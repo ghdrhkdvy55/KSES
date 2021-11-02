@@ -360,7 +360,7 @@ function uniAjaxReturn(url, _type, _async,  param, _rtnGubun){
 			                returnVal=  result.result;
 			            
 				   }else {
-				       
+				       alert("여기 확인");
 				       common_popup(result.meesage, "N", "");
 				   }
 		       }

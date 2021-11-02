@@ -50,7 +50,7 @@ public class ProgrmInfoManageController {
 	@Autowired
 	private UniSelectInfoManageService uniService;
 
-	@RequestMapping(value="progrmList.do")
+	@RequestMapping(value="programList.do")
 	public ModelAndView selectProgrmInfoList(@ModelAttribute("loginVO") LoginVO loginVO, 
 											 @ModelAttribute("progrmInfo") ProgrmInfo progrmInfo, 
 											 HttpServletRequest request, 

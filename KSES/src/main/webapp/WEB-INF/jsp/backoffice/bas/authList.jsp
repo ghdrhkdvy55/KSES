@@ -52,7 +52,6 @@
 	
 	
     var jqGridFunc  = {
-    		
     		setGrid : function(gridOption){
     			var grid = $('#'+gridOption);
     		    var postData = {"pageIndex": "1"};
@@ -440,7 +439,6 @@
 			  $("#authorCode").val('');
 			  $("#mode").val('');
 		}else {
-			  
 			  common_popup("체크된 값이 없습니다.", "N", "bas_menu_create");
 			  return;
 		}
@@ -452,7 +450,7 @@
 	}
 	function fn_menuCheck(authorCode){
 		var params = {'authorCode': authorCode};
-		var returnval = fn_returnSerialInfo("/backoffice/bas/menuCreateMenuListAjax.do", params, "lst");
+		var returnval = uniAjaxReturn("/backoffice/bas/menuCreateMenuListAjax.do", "GET", false, params, "lst");
 		
 		for (var i in returnval){
 			  var node = returnval[i].menu_no;
@@ -462,7 +460,7 @@
 	}
 	$(function () {
 		 
-		 var returnval = uniAjaxReturn("/backoffice/bas/MenuListAjax.do", "POST", false, null,  "lst");
+		 var returnval = uniAjaxReturn("/backoffice/bas/MenuListAjax.do", "POST", false, {"pageIndex": "1"},  "lst");
 		 if (returnval.length> 0){
 			 for (var i in returnval){
 				 if (returnval[i].level == "1"){
