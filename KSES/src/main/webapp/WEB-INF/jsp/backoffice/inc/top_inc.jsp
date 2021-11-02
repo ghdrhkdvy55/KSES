@@ -15,22 +15,14 @@ if(loginVO == null ){
 	<%        
 }else{ 
 	
-	String referer = request.getHeader("referer");
-	referer = referer.replaceAll("(?i:https?://([^/]+)/.*)", "$1");
 	
 	
 	%> 
     
 <div class="header_wrap">
-	<!--// top -->
-	<%=referer %><br/>
-	<%=request.getRequestURL() %>
-	<br/>
-	<%=request.getRequestURI() %>
-	<br/>
-	<%=request.getServletPath() %>
-	<br/>
-    <header>
+	
+	
+	<header>
 		<ul id="header" class="contents">
         	<li class="logo"><h1>경륜경정 스마트 입장시스템</h1></li>
         	<li class="toggle"><a href="#" onclick="toggleNav()" class="menu"></a></li>
@@ -42,21 +34,25 @@ if(loginVO == null ){
     <!--// menu list -->
     <script type="text/javascript">
     $(document).ready(function() { 
-    	    
-		   fn_menuCreate();
+    	   fn_menuCreate();
 	});
 	function fn_menuCreate (){
-		
+		var url = window.location.pathname;
 		var menu = uniAjaxReturn("/backoffice/inc/user_menu.do", "POST", false, null,  "lst");
 		for (var i in menu){	
 			 if  (menu[i].level == "2"){
-				 var ul_list = $("#ul_menu"); //ul_list선언
-				 ul_list.append("<li id='"+menu[i].menu_no+"'></li>");
-				 $("#"+menu[i].menu_no+"").append("<button type='button' onClick='fn_menuClick("+menu[i].menu_no+")' class='sub_menu' id='bn_"+menu[i].menu_no+"'>"+menu[i].menu_nm+"</button>");
-				 $("#bn_"+menu[i].menu_no +"").after("<div id='dv_"+menu[i].menu_no+"' class='panel'></div>");
+				 var ul_list = $("#ul_leftMenu"); //ul_list선언
+				 ul_list.append("<li id='menu_li_"+menu[i].menu_no+"'></li>");
+				 $("#menu_li_"+menu[i].menu_no+"").append("<button type='button' onClick='fn_menuClick("+menu[i].menu_no+")' class='sub_menu' id='menu_bn_"+menu[i].menu_no+"'>"+menu[i].menu_nm+"</button>");
+				 $("#menu_bn_"+menu[i].menu_no +"").after("<div id='menu_dv_"+menu[i].menu_no+"' class='panel'></div>");
 			 }else {
-				 var dv_list = $("#dv_"+menu[i].upper_menu_no+""); //ul_list선언
-				 dv_list.append("<a href='"+menu[i].url+"' id='"+menu[i].menu_no+"'>"+menu[i].menu_nm+"</a>");
+				 var dv_list = $("#menu_dv_"+menu[i].upper_menu_no+""); //ul_list선언
+				 var active = "";
+				 if (menu[i].url == url){
+					 active = "active";
+					 fn_menuClick(menu[i].upper_menu_no);
+				 }
+				 dv_list.append("<a href='"+menu[i].url+"' id='"+menu[i].menu_no+"' class="+active+">"+menu[i].menu_nm+"</a>");
 			 }
 		 }
 		toggleNav();
@@ -86,9 +82,9 @@ if(loginVO == null ){
     		panel.style.display = "none";
     		
     	}
-    	var block_pn = ($("#dv_"+id).prop('style') == "block") ? "display:none" : "display:block";
-    	$("#bn_"+id).prop('class','sub_menu toggle_on');
-    	$("#dv_"+id).prop('style', block_pn); 
+    	var block_pn = ($("#menu_dv_"+id).prop('style') == "block") ? "display:none" : "display:block";
+    	$("#menu_bn_"+id).prop('class','sub_menu toggle_on');
+    	$("#menu_dv_"+id).prop('style', block_pn); 
     	
     }
 	
@@ -96,7 +92,7 @@ if(loginVO == null ){
     
     
     <div id="mySidenav" class="sidenav">
-		<ul id="ul_menu">
+		<ul id="ul_leftMenu">
 			                                
 		</ul>
 	</div>
