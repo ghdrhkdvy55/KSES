@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kses.backoffice.sym.center.mapper.CentertInfoManagerMapper">
+	
+    <select id="selectCenterInfoList"  resultType="lmap">
+		SELECT TB.* 
+	    FROM (
+					    SELECT SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT,
+					           ROW_NUMBER() OVER (ORDER BY a.CENTER_CODE DESC) AS RNUM, 
+					           CENTER_CODE  ,      
+							   CENTER_NM  ,
+						       CASE  WHEN  LEN(CENTER_IMG) > 0 THEN 
+				  	               CENTER_IMG
+							   ELSE 
+						          'no_image.gif'
+						       END CENTER_IMG, 
+						       CENTER_ZIPCODE,
+				               CENTER_ADDR1,
+				               CENTER_ADDR2,
+						       CENTER_USE_YN,      	
+						       ADMIN_APPROVAL_YN   ,	      
+						       FORMAT(a.CENTER_UPDATE_DATE,'yyyy-MM-dd HH:mm:ss') CENTER_UPDATE_DATE,
+						       CENTER_UPDATE_USER_ID	        
+					    FROM  TB_CENTERINFO a
+					    WHERE 1=1        
+					        <if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
+							  AND (    CENTER_CODE LIKE CONCAT('%',#{params.searchKeyword},'%')  OR CENTER_NM LIKE CONCAT('%',#{params.searchKeyword},'%')  )
+							</if>		
+					    
+	        ) TB
+	     WHERE RNUM  BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
+	     ORDER BY TB.CENTER_CODE  DESC
+     </select>
+    <select id="selectCenterInfoManageCombo" resultType="CenterInfo">
+         SELECT  CENTER_CODE , CENTER_NM 
+         FROM TB_CENTERINFO
+         WHERE CENTER_USE_YN = 'Y'
+         ORDER BY  CENTER_NM  ASC
+    </select>
+    <select id="selectCenterInfoManageDetail"  resultType="lmap">
+         SELECT  CENTER_CODE, CENTER_NM, CENTER_ZIPCODE, CENTER_ADDR1,  CENTER_ADDR2, CENTER_TEL,
+				   CENTER_FAX, CENTER_USER_ID, CENTER_REGDATE, CENTER_UPDATE_USER_ID, 
+				   CENTER_UPDATE_DATE, CENTER_IMG, CENTER_URL, CENTER_SEAT_IMG, CENTER_USE_YN , 
+				   REST_INFO, MEETINGROOM_INFO, CENTER_INFO,
+				   SUBSTRING(CENTER_ZIPCODE,0,3) AS center_zipcode1, SUBSTRING(CENTER_ZIPCODE,4,6) AS center_zipcode2 ,     
+				   ADMIN_APPROVAL_YN, FLOOR_INFO, START_FLOOR, END_FLOOR
+		 FROM TB_CENTERINFO
+		 WHERE CENTER_CODE = #{centerCode}		  
+    </select>
+    
+    <insert id="insertCenterInfoManage" >
+         <selectKey resultType="String"  keyProperty="centerCode" order="BEFORE">
+            SELECT dbo.FN_CENTERID() as centerCode
+         </selectKey>
+         <![CDATA[
+             INSERT INTO TB_CENTERINFO (CENTER_CODE, CENTER_NM, CENTER_ZIPCODE, CENTER_ADDR1, CENTER_ADDR2, CENTER_TEL,CENTER_FAX, 
+                                 CENTER_USER_ID, CENTER_REGDATE, CENTER_UPDATE_USER_ID, CENTER_UPDATE_DATE, CENTER_IMG, CENTER_URL, 
+                                 CENTER_SEAT_IMG, CENTER_USE_YN, REST_INFO, MEETINGROOM_INFO, CENTER_INFO, ADMIN_APPROVAL_YN, 
+                                 FLOOR_INFO, START_FLOOR, END_FLOOR
+                                 )
+             VALUES (#{centerCode}, #{centerNm},    #{centerZipCode,jdbcType=VARCHAR}, #{centerAddr1,jdbcType=VARCHAR}, #{centerAddr2,jdbcType=VARCHAR}, #{centerTel,jdbcType=VARCHAR},  #{centerFax,jdbcType=VARCHAR},
+             #{centerUserId,jdbcType=VARCHAR}, SYSDATE, #{centerUserId,jdbcType=VARCHAR}, SYSDATE,  #{centerImg,jdbcType=VARCHAR}, #{centerUrl ,jdbcType=VARCHAR}, 
+             #{centerSeatImg,jdbcType=VARCHAR}, 'Y', #{restInfo,jdbcType=VARCHAR}, #{meetingroomInfo,jdbcType=VARCHAR},  #{centerInfo,jdbcType=VARCHAR} , 
+             #{adminApprovalYn, jdbcType=VARCHAR}, #{floorInfo, jdbcType=VARCHAR}, #{startFloor, jdbcType=VARCHAR}, #{endFloor, jdbcType=VARCHAR}
+             );
+          ]]>
+          <if test="floorlist != null">
+          INSERT INTO TB_FLOORINFO (CENTER_CODE, FLOOR_INFO, FLOOR_NAME, FLOOR_PART,
+                                   REG_DATE, REG_ID, UPDATE_DATE, UPDATE_ID)
+          SELECT #{centerCode}, CODE, CODE_NM, 'FLOOR_PART_2' AS FLOOR_PART, SYSDATE, #{centerUserId,jdbcType=VARCHAR}, SYSDATE, #{centerUserId,jdbcType=VARCHAR}
+          FROM COMTCCMMNDETAILCODE
+          WHERE CODE_ID = 'CENTER_FLOOR'
+                AND CODE_DC IN  
+                <foreach collection="floorlist" item="item" index="index" open="(" separator="," close=")">
+                  #{item}
+                </foreach>
+                ;
+          </if>
+         
+                
+     </insert>
+     <update id="updateCenterInfoManage" >
+	       UPDATE  TB_CENTERINFO SET CENTER_NM = #{centerNm} ,
+	                                 CENTER_ZIPCODE = #{centerZipCode,jdbcType=VARCHAR} ,
+	                                 CENTER_ADDR1 = #{centerAddr1},
+	                                 CENTER_ADDR2 = #{centerAddr2},
+	                                 CENTER_TEL = #{centerTel,jdbcType=VARCHAR} ,
+	                                 CENTER_FAX = #{centerFax,jdbcType=VARCHAR} ,
+	                                 CENTER_UPDATE_USER_ID =#{centerUserId, jdbcType=VARCHAR} ,
+	                                 CENTER_UPDATE_DATE = SYSDATE ,
+	                                 CENTER_URL = #{centerUrl ,jdbcType=VARCHAR} ,
+	                                 CENTER_USE_YN = #{centerUseYn,jdbcType=VARCHAR} ,
+	                                 REST_INFO = #{restInfo,jdbcType=VARCHAR} ,
+	                                 MEETINGROOM_INFO = #{meetingroomInfo,jdbcType=VARCHAR} ,                                
+	                                 CENTER_INFO = #{centerInfo,jdbcType=VARCHAR}   
+	                                 <if test="centerImg != '' ">                                    
+	                                 , CENTER_IMG = #{centerImg,jdbcType=VARCHAR}
+	                                 </if>
+	                                 <if test="centerSeatImg !=  '' ">                     
+	                                 , CENTER_SEAT_IMG = #{centerSeatImg,jdbcType=VARCHAR}
+	                                 </if>      
+	                                 , FLOOR_INFO = #{floorInfo, jdbcType=VARCHAR}
+	                                 , START_FLOOR = #{startFloor, jdbcType=VARCHAR}
+	                                 , END_FLOOR    = #{endFloor, jdbcType=VARCHAR}                     
+	                                 , ADMIN_APPROVAL_YN  = 'Y' 
+	      WHERE CENTER_CODE = #{centerCode}  
+	      
+	      <if test="floorInfo != null">
+	       ;
+	       DELETE FROM  TB_FLOORINFO 
+	       WHERE FLOOR_SEQ in (
+			     SELECT  FLOOR_SEQ 
+				 FROM TB_FLOORINFO 
+				 WHERE CENTER_CODE =#{centerCode}
+					    AND FLOOR_INFO NOT IN ( SELECT  CODE
+										        FROM COMTCCMMNDETAILCODE
+										        WHERE CODE_ID = 'CENTER_FLOOR'
+										                AND CODE_DC IN  (
+										                   SELECT strVALUE FROM dbo.UF_SPLICT(#{floorInfo}, ',')
+										                )
+										       )
+	      ) ;
+	      
+          INSERT INTO TB_FLOORINFO (CENTER_CODE, FLOOR_INFO, FLOOR_NAME, 
+                                   REG_DATE, REG_ID, UPDATE_DATE, UPDATE_ID, FLOOR_PART)
+          SELECT #{centerCode} , CODE, CODE_NM, SYSDATE, #{centerUserId,jdbcType=VARCHAR}, SYSDATE, #{centerUserId,jdbcType=VARCHAR}, 'FLOOR_PART_2' FLOOR_PART
+          FROM COMTCCMMNDETAILCODE
+          WHERE CODE_ID = 'CENTER_FLOOR'
+                AND CODE_DC IN  (  SELECT strVALUE FROM dbo.UF_SPLICT(#{floorInfo}, ',') )
+          AND CODE NOT IN ( select FLOOR_INFO FROM TB_FLOORINFO WHERE center_id = #{centerCode}) ;
+          </if>         
+     </update>
+     <update id="updateCenterFloorInfoManage" >
+          UPDATE  TB_CENTERINFO SET FLOOR_INFO = #{floorInfo, jdbcType=VARCHAR}
+          WHERE CENTER_CODE = #{centerCode}   
+     </update>
+     <delete id="deleteCenterInfoManage">
+	       DELETE FROM TB_CENTERINFO
+	       WHERE CENTER_CODE = #{centerCode}
+     </delete>
+</mapper>

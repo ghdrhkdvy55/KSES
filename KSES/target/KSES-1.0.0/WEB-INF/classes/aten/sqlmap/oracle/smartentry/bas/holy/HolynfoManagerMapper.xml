@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kses.backoffice.bas.holy.mapper.HolyInfoManageMapper">
+	<select id="selectHolyInfoList" resultType="lmap">     	      
+		SELECT * FROM 
+		( 
+			SELECT 	
+				SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT, 
+				ROW_NUMBER() OVER (ORDER BY ROWNUM DESC) AS RNUM, 
+				TB.* 
+			FROM 	
+			(	
+				SELECT 
+					A.HOLY_CD, A.HOLY_DT, A.HOLY_NM, A.USE_YN, TO_CHAR(A.LAST_UPDT_DTM, 'yyyy-mm-dd') AS LAST_UPDT_DTM, A.LAST_UPDUSR_ID
+				FROM TSEC_HOLY_INFO_M A
+				WHERE 1=1
+				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
+					AND 
+					( 
+						A.HOLY_DT LIKE CONCAT('%',#{params.searchKeyword},'%') 
+						OR
+						A.HOLY_NM LIKE CONCAT('%',#{params.searchKeyword},'%')
+					) 
+				</if>
+			) TB 
+		) TA
+		WHERE ROWNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
+		ORDER BY TA.RNUM DESC 
+   	</select>
+
+   	<select id="selectHolyInfoDetail" resultType="lmap">
+		SELECT 
+			HOLY_CD, HOLY_DT, HOLY_NM, USE_YN
+		FROM TSEC_HOLY_INFO_M
+		WHERE HOLY_DT = #{holyDt}
+   	</select>
+	
+	<insert id="insertHolyInfo">
+		INSERT INTO TSEC_HOLY_INFO_M	
+		(
+			HOLY_CD ,HOLY_DT, HOLY_NM, USE_YN, LAST_UPDT_DTM, LAST_UPDUSR_ID, CENTER_CD, FRST_REGIST_DTM
+		)
+		VALUES 
+		(
+			TESC_HOLY_INFO_M_SEQ_SEQ.NEXTVAL, #{holyDt, jdbcType=VARCHAR}, #{holyNm,jdbcType=VARCHAR}, #{useYN,jdbcType=VARCHAR}, SYSDATE, 'admin', 'center001', SYSDATE
+		)
+   	</insert>
+
+ 	<update id="updateHolyInfo">
+		UPDATE TSEC_HOLY_INFO_M SET 
+			HOLY_DT = #{holyDt, jdbcType=VARCHAR}, HOLY_NM = #{holyNm, jdbcType=VARCHAR}, USE_YN = #{useYN, jdbcType=VARCHAR}    
+       	WHERE HOLY_CD = #{holyCd, jdbcType=VARCHAR}
+   	</update>
+   	
+   	<delete id="deleteHolyInfo">   	
+   		DELETE FROM TSEC_HOLY_INFO_M WHERE HOLY_DT IN
+   			<foreach collection="holyList" item="item"  open="(" separator="," close=")">
+   				#{item}
+   			</foreach>
+   	</delete>
+</mapper>

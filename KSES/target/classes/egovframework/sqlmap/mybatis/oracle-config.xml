@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>		
+		<setting name="mapUnderscoreToCamelCase" value="true" />		
+		<setting name="lazyLoadingEnabled" value="true" />
+		<setting name="cacheEnabled" value="true"/>			
+	</settings>
+	
+		  
+	<typeAliases>
+	    <typeAlias alias="lmap" type="com.kses.backoffice.util.service.LowerKeyMap"/>
+	    
+	    <!-- 전자정부 프레임워크 공통 Alias 정의-->
+	    <package name="egovframework.com.cmm"/>
+	    
+	    <package name="egovframework.let.sym.log.clg.vo"/>
+	    <package name="egovframework.let.uat.uap.vo"/>
+	    <package name="egovframework.let.uat.uia.vo"/>
+		
+		<!-- 관리자페이지 사용자 정의 -->
+		<!-- 기초관리 -->
+		<package name="com.kses.backoffice.bas.authority.vo"/>
+		<package name="com.kses.backoffice.bas.code.vo"/>
+		<package name="com.kses.backoffice.bas.holy.vo"/>
+		<package name="com.kses.backoffice.bas.menu.vo"/>
+		<package name="com.kses.backoffice.bas.program.vo"/>
+		<package name="com.kses.backoffice.bas.system.vo"/>
+		
+		<!-- 인사관리 -->
+		<package name="com.kses.backoffice.mng.admin.vo"/>
+		<package name="com.kses.backoffice.mng.employee.vo"/>		
+		
+		<!-- 시설관리 -->
+		<package name="com.kses.backoffice.bld.center.vo"/>
+		<package name="com.kses.backoffice.bld.floor.vo"/>
+		<package name="com.kses.backoffice.bld.seat.vo"/>
+		<package name="com.kses.backoffice.bld.season.vo"/>
+		
+		<!-- 예약현황관리 -->
+		<package name="com.kses.backoffice.rsv.reservation.vo"/>
+		<package name="com.kses.backoffice.rsv.black.vo"/>
+		<package name="com.kses.backoffice.rsv.msg.vo"/>
+		<package name="com.kses.backoffice.rsv.access.vo"/>
+		
+		<!-- 시스템관리 -->
+		<package name="com.kses.backoffice.sys.board.vo"/>
+
+		<!-- etc -->
+		<package name="com.kses.backoffice.sts.content.vo"/>
+		
+		<package name="com.kses.backoffice.sym.equ.vo"/>
+		<package name="com.kses.backoffice.sym.rnt.vo"/>
+		
+		<package name="com.kses.backoffice.uat.uia.vo"/>
+		
+		<package name="com.kses.backoffice.util.vo"/>
+		<package name="com.kses.backoffice.sts.iot.vo"/>	
+	</typeAliases>
+	
+
+</configuration>

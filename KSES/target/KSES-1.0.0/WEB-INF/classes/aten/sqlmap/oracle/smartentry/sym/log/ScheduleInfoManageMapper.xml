@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kses.backoffice.sym.log.mapper.ScheduleInfoManageMapper">
+
+   <select id="selectScheduleListInfo">
+       SELECT TB.* FROM (
+					    SELECT SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT,
+					           ROW_NUMBER() OVER (ORDER BY a.SCH_CODE DESC) AS RNUM, 
+					           a.SCH_CODE, a.SCH_NAME, SCH_RESULT, 	SCH_RESULT_MESSAGE,
+						       FORMAT(a.SCH_REGDATE,'yyyy-MM-dd HH:mm:ss') SCH_REGDATE
+						FROM  TB_SCHEDULRINFO a
+					    WHERE 1=1   
+					          <if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
+							    AND a.SCH_NAME LIKE CONCAT('%',#{params.searchKeyword},'%') 
+							  </if>
+							  
+	    ) TB  
+	    WHERE RNUM  BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}   
+	    ORDER BY TB.SCH_CODE DESC
+	    	
+   </select>
+   <insert id="insertScheduleManage">
+       INSERT INTO TB_SCHEDULRINFO(SCH_CODE, SCH_NAME, SCH_REGDATE, SCH_RESULT, SCH_RESULT_MESSAGE)
+       VALUES (dbo.FN_SCHCODE(), #{schName}, SYSDATE, #{schResult},  #{schResultMessage ,jdbcType=VARCHAR} )
+   </insert>
+
+</mapper>

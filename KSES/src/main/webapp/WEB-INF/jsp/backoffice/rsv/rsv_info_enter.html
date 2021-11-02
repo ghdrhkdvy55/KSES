@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=no;" />
+    <title>경륜경정 스마트입장 관리자</title>
+    <link rel="stylesheet" href="../../css/reset.css">
+	  <link rel="stylesheet" href="../../css/paragraph.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+    <script src="../../js/jquery-3.5.1.min.js"></script>
+    <script src="../../js/bpopup.js"></script>
+    <!-- chart.js -->
+    <script src="../../js/chart.min.js"></script>
+    <script src="../../js/utils.js"></script>
+<body>
+<div class="wrapper">
+  <!--// header -->
+  <div class="header_wrap">
+    <!--// top -->
+    <header>
+      <ul id="header" class="contents">
+        <li class="logo"><h1>경륜경정 스마트 입장시스템</h1></li>
+        <li class="toggle"><a href="#" onclick="toggleNav()" class="menu"></a></li>
+        <li class="logo1"><img src="../../img/logo1.png" alt=""></li>
+        <li class="member"><img src="../../img/login.png" alt=""><span>홍길동</span> 님</li>
+      </ul>
+    </header>
+    <!--top //-->
+    <!--// menu list -->
+    <div id="mySidenav" class="sidenav">
+      <ul>
+        <!--// 통합관리 -->
+        <li>
+          <button class="sub_menu">통합 관리</button>
+          <div class="panel">
+            <a href="../stt/stt_dashboard.html">통합이용 현황</a>
+            <a href="../stt/stt_sales.html">매출현황</a>
+          </div>
+        </li>
+        <!-- 통합관리 //-->
+        <!--// 기초관리 -->
+        <li>
+          <button class="sub_menu">기초 관리</button>
+          <div class="panel">
+            <a href="../bas/bas_code.html">공통코드 관리</a>
+            <a href="../bas/bas_auth.html">권한관리</a>
+            <a href="../bas/bas_program.html">프로그램 관리</a>
+            <a href="../bas/bas_menu.html">메뉴 관리</a>
+            <a href="../bas/bas_holiday.html">휴일관리</a>
+            <a href="../bas/bas_kiosk.html">무인발권기 관리</a>
+            <a href="../bas/bas_set_envir.html">환경설정</a>         
+          </div>
+        </li>
+        <!-- 기초관리//-->
+        <!--// 인사관리 -->
+        <li>
+          <button class="sub_menu">인사 관리</button>
+          <div class="panel">
+            <a href="../mng/mng_admin.html">관리자 관리</a>      
+            <a href="../mng/mng_user.html">사용자 관리</a>
+          </div>
+        </li>
+        <!-- 인사관리//-->
+        <!--// 고객관리 -->
+        <li>
+          <button class="sub_menu">고객 관리</button>
+          <div class="panel open">
+            <a href="rsv_custom_info.html">예약 현황</a>
+            <a href="rsv_info_enter.html" class="active">출입통제 관리</a> 
+            <a href="rsv_vaccin_mng.html">백신 접종자 관리</a>
+            <a href="rsv_mms_mng.html">메시지 전송 관리</a>
+            <a href="rsv_mms_state.html">메시지 전송 현황 관리</a>
+          </div>
+        </li>
+        <!-- 고객관리//-->  
+        <!--// 시설관리 -->
+        <li>
+          <button class="sub_menu">시설 관리</button>
+          <div class="panel">
+            <a href="../bld/bld_branch_office.html">지점 시설 관리</a>
+            <a href="../bld/bld_seat.html">좌석 추가</a>
+            <a href="../bld/bld_season.html">시즌 관리</a>   
+          </div>
+        </li>
+        <!-- 시설관리//-->  
+        <!--// 시스템 현황 -->
+        <li>
+          <button class="sub_menu">시스템 관리</button>
+          <div class="panel">
+            <a href="../sys/sys_board_mng.html">게시판 등록 관리</a>
+            <a href="../sys/sys_log.html">시스템 로그 현황</a>  
+            <a href="../sys/sys_adm_login.html">관리자 로그인 현황</a>
+          </div>
+        </li>
+        <!-- 시스템 현황//-->                                   
+      </ul>
+    </div>
+    <!-- menu list //-->
+
+  </div>
+  <!-- header //-->
+  <!--// contents-->
+  <div id="contents">
+    <div class="breadcrumb">
+      <ol class="breadcrumb-item">
+        <li>고객 관리</li>
+        <li class="active">　> 출입통제 관리</li>
+      </ol>
+    </div>
+
+    <h2 class="title">출입통제 관리</h2><div class="clear"></div>
+    <!--// dashboard -->
+    <div class="dashboard">
+      <!--contents-->
+      <div class="boardlist">
+        <div class="whiteBox searchBox">
+              <div class="sName">
+                <h3>검색 옵션</h3>
+              </div>
+          <div class="top">
+            <p>검색 구분</p>
+            <select>
+              <option value="0">아이디</option>
+              <option value="">이름</option>
+              <option value="">전화번호</option>
+            </select>
+            <input type="text" placeholder="검색어를 입력하세요.">
+          </div>
+          <div class="inlineBtn">
+            <a href=""class="grayBtn">검색</a>
+          </div>
+        </div>
+        <div class="left_box mng_countInfo">
+          <p>총 : 100건</p>
+          <select>
+              <option value="0">10개씩 보기</option>
+              <option value="1">20개씩 보기</option>
+          </select>
+        </div>
+        <div class="clear"></div>
+        <div class="tabs blacklist">
+          <div class="tab active">블랙리스트</div>
+          <div class="tab">자가출입통제</div>
+          <div class="tab">패널티 고객</div>
+        </div>
+        <div class="right_box">
+            <a data-popup-open="blacklist_add" class="blueBtn">입장 제한 고객 등록</a>
+        </div>
+        <div class="clear"></div>
+        <div class="whiteBox">
+          <table class="main_table blacklist">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>아이디</th>
+                <th>이름</th>
+                <th>전화번호</th>
+                <th>유형</th>
+                <th>상세내용</th>
+                <th>삭제</th>
+              </tr>
+            </thead>
+            <tbody class="active">
+              <tr>
+                <td>1</td>
+                <td><a data-popup-open="blacklist_add">user01</a></td>
+                <td><a data-popup-open="blacklist_add">김고객</a></td>
+                <td>01012341234</td>
+                <td>블랙리스트</td>
+                <td>사유</td>
+                <td><a href="" class="grayBtn">삭제</a></td>
+              </tr>      
+              <tr>
+                <td>1</td>
+                <td><a data-popup-open="blacklist_add">user01</a></td>
+                <td><a data-popup-open="blacklist_add">김고객</a></td>
+                <td>01012341234</td>
+                <td>온라인</td>
+                <td>사유</td>
+                <td><a href="" class="grayBtn">삭제</a></td>
+              </tr>   
+              <tr>
+                <td>1</td>
+                <td>user01</td>
+                <td>김고객</td>
+                <td>01012341234</td>
+                <td>온라인</td>
+                <td>사유</td>
+                <td><a href="" class="grayBtn">삭제</a></td>
+              </tr>                          
+            </tbody>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td><a data-popup-open="blacklist_add">user01</a></td>
+                <td><a data-popup-open="blacklist_add">김고객</a></td>
+                <td>01012341234</td>
+                <td>자가출입통제</td>
+                <td>사유</td>
+                <td><a href="" class="grayBtn">삭제</a></td>
+              </tr>      
+              <tr>
+                <td>1</td>
+                <td><a data-popup-open="blacklist_add">user01</a></td>
+                <td><a data-popup-open="blacklist_add">김고객</a></td>
+                <td>01012341234</td>
+                <td>온라인</td>
+                <td>사유</td>
+                <td><a href="" class="grayBtn">삭제</a></td>
+              </tr>   
+              <tr>
+                <td>1</td>
+                <td>user01</td>
+                <td>김고객</td>
+                <td>01012341234</td>
+                <td>온라인</td>
+                <td>사유</td>
+                <td><a href="" class="grayBtn">삭제</a></td>
+              </tr>                          
+            </tbody>
+            
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td><a data-popup-open="blacklist_add">user01</a></td>
+                <td><a data-popup-open="blacklist_add">김고객</a></td>
+                <td>01012341234</td>
+                <td>패널티 고객</td>
+                <td>사유</td>
+                <td><a href="" class="grayBtn">삭제</a></td>
+              </tr>      
+              <tr>
+                <td>1</td>
+                <td><a data-popup-open="blacklist_add">user01</a></td>
+                <td><a data-popup-open="blacklist_add">김고객</a></td>
+                <td>01012341234</td>
+                <td>온라인</td>
+                <td>사유</td>
+                <td><a href="" class="grayBtn">삭제</a></td>
+              </tr>   
+              <tr>
+                <td>1</td>
+                <td>user01</td>
+                <td>김고객</td>
+                <td>01012341234</td>
+                <td>온라인</td>
+                <td>사유</td>
+                <td><a href="" class="grayBtn">삭제</a></td>
+              </tr>                          
+            </tbody>
+          </table>
+        </div>
+        <ul class="page_num">
+          <li><a href="javascript:;" class="before2 "></a></li>
+          <li><a href="javascript:;" class="before rignt15"></a></li>
+          <li class="active"><a href="javascript:;">1</a></li>
+          <li><a href="javascript:;">2</a></li>
+          <li><a href="javascript:;" class="after left15"></a></li>
+          <li><a href="javascript:;" class="after2"></a></li>
+        </ul>
+
+        
+      </div>
+
+    </div>
+    
+  </div>
+  <!-- contents//-->
+</div>
+<!-- wrapper_end-->
+<!-- // 입장제한고객 등록 팝업 -->
+<div data-popup="blacklist_add" class="popup">
+  <div class="pop_con">
+      <a class="button b-close">X</a>
+      <h2 class="pop_tit">입장 제한 고객 등록</h2>
+      <div class="pop_wrap">
+          <table class="detail_table blacklist_add_table">
+              <tbody>
+                  <tr>
+                    <th>회원 조회</th>
+                    <td>
+                      <select name="" id="">
+                          <option value="">아이디</option>
+                          <option value="">이름</option>    
+                          <option value="">전화번호</option>             
+                      </select>
+                      <input type="text" id="">
+                      <a href="" class="blueBtn">조회</a>
+                    </td>
+                      <th>아이디 </th>
+                      <td><input type="text" id=""></td>
+                  </tr>
+                  <tr>
+                      <th>이름 </th>
+                      <td><input type="text" id=""></td>
+                      <th>전화번호 </th>
+                      <td><input type="text" id=""></td>
+                  </tr>
+                  <tr>
+                    <th>제한 유형</th>
+                    <td>
+                        <select>
+                          <option value="0">블랙리스트</option>
+                          <option value="">자가출입통제</option>
+                          <option value="">패널티 고객</option>
+                        </select>
+                    </td>
+                    <th>회원 구분</th>
+                    <td><input type="text" id=""></td>
+                  </tr>
+                  <tr>
+                    <th>상세 내역</th>
+                      <td colspan="3">
+                        <input type="text" id="fulltxt">
+                      </td>
+                  </tr>
+              </tbody>
+          </table>
+      </div>
+      <div class="right_box">
+          <a href="" class="grayBtn">취소</a>
+          <a href="" class="blueBtn">저장</a>
+      </div>
+      <div class="clear"></div>
+  </div>
+</div>
+<!-- 입장제한고객 등록 팝업 // -->
+<script src="../../js/common.js"></script>
+</body>
+</html>
+
+
+

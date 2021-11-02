@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kses.backoffice.mng.employee.mapper.JikwInfoManageMapper">
+<!-- 	<select id="selectJobInfoCombo"  resultType="GradInfo">
+		SELECT EMPJIKW, EMPJIKWCODE
+		FROM TB_JOBINFO 
+		WHERE 1=1
+		ORDER BY cast (SORT_ORDE AS int) ASC
+	</select>
+    
+    
+    <select id="selectJobInfoComboSearch" resultType="GradInfo">
+      SELECT EMPJIKW, EMPJIKWCODE
+      FROM TB_JOBINFO 
+      WHERE 1=1 AND  EMPJIKWCODE LIKE CONCAT('%',#{searchKeyword},'%')
+      ORDER BY SORT_ORDE ASC 
+    </select>
+    
+    <insert id="insertJobInfo">
+         INSERT INTO TB_JOBINFO (EMPJIKW, EMPJIKWCODE, SORT_ORDE)
+		 VALUES(#{empjikw},#{empjikwcode}, #{sortOrde})
+    </insert>
+    
+    <delete id="deleteJobInfo">
+         DELETE FROM TB_JOBINFO
+    </delete> -->
+</mapper>

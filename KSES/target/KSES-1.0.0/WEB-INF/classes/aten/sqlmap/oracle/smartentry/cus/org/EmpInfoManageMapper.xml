@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kses.backoffice.mng.employee.mapper.EmpInfoManageMapper">
+	<select id="selectEmpInfoList" resultType="lmap">
+		SELECT TA.* FROM 
+		( 
+			SELECT 
+				SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT,
+				ROW_NUMBER() OVER (ORDER BY TB.EMP_NAME DESC) AS RNUM, 
+				TB.EMP_ID, TB.EMP_NO, TB.EMP_NAME, TB.DEPT_CODE, TB.DEPT_NAME, 
+				TB.GRAD_CODE, TB.GRAD_CODE, TB.JIKW_CODE, TB.JIKW_NAME, TB.EMP_USEYN
+				TB.EMP_CELLPHONE, TB.EMP_TELPHONE, TB.EMP_EMAIL, TB.ADMIN_GUBUN, TB.EMP_STATE
+				TB.EMP_PIC, TB.LAST_UPDUSRPNTTM, TB.LAST_UPDUSR_ID
+			FROM		
+			(
+				SELECT 
+					A.EMP_ID, A.EMP_NO, A.EMP_NAME, A.DEPT_CODE, A.DEPT_NAME,
+					A.GRAD_CODE, A.GRAD_NAME, A.JIKW_CODE, A.JIKW_NAME, A.EMP_USEYN
+					A.EMP_CELPHONE, A.EMP_TELPHONE, A.EMP_EMAIL, A.ADMIN_GUBUN, A.EMP_STATE
+					A.EMP_PIC, A.LAST_UPDUSRPNTTM, A.LAST_UPDUSR_ID
+				FROM TB_EMPINFO A
+				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
+					<choose>
+						<when test="params.searchCondition == 'empname'">
+							AND A.EMPNAME LIKE '%' || #{params.searchKeyword} || '%' 
+						</when>	
+						<when test="params.searchCondition == 'empid'">
+							AND A.EMPID LIKE '%' || #{params.searchKeyword} || '%' 
+						</when>	
+						<when test="params.searchCondition == 'empno'">
+							AND A.EMPNO LIKE '%' || #{params.searchKeyword} || '%'
+						</when>							
+						<otherwise>
+							AND 
+							(
+								A.EMP_NAME LIKE '%' || #{params.searchKeyword} || '%' 
+								OR A.EMP_ID LIKE '%' || #{params.searchKeyword} || '%' 
+								OR A.EMP_NO LIKE '%' || #{params.searchKeyword} || '%' 
+							)
+						</otherwise>
+					</choose>
+				</if>	 	 
+				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchJobpst)">
+					AND A.DEPT_CODE= #{params.searchJobpst}
+				</if>    
+			)TB
+		)TA
+		<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.mode)">
+			<if test="params.mode == 'list'">
+				WHERE RNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}
+			</if>
+        </if>
+        ORDER BY TA.EMPNAME ASC 
+    </select>
+
+    <select id="selectEmpInfoDetail" resultType="EmpInfo">
+		SELECT  
+			A.EMP_ID, A.EMP_NO, A.EMP_NAME, A.DEPT_CODE, A.DEPT_NAME, 
+			A.GRAD_CODE, A.GRAD_NAME, A.JIKW_CODE, A.JIKW_NAME, A.EMP_USEYN, 
+			A.EMPTELPHONE, A.EMPMAIL, A.AUTHOR_CD, A.COM_CODE, A.EMP_STATE, 
+			A.EMP_CELPHONE, A.EMP_TELPHONE, A.EMP_EMAIL, A.ADMIN_GUBUN, A.EMP_STATE, 
+			A.EMP_PIC
+		FROM TB_EMPINFO A 
+		WHERE 1=1 
+		AND A.EMP_NO = #{empNO}
+    </select>    
+    
+	<update id="mergeEmpInfo" parameterType="java.util.List">
+	    MERGE INTO TB_EMPINFO A
+	    USING (
+	        <foreach collection="list" item="item" open="" close="" index="index" separator="UNION">
+	            SELECT
+	                #{item.empId} AS EMP_ID,
+	                #{item.empNo} AS EMP_NO,
+	                #{item.empName} AS EMP_NAME,
+	                #{item.deptCode} AS DEPT_CODE,
+	                #{item.deptName} AS DEPT_NAME,
+	                #{item.gradCode} AS GRAD_CODE,
+	                #{item.gradName} AS GRAD_NAME,
+	                #{item.jikwCode} AS JIKW_CODE,
+	                #{item.jikwName} AS JIKW_NAME,
+	                #{item.empUseyn} AS EMP_USEYN,
+	                #{item.empCelphone} AS EMP_CELPHONE,
+	                #{item.empTelphone} AS EMP_TELPHONE,
+	                #{item.empEmail} AS EMP_EMAIL,
+	                #{item.empState} AS EMP_STATE,
+	                #{item.empPic} AS EMP_PIC,
+	            FROM DUAL
+	        </foreach>
+	    ) B
+	    ON (A.EMP_NO = B.EMP_NO)
+	    WHEN MATCHED THEN
+	    UPDATE
+	        SET
+	            A.EMP_NAME = B.EMP_NAME,
+	            A.DEPT_CODE = B.DEPT_CODE,
+	            A.DEPT_NAME = B.DEPT_NAME,
+	            A.GRAD_CODE = B.GRAD_CODE,
+	            A.GRAD_NAME = B.GRAD_NAME,
+	            A.JIKW_CODE = B.JIKW_CODE,
+	            A.JIKW_NAME = B.JIKW_NAME,
+	            A.EMP_USEYN = B.EMP_USEYN,
+	            A.EMP_CELPHONE = B.EMP_CELPHONE,
+	            A.EMP_TELPHONE = B.EMP_TELPHONE,
+	            A.EMP_EMAIL = B.EMP_EMAIL,
+	            A.EMP_STATE = B.EMP_STATE,
+	            A.EMP_PIC = B.EMP_PIC,
+	            A.LAST_UPDUSR_PNTTM = SYSDATE,
+	            A.LAST_UPDUSR_ID = 'BATCH',
+	    WHEN NOT MATCHED THEN
+	    INSERT 
+	    (
+			A.EMP_NAME = B.EMP_NAME,
+			A.DEPT_CODE = B.DEPT_CODE,
+			A.DEPT_NAME = B.DEPT_NAME,
+	        A.GRAD_CODE = B.GRAD_CODE,
+	        A.GRAD_NAME = B.GRAD_NAME,
+	        A.JIKW_CODE = B.JIKW_CODE,
+	        A.JIKW_NAME = B.JIKW_NAME,
+	        A.EMP_USEYN = B.EMP_USEYN,
+	        A.EMP_CELPHONE = B.EMP_CELPHONE,
+	        A.EMP_TELPHONE = B.EMP_TELPHONE,
+	        A.EMP_EMAIL = B.EMP_EMAIL,
+	        A.EMP_STATE = B.EMP_STATE,
+	        A.EMP_PIC = B.EMP_PIC,
+			A.LAST_UPDUSR_PNTTM = SYSDATE,
+			A.LAST_UPDUSR_ID = 'BATCH',
+	    )
+	    VALUES 
+	    (
+			B.EMP_NAME,
+			B.DEPT_CODE,
+			B.DEPT_NAME,
+	        B.GRAD_CODE,
+	        B.GRAD_NAME,
+	        B.JIKW_CODE,
+	        B.JIKW_NAME,
+	        B.EMP_USEYN,
+	        B.EMP_CELPHONE,
+	        B.EMP_TELPHONE,
+	        B.EMP_EMAIL,
+	        B.EMP_STATE,
+	        B.EMP_PIC,
+			SYSDATE,
+			'BATCH',
+	    )
+	</update>
+	
+	<delete id="deleteEmpInfo">
+		{CALL
+			DECLARE
+			BEGIN
+			
+			DELETE FROM TB_EMPINFO EMP_NO = #{empNo};
+			DELETE FROM TB_ADMININFO = EMP_NO = #{empNo};
+		}
+    </delete>   
+</mapper>

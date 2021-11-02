@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kses.backoffice.bas.menu.mapper.MenuInfoManageMapper">
+	<select id="selectMenuManageList_D" resultType="lmap">
+		      SELECT TOTAL_RECORD_COUNT, RNUM , MENU_NO,  MENU_ORDR, LPAD(' ', 2*(LEVEL-1)) ||MENU_NM MENU_NM, UPPER_MENU_NO, MENU_DC,
+                     PROGRM_FILE_NM, LEVEL
+              FROM ( SELECT SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT, 
+				                      ROW_NUMBER() OVER (ORDER BY ROWNUM DESC) AS RNUM, TB.* 
+				     FROM (
+							SELECT 
+								  MENU_NO           
+								, MENU_ORDR         
+								, MENU_NM           
+								, UPPER_MENU_NO    
+								, MENU_DC           
+								, PROGRM_FILE_NM    
+							FROM COMTNMENUINFO 
+							WHERE 1=1 
+							     <if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">  
+							     <![CDATA[
+							     AND MENU_NM like '%'|| #{params.searchKeyword}||'%'
+							      ]]>
+							     </if> 
+				         ) 
+				     TB )  
+		       START WITH UPPER_MENU_NO IS NULL --루트노드를 지정,
+               CONNECT BY PRIOR MENU_NO = UPPER_MENU_NO   
+               ORDER BY MENU_ORDR ASC
+	</select> 
+
+
+
+	<select id="selectMenuManage_D" resultType="lmap">
+		<![CDATA[
+			SELECT  MENU_NO           
+					, MENU_ORDR         
+					, MENU_NM           
+					, UPPER_MENU_NO     
+					, MENU_DC             
+					, PROGRM_FILE_NM    
+			FROM COMTNMENUINFO
+			WHERE MENU_NO = #{searchKeyword}
+		]]>
+	</select>
+	
+	<insert id="insertMenuManage_S">
+		<![CDATA[
+			INSERT INTO COMTNMENUINFO ( MENU_NO , MENU_ORDR , MENU_NM , UPPER_MENU_NO, MENU_DC, PROGRM_FILE_NM )
+			VALUES 
+			(   
+			    #{menuNo}, #{menuOrdr ,jdbcType=VARCHAR}, #{menuNm}, #{upperMenuNo}, #{menuDc ,jdbcType=VARCHAR}, #{progrmFileNm} 
+            )
+		]]>
+	</insert>
+
+	<update id="updateMenuManage_S">
+		<![CDATA[
+			UPDATE COMTNMENUINFO SET  MENU_ORDR         = #{menuOrdr}      
+						              , MENU_NM           = #{menuNm}    
+						              , UPPER_MENU_NO     = #{upperMenuNo}    
+						              , MENU_DC           = #{menuDc ,jdbcType=VARCHAR}    
+						              , PROGRM_FILE_NM    = #{progrmFileNm}  
+			WHERE MENU_NO=#{menuNo}
+		]]>
+	</update>
+
+	<delete id="deleteMenuManage_S">
+		<![CDATA[                          
+			DELETE FROM COMTNMENUINFO              
+			WHERE MENU_NO=#{menuNo}                
+		]]>                                
+	</delete> 
+	<delete id="deleteMenuManage_L">
+		                       
+			DELETE FROM COMTNMENUINFO              
+			WHERE MENU_NO IN 
+			<foreach collection="menuNoList" item="item"  open="(" separator="," close=")">
+            #{item}
+            </foreach>		                 	                                
+	</delete> 
+	<!-- 메뉴번호 존재여부 조회 -->
+	<select id="selectMenuNoByPk" resultType="Integer">
+		<![CDATA[
+		SELECT COUNT(MENU_NO) AS "totcnt"
+		  FROM COMTNMENUINFO
+		 WHERE MENU_NO =#{menuNo}
+		]]>
+	</select>
+	
+	<!-- 상위 메뉴번호 존재여부 조회 -->
+    <select id="selectUpperMenuNoByPk" resultType="Integer">
+        <![CDATA[
+        SELECT COUNT(MENU_NO) AS totcnt
+          FROM COMTNMENUINFO
+         WHERE UPPER_MENU_NO = #{menuNo}
+        ]]>
+    </select>
+    
+    
+
+	<select id="selectMenuListT_D"  resultType="lmap">
+		<![CDATA[ 
+            SELECT
+			      MENU_NO          
+				, MENU_ORDR        
+				, MENU_NM           
+				, UPPER_MENU_NO     
+				, MENU_DC           
+				, RELATE_IMAGE_PATH 
+				, RELATE_IMAGE_NM  
+				, PROGRM_FILE_NM  
+			FROM COMTNMENUINFO 
+			WHERE Menu_NO > 0 
+			ORDER BY MENU_ORDR
+		]]> 
+	</select>
+
+	<delete id="deleteAllMenuList" >
+	   {CALL
+			DECLARE
+			BEGIN
+			    <![CDATA[ 
+		        DELETE FROM COMTNMENUINFO WHERE MENU_NO <> UPPER_MENU_NO;
+		     	DELETE FROM COMTNMENUCREATDTLS ;
+		     	]]>
+		    END
+		}                                
+	</delete> 
+	<!-- 삭제 전에 상위값을 알아보기 위해 delete 대신 update 사용 -->
+    <update id="deleteMenuNo">
+        <selectKey keyProperty="cnt" resultType="Integer" order="BEFORE">
+             SELECT COUNT(MENU_NO) AS totcnt
+             FROM COMTNMENUINFO
+             WHERE UPPER_MENU_NO = #{menuNo}
+        </selectKey>
+        <choose>
+           <when test="cnt == 0">
+              DELETE FROM COMTNMENUINFO
+              WHERE MENU_NO = #{menuNo}
+           </when>
+           <otherwise>
+              DELETE FROM COMTNMENUINFO
+              WHERE MENU_NO = -1 
+           </otherwise>
+        </choose>
+    </update>
+	<!-- 메뉴정보 총건수 조회 -->
+	<select id="selectMenuListTotCnt"  resultType="Integer">
+		<![CDATA[
+		SELECT COUNT(MENU_NO) AS totcnt
+		  FROM COMTNMENUINFO
+		]]>
+	</select>
+	
+	<!--  메인 메뉴 합쳐서 관리  -->
+	<select id="selectMainMenuHead" resultType="lmap">
+		<![CDATA[ 
+            SELECT
+			      B.MENU_NO           
+				, B.MENU_ORDR         
+				, B.MENU_NM           
+				, B.UPPER_MENU_NO     
+				, B.MENU_DC           
+				, B.RELATE_IMAGE_PATH 
+				, B.RELATE_IMAGE_NM   
+				, B.PROGRM_FILE_NM    
+				, (SELECT C.URL FROM LETTNPROGRMLIST C WHERE B.PROGRM_FILE_NM = C.PROGRM_FILE_NM) AS "chkURL"
+			FROM COMTNMENUCREATDTLS A, COMTNMENUINFO B 
+			WHERE  B.Menu_NO > 0 
+			AND    B.UPPER_MENU_NO = 0  
+			AND    A.MENU_NO  = B.MENU_NO 
+			AND    A.AUTHOR_CODE = (SELECT C.AUTHOR_CODE from COMTNEMPLYRSCRTYESTBS C
+	                                WHERE  C.SCRTY_DTRMN_TRGET_ID = #{empno})
+			ORDER BY MENU_ORDR
+		]]> 
+	</select>
+
+	<select id="selectMainMenuLeft" resultType="lmap">
+		<![CDATA[ 
+			SELECT TOTAL_RECORD_COUNT, RNUM , MENU_NO,  MENU_ORDR, LPAD(' ', 2*(LEVEL-1)) ||MENU_NM MENU_NM, UPPER_MENU_NO, MENU_DC,
+                   PROGRM_KOREANNM, URL, PROGRM_FILE_NM, LEVEL
+            FROM ( SELECT SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT, 
+				          ROW_NUMBER() OVER (ORDER BY ROWNUM DESC) AS RNUM, TB.* 
+				   FROM (
+							SELECT 
+								  a.MENU_NO           
+								, a.MENU_ORDR         
+								, a.MENU_NM           
+								, a.UPPER_MENU_NO    
+								, a.MENU_DC          
+								, a.PROGRM_FILE_NM  
+								, b.PROGRM_KOREANNM  
+								, b.URL
+							FROM COMTNMENUINFO a, COMTNPROGRMLIST b, COMTNMENUCREATDTLS c
+							WHERE a.PROGRM_FILE_NM = b.PROGRM_FILE_NM
+							      AND a.MENU_NO = c.MENU_NO 
+							      AND c.AUTHOR_CODE = (SELECT  AUTHOR_CD 
+							                           FROM TSEH_ADMIN_INFO_M
+							                           WHERE ADMIN_ID = #{adminId})
+							    
+				         ) 
+				     TB )  
+		       START WITH UPPER_MENU_NO IS NULL --루트노드를 지정,
+               CONNECT BY PRIOR MENU_NO = UPPER_MENU_NO 
+               ORDER BY MENU_ORDR ASC
+		]]> 
+	</select>
+
+	<select id="selectLastMenuURL" resultType="String">
+		<![CDATA[ 
+			SELECT URL 
+			FROM   LETTNPROGRMLIST
+			WHERE  PROGRM_FILE_NM =
+			       (SELECT PROGRM_FILE_NM FROM COMTNMENUINFO
+				    WHERE MENU_NO = #{menuNo})
+		]]> 
+	</select>
+
+	<select id="selectLastMenuNo" resultType="int">
+		<![CDATA[ 
+			SELECT MIN(MENU_NO) 
+			FROM   COMTNMENUINFO
+			WHERE  UPPER_MENU_NO = #{params.menuNo}
+			       AND    MENU_ORDR =
+			      (select MIN(MENU_ORDR) 
+			       from COMTNMENUCREATDTLS A, COMTNMENUINFO B
+			       where A.MENU_NO = B.MENU_NO
+			       AND   A.AUTHOR_CODE = (SELECT AUTHOR_CODE from LETTNEMPLYRSCRTYESTBS
+	                                      WHERE  SCRTY_DTRMN_TRGET_ID = #{params.empNo})
+			       AND   B.UPPER_MENU_NO = #{params.menuNo})
+		]]> 
+	</select>
+
+	<select id="selectLastMenuNoCnt"  resultType="Integer">
+		<![CDATA[ 
+			select count(MENU_NO) 
+			from   COMTNMENUINFO
+			where  UPPER_MENU_NO = #{params.menuNo}
+			and    MENU_ORDR =
+			      (select MIN(MENU_ORDR) 
+			       from COMTNMENUCREATDTLS A, COMTNMENUINFO B
+			       where A.MENU_NO = B.MENU_NO
+			       AND   A.AUTHOR_CODE = (SELECT AUTHOR_CODE from LETTNEMPLYRSCRTYESTBS
+	                                      WHERE  SCRTY_DTRMN_TRGET_ID = #{params.empNo})
+			       AND   B.UPPER_MENU_NO = #{params.menuNo})
+		]]> 
+	</select>
+</mapper>

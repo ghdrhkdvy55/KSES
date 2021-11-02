@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kses.backoffice.sym.center.mapper.FloorInfoManageMapper">
+
+     <select id="selectFloorInfoManageListByPagination"  resultType="lmap">
+		SELECT TB.*
+	    FROM (
+					    SELECT b.FLOOR_SEQ, b.FLOOR_NAME,
+					           SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT,
+					           ROW_NUMBER() OVER (ORDER BY b.FLOOR_SEQ DESC) AS RNUM, 
+					            b.FLOOR_INFO, 
+					           a.CENTER_CODE  ,      
+							   a.CENTER_NM  ,
+						       CASE  WHEN  LEN(FLOOR_MAP) > 0 THEN 
+				  	               FLOOR_MAP
+							   ELSE 
+						          'no_image.gif'
+						       END FLOOR_MAP, 
+						       dbo.FN_DETAILCODENM(b.FLOOR_INFO) FLOOR_INFO_TXT,
+						       SEAT_CNT, MEET_CNT, FLOOR_USEYN, FLOOR_PART,   
+						       FORMAT(b.UPDATE_DATE,'yyyy-MM-dd HH:mm:ss') UPDATE_DATE,    
+						       b.UPDATE_ID	        
+					    FROM  TB_CENTERINFO a, TB_FLOORINFO b
+					    WHERE a.CENTER_CODE = b.CENTER_CODE       
+					         <if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
+							    AND (    b.FLOOR_NAME LIKE CONCAT('%',#{params.searchKeyword},'%')  OR a.CENTER_NM LIKE CONCAT('%',#{params.searchKeyword},'%')  )
+							 </if>		
+							 <if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.centerCode)">
+							  AND a.CENTER_CODE = #{params.centerCode}
+							 </if>
+							 <if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.floorUseyn)">
+							  AND b.FLOOR_USEYN = #{params.floorUseyn}
+							 </if>
+							 <if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.floorSeq)">
+							  AND b.FLOOR_SEQ = #{params.floorSeq}
+							 </if>
+							 <if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.authorCode)">
+							    <if test="params.authorCode == 'ROLE_USER'">
+							    AND b.FLOOR_SEQ IN ( SELECT strVALUE 
+					                                    FROM dbo.UF_SPLICT(
+					                                         ( SELECT COM_PLAY_FLOOR 
+					                                           FROM TB_COMPANYINFO 
+					                                           WHERE COM_CODE = #{params.comCode}) , ',')
+					                                )
+							    </if>
+							 </if>
+							 <if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchFloor)">
+							    <choose>
+							      <when test="params.searchFloor == 'SEAT'">
+							         AND FLOOR_SEQ IN (SELECT FLOOR_SEQ
+													   FROM TB_SEATINFO
+													   WHERE SEAT_USEYN ='Y'
+													         AND SEAT_GUBUN = 'SEAT_GUBUN_2' 
+													   GROUP BY FLOOR_SEQ)    
+							      </when>
+							      <when test="params.searchFloor == 'MEETING'">
+							         AND FLOOR_SEQ IN (SELECT FLOOR_SEQ
+													   FROM TB_MEETING_ROOM
+													   WHERE MEETING_USEYN ='Y'
+														      AND ROOM_TYPE IN('SWC_GUBUN_1', 'SWC_GUBUN_2')
+													   GROUP by FLOOR_SEQ)  
+							      </when>
+							      <otherwise>
+							         AND FLOOR_SEQ IN (SELECT FLOOR_SEQ
+													   FROM TB_MEETING_ROOM
+													   WHERE MEETING_USEYN ='Y'
+														      AND ROOM_TYPE = 'SWC_GUBUN_3'
+													   GROUP by FLOOR_SEQ)
+							      </otherwise>
+							    </choose>
+							 </if>
+							 
+							 
+	        ) TB  
+	    <if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.firstIndex)">
+	    WHERE RNUM  BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
+	    </if>
+        ORDER BY CAST( replace( TB.FLOOR_INFO, 'CENTER_FLOOR_','') as int)   ASC , TB.FLOOR_SEQ DESC
+        		 	    
+     </select>
+    <select id="selectFloorInfoManageCombo" resultType="lmap">
+	       SELECT  a.FLOOR_SEQ , a.FLOOR_NAME 
+	       FROM TB_FLOORINFO a, COMTCCMMNDETAILCODE b
+	       WHERE a.FLOOR_USEYN = 'Y'
+	             AND b.CODE = a.FLOOR_INFO
+	             AND a.CENTER_CODE = #{centerCode}
+	       ORDER BY  CAST (b.CODE_DC AS INT) ASC
+    </select>
+    <select id="selectFloorInfoManageDetail"  resultType="lmap">
+           SELECT  a.FLOOR_SEQ, a.CENTER_CODE, a.FLOOR_INFO, a.FLOOR_MAP, a.FLOOR_MAP1, a.FLOOR_NAME,
+				   a.SEAT_CNT, a.MEET_CNT,a.FLOOR_USEYN, a.FLOOR_PART, b.FLOOR_INFO FLOOR_INFO_CNT,
+				   a.REG_DATE, a.REG_ID, a.UPDATE_DATE,UPDATE_ID, c.CODE_DC
+		   FROM TB_FLOORINFO a, TB_CENTERINFO b, COMTCCMMNDETAILCODE c
+		   WHERE FLOOR_SEQ = #{floorSeq} 		
+		          AND a.CENTER_CODE = b.CENTER_CODE  
+		          AND a.FLOOR_INFO = c.CODE
+    </select>
+    <select id="selectFloorCombo"  resultType="lmap">
+           SELECT  a.FLOOR_SEQ,a.FLOOR_NAME,
+		   FROM TB_FLOORINFO a, TB_CENTERINFO b, COMTCCMMNDETAILCODE c
+		   WHERE FLOOR_SEQ = #{floorSeq} 		
+		          AND a.CENTER_CODE = b.CENTER_CODE  
+		          AND a.FLOOR_INFO = c.CODE
+    </select>
+    <select id="selectTimeInfo" resultType="lmap">
+         select  convert(varchar(8) , SYSDATE, 112) as dayinfo, 
+                 datename(dw, SYSDATE) as weekinfo, 
+                 ltrim(right(convert(varchar(25), SYSDATE, 100), 7)) timeinfo
+    </select>
+    <insert id="insertFloorInfoManage" >
+         INSERT INTO TB_FLOORINFO(CENTER_CODE, FLOOR_INFO, FLOOR_MAP, FLOOR_MAP1, FLOOR_NAME,
+								  SEAT_CNT, MEET_CNT,FLOOR_USEYN, FLOOR_PART,
+								  REG_DATE, REG_ID, UPDATE_DATE,UPDATE_ID)
+         VALUES (#{centerCode}, #{floorInfo}, #{floorMap,jdbcType=VARCHAR}, #{floorMap1,jdbcType=VARCHAR}, #{floorName,jdbcType=VARCHAR}, 
+                 0, 0, #{floorUseyn,jdbcType=VARCHAR}, #{floorPart,jdbcType=VARCHAR},
+                 SYSDATE, #{userId,jdbcType=VARCHAR},  SYSDATE, #{userId,jdbcType=VARCHAR})
+                
+    </insert>
+    <update id="updateFloorInfoManage" >
+            
+	       UPDATE  TB_FLOORINFO SET CENTER_CODE = #{centerCode} 
+	                                , FLOOR_INFO = #{floorInfo,jdbcType=VARCHAR} 
+	                                , FLOOR_NAME = #{floorName,jdbcType=VARCHAR}
+	                                , FLOOR_USEYN = #{floorUseyn,jdbcType=VARCHAR}
+	                                , FLOOR_PART = #{floorPart,jdbcType=VARCHAR} 
+	                                <if test="floorMap != '' ">                                    
+	                                 , FLOOR_MAP = #{floorMap,jdbcType=VARCHAR}
+	                                </if>
+	                                <if test="floorMap1 !=  '' ">                     
+	                                 , FLOOR_MAP1 = #{floorMap1,jdbcType=VARCHAR}
+	                                </if>      
+	                                , UPDATE_DATE = SYSDATE
+	                                , UPDATE_ID = #{userId,jdbcType=VARCHAR}
+	      WHERE FLOOR_SEQ = #{floorSeq}           
+    </update>    
+</mapper>
