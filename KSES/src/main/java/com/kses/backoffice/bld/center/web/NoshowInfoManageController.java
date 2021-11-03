@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kses.backoffice.bld.center.service.CenterInfoManageService;
-import com.kses.backoffice.bld.center.service.PreOpenInfoManageService;
-import com.kses.backoffice.bld.center.vo.PreOpenInfo;
+import com.kses.backoffice.bld.center.service.NoshowInfoManageService;
+import com.kses.backoffice.bld.center.vo.NoshowInfo;
 
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.EgovMessageSource;
@@ -27,22 +27,21 @@ import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
 
 @RestController
 @RequestMapping("/backoffice/bld")
-public class PreOpenInfoManageController {
+public class NoshowInfoManageController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PreOpenInfoManageController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(NoshowInfoManageController.class);
     
     @Autowired
     EgovMessageSource egovMessageSource;
     
     @Autowired
-    PreOpenInfoManageService preOpenInfoService;
+    NoshowInfoManageService noshowInfoService;
     
     @Autowired
     CenterInfoManageService centerInfoService;
     
-    
-    @RequestMapping("preOpenInfoListAjax.do")
-    public ModelAndView selectPreOpenInfo(	@ModelAttribute("loginVO") LoginVO loginVO,
+    @RequestMapping("noshowInfoListAjax.do")
+    public ModelAndView selectNoshownfo(	@ModelAttribute("loginVO") LoginVO loginVO,
     										@RequestParam("centerCd") String centerCd,
     										HttpServletRequest request) {
     	
@@ -59,21 +58,13 @@ public class PreOpenInfoManageController {
 		}
     	
     	try {
-    		List<Map<String, Object>> preOpenInfoList = preOpenInfoService.selectPreOpenInfoList(centerCd);
-    		
-    		//신규 추가 리스트 값 없을때 처리 
-    		String centerNm =   (preOpenInfoList.size() > 0) ? 
-    				             preOpenInfoList.get(0).get("center_nm").toString():
-    				             centerInfoService.selectCenterInfoDetail(centerCd).get("center_nm").toString();
-    			         
-    		//신규 추가 
-    	    model.addObject(Globals.JSON_RETURN_RESULT, centerNm);
-    		model.addObject(Globals .STATUS_REGINFO, preOpenInfoList);
+    		List<Map<String, Object>> noshowInfoList = noshowInfoService.selectNoshowInfoList(centerCd);
+    		model.addObject(Globals.STATUS_REGINFO, noshowInfoList);
     		
     		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
     		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.select"));
     	} catch (Exception e) {
-    		LOGGER.info("selectPreOpenInfo ERROR : " + e.toString());
+    		LOGGER.info("selectNoshownfo ERROR : " + e.toString());
     		model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
     		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 		}
@@ -81,39 +72,19 @@ public class PreOpenInfoManageController {
     	return model;
     }
     
-    @RequestMapping("preOpenInfoUpdate.do")
-    public ModelAndView updatePreOpenInfo(	@ModelAttribute("loginVO") LoginVO loginVO,
-    										@RequestBody List<PreOpenInfo> preOpenInfoList,
+    @RequestMapping("noshowInfoUpdate.do")
+    public ModelAndView updateNoshownfo(	@ModelAttribute("loginVO") LoginVO loginVO,
+    										@RequestBody List<NoshowInfo> noshowInfoList,
 											HttpServletRequest request) {
     	ModelAndView model = new ModelAndView(Globals.JSONVIEW);
     	
     	try {
-			preOpenInfoService.updatePreOpenInfo(preOpenInfoList);
+			noshowInfoService.updateNoshowInfo(noshowInfoList);
 			
     		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
     		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.update"));
 		} catch (Exception e) {
-    		LOGGER.info("updatePreOpenInfo ERROR : " + e.toString());
-    		model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-    		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
-		}
-    	
-    	return model;
-    }
-    
-    @RequestMapping("preOpenInfoCopy.do")
-    public ModelAndView copyPreOpenInfo(	@ModelAttribute("loginVO") LoginVO loginVO,
-    										@RequestBody Map<String, Object> params,
-											HttpServletRequest request) {
-    	ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-    	
-    	try {
-			preOpenInfoService.copyPreOpenInfo(params);
-			
-    		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-    		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.update"));
-		} catch (Exception e) {
-    		LOGGER.info("copyPreOpenInfo ERROR : " + e.toString());
+    		LOGGER.info("updateNoshownfo ERROR : " + e.toString());
     		model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
     		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 		}

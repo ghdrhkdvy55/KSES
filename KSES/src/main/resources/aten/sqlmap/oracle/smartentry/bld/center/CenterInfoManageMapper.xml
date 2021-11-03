@@ -84,7 +84,7 @@
 		VALUES 
 		(
 			#{centerCd}, #{centerNm}, #{centerZipcd, jdbcType=VARCHAR}, #{centerAddr1, jdbcType=VARCHAR}, #{centerAddr2, jdbcType=VARCHAR}, 
-			#{centerTel, jdbcType=VARCHAR}, #{centerFax, jdbcType=VARCHAR}, #{frstRegterId, jdbcType=VARCHAR}, SYSDATE, #{lastUpdusrId, jdbcType=VARCHAR}, 
+			#{centerTel, jdbcType=VARCHAR}, #{centerFax, jdbcType=VARCHAR}, #{userId, jdbcType=VARCHAR}, SYSDATE, #{userId, jdbcType=VARCHAR}, 
 			SYSDATE, #{centerImg, jdbcType=VARCHAR}, #{centerUrl ,jdbcType=VARCHAR}, #{centerMap, jdbcType=VARCHAR}, 'Y', 
 			#{centerInfo, jdbcType=VARCHAR}, #{floorInfo, jdbcType=VARCHAR}, #{startFloor, jdbcType=VARCHAR}, #{endFloor, jdbcType=VARCHAR}, 'TEST'
 		);
@@ -97,7 +97,7 @@
 			)
 			SELECT 
 				FN_FLOORCODE(#{centerCd}, CODE), #{centerCd}, CODE, CODE_NM, 'FLOOR_PART_2', 
-				0, SYSDATE, #{frstRegterId, jdbcType=VARCHAR}, SYSDATE, #{lastUpdusrId, jdbcType=VARCHAR}
+				0, SYSDATE, #{userId, jdbcType=VARCHAR}, SYSDATE, #{userId, jdbcType=VARCHAR}
           	FROM COMTCCMMNDETAILCODE
           	WHERE CODE_ID = 'CENTER_FLOOR'
 			AND CODE_DC IN 
@@ -115,7 +115,7 @@
 		)
 		SELECT 
 			#{centerCd} || '_' || LPAD(LEVEL,2,0), #{centerCd}, LEVEL, '0000', '0000', 
-			SYSDATE, #{frstRegterId, jdbcType=VARCHAR}, SYSDATE, #{lastUpdusrId, jdbcType=VARCHAR}
+			SYSDATE, #{userId, jdbcType=VARCHAR}, SYSDATE, #{userId, jdbcType=VARCHAR}
 		FROM DUAL CONNECT BY LEVEL <= 7;
 		]]> 
 		
@@ -128,7 +128,7 @@
 		)
 		SELECT 
 			#{centerCd} || '_' || LPAD(LEVEL,2,0), #{centerCd}, LEVEL, '0000', '0000', 
-			'0000', SYSDATE, #{frstRegterId, jdbcType=VARCHAR}, SYSDATE, #{lastUpdusrId, jdbcType=VARCHAR}
+			'0000', SYSDATE, #{userId, jdbcType=VARCHAR}, SYSDATE, #{userId, jdbcType=VARCHAR}
 		FROM DUAL CONNECT BY LEVEL <= 7;
 		]]>
 		
@@ -149,7 +149,7 @@
 			CENTER_ADDR2 = #{centerAddr2},
 			CENTER_TEL = #{centerTel, jdbcType=VARCHAR},
 			CENTER_FAX = #{centerFax, jdbcType=VARCHAR},
-			LAST_UPDUSR_ID = #{lastUpdusrId, jdbcType=VARCHAR},
+			LAST_UPDUSR_ID = #{userId, jdbcType=VARCHAR},
 			LAST_UPDT_DTM = SYSDATE,
 			CENTER_URL = #{centerUrl, jdbcType=VARCHAR},
 			USE_YN = #{useYn, jdbcType=VARCHAR},
@@ -186,7 +186,7 @@
 			)
           	SELECT 
           		FN_FLOORCODE(#{centerCd}, CODE), #{centerCd}, CODE, CODE_NM, 'FLOOR_PART_2', 0,
-          		'Y', SYSDATE, #{frstRegterId, jdbcType=VARCHAR}, SYSDATE, #{lastUpdusrId, jdbcType=VARCHAR} 
+          		'Y', SYSDATE, #{userId, jdbcType=VARCHAR}, SYSDATE, #{userId, jdbcType=VARCHAR} 
           		FROM COMTCCMMNDETAILCODE
           	WHERE CODE_ID = 'CENTER_FLOOR'
 			AND CODE_DC IN 

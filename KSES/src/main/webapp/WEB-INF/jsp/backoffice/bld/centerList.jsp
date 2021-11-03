@@ -225,8 +225,8 @@
   			    
 		    },
 		    fn_del : function (){
-		    	var params = {'holySeq':$("#hid_DelCode").val() };
-          	    fn_uniDelAction("/backoffice/bas/centerInfoDelete.do", "GET", params, false, "jqGridFunc.fn_search");
+		    	var params = {'centerList':$("#hid_DelCode").val() };
+          	    fn_uniDelAction("/backoffice/bld/centerInfoDelete.do", "GET", params, false, "jqGridFunc.fn_search");
           	},
 			clearGrid : function() {
 				$("#mainGrid").clearGridData();
@@ -316,7 +316,7 @@
 				if(division == "list") {
 					$("#searchCenterCd").val(centerCd);
 				}
-				var url = "/backoffice/bld/centerHolyInfoListAjax.do"; 
+				var url = "/backoffice/bld/preOpenInfoListAjax.do"; 
 				var param = {"centerCd" : centerCd};
 				$("#bld_early_set .inTxt").html("");
 				fn_Ajax
@@ -358,6 +358,7 @@
 				$("#bld_early_set").bPopup();
 			},
 			fn_preOpen : function (){
+				$("#bld_early_set").bPopup().close();
 				$("#id_ConfirmInfo").attr("href", "javascript:jqGridFunc.fn_preOpenInfoUpdate()");
 				fn_ConfirmPop("입력된 지점 사전예약정보를 저장하시겠습니까?");
 			},
@@ -386,7 +387,6 @@
 							location.href="/backoffice/login.do";
 						} else if (result.status == "SUCCESS") {
 							common_popup("정상적으로 저장 되었습니다.", "Y", "bld_early_set");
-							alert(result.message);
 						} else{
 							common_popup("저장 도중 문제가 발생 하였습니다.", "N", "bld_early_set");
 						}
@@ -492,11 +492,12 @@
 				$("#bld_noshow_set").bPopup();
 			},
 			fn_noshow : function (){
+				$("#bld_noshow_set").bPopup().close();
 				$("#id_ConfirmInfo").attr("href", "javascript:jqGridFunc.fn_noshowInfoUpdate()");
 				fn_ConfirmPop("입력된 지점 사전예약정보를 저장하시겠습니까?");
 			},
 			fn_noshowInfoUpdate : function() {
-				
+				$("#confirmPage").bPopup().close();
 				var url = "/backoffice/bld/noshowInfoUpdate.do";
 				var params = new Array();
 				$("#bld_noshow_set .inTxt tr").each(function(index, item) {
@@ -517,14 +518,14 @@
 					false,
 					function(result) {
 						if (result.status == "LOGIN FAIL") {
-							common_popup(result.meesage, "N","");
+							common_popup(result.message, "N","");
 							location.href="/backoffice/login.do";
 						} else if (result.status == "SUCCESS") {
-							common_popup(result.meesage, "N","bld_noshow_set");
+							common_modelCloseM(result.message, "bld_noshow_set");
 						}
 					},
 					function(request){
-						common_popup("Error:" + request.status,"");						
+						common_modelCloseM("Error:" + request.status,"bld_noshow_set");
 					}    		
 				);
 				
@@ -818,7 +819,7 @@
         </table>
 		<div class="center_box">
           	<a href="javascript:jqGridFunc.fn_preOpen();" class="blueBtn">저장</a> 
-          	<a href="javascript:bPopupClose('bld_early_set');" class="grayBtn">취소</a>
+          	<a href="javascript:common_modelClose('bld_early_set');" class="grayBtn">취소</a>
         </div>
 		</div>
   </div>
@@ -859,7 +860,7 @@
 		</table>
         <div class="center_box">
           	<a href="javascript:jqGridFunc.fn_noshow();" class="blueBtn">저장</a> 
-          	<a href="javascript:bPopupClose('bld_noshow_set');" class="grayBtn">취소</a>
+          	<a href="javascript:common_modelClose('bld_noshow_set');" class="grayBtn">취소</a>
         </div>
       </div>
   </div>

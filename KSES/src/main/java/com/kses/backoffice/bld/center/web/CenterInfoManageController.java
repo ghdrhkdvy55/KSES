@@ -172,13 +172,7 @@ public class CenterInfoManageController {
 		if(!isAuthenticated) {
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
 			model.setViewName("/backoffice/login");
-		} else {
-			HttpSession httpSession = request.getSession(true);
-			loginVO = (LoginVO)httpSession.getAttribute("LoginVO");
-			vo.setFrstRegterId(loginVO.getAdminId());
-			vo.setLastUpdusrId(loginVO.getAdminId());
-	    }
-		
+		} 	
 		try {
 			
 			model.addObject(Globals.STATUS_REGINFO , vo);
@@ -188,7 +182,9 @@ public class CenterInfoManageController {
 			vo.setCenterMap(uploadFile.uploadFileNm(mRequest.getFiles("setCenterMap"), propertiesService.getString("Globals.filePath")));
 			
 			meesage = vo.getMode().equals("Ins") ? "sucess.common.insert" : "sucess.common.update";
-			
+			//userid로 변경 
+			loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
+			vo.setUserId(loginVO.getAdminId());
 			centerInfoManageService.updateCenterInfoManage(vo);
 			
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
@@ -202,12 +198,13 @@ public class CenterInfoManageController {
 	
 	@RequestMapping (value="centerInfoDelete.do")
 	public ModelAndView deleteCenterInfoManage(	@ModelAttribute("loginVO") LoginVO loginVO,
-			                                   	@RequestParam("centerList") List<String> centerList ) throws Exception {
+			                                   	@RequestParam("centerList") String centerList ) throws Exception {
 		
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
 	    Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
 	    
+	    List<String> centerLists =  SmartUtil.dotToList(centerList);
 	    if(!isAuthenticated) {
 	    	model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
 	    	model.setViewName("/backoffice/login");
@@ -215,9 +212,8 @@ public class CenterInfoManageController {
 	    }	
 	    
 	    try {
-	    	for(String centerCd : centerList) {
-	    		
-		    	//이미지 삭제 먼저 하기 
+	    	for(String centerCd : centerLists) {
+	    		//이미지 삭제 먼저 하기 
 		    	int ret = uniService.deleteUniStatement("CENTER_IMG", "TSEB_CENTER_INFO_M", "CENTER_CD = [" + centerCd + "[");		      
 		    	
 		    	if (ret > 0 ) {
@@ -237,11 +233,10 @@ public class CenterInfoManageController {
 		    		uniService.deleteUniStatement("", "TSEC_HOLY_INFO_M", "CENTER_ID=[" + centerCd + "[");		    	 
 		    	} else {
 		    		throw new Exception();		    	  
-		    	}
-		    	
-	    		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-	    		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.delete") );
+		    	}	
 	    	}
+	    	model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+    		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.delete") );
 		} catch (Exception e) {
 			LOGGER.info(e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
