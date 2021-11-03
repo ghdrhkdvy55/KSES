@@ -373,3 +373,46 @@ function uniAjaxReturn(url, _type, _async,  param, _rtnGubun){
 function fn_NVL (reqValue){
 	return (reqValue == undefined || reqValue == "") ? "" : reqValue;
 }
+
+// 값 비교 후 경고 문구 보내기
+function fnIntervalCheck(stratVal, endVal, alertMessge, _modelPop){
+    if (parseInt(stratVal) > parseInt(endVal)){
+		common_popup(alertMessge, "N",_modelPop);
+		return false;
+	}
+	return true;
+}
+// 사용층 checkbox 생성 
+function fnCreatCheckbox(_returnObject, _startVal, _endVal, _checkVal, _checkboxNm, _checkTxt){
+	var checked = "";
+	$("#"+_returnObject).empty();
+	var count = 0;
+	var object_height = 1;
+	for (var i = parseInt(_startVal); i <= parseInt(_endVal); i ++ ){
+	    
+		checked = _checkVal.includes(i) ? "checked" : "";
+		count += 1;
+		console.log(count%5);
+		if (count%6 === 0){
+		   object_height += 1;
+		   $("#"+_returnObject).append("<br/>").css('height',(object_height * 60));
+		}
+		$("#"+_returnObject).append("&nbsp;<input type='checkbox' name='"+_checkboxNm+"'  value='"+i+"' "+checked+">" + i+ _checkTxt);
+	}
+}
+//체크 박스 체크 여부
+
+function ckeckboxValue(message, checkboxNm, _modelPop){
+	var checkboxvalue = "";
+	var check_length = $("input:checkbox[name="+checkboxNm+"]:checked").length;
+	if (check_length <1){
+		common_popup(alertMessge, "N",_modelPop);
+		return false;
+	}else {
+		$("input:checkbox[name="+checkboxNm+"]:checked").each(function(){
+			checkboxvalue = checkboxvalue+","+ $(this).val();
+		});	
+	}
+	return checkboxvalue.substring(1);
+}
+

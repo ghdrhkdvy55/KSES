@@ -138,9 +138,10 @@ public class CenterInfoManageController {
 	}
 	
 	//센터 정보 상세
+	// post 에서 get으로 변경 
 	@RequestMapping (value="centerInfoDetail.do")
 	public ModelAndView selectCenterInfoDetail(	@ModelAttribute("loginVO") LoginVO loginVO, 
-												@RequestBody CenterInfo vo, 
+												@RequestParam("centerCd") String centerCd , 
 												HttpServletRequest request, 
 												BindingResult bindingResult) throws Exception {	
 		
@@ -153,7 +154,7 @@ public class CenterInfoManageController {
 	    }	
 		
 		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-		model.addObject(Globals.STATUS_REGINFO, centerInfoManageService.selectCenterInfoDetail(vo.getCenterCd()));	     	
+		model.addObject(Globals.STATUS_REGINFO, centerInfoManageService.selectCenterInfoDetail(centerCd));	     	
 		return model;
 	}
 	

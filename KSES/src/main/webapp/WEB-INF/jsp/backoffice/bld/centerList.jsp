@@ -248,7 +248,7 @@
 				//층수로 input 생성 
 				if ($("#startFloor").val() != "" && $("#endFloor").val() != "") {
 					//선책 층 유효성 검사
-					if (fnIntervalCheck($("#startFloor").val().replace("CENTER_FLOOR_", ""), $("#endFloor").val().replace("CENTER_FLOOR_", ""), "시작 층수가 종료 층수 보다 큽니다.") == false) {
+					if (fnIntervalCheck($("#startFloor").val().replace("CENTER_FLOOR_", ""), $("#endFloor").val().replace("CENTER_FLOOR_", ""), "시작 층수가 종료 층수 보다 큽니다.", "bld_branch_add") == false) {
 						return false;
 					} else {
 						fnCreatCheckbox("sp_floorInfo", $("#startFloor").val().replace("CENTER_FLOOR_", ""),  $("#endFloor").val().replace("CENTER_FLOOR_", ""), floorinfo, "floorInfos", "층");	
@@ -333,8 +333,7 @@
 							//지점 자동취소 정보 세팅
 							if(result.regist != null) {
 								var setHtml = "";
-								$("#bld_early_set .pop_tit span").html("[" + preOpenInfoList[0].center_nm + "]");
-								
+								$("#bld_early_set .pop_tit span").html("[" + result.result + "]");
 	 							for(var i in result.regist) {
 	 								var obj = result.regist[i];
 	 								setHtml += "<tr id='" + obj.optm_cd + "'>";
@@ -591,18 +590,17 @@
 				$("form[name=regist]").attr("action", "/backoffice/bld/floorList.do").submit();
 			},
 			fn_CheckForm : function () {
-				if (any_empt_line_id("centerNm", "지점명을 입력해주세요.") == false) return;		  
-				if (any_empt_line_id("centerAddr1", "주소를 입력해주세요.") == false) return;
-				if (any_empt_line_id("centerTel", "지점연락처를 입력해주세요.") == false) return;
-	     		  
-				var commentTxt = ($("#mode").val() == "Ins") ? "신규 지점 정보를 등록 하시겠습니까?" : "입력한 지점 정보를 저장 하시겠습니까?";
-				var floorInfo = ckeckboxValue("체크된 층수가 없습니다.", "floorInfos");
+				if (any_empt_line_span("bld_branch_add", "centerNm",  "지점명을 입력해주세요.","sp_message", "savePage") == false) return;
+				if (any_empt_line_span("bld_branch_add", "centerAddr1", "주소를 입력해주세요.","sp_message", "savePage") == false) return;
+				if (any_empt_line_span("bld_branch_add", "centerTel", "지점연락처를 입력해주세요","sp_message", "savePage") == false) return;
+				var floorInfo = ckeckboxValue("체크된 층수가 없습니다.", "floorInfos", "bld_branch_add");
+				$("#floorInfo").val(floorInfo);
+	     		var commentTxt = ($("#mode").val() == "Ins") ? "신규 지점 정보를 등록 하시겠습니까?" : "입력한 지점 정보를 저장 하시겠습니까?";
 				$("#id_ConfirmInfo").attr("href", "javascript:jqGridFunc.fn_update()");
 	       		fn_ConfirmPop(commentTxt);
 			},
-			fn_update : function(){
+			fn_update : function(floorInfo){
 				
-				var resultTxt = ($("#mode").val() == "Ins") ? "신규 지점 정보가 정상적으로 등록 되었습니다." : "지점 정보가 정상적으로 저장 되었습니다.";
 				if(floorInfo == false) return;
 				
 				//체크 박스 체그 값 알아오기 
@@ -621,7 +619,7 @@
 	     	    formData.append('centerInfo' , $("#centerInfo").val());
 	     	    formData.append('startFloor' , $("#startFloor").val());
 	     	    formData.append('endFloor' , $("#endFloor").val());
-	     	    formData.append('floorInfo' , floorInfo);
+	     	    formData.append('floorInfo' , $("#floorInfo").val());
 	     	    formData.append('useYn', $('input[name=useYn]:checked').val());
 	     	    
 	     	    uniAjaxMutipart
@@ -631,7 +629,7 @@
 					function(result) {
 						//결과값 추후 확인 하기 	
 						if (result.status == "SUCCESS"){
-							common_modelClose("bld_branch_add");
+							common_modelClose("confirmPage");
  						    jqGridFunc.fn_search();
 						} else if (result.status == "LOGIN FAIL") {
 							common_modelClose("bld_branch_add");
@@ -712,7 +710,7 @@
 	</div>
 <!-- wrapper_end-->
 <!-- // 지점 등록 팝업 -->
-<div id="bld_branch_add" data-popup="bld_branch_add" class="popup">
+<div id="bld_branch_add" class="popup">
 	<div class="pop_con">
 		<a class="button b-close">X</a>
       	<h2 class="pop_tit">지점 등록</h2>
@@ -830,7 +828,7 @@
 <div id="bld_noshow_set" class="popup">
 	<div class="pop_con">
 		<a class="button b-close">X</a>
-		<h2 class="pop_tit">자동 취소 설정 <span id="sp_centerNm">[장안지점]</span></h2>
+		<h2 class="pop_tit">자동 취소 설정  [장안지점]</h2>
 		<div class="pop_wrap">
 		<fieldset class="whiteBox searchBox">
 			<div class="top" style="border-bottom: 0px; padding: 0px;">

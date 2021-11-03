@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.kses.backoffice.bld.center.service.CenterInfoManageService;
 import com.kses.backoffice.bld.center.service.CenterHolyInfoManageService;
 import com.kses.backoffice.bld.center.vo.CenterHolyInfo;
+import com.kses.backoffice.bld.center.vo.CenterInfo;
 import com.kses.backoffice.util.service.UniSelectInfoManageService;
 
 import egovframework.com.cmm.LoginVO;
@@ -43,6 +44,9 @@ public class CenterHolyInfoManageController {
     
 	@Autowired
 	private UniSelectInfoManageService uniService;
+	
+	@Autowired
+	private CenterInfoManageService centerInfoManageService;
     
     @RequestMapping("centerHolyInfoListAjax.do")
     public ModelAndView selectCenterHolyInfo(	@ModelAttribute("loginVO") LoginVO loginVO,
@@ -62,9 +66,16 @@ public class CenterHolyInfoManageController {
 		}
     	
     	try {
+    		
     		List<Map<String, Object>> centerHolyInfoList = centerHolyInfoService.selectCenterHolyInfoList(centerCd);
+    		//신규 추가 리스트 값 없을때 처리 
+    		String centerNm =   (centerHolyInfoList.size() > 0) ? 
+    			         centerHolyInfoList.get(0).get("center_nm").toString():
+    			         centerInfoManageService.selectCenterInfoDetail(centerCd).get("center_nm").toString();
+    		
     		model.addObject(Globals.STATUS_REGINFO, centerHolyInfoList);
-    		    		
+    		//신규 추가 
+    		model.addObject(Globals.JSON_RETURN_RESULT, centerNm);
     		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
     		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.select"));
     	} catch (Exception e) {
