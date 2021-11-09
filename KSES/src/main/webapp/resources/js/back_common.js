@@ -115,7 +115,7 @@ function any_empt_line_span(close_modal, frm_nm, alert_message, spanTxt, bPopup)
         return true;
 	 }
 }
-function any_empt_line_span_noPop(frm_nm, alert_message, spanTxt){        
+function any_empt_line_span_noPop(frm_nm, alert_message){        
    	 var form_nm = eval("document.getElementById('"+frm_nm+"')");
    	 $("#sp_errorMessage").html("");
    	 if (form_nm.value.length < 1){
@@ -146,38 +146,6 @@ function fn_Ajax(url, _type, param, async, done_callback, fail_callback){
 	return jxFax;
 }
 
-function uniAjax(url, param, async, done_callback, fail_callback){
-	var jxFax =  $.ajax({
-		        type : 'POST',
-		        url : url,
-		        async : async,
-		        beforeSend:function(jxFax, settings){
-	        	   jxFax.setRequestHeader('AJAX', true);
-	        	   //$('.loadingDiv').show();
-	            }, 
-		        complete : function(jqXHR, textStatus) {
-		        },
-		        contentType : "application/json; charset=utf-8",
-		        data : JSON.stringify(param)
-		    }).done(done_callback).fail(fail_callback);
-	return jxFax;
-}
-function uniAjaxSerial(url, param, async, done_callback, fail_callback){
-	var jxFax =  $.ajax({
-		        type : 'GET',
-		        url : url,
-		        async : async,
-		        beforeSend : function(jqXHR, settings) {
-			       jqXHR.setRequestHeader('AJAX', true);
-			       //$('.loadingDiv').show();
-		        }, 
-		        complete : function(jqXHR, textStatus) {
-		        },
-		        contentType : "application/json; charset=utf-8",
-		        data : param,
-		    }).done(done_callback).fail(fail_callback);
-    return jxFax;
-}
 
 //토글 버튼 스크립트
 function toggleValue(obj){
@@ -401,7 +369,6 @@ function fnCreatCheckbox(_returnObject, _startVal, _endVal, _checkVal, _checkbox
 	}
 }
 //체크 박스 체크 여부
-
 function ckeckboxValue(message, checkboxNm, _modelPop){
 	var checkboxvalue = "";
 	var check_length = $("input:checkbox[name="+checkboxNm+"]:checked").length;
@@ -415,4 +382,129 @@ function ckeckboxValue(message, checkboxNm, _modelPop){
 	}
 	return checkboxvalue.substring(1);
 }
+//숫자만 입력 
+function only_num() {
+    if (((event.keyCode < 48) || (event.keyCode > 57)) && (event.keyCode != 190)) event.returnValue = false;
+}
+//지난 일자는 등록 하지 못하게 하기 
+function yesterDayConfirm(res_day, alert_message){
+	var day = new Date();
+    var dateNow = fnLPAD(String(day.getDate()), "0", 2); //일자를 구함
+    var monthNow = fnLPAD(String((day.getMonth() + 1)), "0", 2); // 월(month)을 구함    
+    var yearNow = String(day.getFullYear()); //년(year)을 구함
+    var today = yearNow + monthNow + dateNow;
+    
+    if (parseInt(res_day) < today){
+    	alert(alert_message);
+    	return false;
+    }else {
+    	return true;
+    }
+}
+//체크 박스 전체 선택
+function fn_CheckboxAllChange(ck_nm, boolean){
+   $("input[name="+ck_nm+"]").prop("checked", boolean);
+}
+function fn_CheckboxChoice(ck_nm, choiceValue){
+   
+   
+   $("input[name="+ck_nm+"]").prop("checked", false);
+   if (choiceValue != "" && choiceValue != undefined){
+      choiceValue.split(",").forEach(function(item) {
+          $("#"+item).prop("checked", true);
+          console.log(item);
+      });
+   }
+}
+//combobox 자동 생성 
+// 콤보 박스 리스트
+// _spField #span 에다 넣기 
+// _Field
+function fn_comboList(_spField, _Field, _url, _type, _async, _params, _onChangeAction, _width, _checkVal){
+		    // params로 보내기 
+		    data = (_type == "GET") ? param :JSON.stringify(param);
+		    
+		    if (($("#"+_spField) != undefined && $("#"+_Field) == undefined) ||
+		        ($("#"+_spField) == "" && $("#"+_Field) == undefined)   ){
+		        var onChangeTxt =  _onChangeAction != "" ? "onChange='" + _onChangeAction+ "'" :  "";
+		    	$("#"+_spField).html("<select id='"+ _Field + "' name='"+ _Field + "'" + onChangeTxt+" style='width:" + _width + "'></select>");
+		    }else {
+		         $("#"+_Field).prop("style",_width);
+		         //동적 이벤트 정리 하기 
+		    }
+		    fn_Ajax(_url, 
+		                _type, 
+		                _async,
+		                _params,
+		                function(result) {
+					       if (result.status == "LOGIN FAIL"){
+					    	   location.href="/backoffice/login.do";
+						   }else if (result.status == "SUCCESS"){
+							   //총 게시물 정리 하기
+							    if (result.resultlist.length > 0){
+							        var obj  = result.resultlist;
+								    $("#"+_Field).empty();
+								    $("#"+_Field).append("<option value=''>선택</option>");
+								    for (var i in obj) {
+								        var array = Object.values(obj[i])
+								        var ckString = (array[0] === _checkVal) ? "selected" : "";
+								        $("#"+_Field).append("<option value='"+ array[0]+"' "+ckString+">"+array[1]+"</option>");
+								    }
+							    }else {
+							      //값이 없을때 처리 
+							      $("#"+_Field).empty();
+							      return "0";
+							    }
+							    
+						   }
+					    },
+					    function(request){
+						    common_modelCloseM("Error:" +request.status, "confirmPage");      						
+					    }    		
+			 ); 
+		       
+}
+// json 객체 combobox 만들기
 
+function fn_comboListJson(_Field, _result, _onChangeAction, _width, _checkVal){
+    // params로 보내기 
+    if (_width != ""){
+       $("#"+_Field).width(_width);
+    }  
+    if (_onChangeAction != ""){
+       $("#"+_Field).on('change', function(){
+          var call_script = eval("window."+_onChangeAction+"();"); 
+       });
+    }
+    //동적 이벤트 정리 하기 
+    if (_result.length > 0){
+	        var obj  = _result;
+		    $("#"+_Field).empty();
+		    $("#"+_Field).append("<option value=''>선택</option>");
+		    for (var i in obj) {
+		        var array = Object.values(obj[i])
+		        var ckString = (array[0] === _checkVal) ? "selected" : "";
+		        $("#"+_Field).append("<option value='"+ array[0]+"' "+ckString+">"+array[1]+"</option>");
+		    }
+	 }else {
+	      //값이 없을때 처리 
+	      $("#"+_Field).empty();
+	 }       
+}
+
+// 공백값 치환
+function fn_NVL(reqValue){
+    return (reqValue == undefined || reqValue == "") ? "" : reqValue;
+}
+// rgb -> hex 로 변환
+function rgb2hex(rgb) {
+     if (  rgb.search("rgb") == -1 ) {
+          return rgb;
+     } else {
+          rgb = rgb.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+))?\)$/);
+          function hex(x) {
+               return ("0" + parseInt(x).toString(16)).slice(-2);
+          }
+          return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]); 
+     }
+}

@@ -26,6 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.kses.backoffice.bld.center.service.CenterInfoManageService;
 import com.kses.backoffice.bld.floor.service.FloorInfoManageService;
+import com.kses.backoffice.bld.floor.service.FloorPartInfoManageService;
 import com.kses.backoffice.bld.floor.vo.FloorInfo;
 import com.kses.backoffice.sym.log.annotation.NoLogging;
 import com.kses.backoffice.util.SmartUtil;
@@ -66,6 +67,9 @@ public class FloorInfoManageController {
 	
 	@Autowired
 	private UniSelectInfoManageService uniService;
+	
+	@Autowired
+	private FloorPartInfoManageService partService;
 	
 	@RequestMapping (value="floorList.do")
 	public ModelAndView selectFloorInfoList(	@ModelAttribute("loginVO") LoginVO loginVO, 
@@ -167,6 +171,38 @@ public class FloorInfoManageController {
 	    try {
 	    	model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			model.addObject(Globals.STATUS_REGINFO, floorService.selectFloorInfoDetail(floorInfo.getFloorCd()));
+	    } catch(Exception e) {
+			LOGGER.info(e.toString());
+			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
+	    }
+	    return model;
+	}
+	// 층 신규 GUI 작업 
+	@RequestMapping (value="floorInfoGui.do")
+	public ModelAndView selectFloorInfoGuiManage(@ModelAttribute("LoginVO") LoginVO loginVO, 
+												 @RequestParam("floorCd") String floorCd) throws Exception{
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
+	    Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+	    if(!isAuthenticated) {
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
+			model.setViewName("/backoffice/login");
+			return model;	
+	    }
+	    
+	    try {
+	    	model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+			model.addObject(Globals.STATUS_REGINFO, floorService.selectFloorInfoDetail(floorCd));
+			
+			Map<String, Object> searchVO = new HashMap<String, Object>();
+			searchVO.put("firstIndex", "0");
+			searchVO.put("recordCountPerPage", "100");
+			searchVO.put("floorCd", floorCd);
+			List<Map<String, Object>> partList = partService.selectFloorPartInfoList(searchVO);
+			int totCnt = partList.size() > 0 ?  Integer.valueOf( partList.get(0).get("total_record_count").toString()) :0;
+			model.addObject(Globals.JSON_RETURN_RESULTLISR, partList);
+		    model.addObject(Globals.PAGE_TOTALCNT, totCnt);
+		    
 	    } catch(Exception e) {
 			LOGGER.info(e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);

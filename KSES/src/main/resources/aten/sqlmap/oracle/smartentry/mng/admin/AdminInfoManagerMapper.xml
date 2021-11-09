@@ -66,7 +66,7 @@
           <selectKey resultType="int"  keyProperty="cnt" order="BEFORE">
                 SELECT NVL(COUNT(EMP_NO),0)  as cnt
                 FROM TSEH_ADMIN_INFO_M 
-                WHEREADMIN_ID = #{adminId}
+                WHERE ADMIN_ID = #{adminId}
           </selectKey>
           <choose>
                 <when test="cnt > 0">

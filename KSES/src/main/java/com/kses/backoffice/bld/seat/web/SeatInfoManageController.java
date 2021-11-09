@@ -143,7 +143,7 @@ public class SeatInfoManageController {
 			int totCnt = seatList.size() > 0 ?  Integer.valueOf( seatList.get(0).get("total_record_count").toString()) : 0;
 			model.addObject(Globals.JSON_RETURN_RESULTLISR, seatList);
 			
-			System.out.println(seatList);
+			//System.out.println(seatList);
 			
 		    model.addObject(Globals.PAGE_TOTALCNT, totCnt);
 		    paginationInfo.setTotalRecordCount(totCnt);
