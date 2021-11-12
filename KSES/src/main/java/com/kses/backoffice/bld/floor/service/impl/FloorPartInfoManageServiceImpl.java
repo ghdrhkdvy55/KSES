@@ -43,5 +43,11 @@ public class FloorPartInfoManageServiceImpl extends EgovAbstractServiceImpl  imp
 	public int updateFloorPartInfoManage(FloorPartInfo vo) throws Exception {
 		// TODO Auto-generated method stub
 		return vo.getMode().equals("Ins") ? partMapper.insertFloorPartInfo(vo) : partMapper.updateFloorPartInfo(vo);
+	}
+    //신규 추가 
+	@Override
+	public int updateFloorPartInfPositionInfo(List<FloorPartInfo> floorPartInfo) throws Exception {
+		// TODO Auto-generated method stub
+		return partMapper.updateFloorPartInfPositionInfo(floorPartInfo);
 	}	
 }

@@ -357,7 +357,6 @@ function fnCreatCheckbox(_returnObject, _startVal, _endVal, _checkVal, _checkbox
 	var count = 0;
 	var object_height = 1;
 	for (var i = parseInt(_startVal); i <= parseInt(_endVal); i ++ ){
-	    
 		checked = _checkVal.includes(i) ? "checked" : "";
 		count += 1;
 		console.log(count%5);
@@ -406,8 +405,6 @@ function fn_CheckboxAllChange(ck_nm, boolean){
    $("input[name="+ck_nm+"]").prop("checked", boolean);
 }
 function fn_CheckboxChoice(ck_nm, choiceValue){
-   
-   
    $("input[name="+ck_nm+"]").prop("checked", false);
    if (choiceValue != "" && choiceValue != undefined){
       choiceValue.split(",").forEach(function(item) {
@@ -415,6 +412,10 @@ function fn_CheckboxChoice(ck_nm, choiceValue){
           console.log(item);
       });
    }
+}
+// html #요소 삭제 
+function fn_EmptyField(_Field){
+   $("#"+_Field).empty();
 }
 //combobox 자동 생성 
 // 콤보 박스 리스트
@@ -491,7 +492,26 @@ function fn_comboListJson(_Field, _result, _onChangeAction, _width, _checkVal){
 	      $("#"+_Field).empty();
 	 }       
 }
-
+// 신규 동적 체크 박스 생성 
+function fn_checkboxListJson(_returnObject, _result, _checkVal, _checkboxNm){
+	var checked = "";
+	$("#"+_returnObject).empty();
+	var count = 0;
+	var object_height = 1;
+	console.log(JSON.stringify(_result));
+	
+	
+	for (var i in _result) {
+	    var array = Object.values(_result[i])
+		checked = _checkVal.includes(array[0]) ? "checked" : "";
+		count += 1;
+		if (count%6 === 0){
+		   object_height += 1;
+		   $("#"+_returnObject).append("<br/>").css('height',(object_height * 60));
+		}
+		$("#"+_returnObject).append("&nbsp;<input type='checkbox' name='"+_checkboxNm+"'  value='"+array[0]+"' "+checked+">" + array[1]);
+	}
+}
 // 공백값 치환
 function fn_NVL(reqValue){
     return (reqValue == undefined || reqValue == "") ? "" : reqValue;
@@ -508,3 +528,36 @@ function rgb2hex(rgb) {
           return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]); 
      }
 }
+
+//css select box 
+function fn_cssSelect(_Field, _checkVal){
+    $("#"+_Field).empty();
+    var obj = [ "a_sec,#ffbc26",
+				"b_sec,#4abcff",
+				"c_sec,#ff6e42",
+				"d_sec,#b665ff",
+				"e_sec,#ff65e5",
+				"f_sec,#6e65ff",
+				"g_sec,#4b8bff",
+				"h_sec,#27c7a9",
+				"i_sec,#1c4acf",
+				"j_sec,#ff186d",
+				"k_sec,#426021",
+				"gr_sec,#206618",
+				"n_sec,#80D242",
+				"p_sec,#EC4A4F",
+				"s_sec,#11195D"];    
+	$("#"+_Field).append("<option value=''>선택</option>");
+    for (var i in obj) {
+        var array = obj[i].split(",");
+	    var ckString = (array[0] === _checkVal) ? "selected" : "";
+        $("#"+_Field).append("<option value='"+array[0]+"' "+ckString+" style='background:"+array[1]+"'>>"+array[1]+"</option>");
+    }
+    return;
+}
+//css option 색상 select 색상으로 
+function fn_SelectColor(id){
+    var color = $("#"+id+" option:selected").text();
+    $("#"+id).css("backgroundColor",color);
+}
+

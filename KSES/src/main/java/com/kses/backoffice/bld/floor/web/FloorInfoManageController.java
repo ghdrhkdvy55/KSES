@@ -210,7 +210,7 @@ public class FloorInfoManageController {
 	    }
 	    return model;
 	}
-	
+	//combo box 구역 떄문에 수정 
 	@RequestMapping (value="floorComboInfo.do")
 	public ModelAndView selectFloorComboInfo(	@ModelAttribute("LoginVO") LoginVO loginVO, 
 												@RequestParam("centerCd") String centerCd, 
@@ -220,7 +220,9 @@ public class FloorInfoManageController {
 		
 		try{
 			model.addObject(Globals.STATUS  , Globals.STATUS_SUCCESS);
+			List<Map<String, Object>> floorCombo =  floorService.selectFloorInfoComboList(centerCd);
 			model.addObject(Globals.JSON_RETURN_RESULTLISR, floorService.selectFloorInfoComboList(centerCd));
+			
 		}catch (Exception e){
 			LOGGER.error("floorComboInfo ERROR : " + e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);

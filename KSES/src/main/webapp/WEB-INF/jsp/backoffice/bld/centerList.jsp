@@ -22,6 +22,10 @@
     <script src="/resources/js/jquery-ui.js"></script>
     <!-- 체크 -->
     <link rel="stylesheet" href="/resources/css/jquery-ui.css">
+    <!-- <link rel="stylesheet" href="/css/jquery-ui.css"> -->
+    
+   	<script src="/resources/js/common.js"></script>
+    
     <!-- jqGrid -->
 	<link rel="stylesheet" type="text/css" href="/resources/jqgrid/src/css/ui.jqgrid.css">
     <script type="text/javascript" src="/resources/jqgrid/src/i18n/grid.locale-kr.js"></script>
@@ -169,6 +173,9 @@
 							
 						}
 					},
+					ondblClickRow : function(rowid, iRow, iCol, e){
+						grid.jqGrid('editRow', rowid, {keys: true});
+					},
 					onCellSelect : function (rowid, index, contents, action){
 						var cm = $(this).jqGrid('getGridParam', 'colModel');
 						
@@ -190,10 +197,14 @@
 				return '<img src="' + centerImg + ' " style="width:120px">';
 	    	},
 	    	address : function(cellvalue, options, rowObject) {
-				return fn_NVL(rowObject.center_addr1) +"  "+ fn_NVL( rowObject.center_addr2)
+				/* return rowObject.center_zipcd + "<br>"+ CommonJsUtil.NVL(rowObject.center_addr1) +"  "+ CommonJsUtil.NVL( rowObject.center_addr2) */
+				return CommonJsUtil.NVL(rowObject.center_addr1) +"  "+ CommonJsUtil.NVL( rowObject.center_addr2)
 			},
 	    	useYn : function(cellvalue, options, rowObject) {
 				return (rowObject.use_yn ==  "Y") ? "사용" : "사용안함";
+			},
+			rowBtn : function (cellvalue, options, rowObject) {
+				return '<input type="button" onclick="jqGridFunc.delRow('+rowObject.center_cd+')" value="DEL"/>';
 			},
 			preOpenSettingButton : function (cellvalue, options, rowObject) {
 				return '<a href="javascript:jqGridFunc.fn_preOpenInfo(&#39;list&#39;,&#39;'+rowObject.center_cd+'&#39;);" class="detailBtn">설정</a>';
@@ -701,7 +712,7 @@
         				
         				</table>
         				<div id="pager" class="scroll" style="text-align:center;"></div>     
-          				<br/>
+          				
           				<div id="paginate"></div>
         			</div>
       			</div>
@@ -778,8 +789,9 @@
 			</table>
 		</div>
 		<div class="right_box">
-			<a href="#" class="grayBtn b-close">취소</a>
-          	<a id="btnUpdate" href="javascript:jqGridFunc.fn_CheckForm();" class="blueBtn">저장</a>
+			<a id="btnUpdate" href="javascript:jqGridFunc.fn_CheckForm();" class="blueBtn">저장</a>
+			<a href="javascript:bPopupClose('bld_branch_add');" class="grayBtn">취소</a>
+          	
 		</div>
 		<div class="clear"></div>
 	</div>
@@ -929,6 +941,7 @@
 </div>
 <!-- 휴일관리 팝업 // -->
 <c:import url="/backoffice/inc/popup_common.do" />
+<script type="text/javascript" src="/resources/js/common.js"></script>
 <script type="text/javascript" src="/resources/js/back_common.js"></script>
 </form:form>
 </body>

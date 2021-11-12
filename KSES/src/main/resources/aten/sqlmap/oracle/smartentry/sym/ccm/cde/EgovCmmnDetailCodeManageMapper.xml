@@ -42,9 +42,9 @@
 		FROM COMTCCMMNDETAILCODE A		    
 		WHERE A.CODE_ID = #{code}
 	</select>
-	
+	<!--  2021-11-11 수정 -->
 	<select id="selectCmmnDetail" resultType="lmap">
-		SELECT A.CODE,  A.CODE_NM, A.CODE_DC, A.CODE_ETC1, A.CODE_ETC2, A.USE_AT
+		SELECT A.CODE,  A.CODE_NM, A.CODE_DC, A.CODE_ETC1, A.CODE_ETC2, A.USE_AT, A.CODE_ID
 		FROM COMTCCMMNDETAILCODE A		    
 		WHERE A.CODE = #{code}
 	</select>

@@ -5,7 +5,8 @@ import java.util.Map;
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.kses.backoffice.bld.floor.vo.FloorPartInfo;;
+import com.kses.backoffice.bld.floor.vo.FloorPartInfo;
+import com.kses.backoffice.bld.season.vo.SeasonSeatInfo;;
 
 @Mapper
 public interface FloorPartInfoManageMapper {
@@ -19,4 +20,6 @@ public interface FloorPartInfoManageMapper {
 	public int insertFloorPartInfo(FloorPartInfo vo);
 	
 	public int updateFloorPartInfo(FloorPartInfo vo);
+	
+	public int updateFloorPartInfPositionInfo(@Param("floorPartInfo") List<FloorPartInfo> floorPartInfo);
 }

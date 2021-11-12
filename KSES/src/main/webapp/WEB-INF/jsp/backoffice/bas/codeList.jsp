@@ -249,8 +249,8 @@
 		        	$("#btnUpdate").text("수정");
 		        	var params = {"codeId" : codeId};
 		     	    var url = "/backoffice/bas/codeDetail.do";
-		     	    uniAjaxSerial(url, params,  true,
-		          			function(result) {
+		     	    fn_Ajax(url, "GET", params, false, 
+		     	   		function(result) {
 		     				       if (result.status == "LOGIN FAIL"){
 		     				    	   common_popup(result.meesage, "Y", "bas_code_add");
 			   						   location.href="/backoffice/login.do";
@@ -298,8 +298,8 @@
 				    		     'codeIdDc' : $("#codeIdDc").val(), 
 				    			 'useAt' :fn_emptyReplace($("#useAt").val(),"0"),
 				    			 'mode' : $("#mode").val()
-		    	               }; 
-		    	uniAjax(url, params,  true,
+				    		 }; 
+		       fn_Ajax(url, "POST", params,  true,
 		      			function(result) {
 		    		           
 		 				       if (result.status == "LOGIN FAIL"){
@@ -334,7 +334,7 @@
 			    var url = "/backoffice/bas/codeIDCheck.do"
 	        	var param =  {"codeId" : $("#codeId").val()};
 			    if ($("#codeId").val() != ""){
-	        		uniAjaxSerial(url, param, false, 
+			        fn_Ajax(url, "GET", param, false, 
 		        			    function(result) {	
 	        			              if (result != null) {
 	        			                if (result.status == "SUCCESS"){
@@ -378,7 +378,7 @@
 				    $("#code").val(code);
 				    var url = "/backoffice/bas/CmmnDetailView.do";
 	      		    var param = {"code" : code };
-	      		    uniAjaxSerial(url, param, true,
+	      		    fn_Ajax(url, "GET", param, true,
      		     			function(result) {
 	      		    	           if (result.status == "LOGIN FAIL"){
 	      		    	        	   common_popup(result.meesage, "N","bas_detailcode_add");
@@ -387,6 +387,7 @@
      	                               //관련자 보여 주기 
      	                                var obj = result.regist;
      	                                $("#codeNm").val(obj.code_nm);
+     	                                $("#codeId").val(obj.code_id);
 	     		  						$("#codeDc").val(obj.code_dc);
 	     		  						$("#codeEtc1").val(obj.code_etc1);
 	     		  						$("input:radio[name='detailUseAt']:radio[value='"+obj.use_at+"']").prop('checked', true); 
@@ -399,7 +400,7 @@
   						    }    		
      		       );
 			    }
-			    $("#btn_Detail").trigger("click");
+			    $("#bas_detailcode_add").bPopup();
 			   
 		   },rowBtn: function (cellvalue, options, rowObject){
 			   if (rowObject.code != "")
@@ -411,9 +412,14 @@
         		   fn_uniDelAction("/backoffice/bas/codeDetailCodeDelete.do","GET",params,false, "");
         		   detailFunc.fn_search(codeId);
         	   }
-	       }, fn_detailUpdate : function (){
+	       }, fn_detailUp : function (){
 	    	   if (any_empt_line_span("bas_detailcode_add", "codeNm", "분류명 입력해 주세요.","sp_message", "savePage") == false) return;
-     		  
+	    	   var commentTxt = ($("#mode").val() == "Ins") ? "등록 하시겠습니까?":"저장 하시겠습니까?";
+	    	   $("#id_ConfirmInfo").attr("href", "javascript:detailFunc.fn_detailUpdate()");
+	       	   fn_ConfirmPop(commentTxt);
+	       }, fn_detailUpdate : function (){
+	    	  
+	    	   $("#confirmPage").bPopup().close();
      		   var param = {
      				        "codeId" : $("#codeId").val(),
 	     		     		"code" : $("#code").val(),
@@ -424,36 +430,37 @@
 	     		     		"mode" : $("#mode").val()
      		                }
      		   //여기 부분 정리 하기  
-     		   var commentTxt = ($("#mode").val() == "Ins") ? "등록 하시겠습니까?":"저장 하시겠습니까?";
      		   
-     		   if (confirm(commentTxt)== true){
-     			   uniAjax("/backoffice/bas/CodeDetailUpdate.do", param, true,
-     		     			function(result) {
-     				               common_modelClose("bas_detailcode_add");
-     				               if (result.status == "LOGIN FAIL"){
-    						    	   common_popup(result.meesage, "Y");
-     								   location.href="/backoffice/login.do";
-     		  					   }else if (result.status == "SUCCESS"){
-     	                               //관련자 보여 주기 
-     		  						   detailFunc.fn_search($("#codeId").val());
-     		  					   }else {
-     		  						   common_popup(result.meesage, "Y");
-     		  					   }
-     						},
-  						    function(request){
-  							    common_popup("Error:" +request.status, "Y");
-  						    }    		
-     		        );
-     		   }
+     		   fn_Ajax("/backoffice/bas/CodeDetailUpdate.do", "POST", param, true,
+     		    			function(result) {
+     			               common_modelClose("bas_detailcode_add");
+     			               if (result.status == "LOGIN FAIL"){
+    					    	   common_popup(result.meesage, "Y");
+     							   location.href="/backoffice/login.do";
+     		  				   }else if (result.status == "SUCCESS"){
+     		  					   common_modelClose("bas_detailcode_add");
+     		  					   detailFunc.fn_search($("#codeId").val());
+     	                       }else {
+     		  					   common_popup(result.meesage, "Y");
+     		  				   }
+     					},
+  					    function(request){
+  						    common_popup("Error:" +request.status, "Y");
+  					    }    		
+     		   );
+     		   
 		   }, fn_userDel: function (code){
 			   var params = {'code':code };
     		   fn_uniDelAction("/backoffice/bas/codeDetailCodeDelete.do","GET",params, false, "detailFunc.fn_detailList");
 		   },fn_search : function(gridId){
+			  
+			   alert(gridId);
+			   
 			  $("#mainGrid_"+gridId+"_t").setGridParam({
 	    	    	 datatype	: "json",
 	    	    	 postData	: JSON.stringify(  {
 	    	    		"codeId" : gridId,
-	          			"pageIndex": 1,
+	          			"pageIndex": 1
 	         		 }),
 	    	    	 loadComplete	: function(data) {
 	    	    	 }
@@ -610,7 +617,7 @@
         </div>
         <div class="right_box">
             <a href="#" class="grayBtn">취소</a>
-            <a href="#" id="btnDetailUpdate" name="btnDetailUpdate" onClick="detailFunc.fn_detailUpdate()" class="blueBtn">저장</a>
+            <a href="#" id="btnDetailUpdate" name="btnDetailUpdate" onClick="detailFunc.fn_detailUp()" class="blueBtn">저장</a>
         </div>
         <div class="clear"></div>
     </div>

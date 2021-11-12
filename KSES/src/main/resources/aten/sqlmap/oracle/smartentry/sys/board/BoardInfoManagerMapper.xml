@@ -2,4 +2,278 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kses.backoffice.sys.board.mapper.BoardInfoManagerMapper">
 	
+    <select id="selectBoardManageListByPagination"  resultType="lmap">
+		 
+		SELECT		* 
+		FROM		(	SELECT	 SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT, 
+		                         ROW_NUMBER() OVER (ORDER BY BOARD_SEQ DESC) AS RNUM, 
+		                         TB.* 
+						FROM  (	
+				                    SELECT	a.BOARD_SEQ
+											, a.BOARD_TITLE
+											, FORMAT(a.BOARD_REGDATE,'yyyy-MM-dd HH:mm:ss')  BOARD_REGDATE 
+											, FORMAT(a.BOARD_UPDATE_DATE,'yyyy-MM-dd HH:mm:ss')  BOARD_UPDATE_DATE
+											, CASE a.BOARD_GUBUN WHEN 'QNA' THEN	
+											    (SELECT b.empname FROM tb_empInfo b where b.EMPNO = a.BOARD_REG_ID) 
+											ELSE	
+											    (SELECT c.ADMIN_NAME FROM tb_admin c where c.ADMIN_ID = a.BOARD_REG_ID) 
+											END 		user_nm
+											, (SELECT DEPTNAME FROM tb_empInfo WHERE EMPNO = a.BOARD_REG_ID) deptname
+											, a.BOARD_REG_ID , a.BOARD_VISITED, a.BOARD_NOTICE_USEYN, a.BOARD_TOP_SEQ
+											, a.BOARD_CONTENT, a.BOARD_NOTICE_STARTDAY, a.BOARD_NOTICE_ENDDAY, a.BOARD_FILE01
+									FROM  TSES_BOARD_INFO_I a
+									WHERE a.BOARD_GUBUN = #{params.boardGubun}
+									<if test="params.boardGubun== 'NOT'">
+						            	<choose>
+						            		<when test="params.adminYn == 'user'">
+						            			<![CDATA[
+			            			             AND  a.BOARD_SEQ NOT IN	
+			            			              (SELECT BOARD_SEQ 
+     			                                   FROM TSES_BOARD_INFO_I d 
+     			                                   WHERE d.BOARD_GUBUN='NOT' 
+     			                                          AND d.BOARD_NOTICE_STARTDAY > CONVERT(VARCHAR(8), GETDATE(), 112)
+     			                                              OR 
+     			                                              d.BOARD_NOTICE_ENDDAY <  CONVERT(varchar(8), getdate(), 112)
+     			                                   )
+			            						]]> 
+						            		</when>
+						            		<otherwise>
+						            		</otherwise>
+						            	</choose>
+						            </if>   
+						            <if test="params.boardGubun== 'FAQ'">
+						            	<choose>
+						            		<when test="params.adminYn == 0">
+			            			            AND 	a.BOARD_NOTICE_USEYN != 'N'
+						            		</when>
+						            	</choose>
+						            </if>      		        
+							        <if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
+							        	<choose>
+							        		<when test="params.searchCondition == 'all'">
+							        			<![CDATA[
+									             AND (	BOARD_TITLE LIKE CONCAT('%',#{params.searchKeyword, jdbcType=VARCHAR},'%')  or BOARD_CONTENT LIKE CONCAT('%',#{params.searchKeyword, jdbcType=VARCHAR},'%') )
+												]]> 
+							        		</when>
+							        		<otherwise>
+							        			<choose>
+													<when test="params.searchCondition == 'boardTitle'">
+													<![CDATA[
+									                AND BOARD_TITLE LIKE CONCAT('%',#{params.searchKeyword, jdbcType=VARCHAR},'%') 
+													]]> 
+													</when>
+													<otherwise>
+													<![CDATA[
+												    AND	BOARD_CONTENT LIKE CONCAT('%',#{params.searchKeyword, jdbcType=VARCHAR},'%') 
+													]]> 
+												  </otherwise>
+									            </choose>
+							        		</otherwise>
+							        	</choose>
+									</if>		  
+     								) TB 
+			  )TA 
+			  WHERE RNUM  BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
+			  <choose>
+			      <when test="params.boardGubun== 'NOT'">
+			         ORDER BY BOARD_NOTICE_USEYN DESC,	BOARD_TOP_SEQ ASC, BOARD_SEQ DESC
+			      </when>
+			      <otherwise>
+			         ORDER BY BOARD_SEQ DESC
+			      </otherwise>
+			  </choose>			  
+     </select> 
+     <select id="selectBoardMainManageListByPagination"  resultType="lmap">
+		 <![CDATA[
+		 	SELECT * FROM ( 
+		 	           SELECT  ROW_NUMBER() OVER (ORDER BY BOARD_SEQ DESC) AS RNUM, 
+		 	                   TB.* 
+		 	           FROM 
+		 	               (
+						    SELECT a.BOARD_SEQ,  a.BOARD_TITLE, 	SUBSTRING(DATE_FORMAT( a.BOARD_REGDATE, '%Y-%m-%d'), 0,10) boardRegdate ,
+						               CASE a.BOARD_GUBUN when 'QNA' then 
+							                 (SELECT b.EMPNAME FROM tb_empInfo b where b.EMPNO = a.BOARD_REG_ID) 
+							           ELSE 
+							                  (SELECT c.ADMIN_NAME FROM tb_admin c WHERE c.ADMIN_ID = a.BOARD_REG_ID) 
+							           END userNm,
+							           CASE a.BOARD_GUBUN when 'QNA' then 
+							                 (SELECT  FN_ORGNM(b.CD_DEPT) FROM tb_empInfo b WHERE b.EMPNO = a.BOARD_REG_ID ) 
+							           ELSE '' end orgName, a.BOARD_REG_ID , a.BOARD_VISITED, a.BOARD_NOTICE_USEYN,
+							           CASE a.BOARD_GUBUN when 'QNA' then 'Q&A' WHEN 'FAQ' then 'FAQ'
+							           ELSE '공지사항' end boardGubunTitle
+						      , a.BOARD_NOTICE_STARTDAY
+				              , a.BOARD_NOTICE_ENDDAY
+						    FROM  TSES_BOARD_INFO_I a 
+						    WHERE a.board_seq NOT in	(SELECT board_seq FROM TSES_BOARD_INFO_I d WHERE d.BOARD_GUBUN='NOT' 
+						               AND d.BOARD_NOTICE_STARTDAY >  CONVERT(VARCHAR(8), GETDATE(), 112) OR d.board_notice_endday <  CONVERT(VARCHAR(8), GETDATE(), 112) )
+				                       AND	 a.BOARD_NOTICE_USEYN != 'N'
+						    ) TB
+	        ) 
+	        WHERE RNUM  BETWEEN  1 AND 5
+	        ]]>         		 	    
+     </select> 
+     
+     <update id="updateBoardNoticeUseYn">
+     	UPDATE 	TSES_BOARD_INFO_I  SET BOARD_NOTICE_USEYN = 'N'
+		WHERE 	BOARD_NOTICE_STARTDAY IS NOT NULL 
+		        AND BOARD_NOTICE_ENDDAY IS NOT NULL AND BOARD_GUBUN='NOT' 
+		        AND CONVERT(VARCHAR(8), GETDATE(), 112) NOT BETWEEN BOARD_NOTICE_STARTDAY AND BOARD_NOTICE_ENDDAY
+     </update>
+     
+     <update id="updateBoardTopSeq">
+			UPDATE 	TSES_BOARD_INFO_I SET BOARD_TOP_SEQ = BOARD_TOP_SEQ + 1
+			WHERE 	BOARD_NOTICE_USEYN='Y' AND BOARD_GUBUN='NOT'
+     </update>
+     
+     
+     
+     
+    <select id="selectBoardManageView"  resultType="lmap">
+    <![CDATA[
+          SELECT a.BOARD_SEQ
+				, a.BOARD_TITLE
+		        , a.BOARD_NOTICE_USEYN
+		        , CONVERT(VARCHAR(10) , CONVERT(DATETIME, a.BOARD_NOTICE_STARTDAY), 120) BoardNoticeStartdayTxt
+		        , CONVERT(VARCHAR(10) , CONVERT(DATETIME, a.BOARD_NOTICE_ENDDAY), 120) BoardNoticeEnddayTxt
+		        , a.BOARD_NOTICE_STARTDAY, a.BOARD_NOTICE_ENDDAY
+		        , a.BOARD_GUBUN, a.BOARD_CONTENT, a.BOARD_RETURN_CONTENT
+		        , CONVERT(VARCHAR(10), a.BOARD_REGDATE, 120) boardRegdate
+		        , a.BOARD_REG_ID
+		        , CONVERT(VARCHAR(10), a.BOARD_UPDATE_DATE, 120) boardUpdateDate
+		        , a.BOARD_UPDATE_ID
+		        , a.BOARD_FILE01
+		        , a.BOARD_FILE02
+		        , a.BOARD_VIEW_YN
+		        , dbo.FN_DETAILCODENM (a.BOARD_FAQ_GUBUN) BOARD_FAQ_GUBUN
+		        , a.BOARD_VISITED
+		        , CASE a.BOARD_GUBUN WHEN 'QNA'  THEN 
+		                ( SELECT b.EMPNAME FROM tb_empInfo b WHERE EMPNO = a.BOARD_REG_ID)
+		          ELSE 
+		                (SELECT c.ADMIN_NAME FROM tb_admin c WHERE c.ADMIN_ID = a.BOARD_REG_ID)
+		          END userNm
+		        , CASE a.BOARD_GUBUN WHEN 'QNA'  THEN 
+		              ( SELECT b.DEPTNAME FROM tb_empInfo b WHERE EMPNO = a.BOARD_REG_ID)
+				  ELSE ''
+		          END deptname
+		       , CASE a.BOARD_GUBUN WHEN 'QNA'  THEN ''
+				      ELSE ''
+		         END mobTelNo			
+               , CASE a.BOARD_GUBUN WHEN 'QNA'  THEN 
+              		      (SELECT d.EMPMAIL FROM TB_EMPINFO d WHERE a.BOARD_REG_ID = d.EMPNO)  
+				   ELSE (SELECT c.ADMIN_TEL FROM tb_admin c WHERE c.ADMIN_ID = a.BOARD_REG_ID)
+		         END offi_tel_no				   
+		       , CASE a.BOARD_GUBUN WHEN 'QNA'  THEN
+		              (SELECT EMPMAIL FROM TB_EMPINFO b WHERE b.EMPNO = a.BOARD_REG_ID )
+				   ELSE (SELECT ADMIN_EMAIL FROM tb_admin c WHERE c.ADMIN_ID = a.BOARD_REG_ID)
+		           END email
+		       , CASE  WHEN (SELECT COUNT(*) FROM TSES_BOARD_INFO_I b WHERE b.BOARD_SEQ > #{boardSeq}	AND b.BOARD_GUBUN = a.BOARD_GUBUN ) > 0 THEN
+                              (SELECT TOP 1 b.BOARD_SEQ FROM TSES_BOARD_INFO_I b WHERE  b.BOARD_SEQ > #{boardSeq}	  ORDER BY b.BOARD_SEQ ASC)
+                        ELSE 0
+                 END AS nextBoardSeq
+               , CASE  WHEN (SELECT COUNT(*) FROM TSES_BOARD_INFO_I b WHERE b.BOARD_SEQ < #{boardSeq} AND b.BOARD_GUBUN = a.BOARD_GUBUN ) > 0 THEN
+                                (SELECT TOP 1  b.BOARD_SEQ FROM TSES_BOARD_INFO_I b WHERE  b.BOARD_SEQ < #{boardSeq}  ORDER BY b.BOARD_SEQ DESC )
+                          ELSE 0
+                 END AS preBoardSeq
+               , CASE  WHEN (SELECT COUNT(*) FROM TSES_BOARD_INFO_I b WHERE b.BOARD_SEQ > #{boardSeq} AND b.BOARD_GUBUN = a.BOARD_GUBUN ) > 0 THEN
+                                 ( SELECT  TOP 1 b.BOARD_TITLE FROM TSES_BOARD_INFO_I b WHERE  b.BOARD_SEQ > #{boardSeq}  ORDER BY b.BOARD_SEQ ASC )
+                         ELSE '없음'
+                 END AS nextBoardTitle
+               , CASE  WHEN (SELECT COUNT(*) FROM TSES_BOARD_INFO_I b WHERE b.BOARD_SEQ < #{boardSeq} AND b.BOARD_GUBUN = a.BOARD_GUBUN ) > 0 THEN
+                                  ( SELECT TOP 1 b.BOARD_TITLE FROM TSES_BOARD_INFO_I b WHERE  b.BOARD_SEQ < #{boardSeq}  ORDER BY b.BOARD_SEQ DESC )
+                         ELSE '없음'
+                 END AS preBoardTitle
+               , CASE  WHEN (SELECT COUNT(*) FROM TSES_BOARD_INFO_I b WHERE b.BOARD_SEQ > #{boardSeq} AND b.BOARD_GUBUN = a.BOARD_GUBUN ) > 0 THEN
+                                    ( SELECT TOP 1 b.BOARD_REGDATE FROM TSES_BOARD_INFO_I b WHERE  b.BOARD_SEQ > #{boardSeq}  ORDER BY b.BOARD_SEQ ASC)
+                 END AS nextBoardRegDate
+               , CASE  WHEN (SELECT COUNT(*) FROM TSES_BOARD_INFO_I b WHERE b.BOARD_SEQ < #{boardSeq} AND b.BOARD_GUBUN = a.BOARD_GUBUN ) > 0 THEN
+                                    (  SELECT TOP 1 BOARD_REGDATE FROM TSES_BOARD_INFO_I b WHERE  b.BOARD_SEQ < #{boardSeq} ORDER BY b.BOARD_SEQ DESC )
+                 END AS preBoardRegDate				        
+			FROM 	TSES_BOARD_INFO_I a        	
+			WHERE 	BOARD_SEQ = #{boardSeq}	
+			]]>	
+    </select>
+    
+    
+    
+     <insert id="insertBoardManage" >
+        <![CDATA[
+            INSERT INTO TSES_BOARD_INFO_I (BOARD_TITLE
+			                      , BOARD_TOP_SEQ
+			                      , BOARD_NOTICE_USEYN
+			                      , BOARD_NOTICE_STARTDAY
+			                      , BOARD_NOTICE_ENDDAY
+			                      , BOARD_GUBUN
+			                      , BOARD_CONTENT
+			                      , BOARD_RETURN_CONTENT
+			                      , BOARD_REGDATE
+			                      , BOARD_REG_ID
+			                      , BOARD_UPDATE_DATE
+			                      , BOARD_UPDATE_ID
+			                      , BOARD_FILE01
+			                      , BOARD_FILE02
+			                      , BOARD_VIEW_YN
+			                      , BOARD_FAQ_GUBUN
+			                      , BOARD_VISITED                        
+                      )
+             VALUES ( #{boardTitle}
+                      , #{boardTopSeq,jdbcType=VARCHAR}
+                      , #{boardNoticeUseyn,jdbcType=VARCHAR}
+                      , #{boardNoticeStartday,jdbcType=VARCHAR}
+                      , #{boardNoticeEndday,jdbcType=VARCHAR}
+                      , #{boardGubun}
+                      , #{boardContent,jdbcType=VARCHAR}
+                      , #{boardReturnContent,jdbcType=VARCHAR}
+                      , GETDATE()
+                      , #{userId,jdbcType=VARCHAR}
+                      , GETDATE()
+                      , #{userId,jdbcType=VARCHAR}	
+                      , #{boardFile01,jdbcType=VARCHAR}
+                      , #{boardFile02 ,jdbcType=VARCHAR}
+                      , #{boardViewYn, jdbcType=VARCHAR}
+                      , #{boardFaqGubun, jdbcType=VARCHAR}
+                      ,0                      
+             )
+         ]]>
+     </insert>
+     <update id="updateBoardVisitedManage">
+          UPDATE  TSES_BOARD_INFO_I SET BOARD_VISITED = BOARD_VISITED + 1
+          WHERE BOARD_SEQ = #{boardSeq} 
+     </update>
+     <update id="updateBoardManage" >
+     <![CDATA[
+       UPDATE  TSES_BOARD_INFO_I SET BOARD_TITLE = #{boardTitle} ,
+                                BOARD_NOTICE_USEYN = #{boardNoticeUseyn,jdbcType=VARCHAR},
+                                BOARD_NOTICE_STARTDAY = #{boardNoticeStartday,jdbcType=VARCHAR} ,
+                                BOARD_NOTICE_ENDDAY = #{boardNoticeEndday,jdbcType=VARCHAR} ,
+                                BOARD_GUBUN = #{boardGubun} ,
+                                BOARD_CONTENT = #{boardContent, jdbcType=VARCHAR} ,
+                                BOARD_RETURN_CONTENT = #{boardReturnContent, jdbcType=VARCHAR} ,
+                                BOARD_UPDATE_ID =#{userId,jdbcType=VARCHAR} ,
+                                BOARD_UPDATE_DATE = GETDATE() 
+                                 ]]>     
+                                <if test="boardFile01 != ''">                                    
+                               , BOARD_FILE01 = #{boardFile01, jdbcType=VARCHAR}
+                               </if>
+                                <if test="boardFile02 != ''">                     
+                               , BOARD_FILE02 = #{boardFile02, jdbcType=VARCHAR}
+                               </if>                 
+                               <![CDATA[              
+                               , BOARD_VIEW_YN  = #{boardViewYn, jdbcType=VARCHAR}
+                               , BOARD_FAQ_GUBUN  = #{boardFaqGubun, jdbcType=VARCHAR}
+                               , BOARD_TOP_SEQ = #{boardTopSeq}
+      WHERE BOARD_SEQ = #{boardSeq}   
+      ]]>        
+     </update>
+     
+     <delete id="deleteBoardManage">
+       DELETE FROM TSES_BOARD_INFO_I  WHERE BOARD_SEQ = #{boardSeq}
+     </delete>
+     
+     <select id="selectBoardUploadFileName" resultType="java.lang.String">
+     	SELECT BOARD_FILE02 FROM TSES_BOARD_INFO_I WHERE BOARD_SEQ = #{boardSeq}
+     </select>
+     
+     <select id="selectBoardoriginalFileName" resultType="java.lang.String">
+     	SELECT BOARD_FILE01 FROM TSES_BOARD_INFO_I WHERE BOARD_SEQ = #{boardSeq}
+     </select>
 </mapper>

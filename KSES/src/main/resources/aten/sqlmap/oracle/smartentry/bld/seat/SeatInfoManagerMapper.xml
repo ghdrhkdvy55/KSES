@@ -179,7 +179,10 @@
 				SEAT_TOP = #{item.seatTop, jdbcType=VARCHAR}, 
 				SEAT_LEFT = #{item.seatLeft, jdbcType=VARCHAR}, 
 				LAST_UPDT_DTM = SYSDATE, 
-				LAST_UPDUSR_ID = #{item.lastUpdusrId, jdbcType=VARCHAR}
+				LAST_UPDUSR_ID = #{item.userId, jdbcType=VARCHAR}
+				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(item.seatNm)">
+				 , SEAT_NM = #{item.seatNm}
+				</if>
 			WHERE SEAT_CD = #{item.seatCd} 
 		</foreach> 
     </update> 

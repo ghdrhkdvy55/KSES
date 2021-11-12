@@ -63,7 +63,7 @@ public class MenuInfoManageController {
 	@Resource(name = "egovMessageSource")
 	EgovMessageSource egovMessageSource;
 	
-	@RequestMapping(value = "MenuList.do")
+	@RequestMapping(value = "menuList.do")
 	public ModelAndView selectMenuManageList( ModelMap model) throws Exception {
 		// 0. Spring Security 사용자권한 처리
 		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
