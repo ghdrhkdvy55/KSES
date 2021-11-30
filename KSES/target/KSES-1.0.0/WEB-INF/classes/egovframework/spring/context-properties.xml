@@ -15,9 +15,8 @@
                 <entry key="Globals.filePath" value="C:\dev\eGovFrameDev-3.10.0-64bit\workspace\KSES\src\main\webapp\upload"/>
                 <entry key="Globals.addedOptions" value="false"/>
                 
-                <entry key="smtpIp" value="10.10.5.81"/>
-                <entry key="smtpUser" value="slcAdmin"/>
-                <entry key="smtpPwd" value="slcAdmin"/>
+                <entry key="sppeedUrl_T" value="https://wdev.speedon.or.kr/externalApi/"/>
+                <entry key="sppeedUrl_R" value="https://www.speedon.or.kr/externalApi/"/>
                 
                 <entry key="Globals.qrPath" value="C:\dev\git\conference\videoConference\src\main\webapp\qrcode"/>
                 <entry key="qrCodePath" value="qrcode"/>

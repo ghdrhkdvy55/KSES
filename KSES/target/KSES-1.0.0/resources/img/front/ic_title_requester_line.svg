@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: rgba(255,145,202,0.43);
+        opacity: 0.001;
+      }
+
+      .cls-2 {
+        fill: #ff1a91;
+        opacity: 0;
+      }
+
+      .cls-3, .cls-5 {
+        fill: none;
+      }
+
+      .cls-3 {
+        stroke: #333;
+      }
+
+      .cls-4 {
+        stroke: none;
+      }
+    </style>
+  </defs>
+  <g id="ic_title_requester_line" transform="translate(-201.17 -301.379)">
+    <rect id="area" class="cls-1" width="28" height="28" transform="translate(201.17 301.379)"/>
+    <g id="ic" transform="translate(1)">
+      <rect id="ic_area" class="cls-2" width="24" height="24" transform="translate(202.17 303.379)"/>
+      <path id="Path_20874" data-name="Path 20874" class="cls-3" d="M216.522,318.388l2.867,3.322,6.3-6.046" transform="translate(-2.082 1.157)"/>
+      <g id="Ellipse_43137" data-name="Ellipse 43137" class="cls-3" transform="translate(208.67 306.379)">
+        <circle class="cls-4" cx="4" cy="4" r="4"/>
+        <circle class="cls-5" cx="4" cy="4" r="3.5"/>
+      </g>
+      <path id="Path_20889" data-name="Path 20889" class="cls-3" d="M222.17,314.15h-14v7H215.8" transform="translate(-2.5 1.729)"/>
+    </g>
+  </g>
+</svg>

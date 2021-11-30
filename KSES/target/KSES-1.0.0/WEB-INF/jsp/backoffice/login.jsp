@@ -12,41 +12,49 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=no;" />
-    <title>경륜경정 스마트입장 관리자</title>
+    <title>경륜경정 스마트입장 관리자 로그인</title>
     <link rel="stylesheet" href="/resources/css/reset.css">
-	<link rel="stylesheet" href="/resources/css/paragraph.css">
+	<link rel="stylesheet" href="/resources/css/paragraph.css">    
+    <link rel="stylesheet" href="/resources/css/widescreen.css">
     <link rel="stylesheet" href="/resources/css/common.css">
+    <link rel="stylesheet" href="/resources/css/magic-check.min.css">
     <script src="/resources/js/jquery-3.5.1.min.js"></script>
     <script src="/resources/js/bpopup.js"></script>
-    <link href="/resources/css/magic-check.min.css" rel="stylesheet" />
+    
 </head>
 <body>
-    <form name="regist" method="post" action="/backoffice/actionSecurityLogin.do" autocomplete="off">
-    <div class="wrapper loginBack ">
-        <div class="logoImg"><img src="/resources/img/logo1.png" alt="logo"></div>
-        
+    <form name="regist" method="post" action="/backoffice/actionSecurityLogin.do" autocomplete="off" style="height:100%;">
+    <div class="wrapper loginBack ">       
         <div class="loginBox">
-            <h2 class="title">관리자 로그인</h2><div class="clear"></div>
             <div class="log_box">
                 <h1 class="logo"></h1>
             </div>
             <div class="loginArea">
                 <ul>
                     <li>
-                        <span class="id_icon"><spring:message code='page.login.id' /></span>                    
-                        <input type="text" name="adminId" id="adminId" placeholder="<spring:message code='page.login.id' />" class="form-control">	
-                                                                    
+                        <span class="id_icon">사번</span>
+                        <div class="text-clear">
+                            <input type="text" id="adminId" name="adminId" placeholder="사번을 입력해주세요." value="" class="form-control" />  
+                            <button class="input_reset hidden"  id="id_reset" type="button"></button>
+                            <label id="id_wrong" style="color:red"></label>
+                        </div>
+                        
                     </li>
                     <li>
-                        <span class="pw_icon"><spring:message code='page.login.password' /></span>
-                        <input type="password" name="adminPwd" id="adminPwd" placeholder="<spring:message code='page.login.password' />"    autocomplete="off"/>	
+                        <span class="pw_icon">비밀번호</span>
+                        <div class="text-clear">
+                            <input type="password" id="adminPwd" name="adminPwd" placeholder="비밀번호를 입력해 주세요." />
+                            <button class="input_reset hidden"  id="pass_reset" type="button"></button>
+                            <label id="pw_wrong" style="color:red"></label>
+                        </div>
                     </li>
                 </ul>
             <div class="check_wrap">
                 <ul>
                     <li>
                         <input class="magic-checkbox" type="checkbox" name="layout" id="1" value="option">
-                        <label for="">사번 기억하기</label>
+                        <label for="1"></label>
+                        <label class="text" for="1">사번 기억하기</label>
                     </li>
 
                 </ul>                
@@ -61,6 +69,7 @@
     </div>
     </form>
     <!-- //popup -->
+
     <!--저장확인팝업-->
     <div data-popup="savePage" id="savePage" class="popup m_pop">
       <div class="pop_con">
@@ -106,5 +115,23 @@
    	 }
    }
     </script>
+
+    <!-- input del icon -->
+    <script type="text/javascript">
+        $('li input[type="text"], li input[type="password"]').on('input propertychange', function() {
+          var $this = $(this);
+          var visible = Boolean($this.val());
+          $this.siblings('.input_reset').toggleClass('hidden', !visible);
+        }).trigger('propertychange');
+        
+        $('#id_reset').click(function() {
+          $(this).siblings('#userid').val('')
+            .trigger('propertychange').focus();
+        });      
+        $('#pass_reset').click(function() {
+          $(this).siblings('#pw').val('')
+            .trigger('propertychange').focus();
+        });  
+    </script> 
 </body>
 </html>

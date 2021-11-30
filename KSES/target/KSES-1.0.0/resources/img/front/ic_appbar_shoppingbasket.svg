@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
+    <defs>
+        <style>
+            .cls-2{fill:#fff}
+        </style>
+    </defs>
+    <g id="ic_appbar_shoppingbasket" transform="translate(-8768 1468)">
+        <g id="그룹_105273" transform="translate(8103.996 -1831.358)">
+            <g id="그룹_105271">
+                <path id="패스_20951" d="M686.542 377.658h-7.859l-.048-.447a4.284 4.284 0 0 1-.024-.453 4 4 0 1 1 8 .006 4.216 4.216 0 0 1-.023.445zm-6.931-1h6a3 3 0 1 0-6 0z" class="cls-2"/>
+                <path id="패스_20952" d="M691.62 379.658l-1.923 10h-14.174l-2.308-12h19.808l.192-1H672l2.692 14h15.826l2.115-11z" class="cls-2"/>
+            </g>
+        </g>
+    </g>
+</svg>

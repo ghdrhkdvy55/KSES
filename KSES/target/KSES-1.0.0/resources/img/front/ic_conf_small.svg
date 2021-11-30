@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28">
+  <g id="ic_meetingroom_meeingroom" transform="translate(-283.222 -406.465)">
+    <rect id="사각형_1348-2" data-name="사각형 1348-2" width="28" height="28" transform="translate(283.222 406.465)" fill="rgba(175,55,134,0)"/>
+    <g id="그룹_105266" data-name="그룹 105266">
+      <g id="그룹_105265" data-name="그룹 105265">
+        <g id="그룹_105264" data-name="그룹 105264">
+          <rect id="사각형_114965" data-name="사각형 114965" width="5.703" height="1" transform="translate(292.74 418.707)" fill="#262727"/>
+          <rect id="사각형_114966" data-name="사각형 114966" width="8.963" height="1" transform="translate(292.74 416.049)" fill="#262727"/>
+        </g>
+        <rect id="사각형_114967" data-name="사각형 114967" width="14.458" height="1" transform="translate(289.993 427.539)" fill="#262727"/>
+        <rect id="사각형_114968" data-name="사각형 114968" width="1" height="4" transform="translate(296.722 424.039)" fill="#262727"/>
+      </g>
+      <path id="패스_20806" data-name="패스 20806" d="M305.5,412.215H287.222v1h1.722v11.11H305.5v-9.1h-1v8.1H289.944v-10.11H304.5v.012h1v-.012h1.723v-1Z" fill="#262727"/>
+    </g>
+  </g>
+</svg>

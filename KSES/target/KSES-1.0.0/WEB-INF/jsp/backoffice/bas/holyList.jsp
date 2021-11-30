@@ -54,6 +54,7 @@
     <script type="text/javascript">
 		$(document).ready(function() { 
 			jqGridFunc.setGrid("mainGrid");
+			
 			var clareCalendar = {
 			monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
 			dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
@@ -120,7 +121,7 @@
     	         	// 하단 레코R드 수 표기 유무
     		        viewrecord : true,
     		     	// true 데이터 한번만 받아옴
-    		        //loadonce : false,      
+    		        loadonce : false,      
     		        loadui : "enable",
     		        loadtext:'데이터를 가져오는 중...',
     		      	//빈값일때 표시
@@ -130,8 +131,6 @@
     		        shrinkToFit : true,
     		        refresh : true,
     		        multiselect: true,
-    		        
-    		        loadonce: true,
     				viewrecords: true,
                     footerrow: true,
     		        userDataOnFooter: true, // use the userData parameter of the JSON response to display data on footer
@@ -154,14 +153,14 @@
 						var totalPage = grid.getGridParam("total");
     		              
 						if (pgButton == "next"){
-							gridPage = gridPage < lastPage ? gridPage +=1 : gridPage;
+							/* gridPage = gridPage < lastPage ? gridPage +=1 : gridPage; */
 							if (gridPage < lastPage ){
 								gridPage += 1;
 							} else {
 								gridPage = gridPage;
 							}
 						} else if (pgButton == "prev") {
-							gridPage = gridPage > 1 ? gridPage -=1 : gridPage;
+							/* gridPage = gridPage > 1 ? gridPage -=1 : gridPage; */
 							if (gridPage > 1 ) {
 								gridPage -= 1;
 							} else {
@@ -237,10 +236,13 @@
    	        },
            	fn_holyInfoApply  : function(){
   	    	    var ids = $('#mainGrid').jqGrid('getGridParam', 'selarrrow'); //체크된 row id들을 배열로 반환
+  	    
 	   	    	if (ids.length < 1) {
 	   	    		alert("선택한 값이 없습니다.");
 	   	    		return false;
 	   	    	}
+  	    	    
+	   	   
 	   	    	var params = new Array();
 	   	    	for(var i=0; i < ids.length; i++) {
 	   	    		var param = new Object();
@@ -250,18 +252,19 @@
 	   	    		params.push(param);
 	   	    	}
            		
-           		uniAjax
+           		fn_Ajax
            		(
 					"/backoffice/bas/holyInfoCenterApply.do",
+					"POST",
 					params,
 					false, 
            	 		function(result) {
            		    	if (result.status == "LOGIN FAIL"){
-           		    	   common_popup(result.meesage, "Y","bas_holiday_add");
+           		    	   common_popup(result.message, "Y","bas_holiday_add");
 				    	   location.href="/backoffice/login.do";
            				} else if (result.status == "SUCCESS"){
 	   						   //총 게시물 정리 하기'
-	   						   common_modelClose("bas_holiday_add");
+	   						   common_modelCloseM(result.message, "bas_holiday_add");
 	   						   jqGridFunc.fn_search();
 	   					 }else if (result.status == "FAIL"){
 	   						   common_popup("저장 도중 문제가 발생 하였습니다.", "Y", "bas_holiday_add");
@@ -269,7 +272,7 @@
 	   					 }
 					},
            			function(request){
-           				common_modelCloseM("Error:" + request.status,"mng_admin_add");
+           				common_modelCloseM("Error:" + request.status,"bas_holiday_add");
            			}    		
            	     );
 	   	    	
@@ -289,7 +292,7 @@
 						false,
 						function(result) {
 							if (result.status == "LOGIN FAIL"){
-								common_modelCloseM(result.meesage, "Y", "bas_holiday_add");
+								common_modelCloseM(result.message, "bas_holiday_add");
 								location.href="/backoffice/login.do";
 							} else if (result.status == "SUCCESS") {
 								//총 게시물 정리 하기
@@ -331,6 +334,7 @@
 					'targetHolyDt' : $("#targetHolyDt").val(),
 					'holyNm' : $("#holyNm").val(),
 					'useYN' : fn_emptyReplace($("input[name='useYn']:checked").val(),"Y"),
+					'useYn' : $("input:radio[name='useYn']:checked").val(),
 					'mode' : $("#mode").val()
 				}; 
 				fn_Ajax(url, "POST", params, true,
@@ -340,10 +344,10 @@
 		   						   location.href="/backoffice/login.do";
 		   					   }else if (result.status == "SUCCESS"){
 		   						   //총 게시물 정리 하기'
-		   						   common_modelClose("mng_admin_add");
+		   						   common_modelCloseM(result.message, "bas_holiday_add");
 		   						   jqGridFunc.fn_search();
 		   					   }else if (result.status == "FAIL"){
-		   						   common_modelCloseM("저장 도중 문제가 발생 하였습니다.", "Y", "bas_holiday_add");
+		   						   common_modelCloseM("저장 도중 문제가 발생 하였습니다.", "bas_holiday_add");
 		   						   jqGridFunc.fn_search();
 		   					   }
 		 				    },
@@ -519,8 +523,8 @@
 		</div>
 	</div>
 
-    <c:import url="/backoffice/inc/popup_common.do" />
-    <script type="text/javascript" src="/resources/js/back_common.js"></script>
+<c:import url="/backoffice/inc/popup_common.do" />
+<script type="text/javascript" src="/resources/js/back_common.js"></script>
 </form:form>
 </body>
 </html>

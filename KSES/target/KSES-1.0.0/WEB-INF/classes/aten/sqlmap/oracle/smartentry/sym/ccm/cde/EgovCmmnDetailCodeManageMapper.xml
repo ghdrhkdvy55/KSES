@@ -7,7 +7,8 @@
 			SELECT 
 				SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT,
 				ROW_NUMBER() OVER (ORDER BY A.CODE DESC) AS RNUM, 
-				A.CODE_ID, B.CODE_ID_NM, A.CODE, A.CODE_NM, A.CODE_DC, A.USE_AT, A.CODE_ETC1, A.CODE_ETC2
+				A.CODE_ID, B.CODE_ID_NM, A.CODE, A.CODE_NM, A.CODE_DC, A.USE_AT, A.CODE_ETC1, A.CODE_ETC2,
+				TO_CHAR(A.LAST_UPDT_PNTTM, 'yyyy-mm-dd') AS LAST_UPDT_PNTTM, A.LAST_UPDUSR_ID
 			FROM COMTCCMMNDETAILCODE A
 			     INNER JOIN COMTCCMMNCODE B ON A.CODE_ID = B.CODE_ID				     
 			WHERE B.USE_AT = 'Y'
@@ -42,9 +43,9 @@
 		FROM COMTCCMMNDETAILCODE A		    
 		WHERE A.CODE_ID = #{code}
 	</select>
-	
+	<!--  2021-11-11 수정 -->
 	<select id="selectCmmnDetail" resultType="lmap">
-		SELECT A.CODE,  A.CODE_NM, A.CODE_DC, A.CODE_ETC1, A.CODE_ETC2, A.USE_AT
+		SELECT A.CODE,  A.CODE_NM, A.CODE_DC, A.CODE_ETC1, A.CODE_ETC2, A.USE_AT, A.CODE_ID
 		FROM COMTCCMMNDETAILCODE A		    
 		WHERE A.CODE = #{code}
 	</select>
@@ -121,7 +122,8 @@
 		                               CODE_DC = #{codeDc, jdbcType=VARCHAR}, 
 		                               CODE_ETC1 = #{codeEtc1, jdbcType=VARCHAR}, 
 		                               CODE_ETC2 = #{codeEtc2, jdbcType=VARCHAR}, 
-		                               USE_AT = 'Y', LAST_UPDUSR_ID = #{lastUpdusrId,jdbcType=VARCHAR},
+		                               USE_AT = #{useAt}, 
+		                               LAST_UPDUSR_ID = #{lastUpdusrId,jdbcType=VARCHAR},
 		                               LAST_UPDT_PNTTM = SYSDATE
 		WHERE CODE = #{code}
 		]]>

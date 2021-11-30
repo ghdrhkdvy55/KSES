@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28">
+    <defs>
+        <style>
+            .cls-3{fill:none;stroke:#333}
+        </style>
+    </defs>
+    <g id="ic_coupon_detail_expiration_date" transform="translate(-282.638 -292.945)">
+        <path id="area" fill="rgba(226,131,137,0)" d="M0 0H28V28H0z" transform="translate(282.638 292.945)"/>
+        <path id="빼기_250" fill="#333" stroke="rgba(0,0,0,0)" stroke-miterlimit="10" d="M2006.265-9635.555h-8.626v-16h4v-1h1v1h7v-1h1v1h4v7.626a6.057 6.057 0 0 0-1-.581v-2.045h-15v10h7.046a6 6 0 0 0 .581 1zm-7.628-15v3h15v-3h-3v1h-1v-1h-7v1h-1v-1z" transform="translate(-1709.5 9951)"/>
+        <g id="타원_43203" class="cls-3" transform="translate(296.638 306.945)">
+            <circle cx="5" cy="5" r="5"/>
+            <circle cx="5" cy="5" r="4.5" fill="none"/>
+        </g>
+        <path id="패스_20898" d="M301.638 309.7v2.146h1.989" class="cls-3"/>
+    </g>
+</svg>

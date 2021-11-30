@@ -56,7 +56,7 @@
     			var grid = $('#'+gridOption);
     		    var postData = {"pageIndex": "1"};
     		    grid.jqGrid({
-    		    	url : '/backoffice/bas/MenuListAjax.do' ,
+    		    	url : '/backoffice/bas/menuListAjax.do' ,
     		        mtype :  'POST',
     		        datatype :'json',
     		        
@@ -150,7 +150,7 @@
 		        	$("#menuNo").val(menuNo).prop('readonly', true);
 		        	$("#btnUpdate").text("수정");
 		        	var params = {"menuNo" : menuNo};
-		        	var url = "/backoffice/bas/MenuDetailInfo.do";
+		        	var url = "/backoffice/bas/menuDetailInfo.do";
 		        	fn_Ajax(url, "GET", params, false, 
 			          	    function(result) {
 	     				       if (result.status == "LOGIN FAIL"){
@@ -192,7 +192,7 @@
         	   if (any_empt_line_span("bas_menu_add", "progrmFileNm", "프로그램 명을 입력해 주세요.","sp_message", "savePage") == false) return;
 			   if (any_empt_line_span("bas_menu_add", "upperMenuNo", "upperMenuNo을 입력해 주세요.","sp_message", "savePage") == false) return;
 			   
-		       var url = "/backoffice/bas/MenuRegistUpdate.do";
+		       var url = "/backoffice/bas/menuRegistUpdate.do";
 		       
 		       var params = {    'menuNo' : $("#menuNo").val(),
 				    		     'menuNm' : $("#menuNm").val(),
@@ -212,7 +212,7 @@
 		   						   jqGridFunc.fn_search();
 		   					   }else if (result.status == "SUCCESS"){
 		   						   //총 게시물 정리 하기'
-		   						   common_modelClose("bas_menu_add");
+		   						   common_modelCloseM(result.message, "bas_menu_add");
 		   						   jqGridFunc.fn_search();
 		   					   }else if (result.status == "FAIL"){
 		   						   common_popup("저장 도중 문제가 발생 하였습니다.", "Y", "bas_menu_add");
@@ -269,7 +269,7 @@
 			  
 			  var menuArray = new Array();
 			  getEquipArray("mainGrid", menuArray);
-			  if (empArray.length > 0){
+			  if (menuArray.length > 0){
 				  $("#hid_DelCode").val(menuArray.join(","))
 				  $("#id_ConfirmInfo").attr("href", "javascript:jqGridFunc.fn_del()");
 				  menuArray = null;
@@ -281,14 +281,14 @@
 			  
 		  }, fn_del : function (){
 			  var params = {'checkedMenuNoForDel': $("#hid_DelCode").val() };
-   		      fn_uniDelAction("/backoffice/bas/MenuManageListDelete.do","GET", params, false, "jqGridFunc.fn_search");
+   		      fn_uniDelAction("/backoffice/bas/menuManageListDelete.do","GET", params, false, "jqGridFunc.fn_search");
 		  }, fn_menuAllDel : function(){
 			  //전체 삭제 
 			  $("#id_ConfirmInfo").attr("href", "javascript:jqGridFunc.fn_Alldel()");
 			  fn_ConfirmPop("전체 삭제 하시겠습니까?");
 		  }, fn_Alldel : function (){
 			 
-   		      fn_uniDelAction("/backoffice/bas/MenuBndeAllDelete.do","GET", null, false, "jqGridFunc.fn_search");
+   		      fn_uniDelAction("/backoffice/bas/menuBndeAllDelete.do","GET", null, false, "jqGridFunc.fn_search");
 		  }
     }
   </script>

@@ -10,6 +10,16 @@
         </div>
       </div>
 </div>
+<div data-popup="reloadPage" id="reloadPage" class="popup m_pop">
+      <div class="pop_con">
+        <a id="a_closePop" class="button b-close">X</a>
+        <p class="pop_tit">메세지</p>
+        <p class="pop_wrap"><span id="sp_Message"></span></p>
+        <div class="right_box" id="db_closePop">
+            <a href="#" onClick="location.reload()" class="grayBtn">확인</a>
+        </div>
+      </div>
+</div>
 <div data-popup="confirmPage" id="confirmPage" class="popup m_pop">
       <div class="pop_con">
         <a id="a_closePop" class="button b-close">X</a>

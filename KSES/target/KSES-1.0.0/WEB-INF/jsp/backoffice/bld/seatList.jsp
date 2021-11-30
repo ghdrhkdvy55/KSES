@@ -162,7 +162,11 @@
 							rowNum : $('.ui-pg-selbox option:selected').val(),
 							postData : JSON.stringify({
 											"pageIndex": gridPage,
-											"searchKeyword" : $("#searchKeyword").val(),
+											"searchCenterCd" : $("#searchCenterCd").val(),
+											"searchFloorCd" : $("#searchFloorCd").val(),
+											"searchPartCd" : $("#searchPartCd").val(),
+											"searchFloorCd" : $("#searchFloorCd").val(),
+											"searchCondition" : $("#searchCondition").val(),
 											"pageUnit":$('.ui-pg-selbox option:selected').val()
 										})
 						}).trigger("reloadGrid");
@@ -203,25 +207,28 @@
 			refreshGrid : function(){
 				$('#mainGrid').jqGrid().trigger("reloadGrid");
 			},
-			fn_delCheck  : function(){                        
-		    	 var ids = $('#mainGrid').jqGrid('getGridParam','selarrrow'); //체크된 row id들을 배열로 반환
-		    	 if (ids.length < 1) {
-		    		 alert("선택한 값이 없습니다.");
-		    		 return false;
-		    	 }
-		    	 
-		    	 var seatArray = new Array();
-		    	 for(var i=0; i <ids.length; i++){
-					var rowObject = ids[i]; //체크된 id의 row 데이터 정보를 Object 형태로 반환
-					seatArray.push(ids[i]);
-		    	 } 
-		    	 
-		    	 var params = {'seatList' : seatArray.join(',')};
-      		     fn_uniDelAction("/backoffice/bld/seatInfoDelete.do", params, "jqGridFunc.fn_search");
+
+		    fn_delCheck  : function(){      
+				var menuArray = new Array();
+  			    getEquipArray("mainGrid", menuArray);
+  			    if (menuArray.length > 0){
+  				  $("#hid_DelCode").val(menuArray.join(","))
+  				  $("#id_ConfirmInfo").attr("href", "javascript:jqGridFunc.fn_del()");
+  				  menuArray = null;
+         		      fn_ConfirmPop("삭제 하시겠습니까?");
+  			    }else {
+  				  menuArray = null;
+  				  common_modelCloseM("체크된 값이 없습니다.", "savePage");
+  			    }
+  			    
 		    },
-	 		delRow : function (center_id) {
+		    fn_del : function (){
+		    	var params = {'seatCd':$("#hid_DelCode").val() };
+          	    fn_uniDelAction("/backoffice/bld/seatInfoDelete.do", "GET", params, false, "jqGridFunc.fn_search");
+          	},
+	 		delRow : function (centerCd) {
 				if(trim(center_id) != "") {
-					var params = {'centerCd' : trim(center_id)};
+					var params = {'centerCd' : trim(seatCd)};
 					$("#searchKeyword").val("")
 					fn_uniDelAction("/backoffice/bld/centerInfoDelete.do", params, "jqGridFunc.fn_search");
 				}
@@ -249,25 +256,23 @@
 			fn_centerChange : function(division) {
 				var el = division == "search" ? $("#searchCenterCd") : $("#centerCd");
 				var targetEl = division == "search" ? $("#searchFloorCd") : $("#floorCd");
-				if(targetEl.val() != "") {
-					var url = "/backoffice/bld/floorComboInfo.do?centerCd=" + el.val();
-					var param = {"centerCd" : el.val()}
-					jqGridFunc.fn_comboList(targetEl, url, param);
-				
+				var url = "/backoffice/bld/floorComboInfo.do";
+				var param = {"centerCd" : el.val()};
+				$("#searchPartCd").val("").prop("selected",true);
+				jqGridFunc.fn_comboList(targetEl, url, param);
 			},
 			fn_floorChange : function(division) {
 				var el = division == "search" ? $("#searchFloorCd") : $("#floorCd");
 				var targetEl = division == "search" ? $("#searchPartCd") : $("#partCd");
-				if(targetEl.val() != "") {
-					var url = "/backoffice/bld/partInfoComboList.do?floorCd=" + el.val();
-					var param = {"floorCd" : el.val()}
-					jqGridFunc.fn_comboList(targetEl, url, param);
-				}
+				var url = "/backoffice/bld/partInfoComboList.do";
+				var param = {"floorCd" : el.val()};				
+				jqGridFunc.fn_comboList(targetEl, url, param);
 			},
 			fn_comboList : function(el, url, param) {
-				var returnVal = uniAjaxReturn(url, param);
-				if (returnVal.resultlist.length > 0){
-					var obj = returnVal.resultlist;
+				var resultlist = uniAjaxReturn(url, "GET", false, param, "lst");
+
+				if (resultlist.length > 0){
+					var obj = resultlist;
 					el.empty();
 					el.append("<option value=''>선택</option>");
 						
@@ -286,7 +291,7 @@
 				$("#mode").val(mode);
 			
  				if (mode == "Ins") {
-					 $("#bld_seat_add .pop_tit").html("지점 정보 등록");
+					$("#bld_seat_add .pop_tit").html("좌석 정보 등록");
 					$("#btnUpdate").text('등록');
 					
 					$("#seatNm").val("");
@@ -303,12 +308,14 @@
 				} else {
 					$("#seatCd").val(seatCd);
 					var url = "/backoffice/bld/seatInfoDetail.do";
-					var param = {"seatCd" : seatCd};
+					var params = {"seatCd" : seatCd};
 	      			  
-					uniAjax
+					fn_Ajax
 					(
-					    url, 
-						param, 
+						url, 
+						"POST",
+						params,
+						false,
 						function(result) {
 							if (result.status == "LOGIN FAIL") {
 								alert(result.meesage);
@@ -368,24 +375,29 @@
 			     	   	'useYn': $('input[name=useYn]:checked').val(),
 			     	    'mode' : $("#mode").val()
 					};
-		     	    
-					uniAjax
-		     	    (
-						"/backoffice/bld/seatInfoUpdate.do", 
-						params, 
+					var url = "/backoffice/bld/seatInfoUpdate.do";
+					fn_Ajax
+					(
+						url,
+						"POST",
+						params,
+						false,
 						function(result) {
-							//결과값 추후 확인 하기 	
-							if (result.status == "SUCCESS"){
-								alert(resultTxt);
-								$("#bld_seat_add").bPopup().close();
-			                    jqGridFunc.fn_search(); 	            	
-							} else if (result.status == "LOGIN FAIL") {
-								document.location.href="/backoffice/login.do";
-							}
-						},
-						function(request){
-							alert("ERROR : " + request.status);	       						
-						}    		
+		 				       if (result.status == "LOGIN FAIL"){
+		 				    	   common_popup(result.meesage, "Y","bas_holiday_add");
+		   						   location.href="/backoffice/login.do";
+		   					   }else if (result.status == "SUCCESS"){
+		   						   //총 게시물 정리 하기'
+		   						   common_modelClose("bld_seat_add");
+		   						   jqGridFunc.fn_search();
+		   					   }else if (result.status == "FAIL"){
+		   						   common_modelCloseM("저장 도중 문제가 발생 하였습니다.", "Y", "bld_seat_add");
+		   						   jqGridFunc.fn_search();
+		   					   }
+		 				    },
+		 				    function(request){
+		 				    	common_modelCloseM("Error:" + request.status,"bld_seat_add");
+		 				    }    		 		
 					);
 				} 
 			}   
@@ -417,7 +429,7 @@
 				</ol>
     		</div>
 
-    		<h2 class="title">지점 시설 관리</h2><div class="clear"></div>
+    		<h2 class="title">좌석 관리</h2><div class="clear"></div>
     		
     		<!--// dashboard -->
     		<div class="dashboard">
@@ -460,7 +472,7 @@
 
         			<div class="right_box">
             			<a data-popup-open="bld_seat_add" onclick="jqGridFunc.fn_seatInfo('Ins','0')" class="blueBtn">좌석 추가</a>
-            			<a href="#" onClick="jqGridFunc.fn_delCheck()" class="grayBtn">삭제</a>
+            			<a onClick="jqGridFunc.fn_delCheck()" class="grayBtn">삭제</a>
         			</div>
         			<div class="clear"></div>
         			
@@ -556,7 +568,9 @@
   	</div>
 </div>
 <!-- 좌석 추가 팝업 // -->
-<script src="/resources/js/common.js"></script>
+<c:import url="/backoffice/inc/popup_common.do" />
+<script type="text/javascript" src="/resources/js/common.js"></script>
+<script type="text/javascript" src="/resources/js/back_common.js"></script>
 </form:form>
 </body>
 </html>

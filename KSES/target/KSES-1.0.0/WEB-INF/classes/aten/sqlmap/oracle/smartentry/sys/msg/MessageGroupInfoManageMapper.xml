@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kses.backoffice.sys.msg.mapper.MessageGroupInfoManageMapper">
+    <select id="selectMessageGroupInfoList" resultType="lmap">     	      
+		SELECT * FROM 
+		( 
+			SELECT 	
+				SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT, 
+				ROW_NUMBER() OVER (ORDER BY ROWNUM DESC) AS RNUM, 
+				TB.* 
+			FROM 	
+			(	
+				SELECT GROUP_CODE, GROUP_TITLE, GROUP_USEYN, GROUP_CNT, LAST_UPDUSR_ID, 
+				       TO_CHAR( LAST_UPDT_DTM , 'yyyy-MM-dd') LAST_UPDT_DTM, GROUP_DC
+				FROM TSES_MESSAGGROUP A
+				WHERE 1=1
+				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
+					AND 
+					( 
+						A.GROUP_TITLE LIKE '%'|| #{params.searchKeyword}||'%' 
+						OR
+						A.GROUP_DC LIKE '%'||#{params.searchKeyword}||'%'
+					) 
+				</if>
+				ORDER BY A.LAST_UPDT_DTM DESC
+			) TB 
+		) TA
+		WHERE ROWNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
+		ORDER BY TA.RNUM DESC 
+   	</select>
+   	<select id="selectMessageGroupDetail" resultType="lmap">
+		SELECT GROUP_CODE, GROUP_TITLE, GROUP_DC, GROUP_USEYN, GROUP_CNT, LAST_UPDUSR_ID, LAST_UPDT_DTM
+		FROM TSES_MESSAGGROUP 
+		WHERE GROUP_CODE = #{groupCd}
+   	</select>
+	
+	<insert id="insertMessageGroupInfo">
+			INSERT INTO TSES_MESSAGGROUP	
+			(
+				GROUP_CODE, GROUP_TITLE, GROUP_USEYN, GROUP_DC, GROUP_CNT, LAST_UPDUSR_ID, LAST_UPDT_DTM
+			)
+			VALUES 
+			(
+				#{groupCode}, #{groupTitle}, #{groupUseyn,jdbcType=VARCHAR}, #{groupDc,jdbcType=VARCHAR}, 0,  #{userId,jdbcType=VARCHAR}, SYSDATE
+			)
+	</insert>
+
+	<update id="updateMessageGroupInfo">
+			UPDATE TSES_MESSAGGROUP SET GROUP_TITLE = #{groupTitle, jdbcType=VARCHAR}
+		                                , GROUP_USEYN = #{groupUseyn, jdbcType=VARCHAR}   
+		                                , GROUP_DC = #{groupDc, jdbcType=VARCHAR}     
+		                                , LAST_UPDUSR_ID = #{userId}   
+		                                , LAST_UPDT_DTM = sysdate                     
+	       	WHERE GROUP_CODE = #{groupCode}
+   	</update>
+   	
+   	<delete id="deleteMessageGroupInfo">
+   	    <foreach collection="delCds" item="item" separator=";" open="DECLARE BEGIN" close="; END;">  
+   	            DELETE FROM TSES_MESSAGGROUP_USER  WHERE GROUP_CODE= #{item}
+	            DELETE FROM TSES_MESSAGGROUP WHERE GROUP_CODE = #{item};
+	    </foreach>		
+   	</delete>
+
+
+</mapper>

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="radio_enabled_unsel" width="34" height="34" viewBox="0 0 34 34">
+    <defs>
+        <style>
+            .cls-1{fill:none}
+        </style>
+    </defs>
+    <path id="Enabled_Unselected" d="M0 0H34V34H0z" class="cls-1"/>
+    <g id="Group_37" transform="translate(9 9)">
+        <g id="shape" fill="none" stroke="#e6e6e6">
+            <rect width="16" height="16" stroke="none" rx="8"/>
+            <rect width="15" height="15" x=".5" y=".5" class="cls-1" rx="7.5"/>
+        </g>
+    </g>
+</svg>

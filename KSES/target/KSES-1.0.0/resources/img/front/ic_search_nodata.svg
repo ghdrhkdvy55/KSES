@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+    <defs>
+        <style>
+            .cls-2{fill:#e5e5e5}
+        </style>
+    </defs>
+    <g id="ic_search_nodata" transform="translate(-265.486 -23.885)">
+        <path id="area" fill="rgba(232,71,200,0)" d="M0 0H64V64H0z" transform="translate(265.486 23.885)"/>
+        <g id="ic">
+            <path id="사각형_114947" d="M0 0H1.5V14.222H0z" class="cls-2" transform="rotate(-44.999 224.489 -334.535)"/>
+            <path id="패스_20707" d="M302.836 59.149a11.434 11.434 0 1 1 1.106-1.722l1.105 1.105a13.055 13.055 0 1 0-1.141 1.687z" class="cls-2"/>
+        </g>
+    </g>
+</svg>

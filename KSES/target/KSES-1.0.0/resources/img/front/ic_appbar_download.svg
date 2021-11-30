@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
+    <defs>
+        <style>
+            .cls-3{fill:#fff}
+        </style>
+    </defs>
+    <g id="ic_appbar_download" transform="translate(-664.548 -354.013)">
+        <path id="사각형_119667" fill="rgba(0,0,0,0)" d="M0 0H36V36H0z" transform="translate(664.548 354.013)"/>
+        <path id="사각형_119669" fill="rgba(255,134,134,0)" d="M0 0H30V30H0z" transform="translate(667.548 357.013)"/>
+        <path id="사각형_119728" d="M0 0H20V1H0z" class="cls-3" transform="translate(672.547 381.168)"/>
+        <g id="그룹_106167">
+            <path id="사각형_119729" d="M0 0H1V14H0z" class="cls-3" transform="translate(682.263 363.012)"/>
+            <path id="패스_20968" d="M682.766 378.361l-6.3-5.811.678-.735 5.591 5.159 5.13-5.144.709.706z" class="cls-3"/>
+        </g>
+    </g>
+</svg>

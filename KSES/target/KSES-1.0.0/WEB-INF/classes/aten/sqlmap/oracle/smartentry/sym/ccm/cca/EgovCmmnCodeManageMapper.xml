@@ -7,10 +7,10 @@
 			SELECT SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT,
 			       ROW_NUMBER() OVER (ORDER BY A.CODE_ID DESC) AS RNUM, 
 				   A.CODE_ID, A.CODE_ID_NM, A.CODE_ID_DC, A.USE_AT,
-				   A.LAST_UPDT_PNTTM, A.LAST_UPDUSR_ID
+				   TO_CHAR(A.LAST_UPDT_PNTTM, 'yyyy-mm-dd') AS LAST_UPDT_PNTTM, A.LAST_UPDUSR_ID
+				   
 			FROM COMTCCMMNCODE A				     
-			WHERE A.USE_AT = 'Y' 
-			AND A.CL_CODE = 'SPDM'
+			WHERE A.CL_CODE = 'SPDM'
 			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
 				AND (A.CODE_ID LIKE '%' || #{params.searchKeyword} || '%' OR A.CODE_ID_NM LIKE '%' || #{params.searchKeyword} || '%')
 			</if>					
@@ -52,7 +52,7 @@
 	<update id="updateCmmnCode">
 		UPDATE COMTCCMMNCODE SET CODE_ID_NM = #{codeIdNm}, 
 								 CODE_ID_DC = #{codeIdDc, jdbcType=VARCHAR}, 
-								 USE_AT = 'Y', 
+								 USE_AT = #{useAt}, 
 								 LAST_UPDUSR_ID = #{lastUpdusrId, jdbcType=VARCHAR},
 								 LAST_UPDT_PNTTM = SYSDATE
 		WHERE CODE_ID = #{codeId}

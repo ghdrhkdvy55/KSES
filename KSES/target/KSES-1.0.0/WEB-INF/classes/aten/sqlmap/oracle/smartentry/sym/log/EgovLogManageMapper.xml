@@ -10,7 +10,7 @@
 		)
 		VALUES 
 		( 
-			#{logId}, #{connectMthd}, #{connectId ,jdbcType=VARCHAR}, #{connectIp ,jdbcType=VARCHAR}, #{errorOccrrAt ,jdbcType=VARCHAR}, 
+			#{logId}, #{connectMthd,jdbcType=VARCHAR}, #{connectId ,jdbcType=VARCHAR}, #{connectIp ,jdbcType=VARCHAR}, #{errorOccrrAt ,jdbcType=VARCHAR}, 
 			#{errorCode, jdbcType=VARCHAR}, SYSDATE
 		)
 	</insert>
@@ -39,10 +39,10 @@
 				 TB_EMPINFO B ON A.CONECT_ID = B.ESNTL_ID
 			WHERE A.CONECT_ID = B.EMPNO
 			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchFloorSeq)">
-				AND A.CONECT_MTHD LIKE CONCAT ('%', #searchWrd#,'%') 
+				AND A.CONECT_MTHD LIKE  '%'|| #{searchWrd} ||'%' 
 			</if>
 			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchBgnDe)">
-				AND DATE_FORMAT(a.CREAT_DT, '%Y%m%d') BETWEEN #searchBgnDe# AND #searchEndDe# 
+				AND DATE_FORMAT(a.CREAT_DT, '%Y%m%d') BETWEEN #{searchBgnDe} AND #{searchEndDe} 
 			</if>
 		)TB  
 	   	WHERE RNUM  BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}   

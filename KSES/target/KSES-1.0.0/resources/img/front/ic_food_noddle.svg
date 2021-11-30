@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="70" height="70" viewBox="0 0 70 70">
+    <defs>
+        <style>
+            .cls-5{fill:#333}
+        </style>
+    </defs>
+    <g id="ic_food_noddle" transform="translate(-941.843 -350.734)">
+        <rect id="area" width="70" height="70" fill="none" rx="4" transform="translate(941.843 350.734)"/>
+        <g id="ic_food_noddle-2" transform="translate(6.901 6.746)">
+            <path id="패스_21022" fill="#ffd357" d="M985.455 384.478c0 9.1-6.189 16.48-16.056 16.48-10.038 0-16.056-7.378-16.056-16.48z" transform="translate(-.221 -5.883)"/>
+            <path id="패스_21023" fill="#f7b728" d="M979.193 400.118s8.952-5.415 7.04-15.639h5.567s1.013 13.846-12.607 15.639z" transform="translate(-6.56 -5.884)"/>
+            <path id="패스_21052" fill="#fff" d="M962.628 395.467c-3.239-.711-4.33-5.153-4.375-5.342l1.322-.315c.01.037.94 3.8 3.344 4.33z" transform="translate(-1.425 -7.191)"/>
+            <path id="패스_21053" d="M969.178 401.417c-9.853 0-16.736-7.057-16.736-17.159v-.679h33.471v.679c0 9.942-7.038 17.159-16.735 17.159zm-15.365-16.48c.3 8.938 6.534 15.121 15.365 15.121s15.064-6.182 15.365-15.121z" class="cls-5" transform="translate(0 -5.663)"/>
+            <path id="사각형_121977" d="M0 0H34.77V1.358H0z" class="cls-5" transform="rotate(-18.671 1606.733 -2712.457)"/>
+            <path id="사각형_121978" d="M0 0H1.359V6.966H0z" class="cls-5" transform="translate(956.557 371.023)"/>
+            <path id="사각형_121979" d="M0 0H1.359V9.261H0z" class="cls-5" transform="translate(961.689 368.728)"/>
+            <path id="사각형_121980" d="M0 0H1.359V10.694H0z" class="cls-5" transform="translate(966.82 367.295)"/>
+            <path id="사각형_121981" d="M0 0H1.359V12.16H0z" class="cls-5" transform="translate(971.953 365.829)"/>
+            <path id="사각형_121982" d="M0 0H1.359V13.891H0z" class="cls-5" transform="translate(977.085 364.098)"/>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26">
+    <defs>
+        <style>
+            .cls-2{fill:#308059}
+        </style>
+    </defs>
+    <g id="ic_navi_cafe_sel" transform="translate(-314.134 -317.501)">
+        <path id="area" fill="none" d="M0 0H26V26H0z" transform="translate(314.134 317.501)"/>
+        <g id="ic">
+            <path id="사각형_114502" d="M0 0H1.3V5.317H0z" class="cls-2" transform="translate(324.388 319.097)"/>
+            <path id="사각형_114503" d="M0 0H1.3V3.545H0z" class="cls-2" transform="translate(328.754 320.869)"/>
+            <path id="사각형_114504" d="M0 0H1.3V3.545H0z" class="cls-2" transform="translate(320.022 320.869)"/>
+            <path id="패스_20575" d="M335 329.788h-1.315l-1.942 11.467h-13.412l-2.139-13.768H335.2l.2-1.3h-20.725l2.541 16.368h15.643l1.1-6.084h5.524v-6.683zm3.185 5.384h-4.022l.634-4.083h3.388z" class="cls-2"/>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="70" height="70" viewBox="0 0 70 70">
+    <defs>
+        <style>
+            .cls-4{fill:none;stroke:#333;stroke-miterlimit:10;stroke-width:1.8px}
+        </style>
+    </defs>
+    <g id="ic_food_rice" transform="translate(-407 -490)">
+        <rect id="bg" width="70" height="70" fill="none" rx="4" transform="translate(407 490)"/>
+        <g id="그룹_106249" transform="translate(424.712 510.116)">
+            <path id="패스_21001" fill="#aedde0" d="M678.408 369.315a17.277 17.277 0 1 1-34.542 0z" transform="translate(-643.866 -356.662)"/>
+            <path id="패스_21002" fill="#8fd2d6" d="M662.478 369.707s2.062 13.533-10.22 16.59l5.412-.474s10.672-5.728 10.971-16.508z" transform="translate(-634.099 -356.662)"/>
+            <path id="패스_21003" d="M678.408 369.315a17.277 17.277 0 1 1-34.542 0z" class="cls-4" transform="translate(-643.866 -356.662)"/>
+            <path id="선_165" d="M0 0L5.421 0" class="cls-4" transform="translate(4.47 7.909)"/>
+            <path id="선_166" d="M0 0L5.421 0" class="cls-4" transform="translate(13.445 7.909)"/>
+            <path id="선_167" d="M0 0L5.421 0" class="cls-4" transform="translate(23.665 7.909)"/>
+            <path id="선_168" d="M0 0L5.421 0" class="cls-4" transform="translate(20.155 3.466)"/>
+            <path id="선_169" d="M0 0L5.421 0" class="cls-4" transform="translate(9.313 3.466)"/>
+            <path id="선_170" d="M0 0L5.421 0" class="cls-4" transform="translate(14.734)"/>
+            <path id="패스_21004" fill="none" stroke="#fff" stroke-miterlimit="10" stroke-width="1.8px" d="M646.32 371.538s1 4.226 3.875 4.856" transform="translate(-641.01 -354.075)"/>
+        </g>
+    </g>
+</svg>

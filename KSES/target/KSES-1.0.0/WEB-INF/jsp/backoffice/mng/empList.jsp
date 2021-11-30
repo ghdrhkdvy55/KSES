@@ -161,7 +161,7 @@
     	            }, onCellSelect : function (rowid, index, contents, action){
     	            	var cm = $(this).jqGrid('getGridParam', 'colModel');
     	                //console.log(cm);
-    	                if (cm[index].name !='btn' ){
+    	                if (cm[index].name !='cb' ){
     	                	jqGridFunc.fn_empInfo("Edt", $(this).jqGrid('getCell', rowid, 'emp_no'));
             		    }
     	            }
@@ -194,8 +194,12 @@
 		        	$("#btnUpdate").text("수정");
 		        	var params = {"empNo" : empNo};
 		        	var url = "/backoffice/mng/empDetail.do";
-		        	
-		     	    uniAjaxSerial(url, params, true,
+		        	fn_Ajax
+		     	   	(
+						url, 
+						"GET",
+						params, 
+						false,
 			          	    function(result) {
 	     				       if (result.status == "LOGIN FAIL"){
 		 				    	   common_popup(result.meesage, "Y", "mng_user_add");
@@ -211,7 +215,7 @@
 		       					   $("#empTlphn").val(obj.emp_tlphn);
 		       					   $("#empClphn").val(obj.emp_clphn);
        						       $("#empState").val(obj.emp_state);
-       						       $("input:radio[name='useYn']:radio[value='"+obj.use_yn+"']").prop('checked', true)
+       						       $("input:radio[name='useYn']:radio[value='"+obj.use_yn+"']").prop('checked', true);
        						       $("#sp_Unqi").hide();
        						       $("#btnSave").text("수정");
 	       					   }else{
@@ -233,12 +237,13 @@
 					$("#empTlphn").val('');
 					$("#empClphn").val('');
 				    $("#empState").val('');
-				    $("#useYn").val('');
+				    $("#useAt_Y").prop("checked", true);
 		        	$("#sp_Unqi").show();
 		        	$("#btnSave").text("입력");
 		        }
 		        $("#mng_user_add").bPopup();
            },fn_CheckForm  : function (){
+        	   alert("checkform");
         	   if (any_empt_line_span("mng_user_add", "empNo", "사번을 입력해 주세요.","sp_message", "savePage") == false) return;
         	   if ($("#mode").val() == "Ins" && $("#idCheck").val() != "Y"){
 				   if (any_empt_line_span("mng_user_add", "empNo", "중복체크가 안되었습니다.","sp_message", "savePage") == false) return;
@@ -270,7 +275,7 @@
  						function(result) {
  						       //결과값 추후 확인 하기 	
  						       if (result.status == "SUCCESS"){
- 		    	            	  common_modelClose("mng_user_add");
+								  common_modelCloseM(result.message, "mng_user_add");
 		   						      jqGridFunc.fn_search();
  		    	               }else if (result.status == "LOGIN FAIL"){
  		    	            	  common_popup(result.meesage, "Y","mng_user_add");
@@ -287,28 +292,31 @@
 		  }, fn_empDel : function (){
 			  var empArray = new Array();
 			  getEquipArray("mainGrid", empArray);
-			  if (menuArray.length > 0){
-				  $("#hid_DelCode").val(empArray.join(","))
+			  if (empArray.length > 0){
+				  $("#hid_DelCode").val(empArray.join(","));
 				  $("#id_ConfirmInfo").attr("href", "javascript:jqGridFunc.fn_del()");
        		      empArray = null;
+       		   	  fn_ConfirmPop("삭제 하시겠습니까?");
 			  }else {
 				  empArray = null;
 				  common_modelCloseM("체크된 값이 없습니다.", "savePage");
 			  }
 			  
 		  }, fn_del: function (){
-			  var params = {'empNoDel':$("#hid_DelCode").val() };
-   		      fn_uniDelAction("/backoffice/bas/MenuManageListDelete.do", "POST",params, false, "jqGridFunc.fn_search");
-   		      empArray = null;
+			  var params = {'empNo':$("#hid_DelCode").val() };		  
+			  fn_uniDelAction("/backoffice/mng/empDelete.do", "GET",params, false, "jqGridFunc.fn_search");
 		  }, fn_idCheck : function (){
 	        	//공용으로 활용 할지 정리 필요 
+	        	
+	        	alert(any_empt_line_span("mng_user_add", "empNo", "사번을 입력해 주세요.","sp_message", "savePage"));
 	        	if (any_empt_line_span("mng_user_add", "empNo", "사번을 입력해 주세요.","sp_message", "savePage") == false) return;
-	        	var url = "/backoffice/mng/empNoCheck.do"
+	        	var url = "/backoffice/mng/empNoCheck.do";
     	        var param =  {"empNo" : $("#empNo").val()};
-        		uniAjaxSerial(url, param, false,
+	        	fn_Ajax(url, "GET", param, false,
         			    function(result) {	
      			           if (result != null) {	       	
      			        	   if (result.status == "SUCCESS"){
+     			        		
      			        		    var message = result.result == "OK" ? '등록되지 않은 사번 입니다.' : '등록된 사번 입니다.';
      			        		    var alertIcon =  result.result == "OK" ? "Y" : "N";
      			        		    common_popup(message, alertIcon, "mng_user_add");

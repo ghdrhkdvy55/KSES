@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+    <defs>
+        <style>
+            .cls-2{fill:#333}
+        </style>
+    </defs>
+    <g id="ic_seat_meeting_nor" transform="translate(-572.349 -324.824)">
+        <path id="area" fill="rgba(253,41,205,0)" d="M0 0H20V20H0z" transform="translate(572.349 324.824)"/>
+        <g id="ic">
+            <path id="패스_20657" d="M590.633 328.35H589.3v-.007h-13.808v.007h-1.33v1h1.33v9.143h6.408v2.469h-5.453v1h11.903v-1h-5.45v-2.469h6.4v-7.142h-1v6.142h-11.808v-8.143h14.141z" class="cls-2"/>
+            <path id="사각형_114916" d="M0 0H4.697V1H0z" class="cls-2" transform="translate(578.708 333.689)"/>
+            <path id="사각형_114917" d="M0 0H7.381V1H0z" class="cls-2" transform="translate(578.708 331.5)"/>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28">
+    <defs>
+        <style>
+            .cls-2{fill:#333}
+        </style>
+    </defs>
+    <g id="ic_title_date" transform="translate(-282.638 -292.945)">
+        <path id="area" fill="rgba(226,131,137,0)" d="M0 0H28V28H0z" transform="translate(282.638 292.945)"/>
+        <g id="그룹_105710">
+            <path id="패스_20809" d="M305.138 304.445h-17v-5h17zm-16-1h15v-3h-15z" class="cls-2"/>
+            <path id="사각형_114969" d="M0 0H1V4H0z" class="cls-2" transform="translate(292.138 297.945)"/>
+            <path id="사각형_114970" d="M0 0H1V4H0z" class="cls-2" transform="translate(300.138 297.945)"/>
+            <path id="패스_20810" d="M302.638 314.445h-13.5v-10h15v8h1v-9h-17v12h17v-1z" class="cls-2"/>
+        </g>
+    </g>
+</svg>

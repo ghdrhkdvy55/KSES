@@ -48,7 +48,21 @@
         </property>
     </bean>
     
-
+    <!-- IP 정보 기록 -->
+	<bean id="IpObtainInterceptor" class="egovframework.com.cmm.interceptor.IpObtainInterceptor" />
+ 
+	<bean id="selectAnnotaionMapper" class="egovframework.rte.ptl.mvc.handler.SimpleUrlAnnotationHandlerMapping" p:order="1">
+		<property name="interceptors">
+			<list>
+				<ref bean="IpObtainInterceptor" />
+			</list>
+		</property>
+		<property name="urls">
+			<set>
+				<value>/**/*.do</value>
+			</set>
+		</property>
+	</bean>
 
     <!-- xss 사이트 적용 -->
     <bean id="htmlEscapingObjectMapper" class="com.kses.backoffice.util.HtmlEscapingObjectMapperFactory" />

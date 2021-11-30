@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28">
+    <defs>
+        <style>
+            .cls-3{fill:#333}
+        </style>
+    </defs>
+    <g id="ic_title_car" transform="translate(-.001 .001)">
+        <path id="area" fill="rgba(240,192,217,0)" d="M0 0H28V28H0z" transform="translate(.001 -.001)"/>
+        <g id="ic" transform="translate(2.001 2)">
+            <path id="area-2" fill="rgba(230,100,108,0)" d="M0 0H24V24H0z" transform="translate(0 -.001)"/>
+            <path id="패스_20908" d="M710.935 361.916a2.5 2.5 0 0 1-2.5-2.5v-1.5h5v1.5a2.5 2.5 0 0 1-2.5 2.5zm-1.5-3v.5a1.5 1.5 0 0 0 3 0v-.5z" class="cls-3" transform="translate(-704.235 -340.816)"/>
+            <path id="패스_20909" d="M721.735 361.916a2.5 2.5 0 0 1-2.5-2.5v-1.5h5v1.5a2.5 2.5 0 0 1-2.5 2.5zm-1.5-3v.5a1.5 1.5 0 0 0 3 0v-.5z" class="cls-3" transform="translate(-704.235 -340.816)"/>
+            <path id="패스_20910" d="M724.886 351.916h-17.3l1.866-7h13.568zm-16-1h14.7l-1.334-5h-12.033z" class="cls-3" transform="translate(-704.235 -340.816)"/>
+            <path id="패스_20911" d="M711.235 356.916a2 2 0 1 1 2-2 2 2 0 0 1-2 2zm0-3a1 1 0 1 0 1 1 1 1 0 0 0-1-1z" class="cls-3" transform="translate(-704.235 -340.816)"/>
+            <path id="패스_20912" d="M721.235 356.916a2 2 0 1 1 2-2 2 2 0 0 1-2 2zm0-3a1 1 0 1 0 1 1 1 1 0 0 0-1-1z" class="cls-3" transform="translate(-704.235 -340.816)"/>
+            <path id="패스_20913" d="M724.735 353.916v4h-17v-6h18v-1h-19v8h19v-5z" class="cls-3" transform="translate(-704.235 -340.816)"/>
+        </g>
+    </g>
+</svg>

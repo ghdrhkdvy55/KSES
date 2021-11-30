@@ -35,7 +35,7 @@
 				</if>
 			) TB 
 		) TA
-		WHERE ROWNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
+		WHERE RNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
 		ORDER BY TA.HOLY_DT DESC 
    	</select>
 
@@ -109,27 +109,32 @@
 			)
    	    </foreach>
    	</insert>
-	<update id="holyInfoCenterApply">
+	<update id="holyInfoCenterApply">	
 		<foreach collection="holyInfoList" item="item" separator=";" open="DECLARE BEGIN" close="; END;">   	
-			MERGE INTO TSEB_CENTERHOLY_INFO_I A
-		    USING DUAL B
-		    ON 
+			MERGE INTO TSEB_CENTERHOLY_INFO_I T
+		    USING
+		    (
+		    	SELECT B.CENTER_CD, A.HOLY_DT, A.HOLY_NM, A.LAST_UPDT_DTM, A.LAST_UPDUSR_ID, A.FRST_REGIST_DTM, A.FRST_REGTER_ID
+		    	FROM TSEC_HOLY_INFO_M A, TSEB_CENTER_INFO_M B
+				WHERE A.HOLY_DT = #{item.holyDt}
+		    ) C
+			ON 
 			(	
-				A.HOLY_DT = #{item.holyDt}
+				T.CENTER_CD = C.CENTER_CD
+				AND
+				T.HOLY_DT = C.HOLY_DT
 			)
 			WHEN MATCHED THEN
-			UPDATE SET A.HOLY_NM = #{item.holyNm},
-			           A.USE_YN = #{item.useYn},
-                       A.LAST_UPDT_DTM = sysdate,
-                       A.LAST_UPDUSR_ID = #{item.userId}
+			UPDATE SET 
+				T.HOLY_NM = #{item.holyNm}
 			WHEN NOT MATCHED THEN
 			INSERT 
 			(
-				T.CENTER_HOLY_SEQ, T.CENTER_CD, T.HOLY_DT, T.USE_YN, T.FRST_REGIST_DTM, T.HOLY_NM
+				T.CENTER_HOLY_SEQ, T.CENTER_CD, T.HOLY_DT, T.USE_YN, T.LAST_UPDT_DTM, T.HOLY_NM, T.LAST_UPDUSR_ID
 			)
 			VALUES
 			(
-				SEQ_ESB_CENTERHOLY_INFO.NEXTVAL, C.CENTER_CD, C.HOLY_DT, 'Y', SYSDATE, C.HOLY_NM
+				SEQ_ESB_CENTERHOLY_INFO.NEXTVAL, C.CENTER_CD, C.HOLY_DT, 'Y', SYSDATE, C.HOLY_NM, C.LAST_UPDUSR_ID
 			)
 		</foreach>
    	</update>
