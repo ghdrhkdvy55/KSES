@@ -1,0 +1,208 @@
+package com.kses.backoffice.rsv.reservation.web;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.kses.backoffice.cus.usr.service.UserInfoManageService;
+import com.kses.backoffice.cus.usr.vo.UserInfo;
+import com.kses.backoffice.rsv.reservation.service.AttendInfoManageService;
+import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
+import com.kses.backoffice.rsv.reservation.vo.AttendInfo;
+import com.kses.backoffice.util.SmartUtil;
+
+import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.LoginVO;
+import egovframework.com.cmm.service.Globals;
+import egovframework.let.utl.sim.service.EgovFileScrty;
+import egovframework.rte.fdl.property.EgovPropertyService;
+
+@RestController
+@RequestMapping("/backoffice/rsv")
+public class ResJosnController{
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(ResJosnController.class);
+	//추후 front 로 이동 
+	
+	@Autowired
+    EgovMessageSource egovMessageSource;
+	
+	@Autowired
+	protected EgovPropertyService propertiesService;
+	
+	@Autowired
+	protected UserInfoManageService userService;
+	
+	@Autowired
+	private AttendInfoManageService attendService;
+	
+	@Autowired
+	private ResvInfoManageService resService;
+	
+	@RequestMapping(value="speedCheck.do", method = {RequestMethod.POST})
+    public ModelAndView selectPreOpenInfo(	@ModelAttribute("loginVO") LoginVO loginVO,
+    		                                @RequestBody Map<String, Object> sendInfo,
+    										HttpServletRequest request) {
+		
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+		try {
+		     //값 넣기 
+			 String Url = "";
+			 JsonNode node = null;
+			 if ( SmartUtil.NVL(sendInfo.get("gubun"), "").toString().equals("login") ) {
+				 Url =  propertiesService.getString("sppeedUrl_T") + "user/userChk";
+				 node = SmartUtil.requestHttpJson(Url, SmartUtil.NVL(sendInfo.get("sendInfo"), "").toString());
+				 
+				 
+				 if (node.get("Error_Cd").equals("SUCCESS")  ) {
+					 UserInfo user = new UserInfo();
+					 user.setUserBirthDy(node.get("User_Birth_Day").toString());
+					 user.setUserSexMf(node.get("User_Sex").toString());
+					 user.setUserPhone(node.get("User_Phone").toString());
+					 user.setUserNm(node.get("User_Nm").toString());
+					 user.setMode("Ins");
+					 userService.updateUserInfo(user);
+				 } 
+				
+			 }else if ( SmartUtil.NVL(sendInfo.get("gubun"), "").toString().equals("fep") ) {
+				 //출급 정보
+				 Url =  propertiesService.getString("sppeedUrl_T") +"trade/fepWithdraw";
+				 node = SmartUtil.requestHttpJson(Url, SmartUtil.NVL(sendInfo.get("sendInfo"), "").toString());
+				 if (node.get("Error_Cd").equals("SUCCESS")  ) {
+					 //예약 테이블 출금 정보 처리 하기 
+				 }
+				 
+			 }else {
+				//취소 정보
+				Url =  propertiesService.getString("sppeedUrl_T") +"trade/fepDeposit";
+				node = SmartUtil.requestHttpJson(Url, SmartUtil.NVL(sendInfo.get("sendInfo"), "").toString());
+				if (node.get("Error_Cd").equals("SUCCESS")  ) {
+					 //예약 테이블 취소 정보 처리 하기 
+				}
+			 }
+			 model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+			 model.addObject(Globals.STATUS_REGINFO, node);
+		}catch(Exception e) {
+			StackTraceElement[] ste = e.getStackTrace();
+			int lineNumber = ste[0].getLineNumber();
+			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
+			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
+		}
+		
+		return model;
+		
+	}
+	//qr checkin 검토 
+	@RequestMapping(value="qrReadCheck.do", method = {RequestMethod.POST})
+	public ModelAndView selectQrCheckInfo(	@RequestBody AttendInfo sendInfo,
+											HttpServletRequest request) {
+
+        ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+        try {
+        	EgovFileScrty fileScrty = new EgovFileScrty();	
+        	
+        	String qrInfo = fileScrty.decode(sendInfo.getQrCode())  ;
+        	String result = "";
+        	if (qrInfo.contains(":")) {
+        		String [] attempInfos = qrInfo.split(":");
+        		String resSeq = attempInfos[0];
+        		String qrTime = attempInfos[1];
+        		String inOt = attempInfos[2];
+        		
+        		//시간 비교 
+        		if (  Integer.valueOf( SmartUtil.timeCheck(qrTime)) < -30 ) {
+        			result = "{\"ERROR_CD\": \"ERROR_01\", \"ERROR_MSG\" : \"30초 시간이 경과된 QR입니다.\"}";
+        			
+        		}
+        		
+        		// 현재 날짜/시간
+        		
+        		String formatedNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        		
+        		sendInfo.setResvSeq(resSeq);
+        		sendInfo.setInoutDvsn(inOt);
+        		sendInfo.setRcvDt(formatedNow);
+        		sendInfo.setQrCheckTm(formatedNow);
+        		sendInfo.setRcvCd("OK");
+        		sendInfo.setQrCode(sendInfo.getQrCode());
+        		
+        		sendInfo = attendService.insertAttendInfo(sendInfo);
+        		if (sendInfo.getRcvCd().equals("OK")) {
+        			result = "{\"ERROR_CD\": \"OK\", \"ERROR_MSG\" : \",\"IOGUBUN\":\""+inOt +"\",\"USER_NM\":\""+  sendInfo.getUserNm() +"\"}";
+        		}else {
+        			String errorMessage =  sendInfo.getRcvCd().equals("ERROR_02") ? "입/출입 잘못 시도" : "시스템 에러";
+        			result = "{\"ERROR_CD\": \""+ sendInfo.getRcvCd()+"\", \"ERROR_MSG\" : \""+errorMessage+"\"}";
+        		}
+        	}else {
+        		result = "{\"ERROR_CD\": \"ERROR_04\", \"ERROR_MSG\" : \"잘못된 파라미터 입니다.\"}";
+        	}
+        	model.addObject(result);
+        }catch(Exception e) {
+			StackTraceElement[] ste = e.getStackTrace();
+			int lineNumber = ste[0].getLineNumber();
+			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
+			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
+		}
+        return model;
+	}
+	//qr 새 전송 
+	@RequestMapping(value="qrSend.do")
+	public ModelAndView selectQrSendInfo (@RequestParam("resSeq") String resSeq)throws Exception{
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+		try {
+			Map<String, Object> searchVO = new HashMap<String, Object>();
+			searchVO.put("resSeq", resSeq);
+			searchVO.put("resvDate", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+			Map<String, Object> resInfo = resService.selectUserResvInfo(searchVO);
+			
+			
+			if (resInfo == null) {
+				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+				model.addObject(Globals.STATUS_MESSAGE,"잘못된 예약 번호 이거나 지난 예약번호 입니다.");
+			}else {
+				AttendInfo vo = new AttendInfo();
+				vo.setResvSeq(resSeq);
+				String qrTime =  LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+				String inOt = "";
+				Map<String, Object> attend =  attendService.selectAttendInfoDetail(vo);
+				if (attend == null) {
+					inOt = "IN";
+				}else {
+					inOt = SmartUtil.NVL(attend.get("inout_dvsn"),"OT").toString().equals("IN") ? "OT" : "IN";
+				}
+				EgovFileScrty fileScrty = new EgovFileScrty();
+				String qrCode = fileScrty.encode(resSeq+":"+qrTime+":"+inOt);
+				
+				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+				model.addObject("QRCODE", qrCode);
+			}
+		}catch(Exception e) {
+			StackTraceElement[] ste = e.getStackTrace();
+			int lineNumber = ste[0].getLineNumber();
+			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
+			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
+		}
+		return model;
+	}
+	//무인 발권기만 남았음
+	
+	
+}

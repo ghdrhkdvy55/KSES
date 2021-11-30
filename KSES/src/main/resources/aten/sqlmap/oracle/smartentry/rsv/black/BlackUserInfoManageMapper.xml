@@ -12,9 +12,8 @@
 			FROM 	
 			(	
 				SELECT  
-					A.BLKLST_SEQ, A.USER_ID, A.USER_DVSN, A.USER_CLPHN,
+					A.BLKLST_SEQ, A.USER_ID, A.USER_DVSN, A.USER_CLPHN, A.BLKLST_REASON,
 					A.BLKLST_USER_YN, TO_CHAR(A.FRST_REGIST_DTM, 'YYYY-MM-DD HH24:MI') AS FRST_REGIST_DTM,
-					A.BLKLST_CANCEL_YN,
 					FN_DETAILCODENM(A.BLKLST_DVSN) AS BLKLST_DVSN, B.USER_PHONE, B.USER_NM
 				FROM TSER_BLKLST_INFO_I A, TEST_USER_INFO B
 				WHERE A.USER_ID = B.USER_ID
@@ -54,18 +53,18 @@
 			BLKLST_REASON, BLKLST_CANCEL_YN, FRST_REGTER_ID, FRST_REGIST_DTM, LAST_UPDUSR_ID, 
 			LAST_UPDT_DTM
 		)
-		VALUES
+		VALUES 
 		(
 			SEQ_SER_BLKLIST_INFO.NEXTVAL, #{userId}, #{userDvsn, jdbcType=VARCHAR}, #{userClphn, jdbcType=VARCHAR}, #{blklstDvsn, jdbcType=VARCHAR}, 
-			#{blklstReason, jdbcType=CLOB}, #{blklstCancelYn, jdbcType=VARCHAR}, #{adminId, jdbcType=VARCHAR}, SYSDATE, #{adminId, jdbcType=VARCHAR}, 
+			#{blklstReason, jdbcType=VARCHAR}, #{blklstCancelYn, jdbcType=VARCHAR}, #{adminId, jdbcType=VARCHAR}, SYSDATE, #{adminId, jdbcType=VARCHAR}, 
 			SYSDATE
-		)
+		);
     </update>	
     
     <update id="updateBlackUserInfo">
     	UPDATE TSER_BLKLST_INFO_I SET 
 			BLKLST_CANCEL_YN = #{blklstCancelYn, jdbcType=VARCHAR},
-			LAST_UPDUSR_ID = #{adminId, jdbcType=VARCHAR},
+			LAST_UPDUSR_ID = #{adminId, jdbcType=VARCHAR}
 			LAST_UPDT_DTM = SYSDATE
 		WHERE BLKLST_SEQ = #{blklstSeq}
     </update>	

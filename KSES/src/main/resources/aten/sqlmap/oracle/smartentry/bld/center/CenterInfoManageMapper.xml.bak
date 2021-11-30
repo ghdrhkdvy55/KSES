@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kses.backoffice.bld.center.mapper.CentertInfoManageMapper">
+	<resultMap id="CenterInfoDetail" type="HashMap" >
+    	<result property="center_cd" column="center_cd" jdbcType="VARCHAR" javaType="java.lang.String"/>
+    	<result property="center_nm" column="center_nm" jdbcType="VARCHAR" javaType="java.lang.String"/>
+    	<result property="center_zipcd" column="center_zipcd" jdbcType="VARCHAR" javaType="java.lang.String"/>
+    	<result property="center_addr1" column="center_addr1" jdbcType="VARCHAR" javaType="java.lang.String"/>
+    	<result property="center_addr2" column="center_addr2" jdbcType="VARCHAR" javaType="java.lang.String"/>
+    	<result property="center_tel" column="center_tel" jdbcType="VARCHAR" javaType="java.lang.String"/>
+    	<result property="center_fax" column="center_fax" jdbcType="VARCHAR" javaType="java.lang.String"/>
+    	<result property="center_img" column="center_img" jdbcType="VARCHAR" javaType="java.lang.String"/>
+    	<result property="center_map" column="center_map" jdbcType="VARCHAR" javaType="java.lang.String"/>
+    	<result property="center_url" column="center_url" jdbcType="VARCHAR" javaType="java.lang.String"/>
+    	<result property="center_info" column="center_info" jdbcType="CLOB" javaType="java.lang.String"/>
+    	<result property="use_yn" column="use_yn" jdbcType="VARCHAR" javaType="java.lang.String"/>
+    	<result property="start_floor" column="start_floor" jdbcType="VARCHAR" javaType="java.lang.String"/>
+    	<result property="end_floor" column="end_floor" jdbcType="VARCHAR" javaType="java.lang.String"/>
+    	<result property="floor_info" column="floor_info" jdbcType="VARCHAR" javaType="java.lang.String"/>
+	</resultMap>
+	
+	<select id="selectCenterInfoList" resultType="lmap">
+		SELECT TB.* FROM 
+		(
+			SELECT 
+				SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT,
+				ROW_NUMBER() OVER (ORDER BY A.CENTER_CD DESC) AS RNUM, 
+				CENTER_CD, CENTER_NM, CENTER_TEL,
+				CASE WHEN LENGTH(CENTER_IMG) > 0 THEN 
+					CENTER_IMG
+				ELSE 
+					'no_image.png'
+				END CENTER_IMG, 
+				CENTER_ZIPCD, CENTER_ADDR1, CENTER_ADDR2, USE_YN, CENTER_HOLY_USE_YN, 
+				TO_CHAR(A.LAST_UPDT_DTM, 'yyyy-mm-dd') AS LAST_UPDT_DTM, LAST_UPDUSR_ID	        
+			FROM TSEB_CENTER_INFO_M A
+			WHERE 1=1        
+			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
+				AND
+				(
+					CENTER_CD LIKE '%' || #{params.searchKeyword} || '%'  
+					OR 
+					CENTER_NM LIKE '%' || #{params.searchKeyword} || '%'  
+				)
+			</if>		
+		) TB
+		WHERE RNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
+		ORDER BY TB.CENTER_CD DESC
+	</select>
+        
+	<select id="selectCenterInfoDetail" resultMap="CenterInfoDetail">
+		SELECT  
+			CENTER_CD, CENTER_NM, CENTER_ZIPCD, CENTER_ADDR1, CENTER_ADDR2, 
+			CENTER_TEL, CENTER_FAX, CENTER_IMG, CENTER_MAP, CENTER_URL,
+			CENTER_INFO, USE_YN, START_FLOOR, END_FLOOR, FLOOR_INFO
+		 FROM TSEB_CENTER_INFO_M
+		 WHERE CENTER_CD = #{centerCd}		  
+    </select>
+    
+	<select id="selectCenterInfoComboList" resultType="lmap">
+         SELECT  
+         	A.CENTER_CD, A.CENTER_NM 
+         FROM TSEB_CENTER_INFO_M A
+         WHERE A.USE_YN = 'Y'
+         ORDER BY A.CENTER_NM  ASC
+    </select>
+    
+    <insert id="insertCenterInfoManage">
+	{CALL
+		DECLARE
+		BEGIN
+		
+		<selectKey resultType="String" keyProperty="centerCd" order="BEFORE">
+			SELECT KSES_USER.FN_CENTER_CD() AS centerCd FROM DUAL
+		</selectKey>
+		
+		INSERT INTO TSEB_CENTER_INFO_M 
+		(
+			CENTER_CD, CENTER_NM, CENTER_ZIPCD, CENTER_ADDR1, CENTER_ADDR2, 
+			CENTER_TEL, CENTER_FAX, FRST_REGTER_ID, FRST_REGIST_DTM, LAST_UPDUSR_ID, 
+			LAST_UPDT_DTM, CENTER_IMG, CENTER_URL, CENTER_MAP, USE_YN, 
+			CENTER_INFO, FLOOR_INFO, START_FLOOR, END_FLOOR, CENTER_STDM_DVSN
+		)
+		VALUES 
+		(
+			#{centerCd}, #{centerNm}, #{centerZipcd, jdbcType=VARCHAR}, #{centerAddr1, jdbcType=VARCHAR}, #{centerAddr2, jdbcType=VARCHAR}, 
+			#{centerTel, jdbcType=VARCHAR}, #{centerFax, jdbcType=VARCHAR}, #{userId, jdbcType=VARCHAR}, SYSDATE, #{userId, jdbcType=VARCHAR}, 
+			SYSDATE, #{centerImg, jdbcType=VARCHAR}, #{centerUrl ,jdbcType=VARCHAR}, #{centerMap, jdbcType=VARCHAR}, 'Y', 
+			#{centerInfo, jdbcType=VARCHAR}, #{floorInfo, jdbcType=VARCHAR}, #{startFloor, jdbcType=VARCHAR}, #{endFloor, jdbcType=VARCHAR}, 'TEST'
+		);
+    	
+		<if test="floorInfo != null">
+			INSERT INTO TSEB_FLOOR_INFO_M 
+          	(
+				FLOOR_CD, CENTER_CD, FLOOR_INFO, FLOOR_NM, FLOOR_PART_DVSN, 
+				FLOOR_SEAT_CNT, FRST_REGIST_DTM, FRST_REGTER_ID, LAST_UPDT_DTM, LAST_UPDUSR_ID
+			)
+			SELECT 
+				FN_FLOORCODE(#{centerCd}, CODE), #{centerCd}, CODE, CODE_NM, 'FLOOR_PART_1', 
+				0, SYSDATE, #{userId, jdbcType=VARCHAR}, SYSDATE, #{userId, jdbcType=VARCHAR}
+          	FROM COMTCCMMNDETAILCODE
+          	WHERE CODE_ID = 'CENTER_FLOOR'
+			AND CODE_DC IN 
+			(
+				SELECT COLUMN_VALUE FROM TABLE(UF_SPLICT(#{floorInfo}, ','))
+			);
+		</if>
+
+		<!-- 지점 사전 예약정보 생성 -->
+		<![CDATA[		
+		INSERT INTO TSEB_RESV_ADMSTM_D 
+		(
+			OPTM_CD, CENTER_CD, OPEN_DAY, OPEN_MEMBER_TM, OPEN_GUEST_TM, 
+			FRST_REGIST_DTM, FRST_REGTER_ID, LAST_UPDT_DTM, LAST_UPDUSR_ID
+		)
+		SELECT 
+			#{centerCd} || '_' || LPAD(LEVEL,2,0), #{centerCd}, LEVEL, '0000', '0000', 
+			SYSDATE, #{userId, jdbcType=VARCHAR}, SYSDATE, #{userId, jdbcType=VARCHAR}
+		FROM DUAL CONNECT BY LEVEL <= 7;
+		]]> 
+		
+		<!-- 지점 예약취소 정보 생성 -->
+		<![CDATA[
+		INSERT INTO TSEB_NOSHOW_INFO_M 
+		(
+			NOSHOW_CD, CENTER_CD, NOSHOW_DAY, NOSHOW_AM_TM, NOSHOW_PM_TM,
+			NOSHOW_ALL_TM, FRST_REGIST_DTM, FRST_REGTER_ID, LAST_UPDT_DTM, LAST_UPDUSR_ID
+		)
+		SELECT 
+			#{centerCd} || '_' || LPAD(LEVEL,2,0), #{centerCd}, LEVEL, '0000', '0000', 
+			'0000', SYSDATE, #{userId, jdbcType=VARCHAR}, SYSDATE, #{userId, jdbcType=VARCHAR}
+		FROM DUAL CONNECT BY LEVEL <= 7;
+		]]>
+		
+		END
+	}
+          
+	</insert>
+     
+	<update id="updateCenterInfoManage">
+	{CALL
+		DECLARE
+		BEGIN
+		
+		UPDATE TSEB_CENTER_INFO_M SET 
+			CENTER_NM = #{centerNm}, 
+			CENTER_ZIPCD = #{centerZipcd, jdbcType=VARCHAR},
+			CENTER_ADDR1 = #{centerAddr1},
+			CENTER_ADDR2 = #{centerAddr2},
+			CENTER_TEL = #{centerTel, jdbcType=VARCHAR},
+			CENTER_FAX = #{centerFax, jdbcType=VARCHAR},
+			LAST_UPDUSR_ID = #{userId, jdbcType=VARCHAR},
+			LAST_UPDT_DTM = SYSDATE,
+			CENTER_URL = #{centerUrl, jdbcType=VARCHAR},
+			USE_YN = #{useYn, jdbcType=VARCHAR},
+			CENTER_INFO = #{centerInfo, jdbcType=CLOB}   
+			<if test="centerImg != '' ">                                    
+				,CENTER_IMG = #{centerImg, jdbcType=VARCHAR}
+			</if>
+			<if test="centerMap !=  '' ">                     
+				,CENTER_MAP = #{centerMap, jdbcType=VARCHAR}
+			</if>      
+			,FLOOR_INFO = #{floorInfo, jdbcType=VARCHAR}
+			,START_FLOOR = #{startFloor, jdbcType=VARCHAR}
+			,END_FLOOR = #{endFloor, jdbcType=VARCHAR}                      
+		WHERE CENTER_CD = #{centerCd};
+		
+		<if test="floorInfo != null">
+			DELETE FROM TSEB_FLOOR_INFO_M WHERE FLOOR_CD IN 
+			(
+				SELECT FLOOR_CD FROM TSEB_FLOOR_INFO_M WHERE CENTER_CD = #{centerCd}
+				AND FLOOR_INFO NOT IN 
+				( 
+					SELECT CODE FROM COMTCCMMNDETAILCODE WHERE CODE_ID = 'CENTER_FLOOR'
+					AND CODE_DC IN  
+					(
+						SELECT COLUMN_VALUE FROM TABLE(UF_SPLICT(#{floorInfo}, ','))
+					)
+				)
+			);
+				      
+			INSERT INTO TSEB_FLOOR_INFO_M 
+			(
+				FLOOR_CD, CENTER_CD, FLOOR_INFO, FLOOR_NM, FLOOR_PART_DVSN, FLOOR_SEAT_CNT, 
+				USE_YN, FRST_REGIST_DTM, FRST_REGTER_ID, LAST_UPDT_DTM, LAST_UPDUSR_ID
+			)
+          	SELECT 
+          		FN_FLOORCODE(#{centerCd}, CODE), #{centerCd}, CODE, CODE_NM, 'FLOOR_PART_1', 0,
+          		'Y', SYSDATE, #{userId, jdbcType=VARCHAR}, SYSDATE, #{userId, jdbcType=VARCHAR} 
+          		FROM COMTCCMMNDETAILCODE
+          	WHERE CODE_ID = 'CENTER_FLOOR'
+			AND CODE_DC IN 
+			(
+				SELECT COLUMN_VALUE FROM TABLE(UF_SPLICT(#{floorInfo}, ','))
+			)
+			AND CODE NOT IN 
+			( 
+				SELECT FLOOR_INFO FROM TSEB_FLOOR_INFO_M WHERE CENTER_CD = #{centerCd}
+			);
+		</if>
+		END
+	}         
+	</update>
+     
+	<update id="updateCenterFloorInfoManage" >
+		UPDATE TSEB_CENTER_INFO_M SET 
+			FLOOR_INFO = #{floorInfo, jdbcType=VARCHAR}
+		WHERE CENTER_CD = #{centerCd}   
+	</update>
+     
+	<delete id="deleteCenterInfoManage">
+		DELETE FROM TSEB_CENTER_INFO_M WHERE CENTER_CD = #{centerCd}
+	</delete>
+</mapper>

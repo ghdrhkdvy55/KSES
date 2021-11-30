@@ -47,21 +47,11 @@
 	</select>
 	
 	<select id="getUserLoginCheck" resultType="string" statementType="CALLABLE">	
-		<if test='params.Login_Type == "1"'>
 		SELECT KSES_USER.FN_USERLOGINCHECK
 		(
 			#{params.User_Id, mode=IN, jdbcType=VARCHAR, javaType=string}, 
 			#{params.User_Pw ,mode=IN, jdbcType=VARCHAR, javaType=string}, 
 			#{params.Login_Type, mode=IN, jdbcType=VARCHAR, javaType=string}
 		) FROM DUAL
-		</if>
-		<if test='params.Login_Type == "2"'>
-		SELECT KSES_USER.FN_USERLOGINCHECK
-		(
-			#{params.Card_Id, mode=IN, jdbcType=VARCHAR, javaType=string}, 
-			#{params.Card_Pw ,mode=IN, jdbcType=VARCHAR, javaType=string}, 
-			#{params.Login_Type, mode=IN, jdbcType=VARCHAR, javaType=string}
-		) FROM DUAL
-		</if>	
 	</select>
 </mapper>

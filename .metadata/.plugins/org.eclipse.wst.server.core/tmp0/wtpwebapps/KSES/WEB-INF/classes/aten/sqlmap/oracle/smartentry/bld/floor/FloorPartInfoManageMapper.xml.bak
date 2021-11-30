@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kses.backoffice.bld.floor.mapper.FloorPartInfoManageMapper">
+	<select id="selectFloorPartInfoList"  resultType="lmap">
+		SELECT TB.*
+	    FROM 
+	    (
+			SELECT 
+				SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT,
+				ROW_NUMBER() OVER (ORDER BY c.PART_CD DESC) AS RNUM, 
+				C.PART_CD, C.PART_NM, B.FLOOR_CD, B.FLOOR_INFO, B.FLOOR_NM,
+				A.CENTER_CD, A.CENTER_NM,
+				CASE WHEN LENGTH(PART_MAP1) > 0 THEN 
+					PART_MAP1
+				ELSE 
+					'no_image.png'
+				END PART_MAP1, 
+				B.FLOOR_PART_DVSN, C.LAST_UPDUSR_ID,     	
+				TO_CHAR(C.LAST_UPDT_DTM, 'yyyy-mm-dd') AS LAST_UPDT_DTM, 
+				C.PART_SEAT_RULE, C.PART_MINI_CSS, C.PART_MINI_TOP, C.PART_MINI_LEFT,  C.PART_MINI_WIDTH, C.PART_MINI_HEIGHT, C.USE_YN, 
+				C.PART_ORDER, C.PART_CSS, NVL((SELECT COUNT(*) FROM TSEB_SEAT_INFO_D WHERE PART_CD = C.PART_CD), 0) AS SEAT_CNT
+			FROM  TSEB_CENTER_INFO_M A, TSEB_FLOOR_INFO_M B, TSEB_PART_INFO_D C
+			WHERE A.CENTER_CD = B.CENTER_CD
+			AND C.FLOOR_CD = #{params.floorCd}       
+			AND B.FLOOR_CD = C.FLOOR_CD
+			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
+				AND 
+				(
+					B.FLOOR_NM LIKE '%' || #{params.searchKeyword} || '%'
+					OR 
+					A.CENTER_NM LIKE '%' || #{params.searchKeyword} || '%'
+				)
+			</if>
+			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.floorCd)">
+				AND B.FLOOR_CD = #{params.floorCd}
+			</if>	
+			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.centerCd)">
+				AND B.CENTER_CD = #{params.centerCd}
+			</if>	
+			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.useYn)">
+				AND C.USE_YN = #{params.useYn}
+			</if>		
+		) TB  
+	    WHERE RNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage} 
+        ORDER BY TB.PART_ORDER ASC, TB.PART_CD DESC
+    </select>
+    
+    <select id="selectFloorPartInfoManageCombo" resultType="lmap">
+		SELECT PART_CD, PART_NM 
+	    FROM TSEB_PART_INFO_D
+		WHERE USE_YN = 'Y'
+		<if test="floorCd != '' ">  
+			AND FLOOR_CD = #{floorCd, jdbcType=VARCHAR}
+		</if>
+	    ORDER BY PART_CD ASC
+    </select>
+    
+    <select id="selectFloorPartInfoDetail" resultType="lmap">
+		SELECT  
+			A.CENTER_CD, A.FLOOR_CD, A.PART_CD, A.PART_NM, A.PART_MAP1, 
+			A.PART_MAP2, A.PART_CSS, A.PART_SEAT_RULE, A.PART_MINI_CSS, A.PART_MINI_TOP, 
+			A.PART_MINI_LEFT, A.PART_MINI_WIDTH, A.PART_MINI_HEIGHT, A.USE_YN, A.PART_ORDER, 
+			A.FRST_REGIST_DTM, A.FRST_REGTER_ID, A.LAST_UPDT_DTM, A.LAST_UPDUSR_ID, B.FLOOR_NM, C.CENTER_NM
+		FROM TSEB_PART_INFO_D A, TSEB_FLOOR_INFO_M B, TSEB_CENTER_INFO_M C
+		WHERE PART_CD = #{partCd}  
+		AND A.FLOOR_CD = B.FLOOR_CD
+		AND A.CENTER_CD = C.CENTER_CD	  
+    </select>
+    
+    <insert id="insertFloorPartInfo" >
+		INSERT INTO TSEB_PART_INFO_D
+		(
+			CENTER_CD, FLOOR_CD, PART_CD, PART_NM, PART_MAP1, 
+			PART_MAP2, PART_CSS, PART_SEAT_RULE, PART_MINI_CSS, PART_MINI_TOP, 
+			PART_MINI_LEFT, PART_MINI_WIDTH, PART_MINI_HEIGHT, USE_YN, PART_ORDER, 
+			FRST_REGIST_DTM, FRST_REGTER_ID, LAST_UPDT_DTM, LAST_UPDUSR_ID
+		)
+		VALUES 
+		(
+			#{centerCd}, #{floorCd}, FN_PARTCODE(#{floorCd}), #{partNm, jdbcType=VARCHAR}, #{partMap1, jdbcType=VARCHAR}, 
+			#{partMap2, jdbcType=VARCHAR}, #{partCss, jdbcType=VARCHAR}, #{partSeatRule, jdbcType=VARCHAR}, #{partMiniCss, jdbcType=VARCHAR}, #{partMiniTop, jdbcType=VARCHAR}, 
+			#{partMiniLeft, jdbcType=VARCHAR}, #{partMiniWidth, jdbcType=VARCHAR}, #{partMiniHeight, jdbcType=VARCHAR}, #{useYn, jdbcType=VARCHAR}, #{partOrder, jdbcType=VARCHAR},
+			SYSDATE, #{frstRegterId, jdbcType=VARCHAR},  SYSDATE, #{lastUpdusrId, jdbcType=VARCHAR}
+		)        
+    </insert>
+    
+    <update id="updateFloorPartInfo" >
+		UPDATE TSEB_PART_INFO_D SET  
+			PART_CSS = #{partCss,jdbcType=VARCHAR}, 
+			PART_NM = #{partNm,jdbcType=VARCHAR}, 
+			PART_SEAT_RULE = #{partSeatRule,jdbcType=VARCHAR}, 
+			PART_MINI_CSS = #{partMiniCss,jdbcType=VARCHAR},
+			PART_MINI_LEFT = #{partMiniLeft,jdbcType=VARCHAR}, 
+			PART_MINI_TOP = #{partMiniTop,jdbcType=VARCHAR}, 
+			PART_MINI_WIDTH = #{partMiniWidth,jdbcType=VARCHAR},
+			PART_MINI_HEIGHT = #{partMiniHeight,jdbcType=VARCHAR}, 
+			USE_YN = #{useYn,jdbcType=VARCHAR}, 
+			PART_ORDER = #{partOrder,jdbcType=VARCHAR}, 
+			<if test="partMap1 != ''">                                    
+				PART_MAP1 = #{partMap1,jdbcType=VARCHAR},
+			</if>
+			<if test="partMap2 != ''">                     
+				FLOOR_MAP2 = #{partMap2,jdbcType=VARCHAR},
+			</if>      
+			LAST_UPDT_DTM = SYSDATE,
+			LAST_UPDUSR_ID = #{lastUpdusrId,jdbcType=VARCHAR}
+	     WHERE PART_CD = #{partCd}           
+    </update> 
+    <!--  신규 추가  -->
+    <update id="updateFloorPartInfPositionInfo" parameterType="java.util.List">
+		<foreach collection="floorPartInfo" item="item" separator=";" open="DECLARE BEGIN" close="; END;">
+			UPDATE TSEB_PART_INFO_D SET PART_CSS = #{item.partCss, jdbcType=VARCHAR},
+										PART_MINI_LEFT = #{item.partMiniLeft, jdbcType=VARCHAR},
+										PART_MINI_TOP = #{item.partMiniTop,jdbcType=VARCHAR}, 
+										PART_MINI_WIDTH = #{item.partMiniWidth,jdbcType=VARCHAR},
+			                            PART_MINI_HEIGHT = #{item.partMiniHeight,jdbcType=VARCHAR}, 
+			                            PART_MINI_ROTATE = #{item.partMiniRotate,jdbcType=VARCHAR}, 
+										LAST_UPDT_DTM = SYSDATE, 
+				                        LAST_UPDUSR_ID = #{item.userId, jdbcType=VARCHAR}
+			WHERE PART_CD = #{item.partCd} 
+		</foreach> 
+    </update> 
+    
+</mapper>

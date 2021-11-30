@@ -1,0 +1,63 @@
+﻿
+
+.part_map {
+    width: 1375px;
+    height: 750px;
+    background-size: 100% !important;
+}
+
+.mapArea {
+    width: 100%;
+    margin: 17px 0 0 0;
+    height: calc(100vh - 295px);
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.mapBox {
+    box-sizing: border-box;
+    width: 100%;
+    overflow: auto;
+    height: calc(100vh - 305px );
+    display: block;
+}
+
+.contents {
+    margin: 0 auto;
+    position: relative;
+}
+
+.whiteBack {
+    background-color: white;
+    box-shadow: 0 0 6px 1px rgb(207 207 207 / 32%);
+    box-sizing: border-box;
+}
+
+.mapbottom {
+    padding-bottom: 150px;
+}
+
+.seat_name {
+    font-size: 1.6rem;
+    margin-top: 5px;
+}
+
+.state {
+    margin: 15px auto 0;
+    width: 100%;
+    text-align: center;
+    border-radius: 5px;
+    bottom: 30px;
+    position: absolute;
+}
+
+    .state li {
+        float: left;
+        width: 48% !important;
+        padding: 6px 2px;
+    }
+
+        .state li a.active {
+            font-weight: 500;
+            margin-top: -1.5px;
+        }

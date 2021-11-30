@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kses.backoffice.bld.floor.mapper.FloorInfoManageMapper">
+	<select id="selectFloorInfoList" resultType="lmap">
+		SELECT TB.*
+	    FROM 
+	    (
+			SELECT 
+				SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT,
+				ROW_NUMBER() OVER (ORDER BY A.FLOOR_CD DESC) AS RNUM, 
+				A.FLOOR_CD, A.FLOOR_NM,	A.FLOOR_INFO, B.CENTER_CD, B.CENTER_NM,
+				CASE WHEN LENGTH(FLOOR_MAP1) > 0 THEN 
+					FLOOR_MAP1
+				ELSE 
+					'no_image.png'
+				END FLOOR_MAP1, 
+				FN_DETAILCODENM(A.FLOOR_INFO) AS FLOOR_INFO_TXT, A.FLOOR_SEAT_CNT, A.USE_YN, A.FLOOR_PART_DVSN,
+				TO_CHAR(A.LAST_UPDT_DTM, 'yyyy-mm-dd') AS LAST_UPDT_DTM, A.LAST_UPDUSR_ID	        
+			FROM TSEB_FLOOR_INFO_M A, TSEB_CENTER_INFO_M B
+			WHERE A.CENTER_CD = B.CENTER_CD   
+			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)"> 
+				AND 
+				(
+					B.CENTER_NM LIKE '%' || #{params.searchKeyword} || '%'
+				)
+			</if>		
+			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.centerCd)">
+				AND B.CENTER_CD = #{params.centerCd}
+			</if>
+			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.useYn)">
+				AND A.USE_YN = #{params.useYn}
+			</if>
+			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.floorCd)">
+				AND A.FLOOR_CD = #{params.floorCd}
+			</if>
+		) TB  
+	    <if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.firstIndex)">
+	    	WHERE RNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
+	    </if>
+        ORDER BY TO_NUMBER(REPLACE(TB.FLOOR_INFO, 'CENTER_FLOOR_', '')) ASC, TB.FLOOR_CD DESC	 	    
+	</select>
+    
+	<select id="selectFloorInfoDetail" resultType="lmap">
+		SELECT  
+			A.FLOOR_CD, A.CENTER_CD, B.CENTER_NM, A.FLOOR_INFO, A.FLOOR_MAP1, 
+			A.FLOOR_MAP2, A.FLOOR_NM, A.FLOOR_SEAT_CNT, A.USE_YN, A.FLOOR_PART_DVSN, 
+			A.FLOOR_SEAT_RULE, B.FLOOR_INFO FLOOR_INFO_CNT, A.FRST_REGIST_DTM, A.FRST_REGTER_ID, 
+			A.LAST_UPDT_DTM, A.LAST_UPDUSR_ID, C.CODE_DC
+		FROM TSEB_FLOOR_INFO_M A, TSEB_CENTER_INFO_M B, COMTCCMMNDETAILCODE C
+		WHERE A.FLOOR_CD = #{floorCd} 		
+		AND A.CENTER_CD = B.CENTER_CD  
+		AND A.FLOOR_INFO = C.CODE
+    </select>
+    
+    <select id="selectFloorInfoComboList" resultType="lmap">
+	       SELECT  a.FLOOR_CD AS floorCd, a.FLOOR_NM AS floorNm 
+	       FROM TSEB_FLOOR_INFO_M a, COMTCCMMNDETAILCODE b
+	       WHERE a.USE_YN = 'Y'
+	             AND b.CODE = a.FLOOR_INFO
+	             AND a.CENTER_CD = #{centerCd}
+	             ORDER BY CAST (b.CODE_DC AS INT) ASC
+	     
+    </select>
+    
+    <update id="updateFloorInfo">
+		UPDATE TSEB_FLOOR_INFO_M SET  
+			FLOOR_NM = #{floorNm, jdbcType=VARCHAR}, 
+			USE_YN = #{useYn, jdbcType=VARCHAR}, 
+			FLOOR_PART_DVSN = #{floorPartDvsn, jdbcType=VARCHAR},
+			FLOOR_SEAT_RULE = #{floorSeatRule, jdbcType=VARCHAR}  
+			<if test="floorMap1 != '' ">                                    
+				,FLOOR_MAP1 = #{floorMap1, jdbcType=VARCHAR}
+			</if>
+			<if test="floorMap2 !=  '' ">                     
+				,FLOOR_MAP2 = #{floorMap2, jdbcType=VARCHAR}
+			</if>      
+			,LAST_UPDT_DTM = SYSDATE
+			,LAST_UPDUSR_ID = #{lastUpdusrId, jdbcType=VARCHAR}
+		WHERE FLOOR_CD = #{floorCd}           
+    </update>    
+</mapper>

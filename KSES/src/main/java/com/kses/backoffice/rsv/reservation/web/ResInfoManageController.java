@@ -28,7 +28,7 @@ import com.kses.backoffice.mng.employee.service.DeptInfoManageService;
 import com.kses.backoffice.mng.employee.service.EmpInfoManageService;
 import com.kses.backoffice.rsv.reservation.service.ResInfoManageService;
 import com.kses.backoffice.rsv.reservation.service.ResTimeInfoManageService;
-import com.kses.backoffice.rsv.reservation.vo.ResvInfo;
+import com.kses.backoffice.rsv.reservation.vo.ReservationInfo;
 import com.kses.backoffice.bld.center.service.CenterInfoManageService;
 import com.kses.backoffice.bld.floor.service.FloorInfoManageService;
 import com.kses.backoffice.bld.floor.service.FloorPartInfoManageService;
