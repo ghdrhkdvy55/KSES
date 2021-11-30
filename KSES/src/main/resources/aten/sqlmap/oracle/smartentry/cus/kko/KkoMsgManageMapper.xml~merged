@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kses.backoffice.cus.kko.mapper.KkoMsgManageMapper">
+  
+  <select id="selectKkoMsgInfoList"  resultType="lmap">
+	     SELECT TB.* 
+         FROM (
+				    SELECT SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT,
+				           ROW_NUMBER() OVER (ORDER BY b.REQDATE DESC) AS RNUM, 
+				           a.MSGKEY, a.STATUS, a.PHONE, a.CALLBACK, b.MSG, a.TEMPLATE_CODE, a.FAILED_TYPE,
+						   a.ID, a.SENTDATE, 
+						   FORMAT(b.REQDATE,'yyyy-MM-dd HH:mm:ss') REQDATE,
+						   a.RSLTDATE, a.REPORTDATE, a.RSLT, a.MSG_RSLT
+				    FROM  KKO_MSG a
+				    WHERE 1=1
+				          <if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchStartDay)">
+							  AND CONVERT(varchar(8), a.REG_DATE, 112) Between #{params.searchStartDay} AND #{params.searchEndDay}
+						  </if>
+	     ) TB  
+	     WHERE RNUM  BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage} 
+         ORDER BY TB.REQDATE  DESC
+    </select>
+    <select id="selectKkoMsgInfoDetail" resultType="lmap">
+	     SELECT MSGKEY, SERIALNUM, ID, STATUS, PHONE, CALLBACK, REQDATE, SENTDATE, RSLTDATE, 
+	            REPORTDATE, RSLT, MSG_RSLT, NET, MSG, TEMPLATE_CODE, TEMPLATE_TITLE, FAILED_TYPE, 
+	            FAILED_SUBJECT, FAILED_MSG, FAILED_IMG, PROFILE_KEY, URL, URL_BUTTON_TXT, IMG_PATH, IMG_URL, 
+	            BUTTON_JSON, AD_FLAG, WI_FLAG, PRICE, CURRENCY_TYPE, ETC1, ETC2, ETC3, ETC4, ETC5, ETC6
+	     FROM KKO_MSG a
+	     WHERE a.MSGKEY =  #{msgkey}
+    </select>
+    <insert id="kkoMsgInsertSevice" >
+         INSERT INTO KKO_MSG(REQDATE, STATUS, PHONE, CALLBACK, PROFILE_KEY, 
+							 MSG, TEMPLATE_CODE, FAILED_TYPE, FAILED_SUBJECT, FAILED_MSG)
+         VALUES (SYSDATE, 1, #{phone}, #{callback}, 'XXXXXXXXX', 
+                 #{msg,jdbcType=VARCHAR},  #{templateCode,jdbcType=VARCHAR},  
+                 #{failedType,jdbcType=VARCHAR}, #{failedSubject,jdbcType=VARCHAR},  #{failedMsg,jdbcType=VARCHAR});
+                
+    </insert>
+
+</mapper>

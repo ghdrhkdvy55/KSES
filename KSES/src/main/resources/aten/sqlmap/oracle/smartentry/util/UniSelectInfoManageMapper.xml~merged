@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kses.backoffice.util.mapper.UniSelectInfoManageMapper">
+    <select  id="selectMaxValue" resultType="java.lang.String">
+		{CALL 
+			KSES_USER.SP_MAXVALUE
+			( 
+				#{isColumn ,mode=IN, jdbcType=VARCHAR, javaType=string}, 
+				#{isTable ,mode=IN, jdbcType=VARCHAR, javaType=string}
+			)
+        }
+    </select>
+    
+    <!--  신규 공용 컬럼 -->
+    <update id="updateUniStatement" statementType="CALLABLE">
+		{CALL 
+			KSES_USER.SP_UNIUPDATE
+			(	
+				#{isColumn ,mode=IN, jdbcType=VARCHAR, javaType=string}, 
+				#{isTable ,mode=IN, jdbcType=VARCHAR, javaType=string},
+				#{isCondition ,mode=IN, jdbcType=VARCHAR, javaType=string}
+			)
+        }
+    </update>
+    
+    <delete id="deleteUniStatement" statementType="CALLABLE">
+		{CALL 
+			KSES_USER.SP_UNIDEL
+			(
+				#{isTable, mode=IN, jdbcType=VARCHAR, javaType=string}, 
+				#{isCondition, mode=IN, jdbcType=VARCHAR, javaType=string} 
+			)
+		}
+    </delete>
+    
+    <select id="selectIdDoubleCheck" resultType="java.lang.Integer" statementType="CALLABLE">
+        SELECT 
+        	KSES_USER.FN_UNICHECK
+        	(	
+        		#{isColumn ,mode=IN, jdbcType=VARCHAR, javaType=string}, 
+				#{isTable ,mode=IN, jdbcType=VARCHAR, javaType=string},
+				#{isCondition ,mode=IN, jdbcType=VARCHAR, javaType=string} 
+			) 
+		FROM DUAL
+    </select>
+    
+    <select id="selectFieldStatement" resultType="lmap" statementType="CALLABLE">
+		{CALL 
+			KSES_USER.SP_UNISELECT
+			(
+				#{isColumn ,mode=IN, jdbcType=VARCHAR, javaType=string}, 
+				#{isTable, mode=IN, jdbcType=VARCHAR, javaType=string},
+				#{isCondition ,mode=IN, jdbcType=VARCHAR, javaType=string}
+			)
+        }
+    </select>   
+</mapper>
