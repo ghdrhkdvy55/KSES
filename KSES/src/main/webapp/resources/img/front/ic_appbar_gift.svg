@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
+    <defs>
+        <style>
+            .cls-3{fill:none;stroke:#fff}
+        </style>
+    </defs>
+    <g id="ic_appbar_gift" transform="translate(-1621 -832)">
+        <path id="사각형_114820" fill="#fff" d="M0 0H36V36H0z" opacity="0.002" transform="translate(1621 832)"/>
+        <g id="합치기_1844" fill="#fff" stroke="none">
+            <path d="M-7366.496 15881.002h-15.003v-10h-1v-4.003h16.999v.001H-7373.998V15871.001h8.498v.001h-.996v10zm-7.502-10v9.999h7.501v-9.999h-7.5zm-7.5 0v9.999h7.5v-9.999h-7.5zm-1.001-4.002V15871.001H-7373.998V15867H-7382.499z" transform="translate(9012.998 -15022.501)"/>
+            <path d="M-7365.996 15881.502H-7382v-10h-1V15866.499H-7365v1.001h-8.498v3.001h7.502v-2.001h.996v3.002h-.996v10zm-7.502-10v8.999h6.501v-8.999h-6.5zm-7.5 0v8.999h6.5v-8.999h-6.5zm-1.001-4.002v3.001h7.501v-3.001h-7.501z" transform="translate(9012.998 -15022.501)"/>
+        </g>
+        <path id="패스_20855" d="M-7374 15868s-.025-3.451-2-3.5a1.9 1.9 0 0 0-2 2c0 .583.773 1.5 4 1.5" class="cls-3" transform="translate(9012.998 -15023.501)"/>
+        <path id="패스_20856" d="M-7378 15868s.025-3.451 2-3.5a1.9 1.9 0 0 1 2 2c0 .583-.773 1.5-4 1.5" class="cls-3" transform="translate(9016.998 -15023.501)"/>
+    </g>
+</svg>

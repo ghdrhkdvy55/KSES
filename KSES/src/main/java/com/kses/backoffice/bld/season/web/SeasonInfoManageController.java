@@ -62,7 +62,7 @@ public class SeasonInfoManageController {
 	@Autowired
 	private EgovCcmCmmnDetailCodeManageService cmmnDetailService;
 	
-	//íŒŒì¼ ì—…ë¡œë“œ
+	//ÆÄÀÏ ¾÷·Îµå
     @Autowired
 	private fileService uploadFile;
     
@@ -167,7 +167,7 @@ public class SeasonInfoManageController {
 		return model;
 	}
 	
-	//ì‹œì¦Œ GUI ì¢Œì¸¡ ì„¤ì •
+	//½ÃÁğ GUI ÁÂÃø ¼³Á¤
 	@RequestMapping (value="seasonCenterLst.do")
 	public ModelAndView selectSeasonCenterListInfo(@ModelAttribute("loginVO") LoginVO loginVO, 
 												   @RequestParam("seasonCd") String seasonCd , 
@@ -187,7 +187,7 @@ public class SeasonInfoManageController {
 			List<Map<String, Object>> list = seasonService.selectSeasonCenterInfoList(seasonCd);
 			if (list.size() > 0) {
 				String centerCd = list.get(0).get("center_cd").toString();
-				//ì¸µ 
+				//Ãş 
 				Map<String, Object> search = new HashMap<String,Object>();
 				search.put("centerCd", centerCd);
 				search.put("firstIndex", "0");
@@ -236,7 +236,7 @@ public class SeasonInfoManageController {
 			model.addObject(Globals.JSON_RETURN_RESULTLISR, seasonList);
 			model.addObject(Globals.PAGE_TOTALCNT, totCnt);
 		    
-		    //ì§€ë„ ì´ë¯¸ì§€ 
+		    //Áöµµ ÀÌ¹ÌÁö 
 		    if (searchVO.get("searchFloorCd") != null ) {
 		    	LOGGER.info(searchVO.get("searchPartCd").toString());
 		    	System.out.println((String)searchVO.get("searchPartCd") == "0");
@@ -299,7 +299,7 @@ public class SeasonInfoManageController {
 			
 	    	
 			meesage = vo.getMode().equals("Ins") ? "sucess.common.insert" : "sucess.common.update";
-			//useridë¡œ ë³€ê²½ 
+			//userid·Î º¯°æ 
 			loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
 			vo.setUserId(loginVO.getAdminId());
 			int ret = seasonService.updateSeasonInfo(vo);

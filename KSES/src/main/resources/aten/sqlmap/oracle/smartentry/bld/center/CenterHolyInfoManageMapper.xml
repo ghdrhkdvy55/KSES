@@ -50,4 +50,14 @@
 		)
 		WHERE A.CENTER_CD = #{params.targetCenterCd}
 	</update>
+	
+	<select id="centerUpdateSelect" resultType="lmap">
+		SELECT CENTER_HOLY_SEQ, CENTER_CD, HOLY_DT, HOLY_NM, USE_YN, LAST_UPDUSR_ID
+		FROM TSEB_CENTERHOLY_INFO_I
+		WHERE CENTER_HOLY_SEQ = #{centerHolySeq}
+	</select>
+	<delete id="deleteCenterHolyInfo">
+		DELETE FROM TSEB_CENTERHOLY_INFO_I WHERE CENTER_HOLY_SEQ = #{centerHolySeq}
+	</delete>
+	
 </mapper>

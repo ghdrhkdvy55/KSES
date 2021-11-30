@@ -15,6 +15,8 @@ public interface FloorPartInfoManageService {
 	
 	Map<String, Object> selectFloorPartInfoDetail(String partSeq)throws Exception;
 	
+	List<Map<String, Object>> selectResvPartList(Map<String, Object> params) throws Exception;
+	
 	int updateFloorPartInfoManage(FloorPartInfo vo)throws Exception;
 	
 	int updateFloorPartInfPositionInfo(List<FloorPartInfo> floorPartInfo)throws Exception;

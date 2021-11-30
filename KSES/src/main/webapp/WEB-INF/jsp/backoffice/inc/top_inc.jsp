@@ -27,6 +27,7 @@ if(loginVO == null ){
         	<li class="logo"><h1>경륜경정 스마트 입장시스템</h1></li>
         	<li class="toggle"><a href="#" onclick="toggleNav()" class="menu"></a></li>
         	<li class="logo1"><img src="/resources/img/logo1.png" alt=""></li>
+        	<li class="logout"><img src="/resources/img/logout.png" alt="로그아웃"><a href="/backoffie/actionLogout.do">로그아웃</a></li>
         	<li class="member"><img src="/resources/img/login.png" alt=""><span><%=loginVO.getAdminId() %></span> 님</li>
       	</ul>
     </header>

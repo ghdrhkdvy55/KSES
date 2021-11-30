@@ -85,8 +85,7 @@
 	      			                { label: '페이지사이즈',  name:'menuCheck',         index:'menuCheck',        align:'left',   width:'10%'},
 	      			                { label: '최종수정일자',  name:'last_updt_dtm',         index:'last_updt_dtm',        align:'left',   width:'10%'
 	      			                	, sortable: 'date' ,formatter: "date", formatoptions: { newformat: "Y-m-d"}},
-	      			                { label: '수정자', name: 'last_updusr_id',  index:'last_updusr_id',      align:'center',  width: '10%' fixed:true, sortable : 
-	    			                  false }
+	      			                { label: '수정자', name: 'last_updusr_id',  index:'last_updusr_id',      align:'center',  width: '10%', fixed:true}
     			                ],  //상단면 
     		        rowNum : 10,  //레코드 수
     		        rowList : [10,20,30,40,50,100],  // 페이징 수

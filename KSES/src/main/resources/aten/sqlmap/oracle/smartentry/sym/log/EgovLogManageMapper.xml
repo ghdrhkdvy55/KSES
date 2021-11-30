@@ -10,7 +10,7 @@
 		)
 		VALUES 
 		( 
-			#{logId}, #{connectMthd}, #{connectId ,jdbcType=VARCHAR}, #{connectIp ,jdbcType=VARCHAR}, #{errorOccrrAt ,jdbcType=VARCHAR}, 
+			#{logId}, #{connectMthd,jdbcType=VARCHAR}, #{connectId ,jdbcType=VARCHAR}, #{connectIp ,jdbcType=VARCHAR}, #{errorOccrrAt ,jdbcType=VARCHAR}, 
 			#{errorCode, jdbcType=VARCHAR}, SYSDATE
 		)
 	</insert>
@@ -32,17 +32,16 @@
       	(
 			SELECT 
 				SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT,
-	           	ROW_NUMBER() OVER (ORDER BY COM_CODE DESC) AS RNUM, 
-	           	A.LOG_ID, A.CREAT_DT, A.CONECT_MTHD, A.CONECT_IP, A.CONECT_ID, 
-	           	B.USER_NM AS LOGIN_NM
-			FROM COMTNLOGINLOG A, 
-				 TB_EMPINFO B ON A.CONECT_ID = B.ESNTL_ID
-			WHERE A.CONECT_ID = B.EMPNO
-			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchFloorSeq)">
-				AND A.CONECT_MTHD LIKE CONCAT ('%', #searchWrd#,'%') 
+	           	ROW_NUMBER() OVER (ORDER BY CREAT_DT DESC) AS RNUM, 
+	           	A.LOG_ID,  TO_CHAR( A.CREAT_DT, 'yyyy-mm-dd HH24:MI:SS') CREAT_DT, A.CONECT_MTHD, A.CONECT_IP, A.CONECT_ID, 
+	           	B.EMP_NM AS LOGIN_NM
+			FROM COMTNLOGINLOG A, VW_EMPINFO B 
+			WHERE A.CONECT_ID = B.EMP_NO
+			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
+				AND A.CONECT_MTHD LIKE  '%'|| #{params.searchKeyword} ||'%' 
 			</if>
 			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchBgnDe)">
-				AND DATE_FORMAT(a.CREAT_DT, '%Y%m%d') BETWEEN #searchBgnDe# AND #searchEndDe# 
+				AND DATE_FORMAT(a.CREAT_DT, '%Y%m%d') BETWEEN #{params.searchFrom} AND #{params.searchTo} 
 			</if>
 		)TB  
 	   	WHERE RNUM  BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}   

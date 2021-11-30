@@ -1,0 +1,462 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="725.946" height="693.425" viewBox="0 0 725.946 693.425">
+  <g id="그룹_21" data-name="그룹 21" transform="translate(-200.266 -28.205)">
+    <g id="백그라운드_영역" data-name="백그라운드 영역" transform="translate(184.436 941.372) rotate(-90)">
+      <path id="BACK" d="M315.881,15.831V91.591H219.766v81.414s-2.278,41.838,37.315,41.838h58.8V585.732h11.308V724.815H502.056v16.961H913.167V526.789H759.384V15.831Z" fill="#f9f9f9"/>
+      <g id="그룹_19" data-name="그룹 19">
+        <path id="패스_3" data-name="패스 3" d="M306.629,96.206H254.57v81.953s2.721,31.277,27.714,31.277h24.345Z" transform="translate(-30)" fill="none" stroke="#eee" stroke-width="3"/>
+        <path id="패스_29" data-name="패스 29" d="M359.968,604.5V717.93h58.88V604.5Z" transform="translate(-28.468 2)" fill="none" stroke="#eee" stroke-width="3"/>
+        <path id="패스_59" data-name="패스 59" d="M359.968,604.5v56.715H465.294V604.5Z" transform="translate(35.532 58.715)" fill="none" stroke="#eee" stroke-width="3"/>
+        <g id="사각형_113503" data-name="사각형 113503" transform="translate(320 215)" fill="#eee" stroke="#eee" stroke-width="1">
+          <rect width="32" height="40" stroke="none"/>
+          <rect x="0.5" y="0.5" width="31" height="39" fill="none"/>
+        </g>
+        <g id="사각형_113511" data-name="사각형 113511" transform="translate(320 259.479)" fill="#eee" stroke="#eee" stroke-width="1">
+          <rect width="32" height="44" stroke="none"/>
+          <rect x="0.5" y="0.5" width="31" height="43" fill="none"/>
+        </g>
+        <g id="사각형_113505" data-name="사각형 113505" transform="translate(320 402)" fill="#eee" stroke="#eee" stroke-width="1">
+          <rect width="32" height="38" stroke="none"/>
+          <rect x="0.5" y="0.5" width="31" height="37" fill="none"/>
+        </g>
+        <g id="사각형_113510" data-name="사각형 113510" transform="translate(320 307)" fill="#eee" stroke="#eee" stroke-width="1">
+          <rect width="32" height="91" stroke="none"/>
+          <rect x="0.5" y="0.5" width="31" height="90" fill="none"/>
+        </g>
+        <g id="사각형_113509" data-name="사각형 113509" transform="translate(356.77 402)" fill="#eee" stroke="#eee" stroke-width="1">
+          <rect width="57" height="38" stroke="none"/>
+          <rect x="0.5" y="0.5" width="56" height="37" fill="none"/>
+        </g>
+        <g id="사각형_113512" data-name="사각형 113512" transform="translate(357.215 214.886)" fill="#eee" stroke="#eee" stroke-width="1">
+          <rect width="57" height="183" stroke="none"/>
+          <rect x="0.5" y="0.5" width="56" height="182" fill="none"/>
+        </g>
+        <g id="사각형_4" data-name="사각형 4" transform="translate(321 22)" fill="#eee" stroke="#eee" stroke-width="1">
+          <rect width="93.715" height="70" stroke="none"/>
+          <rect x="0.5" y="0.5" width="92.715" height="69" fill="none"/>
+        </g>
+        <path id="패스_33" data-name="패스 33" d="M281.658,96.206h68.533V210.227H281.658Z" transform="translate(-0.158 0.294)" fill="none" stroke="#eee" stroke-width="3"/>
+        <path id="패스_67" data-name="패스 67" d="M281.658,96.206h56.5V210.227h-56.5Z" transform="translate(76.057 0.294)" fill="none" stroke="#eee" stroke-width="3"/>
+        <path id="패스_68" data-name="패스 68" d="M281.658,96.206h83.8v87.776h-83.8Z" transform="translate(139.057 -74.206)" fill="none" stroke="#eee" stroke-width="3"/>
+        <path id="패스_69" data-name="패스 69" d="M281.658,96.206h52.035v87.776H281.658Z" transform="translate(231.057 -74.206)" fill="none" stroke="#cee0ff" stroke-width="3"/>
+        <path id="패스_70" data-name="패스 70" d="M281.658,96.206h52.035v87.776H281.658Z" transform="translate(290.057 -74.206)" fill="none" stroke="#cee0ff" stroke-width="3"/>
+        <path id="패스_71" data-name="패스 71" d="M281.658,96.206h52.035v87.776H281.658Z" transform="translate(349.057 -74.206)" fill="none" stroke="#cee0ff" stroke-width="3"/>
+        <path id="패스_72" data-name="패스 72" d="M281.658,96.206H343.4v87.776H281.658Z" transform="translate(408.057 -74.206)" fill="none" stroke="#cee0ff" stroke-width="3"/>
+        <path id="패스_74" data-name="패스 74" d="M281.658,96.206h89.208V202.7H281.658Z" transform="translate(380.594 372.814)" fill="none" stroke="#cee0ff" stroke-width="3"/>
+        <path id="패스_75" data-name="패스 75" d="M281.658,96.206h89.208V202.7H281.658Z" transform="translate(282.594 372.814)" fill="none" stroke="#cee0ff" stroke-width="3"/>
+        <path id="패스_37" data-name="패스 37" d="M798.73,631.077v68.395h-66.7V631.077Z" transform="translate(-343.265 -118.17)" fill="none" stroke="#eee" stroke-width="3"/>
+        <path id="패스_65" data-name="패스 65" d="M904.6,2136.391v202.733H726.627V2186.572l30.376,0v-50.181Z" transform="translate(1.088 -1604.005)" fill="#eee" stroke="#eee" stroke-width="1"/>
+        <text id="공조실" transform="translate(819.703 624.215) rotate(90)" fill="#333" font-size="13" font-family="MalgunGothicBold, Malgun Gothic"><tspan x="0" y="0">공조실</tspan></text>
+        <text id="홀" transform="translate(463.215 312.886) rotate(90)" fill="#333" font-size="13" font-family="MalgunGothicBold, Malgun Gothic"><tspan x="0" y="0">홀</tspan></text>
+        <text id="투표소" transform="translate(382.215 285.886) rotate(90)" fill="#333" font-size="13" font-family="MalgunGothicBold, Malgun Gothic"><tspan x="0" y="0">투표소</tspan></text>
+        <text id="여성_흡연실" data-name="여성
+흡연실" transform="translate(389.715 178.386) rotate(90)" fill="#333" font-size="13" font-family="MalgunGothicBold, Malgun Gothic"><tspan x="-13" y="0">여성</tspan><tspan y="0" font-family="SegoeUI-Bold, Segoe UI" font-weight="700"></tspan><tspan x="-19.5" y="17">흡연실</tspan></text>
+        <g id="사각형_113507" data-name="사각형 113507" transform="translate(561.215 682.886)" fill="#eee" stroke="#eee" stroke-width="1">
+          <rect width="162" height="53" stroke="none"/>
+          <rect x="0.5" y="0.5" width="161" height="52" fill="none"/>
+        </g>
+        <g id="흡연구역" transform="translate(403.215 109.776) rotate(90)">
+          <rect id="사각형_113501" data-name="사각형 113501" width="35" height="35" rx="4" fill="#c51515"/>
+          <g id="그룹_18" data-name="그룹 18" transform="translate(-713.342 -315.889)">
+            <path id="패스_58" data-name="패스 58" d="M130.736,744.878l-.982-1.456a1.852,1.852,0,0,0,.8-1.4l0-.071a1.827,1.827,0,0,0-.326-1.225,6.809,6.809,0,0,1-1.046-1.732l-.028-.085a3.2,3.2,0,0,1,1.137-3.27l1.087,1.379-.543-.69.55.684a1.526,1.526,0,0,0-.548,1.388,5.167,5.167,0,0,0,.749,1.211,3.563,3.563,0,0,1,.719,2.465A3.614,3.614,0,0,1,130.736,744.878Z" transform="translate(590.249 -409.296)" fill="#fff"/>
+            <rect id="사각형_113502" data-name="사각형 113502" width="18.03" height="3.251" transform="translate(725.057 337.138)" fill="#fff"/>
+            <line id="선_3" data-name="선 3" y2="3.251" transform="translate(720.937 337.138)" fill="none" stroke="#fff" stroke-width="1.5"/>
+            <line id="선_4" data-name="선 4" y2="3.251" transform="translate(723.466 337.138)" fill="none" stroke="#fff" stroke-width="1.5"/>
+          </g>
+        </g>
+        <g id="흡연구역-2" data-name="흡연구역" transform="translate(480.215 48.886) rotate(90)">
+          <rect id="사각형_113501-2" data-name="사각형 113501" width="35" height="35" rx="4" fill="#c51515"/>
+          <g id="그룹_18-2" data-name="그룹 18" transform="translate(-713.342 -315.889)">
+            <path id="패스_58-2" data-name="패스 58" d="M130.736,744.878l-.982-1.456a1.852,1.852,0,0,0,.8-1.4l0-.071a1.827,1.827,0,0,0-.326-1.225,6.809,6.809,0,0,1-1.046-1.732l-.028-.085a3.2,3.2,0,0,1,1.137-3.27l1.087,1.379-.543-.69.55.684a1.526,1.526,0,0,0-.548,1.388,5.167,5.167,0,0,0,.749,1.211,3.563,3.563,0,0,1,.719,2.465A3.614,3.614,0,0,1,130.736,744.878Z" transform="translate(590.249 -409.296)" fill="#fff"/>
+            <rect id="사각형_113502-2" data-name="사각형 113502" width="18.03" height="3.251" transform="translate(725.057 337.138)" fill="#fff"/>
+            <line id="선_3-2" data-name="선 3" y2="3.251" transform="translate(720.937 337.138)" fill="none" stroke="#fff" stroke-width="1.5"/>
+            <line id="선_4-2" data-name="선 4" y2="3.251" transform="translate(723.466 337.138)" fill="none" stroke="#fff" stroke-width="1.5"/>
+          </g>
+        </g>
+        <text id="매점_" data-name="매점 " transform="translate(636.715 694.386) rotate(90)" fill="#333" font-size="13" font-family="MalgunGothicBold, Malgun Gothic"><tspan x="0" y="0">매점</tspan><tspan y="0" font-family="SegoeUI-Bold, Segoe UI" font-weight="700"> </tspan></text>
+      </g>
+    </g>
+    <g id="비상구" transform="translate(832.322 595.157) rotate(-90)">
+      <g id="비상구-2" data-name="비상구" transform="translate(35) rotate(90)">
+        <rect id="area-101" width="35" height="35" rx="4" fill="#618152"/>
+        <g id="그룹_8" data-name="그룹 8" transform="translate(9 6)">
+          <path id="패스_27" data-name="패스 27" d="M2047.883,3130.2a2.789,2.789,0,1,0-3.4-2A2.787,2.787,0,0,0,2047.883,3130.2Z" transform="translate(-2040.965 -3124.712)" fill="#fff"/>
+          <path id="패스_28" data-name="패스 28" d="M2057.017,3141.461l-3.94-1.039-.582-4.214h0l0-.019-.022-.158,0,0c-.008-.036-.009-.071-.019-.106l-1.482-5.475,2.227-.545,1.461,1.817h0l.157.2a.97.97,0,0,0,1.327.173.891.891,0,0,0,.181-1.278l-.156-.2-1.932-2.536c-.1-.119-.181-.156-.259-.137v-.018l-4.917,1v0c-.094.009-1.651.717-1.867.856l-2.684,2.642-1.7-1.176-.21-.144a.97.97,0,0,0-1.321.207.893.893,0,0,0,.216,1.273l.223.152,2.279,1.608a.9.9,0,0,0,1.2-.132l.006.012,2.016-1.988.7,2.6.282,1.224-5.125,8.043a1.262,1.262,0,0,0,.44,1.776,1.385,1.385,0,0,0,.7.191,1.355,1.355,0,0,0,1.145-.615l4.69-7.361.123-.144.466,3.58a1.256,1.256,0,0,0,.814,1l-.012.029,4.9,1.291a1.3,1.3,0,0,0,1.6-.864A1.241,1.241,0,0,0,2057.017,3141.461Z" transform="translate(-2041.093 -3123.613)" fill="#fff"/>
+        </g>
+      </g>
+    </g>
+    <g id="비상구-3" data-name="비상구" transform="translate(322.322 674.157)">
+      <g id="비상구-4" data-name="비상구">
+        <rect id="area-101-2" data-name="area-101" width="35" height="35" rx="4" fill="#618152"/>
+        <g id="그룹_8-2" data-name="그룹 8" transform="translate(9 6)">
+          <path id="패스_27-2" data-name="패스 27" d="M2047.883,3130.2a2.789,2.789,0,1,0-3.4-2A2.787,2.787,0,0,0,2047.883,3130.2Z" transform="translate(-2040.965 -3124.712)" fill="#fff"/>
+          <path id="패스_28-2" data-name="패스 28" d="M2057.017,3141.461l-3.94-1.039-.582-4.214h0l0-.019-.022-.158,0,0c-.008-.036-.009-.071-.019-.106l-1.482-5.475,2.227-.545,1.461,1.817h0l.157.2a.97.97,0,0,0,1.327.173.891.891,0,0,0,.181-1.278l-.156-.2-1.932-2.536c-.1-.119-.181-.156-.259-.137v-.018l-4.917,1v0c-.094.009-1.651.717-1.867.856l-2.684,2.642-1.7-1.176-.21-.144a.97.97,0,0,0-1.321.207.893.893,0,0,0,.216,1.273l.223.152,2.279,1.608a.9.9,0,0,0,1.2-.132l.006.012,2.016-1.988.7,2.6.282,1.224-5.125,8.043a1.262,1.262,0,0,0,.44,1.776,1.385,1.385,0,0,0,.7.191,1.355,1.355,0,0,0,1.145-.615l4.69-7.361.123-.144.466,3.58a1.256,1.256,0,0,0,.814,1l-.012.029,4.9,1.291a1.3,1.3,0,0,0,1.6-.864A1.241,1.241,0,0,0,2057.017,3141.461Z" transform="translate(-2041.093 -3123.613)" fill="#fff"/>
+        </g>
+      </g>
+    </g>
+    <g id="EV" transform="translate(322.322 605.157)">
+      <rect id="area" width="35" height="35" fill="#3f464d" opacity="0"/>
+      <path id="ic" d="M25.079,34.249H0V9.165H25.08V34.249ZM14.63,24.708h1.306v6.366H18.55V24.708h1.306V17.431H14.63Zm-9.405,0H6.53v6.366H9.144V24.708H10.45V17.431H5.224ZM15.5,14a1.743,1.743,0,1,0,1.743-1.819A1.784,1.784,0,0,0,15.5,14ZM6.1,14a1.784,1.784,0,0,0,1.743,1.819,1.821,1.821,0,0,0,0-3.638A1.784,1.784,0,0,0,6.1,14ZM13.324.135h9.405L18.027,6ZM2.349,5.863,7.053,0l4.7,5.863Z" transform="translate(5)" fill="#3f464d"/>
+    </g>
+    <g id="여_화장실" data-name="여 화장실" transform="translate(711.822 499.657)">
+      <rect id="사각형_111" data-name="사각형 111" width="35" height="35" rx="5" fill="#ff6e6e"/>
+      <g id="그룹_16" data-name="그룹 16" transform="translate(11 7)">
+        <circle id="타원_42765" data-name="타원 42765" cx="3.26" cy="3.26" r="3.26" transform="translate(2.941)" fill="#fff"/>
+        <path id="패스_55" data-name="패스 55" d="M473.049,678.34h4.273c1.114,0,1.679.769,2.017,2l2.2,8.616a2.011,2.011,0,0,1-2.017,2h-8.675a2.01,2.01,0,0,1-2.017-2l2.2-8.616C471.3,679.185,471.934,678.34,473.049,678.34Z" transform="translate(-468.83 -669.647)" fill="#fff"/>
+      </g>
+    </g>
+    <g id="남_화장실" data-name="남 화장실" transform="translate(647.822 570.157)">
+      <g id="ic_toilet_M" transform="translate(0.008)" opacity="0.8">
+        <rect id="사각형_112" data-name="사각형 112" width="35" height="35" rx="5" transform="translate(-0.008 0)" fill="#473aff"/>
+        <g id="그룹_17" data-name="그룹 17" transform="translate(10.992 7)">
+          <ellipse id="타원_42765-2" data-name="타원 42765" cx="3.258" cy="3.258" rx="3.258" ry="3.258" transform="translate(2.843)" fill="#fff"/>
+          <path id="패스_55-2" data-name="패스 55" d="M472.879,690.54h4.1c1.069,0,1.612-.744,1.937-1.936l2.113-8.327a1.937,1.937,0,0,0-1.937-1.937h-8.327a1.937,1.937,0,0,0-1.937,1.937l2.113,8.327C471.206,689.724,471.81,690.54,472.879,690.54Z" transform="translate(-468.83 -670.078)" fill="#fff"/>
+        </g>
+      </g>
+    </g>
+    <g id="EV-2" data-name="EV" transform="translate(860.322 507.156) rotate(-90)">
+      <rect id="area-2" data-name="area" width="35" height="35" fill="#3f464d" opacity="0"/>
+      <path id="ic-2" data-name="ic" d="M25.079,34.249H0V9.165H25.08V34.249ZM14.63,24.708h1.306v6.366H18.55V24.708h1.306V17.431H14.63Zm-9.405,0H6.53v6.366H9.144V24.708H10.45V17.431H5.224ZM15.5,14a1.743,1.743,0,1,0,1.743-1.819A1.784,1.784,0,0,0,15.5,14ZM6.1,14a1.784,1.784,0,0,0,1.743,1.819,1.821,1.821,0,0,0,0-3.638A1.784,1.784,0,0,0,6.1,14ZM13.324.135h9.405L18.027,6ZM2.349,5.863,7.053,0l4.7,5.863Z" transform="translate(34.664 4.584) rotate(90)" fill="#3f464d"/>
+    </g>
+    <g id="좌석" transform="translate(-258.678 804.157) rotate(-90)">
+      <circle id="타원_119" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-2" data-name="좌석" transform="translate(-258.678 746.157) rotate(-90)">
+      <circle id="타원_119-2" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-3" data-name="좌석" transform="translate(-256.678 637.157) rotate(-90)">
+      <circle id="타원_119-3" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-4" data-name="좌석" transform="translate(-256.678 689.157) rotate(-90)">
+      <circle id="타원_119-4" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-5" data-name="좌석" transform="translate(199.322 638.157) rotate(-90)">
+      <circle id="타원_119-5" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-6" data-name="좌석" transform="translate(199.322 734.157) rotate(-90)">
+      <circle id="타원_119-6" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-7" data-name="좌석" transform="translate(-256.678 612.157) rotate(-90)">
+      <circle id="타원_119-7" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-8" data-name="좌석" transform="translate(-237.678 804.157) rotate(-90)">
+      <circle id="타원_119-8" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-9" data-name="좌석" transform="translate(-237.678 746.157) rotate(-90)">
+      <circle id="타원_119-9" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-10" data-name="좌석" transform="translate(-238.678 637.157) rotate(-90)">
+      <circle id="타원_119-10" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-11" data-name="좌석" transform="translate(-238.678 689.157) rotate(-90)">
+      <circle id="타원_119-11" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-12" data-name="좌석" transform="translate(217.322 638.157) rotate(-90)">
+      <circle id="타원_119-12" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-13" data-name="좌석" transform="translate(217.322 734.157) rotate(-90)">
+      <circle id="타원_119-13" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-14" data-name="좌석" transform="translate(-238.678 612.157) rotate(-90)">
+      <circle id="타원_119-14" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-15" data-name="좌석" transform="translate(-216.678 637.157) rotate(-90)">
+      <circle id="타원_119-15" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-16" data-name="좌석" transform="translate(-216.678 689.157) rotate(-90)">
+      <circle id="타원_119-16" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-17" data-name="좌석" transform="translate(240.322 638.157) rotate(-90)">
+      <circle id="타원_119-17" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-18" data-name="좌석" transform="translate(240.322 734.157) rotate(-90)">
+      <circle id="타원_119-18" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-19" data-name="좌석" transform="translate(-216.678 612.157) rotate(-90)">
+      <circle id="타원_119-19" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-20" data-name="좌석" transform="translate(-169.678 638.157) rotate(-90)">
+      <circle id="타원_119-20" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-21" data-name="좌석" transform="translate(15.322 638.157) rotate(-90)">
+      <circle id="타원_119-21" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-22" data-name="좌석" transform="translate(126.322 638.157) rotate(-90)">
+      <circle id="타원_119-22" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-23" data-name="좌석" transform="translate(-169.678 668.157) rotate(-90)">
+      <circle id="타원_119-23" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-24" data-name="좌석" transform="translate(15.322 668.157) rotate(-90)">
+      <circle id="타원_119-24" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-25" data-name="좌석" transform="translate(126.322 668.157) rotate(-90)">
+      <circle id="타원_119-25" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-26" data-name="좌석" transform="translate(-169.678 698.157) rotate(-90)">
+      <circle id="타원_119-26" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-27" data-name="좌석" transform="translate(15.322 698.157) rotate(-90)">
+      <circle id="타원_119-27" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-28" data-name="좌석" transform="translate(126.322 698.157) rotate(-90)">
+      <circle id="타원_119-28" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-29" data-name="좌석" transform="translate(-169.678 728.157) rotate(-90)">
+      <circle id="타원_119-29" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-30" data-name="좌석" transform="translate(15.322 728.157) rotate(-90)">
+      <circle id="타원_119-30" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-31" data-name="좌석" transform="translate(126.322 728.157) rotate(-90)">
+      <circle id="타원_119-31" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-32" data-name="좌석" transform="translate(-169.678 758.157) rotate(-90)">
+      <circle id="타원_119-32" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-33" data-name="좌석" transform="translate(15.322 758.157) rotate(-90)">
+      <circle id="타원_119-33" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-34" data-name="좌석" transform="translate(126.322 758.157) rotate(-90)">
+      <circle id="타원_119-34" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-35" data-name="좌석" transform="translate(15.322 788.157) rotate(-90)">
+      <circle id="타원_119-35" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-36" data-name="좌석" transform="translate(126.322 788.157) rotate(-90)">
+      <circle id="타원_119-36" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-37" data-name="좌석" transform="translate(-148.678 638.157) rotate(-90)">
+      <circle id="타원_119-37" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-38" data-name="좌석" transform="translate(-58.678 638.157) rotate(-90)">
+      <circle id="타원_119-38" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-39" data-name="좌석" transform="translate(52.322 638.157) rotate(-90)">
+      <circle id="타원_119-39" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-40" data-name="좌석" transform="translate(-148.678 668.157) rotate(-90)">
+      <circle id="타원_119-40" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-41" data-name="좌석" transform="translate(-58.678 668.157) rotate(-90)">
+      <circle id="타원_119-41" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-42" data-name="좌석" transform="translate(52.322 668.157) rotate(-90)">
+      <circle id="타원_119-42" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-43" data-name="좌석" transform="translate(-148.678 698.157) rotate(-90)">
+      <circle id="타원_119-43" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-44" data-name="좌석" transform="translate(-58.678 698.157) rotate(-90)">
+      <circle id="타원_119-44" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-45" data-name="좌석" transform="translate(52.322 698.157) rotate(-90)">
+      <circle id="타원_119-45" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-46" data-name="좌석" transform="translate(-148.678 728.157) rotate(-90)">
+      <circle id="타원_119-46" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-47" data-name="좌석" transform="translate(-58.678 728.157) rotate(-90)">
+      <circle id="타원_119-47" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-48" data-name="좌석" transform="translate(52.322 728.157) rotate(-90)">
+      <circle id="타원_119-48" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-49" data-name="좌석" transform="translate(-148.678 758.157) rotate(-90)">
+      <circle id="타원_119-49" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-50" data-name="좌석" transform="translate(-58.678 758.157) rotate(-90)">
+      <circle id="타원_119-50" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-51" data-name="좌석" transform="translate(52.322 758.157) rotate(-90)">
+      <circle id="타원_119-51" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-52" data-name="좌석" transform="translate(-148.678 788.157) rotate(-90)">
+      <circle id="타원_119-52" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-53" data-name="좌석" transform="translate(-111.678 638.157) rotate(-90)">
+      <circle id="타원_119-53" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-54" data-name="좌석" transform="translate(-21.678 638.157) rotate(-90)">
+      <circle id="타원_119-54" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-55" data-name="좌석" transform="translate(89.322 638.157) rotate(-90)">
+      <circle id="타원_119-55" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-56" data-name="좌석" transform="translate(-111.678 668.157) rotate(-90)">
+      <circle id="타원_119-56" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-57" data-name="좌석" transform="translate(-21.678 668.157) rotate(-90)">
+      <circle id="타원_119-57" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-58" data-name="좌석" transform="translate(89.322 668.157) rotate(-90)">
+      <circle id="타원_119-58" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-59" data-name="좌석" transform="translate(-111.678 698.157) rotate(-90)">
+      <circle id="타원_119-59" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-60" data-name="좌석" transform="translate(-21.678 698.157) rotate(-90)">
+      <circle id="타원_119-60" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-61" data-name="좌석" transform="translate(89.322 698.157) rotate(-90)">
+      <circle id="타원_119-61" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-62" data-name="좌석" transform="translate(-111.678 728.157) rotate(-90)">
+      <circle id="타원_119-62" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-63" data-name="좌석" transform="translate(-21.678 728.157) rotate(-90)">
+      <circle id="타원_119-63" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-64" data-name="좌석" transform="translate(89.322 728.157) rotate(-90)">
+      <circle id="타원_119-64" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-65" data-name="좌석" transform="translate(-111.678 758.157) rotate(-90)">
+      <circle id="타원_119-65" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-66" data-name="좌석" transform="translate(-21.678 758.157) rotate(-90)">
+      <circle id="타원_119-66" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-67" data-name="좌석" transform="translate(89.322 758.157) rotate(-90)">
+      <circle id="타원_119-67" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-68" data-name="좌석" transform="translate(-111.678 788.157) rotate(-90)">
+      <circle id="타원_119-68" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-69" data-name="좌석" transform="translate(-21.678 788.157) rotate(-90)">
+      <circle id="타원_119-69" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-70" data-name="좌석" transform="translate(89.322 788.157) rotate(-90)">
+      <circle id="타원_119-70" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-71" data-name="좌석" transform="translate(-132.678 638.157) rotate(-90)">
+      <circle id="타원_119-71" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-72" data-name="좌석" transform="translate(-42.678 638.157) rotate(-90)">
+      <circle id="타원_119-72" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-73" data-name="좌석" transform="translate(68.322 638.157) rotate(-90)">
+      <circle id="타원_119-73" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-74" data-name="좌석" transform="translate(-132.678 668.157) rotate(-90)">
+      <circle id="타원_119-74" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-75" data-name="좌석" transform="translate(-42.678 668.157) rotate(-90)">
+      <circle id="타원_119-75" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-76" data-name="좌석" transform="translate(68.322 668.157) rotate(-90)">
+      <circle id="타원_119-76" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-77" data-name="좌석" transform="translate(-132.678 698.157) rotate(-90)">
+      <circle id="타원_119-77" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-78" data-name="좌석" transform="translate(-42.678 698.157) rotate(-90)">
+      <circle id="타원_119-78" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-79" data-name="좌석" transform="translate(68.322 698.157) rotate(-90)">
+      <circle id="타원_119-79" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-80" data-name="좌석" transform="translate(-132.678 728.157) rotate(-90)">
+      <circle id="타원_119-80" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-81" data-name="좌석" transform="translate(-42.678 728.157) rotate(-90)">
+      <circle id="타원_119-81" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-82" data-name="좌석" transform="translate(68.322 728.157) rotate(-90)">
+      <circle id="타원_119-82" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-83" data-name="좌석" transform="translate(-132.678 758.157) rotate(-90)">
+      <circle id="타원_119-83" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-84" data-name="좌석" transform="translate(-42.678 758.157) rotate(-90)">
+      <circle id="타원_119-84" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-85" data-name="좌석" transform="translate(68.322 758.157) rotate(-90)">
+      <circle id="타원_119-85" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-86" data-name="좌석" transform="translate(-132.678 788.157) rotate(-90)">
+      <circle id="타원_119-86" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-87" data-name="좌석" transform="translate(-42.678 788.157) rotate(-90)">
+      <circle id="타원_119-87" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-88" data-name="좌석" transform="translate(68.322 788.157) rotate(-90)">
+      <circle id="타원_119-88" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-89" data-name="좌석" transform="translate(-95.678 638.157) rotate(-90)">
+      <circle id="타원_119-89" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-90" data-name="좌석" transform="translate(-5.678 638.157) rotate(-90)">
+      <circle id="타원_119-90" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-91" data-name="좌석" transform="translate(105.322 638.157) rotate(-90)">
+      <circle id="타원_119-91" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-92" data-name="좌석" transform="translate(-95.678 668.157) rotate(-90)">
+      <circle id="타원_119-92" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-93" data-name="좌석" transform="translate(-5.678 668.157) rotate(-90)">
+      <circle id="타원_119-93" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-94" data-name="좌석" transform="translate(105.322 668.157) rotate(-90)">
+      <circle id="타원_119-94" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-95" data-name="좌석" transform="translate(-95.678 698.157) rotate(-90)">
+      <circle id="타원_119-95" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-96" data-name="좌석" transform="translate(-5.678 698.157) rotate(-90)">
+      <circle id="타원_119-96" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-97" data-name="좌석" transform="translate(105.322 698.157) rotate(-90)">
+      <circle id="타원_119-97" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-98" data-name="좌석" transform="translate(-95.678 728.157) rotate(-90)">
+      <circle id="타원_119-98" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-99" data-name="좌석" transform="translate(-5.678 728.157) rotate(-90)">
+      <circle id="타원_119-99" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-100" data-name="좌석" transform="translate(105.322 728.157) rotate(-90)">
+      <circle id="타원_119-100" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-101" data-name="좌석" transform="translate(-95.678 758.157) rotate(-90)">
+      <circle id="타원_119-101" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-102" data-name="좌석" transform="translate(-5.678 758.157) rotate(-90)">
+      <circle id="타원_119-102" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-103" data-name="좌석" transform="translate(105.322 758.157) rotate(-90)">
+      <circle id="타원_119-103" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-104" data-name="좌석" transform="translate(-95.678 788.157) rotate(-90)">
+      <circle id="타원_119-104" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-105" data-name="좌석" transform="translate(-5.678 788.157) rotate(-90)">
+      <circle id="타원_119-105" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-106" data-name="좌석" transform="translate(105.322 788.157) rotate(-90)">
+      <circle id="타원_119-106" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-107" data-name="좌석" transform="translate(-279.678 637.157) rotate(-90)">
+      <circle id="타원_119-107" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-108" data-name="좌석" transform="translate(-279.678 689.157) rotate(-90)">
+      <circle id="타원_119-108" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-109" data-name="좌석" transform="translate(175.322 638.157) rotate(-90)">
+      <circle id="타원_119-109" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-110" data-name="좌석" transform="translate(175.322 734.157) rotate(-90)">
+      <circle id="타원_119-110" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="좌석-111" data-name="좌석" transform="translate(-279.678 612.157) rotate(-90)">
+      <circle id="타원_119-111" data-name="타원 119" cx="7.5" cy="7.5" r="7.5" transform="translate(397 491)" fill="#d1d1d1"/>
+    </g>
+    <g id="사각형_113508" data-name="사각형 113508" transform="translate(867.322 435.157) rotate(-90)" fill="#eee" stroke="#eee" stroke-width="1">
+      <rect width="50" height="53" stroke="none"/>
+      <rect x="0.5" y="0.5" width="49" height="52" fill="none"/>
+    </g>
+    <path id="패스_66" data-name="패스 66" d="M317.336,2186.025h61.827v-74.918h72.518v-62.432H317.336Z" transform="translate(-1419.678 938.157) rotate(-90)" fill="none" stroke="#eee" stroke-width="3"/>
+    <path id="패스_73" data-name="패스 73" d="M748.909,1727H510.58v340.545H748.909Z" transform="translate(-1419.678 938.157) rotate(-90)" fill="none" stroke="#cee0ff" stroke-width="3"/>
+    <line id="선_5" data-name="선 5" x2="170" transform="translate(420.822 394.657) rotate(-90)" fill="none" stroke="#cee0ff" stroke-width="3"/>
+    <line id="선_6" data-name="선 6" x2="170" transform="translate(531.822 394.657) rotate(-90)" fill="none" stroke="#cee0ff" stroke-width="3"/>
+  </g>
+</svg>

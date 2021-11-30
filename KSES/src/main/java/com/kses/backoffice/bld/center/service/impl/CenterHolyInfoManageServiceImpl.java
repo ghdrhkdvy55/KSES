@@ -30,15 +30,13 @@ public class CenterHolyInfoManageServiceImpl extends EgovAbstractServiceImpl imp
 
 	@Override
 	public int updateCenterHolyInfo(CenterHolyInfo vo) throws Exception {
-		// TODO Auto-generated method stub
 		int ret = 0;
 		
-		if (vo.getMode().equals("Ins")){
-			ret = (uniMapper.selectIdDoubleCheck("CENTER_HOLY_SEQ", "TSEB_CENTERHOLY_INFO_I", "CENTER_HOLY_SEQ = ["+vo.getCenterHolySeq() +"[ AND HOLY_DT = [" + vo.getHolyDt() + "[") > 0) 
-					? -1 :  centerHolyMapper.insertCenterHolyInfo(vo);
-		} else {
+		if (vo.getMode().equals("Edt")){
 			ret = centerHolyMapper.updateCenterHolyInfo(vo);
-		}
+		} else {
+			ret = (uniMapper.selectIdDoubleCheck("HOLY_DT", "TSEB_CENTERHOLY_INFO_I", "HOLY_DT = ["+ vo.getHolyDt() + "[ AND CENTER_CD = ["+ vo.getCenterCd() + "[" ) > 0) ? -1 : centerHolyMapper.insertCenterHolyInfo(vo);
+		}		
 		return ret;
 	}
 
@@ -47,4 +45,17 @@ public class CenterHolyInfoManageServiceImpl extends EgovAbstractServiceImpl imp
 		// TODO Auto-generated method stub
 		return centerHolyMapper.copyCenterHolyInfo(params);
 	}
+	
+	@Override
+	public Map<String, Object> centerUpdateSelect(String centerHolySeq) throws Exception {
+		// TODO Auto-generated method stub
+		return centerHolyMapper.centerUpdateSelect(centerHolySeq);
+	}
+	
+	@Override
+	public int deleteCenterHolyInfo(int centerHolySeq) throws Exception {
+		// TODO Auto-generated method stub
+		return centerHolyMapper.deleteCenterHolyInfo(centerHolySeq);
+	}
+
 }

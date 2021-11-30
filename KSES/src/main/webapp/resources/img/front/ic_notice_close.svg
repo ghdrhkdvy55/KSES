@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30">
+    <defs>
+        <style>
+            .cls-2{fill:#fff}
+        </style>
+    </defs>
+    <g id="ic_notice_close" transform="translate(-30 -15)">
+        <g id="ic" transform="rotate(45 12.747 60.067)">
+            <path id="사각형_10578" d="M0 0H1V15H0z" class="cls-2" transform="translate(14.5 8.5)"/>
+            <path id="사각형_10580" d="M0 0H15V1H0z" class="cls-2" transform="translate(7.5 15.5)"/>
+        </g>
+    </g>
+</svg>

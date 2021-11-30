@@ -19,7 +19,7 @@ public interface EmpInfoManageMapper {
 	
 	public int updateEmpInfo(EmpInfo params);
 	
-	public int deleteEmpInfo(String empId);
+	public int deleteEmpInfo(@Param("empList") List<String> empList);
 	
 	public int mergeEmpInfo(List<EmpInfo> empInfoList);	
 }

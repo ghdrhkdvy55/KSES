@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import com.kses.backoffice.sys.msg.mapper.MessageInfoManageMapper;
 import com.kses.backoffice.sys.msg.service.MessageInfoManageService;
 import com.kses.backoffice.sys.msg.vo.MessageInfo;
-import com.kses.backoffice.sys.msg.vo.MessageInfoVO;
 
 @Service
 public class MessageInfoManageServiceImpl extends EgovAbstractServiceImpl implements MessageInfoManageService {
@@ -25,7 +24,7 @@ public class MessageInfoManageServiceImpl extends EgovAbstractServiceImpl implem
 	private MessageInfoManageMapper msgMapper;
 
 	@Override
-	public List<Map<String, Object>> selectMsgManageListByPagination(MessageInfoVO searchVO) throws Exception {
+	public List<Map<String, Object>> selectMsgManageListByPagination(Map<String, Object> searchVO) throws Exception {
 		// TODO Auto-generated method stub
 		return msgMapper.selectMsgManageListByPagination(searchVO);
 	}
@@ -36,30 +35,14 @@ public class MessageInfoManageServiceImpl extends EgovAbstractServiceImpl implem
 		return msgMapper.selectMsgManageDetail(MsgSeq);
 	}
 	@Override
-	public int updateMsgManage(MessageInfo vo) throws Exception {
-		int ret = 0;
-		try{
-			if (vo.getMode().equals("Ins"))
-				ret = msgMapper.insertMsgManage(vo);
-			else 
-				ret =msgMapper.updateMsgManage(vo);
-		}catch(Exception e){
-			LOGGER.error("updateMsgManage error:" + e.toString());
-		}
-		return ret;
+	public int insertMsgManage(List<MessageInfo> messageInfos) throws Exception {
+		return msgMapper.insertMsgManage(messageInfos);		
 	}
 
 	@Override
 	public int deleteMsgManage(String msgSeq) throws Exception {
 		// TODO Auto-generated method stub
-		return msgMapper.deleteMsgManage(msgSeq);
-	}
-
-	@Override
-	public List<MessageInfo> selectMsgCombo(String msgGubun)
-			throws Exception {
-		// TODO Auto-generated method stub
-		return msgMapper.selectMsgCombo(msgGubun);
+		return 0;
 	}
 	
 	

@@ -98,7 +98,7 @@ public class MenuInfoServiceImpl extends EgovAbstractServiceImpl implements Menu
 		// TODO Auto-generated method stub
 		int ret = 0;
 		try {
-			List<String> menuNoList = util.dotToList(checkedMenuNoForDel);
+			List<String> menuNoList = SmartUtil.dotToList(checkedMenuNoForDel);
 	        //menuMapper.deleteMenuManage_L(menuNoList)
 	        int delCnt = menuNoList.size();
 	        int realDelCnt = 0;

@@ -7,7 +7,8 @@
 			    	 SELECT	SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT,
 			    	        ROW_NUMBER() OVER (ORDER BY TB.EMP_NO DESC) AS RNUM, 
 			    	        TB.*
-					  FROM		(SELECT a.EMP_ID, a.EMP_NO, a.EMP_NM,  FN_ORGNM(a.DEPT_CD, 'DEPT') DEPT_NM, FN_ORGNM(a.GRAD_CD, 'DEPT') GRAD_NM, FN_ORGNM(a.PSIT_CD, 'POST') PSIT_NM, 
+					  FROM		(SELECT a.EMP_ID, a.EMP_NO, a.EMP_NM,  FN_ORGNM(a.DEPT_CD, 'DEPT') DEPT_NM, FN_ORGNM(a.GRAD_CD, 'DEPT') GRAD_NM, 
+					                    FN_ORGNM(a.PSIT_CD, 'POST') PSIT_NM, 
                                         a.USE_YN, a.EMP_CLPHN, a.EMP_TLPHN, a.EMP_EMAIL, a.ADMIN_DVSN, a.EMP_STATE, a.EMP_PIC, 
                                         TO_CHAR(a.LAST_UPDT_DTM, 'YYYY-MM-DD') LAST_UPDT_DTM, a.LAST_UPDUSR_ID, b.CODE_NM
                                         
@@ -25,6 +26,11 @@
 											      AND  a.EMP_ID LIKE '%'|| #{params.searchKeyword}|| '%' 
 											     ]]> 
 											</when>	
+											<when test="params.searchCondition == 'emp_cell'">
+											    <![CDATA[
+											      AND  a.EMP_CLPHN LIKE '%'|| #{params.searchKeyword}|| '%' 
+											     ]]> 
+											</when>	
 											<when test="params.searchCondition == 'emp_no'">
 											    <![CDATA[
 											      AND  a.EMP_NO LIKE '%'|| #{params.searchKeyword}|| '%' 
@@ -40,6 +46,12 @@
 									  </if>	
 									  <if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchDepth)">
 									      AND a.GRAD_CD= #{params.searchDepth}
+									  </if>
+									  <if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.groupCode)">
+									      AND a.EMP_CLPHN NOT IN 
+									          (SELECT GROUP_USER_CELLPHONE 
+									           FROM TSES_MESSAGGROUP_USER 
+									           WHERE GROUP_CODE =  #{params.groupCode}) 
 									  </if>
 									       
                                  )TB
@@ -250,13 +262,9 @@
 	</update>
 	
 	<delete id="deleteEmpInfo">
-		{CALL
-			DECLARE
-			BEGIN
-				DELETE FROM TSEH_EMP_INFO_M EMP_NO = #{empNo};
-				DELETE FROM TB_ADMININFO = EMP_NO = #{empNo};
-			
-			END 
-		}
+		DELETE FROM TSEH_EMP_INFO_M WHERE EMP_NO IN
+		<foreach collection="empList" item="item"  open="(" separator="," close=")">
+   			#{item}
+   		</foreach>
     </delete>  
 </mapper>

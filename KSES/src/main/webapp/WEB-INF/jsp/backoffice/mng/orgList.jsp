@@ -185,7 +185,7 @@
 		        	$("#btnUpdate").text("수정");
 		        	var params = {"code" : code, 'orgGubun' : $("#orgGubun").val()};
 		        	var url = "/backoffice/mng/orgDetail.do";
-		     	    uniAjaxSerial(url, params, false,
+		     	    fn_Ajax(url, "GET", params, false,
 			          	    function(result) {
 	     				       if (result.status == "LOGIN FAIL"){
 		 				    	   common_popup(result.meesage, "Y", "bas_code_add");
@@ -211,6 +211,7 @@
 		        	$("#codeDc").val('');
 		        	$("#sp_Unqi").show();
 		        	$("#btnSave").text("입력");
+		        	$("#useAt_Y").prop("checked", true);
 		        }
 		        $("#bas_code_add").bPopup();
            },fn_CheckForm  : function (){
@@ -225,10 +226,10 @@
 				    		    'codeNm' : $("#codeNm").val(),
 				    		    'codeDc' : $("#codeDc").val(), 
 				    		    'orgGubun' : $("#orgGubun").val(), 
-				    		    'useYn' : fn_emptyReplace($("#useYn").val(),"Y"),
+				    		    'useYn' : $("input:radio[name='useYn']:checked").val(),
 				    		    'mode' : $("#mode").val()
 		    	               }; 
-		    	uniAjax(url, params, true,
+		    	fn_Ajax(url, "POST", params, true,
 		      			function(result) {
 		 				       if (result.status == "LOGIN FAIL"){
 		 				    	   common_popup(result.meesage, "Y","bas_code_add");
@@ -252,7 +253,7 @@
 	        	url = "/backoffice/mng/orgIdCheck.do"
 	        	var param =  {"code" : $("#code").val(), 'orgGubun' : $("#orgGubun").val() };
 	        	if ($("#code").val() != ""){
-	        		uniAjaxSerial(url, param, false,
+	        		fn_Ajax(url, "GET", param, false,
 	        			    function(result) {	
         			           if (result != null) {	       	
         			        	   if (result.status == "SUCCESS"){
@@ -427,6 +428,7 @@
     </div>
 </div>
     <c:import url="/backoffice/inc/popup_common.do" />
+    <script type="text/javascript" src="/resources/js/common.js"></script>
     <script type="text/javascript" src="/resources/js/back_common.js"></script>
 </body>
 </html>

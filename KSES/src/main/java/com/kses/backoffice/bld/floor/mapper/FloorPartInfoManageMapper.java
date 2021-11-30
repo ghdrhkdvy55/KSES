@@ -16,6 +16,8 @@ public interface FloorPartInfoManageMapper {
 	public List<Map<String, Object>> selectFloorPartInfoManageCombo (@Param("floorCd") String floorCd);
 	
 	public Map<String, Object> selectFloorPartInfoDetail(String partSeq);
+	
+	public List<Map<String, Object>> selectResvPartList(@Param("params") Map<String, Object> params);
 		
 	public int insertFloorPartInfo(FloorPartInfo vo);
 	

@@ -260,12 +260,13 @@
 		               );
 		        }else{
 		        	$("#seasonCd").val('').prop('readonly', false);
-		        	$("#season_nm").val('');
+		        	$("#seasonNm").val('');
 				    $("#seasonStartDay").val('');
 				    $("#seasonEndDay").val('');
 				    fn_CheckboxAllChange("seasonCenterinfo", false);
 				    $("#seasonDc").val('');				  
 		        	$("#btnUpdate").text("입력");
+		        	$("#useAt_Y").prop("checked", true);
 		        }
 		        $("#bld_season_add").bPopup();
            },fn_CheckForm  : function (){
@@ -348,14 +349,14 @@
 		   						  
 		   						   
 		   						   fn_comboListJson("searchCenterCd", result.regist, "fn_floorChange", "100px;", "");
-		   						   $("#searchCenterCd option:eq(1)").prop("selected", true);
+		   						   $("#searchCenterCd option:eq(0)").prop("selected", true);
 		   						   fn_comboListJson("searchFloorCd", result.floorlist, "fn_partChange", "100px;", "");
 		   						   
-		   						   $("#searchFloorCd option:eq(1)").prop("selected", true);
+		   						   $("#searchFloorCd option:eq(0)").prop("selected", true);
 		   						   if ( result.partlist.length > 0){
 		   							   $("#searchPartCd").show();
 		   							   fn_comboListJson("searchPartCd", result.partlist, "", "100px;", ""); 
-		   							   $("#searchPartCd option:eq(1)").prop("selected", true);
+		   							   $("#searchPartCd option:eq(0)").prop("selected", true);
 		   						   }else {
 		   							   $("#searchPartCd").hide();
 		   						   }
@@ -422,7 +423,7 @@
             </select>
             <p>검색어</p>
             <select id="searchCondition"  name="searchCondition">
-              <option value="0">이름</option>
+              <option value="0">선택</option>
               <option value="SEASON_NM">시즌명</option>
               <option value="SEASON_DC">시즌 상세 설명</option>
             </select>
@@ -723,7 +724,7 @@
 	 		var returnVal = uniAjaxReturn(url, "GET", false, params, "lst");
 	 		fn_comboListJson("searchFloorCd", returnVal, "fn_partChange", "100px;", "");
 	 		if (returnVal.length > 0){
-	 			$("#searchFloorCd option:eq(1)").prop("selected", true);
+	 			$("#searchFloorCd option:eq(0)").prop("selected", true);
 	 		}else {
 	 			$("#searchFloorCd").hide();
 	 		}
@@ -735,7 +736,7 @@
 		 	var returnVal = uniAjaxReturn(url, "GET", false, params, "lst");
 			fn_comboListJson("searchPartCd", returnVal, "", "100px;", "");
 			if (returnVal.length > 0){
-	 			$("#searchPartCd option:eq(1)").prop("selected", true);
+	 			$("#searchPartCd option:eq(0)").prop("selected", true);
 	 			$("#searchPartCd").show();
 	 		}else {
 	 			

@@ -97,7 +97,7 @@ public class EgovCcmCmmnCodeManageController {
         return model;
 	}
     @RequestMapping(value="codeListAjax.do")
-	public ModelAndView selectCmmnCodeListAjax(	@ModelAttribute("LoginVO") LoginVO adminLoginVO
+	public ModelAndView selectCmmnCodeListAjax(	@ModelAttribute("LoginVO") LoginVO loginVO
 			                                    , @RequestBody Map<String,Object>  searchVO
 											    , HttpServletRequest request
 											    , BindingResult bindingResult) throws Exception {
@@ -202,14 +202,14 @@ public class EgovCcmCmmnCodeManageController {
 				cmmnCode.setLastUpdusrId(LoginVO.getAdminId());
 			}
   			
-            String meesage = "";
+            String message = "";
   			int ret  = 0;  	    	
-  	        meesage = cmmnCode.getMode().equals("Ins") ? "sucess.common.insert" : "sucess.common.update";
+  	        message = cmmnCode.getMode().equals("Ins") ? "sucess.common.insert" : "sucess.common.update";
   	        ret = cmmnCodeManageService.updateCmmnCode(cmmnCode);
   	        
   	        if (ret > 0) {
   	        	model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-  	        	model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));			
+  	        	model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(message));			
 			} else {
 				throw new Exception();
 			}
@@ -231,7 +231,7 @@ public class EgovCcmCmmnCodeManageController {
 	 * @throws Exception
 	 */
     @RequestMapping(value="codeDelete.do")
-	public ModelAndView deleteCmmnCode(	@ModelAttribute("LoginVO") LoginVO adminLoginVO, 
+	public ModelAndView deleteCmmnCode(	@ModelAttribute("LoginVO") LoginVO loginVO, 
 			                             @RequestBody Map<String,Object> cmmnCode, 
 										HttpServletRequest request,
 										RedirectAttributes redirect,

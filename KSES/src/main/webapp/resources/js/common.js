@@ -447,7 +447,6 @@ function fn_uniDel(_url, _data, _action_url){
 	}
 }
 function fn_uniDelAction(_url, _data, _action_url){
-    
 	if (confirm("삭제 하시겠습니까?")== true){
 	    $.ajax({
 			url: _url,

@@ -17,7 +17,7 @@ public interface BoardInfoManageMapper {
 	
     public List<Map<String, Object>> selectBoardMainManageListByPagination() throws Exception;
     
-    public Map<String, Object> selectBoardManageView(String boardSeq) throws Exception;
+    public Map<String, Object> selectBoardManageDetail(String boardSeq) throws Exception;
 	
     public int insertBoardManage(BoardInfo vo) throws Exception;
 	
@@ -27,11 +27,6 @@ public interface BoardInfoManageMapper {
 	
     public int deleteBoardManage(String  boardSeq) throws Exception;
 
-	public int updateBoardNoticeUseYn() throws Exception;
-
 	public int updateBoardTopSeq() throws Exception;
 
-	public String selectBoardUploadFileName(String boardSeq) throws Exception;
-
-	public String selectBoardoriginalFileName(String boardSeq) throws Exception;
 }

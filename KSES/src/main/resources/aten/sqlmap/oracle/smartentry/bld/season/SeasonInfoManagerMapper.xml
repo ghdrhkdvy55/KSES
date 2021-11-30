@@ -16,11 +16,24 @@
 				FROM TSEB_SEASON_M A
 				WHERE 1=1
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
-					AND 
-					( 
-						#{params.searchCondition} LIKE '%'|| #{params.searchKeyword} || '%' 
+					<choose>
+						<when test="params.searchCondition == 'SEASON_NM'">
+							AND SEASON_NM LIKE '%' || #{params.searchKeyword} || '%' 
+						</when>	
 						
-					) 
+						<when test="params.searchCondition == 'SEASON_DC'">
+							AND SEASON_DC LIKE '%' || #{params.searchKeyword} || '%' 
+						</when>		
+										
+						<otherwise>
+							AND 
+							(
+								SEASON_NM LIKE '%' || #{params.searchKeyword} || '%' 
+								OR SEASON_DC LIKE '%' || #{params.searchKeyword} || '%' 
+							)
+						</otherwise>
+						
+					</choose>
 				</if>
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchCenter)">
 				    AND INSTR(A.SEASON_CENTERINFO,  #{params.searchCenter})  > 0

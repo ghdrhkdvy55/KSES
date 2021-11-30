@@ -81,6 +81,7 @@ public class FloorInfoManageController {
 		try {
 			Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
 			if(!isAuthenticated) {
+				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
 				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
 				model.setViewName("/backoffice/login");
 				return model;	
@@ -101,8 +102,10 @@ public class FloorInfoManageController {
 			//층수 리스트 
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			
-    		List<Map<String, Object>> centerInfoComboList = centerInfoService.selectCenterInfoComboList();
-    		model.addObject("centerInfoComboList", centerInfoComboList);
+			// ComboBox Data
+			List<Map<String, Object>> centerInfoComboList = centerInfoService.selectCenterInfoComboList();
+			model.addObject("centerInfoComboList", centerInfoComboList);
+			model.addObject("floorlistInfo", codeDetailService.selectCmmnDetailComboEtc(params));
 			model.addObject("floorListSeq", floorService.selectFloorInfoComboList(param.get("searchCenterCd")));
 			model.addObject("floorPart", codeDetailService.selectCmmnDetailCombo("FLOOR_PART"));
 			model.addObject("seatClass", codeDetailService.selectCmmnDetailCombo("SEAT_CLASS"));

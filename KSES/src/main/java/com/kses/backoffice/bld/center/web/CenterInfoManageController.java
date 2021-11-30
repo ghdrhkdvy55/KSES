@@ -135,7 +135,7 @@ public class CenterInfoManageController {
 			  
 			  //Paging
 		   	  PaginationInfo paginationInfo = new PaginationInfo();
-			  paginationInfo.setCurrentPageNo(Integer.parseInt(SmartUtil.NVL(searchVO.get("pageIndex").toString(), "1")));
+			  paginationInfo.setCurrentPageNo(Integer.parseInt(SmartUtil.NVL(searchVO.get("pageIndex"), "1").toString()));
 			  paginationInfo.setRecordCountPerPage(pageUnit);
 			  paginationInfo.setPageSize(propertiesService.getInt("pageSize"));
 			  
@@ -227,7 +227,8 @@ public class CenterInfoManageController {
 	
 	@RequestMapping (value="centerInfoDelete.do")
 	public ModelAndView deleteCenterInfoManage(	@ModelAttribute("loginVO") LoginVO loginVO,
-			                                   	@RequestParam("centerList") String centerList ) throws Exception {
+			                                   	@RequestParam("centerList") String centerList,
+			                                   	HttpServletRequest request) throws Exception {
 		
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 

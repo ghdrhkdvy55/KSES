@@ -606,31 +606,25 @@ public class EmpInfoManageController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value="empDelete.do", method = {RequestMethod.POST})
-	public ModelAndView deleteEmployInfo(@RequestParam("empNoDel") String empNoDel,
+	@RequestMapping(value="empDelete.do")
+	public ModelAndView deleteEmployInfo(@RequestParam("empNo") String empNo,
 										 HttpServletRequest request) throws Exception {
 			
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
-			Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-			if(!isAuthenticated) {
-				 model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-				 model.addObject(Globals.STATUS,  Globals.STATUS_LOGINFAIL);
-				 return model;	
-		    }
-			int ret = uniService.deleteUniStatement("", "TSEH_EMP_INFO_M", "EMP_NO IN (SELECT COLUMN_VALUE FROM TABLE (UF_SPLICT(["+ empNoDel+"[, [,[))");
-			if (ret > 0 ) {	
-				//층 
-				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.delete") );		    	 
-			} else {
-				throw new Exception();		    	  
-			}
-		} catch (Exception e){
+	    	int ret =  empService.deleteEmpInfo(SmartUtil.dotToList(empNo));
+	    	if (ret>0) {
+	    		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.delete") );	
+	    	}else {
+	    		throw new Exception();
+	    	}
+				    	 
+		} catch (Exception e) {
 			LOGGER.info(e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.delete"));			
-		}	
+		}		
 		return model;
 	}
 		

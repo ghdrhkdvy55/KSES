@@ -198,6 +198,7 @@
 		    }, clearGrid : function() {
                 $("#mainGrid").clearGridData();
             }, fn_AuthorInfo : function (mode, authorCode){
+            	$("#bas_auth_add").bPopup();
             	$("#mode").val(mode);
         	    if (mode == "Edt"){
 		        	$("#authorCode").val(authorCode).prop('readonly', true);
@@ -205,13 +206,12 @@
 		        	var params = {"authorCode" : authorCode};
 		        	var url = "/backoffice/bas/authInfoDetail.do";
 		        	
-		        	uniAjaxSerial(url, params, true,
+		        	fn_Ajax(url, "GET", params, true,
 			          	    function(result) {
 	     				       if (result.status == "LOGIN FAIL"){
-		 				    	   common_popup(result.meesage, "Y", "mng_admin_add");
+		 				    	   common_popup(result.message, "Y", "mng_admin_add");
 		   						   location.href="/backoffice/login.do";
 	       					   }else if (result.status == "SUCCESS"){
-       						       var obj  = result.regist;
        						       var obj  = result.regist;
 	    						       $("#authorNm").val(obj.author_nm);
 	    						       $("#authorDc").val(obj.author_dc);
@@ -246,19 +246,20 @@
 		  }, fn_update : function (){
 			   $("#confirmPage").bPopup().close();
 			   var url = "/backoffice/bas/authUpdate.do";
-		       var params = {   'authorCode' : $("#authorCode").val(),
-				    		     'authorNm' : $("#authorNm").val(),
-				    		     'authorDc' : $("#authorDc").val(), 
-				    		     'mode' : $("#mode").val()
-		    	               }; 
-		    	uniAjax(url, params, true,
+		       var params = {
+		    		         'authorCode' : $("#authorCode").val(),
+				    		 'authorNm' : $("#authorNm").val(),
+				    		 'authorDc' : $("#authorDc").val(), 
+				    		 'mode' : $("#mode").val()
+		    	             }; 
+		       fn_Ajax(url, "POST", params, true,
 		      			function(result) {
 		 				       if (result.status == "LOGIN FAIL"){
 		 				    	   common_popup(result.meesage, "Y","bas_auth_add");
 		   						   location.href="/backoffice/login.do";
 		   					   }else if (result.status == "SUCCESS"){
 		   						   //총 게시물 정리 하기'
-		   						   common_modelClose("mng_admin_add");
+		   						   common_modelClose("bas_auth_add");
 		   						   jqGridFunc.fn_search();
 		   					   }else if (result.status == "FAIL"){
 		   						   common_popup("저장 도중 문제가 발생 하였습니다.", "Y", "bas_auth_add");
@@ -268,14 +269,14 @@
 		 				    function(request){
 		 				    	common_modelCloseM("Error:" + request.status,"bas_auth_add");
 		 				    }    		
-		        );
+		       );
 		    	
 		  }, fn_idCheck : function (){
 	        	//공용으로 활용 할지 정리 필요 
 			 	var url = "/backoffice/bas/authorIDCheck.do"
 	        	var param =  {"authorCode" : $("#authorCode").val()};
 	        	if ($("#authorCode").val() != ""){
-	        		uniAjaxSerial(url, param, false, 
+	        		fn_Ajax(url, "GET", param, false, 
 	        			    function(result) {	
         			              if (result != null) {
         			                if (result.status == "SUCCESS"){
@@ -419,23 +420,23 @@
 			  menuArray.push("0");
 			  var params = {'checkedMenuNo':menuArray.join(","), 'mode' : $("#mode").val(), 'authorCode': $("#authorCode").val() };
 			  var url = "/backoffice/bas/menuCreateUpdateAjax.do"
-		      uniAjax(url, params, true,
-			      			function(result) {
-			 				       if (result.status == "LOGIN FAIL"){
-			 				    	   common_popup(result.meesage, "Y","bas_menu_create");
-			   						   location.href="/backoffice/login.do";
-			   					   }else if (result.status == "SUCCESS"){
-			   						   //총 게시물 정리 하기'
-			   						   common_modelCloseM(result.message,"bas_menu_create");
-			   						   jqGridFunc.fn_search();
-			   					   }else if (result.status == "FAIL"){
-			   						   common_popup("저장 도중 문제가 발생 하였습니다.", "Y", "bas_menu_create");
-			   						   jqGridFunc.fn_search();
-			   					   }
-			 				    },
-			 				    function(request){
-			 				    	common_modelCloseM("Error:" + request.status,"bas_menu_create");
-			 				    }    		
+			  fn_Ajax(url, "POST", params, true,
+	      			function(result) {
+ 				       if (result.status == "LOGIN FAIL"){
+ 				    	   common_popup(result.meesage, "Y","bas_menu_create");
+   						   location.href="/backoffice/login.do";
+   					   }else if (result.status == "SUCCESS"){
+   						   //총 게시물 정리 하기'
+   						   common_modelCloseM(result.message,"bas_menu_create");
+   						   jqGridFunc.fn_search();
+   					   }else if (result.status == "FAIL"){
+   						   common_popup("저장 도중 문제가 발생 하였습니다.", "Y", "bas_menu_create");
+   						   jqGridFunc.fn_search();
+   					   }
+	 				},
+	 				function(request){
+	 				    common_modelCloseM("Error:" + request.status,"bas_menu_create");
+	 				}    		
 			  );
 			  $("#authorCode").val('');
 			  $("#mode").val('');
@@ -444,25 +445,23 @@
 			  common_popup("체크된 값이 없습니다.", "N", "bas_menu_create");
 			  return;
 		}
-		
-		
-		//var params = {'checkedMenuNoForDel':menuArray.join(",") };
-		//fn_uniDelSerial("/backoffice/bas/MenuManageListDelete.do",params, false, "jqGridFunc.fn_search");
 		menuArray = null;
 	}
 	function fn_menuCheck(authorCode){
 		var params = {'authorCode': authorCode};
-		var returnval = fn_returnSerialInfo("/backoffice/bas/menuCreateMenuListAjax.do", params, "lst");
+		var returnval = uniAjaxReturn("/backoffice/bas/menuCreateMenuListAjax.do", "GET", false, params,  "lst");
 		
 		for (var i in returnval){
 			  var node = returnval[i].menu_no;
-			  console.log("node:" + node);
 			  $('#jstree').jstree('select_node', node);
 		}
 	}
 	$(function () {
+		 var params = {"pageUnit" : 1000};
+		 var returnval = uniAjaxReturn("/backoffice/bas/menuListAjax.do", "POST", false, params,  "lst");
 		 
-		 var returnval = uniAjaxReturn("/backoffice/bas/MenuListAjax.do", "POST", false, null,  "lst");
+		 
+		 
 		 if (returnval.length> 0){
 			 for (var i in returnval){
 				 if (returnval[i].level == "1"){

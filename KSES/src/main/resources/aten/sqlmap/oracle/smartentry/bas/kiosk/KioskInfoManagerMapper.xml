@@ -42,7 +42,7 @@
 				    AND B.CENTER_CD = #{params.searchCenterCd}
 				</if>
 		) TA
-		WHERE ROWNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
+		WHERE RNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
 		ORDER BY TA.TICKET_MCHN_SNO DESC
    	</select>
 

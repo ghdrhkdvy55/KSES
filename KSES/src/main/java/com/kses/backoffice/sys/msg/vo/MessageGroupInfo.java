@@ -11,6 +11,7 @@ public class MessageGroupInfo {
 	private String groupTitle = "";
 	private String groupUseyn = "";
 	private String groupCnt = "";
+	private String groupDc = "";
 	private String lastUpdusrId = "";
 	private String lastUpdtDtm = "";
 	private String mode = "";

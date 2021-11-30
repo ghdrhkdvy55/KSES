@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 34 34">
+    <defs>
+        <style>
+            .cls-2{fill:#333}
+        </style>
+    </defs>
+    <g id="ic_sidemenu_coupon" transform="translate(-419.36 -135.291)">
+        <path id="area" fill="none" d="M0 0H34V34H0z" transform="translate(419.36 135.291)"/>
+        <g id="ic">
+            <path id="패스_20689" d="M445.893 150.19l.467-.03v-.9h-1a2.854 2.854 0 0 0 0 5.479v2.547h-18v-2.547a2.854 2.854 0 0 0 0-5.479v-1.974h15v-.03h4v-.969h-20v3.869l.468.03a1.83 1.83 0 0 1 0 3.628l-.468.031v4.442h20v-4.442l-.467-.031a1.706 1.706 0 0 1-1.588-1.788v-.054a1.706 1.706 0 0 1 1.588-1.782z" class="cls-2"/>
+            <path id="사각형_114934" d="M0 0H1V7H0z" class="cls-2" transform="translate(435.86 148.791)"/>
+        </g>
+    </g>
+</svg>

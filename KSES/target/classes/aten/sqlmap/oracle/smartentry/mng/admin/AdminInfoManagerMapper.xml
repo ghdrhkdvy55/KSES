@@ -16,25 +16,22 @@
 					WHERE a.EMP_NO = b.EMP_NO
 					      AND a.AUTHOR_CD = c.AUTHOR_CODE
 				          <if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
+		
 								<choose>
-									<when test="params.searchCondition == 'ALL'">
-										<![CDATA[						
-										   AND ( ADMIN_ID LIKE CONCAT('%',#{params.searchKeyword},'%')  OR  b.EMP_NM LIKE CONCAT('%',#{params.searchKeyword},'%')  )
-										 ]]> 	
-									</when>
+									  <when test="params.searchCondition == 'ADMIN_ID'">
+									    <![CDATA[
+									      AND  a.ADMIN_ID LIKE '%'|| #{params.searchKeyword}|| '%' 
+									     ]]> 
+									</when>	
+									<when test="params.searchCondition == 'b.EMP_NM'">
+									    <![CDATA[
+									      AND  b.EMP_NM LIKE '%'|| #{params.searchKeyword}|| '%' 
+									     ]]> 
+									</when>	
 									<otherwise>
-										<choose>
-											<when test="params.searchCondition == 'ADMIN_ID'">
-												<![CDATA[		
-												  AND  ADMIN_ID LIKE CONCAT('%',#{params.searchKeyword},'%') 
-												]]> 	
-											</when>
-											<otherwise>
-												<![CDATA[		
-												AND b.EMP_NM LIKE CONCAT('%',#{params.searchKeyword},'%')
-												]]> 	
-											</otherwise>
-										</choose>
+										AND (a.ADMIN_ID LIKE '%'|| #{params.searchKeyword}|| '%'
+										    OR b.EMP_NM LIKE '%'|| #{params.searchKeyword}|| '%' 
+										    )
 									</otherwise>
 								</choose>
 						  </if>	
@@ -44,6 +41,7 @@
 						  <if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchDeptCd)">	        
 						         AND b.DEPT_CD = #{params.searchDeptCd}
 						  </if>	
+
 	            ) TB 
 	        ) TA 
 	        WHERE RNUM  BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}      
@@ -66,7 +64,7 @@
           <selectKey resultType="int"  keyProperty="cnt" order="BEFORE">
                 SELECT NVL(COUNT(EMP_NO),0)  as cnt
                 FROM TSEH_ADMIN_INFO_M 
-                WHEREADMIN_ID = #{adminId}
+                WHERE ADMIN_ID = #{adminId}
           </selectKey>
           <choose>
                 <when test="cnt > 0">

@@ -1,28 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.kses.backoffice.sys.board.mapper.BoardInfoManagerMapper">
+<mapper namespace="com.kses.backoffice.sys.board.mapper.BoardInfoManageMapper">
 	
     <select id="selectBoardManageListByPagination"  resultType="lmap">
 		 
 		SELECT		* 
 		FROM		(	SELECT	 SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT, 
-		                         ROW_NUMBER() OVER (ORDER BY BOARD_SEQ DESC) AS RNUM, 
+		                         ROW_NUMBER() OVER (ORDER BY BOARD_GROUP DESC) AS RNUM, 
 		                         TB.* 
 						FROM  (	
-				                    SELECT	a.BOARD_SEQ
-											, a.BOARD_TITLE
-											, FORMAT(a.BOARD_REGDATE,'yyyy-MM-dd HH:mm:ss')  BOARD_REGDATE 
-											, FORMAT(a.BOARD_UPDATE_DATE,'yyyy-MM-dd HH:mm:ss')  BOARD_UPDATE_DATE
-											, CASE a.BOARD_GUBUN WHEN 'QNA' THEN	
-											    (SELECT b.empname FROM tb_empInfo b where b.EMPNO = a.BOARD_REG_ID) 
-											ELSE	
-											    (SELECT c.ADMIN_NAME FROM tb_admin c where c.ADMIN_ID = a.BOARD_REG_ID) 
-											END 		user_nm
-											, (SELECT DEPTNAME FROM tb_empInfo WHERE EMPNO = a.BOARD_REG_ID) deptname
-											, a.BOARD_REG_ID , a.BOARD_VISITED, a.BOARD_NOTICE_USEYN, a.BOARD_TOP_SEQ
-											, a.BOARD_CONTENT, a.BOARD_NOTICE_STARTDAY, a.BOARD_NOTICE_ENDDAY, a.BOARD_FILE01
+				                    SELECT LPAD(' ', 2*(LEVEL-1)) || BOARD_TITLE AS BOARD_TITLE , BOARD_SEQ, BOARD_CD, BOARD_REFNO, BOARD_CLEVEL, BOARD_NOTICE_START_DAY, BOARD_NOTICE_END_DAY,
+                                           BOARD_POPUP, BOARD_TOP_SEQ, BOARD_VISIT_CNT, USE_YN, LAST_UPDUSR_ID, BOARD_GROUP,
+                                           TO_CHAR(LAST_UPDT_DTM, 'yyyy-MM-dd') LAST_UPDT_DTM
 									FROM  TSES_BOARD_INFO_I a
-									WHERE a.BOARD_GUBUN = #{params.boardGubun}
+									WHERE a.BOARD_CD = #{params.boardCd}
 									<if test="params.boardGubun== 'NOT'">
 						            	<choose>
 						            		<when test="params.adminYn == 'user'">
@@ -30,10 +21,8 @@
 			            			             AND  a.BOARD_SEQ NOT IN	
 			            			              (SELECT BOARD_SEQ 
      			                                   FROM TSES_BOARD_INFO_I d 
-     			                                   WHERE d.BOARD_GUBUN='NOT' 
-     			                                          AND d.BOARD_NOTICE_STARTDAY > CONVERT(VARCHAR(8), GETDATE(), 112)
-     			                                              OR 
-     			                                              d.BOARD_NOTICE_ENDDAY <  CONVERT(varchar(8), getdate(), 112)
+     			                                   WHERE d.BOARD_CD='NOT' 
+     			                                          AND  TO_CHAR(sysdate, 'yyyyMMdd') BETWEEN d.BOARD_NOTICE_STARTDAY AND  d.BOARD_NOTICE_ENDDAY 
      			                                   )
 			            						]]> 
 						            		</when>
@@ -41,47 +30,23 @@
 						            		</otherwise>
 						            	</choose>
 						            </if>   
-						            <if test="params.boardGubun== 'FAQ'">
-						            	<choose>
-						            		<when test="params.adminYn == 0">
-			            			            AND 	a.BOARD_NOTICE_USEYN != 'N'
-						            		</when>
-						            	</choose>
-						            </if>      		        
-							        <if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
-							        	<choose>
-							        		<when test="params.searchCondition == 'all'">
+						            <if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
+
 							        			<![CDATA[
-									             AND (	BOARD_TITLE LIKE CONCAT('%',#{params.searchKeyword, jdbcType=VARCHAR},'%')  or BOARD_CONTENT LIKE CONCAT('%',#{params.searchKeyword, jdbcType=VARCHAR},'%') )
+									             AND (	BOARD_TITLE LIKE '%'||#{params.searchKeyword } ||'%'  
+									                    OR 
+									                    BOARD_CD LIKE '%'||#{params.searchKeyword } ||'%' 
+									                  )
 												]]> 
-							        		</when>
-							        		<otherwise>
-							        			<choose>
-													<when test="params.searchCondition == 'boardTitle'">
-													<![CDATA[
-									                AND BOARD_TITLE LIKE CONCAT('%',#{params.searchKeyword, jdbcType=VARCHAR},'%') 
-													]]> 
-													</when>
-													<otherwise>
-													<![CDATA[
-												    AND	BOARD_CONTENT LIKE CONCAT('%',#{params.searchKeyword, jdbcType=VARCHAR},'%') 
-													]]> 
-												  </otherwise>
-									            </choose>
-							        		</otherwise>
-							        	</choose>
-									</if>		  
+
+									</if>		 
+									START WITH BOARD_REFNO=0
+			                        CONNECT BY PRIOR BOARD_SEQ = BOARD_REFNO
+			                        ORDER SIBLINGS BY BOARD_GROUP DESC
      								) TB 
 			  )TA 
 			  WHERE RNUM  BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
-			  <choose>
-			      <when test="params.boardGubun== 'NOT'">
-			         ORDER BY BOARD_NOTICE_USEYN DESC,	BOARD_TOP_SEQ ASC, BOARD_SEQ DESC
-			      </when>
-			      <otherwise>
-			         ORDER BY BOARD_SEQ DESC
-			      </otherwise>
-			  </choose>			  
+			  
      </select> 
      <select id="selectBoardMainManageListByPagination"  resultType="lmap">
 		 <![CDATA[
@@ -103,164 +68,105 @@
 							           ELSE '공지사항' end boardGubunTitle
 						      , a.BOARD_NOTICE_STARTDAY
 				              , a.BOARD_NOTICE_ENDDAY
-						    FROM  TSES_BOARD_INFO_I a 
-						    WHERE a.board_seq NOT in	(SELECT board_seq FROM TSES_BOARD_INFO_I d WHERE d.BOARD_GUBUN='NOT' 
-						               AND d.BOARD_NOTICE_STARTDAY >  CONVERT(VARCHAR(8), GETDATE(), 112) OR d.board_notice_endday <  CONVERT(VARCHAR(8), GETDATE(), 112) )
+						    FROM  TSES_BOARD_INFO_I a
+						    WHERE a.board_seq NOT in	(SELECT board_seq FROM TSES_BOARD_INFO_I d WHERE d.BOARD_GUBUN='NOT')
+						          AND d.BOARD_NOTICE_STARTDAY >  TO_CHAR(SYSDATE, 'yyyyMMdd' ) OR d.board_notice_endday <  TO_CHAR(SYSDATE, 'yyyyMMdd') )
 				                       AND	 a.BOARD_NOTICE_USEYN != 'N'
 						    ) TB
 	        ) 
 	        WHERE RNUM  BETWEEN  1 AND 5
 	        ]]>         		 	    
      </select> 
-     
-     <update id="updateBoardNoticeUseYn">
-     	UPDATE 	TSES_BOARD_INFO_I  SET BOARD_NOTICE_USEYN = 'N'
-		WHERE 	BOARD_NOTICE_STARTDAY IS NOT NULL 
-		        AND BOARD_NOTICE_ENDDAY IS NOT NULL AND BOARD_GUBUN='NOT' 
-		        AND CONVERT(VARCHAR(8), GETDATE(), 112) NOT BETWEEN BOARD_NOTICE_STARTDAY AND BOARD_NOTICE_ENDDAY
-     </update>
-     
+     <resultMap id="getBoardListResult" type="HashMap"> 
+        <result property="board_seq" column="BOARD_SEQ" /> 
+        <result property="board_cd" column="BOARD_CD" />
+        <result property="board_refno" column="BOARD_REFNO" />
+        <result property="board_clevel" column="BOARD_CLEVEL" />
+        <result property="board_notice_start_day" column="BOARD_NOTICE_START_DAY" />
+        <result property="board_notice_end_day" column="BOARD_NOTICE_END_DAY" />
+        <result property="board_popup" column="BOARD_POPUP" />
+        <result property="board_title" column="BOARD_TITLE" /> 
+        <result property="board_group" column="BOARD_GROUP" /> 
+        <result property="board_top_seq" column="BOARD_TOP_SEQ" /> 
+        <result property="board_visit_cnt" column="BOARD_VISIT_CNT" /> 
+        <result property="use_yn" column="USE_YN" /> 
+        <result property="frst_regter_id" column="FRST_REGTER_ID" /> 
+        <result property="frst_regist_dtm" column="FRST_REGIST_DTM" /> 
+        <result property="last_updusr_id" column="LAST_UPDUSR_ID" /> 
+        <result property="last_updt_dtm" column="LAST_UPDT_DTM" /> 
+        <result property="board_cn" column="BOARD_CN" jdbcType="CLOB" javaType="java.lang.String" /> 
+     </resultMap>
+
+	
+     <select id="selectBoardManageDetail"  resultMap="getBoardListResult">
+     <![CDATA[
+          SELECT BOARD_SEQ, BOARD_CD, BOARD_REFNO, BOARD_CLEVEL, BOARD_NOTICE_START_DAY, BOARD_NOTICE_END_DAY,
+                 BOARD_POPUP, BOARD_TITLE, BOARD_TOP_SEQ, BOARD_VISIT_CNT, USE_YN, BOARD_CN, BOARD_GROUP,
+                 FRST_REGTER_ID, FRST_REGIST_DTM, LAST_UPDUSR_ID, LAST_UPDT_DTM 	        
+		  FROM 	TSES_BOARD_INFO_I a        	
+		  WHERE 	BOARD_SEQ = #{boardSeq}	
+			]]>	
+     </select>     
      <update id="updateBoardTopSeq">
 			UPDATE 	TSES_BOARD_INFO_I SET BOARD_TOP_SEQ = BOARD_TOP_SEQ + 1
 			WHERE 	BOARD_NOTICE_USEYN='Y' AND BOARD_GUBUN='NOT'
      </update>
-     
-     
-     
-     
-    <select id="selectBoardManageView"  resultType="lmap">
-    <![CDATA[
-          SELECT a.BOARD_SEQ
-				, a.BOARD_TITLE
-		        , a.BOARD_NOTICE_USEYN
-		        , CONVERT(VARCHAR(10) , CONVERT(DATETIME, a.BOARD_NOTICE_STARTDAY), 120) BoardNoticeStartdayTxt
-		        , CONVERT(VARCHAR(10) , CONVERT(DATETIME, a.BOARD_NOTICE_ENDDAY), 120) BoardNoticeEnddayTxt
-		        , a.BOARD_NOTICE_STARTDAY, a.BOARD_NOTICE_ENDDAY
-		        , a.BOARD_GUBUN, a.BOARD_CONTENT, a.BOARD_RETURN_CONTENT
-		        , CONVERT(VARCHAR(10), a.BOARD_REGDATE, 120) boardRegdate
-		        , a.BOARD_REG_ID
-		        , CONVERT(VARCHAR(10), a.BOARD_UPDATE_DATE, 120) boardUpdateDate
-		        , a.BOARD_UPDATE_ID
-		        , a.BOARD_FILE01
-		        , a.BOARD_FILE02
-		        , a.BOARD_VIEW_YN
-		        , dbo.FN_DETAILCODENM (a.BOARD_FAQ_GUBUN) BOARD_FAQ_GUBUN
-		        , a.BOARD_VISITED
-		        , CASE a.BOARD_GUBUN WHEN 'QNA'  THEN 
-		                ( SELECT b.EMPNAME FROM tb_empInfo b WHERE EMPNO = a.BOARD_REG_ID)
-		          ELSE 
-		                (SELECT c.ADMIN_NAME FROM tb_admin c WHERE c.ADMIN_ID = a.BOARD_REG_ID)
-		          END userNm
-		        , CASE a.BOARD_GUBUN WHEN 'QNA'  THEN 
-		              ( SELECT b.DEPTNAME FROM tb_empInfo b WHERE EMPNO = a.BOARD_REG_ID)
-				  ELSE ''
-		          END deptname
-		       , CASE a.BOARD_GUBUN WHEN 'QNA'  THEN ''
-				      ELSE ''
-		         END mobTelNo			
-               , CASE a.BOARD_GUBUN WHEN 'QNA'  THEN 
-              		      (SELECT d.EMPMAIL FROM TB_EMPINFO d WHERE a.BOARD_REG_ID = d.EMPNO)  
-				   ELSE (SELECT c.ADMIN_TEL FROM tb_admin c WHERE c.ADMIN_ID = a.BOARD_REG_ID)
-		         END offi_tel_no				   
-		       , CASE a.BOARD_GUBUN WHEN 'QNA'  THEN
-		              (SELECT EMPMAIL FROM TB_EMPINFO b WHERE b.EMPNO = a.BOARD_REG_ID )
-				   ELSE (SELECT ADMIN_EMAIL FROM tb_admin c WHERE c.ADMIN_ID = a.BOARD_REG_ID)
-		           END email
-		       , CASE  WHEN (SELECT COUNT(*) FROM TSES_BOARD_INFO_I b WHERE b.BOARD_SEQ > #{boardSeq}	AND b.BOARD_GUBUN = a.BOARD_GUBUN ) > 0 THEN
-                              (SELECT TOP 1 b.BOARD_SEQ FROM TSES_BOARD_INFO_I b WHERE  b.BOARD_SEQ > #{boardSeq}	  ORDER BY b.BOARD_SEQ ASC)
-                        ELSE 0
-                 END AS nextBoardSeq
-               , CASE  WHEN (SELECT COUNT(*) FROM TSES_BOARD_INFO_I b WHERE b.BOARD_SEQ < #{boardSeq} AND b.BOARD_GUBUN = a.BOARD_GUBUN ) > 0 THEN
-                                (SELECT TOP 1  b.BOARD_SEQ FROM TSES_BOARD_INFO_I b WHERE  b.BOARD_SEQ < #{boardSeq}  ORDER BY b.BOARD_SEQ DESC )
-                          ELSE 0
-                 END AS preBoardSeq
-               , CASE  WHEN (SELECT COUNT(*) FROM TSES_BOARD_INFO_I b WHERE b.BOARD_SEQ > #{boardSeq} AND b.BOARD_GUBUN = a.BOARD_GUBUN ) > 0 THEN
-                                 ( SELECT  TOP 1 b.BOARD_TITLE FROM TSES_BOARD_INFO_I b WHERE  b.BOARD_SEQ > #{boardSeq}  ORDER BY b.BOARD_SEQ ASC )
-                         ELSE '없음'
-                 END AS nextBoardTitle
-               , CASE  WHEN (SELECT COUNT(*) FROM TSES_BOARD_INFO_I b WHERE b.BOARD_SEQ < #{boardSeq} AND b.BOARD_GUBUN = a.BOARD_GUBUN ) > 0 THEN
-                                  ( SELECT TOP 1 b.BOARD_TITLE FROM TSES_BOARD_INFO_I b WHERE  b.BOARD_SEQ < #{boardSeq}  ORDER BY b.BOARD_SEQ DESC )
-                         ELSE '없음'
-                 END AS preBoardTitle
-               , CASE  WHEN (SELECT COUNT(*) FROM TSES_BOARD_INFO_I b WHERE b.BOARD_SEQ > #{boardSeq} AND b.BOARD_GUBUN = a.BOARD_GUBUN ) > 0 THEN
-                                    ( SELECT TOP 1 b.BOARD_REGDATE FROM TSES_BOARD_INFO_I b WHERE  b.BOARD_SEQ > #{boardSeq}  ORDER BY b.BOARD_SEQ ASC)
-                 END AS nextBoardRegDate
-               , CASE  WHEN (SELECT COUNT(*) FROM TSES_BOARD_INFO_I b WHERE b.BOARD_SEQ < #{boardSeq} AND b.BOARD_GUBUN = a.BOARD_GUBUN ) > 0 THEN
-                                    (  SELECT TOP 1 BOARD_REGDATE FROM TSES_BOARD_INFO_I b WHERE  b.BOARD_SEQ < #{boardSeq} ORDER BY b.BOARD_SEQ DESC )
-                 END AS preBoardRegDate				        
-			FROM 	TSES_BOARD_INFO_I a        	
-			WHERE 	BOARD_SEQ = #{boardSeq}	
-			]]>	
-    </select>
+   
+
     
     
     
      <insert id="insertBoardManage" >
-        <![CDATA[
-            INSERT INTO TSES_BOARD_INFO_I (BOARD_TITLE
-			                      , BOARD_TOP_SEQ
-			                      , BOARD_NOTICE_USEYN
-			                      , BOARD_NOTICE_STARTDAY
-			                      , BOARD_NOTICE_ENDDAY
-			                      , BOARD_GUBUN
-			                      , BOARD_CONTENT
-			                      , BOARD_RETURN_CONTENT
-			                      , BOARD_REGDATE
-			                      , BOARD_REG_ID
-			                      , BOARD_UPDATE_DATE
-			                      , BOARD_UPDATE_ID
-			                      , BOARD_FILE01
-			                      , BOARD_FILE02
-			                      , BOARD_VIEW_YN
-			                      , BOARD_FAQ_GUBUN
-			                      , BOARD_VISITED                        
-                      )
-             VALUES ( #{boardTitle}
-                      , #{boardTopSeq,jdbcType=VARCHAR}
-                      , #{boardNoticeUseyn,jdbcType=VARCHAR}
-                      , #{boardNoticeStartday,jdbcType=VARCHAR}
-                      , #{boardNoticeEndday,jdbcType=VARCHAR}
-                      , #{boardGubun}
-                      , #{boardContent,jdbcType=VARCHAR}
-                      , #{boardReturnContent,jdbcType=VARCHAR}
-                      , GETDATE()
-                      , #{userId,jdbcType=VARCHAR}
-                      , GETDATE()
-                      , #{userId,jdbcType=VARCHAR}	
-                      , #{boardFile01,jdbcType=VARCHAR}
-                      , #{boardFile02 ,jdbcType=VARCHAR}
-                      , #{boardViewYn, jdbcType=VARCHAR}
-                      , #{boardFaqGubun, jdbcType=VARCHAR}
-                      ,0                      
-             )
-         ]]>
+            
+			<selectKey keyProperty="seq" resultType="Integer" order="BEFORE">
+	             SELECT BOARDSEQ_SEQ.NEXTVAL AS boardSeq 
+	             FROM DUAL
+	        </selectKey>
+	        <choose>
+	           <when test="mode == 'Ins'">
+	                 INSERT INTO TSES_BOARD_INFO_I (
+		                   BOARD_SEQ, BOARD_CD, BOARD_REFNO, BOARD_CLEVEL, BOARD_GROUP, BOARD_NOTICE_START_DAY, BOARD_NOTICE_END_DAY,
+		                   BOARD_POPUP, BOARD_TITLE, BOARD_TOP_SEQ, BOARD_VISIT_CNT, USE_YN, BOARD_CN,
+		                   FRST_REGTER_ID, FRST_REGIST_DTM, LAST_UPDUSR_ID, LAST_UPDT_DTM                    
+                   )
+                   VALUES (#{seq},  #{boardCd},  #{boardRefno}, #{boardClevel}, ${seq},  #{boardNoticeStartDay,jdbcType=VARCHAR}, #{boardNoticeEndDay,jdbcType=VARCHAR}
+		                    , #{boardPopup, jdbcType=VARCHAR}, #{boardTitle}, #{boardTopSeq,jdbcType=VARCHAR}, 0, #{useYn,jdbcType=VARCHAR}, #{boardCn,jdbcType=VARCHAR}
+		                    , #{userId,jdbcType=VARCHAR}, SYSDATE, #{userId,jdbcType=VARCHAR}, SYSDATE                     
+		                    )
+	           </when>
+	           <otherwise>
+	                INSERT INTO TSES_BOARD_INFO_I (
+		                   BOARD_SEQ, BOARD_CD, BOARD_REFNO, BOARD_CLEVEL, BOARD_GROUP, BOARD_NOTICE_START_DAY, BOARD_NOTICE_END_DAY,
+		                   BOARD_POPUP, BOARD_TITLE, BOARD_TOP_SEQ, BOARD_VISIT_CNT, USE_YN, BOARD_CN,
+		                   FRST_REGTER_ID, FRST_REGIST_DTM, LAST_UPDUSR_ID, LAST_UPDT_DTM                    
+                   )
+                   VALUES (#{seq},  #{boardCd},  #{boardRefno}, #{boardClevel}, #{boardGroup},  #{boardNoticeStartDay,jdbcType=VARCHAR}, #{boardNoticeEndDay,jdbcType=VARCHAR}
+		                    , #{boardPopup, jdbcType=VARCHAR}, #{boardTitle}, #{boardTopSeq,jdbcType=VARCHAR}, 0, #{useYn,jdbcType=VARCHAR}, #{boardCn,jdbcType=VARCHAR}
+		                    , #{userId,jdbcType=VARCHAR}, SYSDATE, #{userId,jdbcType=VARCHAR}, SYSDATE                     
+		                    )
+	           
+	           </otherwise>
+	        </choose>
+           
      </insert>
      <update id="updateBoardVisitedManage">
-          UPDATE  TSES_BOARD_INFO_I SET BOARD_VISITED = BOARD_VISITED + 1
+          UPDATE  TSES_BOARD_INFO_I SET BOARD_VISIT_CNT = BOARD_VISIT_CNT + 1
           WHERE BOARD_SEQ = #{boardSeq} 
      </update>
      <update id="updateBoardManage" >
      <![CDATA[
        UPDATE  TSES_BOARD_INFO_I SET BOARD_TITLE = #{boardTitle} ,
-                                BOARD_NOTICE_USEYN = #{boardNoticeUseyn,jdbcType=VARCHAR},
-                                BOARD_NOTICE_STARTDAY = #{boardNoticeStartday,jdbcType=VARCHAR} ,
-                                BOARD_NOTICE_ENDDAY = #{boardNoticeEndday,jdbcType=VARCHAR} ,
-                                BOARD_GUBUN = #{boardGubun} ,
-                                BOARD_CONTENT = #{boardContent, jdbcType=VARCHAR} ,
-                                BOARD_RETURN_CONTENT = #{boardReturnContent, jdbcType=VARCHAR} ,
-                                BOARD_UPDATE_ID =#{userId,jdbcType=VARCHAR} ,
-                                BOARD_UPDATE_DATE = GETDATE() 
-                                 ]]>     
-                                <if test="boardFile01 != ''">                                    
-                               , BOARD_FILE01 = #{boardFile01, jdbcType=VARCHAR}
-                               </if>
-                                <if test="boardFile02 != ''">                     
-                               , BOARD_FILE02 = #{boardFile02, jdbcType=VARCHAR}
-                               </if>                 
-                               <![CDATA[              
-                               , BOARD_VIEW_YN  = #{boardViewYn, jdbcType=VARCHAR}
-                               , BOARD_FAQ_GUBUN  = #{boardFaqGubun, jdbcType=VARCHAR}
-                               , BOARD_TOP_SEQ = #{boardTopSeq}
+	                                 BOARD_CD = #{boardCd, jdbcType=VARCHAR},
+	                                 BOARD_REFNO = #{boardRefno,jdbcType=VARCHAR},
+	                                 BOARD_CLEVEL = #{boardClevel,jdbcType=VARCHAR},
+	                                 BOARD_NOTICE_START_DAY = #{boardNoticeStartDay,jdbcType=VARCHAR} ,
+	                                 BOARD_NOTICE_END_DAY = #{boardNoticeEndDay,jdbcType=VARCHAR} ,
+	                                 BOARD_POPUP = #{boardPopup, jdbcType=VARCHAR},
+	                                 USE_YN = #{useYn, jdbcType=VARCHAR},
+	                                 BOARD_CN = #{boardCn, jdbcType=VARCHAR} ,
+	                                 LAST_UPDUSR_ID =#{userId,jdbcType=VARCHAR} ,
+	                                 LAST_UPDT_DTM = SYSDATE,
+	                                 BOARD_TOP_SEQ = #{boardTopSeq}
       WHERE BOARD_SEQ = #{boardSeq}   
       ]]>        
      </update>
@@ -269,11 +175,4 @@
        DELETE FROM TSES_BOARD_INFO_I  WHERE BOARD_SEQ = #{boardSeq}
      </delete>
      
-     <select id="selectBoardUploadFileName" resultType="java.lang.String">
-     	SELECT BOARD_FILE02 FROM TSES_BOARD_INFO_I WHERE BOARD_SEQ = #{boardSeq}
-     </select>
-     
-     <select id="selectBoardoriginalFileName" resultType="java.lang.String">
-     	SELECT BOARD_FILE01 FROM TSES_BOARD_INFO_I WHERE BOARD_SEQ = #{boardSeq}
-     </select>
 </mapper>

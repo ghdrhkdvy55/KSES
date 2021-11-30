@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30">
+    <defs>
+        <style>
+            .cls-1{fill:none}
+        </style>
+    </defs>
+    <g id="ic_btn_cafe_minus_dis" transform="translate(20)">
+        <rect id="bg" width="30" height="30" class="cls-1" rx="4" transform="translate(-20)"/>
+        <g id="ic_minus" transform="translate(-3)">
+            <path id="사각형_114964" d="M0 0H18V18H0z" class="cls-1" transform="translate(-11 6)"/>
+            <g id="그룹_105709" transform="translate(-22.5 1.5)">
+                <path id="사각형_114962" fill="#e6e6e6" d="M0 0H11V1H0z" transform="translate(15 13)"/>
+            </g>
+        </g>
+    </g>
+</svg>

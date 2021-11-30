@@ -1,5 +1,7 @@
 package com.kses.backoffice.bld.season.vo;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Getter;
 import lombok.Setter;
 

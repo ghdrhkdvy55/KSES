@@ -421,7 +421,7 @@
 						<tr>
 							<th>층</th>
 							<td>
-								<select class="" id="searchFloorCd" name="searchFloorCd" onChange="fn_floorChange('search');">
+								<select class="" id="searchFloorCd" name="searchFloorCd" onChange="seatService.fn_floorChange('search');">
 									<option value="">검색 층수</option>
 									<c:forEach items="${floorListSeq}" var="floorList">
 										<option value="${floorList.floor_cd}">${floorList.floor_nm}</option>
@@ -482,7 +482,7 @@
 							<table class="total_tab gui_table" id="part_resultList">
 								<thead>
 									<tr>
-										<th style="float: left;"></span>구역명</th>
+										<th style="float: left;">구역명</th>
 										<th style="left: 14%; float: left;">Top</th>
 										<th style="left: 14%; float: left;">left</th>
 										<th style="left: 14%; float: left;">width</th>
@@ -503,8 +503,212 @@
 </nav>
 
 <!-- 구역 생성 팝업 // -->
-
+<!-- // 좌석 위치 세팅 팝업 -->
+<div data-popup="bld_seat_setting" class="popup">
+  <div class="pop_con">
+      <a class="button b-close">X</a>
+      <h2 class="pop_tit">좌석 GUI 위치 셋팅</h2>
+      <div class="pop_wrap pop_seat_setting">
+        <div class="mapArea" style="background: url(/resources/img/floor_bg.png) no-repeat center;">
+          <div class="subTitle left_box">1층 - A구역</div>
+          <ul class="seat">
+            <li><span>1</span></li>
+            <li><span>2</span></li>
+            <li><span>3</span></li>
+            <li><span>4</span></li>
+            <li><span>5</span></li>
+            <li><span>6</span></li>
+            <li><span>7</span></li>
+            <li><span>8</span></li>
+            <li><span>9</span></li>
+            <li><span>10</span></li>
+          </ul>
+        </div>
+        <div class="seatLocationInfo">
+          <div class="subTitle left_box">좌석 위치 </div>
+          <a href="" class="blueBtn right_box">저장</a>
+          <div class="clear"></div>
+          <table class="main_table">
+            <thead>
+              <tr>
+                <th>좌석 이름</th>
+                <th>가격</th>
+                <th>등급</th>
+                <th>구분</th>
+                <th>Top</th>
+                <th>Left</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+                <td>
+                  <select>
+                    <option value="0">등급</option>
+                  </select>
+                </td>
+                <td>
+                  <select>
+                    <option value="0">구분</option>
+                  </select>
+                </td>
+                <td><input type="text" class="positionValue"></td>
+                <td><input type="text" class="positionValue"></td>
+              </tr>
+              <tr>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+                <td>
+                  <select>
+                    <option value="0">등급</option>
+                  </select>
+                </td>
+                <td>
+                  <select>
+                    <option value="0">구분</option>
+                  </select>
+                </td>
+                <td><input type="text" class="positionValue"></td>
+                <td><input type="text" class="positionValue"></td>
+              </tr>
+              <tr>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+                <td>
+                  <select>
+                    <option value="0">등급</option>
+                  </select>
+                </td>
+                <td>
+                  <select>
+                    <option value="0">구분</option>
+                  </select>
+                </td>
+                <td><input type="text" class="positionValue"></td>
+                <td><input type="text" class="positionValue"></td>
+              </tr>
+              <tr>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+                <td>
+                  <select>
+                    <option value="0">등급</option>
+                  </select>
+                </td>
+                <td>
+                  <select>
+                    <option value="0">구분</option>
+                  </select>
+                </td>
+                <td><input type="text" class="positionValue"></td>
+                <td><input type="text" class="positionValue"></td>
+              </tr>
+              <tr>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+                <td>
+                  <select>
+                    <option value="0">등급</option>
+                  </select>
+                </td>
+                <td>
+                  <select>
+                    <option value="0">구분</option>
+                  </select>
+                </td>
+                <td><input type="text" class="positionValue"></td>
+                <td><input type="text" class="positionValue"></td>
+              </tr>
+              <tr>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+                <td>
+                  <select>
+                    <option value="0">등급</option>
+                  </select>
+                </td>
+                <td>
+                  <select>
+                    <option value="0">구분</option>
+                  </select>
+                </td>
+                <td><input type="text" class="positionValue"></td>
+                <td><input type="text" class="positionValue"></td>
+              </tr>
+              <tr>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+                <td>
+                  <select>
+                    <option value="0">등급</option>
+                  </select>
+                </td>
+                <td>
+                  <select>
+                    <option value="0">구분</option>
+                  </select>
+                </td>
+                <td><input type="text" class="positionValue"></td>
+                <td><input type="text" class="positionValue"></td>
+              </tr>
+              <tr>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+                <td>
+                  <select>
+                    <option value="0">등급</option>
+                  </select>
+                </td>
+                <td>
+                  <select>
+                    <option value="0">구분</option>
+                  </select>
+                </td>
+                <td><input type="text" class="positionValue"></td>
+                <td><input type="text" class="positionValue"></td>
+              </tr>
+              <tr>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+                <td>
+                  <select>
+                    <option value="0">등급</option>
+                  </select>
+                </td>
+                <td>
+                  <select>
+                    <option value="0">구분</option>
+                  </select>
+                </td>
+                <td><input type="text" class="positionValue"></td>
+                <td><input type="text" class="positionValue"></td>
+              </tr>
+              <tr>
+                <td><input type="text"></td>
+                <td><input type="text"></td>
+                <td>
+                  <select>
+                    <option value="0">등급</option>
+                  </select>
+                </td>
+                <td>
+                  <select>
+                    <option value="0">구분</option>
+                  </select>
+                </td>
+                <td><input type="text" class="positionValue"></td>
+                <td><input type="text" class="positionValue"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+  </div>
+</div>
+<!-- 좌석 위치 세팅 팝업 // -->
 <c:import url="/backoffice/inc/popup_common.do" />
+<script type="text/javascript" src="/resources/js/common.js"></script>
 <script type="text/javascript" src="/resources/js/back_common.js"></script>
 </form:form>
 
@@ -909,7 +1113,7 @@
 		}, fn_save : function (){
 			$("#id_ConfirmInfo").attr("href", "javascript:floorService.fn_floorUpdate()");
        		fn_ConfirmPop('저장 하시겠습니까?');
-		}, fn_floorUpdate : function (){
+		},/*  fn_floorUpdate : function (){
 			$("#confirmPage").bPopup().close();
 			var PartInfoArray = new Array();
             $("input:hidden[name=part_cd]").each(function() {
@@ -947,7 +1151,7 @@
  	            	common_popup("ERROR : " + request.status, "N", "");
  	            }
  	        ); 	
-		}
+		} */
 	}
 	function fn_GuiMode(){
 		if ($("#hid_guiMode").val() == "part"){
@@ -970,6 +1174,7 @@
 			$("#guiSave").prop("href", "javascript:seatService.fn_save('0')");
 		}
 	}
+	
 	//sub쿼리 
 	function showChildGrid(subgrid_id, row_id) {
 		var param = {"floorCd" : row_id, "pageIndex" : fn_emptyReplace($("#pageIndex").val(), "1"), "pageSize" : "100" }
@@ -1081,11 +1286,15 @@
 		fn_checkForm : function() {
 		    //구역 업데이트
 		    if (any_empt_line_span("bld_section_add", "partNm", "구역명을 입력해주세요.","sp_message", "savePage") == false) return;
-		    var commentTxt = ($("#mode").val() == "Ins") ? "신규 구역 정보를 등록 하시겠습니까?" : "입력한 구역 정보를 저장 하시겠습니까?";
+		    
+			var commentTxt = ($("#mode").val() == "Ins") ? "신규 구역 정보를 등록 하시겠습니까?" : "입력한 구역 정보를 저장 하시겠습니까?";
+			
 			$("#id_ConfirmInfo").attr("href", "javascript:partService.fn_partUpdate()");
 			fn_ConfirmPop(commentTxt);
 		},
 		fn_partUpdate : function() {
+			var resultTxt = ($("#mode").val() == "Ins") ? "신규 구역 정보가 정상적으로 등록 되었습니다." : "구역 정보가 정상적으로 저장 되었습니다.";
+		    
 			$("#confirmPage").bPopup().close();
 			var formData = new FormData();
 		        
@@ -1600,7 +1809,7 @@
   	        "searchCenter": $("#centerCd").val(),
   	        "searchFloorCd": $("#floorCd").val(),
   	        "searchPartCd": $("#partCd").val(),
-  	        "pageUnit": "100"
+  	        "pageUnit": "400"
   	    };
   	   fn_Ajax
  	    (
@@ -1616,9 +1825,9 @@
  	                //테이블 정리 하기
  	                var obj = result.resultlist;
  					const array = Array(obj.length + 1).fill(null).map(() =>Array());
- 					array[0] = ["seatCd","seatNm", "seatTop", "seatLeft"];
+ 					array[0] = ["seatCd","seatNm", "seatTop", "seatLeft", "seatOrder"];
  					for (var i in obj){
- 						array[parseInt(i)+1] = [""+obj[i].seat_cd+"",""+obj[i].seat_nm+ "",""+obj[i].seat_top+ "",""+obj[i].seat_left+ "" ];
+ 						array[parseInt(i)+1] = [""+obj[i].seat_cd+"",""+obj[i].seat_nm+ "",""+obj[i].seat_top+ "",""+obj[i].seat_left+ "" , ""+obj[i].seat_order+""];
  					}
  					//엑셀 다운 로드 
  					var wb = XLSX.utils.book_new();

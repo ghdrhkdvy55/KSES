@@ -45,6 +45,7 @@ public class IncludeManageController {
 		} else {
 			
 			HttpSession httpSession = request.getSession(true);
+			@SuppressWarnings("unchecked")
 			List<Map<String, Object>> menu =  (List<Map<String, Object>>) httpSession.getAttribute("Menu");
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			model.addObject(Globals.JSON_RETURN_RESULTLISR, menu);

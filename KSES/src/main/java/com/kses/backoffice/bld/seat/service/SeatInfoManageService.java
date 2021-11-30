@@ -13,9 +13,11 @@ public interface SeatInfoManageService {
 	
 	Map<String, Object> selectSeatInfoDetail(String seatCd) throws Exception;
 	
+	List<Map<String, Object>> selectReservationSeatList(Map<String, Object> params) throws Exception;
+	
 	int updateSeatInfo(SeatInfo vo) throws Exception;
 	
 	int updateSeatPositionInfo(List<SeatInfo> list) throws Exception;
 	
-	int deleteSeatQrInfo(List<String> seatList)throws Exception;
+	int deleteSeatInfo(List<String> seatList)throws Exception;
 }

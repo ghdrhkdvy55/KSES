@@ -1,11 +1,90 @@
+.blind {
+  display: none !important;
+}
+*:focus {
+outline : none; 
+}
+/* width */
+::-webkit-scrollbar {
+width: 7px;
+}
+/* Track */
+::-webkit-scrollbar-track {
+background: #f1f1f1; 
+}
+/* Handle */
+::-webkit-scrollbar-thumb {
+background: #888; 
+}
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+background: #555; 
+}
+@-webkit-keyframes showUp {
+  0% {
+      opacity: 0;
+      transform: translateY(10px)
+  }
+
+  100% {
+      opacity: 1;
+      transform: translateY(0)
+  }
+}
+
+@keyframes showUp {
+  0% {
+      opacity: 0;
+      transform: translateY(10px)
+  }
+
+  100% {
+      opacity: 1;
+      transform: translateY(0)
+  }
+}
+/* input[type="radio"] {
+  display:none;
+} */
+input[type="radio"] + label span {
+display:inline-block;
+width:16px;
+margin-right: 8px;
+height:16px;
+vertical-align:middle;
+border:1px solid #e6e6e6;
+border-radius: 50%;
+cursor:pointer;
+}
+input[type="radio"]:checked + label span {
+background:url("/resources/img/radio_enabled_sel.png") center no-repeat;
+}
+html, body{width:100%;height:100%;}
+.wrapper {min-height: 100%;margin: 0; padding: 0;}
+.clear {clear: both;}
+.hidden {
+display: none !important;
+}
+
+button {border:0; outline: none;}
+input[type=password] {
+  font-family: 'Malgun gothic', dotum, sans-serif;
+}
+
+
+
+
+
+
+
 /*header*/
 header{background: #fff;border-bottom: 1px solid #e0e0e0;height: 60px;box-shadow: 0px 2px 6px 2px #eaeaea;padding:0 20px;}
 header ul li{display: inline-block; border-right: 1px solid #e0e0e0;height: 60px;vertical-align: top;}
 header h1{font-size: 0;background: url(/resources/img/logo.png) no-repeat;width: 159px;height: 38px;margin: 10px 15px}
-header ul li a{display: block;width: 80px;text-align: center;padding-top: 32px; height: 40px;}
+header ul li a{display: inline-block;width: 80px;text-align: center;padding-top: 32px; height: 40px;}
 .menu{background: url(/resources/img/menu.png) no-repeat center 20px;}
 .menu:hover{background: url(/resources/img/menu_hover.png) no-repeat center 20px;}
-.logout{background: url(/resources/img/logout.png) no-repeat center 12px;}
+
 .member {
     float: right;
     border-right: none;
@@ -13,6 +92,18 @@ header ul li a{display: block;width: 80px;text-align: center;padding-top: 32px; 
     right: 35px;
     position: relative;
 }
+
+.logout {
+    
+    float: right;
+    display: inline-block;
+    position: relative;
+    top: -15px;
+    
+    border-right: none;
+}
+.logout  a {width:60px}
+.logout img {top: 5px; right: 5px; position: relative;}
 .member img {top: 10px; right: 5px; position: relative;}
 
 .logo {
@@ -121,10 +212,10 @@ header ul li a{display: block;width: 80px;text-align: center;padding-top: 32px; 
 /* menu icon */
 .sidenav li:first-child{}
 .sidenav li:nth-child(2){}
-/* .sidenav li:nth-child(3){background: url(/resources/img/menu03.png) no-repeat left;}
+.sidenav li:nth-child(3){background: url(/resources/img/menu03.png) no-repeat left;}
 .sidenav li:nth-child(4){background: url(/resources/img/menu04.png) no-repeat left;}
 .sidenav li:nth-child(5){background: url(/resources/img/menu05.png) no-repeat left;}
-.sidenav li:nth-child(6){background: url(/resources/img/menu06.png) no-repeat left;} */
+.sidenav li:nth-child(6){background: url(/resources/img/menu06.png) no-repeat left;}
 .sidenav li:nth-child(7){background: url(/resources/img/menu07.png) no-repeat left;}
 .sidenav li:nth-child(8){background: url(/resources/img/menu08.png) no-repeat left top 6px;}
 .sidenav li:nth-child(9){background: url(/resources/img/menu09.png) no-repeat left top 6px;}
@@ -135,26 +226,36 @@ header ul li a{display: block;width: 80px;text-align: center;padding-top: 32px; 
 .breadcrumb li {float: left; margin-bottom: 8px; color:#9c9c9c; font-size: 13px;}
 .breadcrumb li.active {color: #006ece;}
 
-/*1006*/
-.loginBox {
-    width: 350px;
-    height: 300px;
-    margin: auto;
-    margin-top: 10%;
-    border: 1px solid #c0c0c0;
-    padding: 40px 20px;
-    border-radius: 10px;
-    background-color: #fff;
+/*로그인*/
+.input_reset {
+position: absolute;
+width: 16px !important;
+height: 16px !important;
+border: 0 !important;
+background: url(/resources/img/ic_list_clear.svg)center no-repeat;
+outline: none;
+top: 48px;
+right: 14px;
+font-size: 0 !important;
+padding: 0 !important;
 }
-.loginArea ul {width: 260px ; margin: auto; }
-.loginArea ul li {margin: 0 0 8px 10px; margin-top: 20px}
-.loginArea ul li span {width: 90px;  vertical-align: sub; display: block;} 
-.loginArea ul li input {width: 240px; padding:12px; border:1px solid #c0c0c0 }
-.loginBtn {width: 240px; border: 1px solid #383838; margin: auto; padding: 9px 15px; border: 2px solid #2A99FB; background: #fff; margin-top: 10px; display: inherit;}
-.check_wrap li {float: left;}
-.loginBox h2 {margin-bottom: 10px;  }
-.loginBox h2 img {margin-right: 10px;}
+.search_top .input_reset {
+top: 13px;
+}
+.loginArea ul li { position: relative; }
+.input_reset {
+position: absolute;
+width: 16px !important;
+height: 16px !important;
+border: 0 !important;
+background: url("/resources/img/ic_list_clear.png")center no-repeat;
+outline: none;
+top: 38px;
+right: 14px;
+font-size:  0 !important;
+padding: 0 !important;
+}
+.input_reset.hidden { display: none; }
+.input_reset:focus {outline: none !important;  border: 0}
+.loginArea ul li label { font-size: 12px }
 
-.loginBtn {cursor: pointer;}
-.logoImg img{position: relative; left: 40%; top: 180px;}
-.loginBack {background: url(/resources/img/admin_bg.png) no-repeat center; height: 100vh; background-size: cover; width: 100%;}

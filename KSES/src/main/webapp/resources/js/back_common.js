@@ -49,6 +49,13 @@ $('.blacklist.tabs>.tab').on('click', function(){
   $tbody.removeClass('active');
   $tbody.eq(tabIdx).addClass('active');
 })
+
+// 맨 마지막 문자 얻어 오기 
+function fn_Endstring(_field){
+  var val =  $("#"+_field).val();
+  return val.slice(val.length -1)
+}
+
 //공통 팝업
 function common_popup(message, alertGubun, hidePopup){
    if (hidePopup != "") {
@@ -60,10 +67,20 @@ function common_popup(message, alertGubun, hidePopup){
        $("#a_closePop").show();
        $("#db_closePop").hide();
    }
+   $("#savePage #sp_Message").html(message);
+   var colors = alertGubun == "Y" ? "blue" : "red";
+   $("#savePage #sp_Message").attr("style", "color:"+colors);
+   $("#savePage").bPopup();
+   
+}
+//공통 팝업 Action
+function common_reloadPopup(message, alertGubun){
+
+   
    $("#sp_Message").html(message);
    var colors = alertGubun == "Y" ? "blue" : "red";
    $("#sp_Message").attr("style", "color:"+colors);
-   $("#savePage").bPopup();
+   $("#reloadPage").bPopup();
    
 }
 //공통 팝업 닫기
@@ -75,8 +92,13 @@ function common_modelClose(modelId){
 function common_modelCloseM(message, modelId){
     $("#btn_ClickId").val('');
     $("#"+ modelId).bPopup().close();
-    $("#sp_Message").html(message);
+    $("#savePage #sp_Message").html(message);
     $("#savePage").bPopup();
+}
+//팝업 닫기 후 신규 팝업 창 보여 주기 
+function common_modelOpen(_closeModel, _openModel){
+   $("#"+_closeModel).bPopup().close();  
+   $("#"+_openModel).bPopup();   
 }
 //페이지 이동 
 function view_Page(code, code1, code_value, action_page, frm_nm){
@@ -105,13 +127,14 @@ function any_empt_line_span(close_modal, frm_nm, alert_message, spanTxt, bPopup)
      
 	 var form_nm = eval("document.getElementById('"+frm_nm+"')");
 	 $("#sp_errorMessage").html("");
+	 
 	 if (form_nm.value.length < 1){
-		  $("#sp_Message").html(alert_message);
-		  $("#sp_Message").attr("style", "color:red");
+		  $("#savePage #sp_Message").html(alert_message);
+		  $("#savePage #sp_Message").attr("style", "color:red");
 		  $("#"+ frm_nm).attr("style", "border-color:red");
 		  $("#"+bPopup).bPopup()
 		  return false;
-	 }else{
+	 } else{
         return true;
 	 }
 }
@@ -300,6 +323,12 @@ function verifyEmail(_field, mng_user_add){
 	}
 
 }
+//전화번호 정규식
+function fn_autoHyphen (obj){
+   
+   return obj.value.replace(/[^0-9]/, '').replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`);
+}
+
 //공통값 return 
 function uniAjaxReturn(url, _type, _async,  param, _rtnGubun){
     var returnVal = "";
@@ -372,7 +401,7 @@ function ckeckboxValue(message, checkboxNm, _modelPop){
 	var checkboxvalue = "";
 	var check_length = $("input:checkbox[name="+checkboxNm+"]:checked").length;
 	if (check_length <1){
-		common_popup(alertMessge, "N",_modelPop);
+		common_popup(message, "N",_modelPop);
 		return false;
 	}else {
 		$("input:checkbox[name="+checkboxNm+"]:checked").each(function(){
@@ -560,4 +589,43 @@ function fn_SelectColor(id){
     var color = $("#"+id+" option:selected").text();
     $("#"+id).css("backgroundColor",color);
 }
+//두 배열 중복값 제거
+function findUniqElem(arr1, arr2) {
+  return arr1.concat(arr2)
+    	 .filter(item => !arr1.includes(item) || !arr2.includes(item));
+}
 
+//페이징 스크립트;
+function ajaxPaging(currentPageNo, firstPageNo, recordCountPerPage, firstPageNoOnPageList, lastPageNoOnPageList, totalPageCount, pageSize, pageScript){
+    var pageHtml = "";
+    pageHtml += "";
+	 if (currentPageNo == firstPageNo ){
+      pageHtml += "<a href='#' >&laquo;</a>";
+	 }else {
+      pageHtml += "<a href='#' onclick='"+pageScript+"("+ firstPageNo +")';return false; '>&laquo;</a>";
+	 }
+	 if (parseInt(currentPageNo) > parseInt(firstPageNo)){
+      pageHtml += "<a href='#' onclick='"+pageScript+"("+ parseInt(parseInt(currentPageNo) -1)+");return false;'>&lt;</a>"
+	 }else {
+      pageHtml += "<a href='#' >&lt;</a>"
+	 }
+    for(var  i = firstPageNoOnPageList; i<= lastPageNoOnPageList; i++){
+		 if (i == currentPageNo){
+            pageHtml += "<a class=active>"+i+"</a>";
+		 }else {
+            pageHtml += "<a href='#' onclick='"+pageScript+"("+i+");return false; '>"+i+"</a>";
+		 }
+    }
+
+	 if (parseInt(totalPageCount) > parseInt(pageSize) ){
+        pageHtml += "<a href='#' onclick='"+pageScript+"("+ parseInt(parseInt(currentPageNo) + 1)+");return false;'>&gt;</a>"
+	 }else {
+        pageHtml += "<a href='#' onclick='"+pageScript+"("+ parseInt(parseInt(currentPageNo) + 1)+");return false;'>&gt;</a>"
+	 }
+    if (parseInt(totalPageCount) > parseInt(pageSize)  ){
+      pageHtml += "<a href='#' onclick='"+pageScript+"("+ totalPageCount +");return false;'>&raquo;</a>";
+	 }else{
+      pageHtml += "<a href='#' >&raquo;</a>";
+	 }	
+    return pageHtml;
+}

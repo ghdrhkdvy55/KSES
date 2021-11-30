@@ -18,4 +18,8 @@ public interface CenterHolyInfoManageMapper {
 	public int insertCenterHolyInfo(CenterHolyInfo vo) throws Exception;
 	
 	public int copyCenterHolyInfo(@Param("params") Map<String, Object> params) throws Exception;
+	
+	public Map<String, Object> centerUpdateSelect(@Param("centerHolySeq") String centerHolySeq) throws Exception;
+	
+	public int deleteCenterHolyInfo(int centerHolySeq);
 }

@@ -68,4 +68,6 @@ public class FloorPartInfo {
 	 private String mode;
 	 
 	 private String userId = "";
+	 
+	 private String partMiniRotate = "";
 }

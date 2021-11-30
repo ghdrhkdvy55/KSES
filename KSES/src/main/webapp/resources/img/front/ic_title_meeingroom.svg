@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28">
+    <defs>
+        <style>
+            .cls-2{fill:#333}
+        </style>
+    </defs>
+    <g id="ic_title_meeingroom" transform="translate(-283.222 -406.465)">
+        <path id="사각형_1348-2" fill="rgba(175,55,134,0)" d="M0 0H28V28H0z" transform="translate(283.222 406.465)"/>
+        <g id="그룹_105266">
+            <g id="그룹_105265">
+                <g id="그룹_105264">
+                    <path id="사각형_114965" d="M0 0H5.703V1H0z" class="cls-2" transform="translate(292.74 418.707)"/>
+                    <path id="사각형_114966" d="M0 0H8.963V1H0z" class="cls-2" transform="translate(292.74 416.049)"/>
+                </g>
+                <path id="사각형_114967" d="M0 0H14.458V1H0z" class="cls-2" transform="translate(289.993 427.539)"/>
+                <path id="사각형_114968" d="M0 0H1V4H0z" class="cls-2" transform="translate(296.722 424.039)"/>
+            </g>
+            <path id="패스_20806" d="M305.5 412.215h-18.278v1h1.722v11.11H305.5v-9.1h-1v8.1h-14.556v-10.11H304.5v.012h1v-.012h1.723v-1z" class="cls-2"/>
+        </g>
+    </g>
+</svg>

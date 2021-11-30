@@ -30,7 +30,7 @@
 			</if>	
 		) TB  
 		WHERE RNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}
-		ORDER BY TB.SEAT_CD DESC  
+		ORDER BY TB.SEAT_CD ASC  
 		<!-- ORDER BY TO_NUMBER(REPLACE(TB.FLOOR_INFO, 'CENTER_FLOOR_', '')) ASC, TB.SEAT_CD DESC -->		 	    
     </select>
     
@@ -44,6 +44,53 @@
 		WHERE SEAT_CD = #{seatCd}
     </select>
     
+    <select id="selectSeatInfoComboList" resultType="lmap">
+		SELECT  
+			A.SEAT_CD, A.SEAT_NM, 
+		FROM TSEB_FLOOR_INFO_M A, COMTCCMMNDETAILCODE B
+		WHERE A.USE_YN = 'Y'
+		AND B.CODE = A.FLOOR_INFO
+		AND A.SEAT_CD = #{seatCd}
+		ORDER BY TO_NUMBER(B.CODE_DC) ASC
+    </select>
+    
+<!-- 	<select id="" resultType="lmap">
+	<![CDATA[
+		SELECT 
+			A.PART_CD, A.PART_NM, B.SEAT_CD, B.SEAT_NM, B.SEAT_ORDER, B.SEAT_TOP, B.SEAT_LEFT,
+			(
+				SELECT NVL(COUNT(*),0) 
+         		FROM TSER_RESV_INFO_I 
+         		WHERE A.PART_CD = PART_CD
+         		AND SEAT_CD = B.SEAT_CD 
+         		AND #{params.resvDate} BETWEEN RESV_START_DT AND RESV_END_DT
+         		AND RESV_CANCEL_CD IS NULL
+			) AS status
+		FROM TSEB_PART_INFO_D A, TSEB_SEAT_INFO_D B
+		WHERE A.PART_CD = B.PART_CD
+		AND B.PART_CD = #{params.partCd}
+	]]>    
+    </select> -->
+    
+    <!-- Front -->
+	<select id="selectReservationSeatList" resultType="lmap">
+	<![CDATA[
+		SELECT 
+			A.PART_CD, A.PART_NM, B.SEAT_CD, B.SEAT_NM, B.SEAT_ORDER, B.SEAT_TOP, B.SEAT_LEFT,
+			(
+				SELECT NVL(COUNT(*),0) 
+         		FROM TSER_RESV_INFO_I 
+         		WHERE A.PART_CD = PART_CD
+         		AND SEAT_CD = B.SEAT_CD 
+         		AND #{params.resvDate} BETWEEN RESV_START_DT AND RESV_END_DT
+         		AND RESV_CANCEL_CD IS NULL
+			) AS status
+		FROM TSEB_PART_INFO_D A, TSEB_SEAT_INFO_D B
+		WHERE A.PART_CD = B.PART_CD
+		AND B.PART_CD = #{params.partCd}
+	]]>    
+    </select>
+    
     <insert id="insertSeatInfo" >
 	{CALL
 		DECLARE
@@ -51,7 +98,7 @@
 		
 		<selectKey resultType="String" keyProperty="seatCd" order="BEFORE">
         	<choose>
-           		<when test='params.partCd == "0"'>
+           		<when test='partCd == "0"'>
             		SELECT FN_SEATCODE(#{floorCd},'FLOOR') AS seatCd
 				</when>
 				<otherwise>
@@ -63,15 +110,15 @@
 		(
 			CENTER_CD, FLOOR_CD, PART_CD, SEAT_CD, SEAT_NM, 
 			USE_YN, SEAT_TOP, SEAT_LEFT, SEAT_CLASS, SEAT_DVSN, 
-			PAY_DVSN, PAY_COST, PAY_AM_COST, PAY_PM_COST SEAT_REQ_DAY, 
-			FRST_REGTER_ID, FRST_REGIST_DTM, LAST_UPDUSR_ID, LAST_UPDT_DTM, 
+			PAY_DVSN, PAY_COST, PAY_AM_COST, PAY_PM_COST, SEAT_REQ_DAY, 
+			FRST_REGTER_ID, FRST_REGIST_DTM, LAST_UPDUSR_ID, LAST_UPDT_DTM
 		)
 		VALUES
 		(            
 			#{centerCd}, #{floorCd}, #{partCd,jdbcType=VARCHAR}, #{seatCd}, #{seatNm}, 
 			'Y', #{seatTop, jdbcType=VARCHAR}, #{seatLeft, jdbcType=VARCHAR}, #{seatClass, jdbcType=VARCHAR}, #{seatDvsn, jdbcType=VARCHAR},
-			#{payDvsn, jdbcType=VARCHAR}, #{payCost, jdbcType=VARCHAR}, #{payAmCost, jdbcType=VARCHAR}, #{payPmCost, jdbcType=VARCHAR}, #{seatReqDay, jdbcType=VARCHAR},
-			#{frstRegterId, jdbcType=VARCHAR}, SYSDATE, #{lastUpdusrId, jdbcType=VARCHAR}
+			#{payDvsn, jdbcType=VARCHAR}, #{payCost, jdbcType=VARCHAR}, 0, 0, 0,
+			#{frstRegterId, jdbcType=VARCHAR}, SYSDATE, #{lastUpdusrId, jdbcType=VARCHAR}, SYSDATE
 		);
                  
 		UPDATE TSEB_FLOOR_INFO_M SET FLOOR_SEAT_CNT = FLOOR_SEAT_CNT + 1 WHERE FLOOR_CD = #{floorCd};
@@ -84,8 +131,14 @@
 	{CALL
 		DECLARE
 		BEGIN
+		<selectKey resultType="String" keyProperty="floorNm" order="BEFORE">
+			SELECT FLOOR_NM FROM TSEB_FLOOR_INFO_M WHERE FLOOR_CD = #{params.floorCd}
+		</selectKey>
+		
 		<choose>
 			<when test='params.partCd != "0"'>
+
+			
 				INSERT INTO TSEB_SEAT_INFO_D
 				(
 					SEAT_CD, CENTER_CD, FLOOR_CD, PART_CD, SEAT_NM, 
@@ -102,8 +155,8 @@
 				(
 					<![CDATA[
 					SELECT  
-						A.CENTER_CD, A.FLOOR_CD, A.PART_CD, A.PART_NM || '_' || B.RN AS RN,  
-						ROW_NUMBER() OVER(ORDER BY B.RN DESC) AS RNUM
+						A.CENTER_CD, A.FLOOR_CD, A.PART_CD, #{floorNm, jdbcType=VARCHAR}|| '_' || A.PART_NM || '_' || B.RN AS RN,  
+						ROW_NUMBER() OVER(ORDER BY B.RN ASC) AS RNUM
 					FROM TSEB_PART_INFO_D A, 
 					( 
 						SELECT NUM AS RN FROM TABLE(FN_ROWTABLE(${params.seatStr}, ${params.seatEnd}))
@@ -131,7 +184,7 @@
 					<![CDATA[
 					SELECT  
 						A.CENTER_CD, A.FLOOR_CD, 0 AS PART_CD, A.FLOOR_NM || '_' || B.RN AS RN,  
-						ROW_NUMBER() OVER(ORDER BY B.RN DESC) AS RNUM
+						ROW_NUMBER() OVER(ORDER BY B.RN ASC) AS RNUM
 					FROM TSEB_FLOOR_INFO_M A, 
 					(
 						SELECT NUM AS RN FROM TABLE(FN_ROWTABLE(${params.seatStr}, ${params.seatEnd})) 
@@ -139,7 +192,7 @@
 					WHERE FLOOR_CD = #{params.floorCd}
 					]]>
 				) TA
-				ORDER BY TA.RN ASC ;
+				ORDER BY TA.RN DESC ;
 			</otherwise>
 		</choose>
 		UPDATE TSEB_FLOOR_INFO_M SET 
@@ -179,15 +232,16 @@
 				SEAT_TOP = #{item.seatTop, jdbcType=VARCHAR}, 
 				SEAT_LEFT = #{item.seatLeft, jdbcType=VARCHAR}, 
 				LAST_UPDT_DTM = SYSDATE, 
-				LAST_UPDUSR_ID = #{item.userId, jdbcType=VARCHAR}
+				LAST_UPDUSR_ID = #{item.userId, jdbcType=VARCHAR},
+				SEAT_ORDER = #{item.seatOrder}
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(item.seatNm)">
 				 , SEAT_NM = #{item.seatNm}
 				</if>
-			WHERE SEAT_CD = #{item.seatCd} 
+			WHERE SEAT_CD = #{item.seatCd}
 		</foreach> 
     </update> 
     
-    <delete id="deleteSeatQrInfo">
+    <delete id="deleteSeatInfo">
 	{CALL
 		DECLARE
 		BEGIN
@@ -200,7 +254,7 @@
 				COUNT(*) CNT, FLOOR_CD 
 			FROM TSEB_SEAT_INFO_D
 			WHERE SEAT_CD IN 
-			<foreach collection="seatList" item="item"  open="(" separator="," close=")">
+			<foreach collection="seatInfoList" item="item"  open="(" separator="," close=")">
 				#{item}
 			</foreach>
 			GROUP BY FLOOR_CD
@@ -208,7 +262,7 @@
         WHERE A.FLOOR_CD = B.FLOOR_CD;
         
         DELETE FROM TSEB_SEAT_INFO_D WHERE SEAT_CD IN
-        <foreach collection="seatList" item="item"  open="(" separator="," close=")">
+        <foreach collection="seatInfoList" item="item"  open="(" separator="," close=")">
             #{item}
         </foreach>
         ;

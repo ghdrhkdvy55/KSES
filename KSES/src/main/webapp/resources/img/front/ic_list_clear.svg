@@ -1,0 +1,6 @@
+<svg id="ic_list_clear" xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 34 34">
+  <rect id="ic_textfield_clear" width="34" height="34" fill="none"/>
+  <g id="slice" transform="translate(9 9)">
+    <path id="ic" d="M5149,7581a8,8,0,1,1,8-8A8.009,8.009,0,0,1,5149,7581Zm0-7.292h0l2.827,2.826.706-.708-2.827-2.825,2.831-2.831-.706-.706-2.831,2.829-2.829-2.829-.708.706,2.831,2.831-2.827,2.825.706.708,2.827-2.826Z" transform="translate(-5141 -7565)" fill="#ccc" stroke="rgba(0,0,0,0)" stroke-miterlimit="10" stroke-width="1"/>
+  </g>
+</svg>

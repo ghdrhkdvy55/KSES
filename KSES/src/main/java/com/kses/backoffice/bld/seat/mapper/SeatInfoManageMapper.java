@@ -16,6 +16,8 @@ public interface SeatInfoManageMapper {
 	
 	public Map<String, Object> selectSeatInfoDetail(@Param("seatCd") String seatCd);
 		
+	public List<Map<String, Object>> selectReservationSeatList(@Param("params") Map<String, Object> params);
+	
 	public int insertSeatInfo(SeatInfo vo);
 	
 	public int insertFloorSeatInfo(@Param("params") Map<String, Object> params);
@@ -24,6 +26,6 @@ public interface SeatInfoManageMapper {
 	
 	public int updateSeatPositionInfo(@Param("seatInfoList") List<SeatInfo> seatInfoList);
 	
-	public int deleteSeatQrInfo(@Param("seatInfoList") List<String> seatList);
+	public int deleteSeatInfo(@Param("seatInfoList") List<String> seatList);
 	
 }

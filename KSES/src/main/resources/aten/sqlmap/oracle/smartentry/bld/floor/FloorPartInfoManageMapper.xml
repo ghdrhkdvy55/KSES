@@ -114,10 +114,34 @@
 										PART_MINI_TOP = #{item.partMiniTop,jdbcType=VARCHAR}, 
 										PART_MINI_WIDTH = #{item.partMiniWidth,jdbcType=VARCHAR},
 			                            PART_MINI_HEIGHT = #{item.partMiniHeight,jdbcType=VARCHAR}, 
+			                            PART_MINI_ROTATE = #{item.partMiniRotate,jdbcType=VARCHAR}, 
 										LAST_UPDT_DTM = SYSDATE, 
 				                        LAST_UPDUSR_ID = #{item.userId, jdbcType=VARCHAR}
 			WHERE PART_CD = #{item.partCd} 
 		</foreach> 
     </update> 
     
+	<!-- Front -->
+	<select id="selectResvPartList" resultType="lmap">
+	<![CDATA[
+        SELECT  
+         	A.PART_CD, A.PART_NM,
+			(
+         		SELECT NVL(COUNT(*),0) 
+         		FROM TSEB_SEAT_INFO_D 
+         		WHERE PART_CD = A.PART_CD
+         	) AS PART_SEAT_MAX_COUNT,
+			(
+         		SELECT NVL(COUNT(*),0) 
+         		FROM TSER_RESV_INFO_I 
+         		WHERE PART_CD = A.PART_CD 
+         		AND #{params.resvDate} BETWEEN RESV_START_DT AND RESV_END_DT
+         		AND RESV_STATE = 'RESV_STATE_1'
+         	) AS PART_SEAT_USE_COUNT
+         FROM TSEB_PART_INFO_D A
+         WHERE A.FLOOR_CD = #{params.floorCd}
+         AND A.USE_YN = 'Y'
+         ORDER BY A.PART_ORDER
+    ]]>
+    </select> 
 </mapper>

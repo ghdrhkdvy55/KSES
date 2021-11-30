@@ -83,10 +83,10 @@ public class MenuInfoManageController {
 	 * @return 출력페이지정보 "sym/mnu/mpm/EgovMenuManage"
 	 * @exception Exception
 	 */
-	@RequestMapping(value = "MenuListAjax.do")
+	@RequestMapping(value = "menuListAjax.do")
 	public ModelAndView selectMenuManageListAjax(@RequestBody Map<String, Object> searchVO, 
-											 HttpServletRequest request, 
-											 BindingResult bindingResult) throws Exception {
+											     HttpServletRequest request, 
+											     BindingResult bindingResult) throws Exception {
 		
 		ModelAndView model = new ModelAndView (Globals.JSONVIEW);
 		// 0. Spring Security 사용자권한 처리
@@ -132,7 +132,7 @@ public class MenuInfoManageController {
 	 * @return 출력페이지정보 "sym/mnu/mpm/EgovMenuDetailSelectUpdt"
 	 * @exception Exception
 	 */
-	@RequestMapping(value = "MenuDetailInfo.do")
+	@RequestMapping(value = "menuDetailInfo.do")
 	public ModelAndView selectMenuManage(@RequestParam("menuNo") String menuNo) throws Exception {
 		ModelAndView model = new ModelAndView (Globals.JSONVIEW);
 		// 0. Spring Security 사용자권한 처리
@@ -162,7 +162,7 @@ public class MenuInfoManageController {
 	 * @return 출력페이지정보 "forward:/sym/mnu/mpm/EgovMenuManageSelect.do"
 	 * @exception Exception
 	 */
-	@RequestMapping("MenuManageListDelete.do")
+	@RequestMapping("menuManageListDelete.do")
 	public ModelAndView deleteMenuManageList(@RequestParam("checkedMenuNoForDel") String checkedMenuNoForDel, 
 			                                 @ModelAttribute("MenuInfo") MenuInfo menu,
 			                                 BindingResult bindingResult)throws Exception {
@@ -177,7 +177,8 @@ public class MenuInfoManageController {
 		}
 		
 		try {
-						
+			
+			
 			 int ret = menuService.deleteMenuManageList(checkedMenuNoForDel);
 			
 			 if (ret == -1) {
@@ -208,7 +209,7 @@ public class MenuInfoManageController {
 	 *         출력페이지정보 등록처리시 "forward:/sym/mnu/mpm/EgovMenuManageSelect.do"
 	 * @exception Exception
 	 */
-	@RequestMapping(value = "MenuRegistUpdate.do")
+	@RequestMapping(value = "menuRegistUpdate.do")
 	public ModelAndView insertMenuManage(@RequestParam Map<String, Object> commandMap, 
 			                             @RequestBody MenuInfo menuIno, 
 			                             BindingResult bindingResult) throws Exception {
@@ -252,7 +253,7 @@ public class MenuInfoManageController {
 	 * @return 출력페이지정보 "forward:/sym/mnu/mpm/EgovMenuManageSelect.do"
 	 * @exception Exception
 	 */
-	@RequestMapping(value = "MenuManageDelete.do")
+	@RequestMapping(value = "menuManageDelete.do")
 	public ModelAndView deleteMenuManage(@RequestParam("menuNo") String menuNo, 
 			                       ModelMap mmp) throws Exception {
 		
@@ -294,7 +295,7 @@ public class MenuInfoManageController {
 	 * @return 출력페이지정보 "sym/mnu/mpm/EgovMenuBndeRegist"
 	 * @exception Exception
 	 */
-	@RequestMapping(value = "MenuBndeAllDelete.do")
+	@RequestMapping(value = "menuBndeAllDelete.do")
 	public ModelAndView menuBndeAllDelete(@ModelAttribute("MenuInfo") MenuInfo menuInfo, 
 			                        ModelMap mmp) throws Exception {
 		
@@ -326,7 +327,7 @@ public class MenuInfoManageController {
 	 * @return 출력페이지정보 "sym/mnu/mpm/EgovMenuBndeRegist"
 	 * @exception Exception
 	 */
-	@RequestMapping(value = "MenuBndeRegist.do")
+	@RequestMapping(value = "menuBndeRegist.do")
 	public ModelAndView menuBndeRegist(@RequestParam Map<String, Object> commandMap, 
 			                     final HttpServletRequest request, 
 			                     @ModelAttribute("MenuInfo") MenuInfo menuInfo,

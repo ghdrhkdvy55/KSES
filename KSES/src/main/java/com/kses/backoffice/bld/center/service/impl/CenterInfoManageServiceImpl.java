@@ -42,7 +42,13 @@ public class CenterInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
 		// TODO Auto-generated method stub
 		return centerMapper.selectCenterInfoDetail(centerCd);
 	}
-
+	
+	@Override
+	public List<Map<String, Object>> selectResvCenterList(String resvDate)throws Exception {
+		// TODO Auto-generated method stub
+		return centerMapper.selectResvCenterList(resvDate);
+	}
+	
 	@Override
 	@Transactional
 	public int updateCenterInfoManage(CenterInfo vo) throws Exception {

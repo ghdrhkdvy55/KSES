@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="114" height="114" viewBox="0 0 114 114">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: red;
+        opacity: 0;
+      }
+
+      .cls-2 {
+        fill: #d6dbe2;
+      }
+
+      .cls-3 {
+        fill: #f5f5f5;
+      }
+
+      .cls-4 {
+        fill: #36404d;
+        opacity: 0.06;
+      }
+
+      .cls-5 {
+        fill: #dadee3;
+      }
+
+      .cls-6 {
+        fill: #fff;
+        opacity: 0.7;
+      }
+
+      .cls-7 {
+        fill: none;
+        stroke: #e1e3e6;
+        stroke-width: 1.2px;
+      }
+    </style>
+  </defs>
+  <g id="ic_blank" transform="translate(-123 -266)">
+    <rect id="area" class="cls-1" width="114" height="114" transform="translate(123 266)"/>
+    <g id="ic_blank-2" data-name="ic_blank" transform="translate(16075 -46.122)">
+      <path id="사각형_121887" data-name="사각형 121887" class="cls-2" d="M1,0H85a1,1,0,0,1,1,1V35.833a0,0,0,0,1,0,0H0a0,0,0,0,1,0,0V1A1,1,0,0,1,1,0Z" transform="translate(-15938 344.45)"/>
+      <rect id="사각형_121889" data-name="사각형 121889" class="cls-3" width="69.875" height="52.795" transform="translate(-15929.938 331.122)"/>
+      <rect id="사각형_121890" data-name="사각형 121890" class="cls-4" width="86" height="50.167" transform="translate(-15938 353.409)"/>
+      <path id="사각형_121888" data-name="사각형 121888" class="cls-5" d="M0,0H86a0,0,0,0,1,0,0V48.167a2,2,0,0,1-2,2H2a2,2,0,0,1-2-2V0A0,0,0,0,1,0,0Z" transform="translate(-15938 356.992)"/>
+      <g id="그룹_106394" data-name="그룹 106394" transform="translate(-15898.404 366.846)">
+        <path id="패스_21091" data-name="패스 21091" class="cls-6" d="M-2,0H4.575L3.844,18.731H-1.269Z" transform="translate(2)"/>
+        <circle id="타원_43220" data-name="타원 43220" class="cls-6" cx="3.345" cy="3.345" r="3.345" transform="translate(0 21.531)"/>
+      </g>
+      <path id="패스_21092" data-name="패스 21092" class="cls-7" d="M-14541.3,353.1h46.718" transform="translate(-1377.441 -10.352)"/>
+      <path id="패스_21093" data-name="패스 21093" class="cls-7" d="M-14541.3,353.1h36.648" transform="translate(-1377.441 -4.081)"/>
+    </g>
+  </g>
+</svg>

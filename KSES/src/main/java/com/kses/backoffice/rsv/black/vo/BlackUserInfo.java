@@ -1,7 +1,5 @@
 package com.kses.backoffice.rsv.black.vo;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,51 +7,45 @@ import lombok.Setter;
 @Getter
 @Setter
 public class BlackUserInfo {
-    // 블랙리스트 코드 ID GEN 생성 
-    @JsonProperty("blacklist_code")
-    private String blacklistCode;
-
-    // 사용자 아이디 
-    @JsonProperty("user_id")
-    private String userId;
+    // 블랙리스트 시퀀스 
+    private String blklstSeq;
 
     // 사용자 구분 
-    @JsonProperty("user_gubun")
-    private String userGubun;
+    private String userDvsn;
+    
+    // 사용자 아이디 
+    private String userId;
+
+    // 사용자 아이디 
+    private String userNm;
 
     // 핸드폰 
-    @JsonProperty("user_cellphone")
-    private String userCellphone;
+    private String userPhone;
 
     // 블랙리스트 유형 
-    @JsonProperty("blacklist_gubun")
-    private String blacklistGubun;
+    private String blklstDvsn;
 
     // 이유 
-    @JsonProperty("blacklist_reason")
-    private String blacklistReason;
-
-    // 사용 여부 
-    @JsonProperty("black_user_at")
-    private String blackUserAt;
-
+    private String blklstReason;
+    
+    // 해제여부
+    private String blklstCancelYn;
+    
     // 최초 등록자 
-    @JsonProperty("frst_register_id")
     private String frstRegisterId;
 
     // 최초 등록일 
-    @JsonProperty("frst_register_pnttm")
     private String frstRegisterPnttm;
 
     // 최종 수정자 
-    @JsonProperty("last_updusr_id")
     private String lastUpdusrId;
 
     // 최종 수정 일자 
-    @JsonProperty("last_updusr_pnttm")
     private String lastUpdusrPnttm;
     
-    // 입려 구분
-    @JsonProperty("mode")
+    // 등록자 ID
+    private String adminId;
+    
+    // 입력 구분
     private String mode;
 }

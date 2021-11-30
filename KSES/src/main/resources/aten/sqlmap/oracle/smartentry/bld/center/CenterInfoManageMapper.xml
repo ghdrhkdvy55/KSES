@@ -65,6 +65,37 @@
          ORDER BY A.CENTER_NM  ASC
     </select>
     
+    <!-- Front -->
+	<select id="selectResvCenterList" resultType="lmap">
+	<![CDATA[
+        SELECT  
+         	A.CENTER_CD, A.CENTER_NM, A.STAND_MAX,
+			(
+         		SELECT NVL(COUNT(*),0) 
+         		FROM TSEB_SEAT_INFO_D 
+         		WHERE CENTER_CD = A.CENTER_CD
+         	) AS CENTER_SEAT_MAX_COUNT,
+			(
+         		SELECT NVL(COUNT(*),0) 
+         		FROM TSER_RESV_INFO_I 
+         		WHERE CENTER_CD = A.CENTER_CD 
+         		AND #{resvDate} BETWEEN RESV_START_DT AND RESV_END_DT
+         		AND RESV_ENTRY_DVSN = 'ENTRY_DVSN_2'
+         		AND RESV_CANCEL_CD IS NULL
+         	) AS CENTER_SEAT_USE_COUNT,
+			(
+         		SELECT NVL(COUNT(*),0) 
+         		FROM TSER_RESV_INFO_I 
+         		WHERE CENTER_CD = A.CENTER_CD 
+         		AND #{resvDate} BETWEEN RESV_START_DT AND RESV_END_DT
+         		AND RESV_ENTRY_DVSN = 'ENTRY_DVSN_1'
+         		AND RESV_CANCEL_CD IS NULL
+         	) AS CENTER_STANDING_USE_COUNT
+         FROM TSEB_CENTER_INFO_M A
+         WHERE A.USE_YN = 'Y'
+    ]]>
+    </select>
+    
     <insert id="insertCenterInfoManage">
 	{CALL
 		DECLARE
@@ -96,7 +127,7 @@
 				FLOOR_SEAT_CNT, FRST_REGIST_DTM, FRST_REGTER_ID, LAST_UPDT_DTM, LAST_UPDUSR_ID
 			)
 			SELECT 
-				FN_FLOORCODE(#{centerCd}, CODE), #{centerCd}, CODE, CODE_NM, 'FLOOR_PART_2', 
+				FN_FLOORCODE(#{centerCd}, CODE), #{centerCd}, CODE, CODE_NM, 'FLOOR_PART_1', 
 				0, SYSDATE, #{userId, jdbcType=VARCHAR}, SYSDATE, #{userId, jdbcType=VARCHAR}
           	FROM COMTCCMMNDETAILCODE
           	WHERE CODE_ID = 'CENTER_FLOOR'
@@ -185,7 +216,7 @@
 				USE_YN, FRST_REGIST_DTM, FRST_REGTER_ID, LAST_UPDT_DTM, LAST_UPDUSR_ID
 			)
           	SELECT 
-          		FN_FLOORCODE(#{centerCd}, CODE), #{centerCd}, CODE, CODE_NM, 'FLOOR_PART_2', 0,
+          		FN_FLOORCODE(#{centerCd}, CODE), #{centerCd}, CODE, CODE_NM, 'FLOOR_PART_1', 0,
           		'Y', SYSDATE, #{userId, jdbcType=VARCHAR}, SYSDATE, #{userId, jdbcType=VARCHAR} 
           		FROM COMTCCMMNDETAILCODE
           	WHERE CODE_ID = 'CENTER_FLOOR'

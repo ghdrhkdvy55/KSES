@@ -184,7 +184,9 @@
 	          			"searchKeyword" : $("#searchKeyword").val(),
 	         			"pageUnit":$('.ui-pg-selbox option:selected').val()
 	         		}),
-	    	    	loadComplete	: function(data) {$("#sp_totcnt").text(data.paginationInfo.totalRecordCount);}
+	         		loadComplete : function(data) {
+	    	    		$("#sp_totcnt").text(data.paginationInfo.totalRecordCount);
+	    	    	}
 	    	     }).trigger("reloadGrid");
  
 	        }, clearGrid : function() {
@@ -194,10 +196,10 @@
             	if (mode == "Edt"){
 		        	$("#adminId").val(adminId).prop('readonly', true);
 		        	$("#btnUpdate").text("수정");
-		        	var params = {"adminId" : adminId};
+		        	var param = {"adminId" : adminId};
 		        	var url = "/backoffice/mng/adminDetail.do";
 		        	
-		     	    uniAjaxSerial(url, params, true,
+		        	fn_Ajax(url, "GET", param, false,
 			          	    function(result) {
 	     				       if (result.status == "LOGIN FAIL"){
 		 				    	   common_popup(result.meesage, "Y", "mng_admin_add");
@@ -211,9 +213,10 @@
 		       					   $("#sp_empEmail").html(obj.emp_email);
 		       					   $("#authorCd").val(obj.author_cd);
 		       					   if (obj.author_cd != "ROLE_ADMIN"){
-		       						  $("#centerCd").val(obj.center_cd).prop('style','display:block');
+		       						  	$("#centerCd").val(obj.center_cd);
+		       							$("#centerCd").prop('style','display:block');
 		       					   }
-       						       $("input:radio[name='useYn']:radio[value='"+obj.use_yn+"']").prop('checked', true)
+       						       $("input:radio[name='useYn']:radio[value='"+obj.use_yn+"']").prop('checked', true);
        						       $("#sp_Unqi").hide();
        						       $("#btnSave").text("수정");
 	       					   }else{
@@ -225,18 +228,20 @@
 			     			}
 		               );
 		        }else{
-		        	$("#empNo").val('').prop('readonly', false);
-		        	$("#adminId").val('');
+		        	$("#adminId").val('').prop('readonly', false);
+		        	$("#empNo").val('');
 				    $("#adminPwd").val('');
 				    $("#adminPwd2").val('');
 					$("#authorCd").val('');
-					$("#center_cd").val('').prop('style','display:none');
-					$("#useYn").val('');
+					$("#centerCd").val('');
+					$("#centerCd").prop('style','display:none');
+					$("#useAt_Y").prop("checked", true);
 		        	$("#sp_Unqi").show();
 		        	$("#btnSave").text("입력");
 		        }
 		        $("#mng_admin_add").bPopup();
            },fn_CheckForm  : function (){
+        	   alert($("#adminId").val());
         	   if (any_empt_line_span("mng_admin_add", "adminId", "아이디을 입력해 주세요.","sp_message", "savePage") == false) return;
         	   if ($("#mode").val() == "Ins" && $("#idCheck").val() != "Y"){
 				   if (any_empt_line_span("mng_admin_add", "adminId", "중복체크가 안되었습니다.","sp_message", "savePage") == false) return;
@@ -268,7 +273,7 @@
 				    		    'useYn' : fn_emptyReplace($("input[name='useYn']:checked").val(),"Y"),
 				    		    'mode' : $("#mode").val()
 		    	               }; 
-		      uniAjax(url, params, true,
+		      fn_Ajax(url, "POST", params, false,
 		      			function(result) {
 		 				       if (result.status == "LOGIN FAIL"){
 		 				    	   common_popup(result.meesage, "Y","mng_admin_add");
@@ -308,7 +313,7 @@
 	        	if (any_empt_line_span("mng_admin_add", "adminId", "사번을 입력해 주세요.","sp_message", "savePage") == false) return;
 	        	var url = "/backoffice/mng/adminIdCheck.do"
     	        var param =  {"adminId" : $("#adminId").val()};
-        		uniAjaxSerial(url, param, false,
+	        	fn_Ajax(url, "GET", param, false,
         			    function(result) {	
      			           if (result != null) {	       	
      			        	   if (result.status == "SUCCESS"){
@@ -393,6 +398,7 @@
 		  		        multiselect:false, 
 		  		        loadComplete : function (data){
 		  		        	//완료 표시 
+		  		        	$("#sp_totcnt").text(data.paginationInfo.totalRecordCount);
 		  		        }, loadError:function(xhr, status, error) {
 		  		        	loadtext:'시스템 장애... '
 		  		        }, onSelectRow: function(rowId){
@@ -423,9 +429,11 @@
 	    	     }).trigger("reloadGrid");
 		 }, fn_centerSearch : function (){
 			 if ($("#authorCd").val() != "ROLE_MANAGER" && $("#authorCd").val() != "ROLE_ADMIN" ||  $("#authorCd").val()  == ""){
-				 $("#center_cd").val('').prop('style','display:none');
-			 }else {
-				 $("#center_cd").val('').prop('style','display:block');
+				 $("#centerCd").val('');
+				  $("#centerCd").prop('style','display:none');
+			 } else {
+				 $("#centerCd").val('');
+				  $("#centerCd").prop('style','display:block');
 			 }
 		 }
     }
@@ -474,13 +482,14 @@
             </select>
             <p>검색어</p>
             <select id="searchCondition" name="searchCondition">
-              <option value="b.EMP_NM">이름</option>
-              <option value="b.EMP_NO">사번</option>
+              <option value="ALL">선택</option>
+              <option value="ADMIN_ID">아이디</option>
+              <option value="b.EMP_NO">이름</option>
             </select>
             <input type="text" id="searchKeyword" name="searchKeyword" placeholder="검색어를 입력하세요.">
           </div>
           <div class="inlineBtn">
-            <a href="#" onClick="" class="grayBtn">검색</a>
+            <a href="#" onClick="javascript:jqGridFunc.fn_search();" class="grayBtn">검색</a>
           </div>
         </div>
         <div class="left_box mng_countInfo">
@@ -548,7 +557,7 @@
                       </select>
                   </td>
                   <th>지점</th>
-                  <td><select id="centerCd" name="id="centerCd" style="display:none"></select></td>
+                  <td><select id="centerCd" name="centerCd" style="display:none"></select></td>
                 </tr>
                 <tr>
                   <th>이메일</th>
@@ -593,7 +602,6 @@
 </div>
 <!-- 관리자 검색 팝업 // -->
      <c:import url="/backoffice/inc/popup_common.do" />
-    <script type="text/javascript" src="/resources/js/common.js"></script>
     <script type="text/javascript" src="/resources/js/back_common.js"></script>
 </body>
 </html>

@@ -44,9 +44,9 @@
 	        DECLARE
 	        BEGIN
 	                <selectKey resultType="String"  keyProperty="menuNo" order="BEFORE">
-			                SELECT DECODE( NVL(count(MENU_NO), 0), 0, 6001, MAX(MENU_NO) + 1) 
+			                SELECT DECODE( NVL(count(MENU_NO), 0), 0, 7001, MAX(MENU_NO) + 1) 
 			                FROM COMTNMENUINFO 
-			                WHERE UPPER_MENU_NO = '6000'
+			                WHERE UPPER_MENU_NO = '7000'
 			        </selectKey>
 					INSERT INTO TSES_BRDSET_INFO_M	
 					(
@@ -67,11 +67,11 @@
 					(
 					    PROGRM_FILE_NM, PROGRM_STRE_PATH, PROGRM_KOREANNM, PROGRM_DC, URL
 					)
-					SELECT #{boardCd}, '/backoffice/brd',  #{boardTitle}, #{boardTitle,jdbcType=VARCHAR}, '/backoffice/brd/boardList.do?boardCd='|| #{boardCd}
+					SELECT #{boardCd}, '/backoffice/sys',  #{boardTitle}, #{boardTitle,jdbcType=VARCHAR}, '/backoffice/sys/boardList.do?boardCd='|| #{boardCd}
 					FROM DUAL;
 					
 					INSERT INTO COMTNMENUINFO ( MENU_NO , MENU_ORDR , MENU_NM , UPPER_MENU_NO, MENU_DC, PROGRM_FILE_NM )
-					SELECT #{menuNo}, #{menuNo},  #{boardTitle}, '6000', #{boardTitle}, #{boardCd} FROM DUAL;
+					SELECT #{menuNo}, #{menuNo},  #{boardTitle}, '7000', #{boardTitle}, #{boardCd} FROM DUAL;
 					
 			 END
 		} 
