@@ -168,15 +168,15 @@
 	                  <tr>
 	                    <th>상세 내역</th>
 	                      <td colspan="3">
-	                        <input type="text" id="fulltxt">
+	                        <input type="text" id="blklstReason">
 	                      </td>
 	                  </tr>
 	              </tbody>
 	          </table>
 	      </div>
 	      <div class="right_box">
-	          <a href="" class="grayBtn">취소</a>
-	          <a href="" class="blueBtn">저장</a>
+	          <a href="javascript:$('#blacklist_add').bPopup().close();" class="grayBtn">취소</a>
+	          <a href="javascript:blackUserService.fn_checkForm();" class="blueBtn">저장</a>
 	      </div>
 	      <div class="clear"></div>
 	  </div>
@@ -186,6 +186,7 @@
 	<!-- // 관리자 검색 팝업 -->
 	<div id="search_result" class="popup">
 		<div class="pop_con">
+			<a href="javascript:common_modalOpenAndClose('blacklist_add', 'search_result');" class="button pop-close">X</a>
 			<h2 class="pop_tit">검색 결과</h2>
 	      	<div id="searchResult" class="pop_wrap">
 	        	<table id="searchResultTable" class="whiteBox main_table">
@@ -234,7 +235,7 @@
 					{label: '전화번호', name:'user_phone', index:'user_phone', align:'center'},
 					{label: '유형', name:'blklst_dvsn', index:'blklst_dvsn', align:'center'},
 					{label: '상세내용', name:'blklst_reason', index:'blklst_reason', align:'center'},
-					{label: '해제', name:'resv_qr_print', index:'resv_qr_print', align:'center', sortable : false, formatter:jqGridFunc.buttonSetting},
+					{label: '해제', name:'blklst_cancel_yn', index:'blklst_cancel_yn', align:'center', sortable : false, formatter:jqGridFunc.buttonSetting},
 				], 
 				rowNum : 10,  //레코드 수
 				rowList : [10,20,30,40,50,100],  // 페이징 수
@@ -311,11 +312,11 @@
 					grid.jqGrid('editRow', rowid, {keys: true});
 				},
 				onCellSelect : function (rowid, index, contents, action){
-					var cm = $(this).jqGrid('getGridParam', 'colModel');
+/* 					var cm = $(this).jqGrid('getGridParam', 'colModel');
 					
 					if (cm[index].name !='btn'){
 						jqGridFunc.fn_resvInfo("Edt", $(this).jqGrid('getCell', rowid, 'resv_seq'));
-					}
+					} */
 				},
 				//체크박스 선택시에만 체크박스 체크 적용
 				beforeSelectRow: function (rowid, e) { 
@@ -331,7 +332,6 @@
 		buttonSetting : function (cellvalue, options, rowObject) {
 			var cancelYn = "";
 			var mode = "";
-			
 			if(rowObject.blklst_cancel_yn == "Y") {
 				cancelYn = "재등록";
 				mode = "N";
@@ -372,14 +372,31 @@
 			$("#searchBlklstDvsn").val($(el).attr("id"));
 			jqGridFunc.fn_search();
 		},
-		fn_checkForm : function() {
-			
+		fn_blacklistAdd : function() {
+			$("#userSearchCondition option:eq(0)").prop("selected",true);
+			$("#userSearchKeyword option:eq(0)").prop("selected",true); 
+			$("#userId").val("");
+			$("#userNm").val("");
+			$("#userPhone").val("");
+			$("#blklstDvsn option:eq(0)").prop("selected",true);
+			$("#blklstReason").val("");
 		},
-		fn_cancelBlklst : function (blklstCancelYn, blklstSeq) {
-			$("#mode").val("Edt");
+		fn_checkForm : function() {
+			$("#mode").val("Ins");
+			if (any_empt_line_span("blacklist_add", "userId", "회원 아이디를 입력해 주세요.","sp_message", "savePage") == false) return;
 			
 			var url = "/backoffice/rsv/updateBlackUserInfo.do";
-			var params = {"mode" : $("#mode").val(), "blklstSeq" : blklstSeq ,"blklstCancelYn" : blklstCancelYn};
+			var params = {
+				"mode" : $("#mode").val(), 
+				"blklstCancelYn" : "N",
+				"blklstDvsn" : $("#blklstDvsn").val(),
+				"userId" : $("#userId").val(),
+				"userNm" : $("#userNm").val(),
+				"userClphn" : $("#userPhone").val(),
+				"blklstReason" : $("#blklstReason").val()
+			};
+			
+			var resultTxt = "출입통제 정보가 정상적으로 등록 되었습니다.";
 			
 			fn_Ajax
 			(
@@ -389,10 +406,38 @@
 				false,
 				function(result) {
 					if (result.status == "LOGIN FAIL") {
-						common_popup(result.meesage, "Y","");
+						common_popup(result.meesage, "N","");
 						location.href="/backoffice/login.do";
 			    	} else if (result.status == "SUCCESS") {
-						
+			    		common_popup(resultTxt, "Y","");
+			    		jqGridFunc.fn_search();
+					}
+				},
+				function(request){
+					common_popup("Error:" + request.status,"");
+				}    		
+			);
+		},
+		fn_cancelBlklst : function (blklstCancelYn, blklstSeq) {
+			$("#mode").val("Edt");
+			
+			var url = "/backoffice/rsv/updateBlackUserInfo.do";
+			var params = {"mode" : $("#mode").val(), "blklstSeq" : blklstSeq,"blklstCancelYn" : blklstCancelYn};
+			var resultTxt = blklstCancelYn == "Y" ? "출입통제가 정상적으로 해제되었습니다." : "출입통제가 정상적으로 재등록 되었습니다.";
+			
+			fn_Ajax
+			(
+				url, 
+				"POST",
+				params,
+				false,
+				function(result) {
+					if (result.status == "LOGIN FAIL") {
+						common_popup(result.meesage, "N","");
+						location.href="/backoffice/login.do";
+			    	} else if (result.status == "SUCCESS") {
+			    		common_popup(resultTxt, "Y","");
+			    		jqGridFunc.fn_search();
 					}
 				},
 				function(request){
@@ -499,7 +544,7 @@
 				loadComplete : function(data) {}
 			}).trigger("reloadGrid");
 		},
-		fn_inSearchInfo : function(userId,userNm,userPhone) {
+		fn_inSearchInfo : function(userId, userNm, userPhone) {
 			$("#userId").val(userId);
 			$("#userNm").val(userNm);
 			$("#userPhone").val(userPhone);

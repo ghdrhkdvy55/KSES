@@ -273,7 +273,7 @@ public class FrontResvInfoManageController {
 				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
 				return model;
 			} else {
-				params.put("resvState", "RESV_STATE_3");
+				params.put("resvState", "RESV_STATE_4");
 				params.put("resvCancelCd", "RESV_CANCEL_CD_2");
 				params.put("resvCancelId", userLoginInfo.getUserId());
 			}

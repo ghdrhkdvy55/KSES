@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
+import com.kses.backoffice.sym.log.annotation.NoLogging;
 import com.kses.front.login.vo.UserLoginInfo;
 
 import egovframework.rte.fdl.property.EgovPropertyService;
@@ -119,6 +120,13 @@ public class MainPageInfoManageController {
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 		}
+		return model;
+	}
+	
+	@NoLogging
+	@RequestMapping(value="inc/popup_common.do")
+	public ModelAndView smartworkPopup() throws Exception{		
+		ModelAndView model = new ModelAndView("/front/inc/popup_common");
 		return model;
 	}
 }

@@ -91,15 +91,21 @@
  	   $("form[name=regist]").attr("action", "/backoffice/actionSecurityLogin.do").submit(); 	   
     }       
     $(document).ready(function() {
-	    	if ("${message}" != "") {
-	    		  if ("${message}" == "login_ok"){
-	    			  alert("2")
-	    			  location.href="/backoffice/resManage/resList.do?searchRoomType=swc_gubun_1";  
-	    		  }else {
-	    			  alert("<spring:message code='page.common.alert03' />");
-		    		  $("#admin_id").focus() ;	    			  
-	    		  }				
-	    	}    	           	    	
+    	$("body").keydown(function (key) {
+        	if(key.keyCode == 13){
+        		form_check();
+        	}
+    	});
+    	
+		if ("${message}" != "") {
+			if ("${message}" == "login_ok"){
+				alert("2")
+				location.href="/backoffice/resManage/resList.do?searchRoomType=swc_gubun_1";  
+			} else {
+				alert("<spring:message code='page.common.alert03' />");
+				$("#admin_id").focus() ;	    			  
+			}				
+		}    	           	    	
     });  
     function any_empt_line_span(frm_nm, alert_message, spanTxt){        
    	 var form_nm = eval("document.getElementById('"+frm_nm+"')");
@@ -117,7 +123,7 @@
     </script>
 
     <!-- input del icon -->
-    <script type="text/javascript">
+    <script type="text/javascript">    
         $('li input[type="text"], li input[type="password"]').on('input propertychange', function() {
           var $this = $(this);
           var visible = Boolean($this.val());

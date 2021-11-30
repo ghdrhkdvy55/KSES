@@ -205,27 +205,27 @@ public class ResvInfoManageController {
 	}
 	
 	@RequestMapping (value="attendInfoUpdate.do")
-	public ModelAndView updateAttendInfo(	HttpServletRequest request, 
-											@ModelAttribute("LoginVO") LoginVO loginVO, 
-											@RequestBody AttendInfo vo, 
+	public ModelAndView updateAttendInfo(	@ModelAttribute("LoginVO") LoginVO loginVO, 
+											@RequestBody AttendInfo vo,
+											HttpServletRequest request,
 											BindingResult result) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-		
-		if(!isAuthenticated) {
-			model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-			return model;
-		}
+		String meesage = "";
 		
 		try {
-			String meesage = "";
+			if(!isAuthenticated) {
+				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
+				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
+				return model;
+			}
+		
 			vo = attendService.insertAttendInfo(vo);
 			
 			if(vo.getRet() > 0) {
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
+				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("sucess.common.insert"));
 			} else {
 				throw new Exception();
 			}
