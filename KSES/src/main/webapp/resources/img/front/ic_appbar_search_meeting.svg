@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
+    <defs>
+        <style>
+            .cls-1{fill:none}.cls-2{fill:#fff}
+        </style>
+    </defs>
+    <g id="ic_appbar_search_meeting" transform="translate(-232.359 -232.632)">
+        <path id="Rectangle_10853" d="M0 0H36V36H0z" class="cls-1" transform="translate(232.359 232.632)"/>
+        <g id="그룹_105704" transform="translate(-2)">
+            <g id="그룹_105702" transform="translate(0 2)">
+                <path id="패스_20797" d="M243.211 253.052h14.153v-3.637a5.988 5.988 0 0 1-4.034-2.284h-7.745v-1h7.115a5.972 5.972 0 0 1-.633-2.671c0-.155.012-.308.023-.46h-8.881zm2.374-3.37h9.366v1h-9.366z" class="cls-1"/>
+                <path id="패스_20798" d="M257.364 249.415v3.637h-14.153V243h8.881a5.878 5.878 0 0 1 .164-1h-11.933v1h1.964v11h7.524v3.318h-7.024v.989h15v-.989h-7.023V254h7.523v-4.551c-.073 0-.144.011-.218.011a6.062 6.062 0 0 1-.705-.045z" class="cls-2"/>
+                <path id="사각형_114960" d="M0 0H9.366V1H0z" class="cls-2" transform="translate(245.585 249.682)"/>
+                <path id="패스_20799" d="M245.585 247.131h7.745a6 6 0 0 1-.628-1h-7.117z" class="cls-2"/>
+            </g>
+            <path id="패스_20800" d="M263.937 249.244l-2.489-2.843a4.481 4.481 0 1 0-.733.681l2.471 2.821zm-9.368-5.784a3.5 3.5 0 1 1 3.5 3.5 3.5 3.5 0 0 1-3.5-3.5z" class="cls-2" transform="translate(0 2)"/>
+        </g>
+    </g>
+</svg>

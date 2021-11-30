@@ -27,13 +27,17 @@ public class LoginLogServiceImpl extends EgovAbstractServiceImpl implements Logi
     @Resource(name = "egovLoginLogIdGnrService")
     private EgovIdGnrService idgenService;
 	
+    @NoLogging
 	@Override
 	public int logInsertLoginLog(LoginLog vo) throws Exception {
 		vo.setLogId(idgenService.getNextStringId());
+		
+		LOGGER.debug("vo info:"  + vo.toString());
+		
 		return loginMapper.logInsertLoginLog(vo);
 	}
 
-    @NoLogging
+    
 	@Override
 	public List<Map<String, Object>> selectLoginLogInfo( Map<String, Object> searchVO) throws Exception {
 		// TODO Auto-generated method stub

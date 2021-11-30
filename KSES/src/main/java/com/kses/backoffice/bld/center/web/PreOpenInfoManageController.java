@@ -40,6 +40,7 @@ public class PreOpenInfoManageController {
     @Autowired
     CenterInfoManageService centerInfoService;
     
+    
     @RequestMapping("preOpenInfoListAjax.do")
     public ModelAndView selectPreOpenInfo(	@ModelAttribute("loginVO") LoginVO loginVO,
     										@RequestParam("centerCd") String centerCd,
@@ -59,7 +60,15 @@ public class PreOpenInfoManageController {
     	
     	try {
     		List<Map<String, Object>> preOpenInfoList = preOpenInfoService.selectPreOpenInfoList(centerCd);
-    		model.addObject(Globals.STATUS_REGINFO, preOpenInfoList);
+    		
+    		//신규 추가 리스트 값 없을때 처리 
+    		String centerNm =   (preOpenInfoList.size() > 0) ? 
+    				             preOpenInfoList.get(0).get("center_nm").toString():
+    				             centerInfoService.selectCenterInfoDetail(centerCd).get("center_nm").toString();
+    			         
+    		//신규 추가 
+    	    model.addObject(Globals.JSON_RETURN_RESULT, centerNm);
+    		model.addObject(Globals .STATUS_REGINFO, preOpenInfoList);
     		
     		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
     		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.select"));

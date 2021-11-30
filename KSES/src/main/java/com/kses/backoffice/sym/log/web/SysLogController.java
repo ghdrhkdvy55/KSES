@@ -24,7 +24,7 @@ import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
 
 @RestController
-@RequestMapping("/backoffice/loginfo")
+@RequestMapping("/backoffice/sym")
 public class SysLogController {
   
      private static final Logger LOGGER = LoggerFactory.getLogger(SysLogController.class);

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28">
+    <defs>
+        <style>
+            .cls-3{fill:#333}
+        </style>
+    </defs>
+    <g id="ic_title_requester" transform="translate(-.001 .376)">
+        <path id="area" d="M0 0H28V28H0z" opacity="0.001" transform="translate(.001 -.376)" style="isolation:isolate"/>
+        <g id="ic" transform="translate(2 2)">
+            <path id="ic_area" fill="rgba(255,26,145,0)" d="M0 0H24V24H0z" transform="translate(.001 -.376)"/>
+            <path id="패스_20925" d="M649.337 361.029l-3.211-3.721.757-.653 2.523 2.923 5.919-5.681.692.722z" class="cls-3" transform="translate(-634.234 -340.816)"/>
+            <g id="타원_43137" transform="translate(6.5 3)">
+                <circle id="타원_43205" cx="4" cy="4" r="4" fill="none"/>
+                <path id="패스_20926" d="M644.734 351.816a4 4 0 1 1 4-4 4 4 0 0 1-4 4zm0-7a3 3 0 1 0 3 3 3 3 0 0 0-3-3z" class="cls-3" transform="translate(-640.734 -343.816)"/>
+            </g>
+            <path id="패스_20927" d="M645.364 360.816h-8.13v-8h14.5v1h-13.5v6h7.13z" class="cls-3" transform="translate(-634.234 -340.816)"/>
+        </g>
+    </g>
+</svg>

@@ -181,6 +181,9 @@ public class EgovCcmCmmnDetailCodeManageController {
     	
     	ModelAndView model = new 	ModelAndView(Globals.JSONVIEW);
     	Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+    	
+    	String message = vo.getMode().equals("Ins") ? "sucess.common.insert" : "sucess.common.update";
+    	
         if(!isAuthenticated) {
         	model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
 	    	model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
@@ -190,6 +193,8 @@ public class EgovCcmCmmnDetailCodeManageController {
     	vo.setLastUpdusrId(user.getAdminId());
     	int ret  = cmmnDetailCodeManageService.updateCmmnDetailCode(vo);
     	model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+    	model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(message));		
+    	
     	
     	return model;
     }

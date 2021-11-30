@@ -1,0 +1,48 @@
+/*layout*/
+@charset "utf-8";
+/*webfont*/
+@font-face {
+ font-family: 'NanumSquare';
+ font-weight: 400;
+ src: url(/font/kses/NanumSquareR.eot);
+ src: url(/font/kses/NanumSquareR.eot?#iefix) format('embedded-opentype'),
+      url(/font/kses/NanumSquareR.woff) format('woff'),
+      url(/font/kses/NanumSquareR.ttf) format('truetype');
+}
+@font-face {
+ font-family: 'NanumSquare';
+ font-weight: 700;
+ src: url(/font/kses/NanumSquareB.eot);
+ src: url(/font/kses/NanumSquareB.eot?#iefix) format('embedded-opentype'),
+      url(/font/kses/NanumSquareB.woff) format('woff'),
+      url(/font/kses/NanumSquareB.ttf) format('truetype');
+}
+@font-face {
+ font-family: 'NanumSquare';
+ font-weight: 800;
+ src: url(/font/kses/NanumSquareEB.eot);
+ src: url(/font/kses/NanumSquareEB.eot?#iefix) format('embedded-opentype'),
+      url(/font/kses/NanumSquareEB.woff) format('woff'),
+      url(/font/kses/NanumSquareEB.ttf) format('truetype');
+}
+@font-face {
+ font-family: 'NanumSquare';
+ font-weight: 300;
+ src: url(/font/kses/NanumSquareL.eot);
+ src: url(/font/kses/NanumSquareL.eot?#iefix) format('embedded-opentype'),
+      url(/font/kses/NanumSquareL.woff) format('woff'),
+      url(/font/kses/NanumSquareL.ttf) format('truetype');
+}
+
+/* All */
+
+header,footer,section,article,aside,nav,menu,hgroup,figure,figcaption{ display:block; margin:0; padding:0}
+html,body{ min-height:100%; margin:0; padding:0; background: #fff; line-height: 1.5em;}
+body,table,input,textarea,select,button{font-family:'NanumSquare',sans-serif;font-size:14px;color:#333;font-weight: 400;}
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td
+{margin:0; padding:0; border:0; border-collapse:separate; border-spacing:0; font-style:inherit; text-decoration:none; list-style:none; letter-spacing:-0.05em}
+img,object{ border:0}
+img{ height:auto}
+article, aside, hgroup, header, footer, figure, figcaption, nav, section,time, mark, canvas, video, audio, details, summary {
+     display:block;
+}

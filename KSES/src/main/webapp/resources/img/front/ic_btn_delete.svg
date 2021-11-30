@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30">
+    <defs>
+        <style>
+            .cls-1{fill:rgba(255,92,92,.64);opacity:0}.cls-3{fill:#333}
+        </style>
+    </defs>
+    <g id="ic_btn_delete" transform="translate(-673.548 -363.013)">
+        <path id="area" d="M0 0H30V30H0z" class="cls-1" transform="translate(673.548 363.013)"/>
+        <g id="_">
+            <path id="area-2" d="M0 0H22V22H0z" class="cls-1" transform="translate(677.548 367.013)"/>
+            <g id="사각형_119737" fill="none" stroke="#333">
+                <path stroke="none" d="M0 0H14V16H0z" transform="translate(681.548 372.013)"/>
+                <path d="M0.5 0.5H13.5V15.5H0.5z" transform="translate(681.548 372.013)"/>
+            </g>
+            <path id="사각형_119738" d="M0 0H8V1H0z" class="cls-3" transform="translate(684.548 369.013)"/>
+            <path id="사각형_119740" d="M0 0H8V1H0z" class="cls-3" transform="rotate(90 155.017 531.03)"/>
+            <path id="사각형_119741" d="M0 0H8V1H0z" class="cls-3" transform="rotate(90 156.517 532.53)"/>
+            <path id="사각형_119742" d="M0 0H8V1H0z" class="cls-3" transform="rotate(90 158.017 534.03)"/>
+            <path id="사각형_119739" d="M0 0H18V1H0z" class="cls-3" transform="translate(679.548 372.013)"/>
+        </g>
+    </g>
+</svg>

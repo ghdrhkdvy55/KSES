@@ -79,10 +79,10 @@
 	    		 	                { label: 'code_id', key: true, name:'code_id',       index:'code_id',      align:'center', hidden:true},
 	    		 	                { label: '코드ID',  name:'code_id',         index:'code_id',        align:'left',   width:'10%'},
 	    		 	                { label: '코드명',  name:'code_id_nm',         index:'code_id_nm',        align:'left',   width:'10%'},
-	    		 	                { label: '코드명',  name:'code_id_dc',         index:'code_id_dc',        align:'left',   width:'10%'},
+	    		 	                { label: '코드설명',  name:'code_id_dc',         index:'code_id_dc',        align:'left',   width:'10%'},
 	    		 	                { label: '사용유무',  name:'use_at',         index:'use_at',        align:'left',   width:'10%'},
 	    		 	                { label: '수정자', name:'last_updusr_id',      index:'last_updusr_id',     align:'center', width:'14%'},
-	    			                { label: '수정 일자', name:'LAST_UPDT_PNTTM', index:'LAST_UPDT_PNTTM', align:'center', width:'12%', 
+	    			                { label: '수정 일자', name:'last_updt_pnttm', index:'last_updt_pnttm', align:'center', width:'12%', 
 	    			                  sortable: 'date' ,formatter: "date", formatoptions: { newformat: "Y-m-d"}},
 	    			                { label: '삭제', name: 'btn',  index:'btn',      align:'center',  width: 50, fixed:true, sortable : 
 	    			                  false, formatter:jqGridFunc.rowBtn}
@@ -131,7 +131,7 @@
     		                	{ label: 'code', key: true, name:'code',       index:'code',      align:'center', hidden:true},
     		                	{ label: '분류명', name:'code_nm',       index:'code_nm',      align:'center', width:'10%'},
     		 	                { label: '상세설명', name:'code_dc',     index:'code_dc',      align:'center', width:'10%'},
-    		 	                { label: '기타', name:'code_ect1',     index:'code_ect1',      align:'center', width:'10%'},
+    		 	                { label: '기타', name:'code_etc1',     index:'code_etc1',      align:'center', width:'10%'},
     		 	                { label: '사용유무', name:'use_at',       index:'use_at',      align:'center', width:'10%'},
     		 	                { label: '최종 수정자', name:'last_updusr_id', index:'last_updusr_id',     align:'center', width:'10%'},
     			                { label: '최종 수정 일자', name:'last_updt_pnttm', index:'last_updt_pnttm', align:'center', width:'12%', 
@@ -249,15 +249,15 @@
 		        	$("#btnUpdate").text("수정");
 		        	var params = {"codeId" : codeId};
 		     	    var url = "/backoffice/bas/codeDetail.do";
-		     	    uniAjaxSerial(url, params,  true,
-		          			function(result) {
+		     	    fn_Ajax(url, "GET", params, false, 
+		     	   		function(result) {
 		     				       if (result.status == "LOGIN FAIL"){
 		     				    	   common_popup(result.meesage, "Y", "bas_code_add");
 			   						   location.href="/backoffice/login.do";
 		       					   }else if (result.status == "SUCCESS"){
 	       						       //총 게시물 정리 하기
 	       						       var obj  = result.regist;
-	       						       $("#codeId").val(obj.code_id);
+	       						       $("#codeId").val(obj.code_id).attr('readonly', true);
 	       						       $("#codeIdNm").val(obj.code_id_nm);
 	       						       $("#codeIdDc").val(obj.code_id_dc);
 	       						       $("#codeId").val(obj.code_id);
@@ -275,11 +275,12 @@
 		               );
 		        }else{
 		        	
-		        	$("#codeId").val('');
+		        	$("#codeId").val('').attr('readonly', false);
 		        	$("#codeIdNm").val('');
 		        	$("#codeIdDc").val('');
 		        	$("#sp_Unqi").show();
 		        	$("#btnSave").text("입력");
+		        	$("#useAt_Y").prop("checked", true);
 		        }
         	    $("#bas_code_add").bPopup();
            },clearGrid : function() {
@@ -290,24 +291,31 @@
 				   if (any_empt_line_span("bas_code_add", "codeId", "중복체크가 안되었습니다.","sp_message", "savePage") == false) return;
 			   }
 			   if (any_empt_line_span("bas_code_add", "codeIdNm", "코드명을 입력해 주세요.","sp_message", "savePage") == false) return;
-		       
+			   var commentTxt = ($("#mode").val() == "Ins") ?  "등록 하시겠습니까?" : "수정 하시겠습니까?" ;
+		       $("#id_ConfirmInfo").attr("href", "javascript:jqGridFunc.fn_update()");
+       		   fn_ConfirmPop(commentTxt);
+           },fn_update : function (){
+        	  
+			   $("#confirmPage").bPopup().close();
+			   		   			   
 		       var url = "/backoffice/bas/codeUpdate.do";
 		       var params = {   'codeId' : $("#codeId").val(),
 				    		     'clCode' : $("#clCode").val(),
 				    		     'codeIdNm' : $("#codeIdNm").val(), 
 				    		     'codeIdDc' : $("#codeIdDc").val(), 
-				    			 'useAt' :fn_emptyReplace($("#useAt").val(),"0"),
+				    			 /* 'useAt' :fn_emptyReplace($("#useAt").val(),"0"), */
+				    			 'useAt' : $("input:radio[name='useAt']:checked").val(),
 				    			 'mode' : $("#mode").val()
-		    	               }; 
-		    	uniAjax(url, params,  true,
+				    		 }; 
+		       fn_Ajax(url, "POST", params,  true,
 		      			function(result) {
 		    		           
 		 				       if (result.status == "LOGIN FAIL"){
-		 				    	   common_popup(result.meesage, "Y","bas_code_add");
+		 				    	   common_popup(result.message, "Y","bas_code_add");
 		   						   location.href="/backoffice/login.do";
 		   					   }else if (result.status == "SUCCESS"){
 		   						   //총 게시물 정리 하기'
-		   						   common_modelClose("bas_code_add");
+		   						   common_modelCloseM(result.message, "bas_code_add");
 		   						   jqGridFunc.fn_search();
 		   					   }else if (result.status == "FAIL"){
 		   						   common_popup("저장 도중 문제가 발생 하였습니다.", "Y", "bas_code_add");
@@ -334,17 +342,17 @@
 			    var url = "/backoffice/bas/codeIDCheck.do"
 	        	var param =  {"codeId" : $("#codeId").val()};
 			    if ($("#codeId").val() != ""){
-	        		uniAjaxSerial(url, param, false, 
+			        fn_Ajax(url, "GET", param, false, 
 		        			    function(result) {	
 	        			              if (result != null) {
-	        			                if (result.status == "SUCCESS"){
-	        			        		    var message = result.result == "OK" ? '<spring:message code="common.codeOk.msg" />' : '<spring:message code="common.codeFail.msg" />';
-            			        		    var alertIcon =  result.result == "OK" ? "Y" : "N";
-            			        		    common_popup(message, alertIcon, "bas_code_add");
+	        			            	  var message = result.result == "OK" ? '<spring:message code="common.codeOk.msg" />' : '<spring:message code="common.codeFail.msg" />';
+          			        		      var alertIcon =  result.result == "OK" ? "Y" : "N";
+	        			                if (result.status == "SUCCESS"){    			        		    
+            			        		    common_popup(message ,alertIcon, "bas_code_add");
            			        		    	$("#idCheck").val(alertIcon);
 										}else {
-											common_popup('<spring:message code="common.codeFail.msg" />', "N", "bas_code_add");
-											$("#idCheck").val("N");
+											common_popup(message, alertIcon, "bas_code_add");
+											$("#idCheck").val(alertIcon);
 										}
 	        			              }
 								},
@@ -372,13 +380,14 @@
 				    $("#codeDc").val('');
 				    $("#codeEtc1").val('');
 		            $("#btnDetailUpdate").text("등록");
+		            $("#detailUseAtY").prop("checked", true);
 			    }else {
 			    	
 				    $("#btnDetailUpdate").text("수정");
 				    $("#code").val(code);
 				    var url = "/backoffice/bas/CmmnDetailView.do";
 	      		    var param = {"code" : code };
-	      		    uniAjaxSerial(url, param, true,
+	      		    fn_Ajax(url, "GET", param, true,
      		     			function(result) {
 	      		    	           if (result.status == "LOGIN FAIL"){
 	      		    	        	   common_popup(result.meesage, "N","bas_detailcode_add");
@@ -387,6 +396,7 @@
      	                               //관련자 보여 주기 
      	                                var obj = result.regist;
      	                                $("#codeNm").val(obj.code_nm);
+     	                                $("#codeId").val(obj.code_id);
 	     		  						$("#codeDc").val(obj.code_dc);
 	     		  						$("#codeEtc1").val(obj.code_etc1);
 	     		  						$("input:radio[name='detailUseAt']:radio[value='"+obj.use_at+"']").prop('checked', true); 
@@ -399,61 +409,65 @@
   						    }    		
      		       );
 			    }
-			    $("#btn_Detail").trigger("click");
+			    $("#bas_detailcode_add").bPopup();
 			   
 		   },rowBtn: function (cellvalue, options, rowObject){
 			   if (rowObject.code != "")
             	   return '<a href="javascript:detailFunc.delRow(&#34;'+rowObject.code_id+'&#34;,&#34;'+rowObject.code+'&#34;);">삭제</a>';
            },delRow : function (codeId, code){
-        	   if(code != "") {
-        		   
+        	   if(code != "") {       		   
         		   var params = {'code':code };
         		   fn_uniDelAction("/backoffice/bas/codeDetailCodeDelete.do","GET",params,false, "");
         		   detailFunc.fn_search(codeId);
         	   }
-	       }, fn_detailUpdate : function (){
+	       }, fn_detailUp : function (){
 	    	   if (any_empt_line_span("bas_detailcode_add", "codeNm", "분류명 입력해 주세요.","sp_message", "savePage") == false) return;
-     		  
+	    	   var commentTxt = ($("#mode").val() == "Ins") ? "등록 하시겠습니까?":"저장 하시겠습니까?";
+	    	   $("#id_ConfirmInfo").attr("href", "javascript:detailFunc.fn_detailUpdate()");
+	       	   fn_ConfirmPop(commentTxt);
+	       }, fn_detailUpdate : function (){
+	    
+	    	   $("#confirmPage").bPopup().close();
      		   var param = {
      				        "codeId" : $("#codeId").val(),
 	     		     		"code" : $("#code").val(),
 	     		     		"codeNm" : $("#codeNm").val(),
 	     		     		"codeDc" : $("#codeDc").val(),
 	     		     		"codeEtc1" : $("#codeEtc1").val(),
-	     		     		"detailUseAt" : fn_emptyReplace($("#detailUseAt").val(),"Y"),
+	     		     		"useAt" : fn_emptyReplace($('input[name="detailUseAt"]:checked').val(),"Y"),
 	     		     		"mode" : $("#mode").val()
      		                }
      		   //여기 부분 정리 하기  
-     		   var commentTxt = ($("#mode").val() == "Ins") ? "등록 하시겠습니까?":"저장 하시겠습니까?";
      		   
-     		   if (confirm(commentTxt)== true){
-     			   uniAjax("/backoffice/bas/CodeDetailUpdate.do", param, true,
-     		     			function(result) {
-     				               common_modelClose("bas_detailcode_add");
-     				               if (result.status == "LOGIN FAIL"){
-    						    	   common_popup(result.meesage, "Y");
-     								   location.href="/backoffice/login.do";
-     		  					   }else if (result.status == "SUCCESS"){
-     	                               //관련자 보여 주기 
-     		  						   detailFunc.fn_search($("#codeId").val());
-     		  					   }else {
-     		  						   common_popup(result.meesage, "Y");
-     		  					   }
-     						},
-  						    function(request){
-  							    common_popup("Error:" +request.status, "Y");
-  						    }    		
-     		        );
-     		   }
+     		   fn_Ajax("/backoffice/bas/CodeDetailUpdate.do", "POST", param, true,
+     		    			function(result) {
+     			               common_modelClose("bas_detailcode_add");
+     			               if (result.status == "LOGIN FAIL"){
+    					    	   common_popup(result.message, "Y");
+     							   location.href="/backoffice/login.do";
+     		  				   }else if (result.status == "SUCCESS"){
+     		  					   common_modelCloseM(result.message, "bas_detailcode_add");
+     		  					   detailFunc.fn_search($("#codeId").val());
+     	                       }else {
+     		  					   common_popup(result.meesage, "Y");
+     		  				   }
+     					},
+  					    function(request){
+  						    common_popup("Error:" +request.status, "Y");
+  					    }    		
+     		   );
+     		   
 		   }, fn_userDel: function (code){
 			   var params = {'code':code };
     		   fn_uniDelAction("/backoffice/bas/codeDetailCodeDelete.do","GET",params, false, "detailFunc.fn_detailList");
 		   },fn_search : function(gridId){
+			  
+			   
 			  $("#mainGrid_"+gridId+"_t").setGridParam({
 	    	    	 datatype	: "json",
 	    	    	 postData	: JSON.stringify(  {
 	    	    		"codeId" : gridId,
-	          			"pageIndex": 1,
+	          			"pageIndex": 1
 	         		 }),
 	    	    	 loadComplete	: function(data) {
 	    	    	 }
@@ -495,7 +509,7 @@
                     <input type="text" id="searchKeyword" name="searchKeyword" placeholder="검색어를 입력하새요.">
                 </div>
                 <div class="inlineBtn">
-                    <a href="" class="grayBtn">검색</a>
+                    <a href="javascript:jqGridFunc.fn_search();" class="grayBtn">검색</a>
                 </div>
             </div>
             <div class="left_box mng_countInfo">
@@ -561,8 +575,9 @@
             </table>
         </div>
         <div class="right_box">
-            <a href="#" class="grayBtn">취소</a>
-            <a href="#" class="blueBtn" id="btnSave" onClick="jqGridFunc.fn_CheckForm()">저장</a>
+        	<a href="#" class="blueBtn" id="btnSave" onClick="jqGridFunc.fn_CheckForm()">저장</a>
+            <a href="#" onClick="common_modelClose('bas_code_add')" class="grayBtn b-close">취소</a>
+            
         </div>
         <div class="clear"></div>
     </div>
@@ -601,7 +616,7 @@
                                 <label for="detailUseAtY"><input type="radio" name="detailUseAt" value="Y" id="detailUseAtY">사용</label>
                             </span>
                             <span>
-                                <label for="detailUseAtN"><input type="radio" name="detailUseAt" value="N" id="detailUseAtN">사용</label>
+                                <label for="detailUseAtN"><input type="radio" name="detailUseAt" value="N" id="detailUseAtN">사용 안함</label>
                             </span>
                         </td>
                     </tr>
@@ -609,8 +624,9 @@
             </table>
         </div>
         <div class="right_box">
-            <a href="#" class="grayBtn">취소</a>
-            <a href="#" id="btnDetailUpdate" name="btnDetailUpdate" onClick="detailFunc.fn_detailUpdate()" class="blueBtn">저장</a>
+        	<a href="#" id="btnDetailUpdate" name="btnDetailUpdate" onClick="detailFunc.fn_detailUp()" class="blueBtn">저장</a>
+            <a href="#" onClick="common_modelClose('bas_detailcode_add')" class="grayBtn b-close">취소</a>
+            
         </div>
         <div class="clear"></div>
     </div>

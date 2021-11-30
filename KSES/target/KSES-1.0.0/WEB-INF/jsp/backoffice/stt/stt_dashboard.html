@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=no;" />
+    <title>경륜경정 스마트입장 관리자</title>
+    <link rel="stylesheet" href="../../css/reset.css">
+	  <link rel="stylesheet" href="../../css/paragraph.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+    <script src="../../js/jquery-3.5.1.min.js"></script>
+    <script src="../../js/bpopup.js"></script>
+    <!-- chart.js -->
+    <script src="../../js/chart.min.js"></script>
+    <script src="../../js/utils.js"></script>
+<body>
+<div class="wrapper">
+  <!--// header -->
+  <div class="header_wrap">
+    <!--// top -->
+    <header>
+      <ul id="header" class="contents">
+        <li class="logo"><h1>경륜경정 스마트 입장시스템</h1></li>
+        <li class="toggle"><a href="#" onclick="toggleNav()" class="menu"></a></li>
+        <li class="logo1"><img src="../../img/logo1.png" alt=""></li>
+        <li class="member"><img src="../../img/login.png" alt=""><span>홍길동</span> 님</li>
+      </ul>
+    </header>
+    <!--top //-->
+    <!--// menu list -->
+    <div id="mySidenav" class="sidenav">
+      <ul>
+        <!--// 통합관리 -->
+        <li>
+          <button class="sub_menu">통합 관리</button>
+          <div class="panel open">
+            <a href="stt_dashboard.html" class="active">통합이용 현황</a>
+            <a href="stt_sales.html">매출현황</a>
+          </div>
+        </li>
+        <!-- 통합관리 //-->
+        <!--// 기초관리 -->
+        <li>
+          <button class="sub_menu">기초 관리</button>
+          <div class="panel">
+            <a href="../bas/bas_code.html">공통코드 관리</a>
+            <a href="../bas/bas_auth.html">권한관리</a>
+            <a href="../bas/bas_program.html">프로그램 관리</a>
+            <a href="../bas/bas_menu.html">메뉴 관리</a>
+            <a href="../bas/bas_holiday.html">휴일관리</a>
+            <a href="../bas/bas_kiosk.html">무인발권기 관리</a>
+            <a href="../bas/bas_set_envir.html">환경설정</a>         
+          </div>
+        </li>
+        <!-- 기초관리//-->
+        <!--// 인사관리 -->
+        <li>
+          <button class="sub_menu">인사 관리</button>
+          <div class="panel">
+            <a href="../mng/mng_admin.html">관리자 관리</a>      
+            <a href="../mng/mng_user.html">사용자 관리</a>
+          </div>
+        </li>
+        <!-- 인사관리//-->
+        <!--// 고객관리 -->
+        <li>
+          <button class="sub_menu">고객 관리</button>
+          <div class="panel">
+            <a href="../rsv/rsv_custom_info.html">예약 현황</a>
+            <a href="../rsv/rsv_info_enter.html">출입통제 관리</a>
+            <a href="../rsv/rsv_vaccin_mng.html">백신 접종자 관리</a>
+            <a href="../rsv/rsv_mms_mng.html">메시지 전송 관리</a>
+            <a href="../rsv/rsv_mms_state.html">메시지 전송 현황 관리</a>
+          </div>
+        </li>
+        <!-- 고객관리//-->  
+        <!--// 시설관리 -->
+        <li>
+          <button class="sub_menu">시설 관리</button>
+          <div class="panel">
+            <a href="../bld/bld_branch_office.html">지점 시설 관리</a>
+            <a href="../bld/bld_seat.html">좌석 추가</a>
+            <a href="../bld/bld_season.html">시즌 관리</a>   
+          </div>
+        </li>
+        <!-- 시설관리//-->  
+        <!--// 시스템 현황 -->
+        <li>
+          <button class="sub_menu">시스템 관리</button>
+          <div class="panel">
+            <a href="../sys/sys_board_mng.html">게시판 등록 관리</a>
+            <a href="../sys/sys_log.html">시스템 로그 현황</a>  
+            <a href="../sys/sys_adm_login.html">관리자 로그인 현황</a>
+          </div>
+        </li>
+        <!-- 시스템 현황//-->                                   
+      </ul>
+    </div>
+    <!-- menu list //-->
+
+  </div>
+  <!-- header //-->
+  <!--// contents-->
+  <div id="contents">
+    <div class="breadcrumb">
+      <ol class="breadcrumb-item">
+        <li>통합 관리</li>
+        <li class="active">　> 통합 이용 현황</li>
+      </ol>
+    </div>
+
+    <h2 class="title">통합 이용 현황</h2><div class="clear"></div>
+    <!--// dashboard -->
+    <div class="dashboard">
+      <div class="row">
+        <div class="lg-4">
+          <div class="dash_box">
+            <div class="icon_con icon_seat">
+              <i></i>
+            </div>
+            <div class="dash_txt">
+              <p class="tit">금일 입장 정원 </p>
+              <p class="txt">1000 </p>
+
+            </div>
+          </div>
+        </div>
+        <div class="lg-4">
+          <div class="dash_box">
+            <div class="icon_con icon_meeting">
+              <i></i>
+            </div>
+            <div class="dash_txt">
+              <p class="tit">총 예약 인원</p>
+              <p class="txt">100 </p>
+              <p class="refresh">
+                <a href="" class="update"> <img src="../../img/refresh.svg" alt="업데이트">업데이트</a>
+              </p>              
+            </div>
+          </div>
+        </div>
+        <div class="lg-4">
+          <div class="dash_box">
+            <div class="icon_con icon_visit">
+              <i></i>
+            </div>
+            <div class="dash_txt">
+              <p class="tit">현재 입장 인원</p>
+              <p class="txt">52</p>
+              <p class="refresh">
+                <a href="" class="update"> <img src="../../img/refresh.svg" alt="업데이트">업데이트</a>
+              </p>              
+            </div>
+          </div>
+        </div>
+        <div class="clear"></div>
+      </div>
+      
+<!--contents-->
+      <div class="boardlist">
+        <a href="meeting_resgister.html" class="right_box blueBtn">엑셀 다운로드</a>  
+        <div class="clear"></div>
+
+        <div class="whiteBox">
+          <table class="main_table">
+            <thead>
+              <tr>
+                <th>지점명</th>
+                <th>입장정원</th>
+                <th>예약인원</th>
+                <th>입장인원</th>
+                <th>자동취소 인원</th>
+                <th>입장률</th>
+                <th></th>
+ 
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>장안지점</td>
+                <td>300명</td>
+                <td>150명</td>
+                <td>100명</td>
+                <td>100명</td>
+                <td>80%</td>
+                <td><a href="" class="detailBtn">상세조회</a></td>
+  
+              </tr>
+              <tr>
+                <td>장안지점</td>
+                <td>300명</td>
+                <td>150명</td>
+                <td>100명</td>
+                <td>100명</td>
+                <td>80%</td>
+                <td><a href="" class="detailBtn">상세조회</a></td>
+  
+              </tr>
+              <tr>
+                <td>장안지점</td>
+                <td>300명</td>
+                <td>150명</td>
+                <td>100명</td>
+                <td>100명</td>
+                <td>80%</td>
+                <td><a href="" class="detailBtn">상세조회</a></td>
+  
+              </tr>
+              <tr>
+                <td>장안지점</td>
+                <td>300명</td>
+                <td>150명</td>
+                <td>100명</td>
+                <td>100명</td>
+                <td>80%</td>
+                <td><a href="" class="detailBtn">상세조회</a></td>
+  
+              </tr>
+              <tr>
+                <td>장안지점</td>
+                <td>300명</td>
+                <td>150명</td>
+                <td>100명</td>
+                <td>100명</td>
+                <td>80%</td>
+                <td><a href="" class="detailBtn">상세조회</a></td>
+  
+              </tr>
+              <tr onclick="location.href='meeting_detail.html'" class="cur_poin" >
+                <td>장안지점</td>
+                <td>300명</td>
+                <td>150명</td>
+                <td>100명</td>
+                <td>100명</td>
+                <td>80%</td>
+                <td><a href="" class="detailBtn">상세조회</a></td>
+  
+              </tr>
+              <tr onclick="location.href='meeting_detail.html'" class="cur_poin" >
+                <td>장안지점</td>
+                <td>300명</td>
+                <td>150명</td>
+                <td>100명</td>
+                <td>100명</td>
+                <td>80%</td>
+                <td><a href="" class="detailBtn">상세조회</a></td>
+  
+              </tr>                                                                      
+            </tbody>
+          </table>
+        </div>
+        <ul class="page_num">
+          <li><a href="javascript:;" class="before2 "></a></li>
+          <li><a href="javascript:;" class="before rignt15"></a></li>
+          <li class="active"><a href="javascript:;">1</a></li>
+          <li><a href="javascript:;">2</a></li>
+          <li><a href="javascript:;" class="after left15"></a></li>
+          <li><a href="javascript:;" class="after2"></a></li>
+        </ul>
+
+        
+      </div>
+
+    </div>
+    
+  </div>
+  <!-- contents//-->
+</div>
+<!-- wrapper_end-->
+
+<!-- chaer script-->
+<script>
+  ////// bar chart 금일 층별 선택좌석 예약 현황
+    var color = Chart.helpers.color;
+    var barChartData = {
+      labels: ['21F', '22F', '23F', '24F', '25F', '26F', '27F'],
+      datasets: [{
+        barBackground: "rgba(221, 224, 229, 1)",
+        backgroundColor: [
+            window.chartColors.blue,
+            window.chartColors.blue,
+            window.chartColors.blue,
+            window.chartColors.blue,
+            window.chartColors.blue,
+            window.chartColors.blue,
+            window.chartColors.blue
+          ],
+        borderColor: [
+            window.chartColors.blue,
+            window.chartColors.blue,
+            window.chartColors.blue,
+            window.chartColors.blue,
+            window.chartColors.blue,
+            window.chartColors.blue,
+            window.chartColors.blue
+          ],
+        borderWidth: 0.5,
+        data : [80,145,65,32,40,120,55]
+      }]
+
+    };
+
+    var cbx = document.getElementById('canvas').getContext('2d');
+    window.myBar = new Chart(cbx, {
+        type: 'bar',
+        data: barChartData,
+        options: {
+          responsive: false,
+          legend: {
+            display: false
+          },
+          tooltips: {
+            callbacks: {
+              label: function(tooltipItem) {
+              console.log(tooltipItem)
+                return tooltipItem.yLabel;
+              }
+            },
+            titleFontSize: 16,
+            bodyFontSize: 14,
+          },
+          scales: {
+            xAxes: [{
+              ticks:{
+                fontColor : '#808080',
+                fontSize : 16
+              },
+              gridLines:{
+                lineWidth: 0
+              }
+            }],
+            yAxes: [{
+              ticks: {
+                fontColor : "#808080",
+                fontSize : 14,
+              },
+              gridLines:{
+                borderDash: [8, 4],
+                color: '#e3e4e8',
+                lineWidth:0.8,
+              }
+            }],
+          },
+        }
+    });
+
+    ////// doughnut chart  금일 하드웨어별 선택좌석 예약현황
+    var randomScalingFactor = function() {
+      return Math.round(Math.random() * 100);
+    };
+    var config = {
+      type: 'doughnut',
+      data: {
+        datasets: [{
+          data: [
+            130,
+            182,
+            80
+          ],
+          backgroundColor: [
+            window.chartColors.sky,
+            window.chartColors.orange,
+            window.chartColors.pink
+          ],
+          label: 'Dataset 1',
+        }],
+        labels: [
+          'MOBILE',
+          'WEB',
+          'KIOSK'
+        ]
+      },
+      options: {
+        maintainAspectRatio: false,
+        responsive: false,
+        animation: {
+          animateScale: true,
+          animateRotate: true
+        },
+        legend: {
+          position: 'bottom',
+          labels: {
+            fontSize: 16
+          },
+        },
+        layout: {
+            padding: {
+                left: 0,
+                right: 0,
+                top: 10,
+                bottom: 10,
+            }
+        },
+        cutoutPercentage: 50,
+        tooltips: {
+          titleFontSize: 16,
+          bodyFontSize: 14,
+        },
+      }
+    };
+
+    var cdx = document.getElementById('chart-area').getContext('2d');
+    window.myDoughnut = new Chart(cdx, config);
+
+    ////// horizontalBarChartData  월간 층별 인기 좌석
+  
+    Chart.plugins.register({
+       afterDatasetsDraw: function(chartInstance) {
+          var ctx = chartInstance.chart.ctx,
+              width = chartInstance.chartArea.right;
+
+          chartInstance.data.datasets.forEach(function(dataset, datasetIndex) {
+             var datasetMeta = chartInstance.getDatasetMeta(datasetIndex);
+             datasetMeta.data.forEach(function(segment, segmentIndex) {
+                var height = segment._model.height,
+                    posX = segment.tooltipPosition().x,
+                    posY = segment.tooltipPosition().y - (height / 2);
+                // draw white background
+                ctx.save();
+                ctx.fillStyle = '#e8edf7';
+                ctx.fillRect(posX, posY, width - posX, height);
+                ctx.restore();
+             });
+          });
+
+       }
+    });
+
+    var color = Chart.helpers.color;
+    var horizontalBarChartData = {
+      labels: ['21F', '22F', '23F', '24F', '25F', '26F', '27F'],
+      datasets: [{
+        barBackground: "rgba(221, 224, 229, 1)",
+        backgroundColor: [
+            color(window.chartColors.sky).alpha(0.5).rgbString(),
+            color(window.chartColors.pink).alpha(0.5).rgbString(),
+            color(window.chartColors.orange).alpha(0.5).rgbString(),
+            color(window.chartColors.green).alpha(0.5).rgbString(),
+            color(window.chartColors.purple).alpha(0.5).rgbString(),
+            color(window.chartColors.yellow).alpha(0.5).rgbString(),
+            color(window.chartColors.grey).alpha(0.5).rgbString()
+          ],
+        borderColor: [
+            window.chartColors.sky,
+            window.chartColors.pink,
+            window.chartColors.orange,
+            window.chartColors.green,
+            window.chartColors.purple,
+            window.chartColors.yellow,
+            window.chartColors.grey
+          ],
+        borderWidth: 1,
+        data : [80,145,65,32,40,120,55]
+      }]
+    };
+
+    var ctx = document.getElementById('horizon_canvas').getContext('2d');
+    window.myHorizontalBar = new Chart(ctx, {
+      type: 'horizontalBar',
+      data: horizontalBarChartData,
+      options: {
+          responsive: false,
+          legend: {
+            display: false
+          },
+          tooltips: {
+            titleFontSize: 16,
+            bodyFontSize: 14,
+          },
+          scales: {
+            xAxes: [{
+              ticks:{
+                fontColor : '#808080',
+                fontSize : 16
+              },
+              gridLines:{
+                lineWidth: 0
+              }
+            }],
+            yAxes: [{
+              ticks: {
+                fontColor : "#808080",
+                fontSize : 14,
+              },
+              gridLines:{
+                lineWidth: 0
+              }
+            }],
+          },
+        }
+    }); 
+
+
+  </script>
+<script src="../../js/common.js"></script>
+</body>
+</html>
+
+
+

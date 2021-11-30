@@ -82,4 +82,6 @@ public class SeatInfo {
 	 
 	 // 입력 구분
 	 private String mode;
+	 
+	 private String userId = "";
 }

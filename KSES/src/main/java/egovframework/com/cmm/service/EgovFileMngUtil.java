@@ -30,6 +30,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 //import java.util.HashMap;
+import org.springframework.web.multipart.MultipartRequest;
 
 /**
  * @Class Name  : EgovFileMngUtil.java
@@ -125,7 +126,7 @@ public class EgovFileMngUtil {
 	    fvo = new FileVO();
 	    fvo.setFileExtsn(fileExt);
 	    fvo.setFileStreCours(storePathString);
-	    fvo.setFileMg(Long.toString(_size));
+	    fvo.setFileSize(Long.toString(_size));
 	    fvo.setOrignlFileNm(orginFileName);
 	    fvo.setStreFileNm(newName);
 	    fvo.setAtchFileId(atchFileIdString);
@@ -139,6 +140,73 @@ public class EgovFileMngUtil {
 
 	return result;
     }
+    
+    public List<FileVO> parseFileKSESInf(Iterator itr, MultipartRequest mRequest, String KeyStr, int fileKeyParam,  String storePath) throws Exception {
+    	int fileKey = fileKeyParam;
+
+    	String storePathString = "";
+    	String atchFileIdString = "";
+    	
+    	storePathString =  ("".equals(storePath) || storePath == null) ? 
+    	        propertyService.getString("Globals.filePath") : storePath;	 
+    	        
+    	LOGGER.debug("==================" +  storePathString + "================");
+    	File saveFolder = new File(storePathString);
+    	if (!saveFolder.exists() || saveFolder.isFile()) {
+    	    saveFolder.mkdirs();
+    	}
+    	
+    	
+    	
+    	MultipartFile file;
+    	String filePath = "";
+    	List<FileVO> result  = new ArrayList<FileVO>();
+    	FileVO fvo;
+    	
+    	
+    	while (itr.hasNext()) {
+    	    List<MultipartFile> file_list = mRequest.getFiles( (String) itr.next()); 
+    		for( MultipartFile mpf : file_list ){
+        		
+        	    String orginFileName = mpf.getOriginalFilename();
+        	    atchFileIdString = idgenService.getNextStringId();
+
+        	    //--------------------------------------
+        	    // 원 파일명이 없는 경우 처리
+        	    // (첨부가 되지 않은 input file type)
+        	    //--------------------------------------
+        	    if ("".equals(orginFileName)) {
+        		continue;
+        	    }
+        	    ////------------------------------------
+
+        	    int index = orginFileName.lastIndexOf(".");
+        	    String fileExt = orginFileName.substring(index + 1);
+        	    String newName = KeyStr + EgovStringUtil.getTimeStamp() + fileKey+"."+fileExt;
+        	    long _size = mpf.getSize();
+
+        	    if (!"".equals(orginFileName)) {
+	        		filePath = storePathString +  newName;
+	        		LOGGER.debug("storePathString:"  + storePathString + ":" + filePath);
+	        		mpf.transferTo(new File(filePath));
+        	    }
+        	    fvo = new FileVO();
+        	    fvo.setAtchFileId(atchFileIdString);
+        	    fvo.setFileExtsn(fileExt);
+        	    fvo.setFileStreCours(storePathString);
+        	    fvo.setFileSize(Long.toString(_size));
+        	    fvo.setOrignlFileNm(orginFileName);
+        	    fvo.setStreFileNm(newName);
+        	    writeFile(mpf, newName, storePathString);
+        	    result.add(fvo);
+        	    fileKey++;
+      	    }
+
+    	    
+    	}
+    	System.out.println("================================================================");
+    	return result;
+        }
 
     /**
      * 첨부파일을 서버에 저장한다.
@@ -207,17 +275,6 @@ public class EgovFileMngUtil {
     String downFileName = EgovStringUtil.isNullToString(request.getAttribute("downFile")).replaceAll("..","");
     String orgFileName = EgovStringUtil.isNullToString(request.getAttribute("orgFileName")).replaceAll("..","");
 
-	/*if ((String)request.getAttribute("downFile") == null) {
-	    downFileName = "";
-	} else {
-	    downFileName = EgovStringUtil.isNullToString(request.getAttribute("downFile"));
-	}*/
-
-	/*if ((String)request.getAttribute("orgFileName") == null) {
-	    orgFileName = "";
-	} else {
-	    orgFileName = (String)request.getAttribute("orginFile");
-	}*/
 
 	File file = new File(downFileName);
 
@@ -310,16 +367,17 @@ public class EgovFileMngUtil {
     protected static void writeFile(MultipartFile file, String newName, String stordFilePath) throws Exception {
 	InputStream stream = null;
 	OutputStream bos = null;
-	newName = EgovStringUtil.isNullToString(newName).replaceAll("..", "");
-	stordFilePath = EgovStringUtil.isNullToString(stordFilePath).replaceAll("..", "");
+	
+	//newName = EgovStringUtil.isNullToString(newName).replaceAll("..", "");
+	//stordFilePath = EgovStringUtil.isNullToString(stordFilePath).replaceAll("..", "");
 	try {
 	    stream = file.getInputStream();
 	    File cFile = new File(stordFilePath);
 
 	    if (!cFile.isDirectory())
 		cFile.mkdir();
-
-	    bos = new FileOutputStream(stordFilePath + File.separator + newName);
+	    
+	    bos = new FileOutputStream(stordFilePath + newName);
 
 	    int bytesRead = 0;
 	    byte[] buffer = new byte[BUFF_SIZE];

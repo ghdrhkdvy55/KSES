@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
+    <defs>
+        <style>
+            .cls-3{fill:#fff}
+        </style>
+    </defs>
+    <g id="ic_appbar_cafeteria" transform="translate(-665.071 -366.429)">
+        <path id="사각형_119669" d="M0 0H30V30H0z" opacity="0.001" transform="translate(668.071 369.429)" style="isolation:isolate"/>
+        <g id="그룹_106084">
+            <path id="패스_20940" d="M691.173 379.429v6h-16v-8h17v-1h-18v10h18v-7z" class="cls-3"/>
+            <path id="사각형_119675" d="M0 0H1V6H0z" class="cls-3" transform="translate(694.072 378.629)"/>
+            <path id="사각형_119676" d="M0 0H1V6H0z" class="cls-3" transform="translate(673.172 388.929)"/>
+            <path id="패스_20944" d="M680.531 392.463h-6.441v-1h5.851l3.293-5.957.875.484z" class="cls-3"/>
+        </g>
+    </g>
+</svg>

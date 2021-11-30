@@ -46,7 +46,7 @@ public interface EmpInfoManageService {
 	 * @param empId
 	 * @return
 	 */
-	public int deleteEmpInfo(String empId);
+	public int deleteEmpInfo(List<String> empList) throws Exception;
 	
 	/**
 	 * SPDM 직원(사용자) 목록 갱신

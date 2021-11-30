@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kses.backoffice.bas.holy.mapper.HolyInfoManagerMapper">
+
+   <select id="selectHolyInfoList" resultType="lmap">     	      
+		 	SELECT	* 
+			FROM 		( SELECT	SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT, 
+			                        ROW_NUMBER() OVER (ORDER BY HOLY_DAY ASC) AS RNUM, 
+									TB.* 
+					          FROM 	(	
+					                 SELECT a.HOLY_DAY, a.HOLY_TITLE, a.HOLY_USEYN,
+					                        a.REG_DATE, a.REG_ID, a.UPDATE_ID,
+					                        FORMAT(a.UPDATE_DATE,'yyyy-MM-dd HH:mm:ss') UPDATE_DATE
+							         FROM  TB_HOLYINFO a
+							         WHERE 	1=1
+					                       <if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
+					                         AND ( a.HOLY_DAY LIKE CONCAT('%',#{params.searchKeyword},'%') or 
+					                               a.HOLY_TITLE LIKE CONCAT('%',#{params.searchKeyword},'%')) 
+								           </if>
+								           <choose>
+								              <when test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchStartDay) ">
+								                  AND a.HOLY_DAY between #{params.searchStartDay} and #{params.searchEndDay}
+								              </when>
+								              <otherwise>
+								                  AND a.HOLY_DAY BETWEEN CONVERT(varchar(8), SYSDATE, 112) AND 
+								                      CONVERT(varchar(8), DATEADD(month, 3 , SYSDATE), 112)
+								              </otherwise>
+								           </choose>	
+								     ) TB 
+					        ) TA
+		WHERE RNUM  BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
+	    ORDER BY TA.HOLY_DAY ASC 
+   </select>
+
+   <select id="selectHolyInfoDetail" resultType="lmap">
+        SELECT a.HOLY_DAY, a.HOLY_TITLE, a.HOLY_USEYN,
+			   a.REG_DATE, a.REG_ID, a.UPDATE_DATE, a.UPDATE_ID
+		FROM  TB_HOLYINFO a
+		WHERE a.HOLY_DAY = #{holyDay}
+   </select>
+   <!-- <insert id="insertHolyInfo">
+        <selectKey resultType="int"  keyProperty="cnt" order="BEFORE">
+                SELECT ISNULL(COUNT(HOLY_DAY),0)  as cnt
+                FROM TB_HOLYINFO 
+                WHERE HOLY_DAY = #{holyDay}
+        </selectKey>
+         <choose>
+                <when test="cnt > 0">
+			       UPDATE TB_HOLYINFO SET HOLY_DAY = #{holyDay}
+	                             ,  HOLY_TITLE = #{holyTitle,jdbcType=VARCHAR }
+	                             ,  HOLY_USEYN = #{holyUseyn,jdbcType=VARCHAR }
+	                             ,  UPDATE_DATE = SYSDATE
+	                             ,  UPDATE_ID = #{updateId ,jdbcType=VARCHAR}                        
+	               WHERE HOLY_DAY = #{holyDay}
+				</when>
+				<otherwise>
+				   INSERT INTO 	TB_HOLYINFO	(HOLY_DAY, HOLY_TITLE, HOLY_USEYN,
+			                                 REG_DATE, REG_ID, UPDATE_DATE, UPDATE_ID)
+			       VALUES (#{holyDay,jdbcType=VARCHAR}, #{holyTitle,jdbcType=VARCHAR} , #{holyUseyn,jdbcType=VARCHAR }
+						  , SYSDATE, #{userId ,jdbcType=VARCHAR}, SYSDATE, #{userId ,jdbcType=VARCHAR})
+				</otherwise>
+		 </choose>
+   </insert> -->
+   <insert id="insertHolyInfo" statementType="CALLABLE" >
+     { call SP_HOLYUPDATE(#{holyTitle, mode=IN, jdbcType=VARCHAR, javaType=string}
+                         , #{holyUseyn, mode=IN, jdbcType=VARCHAR, javaType=string}
+                         , #{userId ,mode=IN, jdbcType=VARCHAR, javaType=string}
+                         , #{holyDay ,mode=IN, jdbcType=VARCHAR, javaType=string}
+                         , #{result ,mode=OUT, jdbcType=VARCHAR, javaType=string} )   
+     }  
+   </insert>
+   <update id="updateHolyInfo">
+       UPDATE TB_HOLYINFO SET HOLY_DAY = #{holyDay}
+                             ,  HOLY_TITLE = #{holyTitle,jdbcType=VARCHAR }
+                             ,  HOLY_USEYN = #{holyUseyn,jdbcType=VARCHAR }
+                             ,  UPDATE_DATE = SYSDATE
+                             ,  UPDATE_ID = #{updateId ,jdbcType=VARCHAR}                        
+       WHERE HOLY_DAY = #{holyDay}
+   </update>
+
+
+</mapper>

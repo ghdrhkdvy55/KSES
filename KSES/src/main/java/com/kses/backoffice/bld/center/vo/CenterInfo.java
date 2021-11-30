@@ -84,4 +84,7 @@ public class CenterInfo {
 	 
 	 // 입력 구분 
 	 private String mode;
+	 
+	 // 등록/수정자 ID
+	 private String userId = "";
 }

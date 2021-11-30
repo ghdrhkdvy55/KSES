@@ -8,14 +8,14 @@ import lombok.Setter;
 public class LoginLog {
 
 	private String logId;
-	private String connectId;
-	private String connectIp;
-	private String connectMthd;
-	private String errorOccrrAt;
-	private String errorCode;
-	private String creatDt;	
-	private String searchStartdday;
-	private String searchEndday;
+	private String connectId = "";
+	private String connectIp = "";
+	private String connectMthd = "";
+	private String errorOccrrAt = "";
+	private String errorCode = "";
+	private String creatDt = "";	
+	private String searchStartdday = "";
+	private String searchEndday = "";
 	private int pageIndex = 1;
 	private int pageUnit = 10;
 	private int pageSize = 10;

@@ -1,0 +1,37 @@
+/*섹션 레이어*/
+
+.circle {
+    display: inline-block;
+    position: relative;
+    top: 20px;
+    z-index: 999;
+    left: 10px;
+    margin-right: 1rem;
+}
+.circle span {
+    padding: 1.3rem;
+    border-radius: 5rem;
+    color: #fff;
+    font-weight: 700;
+    opacity: 0.9;
+    width: 100%;
+    display: block;
+    font-size: 3em;
+    text-align: center;
+    line-height: 1.5em;
+}
+.a_sec {background: #ffbc26;}
+.b_sec {background: #4abcff;}
+.c_sec {background: #ff6e42;}
+.d_sec {background: #b665ff;}
+.e_sec {background: #ff65e5;}
+.f_sec {background: #6e65ff;}
+.g_sec {background: #4b8bff;}
+.h_sec {background: #27c7a9;}
+.i_sec {background: #1c4acf;}
+.j_sec {background: #ff186d;}
+.k_sec {background: #426021;}
+.gr_sec {background: #206618;}
+.n_sec {background: #80D242;}
+.p_sec {background: #EC4A4F;}
+.s_sec {background: #11195D;}

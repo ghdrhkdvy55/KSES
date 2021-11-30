@@ -1,0 +1,62 @@
+﻿.contents {
+    max-width: 100%;
+    width: 1200px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.part_contents {
+	border: 1px solid #e0e0e0;
+    max-width: 100%;
+    width: 1200px;
+    height : 960px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.mapBox {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+
+.mapArea {
+    /*width: 1200px;*/
+    /*height: 715px;*/
+    /* width: 100%; */
+    /* height: calc(100vh - 300px); */
+    background-size: 100% !important;
+}
+
+.gui_seat {height: 400px;}
+
+.part_map {
+    width: 1375px;
+    height: 750px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    background-size: 100% !important;
+}
+
+.pinch-zoom-container {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.mapArea {
+    width: 100%;
+    min-height: 100%;
+    height: auto;
+}
+
+.whiteBack {
+    background-color: white;
+    box-shadow: 0 0 7px 2px rgb(207 207 207 / 28%);
+    padding: 25px;
+    height: auto;
+    box-sizing: border-box;
+}
+
+.mapbottom {
+    padding-bottom: 115px;
+}

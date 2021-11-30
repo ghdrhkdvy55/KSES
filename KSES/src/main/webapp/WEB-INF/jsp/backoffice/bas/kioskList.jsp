@@ -134,14 +134,14 @@
 						var totalPage = grid.getGridParam("total");
     		              
 						if (pgButton == "next"){
-							gridPage = gridPage < lastPage ? gridPage +=1 : gridPage;
+							/* gridPage = gridPage < lastPage ? gridPage +=1 : gridPage; */
 							if (gridPage < lastPage ){
 								gridPage += 1;
 							} else {
 								gridPage = gridPage;
 							}
 						} else if (pgButton == "prev") {
-							gridPage = gridPage > 1 ? gridPage -=1 : gridPage;
+							/* gridPage = gridPage > 1 ? gridPage -=1 : gridPage; */
 							if (gridPage > 1 ) {
 								gridPage -= 1;
 							} else {
@@ -218,14 +218,16 @@
    	        	fn_uniDelAction("/backoffice/bas/kioskDelete.do", "GET", params, false, "jqGridFunc.fn_search");
    	        },
            	fn_kioskInfo : function (mode, ticketMchnSno) {
+           		$("#bas_kiosk_add").bPopup();
            		$("#mode").val(mode);
 		        if (mode == "Edt") {
 		           	var params = {"ticketMchnSno" : ticketMchnSno};
 		     	   	var url = "/backoffice/bas/kioskInfoDetail.do";
 		     	    $("#ticketMchnSno").val(ticketMchnSno).prop('readonly', true);
-		     	   	uniAjaxSerial
+		     	   	fn_Ajax
 		     	   	(
 						url, 
+						"GET",
 						params, 
 						false,
 						function(result) {
@@ -237,11 +239,11 @@
 								var obj = result.regist;
 								$("#ticketMchnSno").val(obj.ticket_mchn_sno);
 								$("#targetTicketMchnSno").val(obj.ticket_mchn_sno);
-								$('select[name=centerCd]').val(obj.center_cd);
+								$("#centerCd").val(obj.center_cd);
 								jqGridFunc.fn_floorCombo();								
-								$('select[name=floorCd]').val(obj.floor_cd);
-								$("textarea[name=ticketMchnRemark]").text(obj.ticket_mchn_remark);		
-								$("input:radio[name='useYn']:radio[value='"+obj.use_yn+"']").prop('checked', true)
+								$("#floorCd").val(obj.floor_cd);
+								$("textarea[name=ticketMchnRemark]").val(obj.ticket_mchn_remark);		
+								$("input:radio[name='useYn']:radio[value='"+obj.use_yn+"']").prop('checked', true);
 								$("#sp_Unqi").hide();
     						    $("#btnSave").text("수정");
 							}else {
@@ -258,7 +260,7 @@
 					$("#useY").prop("checked", true);
 					$("#centerCd option:eq(0)").prop("selected", true);
 					$("#floorCd option:eq(0)").prop("selected", true);
-					$("#ticketMchnRemark").text("");
+					$("textarea[name=ticketMchnRemark]").val("");
 					$("#sp_Unqi").show();
 				    $("#btnSave").text("등록");
 		        }
@@ -268,10 +270,10 @@
 				if ($("#centerCd").val() != ""){
 					var _url = "/backoffice/bld/floorComboInfo.do";
 					var _params = {"centerCd" : $("#centerCd").val()};
-					var returnVal = uniAjaxReturn(_url, "GET", false, _params);
-				
-					if (returnVal.resultlist.length > 0){
-				        var obj  = returnVal.resultlist;
+					var returnVal = uniAjaxReturn(_url, "GET", false, _params, "lst");
+
+					if (returnVal.length > 0){
+				        var obj  = returnVal;
 					    $("#floorCd").empty();
 					    $("#floorCd").append("<option value=''>선택</option>");
 					    for (var i in obj) {
@@ -311,60 +313,66 @@
 					'ticketMchnRemark' : $("#ticketMchnRemark").val(),
 					'mode' : $("#mode").val()
 				}; 
-				uniAjax
+				fn_Ajax
 				(
-					url, 
+					url,
+					"POST",
 					params,
 					false,
 					function(result) {
 						if (result.status == "LOGIN FAIL"){
-							common_popup(result.meesage, "Y","bas_kiosk_add");
+							common_popup(result.message, "Y","bas_kiosk_add");
 							location.href="/backoffice/login.do";
 						} else if (result.status == "OVERLAP FAIL"){
-							common_modelCloseM(result.message, "N", "bas_kiosk_add");
+							common_popup(result.message, "Y", "bas_kiosk_add");
 						} else if (result.status == "SUCCESS") {
-							common_modelCloseM(result.message, "Y", "bas_kiosk_add");
+							common_modelCloseM(result.message, "bas_kiosk_add");
 							jqGridFunc.fn_search();
-						}
+						}else if (result.status == "FAIL"){
+	   						   common_popup(result.message, "Y", "bas_kiosk_add");
+	   						   jqGridFunc.fn_search();
+	   					}
 					},
 					function(request){
 						common_modelCloseM("Error:" + request.status,"bas_kiosk_add");
 					}    		
 				);
 		  	},
-		  	fn_search: function(){
-				//검색 
-	    	  	$("#mainGrid").setGridParam({
-	    	    	datatype : "json",
-	    	    	postData : JSON.stringify
-	    	    	({
-	          			"pageIndex": $("#pager .ui-pg-input").val(),
-	          			"searchKeyword" : $("#searchKeyword").val(),
-						"searchCondition" : $("#searchCondition").val(),
+			fn_search: function(){
+				$("#mainGrid").setGridParam({
+					datatype : "json",
+					postData : JSON.stringify({
+						"pageIndex": $("#pager .ui-pg-input").val(),
+						"searchKeyword" : $("#searchKeyword").val(),
 						"searchCenterCd" : $("#searchCenterCd").val(),
-	          			"pageUnit":$('.ui-pg-selbox option:selected').val()
-	         		}),
-	    	    	loadComplete : function(data) {
-	    	    		$("#sp_totcnt").text(data.paginationInfo.totalRecordCount);
-	    	    	}
-	    	  }).trigger("reloadGrid");
-			}, fn_idCheck : function(){
+						"pageUnit":$('.ui-pg-selbox option:selected').val()
+					}),
+					loadComplete : function(data) {
+						$("#sp_totcnt").text(data.paginationInfo.totalRecordCount);
+					}
+				}).trigger("reloadGrid");
+	 		}, 
+			fn_idCheck : function(){
 				if (any_empt_line_span("bas_kiosk_add", "ticketMchnSno", "무인발권기 Serial을 입력해 주세요.","sp_message", "savePage") == false) return;
 	        	var url = "/backoffice/bas/kisokSerialCheck.do"
     	        var param =  {"ticketMchnSno" : $("#ticketMchnSno").val()};
-        		uniAjaxSerial(url, param, false,
+
+	        	fn_Ajax(url, "GET", param, false,
         			    function(result) {	
      			           if (result != null) {	       	
      			        	   if (result.status == "SUCCESS"){
      			        		    var message = result.result == "OK" ? '등록되지 않은 발권기 입니다.' : '등록된 발권기 입니다.';
      			        		    var alertIcon =  result.result == "OK" ? "Y" : "N";
+     			        		    
      			        		    common_popup(message, alertIcon, "bas_kiosk_add");
     			        		    $("#idCheck").val(alertIcon);
 								}else {
+									
 									common_popup('<spring:message code="common.codeFail.msg" />', "N", "bas_kiosk_add");
 									$("#idCheck").val("N");
 								}
 							}else{
+								
 								common_modelCloseM(result.message,"bas_kiosk_add");
 							}
 						},
@@ -516,8 +524,7 @@
 		</div>
 	</div>
 	<c:import url="/backoffice/inc/popup_common.do" />
-    <script type="text/javascript" src="/resources/js/back_common.js"></script>
+	<script type="text/javascript" src="/resources/js/back_common.js"></script>
 </form:form>
 </body>
-
 </html>

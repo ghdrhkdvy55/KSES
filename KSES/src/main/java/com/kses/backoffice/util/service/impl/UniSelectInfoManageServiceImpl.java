@@ -37,29 +37,34 @@ public class UniSelectInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 		return uniMapper.selectMaxValue(is_Column, is_Table);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public int deleteUniStatement(String is_Column, String is_Table, String is_condition) throws Exception {
 		// TODO Auto-generated method stub
-		//파일 체크 해서 파일 삭제 하기 
-		
-		if (!is_Column.equals("")) {
+		//파일 체크 해서 파일 삭제 하기
+		try {
+			if (!is_Column.equals("")) {
 			Map<String, Object> fileInfo = uniMapper.selectFieldStatement(is_Column, is_Table, is_condition);
-			if (fileInfo != null ) {
-				List column = util.dotToList(is_Column);
-				column.forEach(target->{
-					if (fileInfo.get(target)!= null)
+				if (fileInfo != null ) {
+					List column = util.dotToList(is_Column);
+						column.forEach(target->{
+						if (fileInfo.get(target)!= null)
 						try {
 							fileservice.deleteFile(fileInfo.get(target).toString(), propertiesService.getString("Globals.filePath"));
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					  
-				});
-			}
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+							}
+					
+						});
+					}
+				}
+				//체크 하기
+				uniMapper.deleteUniStatement(is_Table, is_condition);
+			} catch(Exception e) {
+			return 0;
 		}
-		//체크 하기
-		return uniMapper.deleteUniStatement(is_Table, is_condition);
+		return 1;
 	}
 
 	

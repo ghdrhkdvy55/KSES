@@ -24,6 +24,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kses.backoffice.sym.log.vo.SysLog;
@@ -33,6 +35,7 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.exception.CustomerExcetion;
 import egovframework.com.cmm.service.Globals;
 import egovframework.com.cmm.util.EgovUserDetailsHelper;
+import egovframework.let.utl.sim.service.EgovClntInfo;
 
 
 
@@ -160,14 +163,11 @@ public class SysLogAspect    {
 		}
 		
 	}*/
-	/*@AfterReturning(pointcut = "execution(public * egovframework.let..impl.*Impl.update*(..)) "
-			+ " || execution(* aten.com.backoffice..impl.*Impl.update*(..))   "
-			+ " &&  !@target(aten.com.backoffice.sym.log.annotation.NoLogging) "
-            + " &&  !@annotation(aten.com.backoffice.sym.log.annotation.NoLogging) )", returning = "result" )*/
+
 	@Around("execution(public * egovframework.let..impl.*Impl.update*(..)) "
-							+ " || execution(* com.kses.backoffice..*Controller.*(..))   "
-							+ " &&  !@target(com.kses.backoffice.sym.log.annotation.NoLogging) "
-				            + " &&  !@annotation(com.kses.backoffice.sym.log.annotation.NoLogging) )" )	
+            + " || execution(public * com.kses..impl.*Impl.update*(..))   "
+			+ " &&  !@target(com.kses.backoffice.sym.log.annotation.NoLogging) "
+            + " &&  !@annotation(com.kses.backoffice.sym.log.annotation.NoLogging) )" )	
 	public Object logUpdate(ProceedingJoinPoint  joinPoint) throws Throwable {
  
 		SysLog sysLog = new SysLog();
@@ -188,33 +188,104 @@ public class SysLogAspect    {
 		} finally {
 			stopWatch.stop();
 			//paramToJson 나중에 수정하기 
-			/*
-			 * sysLog.setSqlParam(ParamToJson.paramToJson(sqlid));
-			 * 
-			 * String processSeCode = ParamToJson.JsonKeyToString(sqlid,
-			 * "mode").equals("Ins") ? "I" : "U"; String className =
-			 * joinPoint.getTarget().getClass().getName(); String methodName =
-			 * joinPoint.getSignature().getName(); String processTime =
-			 * Long.toString(stopWatch.getTotalTimeMillis()); String uniqId = ""; String ip
-			 * = ""; Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-			 * if(isAuthenticated.booleanValue()) { LoginVO user =
-			 * (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser(); uniqId =
-			 * user.getAdminId();// .getUniqId(); ip = user.getIp() == null ? "":
-			 * user.getIp(); } sysLog.setErrorCode("200"); sysLog.setSrvcNm(className);
-			 * sysLog.setMethodNm(methodName); sysLog.setProcessSeCode(processSeCode);
-			 * sysLog.setProcessTime(processTime); sysLog.setRqesterId(uniqId);
-			 * sysLog.setRqesterIp(ip); sysLog.setMethodResult("");
-			 * 
-			 * 
-			 * sysLog.setSearchIp(ip); sysLog.setSearchId(uniqId); sysLog.setFirstIndex(0);
-			 * sysLog.setRecordCountPerPage(20);
-			 * 
-			 * sysLogService.logInsertSysLog(sysLog);
-			 */
+			
+			sysLog.setSqlParam(ParamToJson.paramToJson(sqlid));
+			String processSeCode = ParamToJson.JsonKeyToString(sqlid,"mode").equals("Ins") ? "I" : "U"; 
+			String className = joinPoint.getTarget().getClass().getName(); 
+			String methodName =
+			joinPoint.getSignature().getName(); 
+			String processTime = Long.toString(stopWatch.getTotalTimeMillis()); 
+			String uniqId = ""; 
+			String ip = ""; 
+			Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+			if(isAuthenticated.booleanValue()) { 
+				 LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser(); 
+				 uniqId = user.getAdminId();
+				 ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+			     HttpServletRequest request = attr.getRequest();
+				 ip = EgovClntInfo.getClntIP(request);
+			} 
+			sysLog.setErrorCode("200"); 
+			sysLog.setSrvcNm(className);
+			sysLog.setMethodNm(methodName); 
+			sysLog.setProcessSeCode(processSeCode);
+			sysLog.setProcessTime(processTime); 
+			sysLog.setRqesterId(uniqId);
+			sysLog.setRqesterIp(ip); 
+			sysLog.setMethodResult("");
+			
+			sysLog.setSearchIp(ip); 
+			sysLog.setSearchId(uniqId); 
+			sysLog.setFirstIndex(0);
+			sysLog.setRecordCountPerPage(20);
+			
+			sysLogService.logInsertSysLog(sysLog);
+			 
 		
  
 		}
  
+	}
+	@Around("execution(public * egovframework.let..impl.*Impl.select*(..)) "
+            + " || execution(public * com.kses..impl.*Impl.select*(..))   "
+			+ " &&  !@target(com.kses.backoffice.sym.log.annotation.NoLogging) "
+            + " &&  !@annotation(com.kses.backoffice.sym.log.annotation.NoLogging) )" )	
+	public Object logSelect(ProceedingJoinPoint  joinPoint) throws Throwable {
+	
+		SysLog sysLog = new SysLog();
+		Object sqlid  = null; 		
+		StopWatch stopWatch = new StopWatch();
+		
+		
+		try {
+			stopWatch.start();
+			Object[] methodArgs = joinPoint.getArgs(); //, sqlArgs = null;
+			if (methodArgs.length > 0){
+			sqlid = methodArgs[0];
+		}
+			Object retValue = joinPoint.proceed();
+			return retValue; 
+		} catch (Throwable e) {
+		    throw e;
+		} finally {
+			stopWatch.stop();
+			//paramToJson 나중에 수정하기 
+			
+			sysLog.setSqlParam(ParamToJson.paramToJson(sqlid));
+			String processSeCode = "S"; 
+			String className = joinPoint.getTarget().getClass().getName(); 
+			String methodName =
+			joinPoint.getSignature().getName(); 
+			String processTime = Long.toString(stopWatch.getTotalTimeMillis()); 
+			String uniqId = ""; 
+			String ip = ""; 
+			Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+			if(isAuthenticated.booleanValue()) { 
+				 LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser(); 
+				 uniqId = user.getAdminId();
+				 ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+				 HttpServletRequest request = attr.getRequest();
+				 ip = EgovClntInfo.getClntIP(request);
+			} 
+			sysLog.setErrorCode("200"); 
+			sysLog.setSrvcNm(className);
+			sysLog.setMethodNm(methodName); 
+			sysLog.setProcessSeCode(processSeCode);
+			sysLog.setProcessTime(processTime); 
+			sysLog.setRqesterId(uniqId);
+			sysLog.setRqesterIp(ip); 
+			sysLog.setMethodResult("");
+			
+			sysLog.setSearchIp(ip); 
+			sysLog.setSearchId(uniqId); 
+			sysLog.setFirstIndex(0);
+			sysLog.setRecordCountPerPage(20);
+			sysLogService.logInsertSysLog(sysLog);
+		
+		
+		
+		}
+	
 	}
 	/**
 	 * 시스템 로그정보를 생성한다.
@@ -255,11 +326,10 @@ public class SysLogAspect    {
 	 * @return Object
 	 * @throws Exception
 	 */
-	//public Object logSelect(ProceedingJoinPoint joinPoint) throws Throwable {
 	@AfterReturning(pointcut = "execution(public * egovframework.let..impl.*Impl.delete*(..)) "
-							+ " || execution(* com.kses..*Controller.*(..))   "
-							+ " &&  !@target(com.kses.backoffice.sym.log.annotation.NoLogging) "
-				            + " &&  !@annotation(com.kses.backoffice.sym.log.annotation.NoLogging) )", returning = "result" )
+		                 + " || execution(public * com.kses..impl.*Impl.delete*(..))   "
+						 + " &&  !@target(com.kses.backoffice.sym.log.annotation.NoLogging) "
+			             + " &&  !@annotation(com.kses.backoffice.sym.log.annotation.NoLogging) )", returning = "result" )
 	public void logSelect(JoinPoint joinPoint, Object result) throws Throwable {
 		StopWatch stopWatch = new StopWatch();
  		SysLog sysLog = new SysLog();
@@ -291,27 +361,34 @@ public class SysLogAspect    {
 			String className = joinPoint.getTarget().getClass().getName();
 			String methodName = joinPoint.getSignature().getName();
 			
-			String processSeCode = "R";
+			String processSeCode = "D";
 			String processTime = Long.toString(stopWatch.getTotalTimeMillis());
 			String uniqId = "";
 			String ip = "";
  
 			
-			/*
-	    	Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-	        if(isAuthenticated.booleanValue()) {
-	    		LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
-				uniqId = user.getAdminId();// .getUniqId();
-				ip = user.getIp();
-	    	}
-	    	*/
-			/*
-			 * sysLog.setSrvcNm(className); sysLog.setMethodNm(methodName);
-			 * sysLog.setProcessSeCode(processSeCode); sysLog.setProcessTime(processTime);
-			 * sysLog.setRqesterId(uniqId); sysLog.setRqesterIp(ip);
-			 * 
-			 * sysLogService.logInsertSysLog(sysLog);
-			 */
+			Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+			if(isAuthenticated.booleanValue()) { 
+				 LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser(); 
+				 uniqId = user.getAdminId();
+				 ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+				 HttpServletRequest request = attr.getRequest();
+				 ip = EgovClntInfo.getClntIP(request);
+			} 
+			sysLog.setErrorCode("200"); 
+			sysLog.setSrvcNm(className);
+			sysLog.setMethodNm(methodName); 
+			sysLog.setProcessSeCode(processSeCode);
+			sysLog.setProcessTime(processTime); 
+			sysLog.setRqesterId(uniqId);
+			sysLog.setRqesterIp(ip); 
+			sysLog.setMethodResult("");
+			
+			sysLog.setSearchIp(ip); 
+			sysLog.setSearchId(uniqId); 
+			sysLog.setFirstIndex(0);
+			sysLog.setRecordCountPerPage(20);
+			sysLogService.logInsertSysLog(sysLog);
  
 		}
  

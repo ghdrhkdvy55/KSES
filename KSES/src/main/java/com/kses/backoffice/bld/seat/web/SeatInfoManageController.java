@@ -34,7 +34,7 @@ import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 
 import com.google.gson.reflect.TypeToken;
 import com.kses.backoffice.mng.employee.service.DeptInfoManageService;
-import com.kses.backoffice.rsv.msg.service.MessageInfoManageService;
+//import com.kses.backoffice.rsv.msg.service.MessageInfoManageService;
 import com.kses.backoffice.sym.log.annotation.NoLogging;
 import com.kses.backoffice.bld.center.service.CenterInfoManageService;
 import com.kses.backoffice.bld.floor.service.FloorInfoManageService;
@@ -77,8 +77,8 @@ public class SeatInfoManageController {
 	@Autowired
 	private DeptInfoManageService deptService;
 	
-	@Autowired
-	private MessageInfoManageService msgService;
+//	@Autowired
+//	private MessageInfoManageService msgService;
 	
 	@Autowired
 	private QrcpdeInfoManageServie qrService;
@@ -143,7 +143,7 @@ public class SeatInfoManageController {
 			int totCnt = seatList.size() > 0 ?  Integer.valueOf( seatList.get(0).get("total_record_count").toString()) : 0;
 			model.addObject(Globals.JSON_RETURN_RESULTLISR, seatList);
 			
-			System.out.println(seatList);
+			//System.out.println(seatList);
 			
 		    model.addObject(Globals.PAGE_TOTALCNT, totCnt);
 		    paginationInfo.setTotalRecordCount(totCnt);
@@ -215,15 +215,19 @@ public class SeatInfoManageController {
 		
 		try {
 			model.addObject(Globals.STATUS_REGINFO , vo);
+			int ret  = seatService.updateSeatInfo(vo);
 			String meesage = vo.getMode().equals("Ins") ? "sucess.common.insert" : "sucess.common.update" ;
-			if(vo.getPartCd() == null || "".equals(vo.getPartCd())) {
-				vo.setPartCd("0");
-			}
-			
-			seatService.updateSeatInfo(vo);
-			
-			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));	
+			if (ret >0){		
+				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
+			 }else if(ret == -1){
+				meesage = "fail.common.overlap";
+				model.addObject(Globals.STATUS, Globals.STATUS_OVERLAPFAIL);
+				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));		
+			 }else {
+				throw new Exception();
+			 }
+
 		} catch (Exception e) {
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.insert"));	
@@ -251,7 +255,7 @@ public class SeatInfoManageController {
 		
 	    try {
 	    	//삭제 관련 내용 수정 공용에서 수정으로 
-	    	int ret =  seatService.deleteSeatQrInfo(SmartUtil.dotToList(seatCd));
+	    	int ret =  seatService.deleteSeatInfo(SmartUtil.dotToList(seatCd));
 	    	
 	    	if (ret > 0) {		
 	    		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
@@ -330,19 +334,30 @@ public class SeatInfoManageController {
 	    return model;
 	}
 	
-	@NoLogging
+	
+	//수정 구문 
 	@RequestMapping(value="seatGuiUpdate.do", method=RequestMethod.POST)
 	public ModelAndView updateSeatGuiPosition (	@RequestBody Map<String, Object> params, 
 												HttpServletRequest request, 
 												BindingResult bindingResult) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-		
+		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+	    if(!isAuthenticated) {
+	    	model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
+	    	model.setViewName("/backoffice/login");
+	    	return model;	
+	    }
 		try {
 			
 			Gson gson = new GsonBuilder().create();
 			List<SeatInfo> seatInfos = gson.fromJson(params.get("data").toString(), new TypeToken<List<SeatInfo>>(){}.getType());
-
+			
+			LoginVO loginVO = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
+	    	String userId = loginVO.getAdminId();
+	    	seatInfos.forEach(SeatInfo -> SeatInfo.setUserId(userId));
+			
+			
 			int result = seatService.updateSeatPositionInfo(seatInfos);
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
             model.addObject("resutlCnt", result);
@@ -354,7 +369,45 @@ public class SeatInfoManageController {
 		return model;
 		
 	}
+	//신규 excel upload
+	@RequestMapping(value="SeatExcelUpload.do", method=RequestMethod.POST)
+	public ModelAndView updateExcelUpload (@RequestBody Map<String, Object> params, 
+										  HttpServletRequest request, 
+										  BindingResult bindingResult) throws Exception {
+		
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
+	    Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+	    if(!isAuthenticated) {
+	    	model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
+	    	model.setViewName("/backoffice/login");
+	    	return model;	
+	    }
+	    
+	    try {
+	    	
+	    	LoginVO loginVO = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
+	    	String userId = loginVO.getAdminId();
+	    	
+	    	Gson gson = new GsonBuilder().create();
+	    	List<SeatInfo> seatInfos = gson.fromJson(params.get("data").toString(), new TypeToken<List<SeatInfo>>(){}.getType());
+			//좌석/ 회의실 정리 하기 
+	    	seatInfos.forEach(SeatInfo -> SeatInfo.setUserId(userId));
+			
+	    	int result = seatService.updateSeatPositionInfo(seatInfos);
+			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+            model.addObject("resutlCnt", result);
+            
+	    } catch(Exception e) {
+			LOGGER.info(e.toString());
+			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.insert"));
+	    }
+	    return model;
+		
+	}
 	
+		
+		
 	@RequestMapping(value="officeMeetingList.do")
 	public ModelAndView  selectMeetingInfoManageListByPagination(@ModelAttribute("loginVO") LoginVO loginVO
 															, HttpServletRequest request
@@ -376,9 +429,7 @@ public class SeatInfoManageController {
 			  model.addObject("DeptInfo", deptService.selectDeptInfoComboList());
 			  model.addObject("payGubun", cmmnDetailService.selectCmmnDetailCombo("PAY_CLASSIFICATION"));
 			  //model.addObject("selectSwcGubun", cmmnDetailService.selectCmmnDetailCombo("SWC_GUBUN"));
-			  
-			  model.addObject("selectMail", msgService.selectMsgCombo("MSG_TYPE_1"));
-			  model.addObject("selectSms", msgService.selectMsgCombo("MSG_TYPE_2"));
+
 			  
 			  
 			  HashMap<String, Object> params = new HashMap<String, Object>();

@@ -75,7 +75,7 @@ public class Globals {
 	public static final String STATUS_NTUNIQUE = "UNIQUE FAIL";
 	public static final String STATUS_LOGINFAIL = "LOGIN FAIL";
 	public static final String STATUS_OVERLAPFAIL = "OVERLAP FAIL";
-	
+	public static final String STATUS_SESSIONFAIL = "SESSION FAIL";
 	
 	public static final String JSONVIEW = "jsonView";
 	public static final String JSON_RESULT_COMMAND = "command_type";

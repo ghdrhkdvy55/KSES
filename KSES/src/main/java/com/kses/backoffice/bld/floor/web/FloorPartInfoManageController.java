@@ -17,13 +17,18 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.kses.backoffice.bld.floor.service.FloorPartInfoManageService;
 import com.kses.backoffice.bld.floor.vo.FloorPartInfo;
+import com.kses.backoffice.bld.season.vo.SeasonSeatInfo;
 import com.kses.backoffice.sym.log.annotation.NoLogging;
 import com.kses.backoffice.util.service.UniSelectInfoManageService;
 import com.kses.backoffice.util.service.fileService;
@@ -124,7 +129,7 @@ public class FloorPartInfoManageController {
 		return model;
 	} 
 
-	@NoLogging
+	
 	@RequestMapping (value="partUpdate.do")
 	public ModelAndView updatePartInfoManage(	HttpServletRequest request, 
 												MultipartRequest mRequest, 
@@ -169,6 +174,8 @@ public class FloorPartInfoManageController {
 		return model;
 	}
 	
+	
+	
 	@RequestMapping (value="partInfoDelete.do")
 	public ModelAndView deletePartInfoManage(	@ModelAttribute("loginVO") LoginVO loginVO,
 			                                   	@RequestParam("partCd") String partCd) throws Exception {
@@ -198,5 +205,28 @@ public class FloorPartInfoManageController {
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.delete"));			
 		}		
 		return model;
+	}
+	//신규 
+	@RequestMapping(value="partGuiUpdate.do", method=RequestMethod.POST)
+	public ModelAndView updatePartGuiPosition (	@RequestBody Map<String, Object> params, 
+												HttpServletRequest request, 
+												BindingResult bindingResult) throws Exception {
+		
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+		
+		try {
+			
+			Gson gson = new GsonBuilder().create();
+			List<FloorPartInfo> seatInfos = gson.fromJson(params.get("data").toString(), new TypeToken<List<FloorPartInfo>>(){}.getType());
+			int result = partService.updateFloorPartInfPositionInfo(seatInfos);
+			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+            model.addObject("resutlCnt", result);
+		}catch(Exception e) {
+			LOGGER.info(e.toString());
+			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.update"));
+		}
+		return model;
+		
 	}
 }

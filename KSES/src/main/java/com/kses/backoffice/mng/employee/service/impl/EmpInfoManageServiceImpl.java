@@ -44,9 +44,9 @@ public class EmpInfoManageServiceImpl extends EgovAbstractServiceImpl implements
 	}
 
 	@Override
-	public int deleteEmpInfo(String empId) {
+	public int deleteEmpInfo(List<String> empList) throws Exception {
 		// TODO Auto-generated method stub
-		return empMapper.deleteEmpInfo(empId);
+		return empMapper.deleteEmpInfo(empList);
 	}
 
 	@Override

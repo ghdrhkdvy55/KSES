@@ -10,6 +10,8 @@ import com.kses.backoffice.sym.log.vo.SysLog;
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 
 
+
+
 @Mapper
 public interface SysLogManageMapper {
 

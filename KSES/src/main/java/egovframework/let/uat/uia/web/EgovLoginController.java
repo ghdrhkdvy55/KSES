@@ -112,8 +112,10 @@ public class EgovLoginController {
 		
 		// 1. 일반 로그인 처리
 		LoginVO resultVO = loginService.actionLogin(loginVO);
-
-		
+		LOGGER.debug("==========================================================");
+		LOGGER.debug("userIp:" + userIp);
+		resultVO.setIp(userIp);
+		LOGGER.debug("==========================================================");
 		boolean loginPolicyYn = true;
 		
 		

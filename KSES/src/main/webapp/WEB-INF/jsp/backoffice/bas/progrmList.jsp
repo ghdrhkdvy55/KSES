@@ -34,6 +34,9 @@
     <link rel="stylesheet" type="text/css" href="/resources/jqgrid/src/css/ui.jqgrid.css">
     <script type="text/javascript" src="/resources/jqgrid/src/i18n/grid.locale-kr.js"></script>
     <script type="text/javascript" src="/resources/jqgrid/js/jquery.jqGrid.min.js"></script>
+    <script type="text/javascript" src="/resources/js/xlsx.js"></script>
+    <script src="/resources/js/xlsx.full.min.js"></script>
+    <script type="text/javascript" language="javascript" src="/resources/js/jszip.min.js"></script>
     <style type="text/css">
      .ui-jqgrid .ui-jqgrid-htable th div{
 		outline-style: none;
@@ -84,7 +87,7 @@
     		        refresh : true,
     	            rownumbers : false, // 리스트 순번
     		        viewrecord : true,    // 하단 레코드 수 표기 유무
-    		        //loadonce : false,     // true 데이터 한번만 받아옴 
+    		        loadonce : false,     // true 데이터 한번만 받아옴 
     		        loadui : "enable",
     		        loadtext:'데이터를 가져오는 중...',
     		        emptyrecords : "조회된 데이터가 없습니다", //빈값일때 표시 
@@ -253,7 +256,24 @@
 		 				    	common_modelCloseM("Error:" + request.status,"bas_program_add");
 		 				    }    		
 		        );
-		  } 
+		}, fn_excelDown : function (cnt){
+			
+			$(".ui-pg-selbox").val(100).trigger('change');		
+ 			$("#mainGrid").jqGrid('setGridParam',{loadonce:true}).trigger('reloadGrid');
+				
+ 			$("#mainGrid").jqGrid('exportToExcel',{
+				includeLabels : true,
+				includeGroupHeader : true,
+				includeFooter: true,
+				fileName : "jqGridExport.xlsx",
+				maxlength : 40 // maxlength for visible string data 
+			});
+				
+ 				
+//			$("#mainGrid").jqGrid('setGridParam',{loadonce:false}).trigger('reloadGrid'); 
+
+			
+    	}
     }
   </script>
 </head>
@@ -282,8 +302,11 @@
                 <p>총 : <span id="sp_totcnt"></span>건</p>
                 
             </div>
-            <a href="#" onClick="" class="right_box blueBtn">Excel 저장</a>  
-            <a href="#" onClick="jqGridFunc.fn_ProgramInfo('Ins', '')" class="right_box blueBtn">프로그램 추가</a>  
+            <div class="right_box">
+				<a id="export" onClick="jqGridFunc.fn_excelDown()" class="blueBtn">엑셀 다운로드</a> 
+            	<a href="#" onClick="jqGridFunc.fn_ProgramInfo('Ins', '')" class="blueBtn">프로그램 추가</a>             	
+            </div>
+             
             <div class="clear"></div>
             <div class="whiteBox">
                 <table id="mainGrid"></table>
@@ -348,6 +371,7 @@
     </div>
 </div>
      <c:import url="/backoffice/inc/popup_common.do" />
+    <script type="text/javascript" src="/resources/js/common.js"></script>
     <script type="text/javascript" src="/resources/js/back_common.js"></script>
 </form:form>
 </body>

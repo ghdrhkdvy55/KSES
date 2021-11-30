@@ -16,10 +16,11 @@ public class IpObtainInterceptor extends HandlerInterceptorAdapter {
 	 
 			String clientIp = request.getRemoteAddr();
 	 
-			LoginVO loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
+		   LoginVO loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
 	       if (loginVO != null) {
+	    	   
 				loginVO.setIp(clientIp);
-			}
+		   }
 	 
 			return true;
 		}

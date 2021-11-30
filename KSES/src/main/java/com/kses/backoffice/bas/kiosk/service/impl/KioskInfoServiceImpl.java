@@ -41,7 +41,7 @@ public class KioskInfoServiceImpl extends EgovAbstractServiceImpl implements Kio
 		if (vo.getMode().equals("Ins")){
 			ret = (uniMapper.selectIdDoubleCheck("TICKET_MCHN_SNO", "TSEC_TICKET_MCHN_M", "TICKET_MCHN_SNO = ["+ vo.getTicketMchnSno() + "[" ) > 0) ? -1 : kioskMapper.insertKioskInfo(vo);
 		} else {
-			kioskMapper.updateKioskInfo(vo);
+			ret = kioskMapper.updateKioskInfo(vo);
 			/*
 			if (!vo.getTargetTicketMchnSno().equals(vo.getTicketMchnSno())) {
 				ret = (uniMapper.selectIdDoubleCheck("TICKET_MCHN_SNO", "TSEC_TICKET_MCHN_M", "TICKET_MCHN_SNO = ["+ vo.getTicketMchnSno() + "[" ) > 0) ? -1 : kioskMapper.updateKioskInfo(vo);

@@ -1,9 +1,12 @@
 package com.kses.backoffice.util;
 
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
@@ -26,10 +29,21 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.ModelAndView;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -37,15 +51,20 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.client.j2se.MatrixToImageConfig;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+import com.kses.backoffice.sym.log.service.InterfaceInfoManageService;
+import com.kses.backoffice.sym.log.vo.InterfaceInfo;
+import com.kses.backoffice.sym.log.vo.sendEnum;
 
 import egovframework.rte.fdl.property.EgovPropertyService;
-
 import java.math.BigDecimal;
+
 
 
 @Service
@@ -57,7 +76,14 @@ public class SmartUtil {
 	@Autowired
 	protected EgovPropertyService propertiesService;
 	
+	@Autowired
+	private static InterfaceInfoManageService interfaceService;
+	
+	
 	public void XMLParse(String xmlData) throws ParserConfigurationException, SAXException, IOException{
+		
+		
+		
 		
 		InputSource is = new InputSource(new StringReader(xmlData));
 		
@@ -103,6 +129,26 @@ public class SmartUtil {
 		
 		return  dayFormat;
 	}
+    /*
+     *  현재 시간과 비교 하여 초 환산 보내 주기 
+     */
+    public static String timeCheck(String _timeDate) {
+    	LocalDateTime now = LocalDateTime.now();
+    	//String formatedNow = now.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+		LocalDateTime date = LocalDateTime.parse(_timeDate, DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+		Duration duration = Duration.between(now, date);
+		return duration.toString();
+    }
+    
+    /*
+     *  현재 시간
+     * 
+     * 
+     */
+    public static String nowTime() {
+    	LocalDateTime now = LocalDateTime.now();
+    	return now.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+    }
     /*
      *  qr 생성 
      *  path 부분은 삭제 필요 
@@ -448,4 +494,121 @@ public class SmartUtil {
 	public static boolean isEmpty(String s) {
 		return !isEmpty(s);
 	}
+	//fomr  전송 응답
+	public JsonNode requestHttpForm(String _url, Map<String, String> _sendInfos){
+
+        HttpClient client = HttpClientBuilder.create().build();
+
+        HttpPost httpPost = new HttpPost(_url);
+
+        try {
+
+            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
+            /*
+            for (Map.Entry<String, String> entry : _sendInfos.entrySet()) {
+                nameValuePairs.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
+            }
+            */
+            _sendInfos.forEach((key, value)  -> 
+                               nameValuePairs.add(new BasicNameValuePair(key ,value)));
+            
+            //headers.forEach((key, value) -> map.put(key, Collections.unmodifiableList(value));
+            		
+            httpPost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+            HttpResponse response = client.execute(httpPost);
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode node = null;
+            if (response.getStatusLine().getStatusCode() == 200) {
+                ResponseHandler<String> handler = new BasicResponseHandler();
+                String body = handler.handleResponse(response);
+                System.out.println("[RESPONSE] requestHttpForm() " + body);
+
+                
+                node = objectMapper.readTree(body);
+                
+
+            } else {
+            	LOGGER.error("response is error:" + response.getStatusLine().getStatusCode());
+                node = objectMapper.readTree("{\"ERROR CODE\":\""+ response.getStatusLine().getStatusCode() + "\"}");
+            }
+            return node;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+	
+	/*   json 전송후 값 받아 오기 
+	 *   _url : 전송 URL
+	 *   _jsonInfo : 전송 Json
+	 *   _integId : 연계 ID
+	 *   _provdId : 제공 ID
+	 *   _requstId : 요청 ID
+	 * 
+	 */
+	
+	public static JsonNode requestHttpJson(String _url, String _jsonInfo, String _integId, String _provdId, String _requstId){
+
+        HttpClient client = HttpClientBuilder.create().build(); // HttpClient 생성
+        HttpPost httpPost = new HttpPost(_url); //POST 메소드 URL 새성
+        try {
+            httpPost.setHeader("Accept", "application/json");
+            httpPost.setHeader("Connection", "keep-alive");
+            httpPost.setHeader("Content-Type", "application/json");
+
+            httpPost.setEntity(new StringEntity(_jsonInfo)); //json 메시지 입력
+
+            HttpResponse response = client.execute(httpPost);
+            
+            
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode node = null;
+            //Response 출력
+            
+           
+            
+            
+            // INTEG_ID
+            //REQUST_INSTT_ID
+            //REQUST_SYS_ID
+            
+            //응답 RSPNS_TRNSMIT_TM 
+            //   RSPNS_RECPTN_TM
+            InterfaceInfo info = new InterfaceInfo();
+            info.setTrsmrcvSeCode(sendEnum.RPQ.getCode() );
+            info.setIntegId(_integId);
+            
+            info.setRequstInsttId(_requstId);
+            info.setRspnsRecptnTm(nowTime());
+            
+            if (response.getStatusLine().getStatusCode() == 200) {
+                ResponseHandler<String> handler = new BasicResponseHandler();
+                String body = handler.handleResponse(response);
+                node = objectMapper.readTree(body);       
+                
+                
+                
+            } else {
+            	LOGGER.error("response is error : " + response.getStatusLine().getStatusCode());
+            	node = objectMapper.readTree("{\"Error_Cd\":\""+ response.getStatusLine().getStatusCode() + "\"}");
+            	
+            }
+            //전송 내용 //수신 요청 
+           
+            
+            info.setRspnsRecptnTm(nowTime());
+            info.setResultCode(node.get("Error_Cd").toString());
+            info.setResultMessage(node.asText());
+            info.setSendMessage(_jsonInfo);
+            interfaceService.InterfaceInsertLoginLog(info);
+            
+            return node;
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 }

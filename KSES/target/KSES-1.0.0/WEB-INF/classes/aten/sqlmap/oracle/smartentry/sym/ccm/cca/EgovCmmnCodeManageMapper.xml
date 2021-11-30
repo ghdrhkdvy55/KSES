@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kses.backoffice.bas.code.mapper.EgovCmmnCodeManageMapper">
+	<select id="selectCmmnCodeListByPagination" resultType="lmap">
+		SELECT R.* FROM
+		(
+			SELECT SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT,
+			       ROW_NUMBER() OVER (ORDER BY A.CODE_ID DESC) AS RNUM, 
+				   A.CODE_ID, A.CODE_ID_NM, A.CODE_ID_DC, A.USE_AT,
+				   A.LAST_UPDT_PNTTM, A.LAST_UPDUSR_ID
+			FROM COMTCCMMNCODE A				     
+			WHERE A.USE_AT = 'Y' 
+			AND A.CL_CODE = 'SPDM'
+			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
+				AND (A.CODE_ID LIKE '%' || #{params.searchKeyword} || '%' OR A.CODE_ID_NM LIKE '%' || #{params.searchKeyword} || '%')
+			</if>					
+		) R
+		WHERE RNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}    
+		ORDER BY RNUM ASC
+	</select>
+	
+	<select id="selectCmmnCodeList" resultType="lmap">
+		SELECT  A.CODE_ID, A.CODE_ID_NM, A.CODE_ID_DC, A.USE_AT,
+				A.LAST_UPDT_PNTTM, A.LAST_UPDUSR_ID
+		FROM COMTCCMMNCODE A		   
+		WHERE A.CL_CODE = 'SPDM'
+		AND A.USE_AT = 'Y'
+	</select>
+	
+	<select id="selectCmmnCodeDetail" resultType="lmap">
+		SELECT 
+			A.CL_CODE, A.CODE_ID, A.CODE_ID_NM, A.CODE_ID_DC, A.USE_AT,
+			A.FRST_REGISTER_ID
+		FROM COMTCCMMNCODE A		     
+		WHERE A.CODE_ID = #{value} 
+		AND A.CL_CODE = 'SPDM'
+	</select>
+	
+	<insert id="insertCmmnCode">
+		INSERT INTO COMTCCMMNCODE
+		(
+			CODE_ID, CODE_ID_NM, CODE_ID_DC, USE_AT, CL_CODE, 
+			FRST_REGIST_PNTTM, FRST_REGISTER_ID, LAST_UPDT_PNTTM, LAST_UPDUSR_ID
+		)
+		VALUES
+		(
+			#{codeId}, #{codeIdNm}, #{codeIdDc, jdbcType=VARCHAR}, 'Y', 'SPDM', 
+			SYSDATE, #{frstRegisterId, jdbcType=VARCHAR}, SYSDATE, #{lastUpdusrId, jdbcType=VARCHAR}
+		)
+	</insert>	
+	
+	<update id="updateCmmnCode">
+		UPDATE COMTCCMMNCODE SET CODE_ID_NM = #{codeIdNm}, 
+								 CODE_ID_DC = #{codeIdDc, jdbcType=VARCHAR}, 
+								 USE_AT = 'Y', 
+								 LAST_UPDUSR_ID = #{lastUpdusrId, jdbcType=VARCHAR},
+								 LAST_UPDT_PNTTM = SYSDATE
+		WHERE CODE_ID = #{codeId}
+	</update>	
+	
+	<delete id="deleteCmmnCode">
+		{CALL
+			DECLARE
+			BEGIN
+	    	
+	    	DELETE FROM COMTCCMMNDETAILCODE WHERE CODE_ID = #{value};
+			DELETE FROM COMTCCMMNCODE WHERE CODE_ID = #{value};
+			
+			END
+		}
+	</delete>
+</mapper>
