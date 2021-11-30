@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26">
+    <defs>
+        <style>
+            .cls-2{fill:#308059}
+        </style>
+    </defs>
+    <g id="ic_navi_meeting_sel" transform="translate(-411.672 -319.005)">
+        <path id="area" fill="none" d="M0 0H26V26H0z" transform="translate(411.672 319.005)"/>
+        <g id="ic">
+            <path id="사각형_114500" d="M0 0H7.414V1.3H0z" class="cls-2" transform="translate(418.846 329.834)"/>
+            <path id="사각형_114501" d="M0 0H11.652V1.3H0z" class="cls-2" transform="translate(418.846 326.378)"/>
+            <path id="패스_20676" d="M435.433 321.4h-23.761v1.3h2.239v14.44h10.111v4.175h-8.75v1.3h18.8v-1.3h-8.75v-4.175h10.111V324.7h-1.3v11.14h-18.922V322.7h22.461v-1.3z" class="cls-2"/>
+        </g>
+    </g>
+</svg>

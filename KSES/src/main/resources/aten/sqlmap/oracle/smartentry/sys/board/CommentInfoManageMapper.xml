@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kses.backoffice.sys.board.mapper.CommentInfoManageMapper">
+
+    <select id="selectCommentManageListByPagination"  resultType="lmap">
+		 
+		SELECT		* 
+		FROM		(	SELECT	 SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT, 
+		                         ROW_NUMBER() OVER (ORDER BY BOARD_GROUP DESC) AS RNUM, 
+		                         TB.* 
+						FROM  (	
+				                    SELECT LPAD(' ', 2*(LEVEL-1)) || CMNT_MENO AS CMNT_MENO , 
+                                            CMNT_NO, CMNT_REFNO, CMNT_LEVEL, CMNT_MENO, CMNT_USER_ID, CMNT_USER_DT, USE_YN, BOARD_SEQ, CMNT_GROUP  
+                                           TO_CHAR(CMNT_USER_DT, 'yyyy-MM-dd') CMNT_USER_DT
+									FROM  TSES_CMNT_INFO_I a
+									WHERE a.BOARD_SEQ = #{params.boardSeq}
+									<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
+									     AND CMNT_MENO LIKE '%'||#{params.searchKeyword } ||'%' 
+									</if>		 
+									START WITH CMNT_REFNO=0
+			                        CONNECT BY PRIOR CMNT_NO = CMNT_REFNO
+			                        ORDER SIBLINGS BY CMNT_GROUP DESC
+     								) TB 
+			  )TA 
+			  WHERE RNUM  BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
+			  
+     </select> 
+    
+
+	
+<!--      <select id="selectCommentManageDetail"  resultMap="getBoardListResult">
+     <![CDATA[
+          SELECT CMNT_NO, CMNT_REFNO, CMNT_LEVEL, CMNT_MENO, CMNT_USER_ID, CMNT_USER_DT, USE_YN, BOARD_SEQ, CMNT_GROUP        
+		  FROM 	TSES_CMNT_INFO_I a        	
+		  WHERE 	CMNT_NO = #{cmntNo}	
+			]]>	
+     </select>     
+     -->
+    
+     <insert id="insertCommentManage" >
+            
+			<selectKey keyProperty="seq" resultType="Integer" order="BEFORE">
+	             SELECT COMMT_SEQ.NEXTVAL AS seq 
+	             FROM DUAL
+	        </selectKey>
+	        <choose>
+	           <when test="mode == 'Ins'">
+	                 INSERT INTO TSES_CMNT_INFO_I (
+		                   CMNT_NO, CMNT_REFNO, CMNT_LEVEL, CMNT_GROUP, CMNT_MENO, CMNT_USER_ID, CMNT_USER_DT, USE_YN, BOARD_SEQ                
+                   )
+                   VALUES (#{seq}, #{cmntRefno}, #{cmntlevel}, ${seq},  #{cmntMeno,jdbcType=VARCHAR},
+		                   #{userId,jdbcType=VARCHAR}, SYSDATE, 'Y',  #{boardSeq,jdbcType=VARCHAR}                     
+		                  )
+	           </when>
+	           <otherwise>
+	                INSERT INTO TSES_CMNT_INFO_I (
+		                   CMNT_NO, CMNT_REFNO, CMNT_LEVEL, CMNT_GROUP, CMNT_MENO, CMNT_USER_ID, CMNT_USER_DT, USE_YN, BOARD_SEQ                  
+                   )
+                   VALUES (#{seq},  #{cmntRefno}, #{cmntlevel}, #{cmntroup},  #{cmntMeno,jdbcType=VARCHAR},
+		                   #{userId,jdbcType=VARCHAR}, SYSDATE, 'Y',  #{boardSeq,jdbcType=VARCHAR}                    
+		                    )
+	           
+	           </otherwise>
+	        </choose>
+           
+     </insert>
+     <update id="updateCommentManage" >
+     <![CDATA[
+       UPDATE  TSES_CMNT_INFO_I SET CMNT_MENO = #{cmntMeno} ,
+	                                CMNT_USER_ID =#{userId,jdbcType=VARCHAR} ,
+	                                CMNT_USER_DT = SYSDATE
+	                                
+      WHERE CMNT_NO = #{cmmtSeq}   
+      ]]>        
+     </update>
+     
+     <delete id="deleteCommentManage">
+       DELETE FROM TSES_CMNT_INFO_I  WHERE CMNT_NO = #{cmmtSeq}
+     </delete>
+
+
+</mapper>

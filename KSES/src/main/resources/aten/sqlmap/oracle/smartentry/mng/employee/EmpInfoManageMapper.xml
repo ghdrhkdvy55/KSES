@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kses.backoffice.mng.employee.mapper.EmpInfoManageMapper">
+   <select id="selectEmpInfoList" resultType="lmap">
+        SELECT  TA.* FROM 
+                     ( 
+			    	 SELECT	SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT,
+			    	        ROW_NUMBER() OVER (ORDER BY TB.EMP_NO DESC) AS RNUM, 
+			    	        TB.*
+					  FROM		(SELECT a.EMP_ID, a.EMP_NO, a.EMP_NM,  FN_ORGNM(a.DEPT_CD, 'DEPT') DEPT_NM, FN_ORGNM(a.GRAD_CD, 'DEPT') GRAD_NM, 
+					                    FN_ORGNM(a.PSIT_CD, 'POST') PSIT_NM, 
+                                        a.USE_YN, a.EMP_CLPHN, a.EMP_TLPHN, a.EMP_EMAIL, a.ADMIN_DVSN, a.EMP_STATE, a.EMP_PIC, 
+                                        TO_CHAR(a.LAST_UPDT_DTM, 'YYYY-MM-DD') LAST_UPDT_DTM, a.LAST_UPDUSR_ID, b.CODE_NM
+                                        
+                                 FROM   TSEH_EMP_INFO_M a , COMTCCMMNDETAILCODE b
+						         WHERE  a.EMP_STATE = b.CODE
+					                   <if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
+										  <choose>
+										    <when test="params.searchCondition == 'emp_nm'">
+											    <![CDATA[
+											      AND  a.EMP_NM LIKE '%'|| #{params.searchKeyword}|| '%' 
+											     ]]> 
+											</when>	
+											<when test="params.searchCondition == 'emp_id'">
+											    <![CDATA[
+											      AND  a.EMP_ID LIKE '%'|| #{params.searchKeyword}|| '%' 
+											     ]]> 
+											</when>	
+											<when test="params.searchCondition == 'emp_cell'">
+											    <![CDATA[
+											      AND  a.EMP_CLPHN LIKE '%'|| #{params.searchKeyword}|| '%' 
+											     ]]> 
+											</when>	
+											<when test="params.searchCondition == 'emp_no'">
+											    <![CDATA[
+											      AND  a.EMP_NO LIKE '%'|| #{params.searchKeyword}|| '%' 
+											     ]]> 
+											</when>							
+											<otherwise>
+											      AND (a.EMP_NM LIKE '%'|| #{params.searchKeyword}|| '%'
+											           OR a.EMP_ID LIKE '%'|| #{params.searchKeyword}|| '%' 
+											           OR a.EMP_NO LIKE '%'|| #{params.searchKeyword}|| '%' 
+											           )
+											</otherwise>
+									      </choose>
+									  </if>	
+									  <if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchDepth)">
+									      AND a.GRAD_CD= #{params.searchDepth}
+									  </if>
+									  <if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.groupCode)">
+									      AND a.EMP_CLPHN NOT IN 
+									          (SELECT GROUP_USER_CELLPHONE 
+									           FROM TSES_MESSAGGROUP_USER 
+									           WHERE GROUP_CODE =  #{params.groupCode}) 
+									  </if>
+									       
+                                 )TB
+		)TA
+		  
+		<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.mode)">
+		  <if test="params.mode == 'list'">
+		   WHERE RNUM  BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}
+          </if>
+        </if>
+        ORDER BY TA.EMP_NO  ASC 
+    </select>
+    <select id="selectEmpInfoCombo" resultType="lmap">
+        SELECT a.EMPID, a.EMPNO, a.EMPNAME,
+               b.COM_TITLE AS COM_NAME
+        FROM   TSEH_EMP_INFO_M a , TB_SWCINFO b
+        WHERE  AUTHOR_CODE != 'ROLE_USER'
+               <if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
+				  <choose>
+				    <when test="params.searchCondition == 'empname'">
+					    <![CDATA[
+					      AND  a.EMPNAME LIKE '%' || #{params.searchKeyword} || '%' 
+					     ]]> 
+					</when>	
+					<when test="params.searchCondition == 'emphandphone'">
+					    <![CDATA[
+					      AND ( REPLACE(a.EMPHANDPHONE, '-','') LIKE '%' || #{params.searchKeyword} || ,'%' 
+					            OR 
+					            REPLACE(a.EMPTELPHONE, '-','') LIKE '%'|| #{params.searchKeyword}|| '%' 
+					           )
+					     ]]> 
+					</when>	
+					<when test="params.searchCondition == 'empno'">
+					    <![CDATA[
+					      AND  a.EMPNO LIKE '%'|| #{params.searchKeyword}|| '%' 
+					     ]]> 
+					</when>							
+					<otherwise>
+					      AND (a.EMPNAME LIKE '%'|| #{params.searchKeyword}|| '%' 
+					           OR a.EMPID LIKE '%'|| #{params.searchKeyword}|| '%' 
+					           OR a.EMPNO LIKE '%'|| #{params.searchKeyword}|| '%' 
+					           OR REPLACE(a.EMPHANDPHONE, '-','') LIKE '%'|| #{params.searchKeyword}|| '%' 
+					           OR REPLACE(a.EMPTELPHONE, '-','') LIKE '%'|| #{params.searchKeyword}|| '%' 
+					           )
+					</otherwise>
+			      </choose>
+			  </if>	
+			  <if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchJobpst)">
+			      AND a.DEPTCODE= #{params.searchJobpst}
+			  </if>
+			  <if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchSwcEmpNo)">
+			      AND a.EMPID IN  (SELECT ADMIN_ID FROM tb_admin WHERE AUTHOR_CODE = 'ROLE_ANONYMOUS')
+			  </if>      
+                              
+		ORDER BY a.EMPNAME  ASC 
+    </select>
+    
+    <select id="selectEmpInfoDetail" resultType="lmap">
+	     SELECT a.EMP_ID, a.EMP_NO, a.EMP_NM, a.DEPT_CD, a.DEPT_NM, a.GRAD_CD, a.GRAD_NM, a.PSIT_CD, a.PSIT_NM,
+                a.USE_YN, a.EMP_CLPHN, a.EMP_TLPHN, a.EMP_EMAIL, a.ADMIN_DVSN, a.EMP_STATE, a.EMP_PIC, 
+                a.LAST_UPDT_DTM, a.LAST_UPDUSR_ID
+	   	 FROM TSEH_EMP_INFO_M a 
+	   	 WHERE a.EMP_NO = #{empNo}
+    </select>
+   
+    
+    <insert id="insertEmpInfo" >
+          <selectKey resultType="int"  keyProperty="cnt" order="BEFORE">
+                SELECT NVL(COUNT(EMP_NO),0)  as cnt
+                FROM TSEH_EMP_INFO_M 
+                WHERE EMP_NO = #{empNo}
+          </selectKey>
+          <choose>
+                <when test="cnt > 0">
+                        UPDATE TSEH_EMP_INFO_M SET EMP_ID = #{empId ,jdbcType=VARCHAR} 
+	                                               , EMP_NM = #{empNm}
+	                                               , DEPT_CD = #{deptCd ,jdbcType=VARCHAR}
+	                                               , DEPT_NM = #{deptNm ,jdbcType=VARCHAR}
+	                                               , GRAD_CD = #{gradCd ,jdbcType=VARCHAR}
+	                                               , GRAD_NM = #{gradNm ,jdbcType=VARCHAR}
+	                                               , PSIT_CD = #{psitCd ,jdbcType=VARCHAR}
+	                                               , PSIT_NM = #{psitNm ,jdbcType=VARCHAR}
+	                                               , USE_YN = #{useYn,jdbcType=VARCHAR}
+	                                               , EMP_CLPHN = #{empClphn ,jdbcType=VARCHAR}
+	                                               , EMP_TLPHN = #{empTlphn ,jdbcType=VARCHAR}
+	                                               , EMP_EMAIL = #{empEmail ,jdbcType=VARCHAR}
+	                                               , EMP_STATE = #{empState ,jdbcType=VARCHAR}
+	                                               <if test="params.searchCondition == 'emphandphone'">
+	                                               , EMP_PIC = #{empPic}
+	                                               </if>
+	                                              LAST_UPDT_DTM =  SYSDATE,
+	                                              LAST_UPDUSR_ID = #{userId ,jdbcType=VARCHAR}
+                      WHERE EMP_NO = #{empNo}
+                </when>
+                <otherwise>
+                        INSERT INTO TSEH_EMP_INFO_M(EMP_ID, EMP_NO, EMP_NM, DEPT_CD, DEPT_NM, GRAD_CD, GRAD_NM, 
+                                                    PSIT_CD, PSIT_NM, USE_YN, EMP_CLPHN, 
+                                                    EMP_TLPHN, EMP_EMAIL, ADMIN_DVSN, EMP_STATE, EMP_PIC, 
+                                                    LAST_UPDT_DTM, LAST_UPDUSR_ID) 
+                        VALUES(#{empId,jdbcType=VARCHAR}, #{empNo}, #{empNm}, #{deptCd, jdbcType=VARCHAR}, #{deptNm ,jdbcType=VARCHAR}, #{gradCd ,jdbcType=VARCHAR}, #{gradNm ,jdbcType=VARCHAR},
+                               #{psitCd ,jdbcType=VARCHAR},#{psitNm ,jdbcType=VARCHAR}, #{useYn,jdbcType=VARCHAR}, #{empClphn ,jdbcType=VARCHAR}, 
+                               #{empTlphn ,jdbcType=VARCHAR} , #{empEmail ,jdbcType=VARCHAR}, 'N', #{empState ,jdbcType=VARCHAR}, #{empPic ,jdbcType=VARCHAR},
+                               SYSDATE, #{userId ,jdbcType=VARCHAR}
+                               )
+                </otherwise>
+         </choose>
+    </insert>
+    <update id="updateEmpInfo">
+         UPDATE TSEH_EMP_INFO_M SET EMP_ID = #{empId ,jdbcType=VARCHAR} 
+                                    , EMP_NM = #{empNm}
+                                    , DEPT_CD = #{deptCd ,jdbcType=VARCHAR}
+                                    , DEPT_NM = #{deptNm ,jdbcType=VARCHAR}
+                                    , GRAD_CD = #{gradCd ,jdbcType=VARCHAR}
+                                    , GRAD_NM = #{gradNm ,jdbcType=VARCHAR}
+                                    , PSIT_CD = #{psitCd ,jdbcType=VARCHAR}
+                                    , PSIT_NM = #{psitNm ,jdbcType=VARCHAR}
+                                    , USE_YN = #{useYn,jdbcType=VARCHAR}
+                                    , EMP_CLPHN = #{empClphn ,jdbcType=VARCHAR}
+                                    , EMP_TLPHN = #{empTlphn ,jdbcType=VARCHAR}
+                                    , EMP_EMAIL = #{empEmail ,jdbcType=VARCHAR}
+                                    , EMP_STATE = #{empState ,jdbcType=VARCHAR}
+                                    <if test="empPic != ''">
+                                    , EMP_PIC = #{empPic}
+                                    </if>
+                                    , LAST_UPDT_DTM =  SYSDATE
+                                    , LAST_UPDUSR_ID = #{userId ,jdbcType=VARCHAR}
+          WHERE EMP_NO = #{empNo}
+    </update>
+    <update id="mergeEmpInfo" parameterType="java.util.List">
+	    MERGE INTO TSEH_EMP_INFO_M A
+	    USING (
+	        <foreach collection="list" item="item" open="" close="" index="index" separator="UNION">
+	            SELECT
+	                #{item.empId} AS EMP_ID,
+	                #{item.empNo} AS EMP_NO,
+	                #{item.empName} AS EMP_NM,
+	                #{item.deptCode} AS DEPT_CD,
+	                #{item.deptName} AS DEPT_NM,
+	                #{item.gradCode} AS GRAD_CD,
+	                #{item.gradName} AS GRAD_NM,
+	                #{item.jikwCode} AS PSIT_CD,
+	                #{item.jikwName} AS PSIT_NM,
+	                #{item.empUseyn} AS USE_YN,
+	                #{item.empCelphone} AS EMP_CLPHN,
+	                #{item.empTelphone} AS EMP_TLPHN,
+	                #{item.empEmail} AS EMP_EMAIL,
+	                #{item.empState} AS EMP_STATE,
+	                #{item.empPic} AS EMP_PIC,
+	            FROM DUAL
+	        </foreach>
+	    ) B
+	    ON (A.EMP_NO = B.EMP_NO)
+	    WHEN MATCHED THEN
+	    UPDATE
+	        SET
+	            A.EMP_NM = B.EMP_NM,
+	            A.DEPT_CD = B.DEPT_CD,
+	            A.DEPT_NM = B.DEPT_NM,
+	            A.GRAD_CD = B.GRAD_CD,
+	            A.GRAD_NM = B.GRAD_NM,
+	            A.PSIT_CD = B.PSIT_CD,
+	            A.PSIT_NM = B.PSIT_NM,
+	            A.USE_YN = B.USE_YN,
+	            A.EMP_CLPHN = B.EMP_CLPHN,
+	            A.EMP_TLPHN = B.EMP_TLPHN,
+	            A.EMP_EMAIL = B.EMP_EMAIL,
+	            A.EMP_STATE = B.EMP_STATE,
+	            A.EMP_PIC = B.EMP_PIC,
+	            A.LAST_UPDUSR_PNTTM = SYSDATE,
+	            A.LAST_UPDUSR_ID = 'BATCH',
+	    WHEN NOT MATCHED THEN
+	    INSERT 
+	    (
+			A.EMP_NM = B.EMP_NM,
+			A.DEPT_CD = B.DEPT_CD,
+			A.DEPT_NM = B.DEPT_NM,
+	        A.GRAD_CD = B.GRAD_CD,
+	        A.GRAD_NM = B.GRAD_NM,
+	        A.PSIT_CD = B.PSIT_CD,
+	        A.PSIT_NM = B.PSIT_NM,
+	        A.USE_YN = B.USE_YN,
+	        A.EMP_CLPHN = B.EMP_CLPHN,
+	        A.EMP_TLPHN = B.EMP_TLPHN,
+	        A.EMP_EMAIL = B.EMP_EMAIL,
+	        A.EMP_STATE = B.EMP_STATE,
+	        A.EMP_PIC = B.EMP_PIC,
+			A.LAST_UPDUSR_PNTTM = SYSDATE,
+			A.LAST_UPDUSR_ID = 'BATCH',
+	    )
+	    VALUES 
+	    (
+			B.EMP_NM,
+			B.DEPT_CD,
+			B.DEPT_NM,
+	        B.GRAD_CD,
+	        B.GRAD_NM,
+	        B.PSIT_CD,
+	        B.PSIT_NM,
+	        B.USE_YN,
+	        B.EMP_CLPHN,
+	        B.EMP_TLPHN,
+	        B.EMP_EMAIL,
+	        B.EMP_STATE,
+	        B.EMP_PIC,
+			SYSDATE,
+			'BATCH',
+	    )
+	</update>
+	
+	<delete id="deleteEmpInfo">
+		DELETE FROM TSEH_EMP_INFO_M WHERE EMP_NO IN
+		<foreach collection="empList" item="item"  open="(" separator="," close=")">
+   			#{item}
+   		</foreach>
+    </delete>  
+</mapper>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kses.backoffice.sym.log.mapper.LoginLogMapper">
+	<!-- 로그인 로그 등록 -->
+	<insert id="logInsertLoginLog">
+		INSERT INTO COMTNLOGINLOG 
+		( 
+			LOG_ID, CONECT_MTHD, CONECT_ID, CONECT_IP, ERROR_OCCRRNC_AT, 
+			ERROR_CODE, CREAT_DT 
+		)
+		VALUES 
+		( 
+			#{logId}, #{connectMthd,jdbcType=VARCHAR}, #{connectId ,jdbcType=VARCHAR}, #{connectIp ,jdbcType=VARCHAR}, #{errorOccrrAt ,jdbcType=VARCHAR}, 
+			#{errorCode, jdbcType=VARCHAR}, SYSDATE
+		)
+	</insert>
+
+	<!-- 로그인 로그 상세  조회 -->
+	<select id="selectLoginDetail" resultType="lmap">
+		SELECT 
+			A.LOG_ID, A.CREAT_DT, A.CONECT_MTHD, A.CONECT_IP, A.CONECT_ID, 
+			B.USER_NM AS LOGIN_NM
+		FROM
+			COMTNLOGINLOG A 
+			LEFT OUTER JOIN COMVNUSERMASTER B ON A.CONECT_ID = B.ESNTL_ID
+		WHERE A.LOG_ID = #{logId}
+	</select>
+
+	<!-- 로그인 로그 목록  조회 -->
+	<select id="selectLoginLogInfo" resultType="lmap">
+		SELECT TB.* FROM 
+      	(
+			SELECT 
+				SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT,
+	           	ROW_NUMBER() OVER (ORDER BY COM_CODE DESC) AS RNUM, 
+	           	A.LOG_ID, A.CREAT_DT, A.CONECT_MTHD, A.CONECT_IP, A.CONECT_ID, 
+	           	B.USER_NM AS LOGIN_NM
+			FROM COMTNLOGINLOG A, 
+				 TB_EMPINFO B ON A.CONECT_ID = B.ESNTL_ID
+			WHERE A.CONECT_ID = B.EMPNO
+			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchFloorSeq)">
+				AND A.CONECT_MTHD LIKE  '%'|| #{searchWrd} ||'%' 
+			</if>
+			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchBgnDe)">
+				AND DATE_FORMAT(a.CREAT_DT, '%Y%m%d') BETWEEN #{searchBgnDe} AND #{searchEndDe} 
+			</if>
+		)TB  
+	   	WHERE RNUM  BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}   
+	   	ORDER BY TB.CREAT_DT DESC
+	</select>
+</mapper>

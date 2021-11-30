@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
+    <defs>
+        <style>
+            .cls-2{fill:#333}
+        </style>
+    </defs>
+    <g id="ic_appbar_menu" transform="translate(-30 -12)">
+        <g id="ic" transform="translate(31 12)">
+            <path id="사각형_10578" d="M0 0H18V1H0z" class="cls-2" transform="translate(8 24)"/>
+            <path id="사각형_10579" d="M0 0H14V1H0z" class="cls-2" transform="translate(8 17)"/>
+            <path id="사각형_10580" d="M0 0H18V1H0z" class="cls-2" transform="translate(8 10)"/>
+        </g>
+    </g>
+</svg>

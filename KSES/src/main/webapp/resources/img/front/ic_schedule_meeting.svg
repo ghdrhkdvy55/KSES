@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 38 38">
+    <defs>
+        <style>
+            .cls-2{fill:#333}
+        </style>
+    </defs>
+    <g id="ic_schedule_meeting" transform="translate(-513.937 -402.981)">
+        <path id="area" fill="rgba(209,28,170,0)" d="M0 0H38V38H0z" transform="translate(513.937 402.981)"/>
+        <g id="ic">
+            <path id="사각형_114919" d="M0 0H8.147V1H0z" class="cls-2" transform="translate(526.521 422.754)"/>
+            <path id="패스_20661" d="M534 418.957h-7.48v1h8.158a8.132 8.132 0 0 1-.678-1z" class="cls-2"/>
+            <path id="패스_20662" d="M543.534 429.354h-21.223v-14.873h10.651a8.231 8.231 0 0 1 .12-1h-14.445v1h2.674v15.873h11.112v5.017H522.6v1h20.65v-1h-9.827v-5.017h11.111v-8.234a8.024 8.024 0 0 1-1 .422z" class="cls-2"/>
+            <path id="패스_20663" d="M540.937 408.481a6.5 6.5 0 1 0 6.5 6.5 6.508 6.508 0 0 0-6.5-6.5zm0 12a5.5 5.5 0 1 1 5.5-5.5 5.506 5.506 0 0 1-5.5 5.5z" class="cls-2"/>
+            <path id="패스_20664" d="M541.224 412.2h-.8v3.146l2.1 1.594.484-.637-1.782-1.354z" class="cls-2"/>
+        </g>
+    </g>
+</svg>

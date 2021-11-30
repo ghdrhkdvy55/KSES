@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="59" height="20" viewBox="0 0 59 20">
+  <g id="그룹_203" data-name="그룹 203" transform="translate(-170 -155)">
+    <rect id="사각형_624" data-name="사각형 624" width="59" height="20" rx="10" transform="translate(170 155)" fill="#ffee9a"/>
+    <g id="vacc" transform="translate(174.811 157.496)">
+      <path id="패스_157" data-name="패스 157" d="M504.043,382.273l-2.283.037.037-2.283,5.637-5.637,2.246,2.246Z" transform="translate(-499.453 -371.738)" fill="#ffee9a" stroke="#2d2d2d" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="1"/>
+      <line id="선_61" data-name="선 61" x2="4.134" y2="4.139" transform="translate(7.037 1.708)" fill="#fff" stroke="#2d2d2d" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="1"/>
+      <line id="선_62" data-name="선 62" y1="2.652" x2="2.652" transform="translate(9.107 1.125)" fill="#fff" stroke="#2d2d2d" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="1"/>
+      <line id="선_63" data-name="선 63" x2="2.246" y2="2.246" transform="translate(10.634 0)" fill="#fff" stroke="#2d2d2d" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="1"/>
+      <line id="선_64" data-name="선 64" x1="2.307" y2="2.312" transform="translate(0 10.572)" fill="#fff" stroke="#2d2d2d" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="1"/>
+      <line id="선_65" data-name="선 65" x1="1.256" y1="1.26" transform="translate(7.772 4.841)" fill="#fff" stroke="#2d2d2d" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="1"/>
+      <line id="선_66" data-name="선 66" x1="1.256" y1="1.256" transform="translate(6.705 5.908)" fill="#fff" stroke="#2d2d2d" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="1"/>
+      <line id="선_67" data-name="선 67" x1="1.26" y1="1.26" transform="translate(5.637 6.972)" fill="#fff" stroke="#2d2d2d" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="1"/>
+      <line id="선_68" data-name="선 68" x1="1.256" y1="1.256" transform="translate(4.574 8.039)" fill="#fff" stroke="#2d2d2d" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="1"/>
+    </g>
+    <text id="_2차접종" data-name="2차접종" transform="translate(187.691 168.38)" fill="#2d2d2d" font-size="10" font-family="NanumSquareB, NanumSquare"><tspan x="0" y="0">2차접종</tspan></text>
+  </g>
+</svg>

@@ -1,0 +1,71 @@
+package com.kses.backoffice.bld.season.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.kses.backoffice.bld.season.mapper.SeasonInfoManageMapper;
+import com.kses.backoffice.bld.season.service.SeasonInfoManageService;
+import com.kses.backoffice.bld.season.vo.SeasonInfo;
+import com.kses.backoffice.util.SmartUtil;
+
+import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+
+@Service
+public class SeasonInfoManageServiceImpl extends EgovAbstractServiceImpl implements SeasonInfoManageService{
+
+	@Autowired
+	private SeasonInfoManageMapper sessionMapper;
+	
+	@Override
+	public List<Map<String, Object>> selectSeasonInfoList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return sessionMapper.selectSeasonInfoList(params);
+	}
+
+	@Override
+	public Map<String, Object> selectSeasonInfoDetail(String seasonCd) {
+		// TODO Auto-generated method stub
+		return sessionMapper.selectSeasonInfoDetail(seasonCd);
+	}
+
+	@Override
+	public int updateSeasonInfo(SeasonInfo vo) {
+		// TODO Auto-generated method stub
+		int ret = 0;
+		if (sessionMapper.selectSeasonCenterInclude(vo) > 0) {
+			ret = -1;
+		}else {
+			try {
+				 ret = vo.getMode().equals("Ins") ?  sessionMapper.insertSeasonInfo(vo) : sessionMapper.updateSeasonInfo(vo) ;
+				 ret = 1; 
+			}catch(Exception e) {
+				System.out.println("updateSeasonInfo error:" + e.toString());
+				ret = 0; 
+			}
+		}
+		return ret;
+	}
+
+	@Override
+	public int deleteSeasonInfo(String seasonCd) {
+		// TODO Auto-generated method stub
+		List<String> seasonList =  SmartUtil.dotToList(seasonCd);
+		return sessionMapper.deleteSeasonInfo(seasonList);
+	}
+
+	@Override
+	public int selectSeasonCenterInclude(SeasonInfo vo) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public List<Map<String, Object>> selectSeasonCenterInfoList(String seasonCd) {
+		// TODO Auto-generated method stub
+		return sessionMapper.selectSeasonCenterInfoList(seasonCd);
+	}
+
+}

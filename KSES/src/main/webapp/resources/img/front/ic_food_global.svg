@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="70" height="70" viewBox="0 0 70 70">
+    <defs>
+        <style>
+            .cls-4{fill:#333}
+        </style>
+    </defs>
+    <g id="ic_food_global" transform="translate(-793.843 -349.734)">
+        <rect id="area-2" width="70" height="70" fill="none" rx="4" transform="translate(793.843 349.734)"/>
+        <g id="path" transform="translate(6.001 1.901)">
+            <path id="패스_20995" fill="#dbdbdb" d="M806.425 393.34c0-10.572 7.753-19.141 17.317-19.141s17.316 8.569 17.316 19.141z" transform="translate(-1.037 -1.197)"/>
+            <path id="사각형_121916" fill="#e9eaee" d="M826.989 369.625a2.237 2.237 0 0 1 2.236 2.237v2.021a.058.058 0 0 1-.057.057h-4.359a.058.058 0 0 1-.057-.057v-2.021a2.237 2.237 0 0 1 2.237-2.237z" transform="translate(-4.779 -.264)"/>
+            <path id="패스_21049" d="M829.907 374.081h-5.477v-3.009a2.739 2.739 0 1 1 5.477 0zm-4.044-1.432h2.612v-1.577a1.306 1.306 0 1 0-2.612 0z" class="cls-4" transform="translate(-4.713)"/>
+            <path id="사각형_121976" d="M0 0H42.9V1.433H0z" class="cls-4" transform="translate(801.343 391.413)"/>
+            <path id="패스_20996" fill="#989697" d="M828.728 374.62s11.2 4.411 9.417 18.23h7.822s-.121-17.04-17.239-18.23z" transform="translate(-5.59 -1.283)"/>
+            <path id="패스_21050" d="M841.548 393.958h-35.753v-.716c0-10.764 8.019-19.522 17.876-19.522s17.877 8.758 17.877 19.522zm-34.307-1.433H840.1c-.342-9.644-7.581-17.373-16.431-17.373s-16.086 7.729-16.429 17.374z" class="cls-4" transform="translate(-.909 -1.1)"/>
+            <path id="패스_21051" fill="#fff" d="M813.519 388.7l-1.412-.243c.042-.247 1.094-6.08 6.267-8l.5 1.343c-4.39 1.627-5.345 6.844-5.355 6.9z" transform="translate(-2.197 -2.475)"/>
+        </g>
+    </g>
+</svg>

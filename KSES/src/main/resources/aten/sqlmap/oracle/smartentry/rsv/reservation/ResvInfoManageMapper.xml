@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kses.backoffice.rsv.reservation.mapper.ResvInfoManageMapper">
+	<!-- backoffice -->
+
+
+	<!-- Front -->
+	<select id="selectUserLastResvInfo" resultType="lmap">
+	<![CDATA[
+		SELECT  
+			A.RESV_SEQ, A.SEAT_CD, A.SEASON_CD, A.RESV_START_DT, A.RESV_END_DT, A.RESV_DVSN,
+			A.RESV_START_TM, A.RESV_END_TM, TO_CHAR(A.RESV_REQ_DATE, 'YYYY-MM-DD HH24:MI') AS RESV_REQ_DATE, A.USER_ID, A.RESV_USER_DVSN,
+			A.RESV_USER_ASK_YN, A.RESV_STATE, A.RESV_RCPT_YN, A.RESV_RCPT_NUMBER, B.SEAT_NM, C.CENTER_NM,
+			CASE WHEN TO_NUMBER(CONCAT(A.RESV_END_DT,A.RESV_END_TM)) >= TO_NUMBER(TO_CHAR(SYSDATE,'YYYYMMDDHH24MI')) THEN 'NOW' 
+				ELSE 'PRE'
+			END AS RESV_INFO_TYPE
+		FROM TSER_RESV_INFO_I A, TSEB_SEAT_INFO_D B, TSEB_CENTER_INFO_M C 
+		WHERE A.USER_ID = #{userId}
+		AND A.SEAT_CD = B.SEAT_CD
+		AND B.CENTER_CD = C.CENTER_CD
+		AND A.RESV_CANCEL_CD IS NULL
+		AND ROWNUM = 1
+		ORDER BY A.RESV_SEQ DESC		
+	]]>	    
+    </select>
+    
+    
+    <!--  수정 RESV_STATE 필드 추가  -->
+	<select id="selectUserResvInfo" resultType="lmap">
+	<![CDATA[
+		SELECT  
+			A.RESV_SEQ, A.SEAT_CD, A.SEASON_CD, A.RESV_START_DT, A.RESV_END_DT, A.RESV_DVSN,
+			A.RESV_START_TM, A.RESV_END_TM, TO_CHAR(A.RESV_REQ_DATE, 'YYYY-MM-DD HH24:MI') AS RESV_REQ_DATE, B.CENTER_NM, A.RESV_ENTRY_DVSN,
+			CASE  
+    			WHEN A.RESV_ENTRY_DVSN = 'ENTRY_DVSN_1'  THEN '입석' 
+    			ELSE (SELECT SEAT_NM FROM TSEB_SEAT_INFO_D WHERE SEAT_CD = A.SEAT_CD)
+    		END AS SEAT_NM,
+			CASE WHEN 
+			(	
+				SELECT 
+					NVL(COUNT(*),0) FROM TSER_RESV_INFO_I 
+				WHERE SEAT_CD = A.SEAT_CD 
+				AND #{params.resvDate} BETWEEN RESV_START_DT AND RESV_END_DT
+			) <= 0 THEN 'Y' 
+			ELSE 'N'
+			END AS RE_RESV_YN, A.RESV_PAY_COST, C.USER_NM, A.RESV_STATE, A.USER_ID
+		 FROM TSER_RESV_INFO_I A, TSEB_CENTER_INFO_M B, TEST_USER_INFO C
+		 WHERE A.RESV_SEQ = #{params.resvSeq}
+		 AND A.CENTER_CD = B.CENTER_CD
+		 AND A.USER_ID = C.USER_ID   
+	]]>	  
+    </select>
+    
+    <insert id="insertUserResvInfo" useGeneratedKeys="true" parameterType="ResvInfo" keyProperty="resvSeq">
+		<selectKey resultType="String" keyProperty="userId" order="BEFORE">
+        	<choose>
+           		<when test='resvUserDvsn == "USER_DVSN_1"'>
+           			SELECT #{userId} AS userId FROM DUAL
+				</when>
+				<otherwise>
+					SELECT FN_NON_MEMBERID(#{centerCd}) AS userId FROM DUAL
+				</otherwise>
+			</choose>
+		</selectKey>
+    
+    	INSERT INTO TSER_RESV_INFO_I (
+			RESV_SEQ, CENTER_CD, FLOOR_CD, PART_CD, SEAT_CD, 
+			RESV_START_DT, RESV_END_DT, RESV_DVSN, RESV_START_TM, RESV_END_TM, 
+			RESV_REQ_DATE, RESV_USER_DVSN, USER_ID, RESV_USER_ASK_YN, RESV_TICKET_YN, 
+			RESV_STATE, RESV_RCPT_YN, RESV_RCPT_NUMBER, FRST_REGIST_DTM, FRST_REGTER_ID, 
+			LAST_UPDT_DTM, LAST_UPDUSR_ID, RESV_ENTRY_DVSN
+		)
+		VALUES 
+		(
+			SEQ_SER_RERV_INFO.NEXTVAL, #{centerCd, jdbcType=VARCHAR}, #{floorCd, jdbcType=VARCHAR}, #{partCd, jdbcType=VARCHAR}, #{seatCd, jdbcType=VARCHAR},
+			#{resvDate, jdbcType=VARCHAR}, #{resvDate, jdbcType=VARCHAR}, 'TEMP', '0000', '1700',
+			SYSDATE, #{resvUserDvsn, jdbcType=VARCHAR}, #{userId, jdbcType=VARCHAR}, #{resvUserAskYn, jdbcType=VARCHAR}, 'TEMP',
+			'TEMP', #{resvRcptYn, jdbcType=VARCHAR}, #{resvRcptNumber, jdbcType=VARCHAR}, SYSDATE, 'admin',
+			SYSDATE, 'admin', #{resvEntryDvsn, jdbcType=VARCHAR}	
+		)		
+    </insert>
+    
+    <select id="selectInUserResvInfo" resultType="lmap">
+		<choose>
+			<when test="resvEntryDvsn == ENTRY_DVSN_1">
+				SELECT 
+					A.RESV_REQ_DATE, A.RESV_ENTRY_DVSN, B.CENTER_NM, C.FLOOR_NM, D.PART_NM, F.SEAT_NM
+				FROM TSER_RESV_INFO_I A, TSEB_CENTER_INFO_M B, TSEB_FLOOR_INFO_M C, TSEB_PART_INFO_D D, TSEB_SEAT_INFO_D F
+				WHERE A.RESV_SEQ = #{resvSeq}
+				AND A.CENTER_CD = B.CENTER_CD
+				AND A.FLOOR_CD = C.FLOOR_CD
+				AND A.PART_CD = D.PART_CD
+				AND A.SEAT_CD = F.SEAT_CD  	
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+    </select> 
+    
+    <select id="selectResInfoManageListByPagination" resultType="lmap">
+		SELECT * FROM 
+		( 
+			SELECT 	
+				SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT, 
+				ROW_NUMBER() OVER (ORDER BY ROWNUM DESC) AS RNUM, 
+				TB.* 
+			FROM 	
+			(	
+				SELECT  
+					A.RESV_SEQ, A.SEAT_CD, A.SEASON_CD, A.RESV_START_DT, A.RESV_END_DT, A.RESV_DVSN,
+					A.RESV_START_TM, A.RESV_END_TM, TO_CHAR(A.RESV_REQ_DATE, 'YYYY-MM-DD HH24:MI') AS RESV_REQ_DATE, A.USER_ID, A.RESV_USER_DVSN,
+					A.RESV_USER_ASK_YN, A.RESV_STATE, A.RESV_RCPT_YN, A.RESV_RCPT_NUMBER, B.SEAT_NM, C.CENTER_NM, USER_NM, USER_PHONE
+					
+				FROM TSER_RESV_INFO_I A, TSEB_SEAT_INFO_D B, TSEB_CENTER_INFO_M C,  TEST_USER_INFO D
+				WHERE A.SEAT_CD = B.SEAT_CD
+					  AND B.CENTER_CD = C.CENTER_CD
+					  AND A.RESV_CANCEL_CD IS NULL
+					  AND A.USER_ID = D.USER_ID
+					  <if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchCenterCd)">
+					      AND C.CENTER_CD = #{params.searchCenterCd}
+					  </if>
+					  <if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchFrom) ">
+					      AND A.RESV_START_DT BETWEEN #{params.searchFrom} AND #{params.searchTo}
+					  </if>
+			    ORDER BY A.RESV_SEQ DESC	
+			) TB 
+		) TA
+		WHERE ROWNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
+		ORDER BY TA.RNUM DESC 
+	    
+    </select>
+    
+    <update id="resPriceChange">
+        UPDATE TSER_RESV_INFO_I SET 
+                                    <choose>
+                                      <when test="resvPayDvsn == 'RESV_PAY_DVSN_2'">
+                                       TRAD_NO = #{tradNo},
+                                       TRAD_DATE = SYSDATE,
+                                      </when>
+                                      <otherwise>
+                                       REFOUND_NO = #{tradNo},
+                                       REFOUND_DATE = SYSDATE,
+                                      </otherwise>
+                                    </choose>
+                                    RESV_PAY_DVSN = #{resvPayDvsn}
+        WHERE RESV_SEQ = #{resvSeq}
+    
+    </update>
+</mapper>

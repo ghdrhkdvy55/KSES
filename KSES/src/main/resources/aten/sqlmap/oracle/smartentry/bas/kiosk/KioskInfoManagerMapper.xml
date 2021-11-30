@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kses.backoffice.bas.kiosk.mapper.KioskInfoManageMapper">
+	<select id="selectKioskInfoList" resultType="lmap">     	      
+		SELECT * FROM 
+		( 
+			SELECT 	
+				SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT, 
+				ROW_NUMBER() OVER (ORDER BY ROWNUM DESC) AS RNUM, 
+				B.CENTER_NM, C.FLOOR_NM, TB.TICKET_MCHN_SNO,TB.TICKET_MCHN_REMARK,
+				CASE TB.USE_YN WHEN 'Y' THEN '사용' ELSE '사용 안함' END AS USE_YN,
+				TB.LAST_UPDT_DTM,TB.LAST_UPDUSR_ID
+			FROM TSEB_CENTER_INFO_M B, TSEB_FLOOR_INFO_M C,
+			(	
+				SELECT 
+					A.TICKET_MCHN_SNO, A.CENTER_CD, A.FLOOR_CD, A.TICKET_MCHN_REMARK, A.USE_YN, TO_CHAR(A.LAST_UPDT_DTM, 'yyyy-mm-dd') AS LAST_UPDT_DTM, A.LAST_UPDUSR_ID
+				FROM TSEC_TICKET_MCHN_M A
+				WHERE 1=1
+			) TB 
+			WHERE B.CENTER_CD = TB.CENTER_CD AND C.FLOOR_CD = TB.FLOOR_CD
+			<if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(params.searchKeyword)">
+					<choose>
+						<when test="params.searchCondition == 'CENTER_NM'">
+							AND B.CENTER_NM LIKE '%' || #{params.searchKeyword} || '%' 
+						</when>	
+						
+						<when test="params.searchCondition == 'FLOOR_NM'">
+							AND C.FLOOR_NM LIKE '%' || #{params.searchKeyword} || '%' 
+						</when>		
+										
+						<otherwise>
+							AND 
+							(
+								B.CENTER_NM LIKE '%' || #{params.searchKeyword} || '%' 
+								OR C.FLOOR_NM LIKE '%' || #{params.searchKeyword} || '%' 
+							)
+						</otherwise>
+						
+					</choose>
+				</if>
+				<if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(params.searchCenterCd)">
+				    AND B.CENTER_CD = #{params.searchCenterCd}
+				</if>
+		) TA
+		WHERE RNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
+		ORDER BY TA.TICKET_MCHN_SNO DESC
+   	</select>
+
+   	<select id="selectKioskInfoDetail" resultType="lmap">
+			SELECT  TICKET_MCHN_SNO, CENTER_CD, FLOOR_CD, USE_YN, TICKET_MCHN_REMARK
+			FROM TSEC_TICKET_MCHN_M
+			WHERE TICKET_MCHN_SNO = #{ticketMchnSno}
+
+		<!-- SELECT
+   			TB.TICKET_MCHN_SNO, A.CENTER_NM, B.FLOOR_NM, TB.USE_YN, TB.TICKET_MCHN_REMARK
+   		FROM TSEB_CENTER_INFO_M A, TSEB_FLOOR_INFO_M B,
+   		(
+			SELECT 
+				TICKET_MCHN_SNO, CENTER_CD, FLOOR_CD, USE_YN, TICKET_MCHN_REMARK
+			FROM TSEC_TICKET_MCHN_M
+			WHERE TICKET_MCHN_SNO = #{ticketMchnSno}
+		) TB
+		WHERE A.CENTER_CD = TB.CENTER_CD AND B.FLOOR_CD = TB.FLOOR_CD -->
+   	</select>
+	
+	<insert id="insertKioskInfo">
+		INSERT INTO TSEC_TICKET_MCHN_M
+		(
+			TICKET_MCHN_SNO, CENTER_CD, FLOOR_CD, USE_YN, TICKET_MCHN_REMARK, FRST_REGTER_ID, FRST_REGIST_DTM, LAST_UPDUSR_ID, LAST_UPDT_DTM
+		)	
+		VALUES 
+		(
+			#{ticketMchnSno},  #{centerCd}, #{floorCd}, #{useYn}, #{ticketMchnRemark}, #{userId, jdbcType=VARCHAR} , SYSDATE, #{userId, jdbcType=VARCHAR}, SYSDATE
+		)
+   	</insert>
+
+ 	<update id="updateKioskInfo">
+		UPDATE TSEC_TICKET_MCHN_M SET CENTER_CD = #{centerCd, jdbcType=VARCHAR}, 
+		                              FLOOR_CD = #{floorCd, jdbcType=VARCHAR}, 
+		                              TICKET_MCHN_REMARK = #{ticketMchnRemark}, 
+		                              USE_YN = #{useYn, jdbcType=VARCHAR}, 
+		                              LAST_UPDUSR_ID = #{userId, jdbcType=VARCHAR}, 
+		                              LAST_UPDT_DTM = SYSDATE
+       	WHERE TICKET_MCHN_SNO = #{ticketMchnSno}
+   	</update>
+   	
+   	<delete id="deleteKioskInfo">   	
+   		DELETE FROM TSEC_TICKET_MCHN_M WHERE TICKET_MCHN_SNO IN
+   			<foreach collection="kioskList" item="item"  open="(" separator="," close=")">
+   				#{item}
+   			</foreach>
+   	</delete>
+</mapper>

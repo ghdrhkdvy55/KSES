@@ -1,0 +1,49 @@
+package com.kses.backoffice.sys.board.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.kses.backoffice.sys.board.mapper.CommentInfoManageMapper;
+import com.kses.backoffice.sys.board.service.CommentInfoManageService;
+import com.kses.backoffice.sys.board.vo.BoardCommInfo;
+
+import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+
+@Service
+public class CommentInfoManageServiceImpl  extends EgovAbstractServiceImpl implements CommentInfoManageService{
+
+	@Autowired
+	private CommentInfoManageMapper commtMapper;
+	
+	@Override
+	public List<Map<String, Object>> selectCommentManageListByPagination(Map<String, Object> params) throws Exception {
+		// TODO Auto-generated method stub
+		return commtMapper.selectCommentManageListByPagination(params);
+	}
+
+	@Override
+	public Map<String, Object> selectCommentManageDetail(String cmntNo) throws Exception {
+		// TODO Auto-generated method stub
+		return commtMapper.selectCommentManageDetail(cmntNo);
+	}
+
+
+	@Override
+	public int updateCommentManage(BoardCommInfo vo) throws Exception {
+		// TODO Auto-generated method stub
+		return !vo.getMode().equals("Ins")? commtMapper.updateCommentManage(vo) : commtMapper.insertCommentManage(vo);
+	}
+
+	@Override
+	public int deleteCommentManage(String cmntNo) throws Exception {
+		// TODO Auto-generated method stub
+		return commtMapper.deleteCommentManage(cmntNo);
+	}
+	
+	
+	
+
+}

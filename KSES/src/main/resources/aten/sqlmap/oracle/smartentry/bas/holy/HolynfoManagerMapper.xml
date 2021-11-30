@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kses.backoffice.bas.holy.mapper.HolyInfoManageMapper">
+	<select id="selectHolyInfoList" resultType="lmap">     	      
+		SELECT * FROM 
+		( 
+			SELECT 	
+				SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT, 
+				ROW_NUMBER() OVER (ORDER BY ROWNUM DESC) AS RNUM, 
+				TB.* 
+			FROM 	
+			(	
+				SELECT  A.HOLY_SEQ, A.HOLY_DT, A.HOLY_NM, CASE A.USE_YN WHEN 'Y' THEN '사용' ELSE '사용 안함' END AS USE_YN, TO_CHAR(A.LAST_UPDT_DTM, 'yyyy-mm-dd') AS LAST_UPDT_DTM, A.LAST_UPDUSR_ID
+				FROM TSEC_HOLY_INFO_M A
+				WHERE 1=1
+				<if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(params.searchKeyword)">
+					<choose>
+						<when test="params.searchCondition == 'HOLY_DT'">
+							AND A.HOLY_DT LIKE '%' || #{params.searchKeyword} || '%' 
+						</when>	
+						
+						<when test="params.searchCondition == 'HOLY_NM'">
+							AND A.HOLY_NM LIKE '%' || #{params.searchKeyword} || '%' 
+						</when>		
+										
+						<otherwise>
+							AND 
+							(
+								A.HOLY_DT LIKE '%' || #{params.searchKeyword} || '%' 
+								OR A.HOLY_NM LIKE '%' || #{params.searchKeyword} || '%' 
+							)
+						</otherwise>
+						
+					</choose>
+				</if>
+			) TB 
+		) TA
+		WHERE RNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
+		ORDER BY TA.HOLY_DT DESC 
+   	</select>
+
+   	<select id="selectHolyInfoDetail" resultType="lmap">
+		SELECT HOLY_SEQ, HOLY_DT, HOLY_NM, USE_YN
+		FROM TSEC_HOLY_INFO_M
+		WHERE HOLY_SEQ = #{holySeq}
+   	</select>
+	
+	<insert id="insertHolyInfo">
+	    <selectKey keyProperty="cnt" resultType="Integer" order="BEFORE">
+             SELECT COUNT(HOLY_DT) AS totcnt
+             FROM TSEC_HOLY_INFO_M
+             WHERE HOLY_DT = #{holyDt}
+        </selectKey>
+        <choose>
+           <when test="cnt > 0">
+               UPDATE TSEC_HOLY_INFO_M SET HOLY_NM = #{holyNm, jdbcType=VARCHAR}, 
+		                                   USE_YN = #{useYn, jdbcType=VARCHAR},
+		                                   LAST_UPDT_DTM = SYSDATE,
+		                                   LAST_UPDUSR_ID =  #{userId,jdbcType=VARCHAR}   
+       	       WHERE HOLY_DT = #{holyDt}
+           </when>
+           <otherwise>
+               INSERT INTO TSEC_HOLY_INFO_M	(HOLY_SEQ ,HOLY_DT, HOLY_NM, USE_YN, 
+                                             LAST_UPDT_DTM, LAST_UPDUSR_ID, FRST_REGIST_DTM, FRST_REGTER_ID)
+			   VALUES ( SEQ_ESC_HOLY_INFO.NEXTVAL, #{holyDt}, #{holyNm,jdbcType=VARCHAR}, #{useYn,jdbcType=VARCHAR}, 
+			            SYSDATE, #{userId, jdbcType=VARCHAR}, SYSDATE, #{userId, jdbcType=VARCHAR} )
+           </otherwise>
+        </choose>
+		
+   	</insert>
+
+ 	<update id="updateHolyInfo">
+		UPDATE TSEC_HOLY_INFO_M SET HOLY_DT = #{holyDt, jdbcType=VARCHAR}, 
+		                            HOLY_NM = #{holyNm, jdbcType=VARCHAR}, 
+		                            USE_YN = #{useYn, jdbcType=VARCHAR},
+		                            LAST_UPDT_DTM = SYSDATE,
+		                            LAST_UPDUSR_ID =  #{userId,jdbcType=VARCHAR}       
+       	WHERE HOLY_SEQ = #{holySeq, jdbcType=VARCHAR}
+   	</update>
+   	
+   	<delete id="deleteHolyInfo">   	
+   		DELETE FROM TSEC_HOLY_INFO_M WHERE HOLY_SEQ IN
+   			<foreach collection="holyList" item="item"  open="(" separator="," close=")">
+   				#{item}
+   			</foreach>
+   	</delete>
+   	<insert id="insertExcelHoly">
+   	    <foreach collection="holyInfoList" item="item" separator=";" open="DECLARE BEGIN" close="; END;">   
+   	        MERGE INTO TSEC_HOLY_INFO_M A
+		    USING DUAL B
+		    ON 
+			(	
+				A.HOLY_DT = #{item.holyDt}
+			)
+			WHEN MATCHED THEN
+			UPDATE SET A.HOLY_NM = #{item.holyNm},
+			           A.USE_YN = #{item.useYn},
+                       A.LAST_UPDT_DTM = sysdate,
+                       A.LAST_UPDUSR_ID = #{item.userId}
+			WHEN NOT MATCHED THEN
+			INSERT
+			(
+			  A.HOLY_SEQ , A.HOLY_DT, A.HOLY_NM, A.USE_YN,  A.LAST_UPDT_DTM, A.LAST_UPDUSR_ID, A.FRST_REGIST_DTM, A.FRST_REGTER_ID
+			)
+			VALUES 
+			( 
+			   SEQ_ESC_HOLY_INFO.NEXTVAL, #{item.holyDt}, #{item.holyNm,jdbcType=VARCHAR}, #{item.useYn,jdbcType=VARCHAR}, 
+			   SYSDATE, #{item.userId, jdbcType=VARCHAR}, SYSDATE, #{item.userId, jdbcType=VARCHAR} 
+			)
+   	    </foreach>
+   	</insert>
+	<update id="holyInfoCenterApply">	
+		<foreach collection="holyInfoList" item="item" separator=";" open="DECLARE BEGIN" close="; END;">   	
+			MERGE INTO TSEB_CENTERHOLY_INFO_I T
+		    USING
+		    (
+		    	SELECT B.CENTER_CD, A.HOLY_DT, A.HOLY_NM, A.LAST_UPDT_DTM, A.LAST_UPDUSR_ID, A.FRST_REGIST_DTM, A.FRST_REGTER_ID
+		    	FROM TSEC_HOLY_INFO_M A, TSEB_CENTER_INFO_M B
+				WHERE A.HOLY_DT = #{item.holyDt}
+		    ) C
+			ON 
+			(	
+				T.CENTER_CD = C.CENTER_CD
+				AND
+				T.HOLY_DT = C.HOLY_DT
+			)
+			WHEN MATCHED THEN
+			UPDATE SET 
+				T.HOLY_NM = #{item.holyNm}
+			WHEN NOT MATCHED THEN
+			INSERT 
+			(
+				T.CENTER_HOLY_SEQ, T.CENTER_CD, T.HOLY_DT, T.USE_YN, T.LAST_UPDT_DTM, T.HOLY_NM, T.LAST_UPDUSR_ID
+			)
+			VALUES
+			(
+				SEQ_ESB_CENTERHOLY_INFO.NEXTVAL, C.CENTER_CD, C.HOLY_DT, 'Y', SYSDATE, C.HOLY_NM, C.LAST_UPDUSR_ID
+			)
+		</foreach>
+   	</update>
+</mapper>

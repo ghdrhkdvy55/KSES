@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+    <defs>
+        <style>
+            .cls-2{fill:#333}
+        </style>
+    </defs>
+    <g id="ic_pin" transform="translate(-466 -94)">
+        <path id="area" fill="rgba(243,156,159,0)" d="M0 0H24V24H0z" transform="translate(466 94)"/>
+        <g id="ic" transform="translate(470.235 101.059)">
+            <g id="그룹_105683" transform="translate(3.176 3.882)">
+                <circle id="타원_42988" cx="1.059" cy="1.059" r="1.059" class="cls-2"/>
+                <circle id="타원_42989" cx="1.059" cy="1.059" r="1.059" class="cls-2" transform="translate(3.529)"/>
+                <circle id="타원_42990" cx="1.059" cy="1.059" r="1.059" class="cls-2" transform="translate(7.059)"/>
+            </g>
+            <path id="합치기_1884" d="M3309.766 11059.942v-10h16v1h-15v8h14v-6h1v7z" class="cls-2" transform="translate(-3310 -11050)"/>
+        </g>
+    </g>
+</svg>

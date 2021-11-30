@@ -1,0 +1,10 @@
+<svg id="ic_textfield_clear_enabled" xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 34 34">
+  <rect id="ic_textfield_clear" width="34" height="34" fill="none"/>
+  <g id="slice" transform="translate(9 9)">
+    <path id="Path" d="M8,0A8,8,0,1,1,0,8,8,8,0,0,1,8,0Z" fill="#e5e5e5"/>
+    <g id="그룹_105279" data-name="그룹 105279" transform="translate(8.707 -15.234) rotate(45)">
+      <rect id="사각형_10578" data-name="사각형 10578" width="1" height="9" transform="translate(15.429 12.429)" fill="#fff"/>
+      <rect id="사각형_10580" data-name="사각형 10580" width="9" height="1" transform="translate(11.429 16.429)" fill="#fff"/>
+    </g>
+  </g>
+</svg>
