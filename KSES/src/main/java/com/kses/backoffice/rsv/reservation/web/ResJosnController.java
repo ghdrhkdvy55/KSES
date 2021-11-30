@@ -130,7 +130,10 @@ public class ResJosnController{
         try {
         	EgovFileScrty fileScrty = new EgovFileScrty();	
         	
-        	String qrInfo = fileScrty.decode(sendInfo.getQrCode());
+        	String qrInfo = fileScrty.decode(sendInfo.getQrCode())  ;
+        	
+        	LOGGER.debug("qrInfo:" + qrInfo);
+        	
         	String result = "";
         	if (qrInfo.contains(":")) {
         		String [] attempInfos = qrInfo.split(":");
@@ -138,6 +141,9 @@ public class ResJosnController{
         		String qrTime = attempInfos[1];
         		String inOt = attempInfos[2];
         		String gubun = attempInfos[3];
+        		String userId = attempInfos[4];
+        		
+        		
         		
         		//시간 비교 
         		if (  Integer.valueOf( SmartUtil.timeCheck(qrTime)) < -30  &&  gubun.equals("INTERVAL") ) {
@@ -148,13 +154,14 @@ public class ResJosnController{
         		// 현재 날짜/시간
         		
         		String formatedNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-        		
+        		sendInfo.setUserId(userId);
         		sendInfo.setResvSeq(resSeq);
         		sendInfo.setInoutDvsn(inOt);
         		sendInfo.setRcvDt(formatedNow);
         		sendInfo.setQrCheckTm(formatedNow);
         		sendInfo.setRcvCd("OK");
         		sendInfo.setQrCode(sendInfo.getQrCode());
+        		
         		
         		sendInfo = attendService.insertAttendInfo(sendInfo);
         		if (sendInfo.getRcvCd().equals("OK")) {
@@ -166,6 +173,8 @@ public class ResJosnController{
         	}else {
         		result = "{\"ERROR_CD\": \"ERROR_04\", \"ERROR_MSG\" : \"잘못된 파라미터 입니다.\"}";
         	}
+        	
+        	
         	model.addObject(result);
         }catch(Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
@@ -178,21 +187,32 @@ public class ResJosnController{
 	}
 	//qr 새 전송 
 	@RequestMapping(value="qrSend.do")
-	public ModelAndView selectQrSendInfo (@RequestParam("resSeq") String resSeq, String _tickPlace)throws Exception{
+	public ModelAndView selectQrSendInfo (@RequestParam("resvSeq") String resvSeq, @RequestParam("tickPlace") String tickPlace)throws Exception{
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
 			Map<String, Object> searchVO = new HashMap<String, Object>();
-			searchVO.put("resSeq", resSeq);
-			searchVO.put("resvDate", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+			String nowDate =  LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+			searchVO.put("resvSeq", resvSeq);
+			searchVO.put("resvDate", nowDate);
+			
+			
+			LOGGER.debug("resSeq:" + resvSeq);
+			LOGGER.debug("resvDate:" + searchVO.get("resvDate"));
+			
 			Map<String, Object> resInfo = resService.selectUserResvInfo(searchVO);
 			
 			
-			if (resInfo == null) {
+			
+			
+			if (resInfo == null ||!resInfo.get("resv_start_dt").toString().equals(nowDate) ) {
 				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 				model.addObject(Globals.STATUS_MESSAGE,"잘못된 예약 번호 이거나 지난 예약번호 입니다.");
+			}else if (SmartUtil.NVL( resInfo.get("resv_state"), "").toString().equals("RESV_STATE_4") ) {
+				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+				model.addObject(Globals.STATUS_MESSAGE,"예약 취소된 예약 번호 입니다.");
 			}else {
 				AttendInfo vo = new AttendInfo();
-				vo.setResvSeq(resSeq);
+				vo.setResvSeq(resvSeq);
 				String qrTime =  LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
 				String inOt = "";
 				Map<String, Object> attend =  attendService.selectAttendInfoDetail(vo);
@@ -203,9 +223,9 @@ public class ResJosnController{
 				}
 				EgovFileScrty fileScrty = new EgovFileScrty();
 				
-				String gubun = _tickPlace.equals("ONLINE") ? "INTERVAL" : "PAPER";
+				String gubun = tickPlace.equals("ONLINE") ? "INTERVAL" : "PAPER";
 				
-				String qrCode = fileScrty.encode(resSeq+":"+qrTime+":"+inOt+":"+ gubun);
+				String qrCode = fileScrty.encode(resvSeq+":"+qrTime+":"+inOt+":"+ gubun + ":" + SmartUtil.NVL(resInfo.get("user_id"), "").toString());
 				
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 				model.addObject("QRCODE", qrCode);
@@ -221,15 +241,14 @@ public class ResJosnController{
 	}
 	//무인 발권기만 남았음
 	@RequestMapping(value="tickMachinRes.do")
-	public ModelAndView selectTickMachinRes (Map<String, Object> jsonInfo )throws Exception{
+	public ModelAndView selectTickMachinRes (@RequestBody Map<String, Object> jsonInfo )throws Exception{
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		
 		
 		model.addObject("IF_NO", jsonInfo.get("IF_NO"));
 		model.addObject("RES_NO", jsonInfo.get("RES_NO"));
-		model.addObject("RETURN_DATE", SmartUtil.nowTime());
+		model.addObject("RETURN_DATE", jsonInfo.get("RES_NO"));
 		model.addObject("MACHINE_SERIAL", jsonInfo.get("MACHINE_SERIAL"));
-		model.addObject("RETURN_DATE", SmartUtil.nowTime());
 		
 		String resName = "";
 		String resPrice = "";
@@ -242,13 +261,15 @@ public class ResJosnController{
 		try {
 			
 			Map<String, Object> searchVO = new HashMap<String, Object>();
-			searchVO.put("resSeq", SmartUtil.NVL(jsonInfo.get("RES_NO"), "").toString());
-			searchVO.put("resvDate", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+			LOGGER.debug("RES_NO:" + jsonInfo.get("RES_NO"));
+			searchVO.put("resvSeq", SmartUtil.NVL(jsonInfo.get("RES_NO"), "").toString());
+			String localTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+			searchVO.put("resvDate", localTime);
 			Map<String, Object> resInfo = resService.selectUserResvInfo(searchVO);
 			String recDate =  SmartUtil.NVL(jsonInfo.get("RES_SEND_DATE"), "").toString();
 			// 인터페이스 구문 타기
 			
-			if (resInfo == null) {
+			if (resInfo != null && SmartUtil.NVL(resInfo.get("resv_start_dt"), "").toString().equals(localTime)) {
 				
 				resName = SmartUtil.NVL(resInfo.get("user_nm") , "").toString();
 				resPrice = SmartUtil.NVL(resInfo.get("resv_pay_cost") , "").toString();
@@ -276,7 +297,7 @@ public class ResJosnController{
 		return model;
 	}
 	@RequestMapping(value="tickMachinQr.do")
-	public ModelAndView selectTickMachinPrice (Map<String, Object> jsonInfo )throws Exception{
+	public ModelAndView selectTickMachinPrice (@RequestBody Map<String, Object> jsonInfo )throws Exception{
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		
 		model.addObject("IF_NO", jsonInfo.get("IF_NO"));
@@ -298,10 +319,11 @@ public class ResJosnController{
 	
 		try {
 			Map<String, Object> searchVO = new HashMap<String, Object>();
-			searchVO.put("resSeq", SmartUtil.NVL(jsonInfo.get("RES_NO"), "").toString());
+			searchVO.put("resvSeq", SmartUtil.NVL(jsonInfo.get("RES_NO"), "").toString());
 			searchVO.put("resvDate", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
 			Map<String, Object> resInfo = resService.selectUserResvInfo(searchVO);
 			String recDate =  SmartUtil.NVL(jsonInfo.get("RES_SEND_DATE"), "").toString();
+			
 			
 			if (resInfo == null) {
 				returnCode = "ERROR_01";
@@ -326,6 +348,7 @@ public class ResJosnController{
 				
 				resInfoU.setTradNo(SmartUtil.NVL(jsonInfo.get("IF_NO"), "").toString()); 
 				resInfoU.setResvPayDvsn("RESV_PAY_DVSN_2");
+				resInfoU.setResvSeq(SmartUtil.NVL(jsonInfo.get("RES_NO"), "").toString());
 				
 				int ret = resService.resPriceChange(resInfoU);
 				if (ret > 0) {

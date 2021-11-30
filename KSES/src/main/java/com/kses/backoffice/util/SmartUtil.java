@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.lang.reflect.Array;
 
+import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.mail.Message;
 import javax.mail.Session;
@@ -42,6 +43,7 @@ import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 import org.w3c.dom.Document;
@@ -58,15 +60,16 @@ import com.google.zxing.client.j2se.MatrixToImageConfig;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+import com.kses.backoffice.sym.log.mapper.InterfaceInfoManageMapper;
 import com.kses.backoffice.sym.log.service.InterfaceInfoManageService;
 import com.kses.backoffice.sym.log.vo.InterfaceInfo;
 import com.kses.backoffice.sym.log.vo.sendEnum;
 
+import egovframework.rte.fdl.idgnr.EgovIdGnrService;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import java.math.BigDecimal;
 
-
-
+@Component
 @Service
 public class SmartUtil {
 
@@ -76,8 +79,13 @@ public class SmartUtil {
 	@Autowired
 	protected EgovPropertyService propertiesService;
 	
+	public  static InterfaceInfoManageService interfaceService;
+	
 	@Autowired
-	private static InterfaceInfoManageService interfaceService;
+	private void interfaceService(InterfaceInfoManageService  interfaceService) {
+		this.interfaceService =  interfaceService;
+	}
+	
 	
 	
 	public void XMLParse(String xmlData) throws ParserConfigurationException, SAXException, IOException{
@@ -133,11 +141,13 @@ public class SmartUtil {
      *  현재 시간과 비교 하여 초 환산 보내 주기 
      */
     public static String timeCheck(String _timeDate) {
+    	
     	LocalDateTime now = LocalDateTime.now();
-    	//String formatedNow = now.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-		LocalDateTime date = LocalDateTime.parse(_timeDate, DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+    	LocalDateTime date = LocalDateTime.parse(_timeDate, DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+		//String nowmatedNow = date.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
 		Duration duration = Duration.between(now, date);
-		return duration.toString();
+		
+		return  String.valueOf(duration.getSeconds());
     }
     
     /*
@@ -553,6 +563,8 @@ public class SmartUtil {
 
         HttpClient client = HttpClientBuilder.create().build(); // HttpClient 생성
         HttpPost httpPost = new HttpPost(_url); //POST 메소드 URL 새성
+        
+        
         try {
             httpPost.setHeader("Accept", "application/json");
             httpPost.setHeader("Connection", "keep-alive");
@@ -587,22 +599,19 @@ public class SmartUtil {
                 ResponseHandler<String> handler = new BasicResponseHandler();
                 String body = handler.handleResponse(response);
                 node = objectMapper.readTree(body);       
-                
-                
-                
             } else {
             	LOGGER.error("response is error : " + response.getStatusLine().getStatusCode());
             	node = objectMapper.readTree("{\"Error_Cd\":\""+ response.getStatusLine().getStatusCode() + "\"}");
-            	
+            	LOGGER.debug("node:" + node);
             }
             //전송 내용 //수신 요청 
-           
             
             info.setRspnsRecptnTm(nowTime());
             info.setResultCode(node.get("Error_Cd").toString());
-            info.setResultMessage(node.asText());
+            info.setResultMessage(NVL( node, "not node").toString());
             info.setSendMessage(_jsonInfo);
             interfaceService.InterfaceInsertLoginLog(info);
+            
             
             return node;
         } catch (Exception e){
