@@ -1,6 +1,6 @@
 /* menu */
 function toggleNav() {
-    if (document.getElementById("mySidenav").style.width == "0") {
+    if (document.getElementById("mySidenav").style.width == "200px") {
         closeNav(); 
     } else { 
         openNav(); 
@@ -325,7 +325,6 @@ function verifyEmail(_field, mng_user_add){
 }
 //전화번호 정규식
 function fn_autoHyphen (obj){
-   
    return obj.value.replace(/[^0-9]/, '').replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`);
 }
 
