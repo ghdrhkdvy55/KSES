@@ -1,37 +1,80 @@
+/*이미지 썸네일*/
+$(document).ready(function() {
+openNav();
+var xOffset = 10;
+var yOffset = 30;
+
+
+
+$(document).on("mouseover", ".jqgrow >td >img", function(e) { //마우스 오버시
+
+$("body").append("<p id='preview'><img src='" + $(this).attr("src") + "' width='300px' /></p>"); //보여줄 이미지를 선언
+$("#preview")
+.css("top", (e.pageY - xOffset) + "px")
+.css("left", (e.pageX + yOffset) + "px")
+.fadeIn("fast"); //미리보기 화면 설정 셋팅
+});
+
+
+
+$(document).on("mousemove", ".jqgrow >td >img", function(e) { //마우스 이동시
+$("#preview")
+.css("top", (e.pageY - xOffset) + "px")
+.css("left", (e.pageX + yOffset) + "px");
+});
+
+
+
+$(document).on("mouseout", ".jqgrow >td >img", function() { //마우스 아웃시
+$("#preview").remove();
+});
+
+
+
+});
+
+
+
 /* menu */
 function toggleNav() {
-    if (document.getElementById("mySidenav").style.width == "0") {
-        closeNav(); 
-    } else { 
-        openNav(); 
-    }
+if (document.getElementById("mySidenav").style.display == "none") {
+openNav();
+} else {
+closeNav();
+}
 }
 function openNav() {
-  document.getElementById("mySidenav").style.width = "200px";
-  document.getElementById("contents").style.marginLeft = "200px";
+document.getElementById("mySidenav").style.display = "block";
+document.getElementById("mySidenav").style.width = "200px";
+document.getElementById("contents").style.marginLeft = "200px";
+document.getElementById("header").style.marginLeft = "0";
 }
 function closeNav() {
-  document.getElementById("mySidenav").style.width = "0";
-  document.getElementById("contents").style.marginLeft= "0";
+document.getElementById("mySidenav").style.display = "none";
+document.getElementById("mySidenav").style.width = "0";
+document.getElementById("contents").style.marginLeft= "0";
+document.getElementById("header").style.marginLeft= "-200px";
 }
-
 /* sub menu */
-  var acc = document.getElementsByClassName("sub_menu");
-  var i;
+var acc = document.getElementsByClassName("sub_menu");
+var i;
 
-  for (i = 0; i < acc.length; i++) {
-    acc[i].addEventListener("click", function() {
-      this.classList.toggle("toggle_on");
-      var panel = this.nextElementSibling;
-      if (panel.style.display === "block") {
-        panel.style.display = "none";
 
-      } else {
-        panel.style.display = "block";
-      }
-    });
-  }
 
+for (i = 0; i < acc.length; i++) {
+acc[i].addEventListener("click", function() {
+this.classList.toggle("toggle_on");
+var panel = this.nextElementSibling;
+if (panel.style.display === "block") {
+panel.style.display = "none";
+
+
+
+} else {
+panel.style.display = "block";
+}
+});
+}
 /* popup */
 $('[data-popup-open]').bind('click', function () {
   var targeted_popup_class = jQuery(this).attr('data-popup-open');
