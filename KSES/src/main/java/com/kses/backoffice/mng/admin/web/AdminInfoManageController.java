@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.servlet.ModelAndView;
 import com.kses.backoffice.bas.authority.service.AuthInfoService;
 import com.kses.backoffice.bas.code.service.EgovCcmCmmnDetailCodeManageService;
+import com.kses.backoffice.bld.center.service.CenterInfoManageService;
 import com.kses.backoffice.mng.admin.service.AdminInfoService;
 import com.kses.backoffice.mng.admin.vo.AdminInfo;
 import com.kses.backoffice.mng.employee.service.DeptInfoManageService;
@@ -60,6 +61,9 @@ public class AdminInfoManageController {
 	@Autowired
 	protected EgovPropertyService propertiesService;
 	
+	@Autowired
+	private CenterInfoManageService centerInfoManageService;
+	
 	
 	@RequestMapping(value="adminList.do")
 	public ModelAndView selectAdminInfoList(	@ModelAttribute("LoginVO") LoginVO loginVO, 
@@ -79,6 +83,9 @@ public class AdminInfoManageController {
 			
 			model.addObject("authorCd", authoService.selectAuthInfoComboList());
 			model.addObject("DEPT", deptService.selectDeptInfoComboList());
+			model.addObject("centerCd", centerInfoManageService.selectCenterInfoComboList());
+			
+			
 		}catch(Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
