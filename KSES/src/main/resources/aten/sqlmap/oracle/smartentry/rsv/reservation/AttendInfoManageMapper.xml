@@ -11,14 +11,14 @@
 			FROM 	
 			(	
 				SELECT A.QR_CHECK_SEQ, A.RESV_SEQ, A.USER_ID, TO_CHAR(A.QR_CHECK_TM,'YYYY-MM-DD HH24:MI:SS') AS QR_CHECK_TM, 
-                       A.INOUT_DVSN, A.QR_UPDT, TO_CHAR(A.RCV_DT,'YYYY-MM-DD HH24:MI:SS') AS RCV_DT, A.RCV_CD,
+                       A.INOUT_DVSN, TO_CHAR(TO_DATE(A.RCV_DT,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS') AS RCV_DT, A.RCV_CD,
                        B.RESV_USER_NM,
                        CASE INOUT_DVSN WHEN 'IN' THEN '입장'
                        ELSE '퇴장'
                        END AS INOUT_DVSN_TEXT
 				FROM TSER_QR_CHECK_H A, TSER_RESV_INFO_I B, TEST_USER_INFO C
 				WHERE A.RESV_SEQ = B.RESV_SEQ
-		              AND A.USER_ID = C.USER_ID
+				AND A.USER_ID = C.USER_ID
 				<if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(params.searchKeyword)">
 					<choose>
 						<when test="params.searchCondition == 'RES_SEQ'">
@@ -37,8 +37,8 @@
 
    	<select id="selectAttendInfoDetail" resultType="lmap">
 		SELECT A.QR_CHECK_SEQ, A.RESV_SEQ, B.USER_ID, A.QR_CHECK_TM,
-               A.INOUT_DVSN, A.QR_UPDT, A.RCV_DT, A.RCV_CD,
-               B.RESV_USER_NM
+               A.INOUT_DVSN, A.RCV_DT, A.RCV_CD,
+               C.RESV_USER_NM
         FROM  TSER_QR_CHECK_H A, TSER_RESV_INFO_I B, TEST_USER_INFO C
 		WHERE A.RESV_SEQ = B.RESV_SEQ
 		AND A.USER_ID = C.USER_ID
@@ -62,23 +62,23 @@
              SELECT USER_ID AS userId FROM TSER_RESV_INFO_I WHERE RESV_SEQ = #{resvSeq}
         </selectKey>
 	
-	    INSERT INTO TSER_QR_CHECK_H	
+	    INSERT INTO TSER_QR_CHECK_H
 	    (
 	    	QR_CHECK_SEQ, RESV_SEQ, USER_ID, QR_CHECK_TM, INOUT_DVSN, 
-	    	QR_UPDT, RCV_DT, RCV_CD, QR_CODE 
+	    	RCV_DT, RCV_CD, QR_CODE 
 	    )
 	    VALUES
 		<choose>
 			<when test="@org.apache.commons.lang3.StringUtils@equals(mode,'Manual')">
 				( 
 	    			QR_CK_SEQ.NEXTVAL, #{resvSeq}, #{userId}, SYSDATE, #{inoutDvsn}, 
-	    			SYSDATE, SYSDATE, 'MANUAL', #{qrCode, jdbcType=VARCHAR}
+	    			TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS'), 'MANUAL', #{qrCode, jdbcType=VARCHAR}
 				)
 			</when>
 			<otherwise>
 				( 
 	    			QR_CK_SEQ.NEXTVAL, #{resvSeq}, #{userId}, SYSDATE, #{inoutDvsn}, 
-	    			SYSDATE, #{rcvDt}, #{rcvCd}, #{qrCode}
+	    			#{rcvDt}, #{rcvCd}, #{qrCode}
 				)
 			</otherwise>
 		</choose>
