@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
-  <g id="img_pr_defult" transform="translate(-1640 -160)">
-    <circle id="bg" cx="24" cy="24" r="24" transform="translate(1640 160)" fill="#dbdbdb"/>
-    <g id="ic" transform="translate(1655 173)">
-      <path id="빼기_4" data-name="빼기 4" d="M684.682,386.33a4.994,4.994,0,1,1,4.994-4.994,4.994,4.994,0,0,1-4.994,4.994Zm0-8.561a3.567,3.567,0,1,0,3.567,3.567,3.567,3.567,0,0,0-3.567-3.567h0Z" transform="translate(-675.408 -376.342)" fill="#fff"/>
-      <path id="빼기_6" data-name="빼기 6" d="M695.237,394.329H676.688v-9.988h18.549v1.427H678.115V392.9h15.7v-4.28h1.427Z" transform="translate(-676.688 -372.928)" fill="#fff"/>
-    </g>
-  </g>
-</svg>

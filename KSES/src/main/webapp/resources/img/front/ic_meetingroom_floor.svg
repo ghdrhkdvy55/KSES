@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28">
-  <g id="ic_meetingroom_floor" transform="translate(-284.638 -520.945)">
-    <rect id="사각형_1348" data-name="사각형 1348" width="28" height="28" transform="translate(284.638 520.945)" fill="rgba(175,55,134,0)"/>
-    <g id="ic_floor" data-name="ic floor">
-      <path id="패스_20811" data-name="패스 20811" d="M292.138,541.945h-1v-5.167H295.8v-4.666h4.667v-4.667h5.166v1h-4.166v4.667H296.8v4.666h-4.667Z" fill="#262727"/>
-    </g>
-  </g>
-</svg>

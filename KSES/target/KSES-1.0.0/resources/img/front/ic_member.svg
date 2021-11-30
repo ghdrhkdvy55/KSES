@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28">
-  <g id="ic_meetingroom_participants" transform="translate(-283.222 -456.465)">
-    <rect id="사각형_1348-3" data-name="사각형 1348-3" width="28" height="28" transform="translate(283.222 456.465)" fill="rgba(175,55,134,0)"/>
-    <g id="그룹_105267" data-name="그룹 105267">
-      <path id="패스_20807" data-name="패스 20807" d="M297.222,469.165a4.1,4.1,0,1,1,4.1-4.1A4.105,4.105,0,0,1,297.222,469.165Zm0-7.2a3.1,3.1,0,1,0,3.1,3.1A3.1,3.1,0,0,0,297.222,461.965Z" fill="#262727"/>
-      <path id="패스_20808" data-name="패스 20808" d="M304.723,473.245v5.276h-15v-7.278h15v0h1v-1h-17v9.278h17v-6.276Z" fill="#262727"/>
-    </g>
-  </g>
-</svg>

@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="28.5" height="24" viewBox="0 0 28.5 24">
-  <g id="그룹_191" data-name="그룹 191" transform="translate(-11 -49)">
-    <g id="icon_navigation_chevron_left_24px" data-name="icon/navigation/chevron_left_24px" transform="translate(11 49)">
-      <rect id="Boundary" width="24" height="24" fill="none"/>
-      <path id="_Color" data-name=" ↳Color" d="M7.4,1.41,5.992,0,0,6l5.992,6L7.4,10.59,2.826,6Z" transform="translate(8 6)"/>
-    </g>
-    <path id="패스_166" data-name="패스 166" d="M0,0H18" transform="translate(21.5 61)" fill="none" stroke="#000" stroke-width="2"/>
-  </g>
-</svg>

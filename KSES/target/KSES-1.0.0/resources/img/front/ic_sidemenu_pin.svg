@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 34 34">
-    <g>
-        <path fill="rgba(243,156,159,0)" d="M0 0H34V34H0z" transform="translate(-466 -94) translate(466 94)"/>
-        <g>
-            <path fill="#333" stroke="rgba(0,0,0,0)" stroke-miterlimit="10" d="M6213 7682v-14h22v1h-21v12h20v-10h1v11zm14.5-7a1.5 1.5 0 1 1 1.5 1.5 1.5 1.5 0 0 1-1.5-1.5zm-5 0a1.5 1.5 0 1 1 1.5 1.5 1.5 1.5 0 0 1-1.5-1.5zm-5 0a1.5 1.5 0 1 1 1.5 1.5 1.5 1.5 0 0 1-1.5-1.5z" transform="translate(-466 -94) translate(-5741 -7564)"/>
-        </g>
-    </g>
-</svg>
