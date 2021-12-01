@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.kses.backoffice.bas.code.service.EgovCcmCmmnDetailCodeManageService;
 import com.kses.backoffice.bas.kiosk.service.KioskInfoService;
 import com.kses.backoffice.bas.kiosk.vo.KioskInfo;
 import com.kses.backoffice.bas.kiosk.web.KioskInfoManageController;
@@ -51,6 +52,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(KioskInfoManageCont
 	@Autowired
 	private CenterInfoManageService centerInfoManageService;
 	
+	@Autowired
+	private EgovCcmCmmnDetailCodeManageService codeDetailService;
+	
 	@RequestMapping(value="kioskList.do")
 	public ModelAndView selectKioskInfoList(@ModelAttribute("loginVO") LoginVO loginVO, 
 											@ModelAttribute("kioskInfo") KioskInfo kioskInfo,
@@ -68,7 +72,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(KioskInfoManageCont
 		
 		List<Map<String, Object>> centerInfoComboList = centerInfoManageService.selectCenterInfoComboList();
 		
+		
+		
 		model.addObject("centerInfo", centerInfoComboList);
+		model.addObject("machInfo", codeDetailService.selectCmmnDetailCombo("MACH_GUBUN"));
 		model.setViewName("/backoffice/bas/kioskList");
 		return model;
 	}

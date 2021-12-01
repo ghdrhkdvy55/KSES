@@ -58,22 +58,6 @@ if(loginVO == null ){
 		 }
 		toggleNav();
 	}
-	/* menu */
-	function toggleNav() {
-	    if (document.getElementById("mySidenav").style.width == "0") {
-	        closeNav(); 
-	    } else { 
-	        openNav(); 
-	    }
-	}
-	function openNav() {
-	  document.getElementById("mySidenav").style.width = "200px";
-	  document.getElementById("contents").style.marginLeft = "200px";
-	}
-	function closeNav() {
-	  document.getElementById("mySidenav").style.width = "0";
-	  document.getElementById("contents").style.marginLeft= "0";
-	}
     function fn_menuClick(id){
     	var acc = document.getElementsByClassName("sub_menu");
     	var i;

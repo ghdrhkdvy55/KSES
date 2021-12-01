@@ -87,7 +87,8 @@
    		         	//상단면
     		        colModel :  
 					[
-						{ label: '무인발권기 Serial',  name:'ticket_mchn_sno', index:'ticket_mchn_sno', align:'center', width:'15%', key:true},
+						{ label: '장비 Serial',  name:'ticket_mchn_sno', index:'ticket_mchn_sno', align:'center', width:'15%', key:true},
+						{ label: '구분',  name:'code_nm', index:'code_nm', align:'center', width:'10%'},
 						{ label: '지점명',  name:'center_nm', index:'center_cd', align:'center', width:'10%'},
 						{ label: '사용 층수', name:'floor_nm', index:'floor_cd', align:'center', width:'15%'},
 						{ label: '위치', name:'ticket_mchn_remark', index:'ticket_mchn_remark', align:'center', width:'15%'},
@@ -244,6 +245,8 @@
 								$("#floorCd").val(obj.floor_cd);
 								$("textarea[name=ticketMchnRemark]").val(obj.ticket_mchn_remark);		
 								$("input:radio[name='useYn']:radio[value='"+obj.use_yn+"']").prop('checked', true);
+								$("#machDvsn").val(obj.mach_dvsn);
+								$("#machEtc1").val(obj.mach_etc1);
 								$("#sp_Unqi").hide();
     						    $("#btnSave").text("수정");
 							}else {
@@ -260,6 +263,8 @@
 					$("#useY").prop("checked", true);
 					$("#centerCd option:eq(0)").prop("selected", true);
 					$("#floorCd option:eq(0)").prop("selected", true);
+					$("#machDvsn").val("");
+					$("#machEtc1").val("");
 					$("textarea[name=ticketMchnRemark]").val("");
 					$("#sp_Unqi").show();
 				    $("#btnSave").text("등록");
@@ -290,11 +295,12 @@
 			 
 			},
 			fn_CheckForm  : function () {
-				if (any_empt_line_span("bas_kiosk_add", "ticketMchnSno", "무인발권기 Serial 입력해주세요.","sp_message", "savePage") == false) return;
+				if (any_empt_line_span("bas_kiosk_add", "ticketMchnSno", "장비 Serial 입력해주세요.","sp_message", "savePage") == false) return;
 				if ($("#mode").val() == "Ins" && $("#idCheck").val() != "Y"){
 					   if (any_empt_line_span("bas_kiosk_add", "ticketMchnSno", "중복체크가 안되었습니다.","sp_message", "savePage") == false) return;
 				}
 				if (any_empt_line_span("bas_kiosk_add", "centerCd", "지점을 선택해주세요.","sp_message", "savePage") == false) return;
+				if (any_empt_line_span("bas_kiosk_add", "machDvsn", "장비구분을 선택해주세요.","sp_message", "savePage") == false) return;
 				if (any_empt_line_span("bas_kiosk_add", "floorCd", "층수를 선택해주세요.","sp_message", "savePage") == false) return;
 				var commentTxt = ($("#mode").val() == "Ins") ?  "등록 하시겠습니까?" : "수정 하시겠습니까?" ;
 			    $("#id_ConfirmInfo").attr("href", "javascript:jqGridFunc.fn_update()");
@@ -309,6 +315,8 @@
 					'targetTicketMchnSno' : $("#targetTicketMchnSno").val(),
 					'centerCd' : $("#centerCd").val(),
 					'floorCd' : $("#floorCd").val(),
+					'machDvsn' : $("#machDvsn").val(),
+					'machEtc1' : $("#machEtc1").val(),
 					'useYn' : $("input:radio[name='useYn']:checked").val(),
 					'ticketMchnRemark' : $("#ticketMchnRemark").val(),
 					'mode' : $("#mode").val()
@@ -345,6 +353,7 @@
 						"pageIndex": $("#pager .ui-pg-input").val(),
 						"searchKeyword" : $("#searchKeyword").val(),
 						"searchCenterCd" : $("#searchCenterCd").val(),
+						"searchMachDvsn" : $("#searchMachDvsn").val(),
 						"pageUnit":$('.ui-pg-selbox option:selected').val()
 					}),
 					loadComplete : function(data) {
@@ -353,7 +362,7 @@
 				}).trigger("reloadGrid");
 	 		}, 
 			fn_idCheck : function(){
-				if (any_empt_line_span("bas_kiosk_add", "ticketMchnSno", "무인발권기 Serial을 입력해 주세요.","sp_message", "savePage") == false) return;
+				if (any_empt_line_span("bas_kiosk_add", "ticketMchnSno", "장비 Serial을 입력해 주세요.","sp_message", "savePage") == false) return;
 	        	var url = "/backoffice/bas/kisokSerialCheck.do"
     	        var param =  {"ticketMchnSno" : $("#ticketMchnSno").val()};
 
@@ -361,7 +370,7 @@
         			    function(result) {	
      			           if (result != null) {	       	
      			        	   if (result.status == "SUCCESS"){
-     			        		    var message = result.result == "OK" ? '등록되지 않은 발권기 입니다.' : '등록된 발권기 입니다.';
+     			        		    var message = result.result == "OK" ? '등록되지 않은 장비 입니다.' : '등록된 장비 입니다.';
      			        		    var alertIcon =  result.result == "OK" ? "Y" : "N";
      			        		    
      			        		    common_popup(message, alertIcon, "bas_kiosk_add");
@@ -398,11 +407,11 @@
     		<div class="breadcrumb">
       			<ol class="breadcrumb-item">
         			<li>기초 관리</li>
-       				<li class="active">　> 무인발권기 관리</li>
+       				<li class="active">　> 장비 관리</li>
       			</ol>
     		</div>
     		
-    		<h2 class="title">무인발권기 관리</h2>
+    		<h2 class="title">장비 관리</h2>
     		<div class="clear">
     	</div>
     	<div class="dashboard">
@@ -415,6 +424,12 @@
 	                </div>
 	                <div class="top">
 	                    <p>검색어</p>
+	                    <select name="searchMachDvsn" id="searchMachDvsn"->
+							<option value="">선택</option>
+							<c:forEach items="${machInfo}" var="machInfo">
+								<option value="${machInfo.code}">${machInfo.codenm}</option>
+							</c:forEach>
+				        </select>
 	                    <select name="searchCenterCd" id="searchCenterCd"->
 							<option value="">지점 선택</option>
 							<c:forEach items="${centerInfo}" var="centerInfo">
@@ -436,7 +451,7 @@
 	              <p>총 : <span id="sp_totcnt"></span>건</p>
 	            </div>
 	            <div class="right_box">
-	                <a href="#" class="blueBtn" onclick="jqGridFunc.fn_kioskInfo('Ins','')">무인발권기 등록</a>
+	                <a href="#" class="blueBtn" onclick="jqGridFunc.fn_kioskInfo('Ins','')">장비 등록</a>
 	                <a href="#" onClick="jqGridFunc.fn_delCheck()" class="grayBtn">삭제</a>
 	            </div>
 	            <div class="clear"></div>
@@ -475,6 +490,17 @@
 		                    </td>
 						</tr>
 						<tr>
+					        <th>장비구분</th>
+				            <td>
+								<select name="machDvsn" id="machDvsn">
+									<option value="">선택</option>
+									<c:forEach items="${machInfo}" var="machInfo">
+										<option value="${machInfo.code}">${machInfo.codenm}</option>
+									</c:forEach>
+								</select>
+							</td>
+						</tr>
+						<tr>
 					        <th>지점명</th>
 				            <td>
 				            	<select name="centerCd" id="centerCd" onchange="jqGridFunc.fn_floorCombo()">
@@ -488,7 +514,6 @@
 						<tr>
 					        <th>층수</th>
 				            <td>
-				            	
 								<select name="floorCd" id="floorCd">
 									<option value="">선택</option>
 								</select>
@@ -505,6 +530,12 @@
 						            <input type="radio" name="useYn" id="useN" value="N">
 					                <label for="n">사용 안함</label>
 				                </span>
+			                </td>
+		                </tr>
+		                <tr>
+							<th>비고</th>
+						    <td>
+					            <input type="text" name="machEtc1" id="machEtc1">
 			                </td>
 		                </tr>
 	                    <tr>

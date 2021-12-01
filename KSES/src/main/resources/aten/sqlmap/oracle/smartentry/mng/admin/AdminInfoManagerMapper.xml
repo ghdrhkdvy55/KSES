@@ -11,7 +11,11 @@
 	                        b.EMP_EMAIL,  FN_ORGNM(b.GRAD_CD, 'DEPT') DEPT_NM,
 							a.ADMIN_PWD, a.ADMIN_LOCKYN, a.USE_YN,	
 							TO_CHAR(a.LAST_UPDT_DTM, 'YYYY-MM-DD') LAST_UPDT_DTM,
-				            c.AUTHOR_NM	
+				            c.AUTHOR_NM	,
+				            CASE  WHEN ( AUTHOR_CD != 'ROLE_ADMIN' OR  AUTHOR_CD != 'ROLE_SYSTEM') THEN
+				                     (SELECT CENTER_NM FROM TSEB_CENTER_INFO_M WHERE CENTER_CD = A.CENTER_CD)
+				                  ELSE ''
+				            END ADMIN_DVSN
 				    FROM   TSEH_ADMIN_INFO_M a , TSEH_EMP_INFO_M b, COMTNAUTHORINFO c
 					WHERE a.EMP_NO = b.EMP_NO
 					      AND a.AUTHOR_CD = c.AUTHOR_CODE
@@ -51,7 +55,7 @@
    <select id="selectAdminUserManageDetail" resultType="lmap">
 	     SELECT a.ADMIN_ID, a.ADMIN_PWD, a.EMP_NO, a.AUTHOR_CD, a.ADMIN_LOCKYN, a.USE_YN, a.ADMIN_PASS_UPDT_DT,
                 a.FRST_REGIST_DTM, a.FRST_REGTER_ID, a.LAST_UPDT_DTM, a.LAST_UPDUSR_ID,
-                FN_ORGNM(b.DEPT_CD, 'DEPT') DEPT_NM, b.EMP_NM, b.EMP_CLPHN, b.EMP_EMAIL
+                FN_ORGNM(b.DEPT_CD, 'DEPT') DEPT_NM, b.EMP_NM, b.EMP_CLPHN, b.EMP_EMAIL, A.CENTER_CD
 	     FROM TSEH_ADMIN_INFO_M a, TSEH_EMP_INFO_M b
 	     WHERE a.EMP_NO = b.EMP_NO
 	           AND ADMIN_ID = #{adminId}

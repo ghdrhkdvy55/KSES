@@ -149,10 +149,11 @@
 				AND #{params.resvDate} BETWEEN RESV_START_DT AND RESV_END_DT
 			) <= 0 THEN 'Y' 
 			ELSE 'N'
-			END AS RE_RESV_YN
-		 FROM TSER_RESV_INFO_I A, TSEB_CENTER_INFO_M B
+			END AS RE_RESV_YN, A.RESV_PAY_COST, C.USER_NM, A.RESV_STATE, A.USER_ID
+		 FROM TSER_RESV_INFO_I A, TSEB_CENTER_INFO_M B, TEST_USER_INFO C
 		 WHERE A.RESV_SEQ = #{params.resvSeq}
-		 AND A.CENTER_CD = B.CENTER_CD
+			   AND A.CENTER_CD = B.CENTER_CD
+			   AND A.USER_ID = C.USER_ID   
 	]]>	  
     </select>
     
@@ -270,5 +271,22 @@
     		RESV_CANCEL_CD = #{params.resvCancelCd},
     		RESV_CANCEL_DT = SYSDATE
     	WHERE RESV_SEQ = #{params.resvSeq}
+    </update>
+    
+    <update id="resPriceChange">
+        UPDATE TSER_RESV_INFO_I SET 
+                                    <choose>
+                                      <when test="resvPayDvsn == 'RESV_PAY_DVSN_2'">
+                                       TRAD_NO = #{tradNo},
+                                       TRAD_DATE = SYSDATE,
+                                      </when>
+                                      <otherwise>
+                                       REFOUND_NO = #{tradNo},
+                                       REFOUND_DATE = SYSDATE,
+                                      </otherwise>
+                                    </choose>
+                                    RESV_PAY_DVSN = #{resvPayDvsn}
+        WHERE RESV_SEQ = #{resvSeq}
+    
     </update>
 </mapper>

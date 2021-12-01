@@ -43,4 +43,11 @@ public class KioskInfo {
  	private String mode = "";
  	
  	private String userId = "";
+ 	
+ 	
+ 	private String machDvsn = "";
+ 	
+ 	private String machEtc1 = "";
+ 	
+ 	private String machEtc2 = "";
 }

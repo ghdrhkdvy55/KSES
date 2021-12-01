@@ -212,12 +212,17 @@
 		       					   $("#sp_empClphn").html(obj.emp_clphn);
 		       					   $("#sp_empEmail").html(obj.emp_email);
 		       					   $("#authorCd").val(obj.author_cd);
-		       					   if (obj.author_cd != "ROLE_ADMIN"){
-		       						  	$("#centerCd").val(obj.center_cd);
-		       							$("#centerCd").prop('style','display:block');
+		       					   if (obj.author_cd != "ROLE_ADMIN" && obj.author_cd != "ROLE_SYSTEM"){
+		       						   $("#centerCd").prop('style','display:block');
+		       						   $("#centerCd").val(obj.center_cd);
+		       					   }else {
+		       						   $("#centerCd").prop('style','display:none');
+		       						   $("#centerCd").val('');
 		       					   }
        						       $("input:radio[name='useYn']:radio[value='"+obj.use_yn+"']").prop('checked', true);
        						       $("#sp_Unqi").hide();
+       						       $("#mng_admin_add > div >h2").text("관리자 수정");
+       						       $("#btn_empSarch").hide();
        						       $("#btnSave").text("수정");
 	       					   }else{
 	       						  common_modelCloseM(result.message, "mng_admin_add");
@@ -237,11 +242,12 @@
 					$("#centerCd").prop('style','display:none');
 					$("#useAt_Y").prop("checked", true);
 		        	$("#sp_Unqi").show();
+		        	$("#mng_admin_add > div >h2").text("관리자 등록");
+		        	$("#btn_empSarch").show();
 		        	$("#btnSave").text("입력");
 		        }
 		        $("#mng_admin_add").bPopup();
            },fn_CheckForm  : function (){
-        	   alert($("#adminId").val());
         	   if (any_empt_line_span("mng_admin_add", "adminId", "아이디을 입력해 주세요.","sp_message", "savePage") == false) return;
         	   if ($("#mode").val() == "Ins" && $("#idCheck").val() != "Y"){
 				   if (any_empt_line_span("mng_admin_add", "adminId", "중복체크가 안되었습니다.","sp_message", "savePage") == false) return;
@@ -407,12 +413,52 @@
 		  	            	var cm = $('#tb_EmpSearch').jqGrid('getGridParam', 'colModel');
 		  	                //console.log(cm);
 		  	                if (cm[index].name !='btn' ){
-		  	                	jqGridFunc.fn_empInfo($(this).jqGrid('getCell', rowid, 'emp_no'),
-			    	                			  $(this).jqGrid('getCell', rowid, 'emp_nm'),
-			    	                			  $(this).jqGrid('getCell', rowid, 'emp_clphn'),
-			    	                			  $(this).jqGrid('getCell', rowid, 'emp_email'),
-			    	                			  $(this).jqGrid('getCell', rowid, 'dept_nm')
-		  	                			          );
+		  	                	
+		  	                	//등록된 값이지 조회 후 update /insert 하기 
+		  	                	
+		  	                	var empNo = $(this).jqGrid('getCell', rowid, 'emp_no');
+		  	                	
+		  	                	var url = "/backoffice/mng/adminIdCheck.do"
+				    	        var param =  {"adminId" : empNo};
+		  	                	//여기 부분 수정 필요 
+					        	fn_Ajax(url, "GET", param, false,
+				        			    function(result) {	
+				     			           if (result != null) {	       	
+				     			        	   if (result.status == "SUCCESS"){
+				     			        		   $("#mng_admin_search").bPopup().close(); 
+				     			        		   /*
+				     			        		        추후 팝업창 으로 수정 예정 
+				     			        		    var message = result.result == "OK" ? '등록되지 않은 사번 입니다.' : '등록된 사번 입니다.';
+				     			        		    var alertIcon =  result.result == "OK" ? "Y" : "N";
+				     			        		    
+				     			        		    common_popup(message, alertIcon, "mng_admin_add").trigger("alert('1')");
+				     			        		    */
+				     			        		    if ($("#mode").val() == "Ins"  && result.result == "OK"){
+				     			        		    	jqGridFunc.fn_empInfo($(this).jqGrid('getCell', rowid, 'emp_no'),
+										    	                			  $(this).jqGrid('getCell', rowid, 'emp_nm'),
+										    	                			  $(this).jqGrid('getCell', rowid, 'emp_clphn'),
+										    	                			  $(this).jqGrid('getCell', rowid, 'emp_email'),
+										    	                			  $(this).jqGrid('getCell', rowid, 'dept_nm')
+						  	                			);
+				     			        		    	$("#idCheck").val(alertIcon);
+				     			        		    }else if ($("#mode").val() == "Ins"  && result.result != "OK"){
+				     			        		    	jqGridFunc.fn_adminInfo("Edt", empNo);
+				     			        		    }
+				     			        		    
+												}else {
+													common_popup('<spring:message code="common.codeFail.msg" />', "N", "mng_admin_add");
+													$("#idCheck").val("N");
+												}
+											}else{
+												common_modelCloseM(result.message,"mng_admin_add");
+											}
+										},
+									    function(request){
+											common_popup('<spring:message code="common.codeFail.msg" />', "N", "mng_admin_add");
+											$("#idCheck").val("N");	       						
+									    }    		
+						        ); 
+					        	
 		          		    }
 		  	            }
 	  		    });
@@ -428,12 +474,12 @@
 	    	    	loadComplete	: function(data) {}
 	    	     }).trigger("reloadGrid");
 		 }, fn_centerSearch : function (){
-			 if ($("#authorCd").val() != "ROLE_MANAGER" && $("#authorCd").val() != "ROLE_ADMIN" ||  $("#authorCd").val()  == ""){
+			 if ($("#authorCd").val() != "ROLE_SYSTEM" && $("#authorCd").val() != "ROLE_ADMIN" &&  $("#authorCd").val()  != ""){
 				 $("#centerCd").val('');
-				  $("#centerCd").prop('style','display:none');
+				 $("#centerCd").prop('style','display:block');
 			 } else {
-				 $("#centerCd").val('');
-				  $("#centerCd").prop('style','display:block');
+				 $("#centerCd").prop('style','display:none');
+				 
 			 }
 		 }
     }
@@ -476,7 +522,7 @@
             <p>부서</p>
             <select id="searchDeptCd" name="searchDeptCd">
                <option value="">부서 선택</option>
-               <c:forEach items="${DEPT}" var="dept">
+               <c:forEach items="${dept}" var="dept">
                   <option value="${dept.deptCd}">${dept.deptNm}</option>
                </c:forEach>
             </select>
@@ -518,20 +564,22 @@
 <div id="mng_admin_add" class="popup">
   <div class="pop_con">
       <a class="button b-close">X</a>
-      <h2 class="pop_tit">관리자 등록</h2>
+      <h2 class="pop_tit" id="h2_txt">관리자 등록</h2>
       <div class="pop_wrap">
           <table class="detail_table" id="tb_adminInfo">
               <tbody>
                 <tr>
                   <th>사번</th>
                   <td>
-                  <input type="text" id="adminId" name="adminId" />
+                  
+                  <input type="hidden" id="adminId" name="adminId" />
                   <span id="sp_Unqi">
-                  <a href="javascript:jqGridFunc.fn_idCheck()" class="blueBtn">중복확인</a>
+                  <!-- <a href="javascript:jqGridFunc.fn_idCheck()" class="blueBtn">중복확인</a> -->
                   <input type="hidden" id="idCheck">
                   </span>   
-                  <br>
-                  <input type="text" id="empNo" name="empNo" /><a href="#" onClick="jqGridFunc.fn_empSearchModel('search')" class="grayBtn" style="margin-left: 5px;" data-popup-open="mng_admin_search">검색</a></td>
+                  <!-- <br> -->
+                  
+                  <input type="text" id="empNo" name="empNo" /><a href="#" onClick="jqGridFunc.fn_empSearchModel('search')" class="grayBtn" style="margin-left: 5px;" id="btn_empSarch" data-popup-open="mng_admin_search">검색</a></td>
                   <th>이름</th>
                   <td><span id="sp_empNm"></span></td>
                 </tr>
@@ -557,7 +605,13 @@
                       </select>
                   </td>
                   <th>지점</th>
-                  <td><select id="centerCd" name="centerCd" style="display:none"></select></td>
+                  <td><select id="centerCd" name="centerCd" style="display:none">
+                         <option value="">지점 선택</option>
+			               <c:forEach items="${centerCd}" var="centerCd">
+			                  <option value="${centerCd.center_cd}">${centerCd.center_nm}</option>
+			               </c:forEach>
+                      </select>
+                  </td>
                 </tr>
                 <tr>
                   <th>이메일</th>

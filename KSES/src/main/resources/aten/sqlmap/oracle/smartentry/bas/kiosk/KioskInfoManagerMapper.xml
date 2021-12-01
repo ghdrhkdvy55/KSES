@@ -9,45 +9,53 @@
 				ROW_NUMBER() OVER (ORDER BY ROWNUM DESC) AS RNUM, 
 				B.CENTER_NM, C.FLOOR_NM, TB.TICKET_MCHN_SNO,TB.TICKET_MCHN_REMARK,
 				CASE TB.USE_YN WHEN 'Y' THEN '사용' ELSE '사용 안함' END AS USE_YN,
-				TB.LAST_UPDT_DTM,TB.LAST_UPDUSR_ID
+				TB.LAST_UPDT_DTM,TB.LAST_UPDUSR_ID, TB.CODE_NM, TB.MACH_ETC1
 			FROM TSEB_CENTER_INFO_M B, TSEB_FLOOR_INFO_M C,
 			(	
 				SELECT 
-					A.TICKET_MCHN_SNO, A.CENTER_CD, A.FLOOR_CD, A.TICKET_MCHN_REMARK, A.USE_YN, TO_CHAR(A.LAST_UPDT_DTM, 'yyyy-mm-dd') AS LAST_UPDT_DTM, A.LAST_UPDUSR_ID
-				FROM TSEC_TICKET_MCHN_M A
-				WHERE 1=1
+					A.TICKET_MCHN_SNO, A.CENTER_CD, A.FLOOR_CD, A.TICKET_MCHN_REMARK, A.USE_YN, 
+					A.MACH_DVSN, A.MACH_ETC1, B.CODE_NM, 
+					TO_CHAR(A.LAST_UPDT_DTM, 'yyyy-mm-dd') AS LAST_UPDT_DTM, A.LAST_UPDUSR_ID
+				FROM TSEC_TICKET_MCHN_M A, COMTCCMMNDETAILCODE B
+				WHERE A.MACH_DVSN = B.CODE
+					<if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(params.searchKeyword)">
+						<choose>
+							<when test="params.searchCondition == 'CENTER_NM'">
+								AND B.CENTER_NM LIKE '%' || #{params.searchKeyword} || '%' 
+							</when>	
+							
+							<when test="params.searchCondition == 'FLOOR_NM'">
+								AND C.FLOOR_NM LIKE '%' || #{params.searchKeyword} || '%' 
+							</when>		
+											
+							<otherwise>
+								AND 
+								(
+									B.CENTER_NM LIKE '%' || #{params.searchKeyword} || '%' 
+									OR C.FLOOR_NM LIKE '%' || #{params.searchKeyword} || '%' 
+								)
+							</otherwise>
+							
+						</choose>
+					</if>
+					<if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(params.searchCenterCd)">
+					    AND B.CENTER_CD = #{params.searchCenterCd}
+					</if>
+					<if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(params.searchMachDvsn)">
+					    AND A.MACH_DVSN = #{params.searchMachDvsn}
+					</if>
 			) TB 
 			WHERE B.CENTER_CD = TB.CENTER_CD AND C.FLOOR_CD = TB.FLOOR_CD
-			<if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(params.searchKeyword)">
-					<choose>
-						<when test="params.searchCondition == 'CENTER_NM'">
-							AND B.CENTER_NM LIKE '%' || #{params.searchKeyword} || '%' 
-						</when>	
-						
-						<when test="params.searchCondition == 'FLOOR_NM'">
-							AND C.FLOOR_NM LIKE '%' || #{params.searchKeyword} || '%' 
-						</when>		
-										
-						<otherwise>
-							AND 
-							(
-								B.CENTER_NM LIKE '%' || #{params.searchKeyword} || '%' 
-								OR C.FLOOR_NM LIKE '%' || #{params.searchKeyword} || '%' 
-							)
-						</otherwise>
-						
-					</choose>
-				</if>
-				<if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(params.searchCenterCd)">
-				    AND B.CENTER_CD = #{params.searchCenterCd}
-				</if>
+			
 		) TA
 		WHERE RNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
 		ORDER BY TA.TICKET_MCHN_SNO DESC
    	</select>
 
    	<select id="selectKioskInfoDetail" resultType="lmap">
-			SELECT  TICKET_MCHN_SNO, CENTER_CD, FLOOR_CD, USE_YN, TICKET_MCHN_REMARK
+			SELECT  TICKET_MCHN_SNO, CENTER_CD, FLOOR_CD, USE_YN, TICKET_MCHN_REMARK,
+			        MACH_DVSN, MACH_ETC1, MACH_ETC2,
+			        FRST_REGTER_ID, FRST_REGIST_DTM, LAST_UPDUSR_ID, LAST_UPDT_DTM
 			FROM TSEC_TICKET_MCHN_M
 			WHERE TICKET_MCHN_SNO = #{ticketMchnSno}
 
@@ -66,11 +74,13 @@
 	<insert id="insertKioskInfo">
 		INSERT INTO TSEC_TICKET_MCHN_M
 		(
-			TICKET_MCHN_SNO, CENTER_CD, FLOOR_CD, USE_YN, TICKET_MCHN_REMARK, FRST_REGTER_ID, FRST_REGIST_DTM, LAST_UPDUSR_ID, LAST_UPDT_DTM
+			TICKET_MCHN_SNO, CENTER_CD, FLOOR_CD, USE_YN, TICKET_MCHN_REMARK, MACH_DVSN, MACH_ETC1, MACH_ETC2,
+			FRST_REGTER_ID, FRST_REGIST_DTM, LAST_UPDUSR_ID, LAST_UPDT_DTM
 		)	
 		VALUES 
 		(
-			#{ticketMchnSno},  #{centerCd}, #{floorCd}, #{useYn}, #{ticketMchnRemark}, #{userId, jdbcType=VARCHAR} , SYSDATE, #{userId, jdbcType=VARCHAR}, SYSDATE
+			#{ticketMchnSno},  #{centerCd}, #{floorCd}, #{useYn}, #{ticketMchnRemark}, #{machDvsn, jdbcType=VARCHAR}, #{machEtc1, jdbcType=VARCHAR}, #{machEtc2, jdbcType=VARCHAR}, 
+			#{userId, jdbcType=VARCHAR} , SYSDATE, #{userId, jdbcType=VARCHAR}, SYSDATE
 		)
    	</insert>
 
@@ -79,7 +89,9 @@
 		                              FLOOR_CD = #{floorCd, jdbcType=VARCHAR}, 
 		                              TICKET_MCHN_REMARK = #{ticketMchnRemark}, 
 		                              USE_YN = #{useYn, jdbcType=VARCHAR}, 
-		                              LAST_UPDUSR_ID = #{userId, jdbcType=VARCHAR}, 
+		                              MACH_DVSN = #{machDvsn, jdbcType=VARCHAR}, 
+		                              MACH_ETC1 = #{machEtc1, jdbcType=VARCHAR}, 
+		                              MACH_ETC2 = #{machEtc2, jdbcType=VARCHAR}, 
 		                              LAST_UPDT_DTM = SYSDATE
        	WHERE TICKET_MCHN_SNO = #{ticketMchnSno}
    	</update>

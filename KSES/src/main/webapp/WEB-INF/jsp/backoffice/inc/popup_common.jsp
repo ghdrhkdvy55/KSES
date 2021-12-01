@@ -6,7 +6,7 @@
         <p class="pop_tit">메세지</p>
         <p class="pop_wrap"><span id="sp_Message"></span></p>
         <div class="right_box" id="db_closePop">
-            <a href="#" onClick="fn_BeforePop()" class="grayBtn">확인</a>
+            <a href="#" onClick="fn_BeforePop()" id="btn_Comfirm" class="grayBtn">확인</a>
         </div>
       </div>
 </div>
