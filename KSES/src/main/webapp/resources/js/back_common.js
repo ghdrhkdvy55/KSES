@@ -37,11 +37,19 @@ $("#preview").remove();
 
 /* menu */
 function toggleNav() {
+<<<<<<< HEAD
 if (document.getElementById("mySidenav").style.display == "none") {
 openNav();
 } else {
 closeNav();
 }
+=======
+    if (document.getElementById("mySidenav").style.width == "200px") {
+        closeNav(); 
+    } else { 
+        openNav(); 
+    }
+>>>>>>> origin/sohoki2
 }
 function openNav() {
 document.getElementById("mySidenav").style.display = "block";
@@ -368,7 +376,6 @@ function verifyEmail(_field, mng_user_add){
 }
 //전화번호 정규식
 function fn_autoHyphen (obj){
-   
    return obj.value.replace(/[^0-9]/, '').replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`);
 }
 

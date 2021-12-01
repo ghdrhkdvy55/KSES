@@ -79,9 +79,9 @@ public class BlackUserInfoManageController {
 	}
     
 	@RequestMapping(value="blackListAjax.do")
-	public ModelAndView selectCenterAjaxInfo(	@ModelAttribute("loginVO") LoginVO loginVO, 
-												@RequestBody Map<String,Object> searchVO, 
-												HttpServletRequest request, 
+	public ModelAndView selectCenterAjaxInfo(	HttpServletRequest request, 
+												@ModelAttribute("loginVO") LoginVO loginVO, 
+												@RequestBody Map<String,Object> searchVO,
 												BindingResult bindingResult	) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
@@ -128,7 +128,7 @@ public class BlackUserInfoManageController {
 	@RequestMapping (value="updateBlackUserInfo.do")
 	public ModelAndView updateCenterInfo(	HttpServletRequest request,
 											@ModelAttribute("LoginVO") LoginVO loginVO, 
-											@ModelAttribute("BlackUserInfo") BlackUserInfo vo, 
+											@RequestBody BlackUserInfo vo, 
 											BindingResult result) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
