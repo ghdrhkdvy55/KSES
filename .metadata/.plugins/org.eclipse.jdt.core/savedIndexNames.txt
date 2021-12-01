@@ -1,2 +1,0 @@
-INDEX VERSION 1.131+C:\gitProject\KSES\.metadata\.plugins\org.eclipse.jdt.core
-1715609868.index
