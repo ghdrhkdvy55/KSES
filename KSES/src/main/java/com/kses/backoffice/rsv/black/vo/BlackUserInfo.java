@@ -21,6 +21,9 @@ public class BlackUserInfo {
 
     // 핸드폰 
     private String userPhone;
+    
+    // 휴대전화
+    private String userClphn;
 
     // 블랙리스트 유형 
     private String blklstDvsn;

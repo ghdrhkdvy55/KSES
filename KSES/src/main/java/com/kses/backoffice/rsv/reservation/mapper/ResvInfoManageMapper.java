@@ -39,6 +39,4 @@ public interface ResvInfoManageMapper {
 	public int updateUserResvInfo(ResvInfo vo);
 	
 	public int resPriceChange(ResvInfo vo);
-	
-	
 }

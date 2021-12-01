@@ -56,23 +56,22 @@
 		$(document).ready(function() { 
 			jqGridFunc.setGrid("mainGrid");
 			var clareCalendar = {
-					monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
-					dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
-					weekHeader: 'Wk',
-					dateFormat: 'yymmdd', //형식(20120303)
-					autoSize: false, //오토리사이즈(body등 상위태그의 설정에 따른다)
-					changeMonth: true, //월변경가능
-					changeYear: true, //년변경가능
-					showMonthAfterYear: true, //년 뒤에 월 표시
-					buttonImageOnly: true, //이미지표시
-					buttonText: '달력선택', //버튼 텍스트 표시
-					buttonImage: '/images/invisible_image.png', //이미지주소
-					yearRange: '1970:2030' //1990년부터 2020년까지
+				monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+				dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
+				weekHeader: 'Wk',
+				dateFormat: 'yymmdd', //형식(20120303)
+				autoSize: false, //오토리사이즈(body등 상위태그의 설정에 따른다)
+				changeMonth: true, //월변경가능
+				changeYear: true, //년변경가능
+				showMonthAfterYear: true, //년 뒤에 월 표시
+				buttonImageOnly: true, //이미지표시
+				buttonText: '달력선택', //버튼 텍스트 표시
+				buttonImage: '/images/invisible_image.png', //이미지주소
+				yearRange: '1970:2030', //1990년부터 2020년까지
+				currentText: "Today"
 			};	       
-			$("#searchResvDateFrom").datepicker(clareCalendar);
-			$("#searchResvDateTo").datepicker(clareCalendar);
-			$("#longResvDateFrom").datepicker(clareCalendar);
-			$("#longResvDateTo").datepicker(clareCalendar);
+			$("#searchResvDateFrom, #searchResvDateTo, #longResvDateFrom, #longResvDateTo").datepicker(clareCalendar);
+			$("#searchResvDateFrom, #searchResvDateTo, #longResvDateFrom, #longResvDateTo").val(new Date().format("yyyyMMdd"));
 			
 			$("img.ui-datepicker-trigger").attr("style", "margin-left:3px; vertical-align:middle; cursor:pointer;"); //이미지버튼 style적용
 			$("#ui-datepicker-div").hide(); //자동으로 생성되는 div객체 숨김
@@ -288,7 +287,7 @@
 		 		var params = {"centerCd" : $("#longPopSearchCenterCd").val()}
 		 		var returnVal = uniAjaxReturn(url, "GET", false, params, "lst");
 		 		fn_comboListJson("longPopSearchFloorCd", returnVal, "jqGridFunc.fn_floorChange", "100px;", "");
-		 		if (returnVal.length > 0){
+		 		if (returnVal.length > 0) {
 		 			$("#longPopSearchFloorCd option:eq(1)").prop("selected", true);
 		 		}else {
 		 			$("#longPopSearchFloorCd").hide();
@@ -299,13 +298,13 @@
 				var url = "/backoffice/bld/partInfoComboList.do"
 			    var params = {"floorCd" : $("#longPopSearchFloorCd").val()}
 			 	var returnVal = uniAjaxReturn(url, "GET", false, params, "lst");
-				fn_comboListJson("longPopSearchPartCd", returnVal, "", "100px;", "");
-				if (returnVal.length > 0){
+				fn_comboListJson("longPopSearchPartCd", returnVal, "jqGridFunc.fn_partChange", "100px;", "");
+				if (returnVal.length > 0) {
 		 			$("#longPopSearchPartCd option:eq(1)").prop("selected", true);
 		 			$("#longPopSearchPartCd").show();
 		 		} else {
 		 			$("#longPopSearchPartCd").hide();
-		 		} selectSeatInfoList
+		 		}
 			},
 			fn_partChange : function() {
 				var url = "/backoffice/bld/partInfoComboList.do"
@@ -319,6 +318,25 @@
 		 			$("#longPopSearchPartCd").hide();
 		 		}
 			},
+			fn_longSeatAdd : function() {
+				$("#longPopSearchCenterCd").val("");
+				$("#longPopSearchFloorCd ").val("");
+				$("#longPopSearchPartCd").val("");
+				$("#longPopSearchSeatCd ").val("");
+				$("#longResvDateFrom ").val(new Date().format("yyyyMMdd"));
+				$("#longResvDateTo ").val(new Date().format("yyyyMMdd"));
+				$("input[name=longResvDay]").prop("checked",false);
+
+				$("#userSearchCondition option:eq(0)").prop("selected",true);
+				$("#userSearchKeyword").val("");
+				$("#longResvUserId").val("");
+				
+				$("#empSearchCondition  option:eq(0)").prop("selected",true);
+				$("#empSearchKeyword").val("");
+				$("#longResvEmpNo").val("");
+				
+				$("#long_seat_add").bPopup();
+			},
 			fn_searchResult : function (searchDvsn){
 				var setHtml = "<table id='searchResultTable' class='whiteBox main_table'>";
 				$("#searchResult").empty();
@@ -330,7 +348,6 @@
 				var postData = "";
 				var url = "";
 				gridEmp.jqGrid('clearGridData',true);
-				
 				
 				if(searchDvsn == "user") {
 					url ="/backoffice/cus/userListAjax.do";
@@ -673,7 +690,7 @@
 					</div>
 	
 					<div class="right_box">
-						<a data-popup-open="long_seat_add" class="blueBtn">장기 예매 고객</a>
+						<a href="javascript:jqGridFunc.fn_longSeatAdd();" class="blueBtn">장기 예매 고객</a>
 						<a href=""  class="blueBtn">엑셀 다운로드</a>
 					</div>
 					<div class="clear"></div>
@@ -738,7 +755,7 @@
                   	</tr>
                   	<tr>
                     	<th>블랙리스트</th>
-                    	<td>대상 아님 <a href="" class="blueBtn left80">블랙리스트 등록</a></td>
+                    	<td>대상 아님 <!-- <a href="" class="blueBtn left80">블랙리스트 등록</a></td> -->
                     	<th>발권 구분</th>
                     	<td>온라인</td>
                   	</tr>
@@ -756,7 +773,7 @@
 			</div>
       	</div>
       	<div class="right_box">
-          	<a href="" class="grayBtn">닫기</a>
+          	<a href="javascript:$('#rsv_detail').bPopup().close();" class="grayBtn">닫기</a>
       	</div>
       	<div class="clear"></div>
   	</div>
@@ -784,12 +801,10 @@
                       	<th>구역 정보 </th>
                       	<td>
 	                        <select id="longPopSearchFloorCd" onChange="jqGridFunc.fn_floorChange();">
-                          		<option value="">1</option>
-                          		<option value="">2</option>                 
+                          		<option value=""></option>
                         	</select>층
 							<select id="longPopSearchPartCd" onChange="jqGridFunc.fn_partChange();" >
-                          		<option value="">A</option>
-                          		<option value="">B</option>                 
+                          		<option value=""></option>                 
                         	</select>구역                        
                       	</td>
                   	</tr>
@@ -859,7 +874,7 @@
 			</table>
       	</div>
       	<div class="right_box">
-			<a href="" class="grayBtn">닫기</a>
+			<a href="javascript:$('#long_seat_add').bPopup().close();" class="grayBtn">닫기</a>
       	</div>
       	<div class="clear"></div>
   	</div>

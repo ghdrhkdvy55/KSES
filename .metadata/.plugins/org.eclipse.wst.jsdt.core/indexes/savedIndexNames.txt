@@ -1,8 +1,6 @@
 INDEX VERSION 1.4+C:\gitProject\KSES\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
-2313804933.index
 3497584756.index
-774948172.index
-1715609868.index
 3199549124.index
 2668073806.index
-2841941174.index
+774948172.index
+1715609868.index
