@@ -10,12 +10,10 @@ import com.kses.backoffice.sym.log.vo.SysLog;
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 
 
-
-
 @Mapper
 public interface SysLogManageMapper {
 
-	public List<Map<String, Object>> selectSysLogList( SysLog searchVO);
+	public List<Map<String, Object>> selectSysLogList(@Param("params") Map<String, Object> params);
 	
 	public Map<String, Object> selectSysLogInfo(@Param("requstId") String requstId);
 	

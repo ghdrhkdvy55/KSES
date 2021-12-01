@@ -1,6 +1,7 @@
 package com.kses.backoffice.sym.log.web;
 
 
+import java.net.Inet4Address;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
@@ -72,6 +73,7 @@ public class LoginLogController {
 			paginationInfo.setCurrentPageNo( Integer.parseInt( SmartUtil.NVL(searchVO.get("pageIndex"), "1")));
 			paginationInfo.setRecordCountPerPage(pageUnit);
 			paginationInfo.setPageSize(propertiesService.getInt("pageSize"));
+			
 			
 
 			searchVO.put("pageSize", propertiesService.getInt("pageSize"));

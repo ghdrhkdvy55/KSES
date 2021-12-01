@@ -35,68 +35,7 @@ public class ControllerAspect {
 	
 	@Autowired
 	private EgovSysLogService sysLogService;
-	/**
-	 * Controller 요청
-	 * @param joinPoint
-	 * @throws Exception
-	 */
-	@Before("execution( public * egovframework.let..web.Controller.*Update(..))  "
-			     + " or execution(public * aten.com.backoffice..web.*Controller.*Update(..)) " 
-			     + " or execution(public * aten.com.backoffice..web.*Controller.*Delete(..)) " 
-			     + " and  !@target(aten.com.backoffice.sym.log.annotation.NoLogging) "
-			     + " and  !@annotation(aten.com.backoffice.sym.log.annotation.NoLogging) )")
-	public void before(JoinPoint joinPoint) throws Exception {
-		Class<?> clazz = joinPoint.getTarget().getClass();
-		LOGGER.info(" [" + clazz.getSimpleName() + "] ---------------------------------------------------------------------------------//");
-		for (Object arg : joinPoint.getArgs()) {
-			if (arg instanceof Map) {
-				LOGGER.info(" (" + joinPoint.getSignature().getName() + ") Controller Parameters: " + arg);
-			}
-		}
-		Object sqlid  = null; 		
-		Object[] methodArgs = joinPoint.getArgs();
-		if (methodArgs.length > 0){
-			sqlid = methodArgs[0];
-		}
-		
-		SysLog sysLog = new SysLog();
-        String processSeCode =  ParamToJson.JsonKeyToString(sqlid, "mode").equals("Ins") ? "I" : "U";
-		String className = joinPoint.getTarget().getClass().getName();
-		String methodName = joinPoint.getSignature().getName();
-		String uniqId = "";
-		String ip = "";
-		
-        Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();	        
-    	if(isAuthenticated.booleanValue()) {
-    		LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
-			uniqId = user.getAdminId();// .getUniqId();
-			ip = user.getIp() == null ? "": user.getIp();
-    	}
-    	sysLog.setSrvcNm(className);
-		sysLog.setMethodNm(methodName);
-		sysLog.setProcessSeCode(processSeCode);
-		sysLog.setSearchIp(ip);
-		sysLog.setSearchId(uniqId);
-		sysLog.setFirstIndex(0);
-		sysLog.setRecordCountPerPage(20);
-		
-		List<Map<String, Object>> sysLists = sysLogService.selectSysLogListCnt(sysLog);
-		int dupCnt = 0;
-		for(Map<String, Object> log : sysLists){
-			if ( log.get("method_nm").toString().equals( methodName)){
-				dupCnt +=1;					
-			}
-			LOGGER.debug("dupCnt"+ dupCnt + ":" +  log.get("method_nm").toString()+":" +methodName);
-			if (dupCnt > 0){
-				LOGGER.debug("3번 중복 행위 함");
-				//return "redirect:/";
-				throw new CustomerExcetion();
-				
-				//throw new CustomerExcetion("중복 애러 확인");
-			}
-		}
-		
-	}
+	
 	
 	/**
 	 * Controller 응답

@@ -36,9 +36,7 @@ public interface EgovSysLogService {
 	 *
 	 * @param SysLog
 	 */
-	public ModelAndView selectSysLogList(SysLog sysLog) throws Exception;
+	public List<Map<String, Object>> selectSysLogList(Map<String, Object> sysLog) throws Exception;
 	
-	
-	public List<Map<String, Object>> selectSysLogListCnt (SysLog sysLog) throws Exception;
 	
 }
