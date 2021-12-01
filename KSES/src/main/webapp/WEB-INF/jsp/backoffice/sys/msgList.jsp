@@ -102,7 +102,7 @@
 			      			        { label: '문자구분', name:'kind', index:'kind', align:'center', width:'12%', 
 	      			                  formatter:jqGridFunc.kind},
 	      			                { label: '전송시간',  name:'senttime',         index:'senttime',        align:'left',   width:'10%'},
-	      			                { label: '애러코드', name: 'errcode',  index:'errcode',      align:'center',  width: '10%', fixed:true}
+	      			                { label: '애러코드', name: 'errcode',  index:'errcode',      align:'center',  width: '10%'}
     			                ],  //상단면 
     		        rowNum : 10,  //레코드 수
     		        rowList : [10,20,30,40,50,100],  // 페이징 수
