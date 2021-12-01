@@ -92,6 +92,13 @@ $('.blacklist.tabs>.tab').on('click', function(){
   $tbody.removeClass('active');
   $tbody.eq(tabIdx).addClass('active');
 })
+
+// 맨 마지막 문자 얻어 오기 
+function fn_Endstring(_field){
+  var val =  $("#"+_field).val();
+  return val.slice(val.length -1)
+}
+
 //공통 팝업
 function common_popup(message, alertGubun, hidePopup){
    if (hidePopup != "") {

@@ -24,7 +24,7 @@ import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
 
 @RestController
-@RequestMapping("/backoffice/sym")
+@RequestMapping("/backoffice/sys")
 public class SysLogController {
   
      private static final Logger LOGGER = LoggerFactory.getLogger(SysLogController.class);
@@ -41,7 +41,7 @@ public class SysLogController {
     protected EgovPropertyService propertiesService;
 	
 	@NoLogging
-	@RequestMapping(value="SyslogList.do", method = {RequestMethod.GET, RequestMethod.POST})
+	@RequestMapping(value="syslogList.do", method = {RequestMethod.GET, RequestMethod.POST})
 	public ModelAndView selectSysLogList(@ModelAttribute("loginVO") LoginVO loginVO
 			                                              , @ModelAttribute("searchVO") SysLog searchVO
 			                                              , HttpServletRequest request

@@ -289,6 +289,14 @@
 		  }, fn_Alldel : function (){
 			 
    		      fn_uniDelAction("/backoffice/bas/menuBndeAllDelete.do","GET", null, false, "jqGridFunc.fn_search");
+		  }, fn_menuNoChange : function (){
+			  if ($("#menuNo").val() != ""){
+				  $("#menuOrdr").val($("#menuNo").val());
+				  var endString = $("#menuOrdr").val().slice($("#menuOrdr").val().length -1);
+				  var upperMenu = (endString != "0") ? $("#menuOrdr").val().substring(0, $("#menuOrdr").val().length -1) + "0" : "0";
+				  $("#upperMenuNo").val(upperMenu);
+				  $("#menuNm").focus();
+			  }
 		  }
     }
   </script>
@@ -349,7 +357,7 @@
                 <tbody>
                     <tr>
                         <th>메뉴NO</th>
-                        <td><input type="text" id="menuNo" name="menuNo"></td>
+                        <td><input type="text" id="menuNo" name="menuNo" onChange="jqGridFunc.fn_menuNoChange()"></td>
                         <th>메뉴 순서</th>
                         <td><input type="text" id="menuOrdr" name="menuOrdr"></td>
                     </tr>
@@ -369,7 +377,7 @@
                     <tr>
                         <th>메뉴 설명</th>
                         <td colspan="3">
-                             <textarea cols="25" rows="5" id="menuDc" name="menuDc"></textarea>
+                             <textarea style="width:550px;height:120px" id="menuDc" name="menuDc"></textarea>
                         </td>
                     </tr>
                 </tbody>

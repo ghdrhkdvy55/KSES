@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,12 +27,12 @@ import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 
 @RestController
-@RequestMapping("/backoffice/sym")
+@RequestMapping("/backoffice/sys")
 public class LoginLogController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(LoginLogController.class);
 			
-	@Resource(name="LoginLogService")
+	@Autowired
 	private LoginLogService loginLogService;
 
 	@Resource(name = "propertiesService")
@@ -56,7 +55,7 @@ public class LoginLogController {
 	@RequestMapping(value = "selectLoginLogList.do")
 	public ModelAndView selectLoginLogInf(@ModelAttribute("searchVO") LoginLog loginLog) throws Exception {
 		
-		ModelAndView model = new ModelAndView("/backoffice/sym/LoginLogList");
+		ModelAndView model = new ModelAndView("/backoffice/sys/LoginLogList");
 		return model;
 	}
 	@RequestMapping(value = "selectLoginLogListAjax.do")

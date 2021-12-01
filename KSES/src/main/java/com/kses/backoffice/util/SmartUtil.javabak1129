@@ -58,9 +58,6 @@ import com.google.zxing.client.j2se.MatrixToImageConfig;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
-import com.kses.backoffice.sym.log.service.InterfaceInfoManageService;
-import com.kses.backoffice.sym.log.vo.InterfaceInfo;
-import com.kses.backoffice.sym.log.vo.sendEnum;
 
 import egovframework.rte.fdl.property.EgovPropertyService;
 import java.math.BigDecimal;
@@ -76,14 +73,7 @@ public class SmartUtil {
 	@Autowired
 	protected EgovPropertyService propertiesService;
 	
-	@Autowired
-	private static InterfaceInfoManageService interfaceService;
-	
-	
 	public void XMLParse(String xmlData) throws ParserConfigurationException, SAXException, IOException{
-		
-		
-		
 		
 		InputSource is = new InputSource(new StringReader(xmlData));
 		
@@ -138,16 +128,6 @@ public class SmartUtil {
 		LocalDateTime date = LocalDateTime.parse(_timeDate, DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
 		Duration duration = Duration.between(now, date);
 		return duration.toString();
-    }
-    
-    /*
-     *  현재 시간
-     * 
-     * 
-     */
-    public static String nowTime() {
-    	LocalDateTime now = LocalDateTime.now();
-    	return now.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
     }
     /*
      *  qr 생성 
@@ -539,17 +519,8 @@ public class SmartUtil {
 
         return null;
     }
-	
-	/*   json 전송후 값 받아 오기 
-	 *   _url : 전송 URL
-	 *   _jsonInfo : 전송 Json
-	 *   _integId : 연계 ID
-	 *   _provdId : 제공 ID
-	 *   _requstId : 요청 ID
-	 * 
-	 */
-	
-	public static JsonNode requestHttpJson(String _url, String _jsonInfo, String _integId, String _provdId, String _requstId){
+	//json 전송후 값 받아 오기 
+	public static JsonNode requestHttpJson(String _url, String _jsonInfo){
 
         HttpClient client = HttpClientBuilder.create().build(); // HttpClient 생성
         HttpPost httpPost = new HttpPost(_url); //POST 메소드 URL 새성
@@ -566,43 +537,15 @@ public class SmartUtil {
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode node = null;
             //Response 출력
-            
-           
-            
-            
-            // INTEG_ID
-            //REQUST_INSTT_ID
-            //REQUST_SYS_ID
-            
-            //응답 RSPNS_TRNSMIT_TM 
-            //   RSPNS_RECPTN_TM
-            InterfaceInfo info = new InterfaceInfo();
-            info.setTrsmrcvSeCode(sendEnum.RPQ.getCode() );
-            info.setIntegId(_integId);
-            
-            info.setRequstInsttId(_requstId);
-            info.setRspnsRecptnTm(nowTime());
-            
             if (response.getStatusLine().getStatusCode() == 200) {
                 ResponseHandler<String> handler = new BasicResponseHandler();
                 String body = handler.handleResponse(response);
-                node = objectMapper.readTree(body);       
-                
-                
-                
+                node = objectMapper.readTree(body);                
             } else {
             	LOGGER.error("response is error : " + response.getStatusLine().getStatusCode());
             	node = objectMapper.readTree("{\"Error_Cd\":\""+ response.getStatusLine().getStatusCode() + "\"}");
             	
             }
-            //전송 내용 //수신 요청 
-           
-            
-            info.setRspnsRecptnTm(nowTime());
-            info.setResultCode(node.get("Error_Cd").toString());
-            info.setResultMessage(node.asText());
-            info.setSendMessage(_jsonInfo);
-            interfaceService.InterfaceInsertLoginLog(info);
             
             return node;
         } catch (Exception e){

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kses.backoffice.bas.code.service.EgovCcmCmmnDetailCodeManageService;
@@ -125,35 +126,31 @@ public class BlackUserInfoManageController {
 	}
 	
 	@RequestMapping (value="updateBlackUserInfo.do")
-	public ModelAndView updateCenterInfo(	@ModelAttribute("LoginVO") LoginVO loginVO, 
-											@RequestBody BlackUserInfo vo,
-											HttpServletRequest request,
+	public ModelAndView updateCenterInfo(	HttpServletRequest request,
+											@ModelAttribute("LoginVO") LoginVO loginVO, 
+											@ModelAttribute("BlackUserInfo") BlackUserInfo vo, 
 											BindingResult result) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-		String meesage = "";
 		
+		if(!isAuthenticated) {
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
+			model.setViewName("/backoffice/login");
+		} 
 		try {
-			if(!isAuthenticated) {
-				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-				return model;
-			} else {
-				loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
-				vo.setAdminId(loginVO.getAdminId());
-			}
-	
+			
+			model.addObject(Globals.STATUS_REGINFO , vo);
+			String meesage = "";
+			
 			meesage = vo.getMode().equals("Ins") ? "sucess.common.insert" : "sucess.common.update";
 
-			int ret = blackUserService.updateBlackUserInfoManage(vo);
+			loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
+			vo.setAdminId(loginVO.getAdminId());
+			blackUserService.updateBlackUserInfoManage(vo);
 			
-			if(ret > 0) {
-				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
-			} else {
-				throw new Exception();
-			}
+			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));		
 		} catch (Exception e){
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.insert"));	
