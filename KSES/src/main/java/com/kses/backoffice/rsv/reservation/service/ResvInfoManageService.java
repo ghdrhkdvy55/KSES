@@ -34,7 +34,7 @@ public interface ResvInfoManageService {
 	 * @throws Exception
 	 */
 	public Map<String, Object> selectUserLastResvInfo(String userId) throws Exception;
-
+	
 	/**
 	 * SPDM 회원 예약 정보 조회
 	 * 
@@ -52,7 +52,7 @@ public interface ResvInfoManageService {
 	 * @throws Exception
 	 */
 	public int updateUserResvInfo(ResvInfo vo) throws Exception;
-
+	
 	/**
 	 * SPDM 회원 예약 현시간 예약한 정보 조회
 	 * 
@@ -120,5 +120,14 @@ public interface ResvInfoManageService {
 	 *  입금 또는 환불
 	 * 
 	 */
-	int resPriceChange(ResvInfo vo)throws Exception;
+	public int resPriceChange(ResvInfo vo)throws Exception;
+	
+	/**
+	 * SPDM 예약 정보 취소
+	 * 
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 */
+	public String resvCenterValidCheck(Map<String, Object> params) throws Exception;
 }
