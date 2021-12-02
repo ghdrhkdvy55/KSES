@@ -11,7 +11,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=no;" />
+    <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
     <title>경륜경정 스마트입장 관리자 로그인</title>
     <link rel="stylesheet" href="/resources/css/reset.css">
 	<link rel="stylesheet" href="/resources/css/paragraph.css">    
@@ -20,7 +20,6 @@
     <link rel="stylesheet" href="/resources/css/magic-check.min.css">
     <script src="/resources/js/jquery-3.5.1.min.js"></script>
     <script src="/resources/js/bpopup.js"></script>
-    
 </head>
 <body>
     <form name="regist" method="post" action="/backoffice/actionSecurityLogin.do" autocomplete="off" style="height:100%;">
@@ -34,7 +33,7 @@
                     <li>
                         <span class="id_icon">사번</span>
                         <div class="text-clear">
-                            <input type="text" id="adminId" name="adminId" placeholder="사번을 입력해주세요." value="" class="form-control" />  
+                            <input type="text" id="adminId" name="adminId" placeholder="사번을 입력해주세요." value="" class="form-control" tabindex="1"/>  
                             <button class="input_reset hidden"  id="id_reset" type="button"></button>
                             <label id="id_wrong" style="color:red"></label>
                         </div>
@@ -43,7 +42,7 @@
                     <li>
                         <span class="pw_icon">비밀번호</span>
                         <div class="text-clear">
-                            <input type="password" id="adminPwd" name="adminPwd" placeholder="비밀번호를 입력해 주세요." />
+                            <input type="password" id="adminPwd" name="adminPwd" placeholder="비밀번호를 입력해 주세요." tabindex="2"/>
                             <button class="input_reset hidden"  id="pass_reset" type="button"></button>
                             <label id="pw_wrong" style="color:red"></label>
                         </div>
@@ -91,6 +90,7 @@
  	   $("form[name=regist]").attr("action", "/backoffice/actionSecurityLogin.do").submit(); 	   
     }       
     $(document).ready(function() {
+    	$('#adminId').focus();
     	$("body").keydown(function (key) {
         	if(key.keyCode == 13){
         		form_check();
@@ -99,11 +99,10 @@
     	
 		if ("${message}" != "") {
 			if ("${message}" == "login_ok"){
-				alert("2")
 				location.href="/backoffice/resManage/resList.do?searchRoomType=swc_gubun_1";  
 			} else {
 				alert("<spring:message code='page.common.alert03' />");
-				$("#admin_id").focus() ;	    			  
+				$("#adminId").focus() ;	    			  
 			}				
 		}    	           	    	
     });  
