@@ -42,22 +42,26 @@ public class AttendInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
 		
 		if(!vo.getMode().equals("Manual")) {
 			Map<String, Object> info = attendMapper.selectAttendInfoDetail(vo);
-			if (vo.getInoutDvsn().equals("IN") && info == null
-				|| vo.getInoutDvsn().equals("IN") && SmartUtil.NVL(info.get("INOUT_DVSN"), "").toString().equals("OT") 
-				|| vo.getInoutDvsn().equals("OT") && SmartUtil.NVL(info.get("INOUT_DVSN"), "").toString().equals("IN") 
-						) {
+			LOGGER.debug("vo:" + vo.getInoutDvsn() + ":" + info.get("inout_dvsn"));
+			
+			if ((vo.getInoutDvsn().equals("IN") && info == null)
+				|| (vo.getInoutDvsn().equals("IN") && SmartUtil.NVL(info.get("inout_dvsn"), "").toString().equals("OT") )
+				|| (vo.getInoutDvsn().equals("OT") && SmartUtil.NVL(info.get("inout_dvsn"), "").toString().equals("IN") )
+					) {
 				ret = attendMapper.insertAttendInfo(vo);
-				vo.setRet(ret);
 				if (ret > 0) {
+					if (info == null) 
+						info = attendMapper.selectAttendInfoDetail(vo);
+					
 					vo.setUserId(SmartUtil.NVL(info.get("user_id"), "").toString());
 					vo.setUserNm(SmartUtil.NVL(info.get("user_nm"), "").toString());
 					vo.setResvSeq("OK");
-				} else {
-					vo.setRcvCd("ERROR_03"); //½Ã½ºÅÛ ¿¡·¯
+				}else {
+					vo.setRcvCd("ERROR_03"); //ì‹œìŠ¤í…œ ì—ëŸ¬
 				}
 				
 			}else {
-				vo.setRcvCd("ERROR_02"); // ÀÔ/ÃâÀÔ Àß¸ø ½Ãµµ 
+				vo.setRcvCd("ERROR_02"); // ì…/ì¶œì… ì˜ëª» ì‹œë„ 
 			}
 		} else {
 			ret = attendMapper.insertAttendInfo(vo);

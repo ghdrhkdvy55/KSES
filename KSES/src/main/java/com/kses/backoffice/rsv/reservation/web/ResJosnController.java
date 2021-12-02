@@ -213,6 +213,7 @@ public class ResJosnController{
 			}else {
 				AttendInfo vo = new AttendInfo();
 				vo.setResvSeq(resvSeq);
+				vo.setUserId(resInfo.get("user_id").toString());
 				String qrTime =  LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
 				String inOt = "";
 				Map<String, Object> attend =  attendService.selectAttendInfoDetail(vo);

@@ -137,7 +137,7 @@ public class SmartUtil {
     	//String formatedNow = now.format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
 		LocalDateTime date = LocalDateTime.parse(_timeDate, DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
 		Duration duration = Duration.between(now, date);
-		return duration.toString();
+		return  String.valueOf(duration.getSeconds());
     }
     
     /*
