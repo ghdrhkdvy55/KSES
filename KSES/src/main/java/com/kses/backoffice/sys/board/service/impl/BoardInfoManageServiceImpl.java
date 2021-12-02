@@ -78,9 +78,6 @@ public class BoardInfoManageServiceImpl extends EgovAbstractServiceImpl implemen
 
 	@Override
 	public int deleteBoardManage(String boardSeq) throws Exception {
-		// TODO Auto-generated method stub
-		//
-		//파일 삭제
 		Map<String, Object> search = new HashMap<String, Object>();
 	    search.put("fileGubun", "BBS");
 	    search.put("fileSeq",boardSeq);
@@ -90,8 +87,6 @@ public class BoardInfoManageServiceImpl extends EgovAbstractServiceImpl implemen
 				uniService.deleteUniStatement("STRE_FILE_NM", "COMTNFILEDETAIL", "STRE_FILE_NM=["+fileInfo.get("stre_file_nm")+"[");
 			}
 		}
-		//코멘트 삭제
-		
 		
 		return boardMapper.deleteBoardManage(boardSeq);
 	}

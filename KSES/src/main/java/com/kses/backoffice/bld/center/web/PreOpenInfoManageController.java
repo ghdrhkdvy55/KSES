@@ -61,12 +61,12 @@ public class PreOpenInfoManageController {
     	try {
     		List<Map<String, Object>> preOpenInfoList = preOpenInfoService.selectPreOpenInfoList(centerCd);
     		
-    		//½Å±Ô Ãß°¡ ¸®½ºÆ® °ª ¾øÀ»¶§ Ã³¸® 
+    		//ì‹ ê·œ ì¶”ê°€ ë¦¬ìŠ¤íŠ¸ ê°’ ì—†ì„ë•Œ ì²˜ë¦¬ 
     		String centerNm =   (preOpenInfoList.size() > 0) ? 
     				             preOpenInfoList.get(0).get("center_nm").toString():
     				             centerInfoService.selectCenterInfoDetail(centerCd).get("center_nm").toString();
     			         
-    		//½Å±Ô Ãß°¡ 
+    		//ì‹ ê·œ ì¶”ê°€
     	    model.addObject(Globals.JSON_RETURN_RESULT, centerNm);
     		model.addObject(Globals .STATUS_REGINFO, preOpenInfoList);
     		

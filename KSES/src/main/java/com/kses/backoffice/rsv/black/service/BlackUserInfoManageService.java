@@ -7,7 +7,7 @@ import com.kses.backoffice.rsv.black.vo.BlackUserInfo;
 
 public interface BlackUserInfoManageService {
 	/**
-	 * SPDM ÃâÀÔÅëÁ¦ÀÎ¿ø ¸ñ·Ï Á¶È¸
+	 * SPDM ì¶œì…í†µì œì¸ì› ëª©ë¡ ì¡°íšŒ
 	 * 
 	 * @param params
 	 * @return
@@ -17,7 +17,7 @@ public interface BlackUserInfoManageService {
 	
 	
 	/**
-	 * SPDM ÃâÀÔÅëÁ¦Á¤º¸ °»½Å
+	 * SPDM ì¶œì…í†µì œì •ë³´ ê°±ì‹ 
 	 * 
 	 * @param vo
 	 * @return
