@@ -121,10 +121,32 @@
                                         </ol>
                                     </p>
                                 </li>
+                                
+								<!--개인정보동의-->
+								<li class="person_check">
+									<p>
+										<span>&lt;개인정보 수집 이용 동의 안내&gt;</span>
+										<ol>
+											<li>코로나 19 확산 방지를 위하여 다음과 같이 개인정보 수집 이용 및 제 3자 제공에 대한 동의를 얻고자 합니다.</li>
+											<li class="prsn_agree"><a data-popup-open="person_agree">자세히 ></a></li>
+											<br>
+											<li class="check_impnt">
+												<input class="magic-checkbox qna_check" type="checkbox" name="layout" id="ENTRY_DVSN_1_person_agree" value="Y">
+											<label for="ENTRY_DVSN_1_person_agree">동의합니다.</label>     
+											</li>
+										</ol>
+									</p>
+								</li>     
                             </ul>
 
                             <!--현금 영수증 발급-->
                             <h4>현금 영수증 발급</h4>
+                            <ul class="bill_confirm">
+                                <li class="check_impnt">
+                                    <input class="magic-checkbox qna_check" type="checkbox" name="layout" id="ENTRY_DVSN_1_bill_confirm" value="Y">
+                                    <label for="ENTRY_DVSN_1_bill_confirm">현금 영수증 발급</label>     
+                                </li>
+                            </ul>
                             <ul id="ENTRY_DVSN_1_cash_area" class="cash_refund">
                                 <li>
                                     <input class="cash_radio" type="radio" checked name="ENTRY_DVSN_1_rcpt_dvsn" id="ENTRY_DVSN_1_rcpt_dvsn1" value="RCPT_DVSN1">
@@ -138,7 +160,7 @@
                             </ul>
                             <ul class="rsv_btn">
                                 <li><a href="javascript:seatService.fn_checkForm();">예약하기</a></li>
-                                <li><a data-popup-open="rsv_cancle">취소</a></li>
+                                <li><a data-popup-open="rsv_cancel">취소</a></li>
                             </ul>
                         </section>
                     </div>
@@ -269,10 +291,31 @@
                                                 </ol>
                                             </p>
                                         </li>
+										<!--개인정보동의-->
+										<li class="person_check">
+											<p>
+												<span>&lt;개인정보 수집 이용 동의 안내&gt;</span>
+												<ol>
+													<li>코로나 19 확산 방지를 위하여 다음과 같이 개인정보 수집 이용 및 제 3자 제공에 대한 동의를 얻고자 합니다.</li>
+													<li class="prsn_agree"><a data-popup-open="person_agree">자세히 ></a></li>
+													<br>
+													<li class="check_impnt">
+														<input class="magic-checkbox qna_check" type="checkbox" name="layout" id="ENTRY_DVSN_2_person_agree" value="Y">
+													<label for="ENTRY_DVSN_2_person_agree">동의합니다.</label>     
+													</li>
+												</ol>
+											</p>
+										</li>                                           
                                     </ul>
 
-                                    <!--현금 영수증 발급-->
-                                    <h4>현금 영수증 발급</h4>
+		                            <!--현금 영수증 발급-->
+		                            <h4>현금 영수증 발급</h4>
+		                            <ul class="bill_confirm">
+		                                <li class="check_impnt">
+		                                    <input class="magic-checkbox qna_check" type="checkbox" name="layout" id="ENTRY_DVSN_2_bill_confirm" value="Y">
+		                                    <label for="ENTRY_DVSN_2_bill_confirm">현금 영수증 발급</label>     
+		                                </li>
+		                            </ul>
                                     <ul id="ENTRY_DVSN_2_cash_area" class="cash_refund">
                                         <li>
                                             <input class="cash_radio" type="radio" checked name="ENTRY_DVSN_2_rcpt_dvsn" id="ENTRY_DVSN_2_rcpt_dvsn1" value="RCPT_DVSN1">
@@ -286,7 +329,7 @@
                                     </ul>
                                     <ul class="rsv_btn">
                                         <li><a href="javascript:seatService.fn_checkForm();">예약하기</a></li>
-                                        <li><a data-popup-open="rsv_cancle">취소</a></li>
+                                        <li><a data-popup-open="rsv_cancel">취소</a></li>
                                     </ul>                                 
                                 </div>
                             </div>
@@ -352,19 +395,100 @@
     <!-- 예약완료 팝업 // -->
 
     <!-- // 예약취소 팝업 -->
-    <div data-popup="rsv_cancle" class="popup">
+    <div data-popup="rsv_cancel" class="popup">
       <div class="pop_con rsv_popup">
           <a class="button b-close">X</a>
           <div class="pop_wrap">
               <h4><img src="/resources/img/front/cancle.svg" alt="예약취소">예약이 취소 되었습니다.</h4>
           </div>
-          <div class="cancle_btn">
+          <div class="cancel_btn">
               <a href="/front/main.do" class="grayBtn">처음으로</a>
           </div>
           <div class="clear"></div>
       </div>
     </div>
     <!-- 예약취소 팝업 // -->
+    
+        <!-- // 개인정보 수집이용 약관 팝업 -->
+    <div id="" data-popup="person_agree" class="popup">
+      <div class="pop_con rsv_popup">
+          <a class="button b-close">X</a>
+          <div class="pop_wrap">
+            <div class="text privacy_text">
+                <p class="font14 mg_l20">개인정보 수집·이용 및  제 3자 제공 동의서</p><br>                
+                <p class="font13 mg_l20">코로나19 확산방지를 위하여 경주사업총괄본부에서는 다음과 같이 개인정보 수집·이용 및 제 3자 제공에 대한 동의를 얻고자 합니다.</p>
+                
+                <div class="tablet_wrap">
+                         
+                    <div class="pd_l10 pd_r10">
+                        <p class="font13 mg_l10">▶ 개인정보수집·이용 동의</p>
+                        <table class="tb3" summary="개인정보수집·이용 동의">
+                            <caption>개인정보수집·이용 동의</caption>
+                            <colgroup>
+                                <col width="34%">
+                                <col width="33%">
+                                <col width="33%">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th scope="col">항목</th>
+                                    <th scope="col">수집목적</th>
+                                    <th scope="col">보유기간</th>
+                                </tr>
+                            </thead>
+                            <tbody>             
+                                <tr>
+                                    <td>성명,전화번호,<br>출입시설,출입시간</td>
+                                    <td>코로나19 확진자<br>발생시 역학조사 및 <br>안내문자 발송</td>
+                                    <td class="text_center" style="color:red; font-size:12px; font-weight:bold;">4주</td>
+                                </tr>                                              
+                            </tbody>
+                        </table><br>
+                        
+                        <p class="font13 mg_l10">▶ 개인정보 제3자 제공 동의</p>
+                        <table class="tb3" summary="개인정보 제3자 제공 동의">
+                            <caption>개인정보 제3자 제공 동의</caption>
+                            <colgroup>
+                                <col width="27%">
+                                <col width="29%">
+                                <col width="26%">
+                                <col width="18%">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th scope="col">제공받는 기관</th>
+                                    <th scope="col">제공목적</th>
+                                    <th scope="col">제공항목</th>
+                                    <th scope="col">보유기간</th>
+                                </tr>
+                            </thead>
+                            <tbody>             
+                                <tr>
+                                    <td class="text_center" style="color:red; font-size:12px; font-weight:bold;">보건복지부,<br>질병관리청,<br>지자체</td>
+                                    <td class="text_center" style="color:red; font-size:11px; font-weight:bold;">코로나19<br>확진자 발생 시<br>역학조사</td>
+                                    <td>성명,전화번호,<br>출입시설,출입시간</td>
+                                    <td class="text_center" style="color:red; font-size:12px; font-weight:bold;">4주</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div><br>
+                    
+                    <p class="font13 mg_l20">※위의 개인정보 수집·이용 및 3자 제공에 대한 동의를 거부할 권리가 있습니다. 그러나 동의를 거부할 경우 출입이 제한될 수 있습니다. </p><br>
+                    <!-- 기금조성총괄본부로 바뀌어서 일단 삭제 
+                    <ui><li style="text-align: center;" class="first_type"><img src="/kcycle/images/new/sub7-1-3-img05.jpg" alt="경륜경정총괄본부"/></li></ui><br/>
+                     -->
+                    
+                </div>                
+            </div>
+
+          </div>
+          <div class="cancel_btn">
+              <a href="" class="grayBtn">닫기</a>
+          </div>
+          <div class="clear"></div>
+      </div>
+    </div>
+    <!-- 개인정보 수집이용 약관 팝업 // -->
 
     <!--층 선택 시 show/hide-->
     <script>
@@ -510,7 +634,7 @@
 									$(".sel_part_nm").html($(this).attr("name") + "구역");
 								})
 							} else {
-								alert("해당층은 현재 선택 가능한 구역이 존재하지 않습니다.")
+								fn_openPopup("해당층은 현재 선택 가능한 구역이 존재하지 않습니다.", "red", "ERROR", "확인", "");
 							}
 				    	}
 					},
@@ -648,7 +772,7 @@
 	 			});
                 	
 
-				setHtml += '    <div class="part_map pinch-zoom"  style="background-repeat: no-repeat; background-position: center center">';
+				setHtml += '    <div class="part_map pinch-zoom" style="background-repeat: no-repeat; background-position: center center">';
 				setHtml += '        <div class="seat">';
 				setHtml += '            <ul id="area_Map">';
 				setHtml += '            </ul>';
@@ -678,15 +802,20 @@
 
 				if(enterDvsn != "ENTRY_DVSN_1") {
 					if($("#seatCd").val() == "") {
-						alert("좌석을 선택해주세요");
+						fn_openPopup("좌석을 선택해주세요", "red", "ERROR", "확인", "");
 						return;
-					} else if(!$("input:checkbox[id='" + enterDvsn + "_qna_check']").is(":checked")) {
-						alert("전자문진표 작성여부에 동의해주세요");
-						return;
-					}
+					} 
+				}
+				
+				if(!$("input:checkbox[id='" + enterDvsn + "_qna_check']").is(":checked")) {
+					fn_openPopup("전자문진표 작성여부에 동의해주세요", "red", "ERROR", "확인", "");
+					return;
+				}
+				if(!$("input:checkbox[id='" + enterDvsn + "_person_agree']").is(":checked")) {
+					fn_openPopup("개인정보 수집 이용여부에 대하여 동의해주세요", "red", "ERROR", "확인", "");
+					return;
 				}
  				
-				
  				var url = "/front/updateUserResvInfo.do";
 				var params = {
 					"mode" : "Ins",
@@ -700,7 +829,9 @@
 					"resvUserNm" : $("#" + enterDvsn + "_resvUserNm").val(),
 					"resvUserClphn" : $("#" +  enterDvsn + "_resvUserClphn").val(),
 					"resvUserAskYn" : $("input:checkbox[id='" + enterDvsn + "_qna_check']").val(),
-					"resvRcptNumber" : $("#" + enterDvsn + "_cash_number").val()
+					"resvRcptNumber" : $("#" + enterDvsn + "_cash_number").val(),
+					"resvRcptNumber" : $("#" + enterDvsn + "_cash_number").val(),
+					"indvdlinfoAgreYn" : $("#" + enterDvsn + "_person_agree").val()
 				}
 					
 				fn_Ajax
@@ -730,27 +861,13 @@
 			},
 			fn_initializing : function(division) {
 				if(division == "ALL") {
-					$("#section_sel").hide();
-					$("#tab-a").hide();
-					
-					$("#floorCd").val("");
-					$("#partCd").val("");
-					$("#seatCd").val("");
-					
-					$(".sel_floor_nm").html("");
-					$(".sel_part_nm").html("");
-					$(".sel_seat_nm").html("");
+					$("#section_sel, #tab-a").hide();
+					$("#floorCd, #partCd, #seatCd").val("");
+					$(".sel_floor_nm, .sel_part_nm, .sel_seat_nm").html("");
 				} else if (division == "FLOOR") {
-					// SHOW & HIDE
-					$("#section_sel").show();
-					$("#tab-a").hide();
-					
-					// VALUE
-					$("#partCd").val("");
-					$("#seatCd").val("");
-					
-					$(".sel_part_nm").html("");
-					$(".sel_seat_nm").html("");
+					$("#section_sel, #tab-a").show();
+					$("#partCd, #seatCd").val("");
+					$(".sel_part_nm, .sel_seat_nm").html("");
 				} else if (division == "PART") {
 					$("#tab-a").show();
 					$("#seatCd").val("");
@@ -771,6 +888,7 @@
 		})
     </script>
  
+ 	<c:import url="/front/inc/popup_common.do" />
 	<script src="/resources/js/front/common.js"></script>
 	<script src="/resources/js/front/front_common.js"></script>
 	</form:form>

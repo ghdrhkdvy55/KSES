@@ -78,8 +78,9 @@
 		
 		var qrService = {
 			createQrCode : function() {
-				var url = "/front/resvQrInfo.do";
-				var params = {"resvSeq" : $("#resvSeq").val()}
+				var url = "/backoffice/rsv/qrSend.do";
+				var params = {"resvSeq" : $("#resvSeq").val(),
+								"tickPlace" : "ONLINE"}
 				
 				fn_Ajax
 				(
@@ -91,18 +92,18 @@
 				    	if (result.status == "SUCCESS") {
 				    		$("#qr_code").empty();
 				    		
-				    		console.log(JSON.stringify(result.resvQrInfo));
+				    		console.log(result.QRCODE);
 				    		
 							var qrcode = new QRCode("qr_code", {
-							    text: JSON.stringify(result.resvQrInfo),
+							    text: result.QRCODE,
 							    width: 256,
 							    height: 256,
 							    colorDark : "#000000",
 							    colorLight : "#ffffff",
-							    correctLevel : QRCode.CorrectLevel.H
+							    correctLevel : QRCode.CorrectLevel.M
 							});
 							
-							$("#qr_code > img").css({"margin":"auto"});
+							$("#qr_code > img").css("margin", "auto");
 							
 							qrTime = 120;
 							setInterval(function () {

@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="/resources/css/front/swiper.min.css">
     <!-- popup-->    
     <script src="/resources/js/front/bpopup.js"></script>
+    <style>body{background:#f4f4f4 ;}</style>
 </head>
 <body>
 	<form:form name="regist" commandName="regist" method="post" action="/front/main.do">
@@ -60,7 +61,7 @@
                             <div id="user_rsv_area">
                                 <ul id="user_info_bottom_area">
 
-                                    <li class="rsv_cancle"><a data-popup-open="rsv_cancle_pop">예약취소</a></li>
+                                    <li class="rsv_cancel"><a data-popup-open="rsv_cancel_pop">예약취소</a></li>
 
                                 </ul>
                             </div>
@@ -149,7 +150,7 @@
     </form:form>  
 
     <!-- // 예약취소 팝업 -->
-    <div data-popup="rsv_cancle_pop" class="popup">
+    <div data-popup="rsv_cancel_pop" class="popup">
       <div class="pop_con rsv_popup">
           <a class="button b-close">X</a>
           <div class="pop_wrap">
@@ -263,7 +264,7 @@
                     </li> 
                </ul>
           </div>
-          <div class="cancle_btn">
+          <div class="cancel_btn">
               <a href="" id="resvCancleBtn" class="grayBtn">예약취소</a>
           </div>
           <div class="clear"></div>
@@ -338,7 +339,7 @@
 			var today = date.format("yyyyMMdd");
 			
 			date.setDate(date.getDate() +1);
-			var tomorrow = date.format("yyyyMMdd")
+			var tomorrow = date.format("yyyyMMdd");
 			
 			var resvDate = (time < test_time) ? today : tomorrow;
 			
@@ -400,7 +401,7 @@
 										// 유저정보하단 HTML생성
 										setHtml = "";
 										setHtml += "<li><span><a href='javascript:mainService.fn_userResvInfo(&#39;NOW&#39;, &#39;" + obj.resv_seq + "&#39;, &#39;rsv_info&#39;);' >" + obj.center_nm + " " + obj.seat_nm + "</a></span></li>";
-										setHtml += "<li class='rsv_cancle'><a href='javascript:mainService.fn_userResvInfo(&#39;CANCEL&#39;, &#39;" + obj.resv_seq + "&#39;, &#39;cancel_rsv_info&#39;);'>예약취소</a></li>";
+										setHtml += "<li class='rsv_cancel'><a href='javascript:mainService.fn_userResvInfo(&#39;CANCEL&#39;, &#39;" + obj.resv_seq + "&#39;, &#39;cancel_rsv_info&#39;);'>예약취소</a></li>";
 										setHtml += "<li><em><img src='/resources/img/front/alert_icon.svg' alt='알림'>15시 까지 미 입장시 입장예약이 취소됩니다.</em></li>";
 										userInfoBottomArea.append(setHtml);
 										
@@ -560,8 +561,7 @@
 					function(result) {
 				    	console.log(result);
 						if (result.status == "SUCCESS") {
-							alert("예약이 정상적으로 취소되었습니다.");
-							location.reload();
+							fn_openPopup("예약이 정상적으로 취소되었습니다.", "blue", "SUCCESS", "확인", "javascript:location.reload();");
 						} else if (result.status == "LOGIN FAIL"){
 							alert(result.message);
 							locataion.href = "/front/main.do";
@@ -577,10 +577,37 @@
 			},
 			fn_moveQrPage : function(resvSeq) {
 				location.href = "/front/qrEnter.do?resvSeq=" + resvSeq;
-			}
+			},
+			// 로그인 시작
+			test : function() {
+				var url = "/front/rsv/resvCenterValidCheck.do";
+				var params = {
+					"centerCd" : "C21110401"
+				}
+				
+				fn_Ajax
+				(
+				    url,
+				    "POST",
+					params,
+					false,
+					function(result) {
+				    	console.log(result);
+						if (result.status == "SUCCESS") {
+							loginService.createUserSession(result.RESULT);
+						} else {
+							fn_openPopup("등록되지 않은 아이디이거나 비밀번호를 잘못 입력하였습니다.", "red", "ERROR", "확인", "");
+						}
+					},
+					function(request) {
+						alert("ERROR : " + request.status);	       						
+					}    		
+				);	
+			},
 		}
     </script>
 
+	<c:import url="/front/inc/popup_common.do" />
     <script src="/resources/js/front/common.js"></script>
 	<script src="/resources/js/front/front_common.js"></script>
 </body>

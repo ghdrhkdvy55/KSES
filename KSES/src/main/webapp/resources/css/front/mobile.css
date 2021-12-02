@@ -2,9 +2,9 @@
 
 /*좌석선택_mask*/
 #mask {
-    z-index: 9000;
+    z-index: 9;
     background-color: #2e2e2e;
-    height: 350px;
+    height: 300px;
     width: 90%;
     opacity: 0.5;
     position: absolute;
@@ -154,11 +154,12 @@
 }
 @media screen and (max-width: 480px) {
   #showHide_seat section .cert_confirm input[type=text] ,
-  #showHide section .cert_confirm input[type=text] {width: 70%;}
-  .detail_srch input {width: 75%}
+  #showHide section .cert_confirm input[type=text] {width: 70%;} 
+  .detail_srch select, .detail_srch input {width: 71%!important;}
   .rsv_btn li a {padding: 2rem 3rem}
   .rsv_btn li:first-child a {padding: 2rem 6rem}  
-  .rsv_cancle { float: left;    margin: 1.5rem 0 0.5rem;} 
+  .rsv_cancel {float: left;margin: 1.5rem 0 0.5rem;} 
+
   
 }
 @media screen and (max-width: 360px) {
@@ -166,9 +167,22 @@
   #menu_ul >li {width: 150px;}
   #showHide_seat section .cert_confirm input[type=text] ,
   #showHide section .cert_confirm input[type=text] {width: 60%;}
-  .main_user_rsv li:last-child {position: relative; top: -1.5rem;}
+  .rsv_btn li:first-child {
+    width: 63%;
+    background: #47D6BE;
+}
+  .rsv_btn li:first-child a {padding: 2rem 4rem;}
+  .rsv_btn li a {padding: 2rem;}
+  .rsv_popup {padding: 40px 20px 75px;}
+  .cancel_btn {top: 2rem !important;}
+  .srchBtn {padding: 4px 15px !important;}
+  .login_num_info li {width: 13rem!important;}
+  .detail_srch li {width: 24%;}
+  .main_user .main_user_info, .main_user .main_user_reser {margin-top: -10px!important;}
+  .non_member li:first-child a {padding: 10px 0}
+  .detail_srch li span {padding-left: 0;} 
   .popup {width: 92%;}
-  .main_user_pad {padding: 2.1rem 1.6rem 1rem 2.4rem;}
+  .main_user_pad {padding: 2.1rem 1.6rem 1.8rem 2.4rem;}
   .main_user_rsv li em {margin-top: 0; }
   .mo_user_info_txt ul li:first-child .thvac {margin-left: 0;}
   .price table td span {display: inline-block; margin-top: 5px; float: none;}
@@ -176,15 +190,13 @@
   .pay_btn li {margin: 1rem 0; }
   .grayBtn a {padding: 1.5rem 10rem;}
   .mintBtn a {padding: 1.5rem 10rem;}
-  .rsv_btn li a {padding: 2rem 3rem}
-  .rsv_btn li:first-child a {padding: 2rem 5rem}
   .pop_wrap h4 {font-size: 1.1em;}
   .rsv_list {width: 100%}
-  .summit_btn a, .cancle_btn a {padding: 2rem 4rem}
+  .summit_btn a, .cancel_btn a {padding: 2rem 4rem}
   .slogan {font-size: 1.5em;}
   .main_user_rsv li span a {font-size: 2.6rem;}
   .main_user_rsv li{ font-size: 1.2em; }
-  .rsv_cancle { float: left; margin: 1.5rem 0 0.5rem;}
+  .rsv_cancel { float: left; margin: 1.5rem 0 0.5rem;}
   .sub_con_view .food_img_box img { width: auto; max-height: 100%; height: 100%}
 }
 .sub_food_img .scant{
@@ -452,11 +464,11 @@
 .popcal {
   position: relative;
   z-index: 1012;
-  width: 300px !important;
+  width: 280px !important;
   box-sizing: border-box;
   margin: auto;
   border-radius: 6px !important;
-  padding: 4.5rem 2rem 2rem 2rem;
+  padding: 3rem 2rem 2rem 2rem;
 }
 #ui-datepicker-div {
     z-index: 10111 !important;

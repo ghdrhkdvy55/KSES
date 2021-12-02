@@ -38,7 +38,7 @@
    	<select id="selectAttendInfoDetail" resultType="lmap">
 		SELECT A.QR_CHECK_SEQ, A.RESV_SEQ, B.USER_ID, A.QR_CHECK_TM,
                A.INOUT_DVSN, A.RCV_DT, A.RCV_CD,
-               C.RESV_USER_NM
+               C.USER_NM
         FROM  TSER_QR_CHECK_H A, TSER_RESV_INFO_I B, TEST_USER_INFO C
 		WHERE A.RESV_SEQ = B.RESV_SEQ
 		AND A.USER_ID = C.USER_ID

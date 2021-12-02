@@ -60,7 +60,7 @@
                 </div>
 
                 <div class="selBtn branch_btn">
-                    <a href="javascript:centerService.fn_checkForm();">지점 선택</a>
+                    <a href="javascript:centerService.fn_centerResvVaildCheck();">지점 선택</a>
                 </div>
             </div>
 
@@ -83,11 +83,6 @@
     <!--메뉴버튼 속성-->
     <script>
 		$(document).ready(function() {			
-			if(sessionStorage.getItem("resvDate") == null) {
-				alert("예약일자 정보가 존재하지 않습니다.\n처음부터 예약을 진행해주세요");
-				location.href = "/front/main.do";
-			}
-			
 			var date = new Date();
 			var today = date.format("yyyy-MM-dd");
 			$(".date").html(today);
@@ -134,11 +129,6 @@
 				);	    						
 			},
 			fn_checkForm : function() {
-				if($("#centerCd").val() == "") {
-					alert("지점을 선택해주세요");
-					return;
-				}
-				
 				var centerCd = $("#centerCd").val();
 				
 				// 현재 시간 기준 해당 지점이 예약가능한 지점인가에 대한 Ajax 통신 처리 필요
@@ -157,12 +147,51 @@
 					$("#centerCd").val($(this).attr("id"));
 				})
 			},
-			fn_centerResvVaildCheck : function(centerCd) {
+			// 로그인 시작
+			fn_centerResvVaildCheck : function() {
+				if($("#centerCd").val() == "") {
+					fn_openPopup("지점을 선택해주세요.", "red", "ERROR", "확인", "");
+					return;
+				}
 				
+				var centerCd = $("#centerCd").val();
+				var url = "/front/resvCenterValidCheck.do";
+				var params = {
+					"centerCd" : centerCd
+				}
+				
+				fn_Ajax
+				(
+				    url,
+				    "POST",
+					params,
+					false,
+					function(result) {
+						if (result.status == "SUCCESS") {
+							if(result.checkResult.result == "HOLYDAY") {
+								fn_openPopup("해당 지점은 현재 예약하려는 일자에 휴일입니다.", "red", "ERROR", "확인", "");
+								return;
+							} else if(result.checkResult.result == "HOLYDAY") {
+								fn_openPopup("해당 지점은 현재 예약 가능시간이 아닙니다.", "red", "ERROR", "확인", "");
+								return;
+							} else if(result.checkResult.result == "ERROR") {
+								fn_openPopup("시스템 에러가 발생하였습니다..", "red", "ERROR", "확인", "");
+							} else {
+								centerService.fn_checkForm();
+							}
+						} else if (result.status == "LOGIN FAIL"){
+							fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "location.href='/front/login.do'");
+						}
+					},
+					function(request) {
+						alert("ERROR : " + request.status);	       						
+					}    		
+				);	
 			}
 		}
     </script>
     
+	<c:import url="/front/inc/popup_common.do" />
 	<script src="/resources/js/front/common.js"></script>
 	<script src="/resources/js/front/front_common.js"></script>
 	</form:form>

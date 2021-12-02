@@ -37,19 +37,13 @@ $("#preview").remove();
 
 /* menu */
 function toggleNav() {
-<<<<<<< HEAD
+
 if (document.getElementById("mySidenav").style.display == "none") {
 openNav();
 } else {
 closeNav();
 }
-=======
-    if (document.getElementById("mySidenav").style.width == "200px") {
-        closeNav(); 
-    } else { 
-        openNav(); 
-    }
->>>>>>> origin/sohoki2
+
 }
 function openNav() {
 document.getElementById("mySidenav").style.display = "block";

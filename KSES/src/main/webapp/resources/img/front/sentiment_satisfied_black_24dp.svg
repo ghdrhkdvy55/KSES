@@ -1,0 +1,6 @@
+<svg id="sentiment_satisfied_black_24dp" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <path id="패스_6" data-name="패스 6" d="M0,0H24V24H0Z" fill="none"/>
+  <circle id="타원_1" data-name="타원 1" cx="1.5" cy="1.5" r="1.5" transform="translate(14 8)" fill="#333"/>
+  <circle id="타원_2" data-name="타원 2" cx="1.5" cy="1.5" r="1.5" transform="translate(7 8)" fill="#333"/>
+  <path id="패스_7" data-name="패스 7" d="M12,16a4,4,0,0,1-3.45-2H6.88a5.495,5.495,0,0,0,10.24,0H15.45A4,4,0,0,1,12,16ZM11.99,2A10,10,0,1,0,22,12,10,10,0,0,0,11.99,2ZM12,20a8,8,0,1,1,8-8A8,8,0,0,1,12,20Z" fill="#333"/>
+</svg>
