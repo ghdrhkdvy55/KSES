@@ -12,8 +12,9 @@ public class InterfaceInfo {
 	private String trsmrcvSeCode = "";
 	private String integId = "";
 	private String provdInsttId = "";
-	private String provdYysId = "";
+	private String provdSysId = "";
 	private String provdSvcId = "";
+	
 	private String requstInsttId = "";
 	private String requstSysId = "";
 	private String requstTrnsmitTm = "";

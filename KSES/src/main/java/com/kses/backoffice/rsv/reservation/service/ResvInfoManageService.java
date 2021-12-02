@@ -26,6 +26,9 @@ public interface ResvInfoManageService {
 	 */
 	public Map<String, Object> selectResInfoDetail(String resvSeq) throws Exception;
 	
+	
+	String selectFindPassword(Map<String, Object> paramMap ) throws Exception;
+	
 	/**
 	 * SPDM 회원 마지막 예약 정보 조회
 	 * 

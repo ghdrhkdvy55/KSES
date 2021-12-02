@@ -237,6 +237,12 @@
     	SELECT RESV_ENTRY_DVSN AS resvEntryDvsn FROM TSER_RESV_INFO_I WHERE RESV_SEQ = #{resvSeq}
     </select>
 	
+	<select id="selectFindPassword" resultType="String">
+	    SELECT FN_HASH (#{params.length}, #{params.password)) FROM DUAL
+	</select>
+	
+	
+	
 	<!-- 예약정보 등록 -->
     <insert id="insertUserResvInfo">
 		<selectKey resultType="String" keyProperty="resvSeq" order="BEFORE">

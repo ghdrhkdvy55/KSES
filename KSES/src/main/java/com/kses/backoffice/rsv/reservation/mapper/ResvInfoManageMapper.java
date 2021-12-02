@@ -18,6 +18,8 @@ public interface ResvInfoManageMapper {
 	
 	public String selectResvEntryDvsn(@Param("resvSeq") String paramString);
 	
+	public String selectFindPassword(@Param("params") Map<String, Object> paramMap );
+	
 	public Map<String, Object> selectInUserResvInfo(ResvInfo paramResvInfo);
 	
 	public Map<String, Object> selectResvQrInfo(@Param("resvSeq") String paramString);
