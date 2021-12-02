@@ -1113,7 +1113,7 @@
 		}, fn_save : function (){
 			$("#id_ConfirmInfo").attr("href", "javascript:floorService.fn_floorUpdate()");
        		fn_ConfirmPop('저장 하시겠습니까?');
-		},/*  fn_floorUpdate : function (){
+		},  fn_floorUpdate : function (){
 			$("#confirmPage").bPopup().close();
 			var PartInfoArray = new Array();
             $("input:hidden[name=part_cd]").each(function() {
@@ -1151,7 +1151,7 @@
  	            	common_popup("ERROR : " + request.status, "N", "");
  	            }
  	        ); 	
-		} */
+		} 
 	}
 	function fn_GuiMode(){
 		if ($("#hid_guiMode").val() == "part"){

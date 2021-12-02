@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kses.backoffice.bas.code.service.EgovCcmCmmnDetailCodeManageService;
@@ -79,9 +78,9 @@ public class BlackUserInfoManageController {
 	}
     
 	@RequestMapping(value="blackListAjax.do")
-	public ModelAndView selectCenterAjaxInfo(	HttpServletRequest request, 
-												@ModelAttribute("loginVO") LoginVO loginVO, 
-												@RequestBody Map<String,Object> searchVO,
+	public ModelAndView selectCenterAjaxInfo(	@ModelAttribute("loginVO") LoginVO loginVO, 
+												@RequestBody Map<String,Object> searchVO, 
+												HttpServletRequest request, 
 												BindingResult bindingResult	) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
@@ -126,31 +125,35 @@ public class BlackUserInfoManageController {
 	}
 	
 	@RequestMapping (value="updateBlackUserInfo.do")
-	public ModelAndView updateCenterInfo(	HttpServletRequest request,
-											@ModelAttribute("LoginVO") LoginVO loginVO, 
-											@RequestBody BlackUserInfo vo, 
+	public ModelAndView updateCenterInfo(	@ModelAttribute("LoginVO") LoginVO loginVO, 
+											@RequestBody BlackUserInfo vo,
+											HttpServletRequest request,
 											BindingResult result) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+		String meesage = "";
 		
-		if(!isAuthenticated) {
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-			model.setViewName("/backoffice/login");
-		} 
 		try {
-			
-			model.addObject(Globals.STATUS_REGINFO , vo);
-			String meesage = "";
-			
+			if(!isAuthenticated) {
+				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
+				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
+				return model;
+			} else {
+				loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
+				vo.setAdminId(loginVO.getAdminId());
+			}
+	
 			meesage = vo.getMode().equals("Ins") ? "sucess.common.insert" : "sucess.common.update";
 
-			loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
-			vo.setAdminId(loginVO.getAdminId());
-			blackUserService.updateBlackUserInfoManage(vo);
+			int ret = blackUserService.updateBlackUserInfoManage(vo);
 			
-			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));		
+			if(ret > 0) {
+				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
+			} else {
+				throw new Exception();
+			}
 		} catch (Exception e){
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.insert"));	

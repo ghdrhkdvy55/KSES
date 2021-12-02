@@ -9,7 +9,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" >
     <link href="/resources/css/front/reset.css" rel="stylesheet" />
     <script src="/resources/js/front/jquery-3.5.1.min.js"></script>
     <link href="/resources/css/front/mobile.css" rel="stylesheet" />
@@ -176,7 +176,7 @@
 				if(valid){
 					loginService.actionLogin();	
 				}
-			},
+			}, 
 			// 로그인 시작
 			actionLogin : function() {
 				var url = "/front/actionLogin.do";
@@ -197,16 +197,16 @@
 					false,
 					function(result) {
 				    	console.log(result);
-						if (result.Error_Cd == "SUCCESS") {
-							loginService.createUserSession(result);
+						if (result.RESULT.Error_Cd == "SUCCESS") {
+							loginService.createUserSession(result.RESULT);
 						} else {
-							alert("등록되지 않은 아이디이거나 비밀번호를 잘못 입력하였습니다.");
+							fn_openPopup("등록되지 않은 아이디이거나 비밀번호를 잘못 입력하였습니다.", "red", "ERROR", "확인", "");
 						}
 					},
 					function(request) {
-						alert("ERROR : " + request.status);
-					}
-				);
+						alert("ERROR : " + request.status);	       						
+					}    		
+				);	
 			},
 			// 로그인 유저 세션 생성
 			createUserSession : function(userInfo) {
@@ -233,8 +233,7 @@
 				    params,
 					false,
 					function(result) {
-				    	console.log(result);
-				    	if (result == "SUCCESS") {
+				    	if (result.status == "SUCCESS") {
 				    		if($("#login_type").val() == "1" && $("input:checkbox[id='saveId']").is(":checked")) {
 				    			localStorage.setItem("saveId", $("#id").val());	
 				    		} else {
@@ -254,6 +253,7 @@
 		}	
 	</script>
 	<!--loading -->
+	<c:import url="/front/inc/popup_common.do" />
 	<script src="/resources/js/front/jquery-spinner.min.js"></script>
 	<script src="/resources/js/front/common.js"></script>
 	<script src="/resources/js/front/front_common.js"></script>

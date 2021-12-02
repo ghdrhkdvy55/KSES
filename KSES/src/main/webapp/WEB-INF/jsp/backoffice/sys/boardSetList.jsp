@@ -82,13 +82,9 @@
 	      			                  formatter:jqGridFunc.comment},
 			      			        { label: '사용유무', name:'use_yn', index:'use_yn', align:'center', 
 	      			                  formatter:jqGridFunc.useYn},
-<<<<<<< HEAD
-	      			                { label: '페이지사이즈',  name:'board_size', index:'board_size', align:'left'},
-	      			                { label: '최종수정일자',  name:'last_updt_dtm', index:'last_updt_dtm', align:'left'
-=======
-	      			                { label: '페이지사이즈',  name:'board_size',         index:'board_size',        align:'left',   width:'10%'},
-	      			                { label: '최종수정일자',  name:'last_updt_dtm',         index:'last_updt_dtm',        align:'left',   width:'10%'
->>>>>>> origin/sohoki2
+	      			                { label: '페이지사이즈',  name:'board_size',         index:'board_size',        align:'left'},
+	      			                { label: '최종수정일자',  name:'last_updt_dtm',         index:'last_updt_dtm',        align:'left'
+
 	      			                	, sortable: 'date' ,formatter: "date", formatoptions: { newformat: "Y-m-d"}},
 	      			                { label: '수정자', name: 'last_updusr_id',  index:'last_updusr_id', align:'center', fixed:true}
     			                ],  //상단면 

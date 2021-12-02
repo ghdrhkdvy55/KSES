@@ -14,7 +14,10 @@
     <script src="/resources/js/front/jquery-3.5.1.min.js"></script>
     <link href="/resources/css/front/mobile.css" rel="stylesheet" />
     <link href="/resources/css/front/common.css" rel="stylesheet" />
-
+	
+	<link href="/resources/css/front/jquery-ui.css" rel="stylesheet" />
+	<link href="/resources/css/front/smart.css" rel="stylesheet" />
+	<script src="/resources/js/front/jquery-ui.js"></script>
     <!--check box _ css-->
     <link href="/resources/css/front/magic-check.min.css" rel="stylesheet" />
     
@@ -32,8 +35,6 @@
 	<input type="hidden" id="userDvsn" name="userDvsn" value="${sessionScope.userLoginInfo.userDvsn}">
 	<input type="hidden" id="userId" name="userId" value="${sessionScope.userLoginInfo.userId}">
 	<input type="hidden" id="userNm" name="userNm" value="${sessionScope.userLoginInfo.userNm}">
-	
-	<input type="hidden" id="searchDay" name="searchDay" value="7">
 	
     <div class="wrapper">
         <!--// header -->
@@ -53,17 +54,49 @@
                 <!-- 공지사항 데이터 -->
                 <div>
                     <div id="date_search" class="date_srch"> 
-                        <table> 
+                    	<h4>조회기간 선택</h4>
+<!--                         <table> 
                             <tbody> 
                             	<tr>
-	                                <td><a href="javascript:userResvService.fn_userResvInfo('7');">1주일</a></td>
-	                                <td><a href="javascript:userResvService.fn_userResvInfo('30');">1개월</a></td>
-	                                <td><a href="javascript:userResvService.fn_userResvInfo('90');">3개월</a></td>
-	                                <td><a href="javascript:void(0);">상세조회</a></td>
+	                                <td><a href="javascript:userResvService.fn_userResvInfo('7');" id="7">1주일</a></td>
+	                                <td><a href="javascript:userResvService.fn_userResvInfo('30');" id="30">1개월</a></td>
+	                                <td><a href="javascript:userResvService.fn_userResvInfo('90');" id="90">3개월</a></td>
+	                                <td><a href="javascript:userResvService.fn_userResvInfo('180');" id="180">6개월</a></td>
                                 </tr>
                             </tbody>                            
-                        </table>
+                        </table> -->
+						<div class="detail_srch">
+                            <ul>
+                                <li>
+                                    <select id="searchDayCondition" class="select_box_srch">
+                                        <option value="RESV_REQ_DATE">예약일</option>
+                                        <option value="RESV_START_DT">경주일</option>
+                                    </select>
+                                </li>
+                                
+                                <li><input type="text" id="searchDayFrom" class="cal_icon" name="date_from" autocomplete=off><span>~</span></li> 
+                                <li><input type="text" id="searchDayTo" class="cal_icon" name="date_to" autocomplete=off></li>
+                                
+                                <li><a href="javascript:userResvService.fn_userResvInfo(true);" class="srchBtn">검색</a></li>
+                            </ul>
+                        </div> 
                     </div>         
+					<div class="srch_opt">
+                        <ul>
+                            <li>
+                                <input class="cash_radio" type="radio" checked name="searchStateCondition" id="ALL" value="ALL" onclick="userResvService.fn_userResvInfo();">
+                                <label for="ALL"><span></span>전체</label>
+                            </li>
+                            <li>
+                                <input class="cash_radio" type="radio" name="searchStateCondition" id="RESV" value="RESV" onclick="userResvService.fn_userResvInfo();">
+                                <label for="RESV"><span></span>예약</label>
+                            </li>
+                            <li>
+                                <input class="cash_radio" type="radio" name="searchStateCondition" id="CANCEL" value="CANCEL" onclick="userResvService.fn_userResvInfo();">
+                                <label for="CANCEL"><span></span>취소</label>
+                            </li>
+                        </ul>    
+                    </div>   
                     <div id="my_rsv_stat" class="my_rsv_stat">
                         <ul class="my_rsv">
                             <li>
@@ -101,7 +134,7 @@
                 <div id="my_rsv_stat_list">
                     <div class="notice_con list_con">
                         <p class="notice_date">2021.12.01 12:00</p>
-                        <p class="notice_stat"><span class="cancle">취소됨</span></p>
+                        <p class="notice_stat"><span class="cancel">취소됨</span></p>
                         <p class="notice_tit">대전지점 A-3F-001</p>
                     </div>
                 </div>                
@@ -128,20 +161,52 @@
 
     <!--메뉴버튼 속성-->
     <script>
- 		$(document).ready(function() {
- 			userResvService.fn_userResvInfo('7');
+ 		$(document).ready(function() { 
+	 		var clareCalendar = {
+	 			monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+	 			dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
+	 			weekHeader: 'Wk',
+	 			dateFormat: 'yymmdd', //형식(20120303)
+	 			autoSize: false, //오토리사이즈(body등 상위태그의 설정에 따른다)
+	 			changeMonth: true, //월변경가능
+	 			changeYear: true, //년변경가능
+	 			showMonthAfterYear: true, //년 뒤에 월 표시
+	 			buttonImageOnly: true, //이미지표시
+	 			buttonText: '달력선택', //버튼 텍스트 표시
+	 			buttonImage: '/images/invisible_image.png', //이미지주소
+	 			yearRange: '1970:2030', //1990년부터 2020년까지
+	 			currentText: "Today"
+	 		};	       
+
+	 		$("#searchDayFrom, #searchDayTo").datepicker(clareCalendar);
+	 		var today = new Date();
+	 		$("#searchDayFrom").val(today.format("yyyyMMdd"));
+	 		
+	 		
+	 		var day7 = new Date(today.getTime() + 604800000);
+	 		$("#searchDayTo").val(day7.format("yyyyMMdd"));	 		
+ 			
+ 			userResvService.fn_userResvInfo();
 		});
 
 		var userResvService = {
-			fn_userResvInfo : function(searchDay) {
-				$("searchDay").val(searchDay);
+			fn_userResvInfo : function(isSearch) {
+				if(isSearch){
+					$("input[name='searchStateCondition']:checked").val()
+				}
+				
+				/* alert($("input[name='searchStateCondition']:checked").val()); */
 				
 				var url = "/front/userMyResvInfo.do";
 				var params = {
 					"userId" : $("#userId").val(),
-					"searchDay" : searchDay
+					"searchDayCondition" : $("#searchDayCondition").val(),
+					"searchDayFrom" : $("#searchDayFrom").val(),
+					"searchDayTo" : $("#searchDayTo").val(),
+					"searchStateCondition" : $("input[name='searchStateCondition']:checked").val()
 				}
 
+				
 				fn_Ajax
 				(
 				    url,
@@ -149,8 +214,6 @@
 					params,
 					false,
 					function(result) {
-				    	console.log(result);
-				    	
 						if(result.status == "SUCCESS") {
 							if(result.userResvInfo != null) {
 								var userResvInfo = result.userResvInfo;
@@ -220,9 +283,9 @@
 				switch(resvState) {
 					case "RESV_STATE_2" : className = "done"; 
 						break;
-					case "RESV_STATE_3" : className = "cancle"; 
+					case "RESV_STATE_3" : className = "done"; 
 						break;
-					case "RESV_STATE_4" : className = "noshow"; 
+					case "RESV_STATE_4" : className = "cancel"; 
 						break;
 					default : className = "done" 
 						break;
@@ -248,7 +311,7 @@
 					    	console.log(result);
 							if (result.status == "SUCCESS") {
 								alert("예약이 정상적으로 취소되었습니다.");
-								userResvService.fn_userResvInfo($("#searchDay").val());
+								userResvService.fn_userResvInfo();
 							} else if (result.status == "LOGIN FAIL"){
 								alert(result.message);
 								locataion.href = "/front/main.do";

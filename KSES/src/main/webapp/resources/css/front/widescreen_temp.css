@@ -28,6 +28,15 @@
     background-size: 100% !important;
 }
 
+#mask {
+    z-index: 9;
+    background-color: #2e2e2e;
+    height: 515px;
+    width: 97%;
+    opacity: 0.5;
+    position: absolute;
+    left: 1.5%;
+}
 .gui_seat {height: 400px;}
 
 .part_map {

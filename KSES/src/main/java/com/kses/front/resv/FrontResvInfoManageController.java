@@ -236,6 +236,8 @@ public class FrontResvInfoManageController {
 				}
 
 				user.setMode("Ins");
+				
+				//회원 정보
 				userService.updateUserInfo(user);
 				
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
@@ -323,6 +325,41 @@ public class FrontResvInfoManageController {
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		} catch(Exception e) {
 			LOGGER.error("selectRsvPartListAjax : " + e.toString());
+			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg")); 
+		}
+		return model;
+	}
+	
+	@RequestMapping (value="resvCenterValidCheck.do")
+	public ModelAndView resvCenterValidCheck(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo, 
+												@RequestBody Map<String, Object> params,
+												HttpServletRequest request,
+												BindingResult result) throws Exception {
+		
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+		try {
+			HttpSession httpSession = request.getSession(true);
+			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
+			
+			if("USER_DVSN_1".equals(params.get("resvDvsn")) && userLoginInfo == null) {
+				userLoginInfo = new UserLoginInfo();
+				userLoginInfo.setUserDvsn("USER_DVSN_2");
+				httpSession.setAttribute("userLoginInfo", userLoginInfo);
+				
+				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
+				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
+				return model;
+			}
+			
+			params.put("result", "");
+			params.put("resvDate", "");
+			resvService.resvCenterValidCheck(params);
+			
+			model.addObject("checkResult", params);
+			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+		} catch(Exception e) {
+			LOGGER.error("resvCenterValidCheck : " + e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg")); 
 		}

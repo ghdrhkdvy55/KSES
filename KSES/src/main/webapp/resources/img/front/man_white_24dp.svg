@@ -1,0 +1,11 @@
+<svg id="man_black_24dp" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <g id="그룹_9" data-name="그룹 9">
+    <rect id="사각형_2" data-name="사각형 2" width="24" height="24" fill="none"/>
+  </g>
+  <g id="그룹_11" data-name="그룹 11">
+    <g id="그룹_10" data-name="그룹 10">
+      <path id="패스_10" data-name="패스 10" d="M14,7H10A2.006,2.006,0,0,0,8,9v6h2v7h4V15h2V9A2.006,2.006,0,0,0,14,7Z" fill="#fff"/>
+      <circle id="타원_3" data-name="타원 3" cx="2" cy="2" r="2" transform="translate(10 2)" fill="#fff"/>
+    </g>
+  </g>
+</svg>
