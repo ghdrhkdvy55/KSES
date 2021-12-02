@@ -54,7 +54,7 @@ public class SysLogController {
                                          , HttpServletRequest request
 									     , BindingResult bindingResult)throws Exception {
 		
-		      ModelAndView mav = new ModelAndView("/backoffice/sys/SyslogList");
+		      ModelAndView mav = new ModelAndView("/backoffice/sys/syslog");
 		      try{
 		    	  
 		    	  Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();

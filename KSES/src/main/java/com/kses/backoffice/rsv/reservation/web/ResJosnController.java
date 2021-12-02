@@ -36,6 +36,7 @@ import egovframework.com.cmm.service.Globals;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 import egovframework.rte.fdl.property.EgovPropertyService;
 
+
 @RestController
 @RequestMapping("/backoffice/rsv")
 public class ResJosnController{
@@ -72,9 +73,30 @@ public class ResJosnController{
 			 JsonNode node = null;
 			 //_requstId
 			 //
+			 
+			 String json = "{\"Login_Type\" : \"2\"," + 
+			 		"        \"User_id\" : \"tester11\"," + 
+			 		"        \"User_Pw\" : \"qweqwe12!\"," + 
+			 		"        \"Card_No\": \"2021112135420427\"," + 
+			 		"        \"Card_Pw\" : \"4LxgyCcT9k74pXwMQNAs4k/QFB1cwwhiWcGbHmKmK+o=\"," + 
+			 		"        \"System_Type\" : \"E\"" + 
+			 		"    }";
+			 
+			 JSONObject jsonObject = new JSONObject();
+			 for( Map.Entry<String, Object> entry : ((Map<String, Object>) sendInfo.get("sendInfo")).entrySet() ) {
+				 String key = entry.getKey();
+		         Object value = entry.getValue();
+		         jsonObject.put(key, value);
+			 }
+			 
 			 if ( SmartUtil.NVL(sendInfo.get("gubun"), "").toString().equals("login") ) {
 				 Url =  propertiesService.getString("sppeedUrl_T") + "user/userChk";
-				 node = SmartUtil.requestHttpJson(Url, SmartUtil.NVL(sendInfo.get("sendInfo"), "").toString(), "SPEEDLOGIN", "SPEEDON", "KSES" );
+				 
+				 System.out.println(SmartUtil.NVL(sendInfo.get("sendInfo"), "").toString());
+				
+				 
+				 
+				 node = SmartUtil.requestHttpJson(Url,jsonObject.toJSONString(), "SPEEDLOGIN", "SPEEDON", "KSES" );
 				 
 				 
 				 if (node.get("Error_Cd").equals("SUCCESS")  ) {
@@ -95,7 +117,7 @@ public class ResJosnController{
 			 }else if ( SmartUtil.NVL(sendInfo.get("gubun"), "").toString().equals("fep") ) {
 				 //출급 정보
 				 Url =  propertiesService.getString("sppeedUrl_T") +"trade/fepWithdraw";
-				 node = SmartUtil.requestHttpJson(Url, SmartUtil.NVL(sendInfo.get("sendInfo"), "").toString(), "SPEEDWITHDRAW", "SPEEDON", "KSES");
+				 node = SmartUtil.requestHttpJson(Url, jsonObject.toJSONString(), "SPEEDWITHDRAW", "SPEEDON", "KSES");
 				 if (node.get("Error_Cd").equals("SUCCESS")  ) {
 					 //예약 테이블 출금 정보 처리 하기 
 				 }
@@ -103,7 +125,7 @@ public class ResJosnController{
 			 }else {
 				//취소 정보
 				Url =  propertiesService.getString("sppeedUrl_T") +"trade/fepDeposit";
-				node = SmartUtil.requestHttpJson(Url, SmartUtil.NVL(sendInfo.get("sendInfo"), "").toString(), "SPEEDFEPDEPOSIT", "SPEEDON", "KSES");
+				node = SmartUtil.requestHttpJson(Url, jsonObject.toJSONString(), "SPEEDFEPDEPOSIT", "SPEEDON", "KSES");
 				if (node.get("Error_Cd").equals("SUCCESS")  ) {
 					 //예약 테이블 취소 정보 처리 하기 
 				}
@@ -135,6 +157,12 @@ public class ResJosnController{
         	LOGGER.debug("qrInfo:" + qrInfo);
         	
         	String result = "";
+        	
+        	String ERROR_CD = "";
+        	String ERROR_MSG = "";
+        	String IOGUBUN = "";
+        	String USER_NM = "";
+        	
         	if (qrInfo.contains(":")) {
         		String [] attempInfos = qrInfo.split(":");
         		String resSeq = attempInfos[0];
@@ -147,7 +175,8 @@ public class ResJosnController{
         		
         		//시간 비교 
         		if (  Integer.valueOf( SmartUtil.timeCheck(qrTime)) < -30  &&  gubun.equals("INTERVAL") ) {
-        			result = "{\"ERROR_CD\": \"ERROR_01\", \"ERROR_MSG\" : \"30초 시간이 경과된 QR입니다.\"}";
+        			ERROR_CD = "ERROR_01";
+        			ERROR_MSG = "30초 시간이 경과된 QR입니다.";
         			
         		}
         		
@@ -165,23 +194,34 @@ public class ResJosnController{
         		
         		sendInfo = attendService.insertAttendInfo(sendInfo);
         		if (sendInfo.getRcvCd().equals("OK")) {
-        			result = "{\"ERROR_CD\": \"OK\", \"ERROR_MSG\" : \",\"IOGUBUN\":\""+inOt +"\",\"USER_NM\":\""+  sendInfo.getUserNm() +"\"}";
+        			ERROR_CD = "OK";
+        			ERROR_MSG = "";
+        			IOGUBUN = inOt;
+        			USER_NM = sendInfo.getUserNm();
+        			
         		}else {
         			String errorMessage =  sendInfo.getRcvCd().equals("ERROR_02") ? "입/출입 잘못 시도" : "시스템 에러";
-        			result = "{\"ERROR_CD\": \""+ sendInfo.getRcvCd()+"\", \"ERROR_MSG\" : \""+errorMessage+"\"}";
+        			ERROR_CD = sendInfo.getRcvCd();
+        			ERROR_MSG = errorMessage;
         		}
         	}else {
-        		result = "{\"ERROR_CD\": \"ERROR_04\", \"ERROR_MSG\" : \"잘못된 파라미터 입니다.\"}";
+        		ERROR_CD = "ERROR_04";
+    			ERROR_MSG = "잘못된 파라미터 입니다.";
+    			
         	}
+        	model.addObject("ERROR_CD", ERROR_CD);
+        	model.addObject("ERROR_MSG", ERROR_MSG);
+        	model.addObject("IOGUBUN", IOGUBUN);
+        	model.addObject("USER_NM", USER_NM);
         	
         	
-        	model.addObject(result);
         }catch(Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
-			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
+			LOGGER.error("selectQrCheckInfo error:" + e.toString() + ":" + lineNumber);
+			model.addObject("ERROR_CD", "ERROR_03");
+        	model.addObject("ERROR_MSG", "시스템 에러");
+        	
 		}
         return model;
 	}
@@ -195,9 +235,6 @@ public class ResJosnController{
 			searchVO.put("resvSeq", resvSeq);
 			searchVO.put("resvDate", nowDate);
 			
-			
-			LOGGER.debug("resSeq:" + resvSeq);
-			LOGGER.debug("resvDate:" + searchVO.get("resvDate"));
 			
 			Map<String, Object> resInfo = resService.selectUserResvInfo(searchVO);
 			

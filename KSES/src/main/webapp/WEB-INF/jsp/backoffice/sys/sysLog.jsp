@@ -92,18 +92,17 @@
 	   		             repeatitems:false
    		            },
     		        colModel :  [
-	    		 	                { label: '인터페이스 아이디', key: true,  name:'requst_id',    index:'requst_id', align:'left', hidden:true},
-	    		 	                { label: '일자',  name:'occrrnc_de', index:'occrrnc_de', align:'left',   width:'10%'},
-	    		 	                { label: '송수신구분',  name:'trsmrcv_se_code',  index:'trsmrcv_se_code',  align:'left',   width:'10%'},
-	    		 	                { label: '연계ID', name:'integ_id', index:'integ_id', align:'center', width:'12%' },
-	      			                { label: '제공기관', name:'provd_instt_id', index:'provd_instt_id', align:'center', width:'12%' },
-		      			            { label: '요청기간', name:'requst_instt_id', index:'requst_instt_id', align:'center', width:'12%'},
-		      			            { label: '송신시간', name:'requst_trnsmit_tm', index:'requst_trnsmit_tm', align:'center', width:'12%'},
-		      			            { label: '수신시간', name:'rspns_recptn_tm', index:'rspns_recptn_tm', align:'center', width:'12%'},
-		      			            { label: '결과코드', name:'result_code', index:'result_code', align:'center', width:'12%'},
-		      			            { label: '발생일자', name: 'frst_regist_pnttm',  index:'frst_regist_pnttm',      align:'center',  width: '8%', 
+	    		 	                { label: '아이디', key: true,  name:'requst_id',    index:'requst_id', align:'left', hidden:true},
+	    		 	                { label: '업무구분', name:'job_se_code', index:'job_se_code', align:'left',   width:'10%'},
+	    		 	                { label: '서비스명', name:'srvc_nm', index:'srvc_nm', align:'center', width:'10%' },
+	      			                { label: '매서드명', name:'method_nm', index:'method_nm', align:'center', width:'10%' },
+		      			            { label: '처리시간', name:'process_time', index:'process_time', align:'center', width:'10%'},
+		      			            { label: '애러코드', name:'error_code', index:'error_code', align:'center', width:'10%'},
+		      			            { label: '요청자IP', name:'rqester_ip', index:'rqester_ip', align:'center', width:'10%'},
+		      			            { label: '요청자', name:'rqester_id', index:'rqester_id', align:'center', width:'10%'},
+		      			            { label: '실행일자', name: 'occrrnc_date',  index:'occrrnc_date',      align:'center',  width: '8%', 
 						            	sortable: 'date' ,formatter: "date", formatoptions: { newformat: "Y-m-d H:i:s"} }
-			      			        
+		      			          
     			                ],  //상단면 
     		        rowNum : 10,  //레코드 수
     		        rowList : [10,20,30,40,50,100],  // 페이징 수
@@ -181,8 +180,8 @@
     		}, result : function(cellvalue, options, rowObject){
     			var resultTxt = "";
     			switch (rowObject.result ){
-	    		    case "O" :
-	    		    	resultTxt = "즉시전송";
+	    		    case "S" :
+	    		    	resultTxt = "조회";
 	    		        break;
 	    		    case "R" :
 	    		    	resultTxt = "예약전송";
