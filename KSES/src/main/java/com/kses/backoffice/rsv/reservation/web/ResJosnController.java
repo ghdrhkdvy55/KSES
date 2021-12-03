@@ -74,13 +74,6 @@ public class ResJosnController{
 			 //_requstId
 			 //
 			 
-			 String json = "{\"Login_Type\" : \"2\"," + 
-			 		"        \"User_id\" : \"tester11\"," + 
-			 		"        \"User_Pw\" : \"qweqwe12!\"," + 
-			 		"        \"Card_No\": \"2021112135420427\"," + 
-			 		"        \"Card_Pw\" : \"4LxgyCcT9k74pXwMQNAs4k/QFB1cwwhiWcGbHmKmK+o=\"," + 
-			 		"        \"System_Type\" : \"E\"" + 
-			 		"    }";
 			 
 			 JSONObject jsonObject = new JSONObject();
 			 for( Map.Entry<String, Object> entry : ((Map<String, Object>) sendInfo.get("sendInfo")).entrySet() ) {

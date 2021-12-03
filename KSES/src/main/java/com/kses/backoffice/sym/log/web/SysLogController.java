@@ -50,11 +50,9 @@ public class SysLogController {
 	
 	@NoLogging
 	@RequestMapping(value="syslogList.do")
-	public ModelAndView selectSysLogList(@ModelAttribute("loginVO") LoginVO loginVO
-                                         , HttpServletRequest request
-									     , BindingResult bindingResult)throws Exception {
-		
-		      ModelAndView mav = new ModelAndView("/backoffice/sys/syslog");
+	public ModelAndView selectSysLog(@ModelAttribute("loginVO") LoginVO loginVO)throws Exception {
+	
+		      ModelAndView mav = new ModelAndView("/backoffice/sys/sysLog");
 		      try{
 		    	  
 		    	  Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
@@ -62,10 +60,7 @@ public class SysLogController {
 			          	mav.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
 			          	mav.setViewName("/backoffice/login");
 			          	return mav;	
-		          } else {
-			          	HttpSession httpSession = request.getSession(true);
-			          	loginVO = (LoginVO)httpSession.getAttribute("LoginVO");
-			      }
+		          }
 		      }catch(Exception e){
 		    	  mav.addObject("message", egovMessageSource.getMessage("fail.common.select"));
 		    	  mav.addObject("status", Globals.STATUS_FAIL);
@@ -131,17 +126,19 @@ public class SysLogController {
 		      return model;
 	}
 	@NoLogging
-	@RequestMapping(value="SyslogInfo.do")
-	public ModelAndView selectSysLogInfo(HttpServletRequest request, 
-			                             @RequestParam("requestId") String  requestId)throws Exception {
+	@RequestMapping(value="selectlogInfoDetail.do")
+	public ModelAndView selectlogInfoDetail(HttpServletRequest request, 
+			                             @RequestParam("requstId") String  requstId)throws Exception {
 		ModelAndView mav = new ModelAndView(Globals.JSONVIEW);
 		try{ 
-			 mav.addObject("status", Globals.STATUS_SUCCESS);
-			 mav.addObject("sysInfo", sysLogService.selectSysLogInfo(requestId));
+			 mav.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+			 mav.addObject(Globals.STATUS_REGINFO, sysLogService.selectSysLogInfo(requstId));
 		}catch(Exception e){
-			LOGGER.debug("selectSysLogInfo error: " + e.toString());
-			mav.addObject("message",  egovMessageSource.getMessage("fail.common.select"));
-	    	mav.addObject("status", Globals.STATUS_FAIL);
+			StackTraceElement[] ste = e.getStackTrace();
+			int lineNumber = ste[0].getLineNumber();
+			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
+			mav.addObject(Globals.STATUS_MESSAGE,  egovMessageSource.getMessage("fail.common.select"));
+	    	mav.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 	    	//throw e;
 		}
 		return mav;

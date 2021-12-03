@@ -36,24 +36,28 @@
    	</select>
 
    	<select id="selectAttendInfoDetail" resultType="lmap">
-		SELECT A.QR_CHECK_SEQ, A.RESV_SEQ, B.USER_ID, A.QR_CHECK_TM,
-               A.INOUT_DVSN, A.RCV_DT, A.RCV_CD,
-               C.USER_NM
-        FROM  TSER_QR_CHECK_H A, TSER_RESV_INFO_I B, TEST_USER_INFO C
-		WHERE A.RESV_SEQ = B.RESV_SEQ
-		AND A.USER_ID = C.USER_ID
-		<choose>
-			<when test="resvSeq != '' and userId != ''">
-				AND TO_CHAR(A.QR_CHECK_TM, 'yyyyMMdd') = TO_CHAR(SYSDATE, 'yyyyMMdd')
-				AND B.RESV_START_DT = TO_CHAR(SYSDATE, 'yyyyMMdd')
-				AND A.RESV_SEQ = #{resvSeq} 
-				AND ROWNUM = 1
-				ORDER BY A.QR_CHECK_TM DESC
-			</when>
-			<otherwise>
-				AND A.QR_CHECK_SEQ = #{qrCheckSeq}
-			</otherwise>
-		</choose>
+   	    
+   	    SELECT * 
+   	    FROM (
+   			SELECT A.QR_CHECK_SEQ, A.RESV_SEQ, B.USER_ID, A.QR_CHECK_TM,
+	               A.INOUT_DVSN, A.RCV_DT, A.RCV_CD,
+	               C.USER_NM, ROW_NUMBER() OVER (ORDER BY ROWNUM DESC) AS RNUM
+	        FROM  TSER_QR_CHECK_H A, TSER_RESV_INFO_I B, TEST_USER_INFO C
+			WHERE A.RESV_SEQ = B.RESV_SEQ
+			AND A.USER_ID = C.USER_ID
+			<choose>
+				<when test="resvSeq != '' and userId != ''">
+					AND TO_CHAR(A.QR_CHECK_TM, 'yyyyMMdd') = TO_CHAR(SYSDATE, 'yyyyMMdd')
+					AND B.RESV_START_DT = TO_CHAR(SYSDATE, 'yyyyMMdd')
+					AND A.RESV_SEQ = #{resvSeq} 
+					ORDER BY A.QR_CHECK_TM DESC
+				</when>
+				<otherwise>
+					AND A.QR_CHECK_SEQ = #{qrCheckSeq}
+				</otherwise>
+			</choose>
+		)
+		WHERE RNUM = 1
    	</select>
    	
 	

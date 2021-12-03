@@ -52,7 +52,6 @@ public class LoginLogAspect {
         loginLog.setErrorOccrrAt("N");
         loginLog.setErrorCode("");
         
-        System.out.println(loginLog.getConnectId()+ ":" + loginLog.getConnectIp() + ":" + loginLog.getLoginMthd() + ":" + loginLog.getErrorOccrrAt() + ":" + loginLog.getErrorCode());
         
         loginLogService.logInsertLoginLog(loginLog);
 

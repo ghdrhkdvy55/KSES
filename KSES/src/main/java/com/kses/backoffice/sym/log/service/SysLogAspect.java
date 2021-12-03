@@ -393,6 +393,8 @@ public class SysLogAspect    {
 		}
  
 	}
+	
+	
 	@AfterThrowing(pointcut = "execution( public * egovframework.let..impl.*Impl.update*(..))  "
 						     + " or execution(* com.kses.*Controller.*(..)) " 
 						     + " and  !@target(com.kses.backoffice.sym.log.annotation.NoLogging) "
@@ -430,6 +432,7 @@ public class SysLogAspect    {
 			return mav;
 		}
 	}
+	
 	private String fillParameters(String statement, Object[] sqlArgs){
 		StringBuilder completedSqlBuilder = new StringBuilder(Math.round(statement.length() * 1.2f));
 		int index, prevIndex = 0;

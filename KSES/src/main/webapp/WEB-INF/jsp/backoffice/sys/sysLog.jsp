@@ -76,7 +76,7 @@
     			var grid = $('#'+gridOption);
     		    var postData = {"pageIndex": "1"};
     		    grid.jqGrid({
-    		    	url : '/backoffice/sys/selectInterfaceListAjax.do' ,
+    		    	url : '/backoffice/sys/selectlogListAjax.do' ,
     		        mtype :  'POST',
     		        datatype :'json',
     		        pager: $('#pager'),  
@@ -93,7 +93,8 @@
    		            },
     		        colModel :  [
 	    		 	                { label: '아이디', key: true,  name:'requst_id',    index:'requst_id', align:'left', hidden:true},
-	    		 	                { label: '업무구분', name:'job_se_code', index:'job_se_code', align:'left',   width:'10%'},
+	    		 	                { label: '업무구분', name:'process_se_code', index:'process_se_code', align:'left',   width:'10%',
+	    		 	                  formatter:jqGridFunc.result	},
 	    		 	                { label: '서비스명', name:'srvc_nm', index:'srvc_nm', align:'center', width:'10%' },
 	      			                { label: '매서드명', name:'method_nm', index:'method_nm', align:'center', width:'10%' },
 		      			            { label: '처리시간', name:'process_time', index:'process_time', align:'center', width:'10%'},
@@ -101,7 +102,7 @@
 		      			            { label: '요청자IP', name:'rqester_ip', index:'rqester_ip', align:'center', width:'10%'},
 		      			            { label: '요청자', name:'rqester_id', index:'rqester_id', align:'center', width:'10%'},
 		      			            { label: '실행일자', name: 'occrrnc_date',  index:'occrrnc_date',      align:'center',  width: '8%', 
-						            	sortable: 'date' ,formatter: "date", formatoptions: { newformat: "Y-m-d H:i:s"} }
+						            	sortable: 'date' ,formatter: "date",formatoptions: { srcformat: 'Y-m-d H:i:s', newformat: 'm/d/Y h:i:s' } }
 		      			          
     			                ],  //상단면 
     		        rowNum : 10,  //레코드 수
@@ -173,61 +174,58 @@
     	            },onCellSelect : function (rowid, index, contents, action){
     	            	var cm = $(this).jqGrid('getGridParam', 'colModel');
     	                if (cm[index].name != 'cb'){
-    	                	jqGridFunc.fn_interfaceInfo($(this).jqGrid('getCell', rowid, 'requst_id'));
+    	                	jqGridFunc.fn_sysInfo($(this).jqGrid('getCell', rowid, 'requst_id'));
             		    }
     	            }
     		    });
     		}, result : function(cellvalue, options, rowObject){
     			var resultTxt = "";
-    			switch (rowObject.result ){
+    			switch (rowObject.process_se_code ){
 	    		    case "S" :
 	    		    	resultTxt = "조회";
 	    		        break;
-	    		    case "R" :
-	    		    	resultTxt = "예약전송";
+	    		    case "I" :
+	    		    	resultTxt = "입력";
 	    		        break;
-	    		    case "Y" :
-	    		    	resultTxt = "정상발송";
+	    		    case "U" :
+	    		    	resultTxt = "수정";
 	    		        break;
-	    		    default :
-	    		    	resultTxt = "애러";
+	    		    case "D" :
+	    		    	resultTxt = "삭제";
+	    		        break;
 	    		}
     			return resultTxt;
-    		}, fn_interfaceInfo : function (requstId){
-    			var url = "/backoffice/sys/selectInterfaceDetail.do";
+    		}, fn_sysInfo : function (requstId){
+    			var url = "/backoffice/sys/selectlogInfoDetail.do";
  		       
  		        var params = {'requstId' : requstId}; 
  		        fn_Ajax(url, "GET", params, false,
  		      			function(result) {
  		 				       if (result.status == "LOGIN FAIL"){
- 		 				    	   common_popup(result.meesage, "Y","bas_menu_add");
- 		   						   location.href="/backoffice/login.do";
+ 		 				    	   location.href="/backoffice/login.do";
  		   					   }else if (result.status == "SUCCESS"){
  		   						   //총 게시물 정리 하기'
- 		   						   var obj = result.regist;
- 		   						   $("#sp_reqId").html(obj.requst_id);
- 		   						   $("#sp_trsmrcv").html(obj.trsmrcv_se_code);
- 		   					   	   $("#sp_reqInsttId").html(obj.provd_instt_id);
- 		   						   $("#sp_proInsttId").html(obj.requst_instt_id);
- 		   						   $("#sp_reqTrnTm").html(obj.requst_trnsmit_tm);
- 		   		                   $("#sp_rspTrnTm").html(obj.rspns_trnsmit_tm);
- 		   	                       $("#sp_resultCode").html(obj.result_code);
- 		   	                       $("#sp_resultMessage").html(obj.result_message);
- 		   	                       $("#sp_sendtMessage").html(obj.send_message);
- 		   	                       
- 		   	                   
- 		   						   $("#bas_interfaceinfo").bPopup();
+ 		   							   var obj = result.regist;
+ 		   						   $("#sp_Odate").html(obj.occrrnc_date);  //발생 일자
+ 		   						   $("#sp_ReqId").html(obj.emp_nm); //요청자
+ 		   					   	   $("#sp_Service").html(obj.srvc_nm);
+ 		   						   $("#sp_Method").html(obj.method_nm);
+ 		   						   $("#sp_ProcessN").html(obj.process_se_code_txt);
+ 		   						   $("#sp_ProcessT").html(obj.process_time);
+ 		   		                   $("#sp_Params").html(obj.sql_param);
+ 		   	                       $("#sp_Result").html(obj.method_result);
+ 		   	                       $("#sp_Error").html(obj.error_se);
+ 		   	                       $("#sp_ErrorCd").html(obj.error_code);
+ 		   	        			   $("#bas_sys_add").bPopup();
  		   					   }else if (result.status == "FAIL"){
  		   						   common_modelCloseM(result.message, "");
  		   						   
  		   					   }
  		 				    },
  		 				    function(request){
- 		 				    	common_modelCloseM("Error:" + request.status, "Y", "bas_menu_add");
+ 		 				    	common_modelCloseM("Error:" + request.status, "Y", "");
  		 				    }    		
  		        );
-    		    
-    		    
     		}
     }
   </script>
@@ -284,51 +282,57 @@
 </div>
 <!-- wrapper_end-->
 <!--권한분류 추가 팝업-->
-<div data-popup="bas_auth_add" class="popup m_pop">
+<div id="bas_sys_add" class="popup">
     <div class="pop_con">
         <a class="button b-close">X</a>
-        <h2 class="pop_tit">권한 분류 추가</h2>
+        <h2 class="pop_tit">시스템 상세</h2>
         <div class="pop_wrap">
             <table class="detail_table">
                 <tbody>
                     <tr>
-                        <th>권한 코드</th>
-                        <td>
-                            <input type="text">
-                            <a href="" class="blueBtn">중복확인</a>
+                        <th>발생일자</th>
+                        <td><span id="sp_Odate"></span></td>
+                        <th>요청자ID</th>
+                        <td><span id="sp_ReqId"></span></td>
+                    </tr>
+                    <tr>
+                        <th>서비스명</th>
+                        <td><span id="sp_Service"></span></td>
+                        <th>메소드명</th>
+                        <td><span id="sp_Method"></span></td>
+                    </tr>
+                    <tr>
+                        <th>업무구분</th>
+                        <td><span id="sp_ProcessN"></span></td>
+                        <th>처리시간</th>
+                        <td><span id="sp_ProcessT"></span></td>
+                        
+                    </tr>
+                    <tr>
+                        <th>애러구분</th>
+                        <td><span id="sp_Error"></span></td>
+                        <th>애러코드</th>
+                        <td><span id="sp_ErrorCd"></span></td>
+                    </tr>
+                    
+                    
+                    <tr>
+                        <th>요청 파라미터</th>
+                        <td colspan="3">
+                           <span id="sp_Params"></span>
                         </td>
                     </tr>
                     <tr>
-                        <th>권한명</th>
-                        <td>
-                            <input type="text">
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>상세설명</th>
-                        <td>
-                            <input type="text">
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>사용 유무</th>
-                        <td>
-                            <span>
-                                <input type="radio" value="y" id="y">
-                                <label for="y">사용</label>
-                            </span>
-                            <span>
-                                <input type="radio" value="n" id="n">
-                                <label for="n">사용 안함</label>
-                            </span>
+                        <th>요청 파라미터</th>
+                        <td colspan="3">
+                           <span id="sp_Result"></span>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
         <div class="right_box">
-            <a href="" class="grayBtn">취소</a>
-            <a href="" class="blueBtn">저장</a>
+            <a href="javascript:common_modelClose('bas_sys_add')" class="grayBtn">닫기</a>
         </div>
         <div class="clear"></div>
     </div>

@@ -76,8 +76,15 @@ public class SmartUtil {
 	@Autowired
 	protected EgovPropertyService propertiesService;
 	
+    public static InterfaceInfoManageService interfaceService;
+	
+	
 	@Autowired
-	private static InterfaceInfoManageService interfaceService;
+    private void InterfaceInfoManageService(InterfaceInfoManageService interfaceService) {
+        this.interfaceService = interfaceService;
+    }
+	
+	
 	
 	
 	public void XMLParse(String xmlData) throws ParserConfigurationException, SAXException, IOException{
@@ -567,15 +574,6 @@ public class SmartUtil {
             JsonNode node = null;
             //Response 출력
             
-           
-            
-            
-            // INTEG_ID
-            //REQUST_INSTT_ID
-            //REQUST_SYS_ID
-            
-            //응답 RSPNS_TRNSMIT_TM 
-            //   RSPNS_RECPTN_TM
             InterfaceInfo info = new InterfaceInfo();
             info.setTrsmrcvSeCode(sendEnum.RPQ.getCode() );
             info.setIntegId(_integId);
@@ -599,9 +597,10 @@ public class SmartUtil {
            
             
             info.setRspnsRecptnTm(nowTime());
-            info.setResultCode(node.get("Error_Cd").toString());
-            info.setResultMessage(node.asText());
+            info.setResultCode(node.get("Error_Cd").toString().replace("\"", ""));
+            info.setResultMessage(node.toString());
             info.setSendMessage(_jsonInfo);
+            info.setRqesterId("admin");
             interfaceService.InterfaceInsertLoginLog(info);
             
             return node;

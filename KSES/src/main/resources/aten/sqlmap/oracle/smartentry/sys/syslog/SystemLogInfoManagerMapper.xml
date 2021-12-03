@@ -33,24 +33,26 @@
         <![CDATA[   
             SELECT 
                   a.REQUST_ID
-                , a.OCCRRNC_DE
                 , a.SRVC_NM
                 , a.METHOD_NM
                 , a.PROCESS_SE_CODE
-                , c.CODE_NM AS PROCESS_SE_CODE_NM
+                , CASE  a.PROCESS_SE_CODE WHEN 'S' THEN '조회'
+                        WHEN 'I' THEN '입력'
+                        WHEN 'U' THEN '업데이트'
+                        WHEN 'D' THEN '삭제'
+                  END PROCESS_SE_CODE_TXT
                 , a.PROCESS_TIME
                 , a.RQESTER_IP
                 , a.RQESTER_ID
-                , b.USER_NM AS RQESTER_NM
-            FROM
-                COMTNSYSLOG a
-            LEFT OUTER JOIN VW_EMPINFO b
-                ON a.RQESTER_ID = b.EMP_NO
-            LEFT OUTER JOIN LETTCCMMNDETAILCODE c
-                ON TRIM(a.PROCESS_SE_CODE) = c.CODE
-            WHERE 
-                c.CODE_ID = 'COM033'
-            AND a.REQUST_ID = #{requstId}
+                , b.EMP_NM
+                , a.SQL_PARAM
+                , a.METHOD_RESULT
+                , TO_CHAR(a.OCCRRNC_DATE, 'YYYY-MM-DD HH24:MI:SS') OCCRRNC_DATE 
+                , a.ERROR_SE
+                , a.ERROR_CODE
+            FROM COMTNSYSLOG a, VW_EMPINFO b
+            WHERE a.RQESTER_ID = b.ADMIN_ID
+                  AND a.REQUST_ID = #{requstId}
             ]]>
     </select>
 
@@ -61,25 +63,19 @@
             SELECT SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT, 
 				   ROW_NUMBER() OVER (ORDER BY ROWNUM DESC) AS RNUM, TB.* 
             FROM (
-		            SELECT 
+		             SELECT 
 		                  a.REQUST_ID
-		                , a.OCCRRNC_DE
 		                , a.SRVC_NM
 		                , a.METHOD_NM
 		                , a.PROCESS_SE_CODE
-		                , c.CODE_NM AS PROCESS_SE_CODE_NM
 		                , a.PROCESS_TIME
 		                , a.RQESTER_IP
 		                , a.RQESTER_ID
-		                , b.USER_NM AS RQESTER_NM
-		            FROM
-		                COMTNSYSLOG a
-		            LEFT OUTER JOIN VW_EMPINFO b
-		                ON a.RQESTER_ID = b.EMP_NO
-		            LEFT OUTER JOIN LETTCCMMNDETAILCODE c
-		                ON TRIM(a.PROCESS_SE_CODE) = c.CODE
+		                , b.EMP_NM AS RQESTER_NM
+		                , TO_CHAR(OCCRRNC_DATE, 'YYYY-MM-DD HH24:MI:SS') OCCRRNC_DATE 
+		            FROM COMTNSYSLOG a, VW_EMPINFO b
 		            WHERE 
-		                c.CODE_ID = 'COM033'
+		                 a.RQESTER_ID = b.ADMIN_ID
 		            ]]>
 		        <if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
 		            <![CDATA[  AND c.CODE_NM LIKE '%' || #{params.searchKeyword} || '%' ]]>
@@ -91,7 +87,7 @@
 		            ORDER BY a.OCCRRNC_DE DESC 
             ) TB 
           ) 
-          WHERE rn BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}
+          WHERE RNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}
         ]]>
     </select>
 
