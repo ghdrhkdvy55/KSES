@@ -179,14 +179,17 @@
 			}, 
 			// 로그인 시작
 			actionLogin : function() {
-				var url = "/front/actionLogin.do";
+				var url = "/backoffice/rsv/speedCheck.do";
 				var params = {
-					"Login_Type" : $("#login_type").val(),
-					"User_Id" : $("#id").val(),
-					"User_Pw" : $("#pw").val(),
-					"Card_Id" : $("#cardNo").val(),
-					"Card_Pw" : $("#cardPw").val(),
-					"System_Type" : "E"
+					"gubun" : "login",
+					"sendInfo" : {
+						"Login_Type" : $("#login_type").val(),
+						"User_Id" : $("#id").val(),
+						"User_Pw" : $("#pw").val(),
+						"Card_Id" : $("#cardNo").val(),
+						"Card_Pw" : $("#cardPw").val(),
+						"System_Type" : "E"
+					}
 				}
 				
 				fn_Ajax
@@ -197,8 +200,10 @@
 					false,
 					function(result) {
 				    	console.log(result);
-						if (result.RESULT.Error_Cd == "SUCCESS") {
-							loginService.createUserSession(result.RESULT);
+				    	
+						if (result.status == "SUCCESS") {
+							
+							loginService.createUserSession(result.regist);
 						} else {
 							fn_openPopup("등록되지 않은 아이디이거나 비밀번호를 잘못 입력하였습니다.", "red", "ERROR", "확인", "");
 						}
