@@ -226,8 +226,10 @@
 	    						       $("#boardSize").val(obj.board_size);
 	    						       $("#boardNoticeDvsn").val(obj.board_notice_dvsn);
 	    						       $("input:radio[name='useYn']:radio[value='"+obj.use_yn+"']").prop('checked', true)
-	    						       $("#boardFileUploadYn").val(obj.board_file_upload_yn);
-	    						       $("#boardCmntUse").val(obj.board_cmnt_use);
+	    						       
+	    						       $("input:radio[name='boardFileUploadYn']:radio[value='"+obj.board_file_upload_yn+"']").prop('checked', true)
+	    						       $("input:radio[name='boardCmntUse']:radio[value='"+obj.board_cmnt_use+"']").prop('checked', true)
+	    						       
 	    						       $("#sp_Unqi").hide();
 	    						       if (obj.board_center_id != ""){
 	    						    	   var url = "/backoffice/bld/centerCombo.do"
@@ -448,6 +450,7 @@
                     <td>
                       <label for="useAt_Y"><input name="useYn" type="radio" id="useAt_Y" value="Y"/>사용</label>
                       <label for="useAt_N"><input name="useYn" type="radio" id="useAt_N" value="N"/>사용 안함</label>
+                       
                     </td>
                   </tr>
 

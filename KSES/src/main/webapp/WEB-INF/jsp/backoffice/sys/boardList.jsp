@@ -81,26 +81,30 @@
     </style>
     <script type="text/javascript">
 	 $(document).ready(function() { 
-		   jqGridFunc.setGrid("mainGrid");
-		   var clareCalendar = {
-		            monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
-		            dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
-		            weekHeader: 'Wk',
-		            dateFormat: 'yymmdd', //형식(20120303)
-		            autoSize: false, //오토리사이즈(body등 상위태그의 설정에 따른다)
-		            changeMonth: true, //월변경가능
-		            changeYear: true, //년변경가능
-		            showMonthAfterYear: true, //년 뒤에 월 표시
-		            buttonImageOnly: true, //이미지표시
-		            buttonText: '달력선택', //버튼 텍스트 표시
-		            buttonImage: '/images/invisible_image.png', //이미지주소
-		            showOn: "both", //엘리먼트와 이미지 동시 사용(both,button)
-		            yearRange: '1970:2030' //1990년부터 2020년까지
-          };	      
-          $("#boardNoticeStartDay").datepicker(clareCalendar);
-          $("#boardNoticeEndDay").datepicker(clareCalendar);        
-          $("img.ui-datepicker-trigger").attr("style", "margin-left:3px; vertical-align:middle; cursor:pointer;"); //이미지버튼 style적용
-	      $("#ui-datepicker-div").hide(); //자동으로 생성되는 div객체 숨김
+		 
+		 ("${regist.board_file_upload_yn }" == "Y") ? $("#tr_fileUpload").show() : $("#tr_fileUpload").hide();
+		
+		 
+		 jqGridFunc.setGrid("mainGrid");
+		 var clareCalendar = {
+		           monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+		           dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
+		           weekHeader: 'Wk',
+		           dateFormat: 'yymmdd', //형식(20120303)
+		           autoSize: false, //오토리사이즈(body등 상위태그의 설정에 따른다)
+		           changeMonth: true, //월변경가능
+		           changeYear: true, //년변경가능
+		           showMonthAfterYear: true, //년 뒤에 월 표시
+		           buttonImageOnly: true, //이미지표시
+		           buttonText: '달력선택', //버튼 텍스트 표시
+		           buttonImage: '/images/invisible_image.png', //이미지주소
+		           showOn: "both", //엘리먼트와 이미지 동시 사용(both,button)
+		           yearRange: '1970:2030' //1990년부터 2020년까지
+         };	      
+         $("#boardNoticeStartDay").datepicker(clareCalendar);
+         $("#boardNoticeEndDay").datepicker(clareCalendar);        
+         $("img.ui-datepicker-trigger").attr("style", "margin-left:3px; vertical-align:middle; cursor:pointer;"); //이미지버튼 style적용
+	     $("#ui-datepicker-div").hide(); //자동으로 생성되는 div객체 숨김
 	 });
 	 
 	 
@@ -208,7 +212,8 @@
 					    	grid.jqGrid('editRow', rowid, {keys: true});
 					    },onCellSelect : function (rowid, index, contents, action){
 					    	var cm = $(this).jqGrid('getGridParam', 'colModel');
-					        if (cm[index].name=='cb' ){
+					    	
+					        if (cm[index].name == 'board_title' ){
 					        	boardinfo.fn_boardInfo("Edt", $(this).jqGrid('getCell', rowid, 'board_seq'));
 						    }
 					        
@@ -279,6 +284,12 @@
 				       						$("#board_refno").val(obj.board_refno); //부모값
 				       						$("#boardGroup").val(obj.board_group); //부모값
 				       						
+				       						if (obj.board_center_id != ""){
+			    						    	   var url = "/backoffice/bld/centerCombo.do"
+			    	    						   var returnVal = uniAjaxReturn(url, "GET", false, null, "lst");
+			    	    						   fn_checkboxListJson("sp_boardCenter", returnVal,obj.board_center_id, "boardCenterId");  
+			    						    }
+				       						
 				       						toggleClick("useYn", obj.use_yn);
 								    		toggleClick("boardPopup", obj.board_popup);
 								       }
@@ -297,6 +308,8 @@
    						$("#boardRefno").val(''); //부모값
    						$("#boardClevel").val(''); //부모값
    						$("#h2_txt").text("등록");
+   						
+   						fn_EmptyField("sp_boardCenter");
    						
 			        	toggleDefault("useYn");
 			        	toggleDefault("boardPopup");
@@ -633,6 +646,10 @@
 		                    </td>
 	                    </tr>
 	                    <tr>
+	                        <th>지점 선택</th>
+	                        <td colspan="3"><span id="sp_boardCenter"></span>
+	                    </tr>
+	                    <tr id="tr_fileUpload">
 	                       <th><span class="redText" id="sp_returntxt">파일 업로드</span></th>
 	                       <td colspan="3">
 		                        <div class="upload-btn-wrapper">

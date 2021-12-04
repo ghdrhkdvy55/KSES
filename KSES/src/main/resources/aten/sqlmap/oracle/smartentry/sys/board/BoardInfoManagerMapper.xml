@@ -93,7 +93,8 @@
         <result property="frst_regter_id" column="FRST_REGTER_ID" /> 
         <result property="frst_regist_dtm" column="FRST_REGIST_DTM" /> 
         <result property="last_updusr_id" column="LAST_UPDUSR_ID" /> 
-        <result property="last_updt_dtm" column="LAST_UPDT_DTM" /> 
+        <result property="last_updt_dtm" column="LAST_UPDT_DTM" />
+        <result property="boardCenterId" column="BOARD_CENTER_ID" /> 
         <result property="board_cn" column="BOARD_CN" jdbcType="CLOB" javaType="java.lang.String" /> 
      </resultMap>
 
@@ -102,7 +103,7 @@
      <![CDATA[
           SELECT BOARD_SEQ, BOARD_CD, BOARD_REFNO, BOARD_CLEVEL, BOARD_NOTICE_START_DAY, BOARD_NOTICE_END_DAY,
                  BOARD_POPUP, BOARD_TITLE, BOARD_TOP_SEQ, BOARD_VISIT_CNT, USE_YN, BOARD_CN, BOARD_GROUP,
-                 FRST_REGTER_ID, FRST_REGIST_DTM, LAST_UPDUSR_ID, LAST_UPDT_DTM 	        
+                 FRST_REGTER_ID, FRST_REGIST_DTM, LAST_UPDUSR_ID, LAST_UPDT_DTM , BOARD_CENTER_ID	        
 		  FROM 	TSES_BOARD_INFO_I a        	
 		  WHERE 	BOARD_SEQ = #{boardSeq}	
 			]]>	
@@ -127,22 +128,26 @@
 	                 INSERT INTO TSES_BOARD_INFO_I (
 		                   BOARD_SEQ, BOARD_CD, BOARD_REFNO, BOARD_CLEVEL, BOARD_GROUP, BOARD_NOTICE_START_DAY, BOARD_NOTICE_END_DAY,
 		                   BOARD_POPUP, BOARD_TITLE, BOARD_TOP_SEQ, BOARD_VISIT_CNT, USE_YN, BOARD_CN,
-		                   FRST_REGTER_ID, FRST_REGIST_DTM, LAST_UPDUSR_ID, LAST_UPDT_DTM                    
+		                   FRST_REGTER_ID, FRST_REGIST_DTM, LAST_UPDUSR_ID, LAST_UPDT_DTM ,    
+		                   BOARD_CENTER_ID               
                    )
                    VALUES (#{seq},  #{boardCd},  #{boardRefno}, #{boardClevel}, ${seq},  #{boardNoticeStartDay,jdbcType=VARCHAR}, #{boardNoticeEndDay,jdbcType=VARCHAR}
 		                    , #{boardPopup, jdbcType=VARCHAR}, #{boardTitle}, #{boardTopSeq,jdbcType=VARCHAR}, 0, #{useYn,jdbcType=VARCHAR}, #{boardCn,jdbcType=VARCHAR}
-		                    , #{userId,jdbcType=VARCHAR}, SYSDATE, #{userId,jdbcType=VARCHAR}, SYSDATE                     
+		                    , #{userId,jdbcType=VARCHAR}, SYSDATE, #{userId,jdbcType=VARCHAR}, SYSDATE
+		                    , #{boardCenterId ,jdbcType=VARCHAR}                     
 		                    )
 	           </when>
 	           <otherwise>
 	                INSERT INTO TSES_BOARD_INFO_I (
 		                   BOARD_SEQ, BOARD_CD, BOARD_REFNO, BOARD_CLEVEL, BOARD_GROUP, BOARD_NOTICE_START_DAY, BOARD_NOTICE_END_DAY,
 		                   BOARD_POPUP, BOARD_TITLE, BOARD_TOP_SEQ, BOARD_VISIT_CNT, USE_YN, BOARD_CN,
-		                   FRST_REGTER_ID, FRST_REGIST_DTM, LAST_UPDUSR_ID, LAST_UPDT_DTM                    
+		                   FRST_REGTER_ID, FRST_REGIST_DTM, LAST_UPDUSR_ID, LAST_UPDT_DTM,
+		                   BOARD_CENTER_ID                    
                    )
                    VALUES (#{seq},  #{boardCd},  #{boardRefno}, #{boardClevel}, #{boardGroup},  #{boardNoticeStartDay,jdbcType=VARCHAR}, #{boardNoticeEndDay,jdbcType=VARCHAR}
 		                    , #{boardPopup, jdbcType=VARCHAR}, #{boardTitle}, #{boardTopSeq,jdbcType=VARCHAR}, 0, #{useYn,jdbcType=VARCHAR}, #{boardCn,jdbcType=VARCHAR}
-		                    , #{userId,jdbcType=VARCHAR}, SYSDATE, #{userId,jdbcType=VARCHAR}, SYSDATE                     
+		                    , #{userId,jdbcType=VARCHAR}, SYSDATE, #{userId,jdbcType=VARCHAR}, SYSDATE  
+		                    , #{boardCenterId ,jdbcType=VARCHAR}                     
 		                    )
 	           
 	           </otherwise>
@@ -166,6 +171,7 @@
 	                                 BOARD_CN = #{boardCn, jdbcType=VARCHAR} ,
 	                                 LAST_UPDUSR_ID =#{userId,jdbcType=VARCHAR} ,
 	                                 LAST_UPDT_DTM = SYSDATE,
+	                                 BOARD_CENTER_ID = #{boardCenterId,jdbcType=VARCHAR}  
 	                                 BOARD_TOP_SEQ = #{boardTopSeq}
       WHERE BOARD_SEQ = #{boardSeq}   
       ]]>        
