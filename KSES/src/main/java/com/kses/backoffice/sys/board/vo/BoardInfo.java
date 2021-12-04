@@ -29,4 +29,5 @@ public class BoardInfo {
 	private String userId = "";
 	private String boardGroup = "";
 	private int seq = 0;
+	private String boardCenterId  = "";
 }

@@ -283,8 +283,8 @@
 				       						$("#board_clevel").val(obj.board_clevel); //몇번째
 				       						$("#board_refno").val(obj.board_refno); //부모값
 				       						$("#boardGroup").val(obj.board_group); //부모값
-				       						
-				       						if (obj.board_center_id != ""){
+				       						console.log("board_center_id:" + obj.board_center_id )
+				       						if ("${regist.board_cd }"  == "Not"){
 			    						    	   var url = "/backoffice/bld/centerCombo.do"
 			    	    						   var returnVal = uniAjaxReturn(url, "GET", false, null, "lst");
 			    	    						   fn_checkboxListJson("sp_boardCenter", returnVal,obj.board_center_id, "boardCenterId");  
@@ -340,6 +340,10 @@
     			    for (var i = 0; i < uploadFileList.length; i++) {
     					formData.append('files', fileList[uploadFileList[i]]);
     				}
+    			    
+    			    
+    			    boardCenterId = ckeckboxValueNoPopup("boardCenterId");
+    			    
     			    formData.append('mode' , $("#mode").val());
     			    formData.append('boardSeq' , $("#boardSeq").val());
     			    formData.append('boardTitle' , $("#boardTitle").val());
@@ -352,6 +356,10 @@
     			    formData.append('boardCd' , $("#boardCd").val());
     			    formData.append('useYn' , fn_emptyReplace($("#useYn").val(),"N"));
     			    formData.append('boardPopup' , fn_emptyReplace($("#boardPopup").val(),"N"));
+    			    formData.append('boardCenterId' , boardCenterId);
+    			    
+    			    
+    			    
     			    uniAjaxMutipart("/backoffice/sys/boardUpdate.do", formData, 
 				  		function(result) {
     			  	           //alert("result:" + result);
