@@ -434,13 +434,13 @@
 				     			        		    common_popup(message, alertIcon, "mng_admin_add").trigger("alert('1')");
 				     			        		    */
 				     			        		    if ($("#mode").val() == "Ins"  && result.result == "OK"){
-				     			        		    	jqGridFunc.fn_empInfo($(this).jqGrid('getCell', rowid, 'emp_no'),
-										    	                			  $(this).jqGrid('getCell', rowid, 'emp_nm'),
-										    	                			  $(this).jqGrid('getCell', rowid, 'emp_clphn'),
-										    	                			  $(this).jqGrid('getCell', rowid, 'emp_email'),
-										    	                			  $(this).jqGrid('getCell', rowid, 'dept_nm')
+				     			        		    	jqGridFunc.fn_empInfo($("#tb_EmpSearch").jqGrid('getCell', rowid, 'emp_no'),
+				     			        		    			$("#tb_EmpSearch").jqGrid('getCell', rowid, 'emp_nm'),
+				     			        		    			$("#tb_EmpSearch").jqGrid('getCell', rowid, 'emp_clphn'),
+				     			        		    			$("#tb_EmpSearch").jqGrid('getCell', rowid, 'emp_email'),
+				     			        		    			$("#tb_EmpSearch").jqGrid('getCell', rowid, 'dept_nm')
 						  	                			);
-				     			        		    	$("#idCheck").val(alertIcon);
+				     			        		    	$("#idCheck").val("Y");
 				     			        		    }else if ($("#mode").val() == "Ins"  && result.result != "OK"){
 				     			        		    	jqGridFunc.fn_adminInfo("Edt", empNo);
 				     			        		    }

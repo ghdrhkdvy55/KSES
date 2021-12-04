@@ -325,6 +325,7 @@
 								$("#endFloor").val(obj.end_floor);
 								$("#centerUrl").val(obj.center_url);
 								$("input:radio[name='useYn']:radio[value='" + obj.use_yn + "']").prop('checked', true);
+								$("input:radio[name='centerPilotYn']:radio[value='" + obj.center_pilot_yn + "']").prop('checked', true);
 								$("#ir3").val(obj.center_info);
 								fnCreatCheckbox("sp_floorInfo", $("#startFloor").val().replace("CENTER_FLOOR_", ""),  $("#endFloor").val().replace("CENTER_FLOOR_", ""), obj.floor_info, "floorInfos", "층") ;
 							}
@@ -747,7 +748,9 @@
 	     	    formData.append('endFloor' , $("#endFloor").val());
 	     	    formData.append('floorInfo' , $("#floorInfo").val());
 	     	    formData.append('useYn', $('input[name=useYn]:checked').val());
-	     	    
+	     	    formData.append('centerPilotYn', $('input[name=centerPilotYn]:checked').val());
+	     	   
+	     	   
 	     	    uniAjaxMutipart
 	     	    (
 					"/backoffice/bld/centerInfoUpdate.do", 
@@ -901,6 +904,13 @@
                     		<label for="useYn_N"><input id="useYn_N" type="radio" name="useYn" value="N">N</label>
                   		</td>
 					</tr>
+					<tr>
+						<th>시범 지점 여부</th>
+	                  	<td colspan="3">
+                    		<label for="useYn_Y"><input id="centerPilotYn_Y" type="radio" name="centerPilotYn" value="Y" checked>Y</label>
+                    		<label for="useYn_N"><input id="centerPilotYn_N" type="radio" name="centerPilotYn" value="N">N</label>
+                  		</td>
+					</tr>
 				</tbody>
 			</table>
 		</div>
@@ -1021,7 +1031,6 @@
 					</tr>
 	          	</thead>
 	          	<tbody class="inTxt">
-
 	            	<tr>
 	              		<td><input type="text" id="holyDt" class="cal_icon" name="holyDt" autocomplete=off></td>
 	              		<td><input type="text" id="holyNm"></td>

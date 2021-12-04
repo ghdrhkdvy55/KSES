@@ -42,7 +42,14 @@ public class AttendInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
 		
 		if(!vo.getMode().equals("Manual")) {
 			Map<String, Object> info = attendMapper.selectAttendInfoDetail(vo);
-			LOGGER.debug("vo:" + vo.getInoutDvsn() + ":" + info.get("inout_dvsn"));
+			//LOGGER.debug("vo:" + vo.getInoutDvsn() + ":" + info.get("inout_dvsn"));
+			
+			if(info == null) {
+				//최초 이면 출금 하기
+				
+				
+			}
+			
 			
 			if ((vo.getInoutDvsn().equals("IN") && info == null)
 				|| (vo.getInoutDvsn().equals("IN") && SmartUtil.NVL(info.get("inout_dvsn"), "").toString().equals("OT") )

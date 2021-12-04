@@ -29,7 +29,10 @@ public enum speedon {
 	TRADE_ERROR_011("TRADE_ERROR_011", "입출금 업무서비스 비활성화"), 
 	TRADE_ERROR_012("TRADE_ERROR_012", "잔액 부족"), 
 	TRADE_ERROR_013("TRADE_ERROR_013", "시스템타입 없음"), 
-	TRADE_ERROR_014("TRADE_ERROR_014", "알수없는 Trade_No"); 
+	TRADE_ERROR_014("TRADE_ERROR_014", "알수없는 Trade_No"),
+	TRADE_ERROR_015("TRADE_ERROR_015", "External key 없음"), 
+	TRADE_ERROR_016("TRADE_ERROR_016", "거래내역 정보 없음"); 
+	
 	
 	
 	private String code; 
