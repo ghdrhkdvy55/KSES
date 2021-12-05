@@ -296,7 +296,10 @@
 					$("#centerTel").val("");
 					$("#centerFax").val("");
 					$("#centerUrl").val("");
+					$("#centerSpeedCd").val("");
 					$("input:radio[name='useYn']:radio[value='Y']").prop('checked', true);
+					
+					
 					$("#sp_floorInfo").empty();
 				} else {
 					var url = "/backoffice/bld/centerInfoDetail.do";
@@ -324,6 +327,7 @@
 								$("#startFloor").val(obj.start_floor);
 								$("#endFloor").val(obj.end_floor);
 								$("#centerUrl").val(obj.center_url);
+								$("#centerSpeedCd").val(obj.center_speed_cd);
 								$("input:radio[name='useYn']:radio[value='" + obj.use_yn + "']").prop('checked', true);
 								$("input:radio[name='centerPilotYn']:radio[value='" + obj.center_pilot_yn + "']").prop('checked', true);
 								$("#ir3").val(obj.center_info);
@@ -749,6 +753,7 @@
 	     	    formData.append('floorInfo' , $("#floorInfo").val());
 	     	    formData.append('useYn', $('input[name=useYn]:checked').val());
 	     	    formData.append('centerPilotYn', $('input[name=centerPilotYn]:checked').val());
+	     	    formData.append('centerSpeedCd' , $("#centerSpeedCd").val());
 	     	   
 	     	   
 	     	    uniAjaxMutipart
@@ -910,6 +915,8 @@
                     		<label for="useYn_Y"><input id="centerPilotYn_Y" type="radio" name="centerPilotYn" value="Y" checked>Y</label>
                     		<label for="useYn_N"><input id="centerPilotYn_N" type="radio" name="centerPilotYn" value="N">N</label>
                   		</td>
+                  		<th>SPEEDON CODE</th>
+	                  	<td><input type="text" id="centerSpeedCd"  name="centerSpeedCd"></td>
 					</tr>
 				</tbody>
 			</table>
