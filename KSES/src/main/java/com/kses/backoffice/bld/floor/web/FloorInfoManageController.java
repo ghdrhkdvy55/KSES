@@ -206,8 +206,12 @@ public class FloorInfoManageController {
 			model.addObject(Globals.JSON_RETURN_RESULTLISR, partList);
 		    model.addObject(Globals.PAGE_TOTALCNT, totCnt);
 		    
+		    LOGGER.debug("에러 확인 ");
+		    
 	    } catch(Exception e) {
-			LOGGER.info(e.toString());
+	    	StackTraceElement[] ste = e.getStackTrace();
+			int lineNumber = ste[0].getLineNumber();
+			LOGGER.error("selectQrCheckInfo error:" + e.toString() + ":" + lineNumber);
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 	    }

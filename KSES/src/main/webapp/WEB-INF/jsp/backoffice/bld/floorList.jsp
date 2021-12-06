@@ -28,9 +28,7 @@
     <link rel="stylesheet" href="/resources/css/jquery-ui.css">
 	<!-- <link rel="stylesheet" href="/css/jquery-ui.css"> -->
 	
-	<!-- chart.js -->
-    <script src="/resources/js/chart.min.js"></script>
-    <script src="/resources/js/utils.js"></script>
+	
     
    	<script src="/resources/js/common.js"></script>
     
@@ -60,6 +58,30 @@
 		.selected tr{
 		    background-color: rgba(41, 103, 182, 0.89);
 		    color: #FFF;
+		}
+		.ui-rotatable-handle {
+		  background: url("https://cdn.jsdelivr.net/jquery.ui.rotatable/1.0.1/rotate.png");
+		  background-repeat: no-repeat;
+		  background-size: 100% 100%;
+		  height: 25px;
+		  width: 25px;
+		  position: absolute;
+		}
+		.ui-rotatable-handle-sw {
+		  bottom: -27px;
+		  left: -27px;
+		}
+		.ui-rotatable-handle-nw {
+		  top: -27px;
+		  left: -27px;
+		}
+		.ui-rotatable-handle-se {
+		  bottom: -27px;
+		  right: -27px;
+		}
+		.ui-rotatable-handle-ne {
+		  top: -27px;
+		  right: -27px;
 		}
     </style>
     
@@ -121,7 +143,7 @@
             transition: all 150ms ease-out;
         }
     </style>
-     <link rel="stylesheet" href="/resources/css/paragraph_new.css">
+    <link rel="stylesheet" href="/resources/css/paragraph_new.css">
     
 	<script>
 		jQuery.browser = {};
@@ -369,6 +391,12 @@
                     <td><input type="number" id="partMiniWidth" onkeyup="this.value=this.value.replace(/[^0-9]/g,'');"></td>
 					<th>미니맵 HEIGHT</th>
                     <td><input type="number" id="partMiniHeight" onkeyup="this.value=this.value.replace(/[^0-9]/g,'');"></td>
+				</tr> 
+				<tr>
+                    <th>미니맵 Rotate</th>
+                    <td><input type="number" id="partMiniRotate" onkeyup="this.value=this.value.replace(/[^0-9]/g,'');"></td>
+                    <th>구역금액</th>
+                    <td><input type="number" id="partPayCost" onkeyup="this.value=this.value.replace(/[^0-9]/g,'');"></td>
 				</tr>                
 			</tbody>
 		</table>
@@ -483,11 +511,12 @@
 								<thead>
 									<tr>
 										<th style="float: left;">구역명</th>
-										<th style="left: 14%; float: left;">Top</th>
-										<th style="left: 14%; float: left;">left</th>
-										<th style="left: 14%; float: left;">width</th>
-										<th style="right: 19.6%; float: right;">height</th>
-										<th style="right: 19.6%; float: right;">css</th>
+										<th style="left: 7%; float: left;">Top</th>
+										<th style="left: 7%; float: left;">left</th>
+										<th style="left: 7%; float: left;">width</th>
+										<th style="right: 7%; float: right;">height</th>
+										<th style="right: 7%; float: right;">rotate</th>
+										<th style="right: 7%; float: right;">css</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -991,7 +1020,6 @@
 			floorService.fn_floorMap();
 		}, fn_floorMap : function (){
 			//gui 설정 
-			
 			$("#hid_guiMode").val("part");
 			//gui 환견 변경 
 			fn_GuiMode();
@@ -1004,18 +1032,22 @@
 				params,
 				false,
 	 	        function(result) {
+					
 	 	            if (result.status == "LOGIN FAIL") {
 	 	                
 	 	                location.href = "/backoffice/login.do";
 	 	            } else if (result.status == "SUCCESS") {
 	 	                //테이블 정리 하기
-	 	                var img = fn_NVL(result.regist.floor_map1) != "" ? "/upload/"+result.regist.floor_map1 : "";
+	 	                var img = fn_NVL(result.regist.floor_map1) != "./no_img.gif" ? "/upload/"+result.regist.floor_map1 : "";
+	 	                //alert("img" + img);
+	 	                
 	 	                
 	 	                $('.mapArea').css({
 	                        "background": "#fff url("+img+")",
 	                        'background-repeat': 'no-repeat',
 	                        'background-position': ' center'
 	                    });
+	 	                
 	 	                if (result.resultlist.length > 0) {
 	 	                    var shtml = "";
 	 	                    var trHtml = "";
@@ -1023,14 +1055,18 @@
  	                        $("#seat_resultList > tbody").empty();
  	                        $("#part_resultList > tbody").empty();
  	                        for (var i in result.resultlist) {
- 	                            shtml += '<li id="s' + trim(fn_NVL(obj[i].part_cd)) + '" class="seat" seat-id="' + obj[i].part_cd + '" style="opacity: 0.7;text-align: center; display: inline-block;" name="' + obj[i].part_cd + '" >' 
+ 	                        	
+ 	                        	
+ 	                            shtml += '<div class="box-wrapper"><li id="s' + trim(fn_NVL(obj[i].part_cd)) + '" class="seat" seat-id="' + obj[i].part_cd + '" style="opacity: 0.7;text-align: center; display: inline-block;" name="' + obj[i].part_cd + '" >' 
  	                                  +  '<div class="section">'
  	                                  +  '   <div class="circle">'
  	                                  +  '       <span class=' + fn_NVL(obj[i].part_css) + '>' + fn_NVL(obj[i].part_nm) + '</span>'
  	                                  +  '   </div>'
  	                                  +  ' </div>'
- 	                                  +  '</li>';
+ 	                                  +  '</li></div>';
+ 	                             
  	                            $('#seat_list').html(shtml);
+ 	                        
  	                            trHtml += "<tr id='tr_"+ obj[i].part_cd+"'>" +
 		                                "   <td>" + obj[i].part_nm + "" +
 		                                "   <input type='hidden' id='part_cd' name='part_cd' value='" + obj[i].part_cd + "'></td>" +
@@ -1040,26 +1076,47 @@
 		                                "   <td><a href='javascript:fn_FloopLeftUp(&#34;" + obj[i].part_cd + "&#34;)' class='leftB'></a>" +
 		                                "   <input type='text' id='left_" + obj[i].part_cd + "' value='" + obj[i].part_mini_left + "' onchange='left_chage(&#34;" + obj[i].part_cd + "&#34, this.value)'>" +
 		                                "   <a href='javascript:fn_FloopLeftdown(&#34;" + obj[i].part_cd + "&#34;)' class='rightB'></a></td>" +
-		                                "   <td><input type='text' id='width_" + obj[i].part_cd + "' value='" + obj[i].part_mini_width + "' onchange='width_chage(&#34;" + obj[i].part_cd + "&#34;, this.value)'></td>"+
-		                                "   <td><input type='text' id='height_" + obj[i].part_cd + "'  value='" + obj[i].part_mini_height + "' onchange='height_chage(&#34;" + obj[i].part_cd + "&#34;, this.value)'></td>"+
+		                                "   <td><input type='text' id='width_" + obj[i].part_cd + "' style='width:80px;' value='" + obj[i].part_mini_width + "' onchange='width_chage(&#34;" + obj[i].part_cd + "&#34;, this.value)'></td>"+
+		                                "   <td><input type='text' id='height_" + obj[i].part_cd + "' style='width:80px;' value='" + obj[i].part_mini_height + "' onchange='height_chage(&#34;" + obj[i].part_cd + "&#34;, this.value)'></td>"+
+		                                "   <td><input type='text' id='rotate_" + obj[i].part_cd + "' style='width:80px;' value='" + obj[i].part_mini_rotate + "' onchange='rotate_chage(&#34;" + obj[i].part_cd + "&#34;, this.value)'></td>"+
 		                                "   <td><select id='css_"+ obj[i].part_cd + "' onChange='fn_SelectColor(&#34;css_"+ obj[i].part_cd + "&#34;)'/></td>"+
 		                                "</tr>";
+		                                //alert(trHtml);
                                $("#part_resultList > tbody").append(trHtml);
                                fn_cssSelect("css_"+obj[i].part_cd,  obj[i].part_css);
                                fn_SelectColor("css_"+obj[i].part_cd);
                                trHtml = "";
  	                        }
+ 	                        
 	 	                    for (var i in result.resultlist) {
  	                            $('.mapArea ul li#s' + trim(fn_NVL(obj[i].part_cd))).css({
  	                                "top": fn_NVL(obj[i].part_mini_top) + "px",
  	                                "left": fn_NVL(obj[i].part_mini_left) + "px",
  	                                "width": fn_NVL(obj[i].part_mini_width) + "px",
  	                                "height": fn_NVL(obj[i].part_mini_height) + "px",
+ 	                                '-moz-transform': 'rotate(' + fn_NVL(obj[i].part_mini_rotate) + 'deg)',
+ 	                                '-webkit-transform': 'rotate(' + fn_NVL(obj[i].part_mini_rotate) + 'deg)',
+ 	                               
  	                            });
+ 	                            console.log(parseInt( obj[i].part_mini_rotate));
+ 	                            
+ 	                            if ( parseInt( obj[i].part_mini_rotate) > 0   ){
+ 	                            	 $('.mapArea ul li#s' + trim(fn_NVL(obj[i].part_cd)) + "> .section >.circle").css({
+ 	   	                        	    '-moz-transform': 'rotate(-'+ fn_NVL(obj[i].part_mini_rotate) + 'deg)',
+ 	  		                            '-webkit-transform': 'rotate(-'+ fn_NVL(obj[i].part_mini_rotate) + 'deg)',
+ 	   	                             });
+	                        	}else {
+	                        		 $('.mapArea ul li#s' + trim(fn_NVL(obj[i].part_cd)) + "> .section >.circle").css({
+	    	                        	  '-moz-transform': 'rotate('+ Math.abs(fn_NVL(obj[i].part_mini_rotate)) + 'deg)',
+	   		                              '-webkit-transform': 'rotate(+'+ Math.abs(fn_NVL(obj[i].part_mini_rotate)) + 'deg)',
+	    	                         });
+	                            }  
+ 	                          
 	 	                    }
+	 	                    //nw rotate 시키기 
 	 	                    $('.seat').resizable({
 	 	                    	aspectRatio: false,
-	 	                        handles: 'ne, se, sw, nw',
+	 	                        handles: 'ne, se, sw',
 	 	                        minHeight : 30,
 	 	                        minWidth : 30,
 	 	                        start : function(e, ui){
@@ -1081,7 +1138,7 @@
 	 	                        }
 	 	                        
 	 	                    });
-	 	                    
+	 	                   
 	 	                    $('.seat').draggable({
 	 	                      start : function (e, ui){
 			 	                 var get_id = e.target.id;
@@ -1095,8 +1152,41 @@
 			 	                   	var left_id ='left_' + $('#'+get_id)[0].attributes.name.value;
 			 	                    $('#'+top_id).val(ui.position.top);
 			 	                   	$('#'+left_id).val(ui.position.left);
+			 	                   	
+			 	                   	
 	 	                    	}
 	 	                    });
+	 	                    //신규 추가
+	 	                    var nw = $("<div>", {
+	 	                	    class: "ui-rotatable-handle"
+	 	                	});
+	 	                	var ne = nw.clone();
+	 	                	var se = nw.clone();
+	 	                	$('.seat div.ui-rotatable-handle').addClass("ui-rotatable-handle-sw");
+	 	                	nw.addClass("ui-rotatable-handle-nw");
+	 	                	  // Assign handles to box
+	 	                	$(".seat").append(nw);  
+	 	                	$(".seat div[class*='ui-rotatable-handle-']").draggable({
+	 	                		
+	 	                		
+	 	                	    drag: function(e, ui){
+	 	                	   	    
+		 	                   	    var get_id = $(this).parent().attr("id").substring(1);
+		 	                   	   	var top = parseInt(parseInt(ui.position.top) -27);
+	 	                	    	var left = parseInt(parseInt(ui.position.left) -27);
+	 	                	    	console.log("top:" + top + ": left"  + parseInt(ui.position.left) );
+	 	                	    	
+	 	                	    	var rotateCSS = 'rotate(' + ui.position.left + 'deg)';
+	 	                	    	$('#rotate_'+get_id).val( ui.position.left);
+	 	                	    	
+	 	                	        $(this).parent().css({
+	 	                	            '-moz-transform': rotateCSS,
+	 	                	            '-webkit-transform': rotateCSS
+	 	                	        });
+	 	                	        
+	 	                	    }
+	 	                	}); 
+	 	                	  
 	 	                } else {
 	 	                    $('#seat_list').html('');
 	 	                }
@@ -1109,7 +1199,9 @@
 	 	        	seatService.fn_showLeft();
 				    common_popup("ERROR : " + request.status, "N", "");
 	 	        }
+	 	       
 	 	    );
+		
 		}, fn_save : function (){
 			$("#id_ConfirmInfo").attr("href", "javascript:floorService.fn_floorSettingUpdate()");
        		fn_ConfirmPop('저장 하시겠습니까?');
@@ -1124,10 +1216,14 @@
  	            FloorPartInfo.partMiniLeft =  $("#left_" + FloorPartInfo.partCd).val(); 
  	            FloorPartInfo.partMiniWidth =  $("#width_" + FloorPartInfo.partCd).val(); 
  	            FloorPartInfo.partMiniHeight =  $("#height_" + FloorPartInfo.partCd).val();
+ 	            FloorPartInfo.partMiniRotate =  $("#rotate_" + FloorPartInfo.partCd).val();
  	            FloorPartInfo.partCss = fn_emptyReplace( $("#css_" + FloorPartInfo.partCd).val(), "N");
  	            PartInfoArray.push(FloorPartInfo);
  	        });
-
+            console.log(JSON.stringify(PartInfoArray));
+            
+            
+            
  	        var param = new Object();
  	        param.data = PartInfoArray;
  	        
@@ -1212,6 +1308,10 @@
 				{ label: '좌석 네이밍', name:'part_seat_rule', index:'part_seat_rule', align:'center' },
 				{ label: '미니맵Top', name:'part_mini_top', index:'part_mini_top', align:'center' },
 				{ label: '미니맵Left', name:'part_mini_left', index:'part_mini_left', align:'center' },
+				{ label: '미니맵Left', name:'part_mini_left', index:'part_mini_left', align:'center' },
+				{ label: '미니맵Width', name:'part_mini_width', index:'part_mini_left', align:'center' },
+				{ label: '미니맵Height', name:'part_mini_height', index:'part_mini_left', align:'center' },
+				{ label: '미니맵Rotate', name:'part_mini_rotate', index:'part_mini_left', align:'center' },
 				{ label: '미니맵Css', name:'part_mini_css', index:'part_mini_css', align:'center'},
 				{ label: '정렬순서', name:'part_order', index:'part_order', align:'center'},
 				{ label: '사용유무', name:'use_yn', index:'use_yn', align:'center'},
@@ -1310,6 +1410,8 @@
 		    formData.append('partMiniLeft', fn_emptyReplace($("#partMiniLeft").val(), "0"));
 		    formData.append('partMiniWidth', fn_emptyReplace($("#partMiniWidth").val(), "0"));
 		    formData.append('partMiniHeight', fn_emptyReplace($("#partMiniHeight").val(), "0"));
+		    formData.append('partMiniRotate', fn_emptyReplace($("#partMiniRotate").val(), "0"));
+		    formData.append('partPayCost', fn_emptyReplace($("#partPayCost").val(), "0"));
 		    formData.append('partOrder', fn_emptyReplace($("#partOrder").val(), "0"));
 		    formData.append('useYn', fn_emptyReplace($('input[name=part_use_yn]:checked').val(), "Y"));
 		    formData.append('mode', $("#mode").val());
@@ -1352,7 +1454,11 @@
                 $("#partMiniTop").val("");
                 $("#partMiniLeft").val("");
                 $("#partMiniWidth").val("");
-                $("#partMiniHeight").val("");			                    
+                $("#partMiniHeight").val("");
+                $("#partMiniRotate").val("");
+                $("#partPayCost").val("");
+                
+                
                 $("#partOrder").val("");
 				$("input:radio[name='part_use_yn']:radio[value='Y']").prop('checked', true);
 		        
@@ -1385,7 +1491,9 @@
 			                $("#partMiniTop").val(obj.part_mini_top);
 			                $("#partMiniLeft").val(obj.part_mini_left);
 			                $("#partMiniWidth").val(obj.part_mini_width);
-			                $("#partMiniHeight").val(obj.part_mini_height);			                    
+			                $("#partMiniHeight").val(obj.part_mini_height);	
+			                $("#partMiniRotate").val(obj.part_mini_rotate);	
+			                $("#partPayCost").val(obj.part_pay_cost);
 			                $("#partOrder").val(obj.part_order);
 			                $("input:radio[name='part_use_yn']:radio[value='" + obj.use_yn + "']").prop('checked', true);
 			            }
@@ -1599,7 +1707,7 @@
 	 	                                    "   <input type='text' id='left_" + obj[i].seat_cd + "' name='left_" + obj[i].seat_cd + "' value='" + obj[i].seat_left + "' onchange='left_chage(&#34;" + obj[i].seat_cd + "&#34, this.value)'>" +
 	 	                                    "   <a href='javascript:left_down(&#34;" + obj[i].seat_cd + "&#34;)' class='rightB'></a></td>" +
 	 	                                    "</tr>";
-	 	                                $("#seat_resultList > tbody").append(shtml);
+	 	                                $("#seat_resultList > tbody:last").append(shtml);
 	 	                                shtml = "";
 	 	                            }
 	
@@ -1753,6 +1861,9 @@
  	 ************************************/
  	function height_chage(str, str2) {
  	    $('li[name="' + str + '"]').css('height', str2 + 'px');
+ 	}
+ 	function rotate_chage(str, str2) {
+ 	    $('li[name="' + str + '"]').css('rotate', str2 + '');
  	}
  	
  	
