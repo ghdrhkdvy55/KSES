@@ -143,7 +143,7 @@
                             <h4>현금 영수증 발급</h4>
                             <ul class="bill_confirm">
                                 <li class="check_impnt">
-                                    <input class="magic-checkbox qna_check" type="checkbox" name="layout" id="ENTRY_DVSN_1_bill_confirm" value="Y">
+                                    <input class="magic-checkbox qna_check" type="checkbox" name="layout" id="ENTRY_DVSN_1_bill_confirm" value="Y" onclick="">
                                     <label for="ENTRY_DVSN_1_bill_confirm">현금 영수증 발급</label>     
                                 </li>
                             </ul>
@@ -556,7 +556,6 @@
 				);	    						
 			},
 			fn_enterTypeChange : function(enterDvsn) {
-				
 				if($("#enterDvsn").val() != enterDvsn) {
 					if(enterDvsn == "ENTRY_DVSN_1") {
 						$(".sel_floor_nm").html("");
@@ -564,12 +563,15 @@
 						$(".sel_seat_nm").html("");
 						
 						$("#showHide").show();
-						$("#showHide_seat").hide();				
+						$("#showHide_seat").hide();
+						
 					} else {
+						
 						$("#showHide").hide();
 						$("#showHide_seat").show();
 						$("#section_sel").hide();
 						$("#selectFloorCd").val("");
+						seatService.fn_initializing("ALL");
 					}
 					
 					$("#enterDvsn").val(enterDvsn);
@@ -578,6 +580,7 @@
 					$("#" + enterDvsn + "_cash_number").val("");
 					$("input:radio[name='" + enterDvsn + "_rcpt_dvsn']").eq(0).prop("checked", true);
 					$("input:checkbox[id='" + enterDvsn + "_qna_check']").prop("checked", false);
+					$("input:checkbox[id='" + enterDvsn + "_person_agree']").prop("checked", false);
 				}
 			},
 			fn_floorChange : function() {
@@ -786,10 +789,6 @@
 				var el = document.querySelector('div.pinch-zoom');
 				var pinchzoom = new PinchZoom.default(el, {});
 			},
-			fn_seatChange : function(el) {
-				var seatBtn = $("#area_Map li[id^='s']");
-				
-			},
 			fn_seatSearch : function() {
 				var searchSeatCd = $("#searchSeatCd").val();
 				$("#" + searchSeatCd).attr("tabindex", -1).focus();
@@ -815,7 +814,7 @@
 					fn_openPopup("개인정보 수집 이용여부에 대하여 동의해주세요", "red", "ERROR", "확인", "");
 					return;
 				}
- 				
+				
  				var url = "/front/updateUserResvInfo.do";
 				var params = {
 					"mode" : "Ins",
@@ -826,14 +825,30 @@
 					"floorCd" : $("#floorCd").val(),
 					"partCd" : $("#partCd").val(),
 					"seatCd" : $("#seatCd").val(),
+					"checkDvsn" : "ALL",
 					"resvUserNm" : $("#" + enterDvsn + "_resvUserNm").val(),
 					"resvUserClphn" : $("#" +  enterDvsn + "_resvUserClphn").val(),
 					"resvUserAskYn" : $("input:checkbox[id='" + enterDvsn + "_qna_check']").val(),
-					"resvRcptNumber" : $("#" + enterDvsn + "_cash_number").val(),
-					"resvRcptNumber" : $("#" + enterDvsn + "_cash_number").val(),
 					"indvdlinfoAgreYn" : $("#" + enterDvsn + "_person_agree").val()
 				}
+				
+				if($("input:checkbox[id='" + enterDvsn + "_bill_confirm']").is(":checked")) {
+					params.resvRcptYn == "Y"
+					params.resvRcptDvsn = $("input[name='" + enterDvsn + "_rcpt_dvsn']:checked").val(); 
+					params.resvRcptNumber = $("#" + enterDvsn + "_cash_number").val();
 					
+					if(params.resvRcptNumber == "") {
+						fn_openPopup("현금 영수증 번호를 입력해주세요", "red", "ERROR", "확인", "");
+						return;
+					}
+				} else {
+					params.resvRcptYn == "N"
+					params.resvRcptDvsn = "";
+					params.resvRcptNumber =  "";
+				}
+				
+				return;
+				
 				fn_Ajax
 				(
 				    url,
@@ -859,13 +874,23 @@
 					}
 				);	
 			},
+			fn_billConfirmChange : function() {
+				var enterDvsn = $("#enterDvsn").val();
+				if($("input:checkbox[id='" + enterDvsn + "_bill_confirm']").is(":checked")) {
+					$("#" + enterDvsn  + "_cash_area li").show();
+					$("input:radio[name='" + enterDvsn + "_rcpt_dvsn']").eq(0).prop("checked", true);
+					$("#" + enterDvsn + "_cash_number").val("");
+				} else {
+					$("#" + enterDvsn  + "_cash_area li").hide();
+				}
+			},
 			fn_initializing : function(division) {
 				if(division == "ALL") {
 					$("#section_sel, #tab-a").hide();
 					$("#floorCd, #partCd, #seatCd").val("");
 					$(".sel_floor_nm, .sel_part_nm, .sel_seat_nm").html("");
 				} else if (division == "FLOOR") {
-					$("#section_sel, #tab-a").show();
+					$("#section_sel").show();
 					$("#partCd, #seatCd").val("");
 					$(".sel_part_nm, .sel_seat_nm").html("");
 				} else if (division == "PART") {

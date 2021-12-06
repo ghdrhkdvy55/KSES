@@ -155,9 +155,11 @@
 				}
 				
 				var centerCd = $("#centerCd").val();
-				var url = "/front/resvCenterValidCheck.do";
+				var url = "/front/resvValidCheck.do";
 				var params = {
-					"centerCd" : centerCd
+					"centerCd" : centerCd,
+					"seatCd" : "",
+					"checkDvsn" : "CENTER"
 				}
 				
 				fn_Ajax
@@ -168,14 +170,9 @@
 					false,
 					function(result) {
 						if (result.status == "SUCCESS") {
-							if(result.checkResult.result == "HOLYDAY") {
-								fn_openPopup("해당 지점은 현재 예약하려는 일자에 휴일입니다.", "red", "ERROR", "확인", "");
+							if(result.validResult.resultCode != "SUCCESS") {
+								fn_openPopup(result.validResult.resultMessage, "red", "ERROR", "확인", "");
 								return;
-							} else if(result.checkResult.result == "HOLYDAY") {
-								fn_openPopup("해당 지점은 현재 예약 가능시간이 아닙니다.", "red", "ERROR", "확인", "");
-								return;
-							} else if(result.checkResult.result == "ERROR") {
-								fn_openPopup("시스템 에러가 발생하였습니다..", "red", "ERROR", "확인", "");
 							} else {
 								centerService.fn_checkForm();
 							}

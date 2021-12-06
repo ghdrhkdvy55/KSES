@@ -580,7 +580,7 @@
 			},
 			// 로그인 시작
 			test : function() {
-				var url = "/front/rsv/resvCenterValidCheck.do";
+				var url = "/front/rsv/resvValidCheck.do";
 				var params = {
 					"centerCd" : "C21110401"
 				}

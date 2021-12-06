@@ -132,5 +132,5 @@ public interface ResvInfoManageService {
 	 * @return
 	 * @throws Exception
 	 */
-	public String resvCenterValidCheck(Map<String, Object> params) throws Exception;
+	public String resvValidCheck(Map<String, Object> params) throws Exception;
 }

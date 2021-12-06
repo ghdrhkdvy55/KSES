@@ -213,6 +213,8 @@ public class FrontResvInfoManageController {
 				vo.setUserId(userLoginInfo.getUserId());
 			}
 			
+			/*resvService.resvValidCheck();*/
+			
 			// resvService.resvInfoValidCheck(vo);
 			int ret = resvService.updateUserResvInfo(vo);
 			if(ret > 0) {
@@ -221,24 +223,25 @@ public class FrontResvInfoManageController {
 				model.addObject("resvInfo", resvInfo);
 				
 				UserInfo user = new UserInfo();
-				if("USER_DVSN_1".equals(vo.getResvUserDvsn())) {
+				if("USER_DVSN_2".equals(vo.getResvUserDvsn())) {
 					user.setUserId(userLoginInfo.getUserId());
 					user.setUserBirthDy(userLoginInfo.getUserBirthDy());
 					user.setUserSexMf(userLoginInfo.getUserSexMf());
 					user.setUserPhone(userLoginInfo.getUserPhone());
 					user.setUserNm(userLoginInfo.getUserNm());
-				} else {
+					user.setMode("Ins");
+					userService.updateUserInfo(user);
+				}/* else {
 					user.setUserId((String)resvInfo.get("user_id"));
 					user.setUserBirthDy("19000000");
 					user.setUserSexMf("N");
 					user.setUserPhone(vo.getResvUserClphn());
 					user.setUserNm(vo.getResvUserNm());
-				}
+				}*/
 
-				user.setMode("Ins");
-				
+
 				//회원 정보
-				userService.updateUserInfo(user);
+				
 				
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
@@ -331,8 +334,8 @@ public class FrontResvInfoManageController {
 		return model;
 	}
 	
-	@RequestMapping (value="resvCenterValidCheck.do")
-	public ModelAndView resvCenterValidCheck(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo, 
+	@RequestMapping (value="resvValidCheck.do")
+	public ModelAndView resvValidCheck(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo, 
 												@RequestBody Map<String, Object> params,
 												HttpServletRequest request,
 												BindingResult result) throws Exception {
@@ -352,14 +355,12 @@ public class FrontResvInfoManageController {
 				return model;
 			}
 			
-			params.put("result", "");
-			params.put("resvDate", "");
-			resvService.resvCenterValidCheck(params);
+			resvService.resvValidCheck(params);
 			
-			model.addObject("checkResult", params);
+			model.addObject("validResult", params);
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		} catch(Exception e) {
-			LOGGER.error("resvCenterValidCheck : " + e.toString());
+			LOGGER.error("resvValidCheck : " + e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg")); 
 		}
