@@ -46,11 +46,8 @@
 		WHERE ROWNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
 		ORDER BY TA.RNUM DESC 
    	</select>
-   	
    	<select id="selectUserInfoDetail" resultType="lmap">
-		SELECT 
-			USER_ID, USER_NM, USER_PHONE, USER_SEX_MF, USER_BIRTH_DY, LAST_UPDUSR_ID, LAST_UPDT_DTM,
-			USER_RCPT_YN, USER_RCPT_DVSN, USER_RCPT_NUMBER
+		SELECT USER_ID, USER_NM, USER_PHONE, USER_SEX_MF, USER_BIRTH_DY, LAST_UPDUSR_ID, LAST_UPDT_DTM
 		FROM TEST_USER_INFO 
 		WHERE USER_ID = #{userId}
    	</select>
@@ -69,37 +66,34 @@
 			USER_SEX_MF = #{userSexMf, jdbcType=VARCHAR}, 
 			USER_BIRTH_DY = #{userBirthDy, jdbcType=VARCHAR}, 
 			LAST_UPDUSR_ID = #{userId}, 
+			USER_CARD_ID  = #{ userCardId, jdbcType=VARCHAR} , 
+            USER_CARD_NO  = #{ userCardNo, jdbcType=VARCHAR}  ,
+            USER_CARD_SEQ  = #{ userCardSeq, jdbcType=VARCHAR} , 
 			LAST_UPDT_DTM = SYSDATE  
 		WHEN NOT MATCHED THEN
 		INSERT	
 		(
-			USER_ID, USER_NM, USER_PHONE, USER_SEX_MF, USER_BIRTH_DY, LAST_UPDUSR_ID, LAST_UPDT_DTM
+			USER_ID, USER_NM, USER_PHONE, USER_SEX_MF, USER_BIRTH_DY, LAST_UPDUSR_ID, LAST_UPDT_DTM, 
+			USER_CARD_ID, USER_CARD_NO, USER_CARD_SEQ
 		)
 		VALUES 
 		(
-			#{userId}, #{userNm}, #{userPhone,jdbcType=VARCHAR}, #{userSexMf,jdbcType=VARCHAR}, #{userBirthDy,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, SYSDATE
+			#{userId}, #{userNm}, #{userPhone,jdbcType=VARCHAR}, #{userSexMf,jdbcType=VARCHAR}, #{userBirthDy,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, SYSDATE,
+		    #{ userCardId, jdbcType=VARCHAR}, #{ userCardNo, jdbcType=VARCHAR} ,  #{ userCardSeq, jdbcType=VARCHAR} 
 		)		
 	</insert>
 
 	<update id="updateUserInfo">
-		UPDATE TEST_USER_INFO SET 
-			USER_NM = #{userNm, jdbcType=VARCHAR}, 
-			USER_PHONE = #{userPhone, jdbcType=VARCHAR}, 
-			USER_SEX_MF = #{userSexMf, jdbcType=VARCHAR}, 
-			USER_BIRTH_DY = #{userBirthDy, jdbcType=VARCHAR}, 
-			LAST_UPDUSR_ID = #{userId}, 
-			LAST_UPDT_DTM = sysdate                     
-		WHERE USER_ID = #{userId}
-   	</update>
-   	
-	<update id="updateUserRcptInfo">
-		UPDATE TEST_USER_INFO SET 
-			USER_RCPT_YN = #{userRcptYn, jdbcType=VARCHAR}, 
-			USER_RCPT_DVSN = #{userRcptDvsn, jdbcType=VARCHAR}, 
-			USER_RCPT_NUMBER = #{userRcptNumber, jdbcType=VARCHAR},
-			LAST_UPDUSR_ID = #{userId}, 
-			LAST_UPDT_DTM = SYSDATE                      
-		WHERE USER_ID = #{userId}
+			UPDATE TEST_USER_INFO SET USER_NM = #{userNm, jdbcType=VARCHAR}
+		                              , USER_PHONE = #{userPhone, jdbcType=VARCHAR}   
+		                              , USER_SEX_MF = #{userSexMf, jdbcType=VARCHAR} 
+		                              , USER_BIRTH_DY = #{userBirthDy, jdbcType=VARCHAR}    
+		                              , USER_CARD_ID  = #{ userCardId, jdbcType=VARCHAR}  
+		                              , USER_CARD_NO  = #{ userCardNo, jdbcType=VARCHAR}  
+		                              , USER_CARD_SEQ  = #{ userCardSeq, jdbcType=VARCHAR}  
+		                              , LAST_UPDUSR_ID = #{userId}   
+		                              , LAST_UPDT_DTM = sysdate                     
+	       	WHERE USER_ID = #{userId}
    	</update>
    	
    	<delete id="deleteUserInfo">

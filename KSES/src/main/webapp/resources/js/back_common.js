@@ -454,6 +454,17 @@ function ckeckboxValue(message, checkboxNm, _modelPop){
 	}
 	return checkboxvalue.substring(1);
 }
+
+// 체크 박스 값 가지고 오기 
+function ckeckboxValueNoPopup(checkboxNm){
+	var checkboxvalue = "";
+	$("input:checkbox[name="+checkboxNm+"]:checked").each(function(){
+			checkboxvalue = checkboxvalue+","+ $(this).val();
+	});	
+	
+	return checkboxvalue.substring(1);
+}
+
 //숫자만 입력 
 function only_num() {
     if (((event.keyCode < 48) || (event.keyCode > 57)) && (event.keyCode != 190)) event.returnValue = false;
@@ -571,12 +582,14 @@ function fn_checkboxListJson(_returnObject, _result, _checkVal, _checkboxNm){
 	$("#"+_returnObject).empty();
 	var count = 0;
 	var object_height = 1;
-	console.log(JSON.stringify(_result));
+	//console.log(JSON.stringify(_result));
 	
 	
 	for (var i in _result) {
 	    var array = Object.values(_result[i])
-		checked = _checkVal.includes(array[0]) ? "checked" : "";
+	    if (_checkVal != undefined  && _checkVal != "")
+	       checked = _checkVal.includes(array[0]) ? "checked" : "";
+	    
 		count += 1;
 		if (count%6 === 0){
 		   object_height += 1;

@@ -597,7 +597,7 @@ public class SmartUtil {
            
             
             info.setRspnsRecptnTm(nowTime());
-            info.setResultCode(node.get("Error_Cd").toString().replace("\"", ""));
+            info.setResultCode(node.get("Error_Cd").asText());
             info.setResultMessage(node.toString());
             info.setSendMessage(_jsonInfo);
             info.setRqesterId("admin");

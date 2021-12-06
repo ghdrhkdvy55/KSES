@@ -94,7 +94,7 @@
         <result property="frst_regist_dtm" column="FRST_REGIST_DTM" /> 
         <result property="last_updusr_id" column="LAST_UPDUSR_ID" /> 
         <result property="last_updt_dtm" column="LAST_UPDT_DTM" />
-        <result property="boardCenterId" column="BOARD_CENTER_ID" /> 
+        <result property="board_center_id" column="BOARD_CENTER_ID" /> 
         <result property="board_cn" column="BOARD_CN" jdbcType="CLOB" javaType="java.lang.String" /> 
      </resultMap>
 
@@ -103,7 +103,7 @@
      <![CDATA[
           SELECT BOARD_SEQ, BOARD_CD, BOARD_REFNO, BOARD_CLEVEL, BOARD_NOTICE_START_DAY, BOARD_NOTICE_END_DAY,
                  BOARD_POPUP, BOARD_TITLE, BOARD_TOP_SEQ, BOARD_VISIT_CNT, USE_YN, BOARD_CN, BOARD_GROUP,
-                 FRST_REGTER_ID, FRST_REGIST_DTM, LAST_UPDUSR_ID, LAST_UPDT_DTM , BOARD_CENTER_ID	        
+                 FRST_REGTER_ID, FRST_REGIST_DTM, LAST_UPDUSR_ID, LAST_UPDT_DTM , BOARD_CENTER_ID
 		  FROM 	TSES_BOARD_INFO_I a        	
 		  WHERE 	BOARD_SEQ = #{boardSeq}	
 			]]>	
@@ -171,7 +171,7 @@
 	                                 BOARD_CN = #{boardCn, jdbcType=VARCHAR} ,
 	                                 LAST_UPDUSR_ID =#{userId,jdbcType=VARCHAR} ,
 	                                 LAST_UPDT_DTM = SYSDATE,
-	                                 BOARD_CENTER_ID = #{boardCenterId,jdbcType=VARCHAR}  
+	                                 BOARD_CENTER_ID = #{boardCenterId,jdbcType=VARCHAR},  
 	                                 BOARD_TOP_SEQ = #{boardTopSeq}
       WHERE BOARD_SEQ = #{boardSeq}   
       ]]>        

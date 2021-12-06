@@ -17,6 +17,8 @@
     	<result property="start_floor" column="start_floor" jdbcType="VARCHAR" javaType="java.lang.String"/>
     	<result property="end_floor" column="end_floor" jdbcType="VARCHAR" javaType="java.lang.String"/>
     	<result property="floor_info" column="floor_info" jdbcType="VARCHAR" javaType="java.lang.String"/>
+    	<result property="center_pilot_yn" column="CENTER_PILOT_YN" jdbcType="VARCHAR" javaType="java.lang.String"/>
+    	<result property="center_speed_cd" column="CENTER_SPEED_CD" jdbcType="VARCHAR" javaType="java.lang.String"/>
 	</resultMap>
 	
 	<select id="selectCenterInfoList" resultType="lmap">
@@ -52,7 +54,7 @@
 		SELECT  
 			CENTER_CD, CENTER_NM, CENTER_ZIPCD, CENTER_ADDR1, CENTER_ADDR2, 
 			CENTER_TEL, CENTER_FAX, CENTER_IMG, CENTER_MAP, CENTER_URL,
-			CENTER_INFO, USE_YN, START_FLOOR, END_FLOOR, FLOOR_INFO
+			CENTER_INFO, USE_YN, START_FLOOR, END_FLOOR, FLOOR_INFO, CENTER_PILOT_YN, CENTER_SPEED_CD
 		 FROM TSEB_CENTER_INFO_M
 		 WHERE CENTER_CD = #{centerCd}		  
     </select>
@@ -110,14 +112,15 @@
 			CENTER_CD, CENTER_NM, CENTER_ZIPCD, CENTER_ADDR1, CENTER_ADDR2, 
 			CENTER_TEL, CENTER_FAX, FRST_REGTER_ID, FRST_REGIST_DTM, LAST_UPDUSR_ID, 
 			LAST_UPDT_DTM, CENTER_IMG, CENTER_URL, CENTER_MAP, USE_YN, 
-			CENTER_INFO, FLOOR_INFO, START_FLOOR, END_FLOOR, CENTER_STDM_DVSN
+			CENTER_INFO, FLOOR_INFO, START_FLOOR, END_FLOOR, CENTER_STDM_DVSN, CENTER_PILOT_YN, CENTER_SPEED_CD
 		)
 		VALUES 
 		(
 			#{centerCd}, #{centerNm}, #{centerZipcd, jdbcType=VARCHAR}, #{centerAddr1, jdbcType=VARCHAR}, #{centerAddr2, jdbcType=VARCHAR}, 
 			#{centerTel, jdbcType=VARCHAR}, #{centerFax, jdbcType=VARCHAR}, #{userId, jdbcType=VARCHAR}, SYSDATE, #{userId, jdbcType=VARCHAR}, 
 			SYSDATE, #{centerImg, jdbcType=VARCHAR}, #{centerUrl ,jdbcType=VARCHAR}, #{centerMap, jdbcType=VARCHAR}, 'Y', 
-			#{centerInfo, jdbcType=VARCHAR}, #{floorInfo, jdbcType=VARCHAR}, #{startFloor, jdbcType=VARCHAR}, #{endFloor, jdbcType=VARCHAR}, 'TEST'
+			#{centerInfo, jdbcType=VARCHAR}, #{floorInfo, jdbcType=VARCHAR}, #{startFloor, jdbcType=VARCHAR}, #{endFloor, jdbcType=VARCHAR}, 'TEST',
+		    #{centerPilotYn , jdbcType=VARCHAR}, #{centerSpeedCd , jdbcType=VARCHAR}
 		);
     	
 		<if test="floorInfo != null">
@@ -193,7 +196,9 @@
 			</if>      
 			,FLOOR_INFO = #{floorInfo, jdbcType=VARCHAR}
 			,START_FLOOR = #{startFloor, jdbcType=VARCHAR}
-			,END_FLOOR = #{endFloor, jdbcType=VARCHAR}                      
+			,END_FLOOR = #{endFloor, jdbcType=VARCHAR}      
+			, CENTER_PILOT_YN = #{centerPilotYn , jdbcType=VARCHAR}  
+			, CENTER_SPEED_CD = #{centerSpeedCd , jdbcType=VARCHAR}                
 		WHERE CENTER_CD = #{centerCd};
 		
 		<if test="floorInfo != null">
