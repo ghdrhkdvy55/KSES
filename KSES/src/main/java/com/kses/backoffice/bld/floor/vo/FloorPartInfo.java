@@ -70,4 +70,6 @@ public class FloorPartInfo {
 	 private String userId = "";
 	 
 	 private String partMiniRotate = "";
+	 
+	 private String partPayCost = "";
 }
