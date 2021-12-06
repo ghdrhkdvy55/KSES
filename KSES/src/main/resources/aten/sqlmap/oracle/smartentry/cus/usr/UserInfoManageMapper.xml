@@ -66,15 +66,20 @@
 			USER_SEX_MF = #{userSexMf, jdbcType=VARCHAR}, 
 			USER_BIRTH_DY = #{userBirthDy, jdbcType=VARCHAR}, 
 			LAST_UPDUSR_ID = #{userId}, 
+			USER_CARD_ID  = #{ userCardId, jdbcType=VARCHAR} , 
+            USER_CARD_NO  = #{ userCardNo, jdbcType=VARCHAR}  ,
+            USER_CARD_SEQ  = #{ userCardSeq, jdbcType=VARCHAR} , 
 			LAST_UPDT_DTM = SYSDATE  
 		WHEN NOT MATCHED THEN
 		INSERT	
 		(
-			USER_ID, USER_NM, USER_PHONE, USER_SEX_MF, USER_BIRTH_DY, LAST_UPDUSR_ID, LAST_UPDT_DTM
+			USER_ID, USER_NM, USER_PHONE, USER_SEX_MF, USER_BIRTH_DY, LAST_UPDUSR_ID, LAST_UPDT_DTM, 
+			USER_CARD_ID, USER_CARD_NO, USER_CARD_SEQ
 		)
 		VALUES 
 		(
-			#{userId}, #{userNm}, #{userPhone,jdbcType=VARCHAR}, #{userSexMf,jdbcType=VARCHAR}, #{userBirthDy,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, SYSDATE
+			#{userId}, #{userNm}, #{userPhone,jdbcType=VARCHAR}, #{userSexMf,jdbcType=VARCHAR}, #{userBirthDy,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, SYSDATE,
+		    #{ userCardId, jdbcType=VARCHAR}, #{ userCardNo, jdbcType=VARCHAR} ,  #{ userCardSeq, jdbcType=VARCHAR} 
 		)		
 	</insert>
 
@@ -82,7 +87,10 @@
 			UPDATE TEST_USER_INFO SET USER_NM = #{userNm, jdbcType=VARCHAR}
 		                              , USER_PHONE = #{userPhone, jdbcType=VARCHAR}   
 		                              , USER_SEX_MF = #{userSexMf, jdbcType=VARCHAR} 
-		                              , USER_BIRTH_DY = #{userBirthDy, jdbcType=VARCHAR}     
+		                              , USER_BIRTH_DY = #{userBirthDy, jdbcType=VARCHAR}    
+		                              , USER_CARD_ID  = #{ userCardId, jdbcType=VARCHAR}  
+		                              , USER_CARD_NO  = #{ userCardNo, jdbcType=VARCHAR}  
+		                              , USER_CARD_SEQ  = #{ userCardSeq, jdbcType=VARCHAR}  
 		                              , LAST_UPDUSR_ID = #{userId}   
 		                              , LAST_UPDT_DTM = sysdate                     
 	       	WHERE USER_ID = #{userId}

@@ -87,4 +87,6 @@ public class CenterInfo {
 	 
 	 // 등록/수정자 ID
 	 private String userId = "";
+	 
+	 private String centerPilotYn = "";
 }

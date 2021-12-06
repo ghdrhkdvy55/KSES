@@ -15,5 +15,8 @@ public class UserInfo {
 	private String lastUpdtDtm = "";
 	private String lastUpdusrId = "";
 	private String mode = "";
+	private String userCardId = "";
+	private String userCardNo = "";
+	private String userCardSeq = "";
 	
 }
