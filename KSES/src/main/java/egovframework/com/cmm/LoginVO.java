@@ -45,6 +45,9 @@ public class LoginVO implements Serializable{
 	private String empState; 
 	private String empPic;
 	private String ip;
+	private String centerCd = "";
+	
+	
 	
 	
 }

@@ -99,6 +99,16 @@ public class ResvInfoManageController {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
 		try {
+			  
+	          Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+				
+			  if(!isAuthenticated) {
+					model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
+					model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
+					model.setViewName("/backoffice/login");
+					return model;
+			  } 
+			
 			  int pageUnit = searchVO.get("pageUnit") == null ? propertiesService.getInt("pageUnit") : Integer.valueOf((String) searchVO.get("pageUnit"));
 			  
 			  searchVO.put("pageSize", propertiesService.getInt("pageSize"));
@@ -115,7 +125,13 @@ public class ResvInfoManageController {
 			  searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
 			  searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
 			  
-			  LOGGER.debug("pageUnit End");
+			  loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
+			  
+			  
+			  searchVO.put("authorCd", loginVO.getAuthorCd());
+			  searchVO.put("centerCd", loginVO.getCenterCd());
+			  
+			  
 			  List<Map<String, Object>> list = resvService.selectResInfoManageListByPagination(searchVO);
 			  LOGGER.debug("[-------------------------------------------list:" + list.size() + "------]");
 		      model.addObject(Globals.JSON_RETURN_RESULTLISR, list);

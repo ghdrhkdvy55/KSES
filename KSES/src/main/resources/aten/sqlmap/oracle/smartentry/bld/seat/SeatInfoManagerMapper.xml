@@ -28,6 +28,9 @@
 			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchPartCd)">
 				AND TRIM(A.PART_CD) = #{params.searchPartCd}
 			</if>	
+			<if test="params.authorCd != 'ROLE_ADMIN' and params.authorCd != 'ROLE_SYSTEM'">
+				   AND B.CENTER_CD = #{params.centerCd}
+			</if>	
 		) TB  
 		WHERE RNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}
 		ORDER BY TB.SEAT_CD ASC  
