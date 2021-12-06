@@ -153,7 +153,7 @@ public class fileServiceImpl extends EgovAbstractServiceImpl implements fileServ
 	    }else {	    
 		    while (!createNewFile(f) && count < 9999) {  
 		      count++;
-		      String newName = body+"[" + count +"]" + ext;
+		      String newName = body+ "_" + count + ext;
 		      LOGGER.debug("파일이 있을때  filenm:"+ newName);
 		      f = new File(f.getParent(), newName);
 		    }
