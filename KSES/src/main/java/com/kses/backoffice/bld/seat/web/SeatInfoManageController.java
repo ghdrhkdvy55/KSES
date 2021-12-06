@@ -138,6 +138,11 @@ public class SeatInfoManageController {
 		    searchVO.put("firstIndex", paginationInfo.getFirstRecordIndex());
 		    searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
 		    searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
+		    
+		    loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
+			searchVO.put("authorCd", loginVO.getAuthorCd());
+			searchVO.put("centerCd", loginVO.getCenterCd());
+			  
 			  
 			List<Map<String, Object>> seatList = seatService.selectSeatInfoList(searchVO);
 			int totCnt = seatList.size() > 0 ?  Integer.valueOf( seatList.get(0).get("total_record_count").toString()) : 0;

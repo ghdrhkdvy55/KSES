@@ -203,9 +203,24 @@ public class EgovLoginController {
 	    	LoginVO loginVO = (LoginVO)httpSession.getAttribute("LoginVO");
 	    	loginVO.setIp(EgovClntInfo.getClntIP(request));
 	    	*/
+	    	LoginVO loginvo = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
+	    	String url = "";
+	    	switch (loginvo.getAuthorCd()) {
+	    	    case "ROLE_ADMIN" : 
+	    	    	url = "forward:/backoffice/bas/codeList.do";
+	    	    	break;
+	    	    case "ROLE_SYSTEM":
+		    	    url = "forward:/backoffice/bas/codeList.do";
+	    	    	break;
+	    	    case "ROLE_MANAGER":
+		    	    url = "forward:/backoffice/rsv/rsvList.do";
+	    	    	break;
+	    	    case "ROLE_USER":
+		    	    url = "forward:/backoffice/rsv/rsvList.do";
+	    	    	break;
+	    	}
 	    	
-	  		
-	    	return "forward:/backoffice/bas/codeList.do";
+	    	return url;
     	} catch(Exception e){
     		LOGGER.debug("login Error:" + e.toString());
     		model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
