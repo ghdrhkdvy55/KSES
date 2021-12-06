@@ -12,6 +12,11 @@ public class UserInfo {
 	private String userPhone = "";
 	private String userSexMf = "";
 	private String userBirthDy = "";
+	private String indvdlinfoAgreYn = "";
+	private String indvdlinfoAgreDt = "";
+	private String userRcptYn = "";
+	private String userRcptDvsn = "";
+	private String userRcptNumber = "";
 	private String lastUpdtDtm = "";
 	private String lastUpdusrId = "";
 	private String mode = "";
