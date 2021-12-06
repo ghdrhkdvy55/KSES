@@ -61,6 +61,9 @@ public class ResvInfo {
 	// 문진표 작성 여부
 	private String resvUserAskYn;
 	
+	// 개인정보 수집 이용 여부
+	private String indvdlinfoAgreYn;
+	
 	// 발권 구분
 	private String resvTicketYn;
 
@@ -82,8 +85,11 @@ public class ResvInfo {
 	// 환불 비용
 	private int resvCancelCost;
 
-	// 현금 영수증 출력
+	// 현금 영수증 발급 여부
 	private String resvRcptYn;
+	
+	// 현금 영수증 발급 구분
+	private String resvRcptDvsn;
 	
 	// 현금 영수증 번호
 	private String resvRcptNumber;
@@ -106,7 +112,7 @@ public class ResvInfo {
 	// 입력 구분
 	private String mode;
 	
-
+	// 결제 구분
 	private String resvPayDvsn = "";
 	
 	//신규 추가

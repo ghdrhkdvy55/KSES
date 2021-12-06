@@ -202,10 +202,13 @@
 				    	console.log(result);
 				    	
 						if (result.status == "SUCCESS") {
-							
-							loginService.createUserSession(result.regist);
+							if(result.regist.Error_Cd == "SUCCESS") { 
+								loginService.createUserSession(result.regist);
+							} else {
+								fn_openPopup(result.regist.Error_Msg, "red", "ERROR", "확인", "");
+							}
 						} else {
-							fn_openPopup("등록되지 않은 아이디이거나 비밀번호를 잘못 입력하였습니다.", "red", "ERROR", "확인", "");
+							fn_openPopup("로그인중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
 						}
 					},
 					function(request) {
@@ -238,7 +241,7 @@
 				    params,
 					false,
 					function(result) {
-				    	if (result.status == "SUCCESS") {
+				    	if (result == "SUCCESS") {
 				    		if($("#login_type").val() == "1" && $("input:checkbox[id='saveId']").is(":checked")) {
 				    			localStorage.setItem("saveId", $("#id").val());	
 				    		} else {

@@ -131,7 +131,7 @@
 	]]>	    
     </select>
     
-    <!--  수정 RESV_STATE 필드 추가  -->
+	<!-- 회원 메인페이지 예약정보 조회 -->
 	<select id="selectUserResvInfo" resultType="lmap">
 	<![CDATA[
 		SELECT  
@@ -302,12 +302,14 @@
     </update>
 
 	<!-- 입력은 대소문자구분 (to의 필드값)-->
-	<select id="resvCenterValidCheck" resultType="string" statementType="CALLABLE">
+	<select id="resvValidCheck" resultType="string" statementType="CALLABLE">
 	{CALL
 		KSES_USER.SP_RESV_CENTER_VALID
 		(
 			#{params.centerCd, mode=IN, jdbcType=VARCHAR, javaType=string},
-			#{params.result, mode=OUT, jdbcType=VARCHAR, javaType=string},
+			#{params.seatCd, mode=IN, jdbcType=VARCHAR, javaType=string},
+			#{params.checkDvsn, mode=IN, jdbcType=VARCHAR, javaType=string},
+			#{params.resultCode, mode=OUT, jdbcType=VARCHAR, javaType=string},
 			#{params.resvDate, mode=OUT, jdbcType=VARCHAR, javaType=string}
 		)
 	}

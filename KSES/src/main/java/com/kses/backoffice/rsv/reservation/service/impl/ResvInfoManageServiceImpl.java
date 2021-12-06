@@ -5,6 +5,7 @@ import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.kses.backoffice.rsv.reservation.mapper.ResvInfoManageMapper;
 import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
 import com.kses.backoffice.rsv.reservation.vo.ResvInfo;
+import com.kses.backoffice.rsv.reservation.vo.reservation;
+import com.kses.backoffice.rsv.reservation.vo.speedon;
 
 @Service
 public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implements ResvInfoManageService {
@@ -99,9 +102,22 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	}
 	
 	@Override
-	public String resvCenterValidCheck(Map<String, Object> params) throws Exception {
+	public String resvValidCheck(Map<String, Object> params) throws Exception {
 		// TODO Auto-generated method stub
-		return resvMapper.resvCenterValidCheck(params);
+		params.put("resultCode", "");
+		params.put("resvDate", "");
+		
+		resvMapper.resvValidCheck(params);
+		
+		if(!params.get("resultCode").equals("SUCCESS")) {
+			for(reservation resv : reservation.values()) {
+				if(resv.getCode().equals(params.get("resultCode"))) {
+					params.put("resultMessage", resv.getName());
+				}
+			}
+		}
+		
+		return "";
 	}
 	
 	@Override

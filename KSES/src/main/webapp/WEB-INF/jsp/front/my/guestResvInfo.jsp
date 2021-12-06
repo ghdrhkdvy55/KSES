@@ -95,9 +95,10 @@
                             </ol>
                         </li>                                                                                    
                     </ul>
-                    <div class="close_btn">
-                        <a href="javascript:location.reload();">닫기</a>
-                    </div>
+                    <ul class="non_memBtn">
+                        <li class="cancelBtn"><a href="">예약취소</a></li>
+                        <li class="close_btn"><a href="javascript:location.reload();">닫기</a></li>
+                    </ul>
                 </div>
             </div>
         </div>

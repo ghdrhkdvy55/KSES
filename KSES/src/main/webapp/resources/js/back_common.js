@@ -93,7 +93,6 @@ $('.blacklist.tabs>.tab').on('click', function(){
   $(this).addClass('active');
   $tbody.removeClass('active');
   $tbody.eq(tabIdx).addClass('active');
-  
 })
 
 // 맨 마지막 문자 얻어 오기 

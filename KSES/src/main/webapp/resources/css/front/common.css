@@ -2053,9 +2053,21 @@ ul.tabs li{
 .rsvInfo_result {
     border-top: none !important;
 }
+
+.non_memBtn li {display: inline-block; width: 48%;}
+.non_memBtn li a {display: block;}
 .close_btn a{
-    display: block;
     background: #393939;
+    padding: 2rem 0;
+    text-align: center;
+    border-radius: 8px;
+    font-size: 1.1em;
+    color: #fff;
+    margin-top: 5rem;
+}
+
+.cancelBtn a {
+    background: #c0c0c0;
     padding: 2rem 0;
     text-align: center;
     border-radius: 8px;
@@ -2290,7 +2302,6 @@ ul.tabs li{
     float: none !important;
     top: 0!important;
 }
-
 .prsn_agree {
     list-style: none!important;
     padding: 0 1rem;
