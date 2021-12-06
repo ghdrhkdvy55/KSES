@@ -1111,9 +1111,9 @@
 	 	        }
 	 	    );
 		}, fn_save : function (){
-			$("#id_ConfirmInfo").attr("href", "javascript:floorService.fn_floorUpdate()");
+			$("#id_ConfirmInfo").attr("href", "javascript:floorService.fn_floorSettingUpdate()");
        		fn_ConfirmPop('저장 하시겠습니까?');
-		},  fn_floorUpdate : function (){
+		},  fn_floorSettingUpdate : function (){
 			$("#confirmPage").bPopup().close();
 			var PartInfoArray = new Array();
             $("input:hidden[name=part_cd]").each(function() {
