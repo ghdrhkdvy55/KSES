@@ -55,6 +55,7 @@ public class AttendInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
 				|| (vo.getInoutDvsn().equals("IN") && SmartUtil.NVL(info.get("inout_dvsn"), "").toString().equals("OT") )
 				|| (vo.getInoutDvsn().equals("OT") && SmartUtil.NVL(info.get("inout_dvsn"), "").toString().equals("IN") )
 					) {
+				
 				ret = attendMapper.insertAttendInfo(vo);
 				if (ret > 0) {
 					if (info == null) 
@@ -63,6 +64,9 @@ public class AttendInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
 					vo.setUserId(SmartUtil.NVL(info.get("user_id"), "").toString());
 					vo.setUserNm(SmartUtil.NVL(info.get("user_nm"), "").toString());
 					vo.setResvSeq("OK");
+					//
+					
+					
 				}else {
 					vo.setRcvCd("ERROR_03"); //시스템 에러
 				}

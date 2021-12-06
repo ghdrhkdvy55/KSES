@@ -217,6 +217,17 @@ public class ResJosnController{
         		String inOt = attempInfos[2];
         		String gubun = attempInfos[3];
         		String userId = attempInfos[4];
+        		String centerPilotYn = attempInfos[5];
+        		String tradNo = attempInfos[6];
+        		String resvEntryDvsn = attempInfos[7];
+        		String resvPayCost = attempInfos[8];
+        		
+        		String user_card_id = attempInfos[9];
+        		String user_card_seq = attempInfos[10];
+        		String user_card_password = attempInfos[11];
+        		String center_speed_cd = attempInfos[12];
+        		
+        		
         		
         		
         		
@@ -224,10 +235,50 @@ public class ResJosnController{
         		if (  Integer.valueOf( SmartUtil.timeCheck(qrTime)) < -30  &&  gubun.equals("INTERVAL") ) {
         			ERROR_CD = "ERROR_01";
         			ERROR_MSG = "30초 시간이 경과된 QR입니다.";
-        			
+        			model.addObject("ERROR_CD", ERROR_CD);
+                	model.addObject("ERROR_MSG", ERROR_MSG);
+                	return model;
         		}
         		
         		// 현재 날짜/시간
+        		if (centerPilotYn.equals("Y") && !tradNo.equals("") && Integer.valueOf( resvPayCost) > 0) {
+        			//결제 먼저 하기 
+        		
+        			String Url =  propertiesService.getString("sppeedUrl_T") +"trade/fepWithdraw";
+        			
+        			String jsonInfo = "{\"External_Key\" : \""+ resSeq+"\"," + 
+        					"        \"Card_Id\" : \"1080149960\"," + 
+        					"        \"Card_Pw\" : \"4LxgyCcT9k74pXwMQNAs4k/QFB1cwwhiWcGbHmKmK+o=\"," + 
+        					"        \"Card_Seq\" : \"1\"," + 
+        					"        \"Div_Cd\" : \"10404\"," + 
+        					"        \"Pay_Type\" : \"001\"," + 
+        					"        \"Trade_Cd\" : \"20A61\"," + 
+        					"        \"Trade_Pay\" : \""+ resvPayCost +"\"," + 
+        					"        \"Trade_Detail\" : \"입장료 테스트\"," + 
+        					"        \"System_Type\" : \"E\"}";
+        			
+        			JsonNode node = SmartUtil.requestHttpJson(Url, jsonInfo, "SPEEDWITHDRAW", "SPEEDON", "KSES");
+	   				if (node.get("Error_Cd").asText().equals("SUCCESS")  ) {
+	   					 //예약 테이블 출금 정보 처리 하기 
+	   					 ResvInfo resInfo = new ResvInfo();
+	   					 resInfo.setResvSeq(resSeq);
+	   					 resInfo.setResvPayDvsn("RESV_PAY_DVSN_2");
+	   					 resInfo.setTradNo(node.get("Trade_No").asText());
+	   					 resService.resPriceChange(resInfo);
+	   					 
+	   				}else {
+	   					for (speedon direction : speedon.values()) {
+                            if (direction.getCode().equals(node.get("Error_Cd").asText())) {
+                            	ERROR_MSG = direction.getName();
+                            }
+	   					}
+	   					//예약 결계 최소 관련  내용
+	   					model.addObject("ERROR_CD", node.get("Error_Cd").asText());
+	                	model.addObject("ERROR_MSG", ERROR_MSG);
+	                	return model;
+	   				}
+	   				
+        		}
         		
         		String formatedNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
         		sendInfo.setUserId(userId);
@@ -240,6 +291,9 @@ public class ResJosnController{
         		
         		
         		sendInfo = attendService.insertAttendInfo(sendInfo);
+        		
+        		
+        		
         		if (sendInfo.getRcvCd().equals("OK")) {
         			ERROR_CD = "OK";
         			ERROR_MSG = "";
@@ -309,7 +363,17 @@ public class ResJosnController{
 				
 				EgovFileScrty fileScrty = new EgovFileScrty();
 				String gubun = tickPlace.equals("ONLINE") ? "INTERVAL" : "PAPER";
-				String qrCode = fileScrty.encode(resvSeq+":"+qrTime+":"+inOt+":"+ gubun + ":" + SmartUtil.NVL(resInfo.get("user_id"), "").toString());
+				
+				
+				String qrCode = fileScrty.encode(resvSeq+":"+qrTime+":"+inOt+":"+ gubun + ":" + SmartUtil.NVL(resInfo.get("user_id"), "").toString()
+				                + ":" + SmartUtil.NVL(resInfo.get("center_pilot_yn"), "").toString() 
+                                + ":" + SmartUtil.NVL(resInfo.get("trad_no"), "").toString()
+                                + ":" + SmartUtil.NVL(resInfo.get("resv_entry_dvsn"), "").toString() 
+                                + ":" + SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString()
+                                + ":" + SmartUtil.NVL(resInfo.get("user_card_id"), "").toString()
+                                + ":" + SmartUtil.NVL(resInfo.get("user_card_seq"), "").toString()
+                                + ":" + SmartUtil.NVL(resInfo.get("user_card_password"), "").toString()
+                                + ":" + SmartUtil.NVL(resInfo.get("center_speed_cd"), "").toString()) ;
 				fileScrty =  null;
 				
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);

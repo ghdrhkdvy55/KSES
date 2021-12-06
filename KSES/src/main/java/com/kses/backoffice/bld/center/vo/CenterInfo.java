@@ -89,4 +89,6 @@ public class CenterInfo {
 	 private String userId = "";
 	 
 	 private String centerPilotYn = "";
+	 
+	 private String centerSpeedCd = "";
 }
