@@ -39,7 +39,7 @@
 }
 .gui_seat {height: 400px;}
 
-.part_map {
+.floor_map, .part_map {
     width: 1375px;
     height: 750px;
     margin: 0 auto;

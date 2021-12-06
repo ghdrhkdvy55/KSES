@@ -15,5 +15,7 @@ public interface UserInfoManageService {
     
     int updateUserInfo(UserInfo vo) throws Exception;
     
+    int updateUserRcptInfo(UserInfo vo) throws Exception;
+    
     boolean deleteUserInfo(String delCds) throws Exception;
 }

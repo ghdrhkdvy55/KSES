@@ -17,5 +17,7 @@ public interface UserInfoManageMapper {
 	
     public int updateUserInfo(UserInfo vo);
     
+    public int updateUserRcptInfo(UserInfo vo);
+    
     public void deleteUserInfo(@Param("delCds") List<String> delCds);
 }

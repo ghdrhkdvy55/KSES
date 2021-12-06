@@ -1,6 +1,6 @@
 ﻿
 
-.part_map {
+.floor_map, .part_map {
     width: 1375px;
     height: 750px;
     background-size: 100% !important;

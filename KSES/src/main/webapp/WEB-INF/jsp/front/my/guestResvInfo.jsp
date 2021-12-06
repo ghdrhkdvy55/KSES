@@ -47,7 +47,7 @@
                     <h4>예약 정보 조회</h4>
                     <ul class="rsvInfo">
                         <li><input id="resvUserNm" name="resvUserNm" type="text" placeholder="이름"></li>
-                        <li><input id="resvUserClphn" name="resvUserClphn" type="text" placeholder="휴대폰 번호('-'없이 숫자만 입력"></li>
+                        <li><input id="resvUserClphn" name="resvUserClphn" type="text" onkeypress="onlyNum();" placeholder="휴대폰 번호('-'없이 숫자만 입력"></li>
                     </ul>
 
                     <div class="inquiry_btn">
@@ -115,6 +115,8 @@
 		</div>
 	</div>
 	</form:form>
+	
+	<c:import url="/front/inc/popup_common.do" />
 	<script src="/resources/js/front/jquery-spinner.min.js"></script>
 	<script src="/resources/js/front/common.js"></script>
 	<script src="/resources/js/front/front_common.js"></script>
@@ -152,7 +154,7 @@
 								$(".search").hide();
 								$(".result").show();
 							} else {
-								alert("해당 정보로 예약된 정보가 존재하지 않습니다.")
+								fn_openPopup("해당 정보로 예약된 정보가 존재하지 않습니다.", "red", "ERROR", "확인", "");
 							}
 						} 
 					},

@@ -100,9 +100,9 @@
                         <!--예약 정보 입력-->
                             <h4>예약 정보 입력</h4>
                             <ul id="standing_resv_area">
-                                <li><input type="text" id="ENTRY_DVSN_1_resvUserNm" placeholder="이름을 입력해주세요."></li>
-                                <li><input type="text" id="ENTRY_DVSN_1_resvUserClphn" placeholder="전화번호를 '-'없이 입력해주세요."></li>
-                                <li class="certify" onclick="javascript:seatService.fn_certification();"><a href=""><img src="/resources/img/front/certify.svg" alt="">인증 하기</a></li>
+                                <li><input type="text" id="ENTRY_DVSN_1_resvUserNm" class="nonMemberArea" placeholder="이름을 입력해주세요."></li>
+                                <li><input type="text" id="ENTRY_DVSN_1_resvUserClphn" class="nonMemberArea" onkeypress="onlyNum();" placeholder="전화번호를 '-'없이 입력해주세요."></li>
+                                <li class="certify nonMemberArea" onclick="javascript:seatService.fn_certification();"><a href=""><img src="/resources/img/front/certify.svg" alt="">인증 하기</a></li>
                                 <!--전자문진표-->
                                 <li class="covid19_qna">
                                     <p>
@@ -123,7 +123,7 @@
                                 </li>
                                 
 								<!--개인정보동의-->
-								<li class="person_check">
+								<li class="person_check nonMemberArea">
 									<p>
 										<span>&lt;개인정보 수집 이용 동의 안내&gt;</span>
 										<ol>
@@ -143,7 +143,7 @@
                             <h4>현금 영수증 발급</h4>
                             <ul class="bill_confirm">
                                 <li class="check_impnt">
-                                    <input class="magic-checkbox qna_check" type="checkbox" name="layout" id="ENTRY_DVSN_1_bill_confirm" value="Y" onclick="">
+                                    <input class="magic-checkbox qna_check" type="checkbox" name="layout" id="ENTRY_DVSN_1_bill_confirm" value="Y" onclick="seatService.fn_billConfirmChange();">
                                     <label for="ENTRY_DVSN_1_bill_confirm">현금 영수증 발급</label>     
                                 </li>
                             </ul>
@@ -156,7 +156,7 @@
                                     <input class="cash_radio" type="radio" name="ENTRY_DVSN_1_rcpt_dvsn" id="ENTRY_DVSN_1_rcpt_dvsn2" value="RCPT_DVSN2">
                                     <label for="ENTRY_DVSN_1_rcpt_dvsn2"><span></span>지출 증빙용</label>
                                 </li>
-                                <li><input type="text" id="ENTRY_DVSN_1_cash_number" placeholder="'-'없이 입력해 주세요."></li>
+                                <li><input type="text" id="ENTRY_DVSN_1_cash_number" onkeypress="onlyNum();" placeholder="'-'없이 입력해 주세요."></li>
                             </ul>
                             <ul class="rsv_btn">
                                 <li><a href="javascript:seatService.fn_checkForm();">예약하기</a></li>
@@ -199,14 +199,9 @@
                                     </table>
                                 </div>
                                 <!--구역선택 맵-->
-                                <div id="part_map" class="section_map">
-<!--                                     <ul>
-                                        <li><span class="stand">A</span></li>
-                                        <li><span class="premir">B</span></li>
-                                        <li><span class="noble">C</span></li>
-                                    </ul> -->
-                                    <p><img src="/resources/img/front/gangnam_6f.svg" class="map"></p>                                    
-                                </div>
+								<div id="part_select" class="seat_select">
+
+								</div>
 
                                 <!--구역선택 메뉴-->
                                 <div id="part_area" class="section_menu">                                                                         
@@ -247,7 +242,7 @@
                                            <li><span class="select_Seat"></span>선택좌석</li>
                                        </ul> 
                                     </div>
-                                    <div id="seat_select" class="seat_select">
+                                    <div id="seat_select" class="seat_select test_sel">
                                         <div>
                                    			
                                         </div>
@@ -270,9 +265,9 @@
                                     <!--예약 정보 입력-->
                                     <h4>예약 정보 입력</h4>
                                     <ul id="ENTRY_DVSN_2_resv_area">
-                                        <li><input type="text" id="ENTRY_DVSN_2_resvUserNm" placeholder="이름을 입력해주세요."></li>
-                                        <li><input type="text" id="ENTRY_DVSN_2_resvUserClphn" placeholder="전화번호를 '-'없이 입력해주세요."></li>
-                                        <li class="certify" onclick="javascript:seatService.fn_certification();"><a href=""><img src="/resources/img/front/certify.svg" alt="">인증 하기</a></li>
+                                        <li class="nonMemberArea"><input type="text" id="ENTRY_DVSN_2_resvUserNm" placeholder="이름을 입력해주세요."></li>
+                                        <li class="nonMemberArea"><input type="text" id="ENTRY_DVSN_2_resvUserClphn" onkeypress="onlyNum();" placeholder="전화번호를 '-'없이 입력해주세요."></li>
+                                        <li class="certify nonMemberArea" onclick="javascript:seatService.fn_certification();"><a href=""><img src="/resources/img/front/certify.svg" alt="">인증 하기</a></li>
                                         <!--전자문진표-->
                                         <li class="covid19_qna">
                                             <p>
@@ -292,7 +287,7 @@
                                             </p>
                                         </li>
 										<!--개인정보동의-->
-										<li class="person_check">
+										<li class="person_check nonMemberArea">
 											<p>
 												<span>&lt;개인정보 수집 이용 동의 안내&gt;</span>
 												<ol>
@@ -312,7 +307,7 @@
 		                            <h4>현금 영수증 발급</h4>
 		                            <ul class="bill_confirm">
 		                                <li class="check_impnt">
-		                                    <input class="magic-checkbox qna_check" type="checkbox" name="layout" id="ENTRY_DVSN_2_bill_confirm" value="Y">
+		                                    <input class="magic-checkbox qna_check" type="checkbox" name="layout" id="ENTRY_DVSN_2_bill_confirm" value="Y" onclick="seatService.fn_billConfirmChange();">
 		                                    <label for="ENTRY_DVSN_2_bill_confirm">현금 영수증 발급</label>     
 		                                </li>
 		                            </ul>
@@ -325,7 +320,7 @@
                                             <input class="cash_radio" type="radio" name="ENTRY_DVSN_2_rcpt_dvsn" id="ENTRY_DVSN_2_rcpt_dvsn2" value="RCPT_DVSN2">
                                             <label for="ENTRY_DVSN_2_rcpt_dvsn2"><span></span>지출 증빙용</label>
                                         </li>
-                                        <li><input type="text" id="ENTRY_DVSN_2_cash_number" placeholder="'-'없이 입력해 주세요."></li>
+                                        <li><input type="text" id="ENTRY_DVSN_2_cash_number" onkeypress="onlyNum();" placeholder="'-'없이 입력해 주세요."></li>
                                     </ul>
                                     <ul class="rsv_btn">
                                         <li><a href="javascript:seatService.fn_checkForm();">예약하기</a></li>
@@ -492,6 +487,7 @@
 
     <!--층 선택 시 show/hide-->
     <script>
+    	var isMember = $("#resvUserDvsn").val() == "USER_DVSN_1" ? true : false;
     	var pinchzoom = "";
     	var pinchInit = true;
     	var certification = false;
@@ -564,9 +560,7 @@
 						
 						$("#showHide").show();
 						$("#showHide_seat").hide();
-						
 					} else {
-						
 						$("#showHide").hide();
 						$("#showHide_seat").show();
 						$("#section_sel").hide();
@@ -574,13 +568,25 @@
 						seatService.fn_initializing("ALL");
 					}
 					
+				
 					$("#enterDvsn").val(enterDvsn);
+					
+					$("#" + enterDvsn + "_cash_area").hide();
+					$("input:radio[name='" + enterDvsn + "_rcpt_dvsn']").eq(0).prop("checked", true);
+					
 					$("#" + enterDvsn + "_resvUserNm").val("");
 					$("#" + enterDvsn + "_resvUserClphn").val("");
 					$("#" + enterDvsn + "_cash_number").val("");
 					$("input:radio[name='" + enterDvsn + "_rcpt_dvsn']").eq(0).prop("checked", true);
 					$("input:checkbox[id='" + enterDvsn + "_qna_check']").prop("checked", false);
 					$("input:checkbox[id='" + enterDvsn + "_person_agree']").prop("checked", false);
+					$("input:checkbox[id='" + enterDvsn + "_bill_confirm']").prop("checked", false);
+					
+					if(isMember) {
+						$(".nonMemberArea").hide();
+					} else {
+						$(".nonMemberArea").show();
+					}
 				}
 			},
 			fn_floorChange : function() {
@@ -589,6 +595,7 @@
 				} else {					
 					return;
 				}
+				
 				$("#floorCd").val($("#selectFloorCd").val());
 				$(".sel_floor_nm").html($("#selectFloorCd option:checked").text());
 				$("#section_sel").show();
@@ -609,13 +616,28 @@
 					false,
 					function(result) {
 				    	if (result.status == "SUCCESS"){
-				            if (result.seatMapInfo != null) {
+/* 				            if (result.seatMapInfo != null) {
 			 	                var img = result.seatMapInfo.floor_map1;
 								img = (img == undefined) ? "#fff url(/resources/img/no_image.png)" : "/upload/" + img;
 			 	                
 			 	                $('.section_map img').attr("src", img);
-			 	            }
-							
+			 	            } */
+							seatService.fn_initPinch("floor");
+				    		if (result.seatMapInfo != null) {
+				    		    var img = result.seatMapInfo.floor_map1;
+				    		    $('.floor_map').css({
+				    		        "background": "#fff url(/upload/" + img + ")",
+				    		        'background-repeat': 'no-repeat',
+				    		        'background-position': ' center'
+				    		    });
+				    		} else {
+				    		    $('.floor_map').css({
+				    		        "background": "#fff url()",
+				    		        'background-repeat': 'no-repeat',
+				    		        'background-position': ' center'
+				    		    });
+				    		}
+				            
 							if (result.resultlist.length > 0){
 								$("#menu_ul").empty();
 								$.each(result.resultlist, function(index, item) {
@@ -644,7 +666,7 @@
 					function(request) {
 						alert("ERROR : " +request.status);	       						
 					}    		
-				);	
+				);
 			},
 			fn_partChange : function(partCd) {
 				/* $("#tab-a").show(); */
@@ -670,7 +692,7 @@
 					function(result) {
 				    	if (result.status == "SUCCESS"){
 				    		// 좌석 GUI HTML세팅(PinchZoom)
-				    		seatService.fn_initPinch();
+				    		seatService.fn_initPinch("seat");
 				    		
 				    		if (result.seatMapInfo != null) {
 				    		    var img = result.seatMapInfo.part_map1;
@@ -740,54 +762,75 @@
 					}    		
 				);	
 			},
-			fn_initPinch : function() {
-				var seat_select = $("#seat_select");
-				seat_select.empty();
-				
-				var setHtml = '';
-				setHtml += '<div class="window"></div>';
-				setHtml += '<div id="gui_seat" class="gui_seat mapbottom pinch-zoom-parent">';
+			fn_initPinch : function(dvsn) {
+				if(dvsn == "seat") {
+					var seat_select = $("#seat_select");
+					seat_select.empty();
+					
+					var setHtml = '';
+					setHtml += '<div class="window"></div>';
+					setHtml += '<div id="gui_seat" class="gui_seat mapbottom pinch-zoom-parent">';
 
-				setHtml += '    <div id="mask">';
-				setHtml += '        <div class="info_img">';
-				setHtml += '            <img src="/resources/img/front/finger.png" alt="">';
-				setHtml += '            <p>손가락으로 펼쳐 확대해보세요.</p>';
-				setHtml += '        </div>';
-				setHtml += '    </div>';
-		         
-		         //검은 막 띄우기
-		         $(document).on("click",".openMask",function(){ 
-		             e.preventDefault();
-		             wrapWindowByMask();
-	 			});
-		            
-				//닫기 버튼을 눌렀을 때
-				$(document).on("click",".window .close",function(){ 
-					//링크 기본동작은 작동하지 않도록 한다.
-					e.preventDefault();
-					$('#mask, .window').hide();
-	 			});
-		            
-				//검은 막을 눌렀을 때
-				$(document).on("click","#mask",function(){ 
-					$(this).hide();
-					$('.window').hide();
-	 			});
-                	
+					setHtml += '    <div id="mask">';
+					setHtml += '        <div class="info_img">';
+					setHtml += '            <img src="/resources/img/front/finger.png" alt="">';
+					setHtml += '            <p>손가락으로 펼쳐 확대해보세요.</p>';
+					setHtml += '        </div>';
+					setHtml += '    </div>';
+			         
+			         //검은 막 띄우기
+			         $(document).on("click",".openMask",function(){ 
+			             e.preventDefault();
+			             wrapWindowByMask();
+		 			});
+			            
+					//닫기 버튼을 눌렀을 때
+					$(document).on("click",".window .close",function(){ 
+						//링크 기본동작은 작동하지 않도록 한다.
+						e.preventDefault();
+						$('#mask, .window').hide();
+		 			});
+			            
+					//검은 막을 눌렀을 때
+					$(document).on("click","#mask",function(){ 
+						$(this).hide();
+						$('.window').hide();
+		 			});
+	                	
+	
+					setHtml += '    <div class="part_map pinch-zoom" style="background-repeat: no-repeat; background-position: center center">';
+					setHtml += '        <div class="seat">';
+					setHtml += '            <ul id="area_Map">';
+					setHtml += '            </ul>';
+					setHtml += '        </div>';
+					setHtml += '    </div>';
+					setHtml += '</div>';
+					
+					seat_select.append(setHtml);
 
-				setHtml += '    <div class="part_map pinch-zoom" style="background-repeat: no-repeat; background-position: center center">';
-				setHtml += '        <div class="seat">';
-				setHtml += '            <ul id="area_Map">';
-				setHtml += '            </ul>';
-				setHtml += '        </div>';
-				setHtml += '    </div>';
-				setHtml += '</div>';
-				
-				seat_select.append(setHtml);
-				
-				var gui_seat = document.getElementById("gui_seat");
-				var el = document.querySelector('div.pinch-zoom');
-				var pinchzoom = new PinchZoom.default(el, {});
+					var el = document.querySelector('.part_map');
+					console.log(el);
+					var pinchzoom = new PinchZoom.default(el, {});
+				} else {
+					var part_select = $("#part_select");
+					part_select.empty();
+					
+					var setHtml = '';
+					setHtml += '<div id="floor_gui_seat" class="gui_seat mapbottom pinch-zoom-parent">';
+					setHtml += '    <div class="floor_map pinch-zoom" style="background-repeat: no-repeat; background-position: center center">';
+					setHtml += '        <div class="floor">';
+					setHtml += '            <ul id="floor_area_Map">';
+					setHtml += '            </ul>';
+					setHtml += '        </div>';
+					setHtml += '    </div>';
+					setHtml += '</div>';
+					
+					part_select.append(setHtml);
+					
+					var partSelect = document.querySelector('#part_select');
+					var el = document.querySelector('.pinch-zoom');
+					var pinchzoom = new PinchZoom.default(el, {});
+				}
 			},
 			fn_seatSearch : function() {
 				var searchSeatCd = $("#searchSeatCd").val();
@@ -877,11 +920,11 @@
 			fn_billConfirmChange : function() {
 				var enterDvsn = $("#enterDvsn").val();
 				if($("input:checkbox[id='" + enterDvsn + "_bill_confirm']").is(":checked")) {
-					$("#" + enterDvsn  + "_cash_area li").show();
+					$("#" + enterDvsn  + "_cash_area").show();
 					$("input:radio[name='" + enterDvsn + "_rcpt_dvsn']").eq(0).prop("checked", true);
 					$("#" + enterDvsn + "_cash_number").val("");
 				} else {
-					$("#" + enterDvsn  + "_cash_area li").hide();
+					$("#" + enterDvsn  + "_cash_area").hide();
 				}
 			},
 			fn_initializing : function(division) {
@@ -891,6 +934,7 @@
 					$(".sel_floor_nm, .sel_part_nm, .sel_seat_nm").html("");
 				} else if (division == "FLOOR") {
 					$("#section_sel").show();
+					$("#tab-a").hide();
 					$("#partCd, #seatCd").val("");
 					$(".sel_part_nm, .sel_seat_nm").html("");
 				} else if (division == "PART") {
