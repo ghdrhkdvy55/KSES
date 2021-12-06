@@ -38,7 +38,7 @@ if(loginVO == null ){
     	   fn_menuCreate();
 	});
 	function fn_menuCreate (){
-		var url = window.location.pathname;
+		var url = window.location.pathname+window.location.search;
 		var menu = uniAjaxReturn("/backoffice/inc/user_menu.do", "POST", false, null,  "lst");
 		for (var i in menu){	
 			 if  (menu[i].level == "2"){
@@ -49,6 +49,7 @@ if(loginVO == null ){
 			 }else {
 				 var dv_list = $("#menu_dv_"+menu[i].upper_menu_no+""); //ul_list선언
 				 var active = "";
+				 //console.log("menu[i].url:" +menu[i].url + ":" + url);
 				 if (menu[i].url == url){
 					 active = "active";
 					 fn_menuClick(menu[i].upper_menu_no);

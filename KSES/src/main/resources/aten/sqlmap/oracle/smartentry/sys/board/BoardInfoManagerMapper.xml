@@ -94,7 +94,7 @@
         <result property="frst_regist_dtm" column="FRST_REGIST_DTM" /> 
         <result property="last_updusr_id" column="LAST_UPDUSR_ID" /> 
         <result property="last_updt_dtm" column="LAST_UPDT_DTM" />
-        <result property="boardCenterId" column="BOARD_CENTER_ID" /> 
+        <result property="board_center_id" column="BOARD_CENTER_ID" /> 
         <result property="board_cn" column="BOARD_CN" jdbcType="CLOB" javaType="java.lang.String" /> 
      </resultMap>
 
@@ -171,7 +171,7 @@
 	                                 BOARD_CN = #{boardCn, jdbcType=VARCHAR} ,
 	                                 LAST_UPDUSR_ID =#{userId,jdbcType=VARCHAR} ,
 	                                 LAST_UPDT_DTM = SYSDATE,
-	                                 BOARD_CENTER_ID = #{boardCenterId,jdbcType=VARCHAR}  
+	                                 BOARD_CENTER_ID = #{boardCenterId,jdbcType=VARCHAR},  
 	                                 BOARD_TOP_SEQ = #{boardTopSeq}
       WHERE BOARD_SEQ = #{boardSeq}   
       ]]>        
