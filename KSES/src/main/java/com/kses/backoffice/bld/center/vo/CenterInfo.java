@@ -91,4 +91,10 @@ public class CenterInfo {
 	 private String centerPilotYn = "";
 	 
 	 private String centerSpeedCd = "";
+	 
+	 private String centerStandYn = "";
+	 
+	 private String centerStandMax = "";
+	 
+	 private String centerEntryPayCost = "";
 }

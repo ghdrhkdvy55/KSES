@@ -19,6 +19,9 @@
     	<result property="floor_info" column="floor_info" jdbcType="VARCHAR" javaType="java.lang.String"/>
     	<result property="center_pilot_yn" column="CENTER_PILOT_YN" jdbcType="VARCHAR" javaType="java.lang.String"/>
     	<result property="center_speed_cd" column="CENTER_SPEED_CD" jdbcType="VARCHAR" javaType="java.lang.String"/>
+		<result property="center_stand_yn" column="CENTER_STAND_YN" jdbcType="VARCHAR" javaType="java.lang.String"/>
+    	<result property="center_stand_max" column="CENTER_STAND_MAX" jdbcType="VARCHAR" javaType="java.lang.String"/>
+    	<result property="center_entry_pay_cost" column="CENTER_ENTRY_PAY_COST" jdbcType="VARCHAR" javaType="java.lang.String"/>
 	</resultMap>
 	
 	<select id="selectCenterInfoList" resultType="lmap">
@@ -54,7 +57,8 @@
 		SELECT  
 			CENTER_CD, CENTER_NM, CENTER_ZIPCD, CENTER_ADDR1, CENTER_ADDR2, 
 			CENTER_TEL, CENTER_FAX, CENTER_IMG, CENTER_MAP, CENTER_URL,
-			CENTER_INFO, USE_YN, START_FLOOR, END_FLOOR, FLOOR_INFO, CENTER_PILOT_YN, CENTER_SPEED_CD
+			CENTER_INFO, USE_YN, START_FLOOR, END_FLOOR, FLOOR_INFO, 
+			CENTER_PILOT_YN, CENTER_SPEED_CD, CENTER_STAND_YN, CENTER_STAND_MAX, CENTER_ENTRY_PAY_COST
 		 FROM TSEB_CENTER_INFO_M
 		 WHERE CENTER_CD = #{centerCd}		  
     </select>
@@ -71,7 +75,7 @@
 	<select id="selectResvCenterList" resultType="lmap">
 	<![CDATA[
         SELECT  
-         	A.CENTER_CD, A.CENTER_NM, A.STAND_MAX,
+         	A.CENTER_CD, A.CENTER_NM, A.CENTER_STAND_MAX,
 			(
          		SELECT NVL(COUNT(*),0) 
          		FROM TSEB_SEAT_INFO_D 
@@ -112,15 +116,16 @@
 			CENTER_CD, CENTER_NM, CENTER_ZIPCD, CENTER_ADDR1, CENTER_ADDR2, 
 			CENTER_TEL, CENTER_FAX, FRST_REGTER_ID, FRST_REGIST_DTM, LAST_UPDUSR_ID, 
 			LAST_UPDT_DTM, CENTER_IMG, CENTER_URL, CENTER_MAP, USE_YN, 
-			CENTER_INFO, FLOOR_INFO, START_FLOOR, END_FLOOR, CENTER_STDM_DVSN, CENTER_PILOT_YN, CENTER_SPEED_CD
+			CENTER_INFO, FLOOR_INFO, START_FLOOR, END_FLOOR, CENTER_STDM_DVSN, 
+			CENTER_PILOT_YN, CENTER_SPEED_CD, CENTER_STAND_YN, CENTER_STAND_MAX, CENTER_ENTRY_PAY_COST
 		)
 		VALUES 
 		(
 			#{centerCd}, #{centerNm}, #{centerZipcd, jdbcType=VARCHAR}, #{centerAddr1, jdbcType=VARCHAR}, #{centerAddr2, jdbcType=VARCHAR}, 
 			#{centerTel, jdbcType=VARCHAR}, #{centerFax, jdbcType=VARCHAR}, #{userId, jdbcType=VARCHAR}, SYSDATE, #{userId, jdbcType=VARCHAR}, 
 			SYSDATE, #{centerImg, jdbcType=VARCHAR}, #{centerUrl ,jdbcType=VARCHAR}, #{centerMap, jdbcType=VARCHAR}, 'Y', 
-			#{centerInfo, jdbcType=VARCHAR}, #{floorInfo, jdbcType=VARCHAR}, #{startFloor, jdbcType=VARCHAR}, #{endFloor, jdbcType=VARCHAR}, 'TEST',
-		    #{centerPilotYn , jdbcType=VARCHAR}, #{centerSpeedCd , jdbcType=VARCHAR}
+			#{centerInfo, jdbcType=VARCHAR}, #{floorInfo, jdbcType=VARCHAR}, #{startFloor, jdbcType=VARCHAR}, #{endFloor, jdbcType=VARCHAR}, '',
+		    #{centerPilotYn , jdbcType=VARCHAR}, #{centerSpeedCd , jdbcType=VARCHAR}, #{centerStandYn, jdbcType=VARCHAR}, #{centerStandMax, jdbcType=VARCHAR}, #{centerEntryPayCost, jdbcType=VARCHAR}
 		);
     	
 		<if test="floorInfo != null">
@@ -197,8 +202,11 @@
 			,FLOOR_INFO = #{floorInfo, jdbcType=VARCHAR}
 			,START_FLOOR = #{startFloor, jdbcType=VARCHAR}
 			,END_FLOOR = #{endFloor, jdbcType=VARCHAR}      
-			, CENTER_PILOT_YN = #{centerPilotYn , jdbcType=VARCHAR}  
-			, CENTER_SPEED_CD = #{centerSpeedCd , jdbcType=VARCHAR}                
+			,CENTER_PILOT_YN = #{centerPilotYn, jdbcType=VARCHAR}  
+			,CENTER_SPEED_CD = #{centerSpeedCd, jdbcType=VARCHAR}
+			,CENTER_STAND_YN = #{centerStandYn, jdbcType=VARCHAR}
+			,CENTER_STAND_MAX = #{centerStandMax, jdbcType=VARCHAR}
+			,CENTER_ENTRY_PAY_COST = #{centerEntryPayCost, jdbcType=VARCHAR}                
 		WHERE CENTER_CD = #{centerCd};
 		
 		<if test="floorInfo != null">

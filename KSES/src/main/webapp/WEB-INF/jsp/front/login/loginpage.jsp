@@ -199,17 +199,15 @@
 					params,
 					false,
 					function(result) {
-				    	console.log(result);
-				    	
-						if (result.status == "SUCCESS") {
-							if(result.regist.Error_Cd == "SUCCESS") { 
+				    	if(result.regist != null) {
+							if (result.regist.Error_Msg == "SUCCESS") {
 								loginService.createUserSession(result.regist);
 							} else {
 								fn_openPopup(result.regist.Error_Msg, "red", "ERROR", "확인", "");
 							}
-						} else {
-							fn_openPopup("로그인중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
-						}
+				    	} else {
+				    		fn_openPopup("로그인중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
+				    	}
 					},
 					function(request) {
 						alert("ERROR : " + request.status);	       						

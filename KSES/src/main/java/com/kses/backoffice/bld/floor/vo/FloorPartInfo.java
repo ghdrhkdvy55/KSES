@@ -50,6 +50,12 @@ public class FloorPartInfo {
 	 private String useYn;
 	 
 	 // 구역 사용 유무
+	 private String partClass;
+	 
+	 // 구역 사용 유무
+	 private String partPayCost;
+	 
+	 // 구역 사용 유무
 	 private String partOrder;
 	 
 	 // 최초 등록 일자

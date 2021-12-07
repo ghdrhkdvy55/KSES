@@ -68,7 +68,7 @@ public class ResJosnController{
 	private InterfaceInfoManageService interfaceService;
 	
 	
-	
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="speedCheck.do", method = {RequestMethod.POST})
     public ModelAndView selectPreOpenInfo(	@ModelAttribute("loginVO") LoginVO loginVO,
     		                                @RequestBody Map<String, Object> sendInfo,
@@ -94,6 +94,22 @@ public class ResJosnController{
 			 if ( SmartUtil.NVL(sendInfo.get("gubun"), "").toString().equals("login") ) {
 				 Url =  propertiesService.getString("sppeedUrl_T") + "user/userChk";
 				 
+				 
+				 // 스피드온 패스워드 암호화(임시)
+				 // Login_Type -> 1 = SHA-512 + Base64 : 2 = SHA-256 + Base64 
+				 String encryptType = "";
+				 String password = "";
+				 
+				 if("1".equals(jsonObject.get("Login_Type").toString())) {
+					 encryptType = "SHA-512";
+					 password = jsonObject.get("User_Pw").toString();
+					 jsonObject.put("User_Pw", SmartUtil.encryptPassword(password, encryptType));
+				 } else {
+					 encryptType = "SHA-256";
+					 password = jsonObject.get("Card_Pw").toString();
+					 jsonObject.put("Card_Pw", SmartUtil.encryptPassword(password, encryptType));
+				 }
+
 				 node = SmartUtil.requestHttpJson(Url,jsonObject.toJSONString(), "SPEEDLOGIN", "SPEEDON", "KSES" );
 				 errorCd = node.get("Error_Cd").asText();
 				 if (node.get("Error_Cd").asText().equals("SUCCESS")) {

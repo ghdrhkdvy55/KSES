@@ -335,11 +335,11 @@
 				<tr>
 					<th>구역 명</th>
 					<td><input type="text" id="partNm"></td>
-                    <th>구역 CSS</th>
-                    <td><input id="partCss" type="text"></td>
+					<th>정렬 순서</th>
+                    <td><input type="number" id="partOrder" onkeyup="this.value=this.value.replace(/[^0-9]/g,'');"></td>
 				</tr>
 				<tr>
-                    <th>웹 도면 이미지</th>
+					<th>웹 도면 이미지</th>
                     <td><input type="file" id="partMap1"></td>
                     <th>사용 유무</th>
                     <td>
@@ -348,10 +348,23 @@
                     </td>
 				</tr>
 				<tr>
-                    <th>정렬 순서</th>
-                    <td><input type="number" id="partOrder" onkeyup="this.value=this.value.replace(/[^0-9]/g,'');"></td>
+					<th>좌석 등급</th>
+                    	<td>
+							<select id="partClass">
+							<option value="">좌석 등급 선택</option>
+							<c:forEach items="${seatClass}" var="seatClass">
+								<option value="${seatClass.code}">${seatClass.codenm}</option>
+							</c:forEach>
+						</select>
+					</td>
+					<th>좌석 금액</th>
+					<td><input type="number" id="partPayCost"></td>
+				</tr>
+				<tr>
 					<th>좌석 네이밍</th>
                     <td><input type="text" id="partSeatRule"></td>
+					<th>구역 CSS</th>
+                    <td><input id="partCss" type="text"></td>
 				</tr>
 				<tr>
                     <th>미니맵 CSS</th>
@@ -1301,6 +1314,7 @@
 		    formData.append('centerCd', $("#centerCd").val());
 		    formData.append('floorCd', $("#floorCd").val());
 		    formData.append('partCd', $("#partCd").val());
+		    formData.append('partClass', $("#partClass").val());
 		    formData.append('partMap1', $('#partMap1')[0].files[0]);
 		    formData.append('partCss', $("#partCss").val());
 		    formData.append('partSeatRule', $("#partSeatRule").val());
@@ -1309,7 +1323,8 @@
 		    formData.append('partMiniTop', fn_emptyReplace($("#partMiniTop").val(), "0"));
 		    formData.append('partMiniLeft', fn_emptyReplace($("#partMiniLeft").val(), "0"));
 		    formData.append('partMiniWidth', fn_emptyReplace($("#partMiniWidth").val(), "0"));
-		    formData.append('partMiniHeight', fn_emptyReplace($("#partMiniHeight").val(), "0"));
+		    formData.append('partMiniHeight', fn_emptyReplace($("#partMiniHeight").val(), "0")); 
+		    formData.append('partPayCost', fn_emptyReplace($("#partPayCost").val(), "0"));
 		    formData.append('partOrder', fn_emptyReplace($("#partOrder").val(), "0"));
 		    formData.append('useYn', fn_emptyReplace($('input[name=part_use_yn]:checked').val(), "Y"));
 		    formData.append('mode', $("#mode").val());
@@ -1346,13 +1361,15 @@
 		    	
                 $("#partNm").val("");
                 $("#partCss").val("");
+                $("#partClass").val("");
                 $("#partMap1").val("");
                 $("#partSeatrule").val("");
                 $("#partMiniCss").val("");
                 $("#partMiniTop").val("");
                 $("#partMiniLeft").val("");
                 $("#partMiniWidth").val("");
-                $("#partMiniHeight").val("");			                    
+                $("#partMiniHeight").val("");
+                $("#partPayCost").val("");
                 $("#partOrder").val("");
 				$("input:radio[name='part_use_yn']:radio[value='Y']").prop('checked', true);
 		        
@@ -1380,12 +1397,14 @@
 
 			                $("#partNm").val(obj.part_nm);
 			                $("#partCss").val(obj.part_css);
+			                $("#partClass").val(obj.part_class);
 			                $("#partSeatRule").val(obj.part_seat_rule);
 			                $("#partMiniCss").val(obj.part_mini_css);
 			                $("#partMiniTop").val(obj.part_mini_top);
 			                $("#partMiniLeft").val(obj.part_mini_left);
 			                $("#partMiniWidth").val(obj.part_mini_width);
-			                $("#partMiniHeight").val(obj.part_mini_height);			                    
+			                $("#partMiniHeight").val(obj.part_mini_height);
+			                $("#partPayCost").val(obj.part_pay_cost);
 			                $("#partOrder").val(obj.part_order);
 			                $("input:radio[name='part_use_yn']:radio[value='" + obj.use_yn + "']").prop('checked', true);
 			            }

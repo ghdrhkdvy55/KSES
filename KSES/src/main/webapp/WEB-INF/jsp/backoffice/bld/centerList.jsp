@@ -296,7 +296,10 @@
 					$("#centerTel").val("");
 					$("#centerFax").val("");
 					$("#centerUrl").val("");
-					$("#centerSpeedCd").val("");
+					$("#centerSpeedCd").val("");					
+					$("input:radio[name='centerStandYn']:radio[value='Y']").prop('checked', true);
+					$("#centerStandMax").val("");
+					$("#centerEntryPayCost").val("");
 					$("input:radio[name='useYn']:radio[value='Y']").prop('checked', true);
 					
 					
@@ -330,6 +333,9 @@
 								$("#centerSpeedCd").val(obj.center_speed_cd);
 								$("input:radio[name='useYn']:radio[value='" + obj.use_yn + "']").prop('checked', true);
 								$("input:radio[name='centerPilotYn']:radio[value='" + obj.center_pilot_yn + "']").prop('checked', true);
+								$("input:radio[name='centerStandYn']:radio[value='" + obj.center_stand_yn + "']").prop('checked', true);
+								$("#centerStandMax").val(obj.center_stand_max);
+								$("#centerEntryPayCost").val(obj.center_entry_pay_cost);
 								$("#ir3").val(obj.center_info);
 								fnCreatCheckbox("sp_floorInfo", $("#startFloor").val().replace("CENTER_FLOOR_", ""),  $("#endFloor").val().replace("CENTER_FLOOR_", ""), obj.floor_info, "floorInfos", "층") ;
 							}
@@ -754,7 +760,9 @@
 	     	    formData.append('useYn', $('input[name=useYn]:checked').val());
 	     	    formData.append('centerPilotYn', $('input[name=centerPilotYn]:checked').val());
 	     	    formData.append('centerSpeedCd' , $("#centerSpeedCd").val());
-	     	   
+	     	   	formData.append('centerStandYn', $('input[name=centerStandYn]:checked').val());
+	     	    formData.append('centerStandMax' , $("#centerStandMax").val());
+	     	    formData.append('centerEntryPayCost' , $("#centerEntryPayCost").val());
 	     	   
 	     	    uniAjaxMutipart
 	     	    (
@@ -911,12 +919,25 @@
 					</tr>
 					<tr>
 						<th>시범 지점 여부</th>
-	                  	<td colspan="3">
-                    		<label for="useYn_Y"><input id="centerPilotYn_Y" type="radio" name="centerPilotYn" value="Y" checked>Y</label>
-                    		<label for="useYn_N"><input id="centerPilotYn_N" type="radio" name="centerPilotYn" value="N">N</label>
+	                  	<td>
+                    		<label for="centerPilotYn_Y"><input id="centerPilotYn_Y" type="radio" name="centerPilotYn" value="Y" checked>Y</label>
+                    		<label for="centerPilotYn_N"><input id="centerPilotYn_N" type="radio" name="centerPilotYn" value="N">N</label>
                   		</td>
                   		<th>SPEEDON CODE</th>
 	                  	<td><input type="text" id="centerSpeedCd"  name="centerSpeedCd"></td>
+					</tr>
+					<tr>
+						<th>입석 여부</th>
+	                  	<td>
+                    		<label for="centerStandYn_Y"><input id="centerStandYn_Y" type="radio" name="centerStandYn" value="Y" checked>Y</label>
+                    		<label for="centerStandYn_N"><input id="centerStandYn_N" type="radio" name="centerStandYn" value="N">N</label>
+                  		</td>
+						<th>최대 입석수</th>
+	                  	<td><input type="text" id="centerStandMax" name="centerStandMax" onkeypress="onlyNum();"></td>
+					</tr>
+					<tr>
+						<th>지점 입장료</th>
+	                  	<td><input type="text" id="centerEntryPayCost" name="centerEntryPayCost" onkeypress="onlyNum();"></td>
 					</tr>
 				</tbody>
 			</table>

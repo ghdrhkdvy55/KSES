@@ -29,6 +29,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -64,6 +65,8 @@ import com.kses.backoffice.sym.log.vo.sendEnum;
 
 import egovframework.rte.fdl.property.EgovPropertyService;
 import java.math.BigDecimal;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 
 
@@ -610,4 +613,31 @@ public class SmartUtil {
 
         return null;
     }
+	
+	/**
+	 * 비밀번호를 암호화하는 기능(복호화가 되면 안되므로 SHA-256 인코딩 방식 적용)
+	 * 
+	 * @param data 암호화할 비밀번호
+	 * @param salt Salt
+	 * @return 암호화된 비밀번호
+	 * @throws Exception
+	 */
+	public static String encryptPassword(String data, String encryptType) {
+		byte[] hashValue = null; // 해쉬값
+		MessageDigest md;
+		
+		try {
+
+			md = MessageDigest.getInstance(encryptType);
+			md.reset();
+
+			hashValue = md.digest(data.getBytes());
+
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return new String(Base64.encodeBase64(hashValue)); 
+	}
 }
