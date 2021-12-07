@@ -67,6 +67,7 @@ public class EgovSessionMapping extends EgovUsersByUsernameMapping  {
         String strEmpNo = rs.getString("EMP_NO");
         String strEmpPic = rs.getString("EMP_PIC");
         String strEmpState = rs.getString("EMP_STATE");
+        String strCenterCd = rs.getString("CENTER_CD");
         
       
         
@@ -85,6 +86,7 @@ public class EgovSessionMapping extends EgovUsersByUsernameMapping  {
         loginVO.setEmpNo(strEmpNo);
         loginVO.setEmpState(strEmpState);
         loginVO.setEmpPic(strEmpPic);
+        loginVO.setCenterCd(strCenterCd);
         
 
         return new EgovUserDetails(strUserId, strPassWord, strEnabled, loginVO);

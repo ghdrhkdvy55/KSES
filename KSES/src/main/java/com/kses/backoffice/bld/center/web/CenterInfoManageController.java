@@ -143,6 +143,11 @@ public class CenterInfoManageController {
 			  searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
 			  searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
 			  
+			  
+              loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
+			  searchVO.put("authorCd", loginVO.getAuthorCd());
+			  searchVO.put("centerCd", loginVO.getCenterCd());
+			  
 			  LOGGER.debug("pageUnit End");
 			  List<Map<String, Object>> list = centerInfoManageService.selectCenterInfoList(searchVO);
 			  LOGGER.debug("[-------------------------------------------list:" + list.size() + "------]");

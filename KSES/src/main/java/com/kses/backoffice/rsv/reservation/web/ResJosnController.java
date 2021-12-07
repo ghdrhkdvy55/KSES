@@ -42,6 +42,8 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
 import egovframework.rte.fdl.property.EgovPropertyService;
 
 
+
+
 @RestController
 @RequestMapping("/backoffice/rsv")
 public class ResJosnController{
@@ -233,6 +235,9 @@ public class ResJosnController{
         		String inOt = attempInfos[2];
         		String gubun = attempInfos[3];
         		String userId = attempInfos[4];
+        		
+        		
+        		
         		String centerPilotYn = attempInfos[5];
         		String tradNo = attempInfos[6];
         		String resvEntryDvsn = attempInfos[7];
@@ -382,7 +387,9 @@ public class ResJosnController{
 				
 				
 				String qrCode = fileScrty.encode(resvSeq+":"+qrTime+":"+inOt+":"+ gubun + ":" + SmartUtil.NVL(resInfo.get("user_id"), "").toString()
-				                + ":" + SmartUtil.NVL(resInfo.get("center_pilot_yn"), "").toString() 
+				             
+						
+						        + ":" + SmartUtil.NVL(resInfo.get("center_pilot_yn"), "").toString() 
                                 + ":" + SmartUtil.NVL(resInfo.get("trad_no"), "").toString()
                                 + ":" + SmartUtil.NVL(resInfo.get("resv_entry_dvsn"), "").toString() 
                                 + ":" + SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString()

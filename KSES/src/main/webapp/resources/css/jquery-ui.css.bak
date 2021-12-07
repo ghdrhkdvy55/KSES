@@ -331,11 +331,11 @@ button.ui-button::-moz-focus-inner {
 }
 .ui-datepicker .ui-datepicker-prev {
 	left: 2px;
-	background:#fff;
+	background:url(/resources/img/prev.png)no-repeat;
 }
 .ui-datepicker .ui-datepicker-next {
 	right: 2px;
-	background:#fff;
+	background:url(/resources/img/next.png)no-repeat;
 }
 .ui-datepicker .ui-datepicker-prev span,
 .ui-datepicker .ui-datepicker-next span {
@@ -896,22 +896,19 @@ body .ui-tooltip {
 	
 	border: 2px solid #1b76c500;
 	/* border: 2px solid #1b76c5; */
-	margin-top: 10px;
-
 }
 .ui-widget-content {
 	border: 1px solid #dddddd;
-	background: #fff;
+	background: #fffdf8;
 	color: #333333;
 }
 .ui-widget-content a {
     color: #ffffff;
     /* color: #333333; */
+    background: #a9a9a9;
     padding: 5px 12px;
     border-radius: 5px;
     font-size: 13px;
-    margin-right: 5px;
-    background: #878787;
 }
 .ui-widget-header {
 	border-bottom: 1px solid #eaeaea;

@@ -43,20 +43,21 @@ input[type="checkbox"]:checked { border:0; background-image:url("../resources/im
 } */
 /*BUTTON*/
 .defaultBtn:hover {color:#868686;  background: #e4f4f5;border:1px solid #747474;}
-.defaultBtn { 
-	display: inline-block;
-	min-width:50px;  
-	padding:7px 20px; 
-	color:#868686; 
-	border:1px solid #ccc; 
-	background-color:#fff; 
-	border-radius: 2px;
-	font-size: 14px;
-	text-align: center;
-	font-weight: 400;
-	vertical-align:middle;
-	margin-right:10px;
-	float:right;
+.defaultBtn {
+    display: inline-block;
+    min-width: 30px;
+    padding: 7px 20px;
+    color: #868686;
+    border: 1px solid #fff;
+    background-color: #ff9797;
+    border-radius: 2px;
+    font-size: 14px;
+    text-align: center;
+    font-weight: 400;
+    vertical-align: middle;
+    margin-right: 10px;
+    float: right;
+    border-radius: 6px;
 }
 
 <!-- JDH -->
@@ -239,15 +240,15 @@ table a{color: #5a5a5a;}
 /* .left24 {margin-left:24px;} */
 .w570 {width:570px;}
 #resultList input[type="text"] { width:55px; height:30px; margin:0 8px; padding-left:0; text-align:center;}
-.up {display:block;width:15px;height:15px;background: url("/resources/img/up_icon02.png")center no-repeat;position:absolute;right: 92px;top: 18px;}
-.down {display:block;width:15px;height:15px;background:url("/resources/img/down_icon02.png")center no-repeat;position:absolute;left: 92px;top: 18px;}
+.up {display:block;width:15px;height:15px;background: url("/resources/img/up_icon02.png")center no-repeat;position:absolute;right: 101px;top: 18px;}
+.down {display:block;width:15px;height:15px;background:url("/resources/img/down_icon02.png")center no-repeat;position:absolute;left: 101px;top: 18px;}
 .leftB {
     display: block;
     width: 15px;
     height: 15px;
     background: url("/resources/img/left_icon02.png")center no-repeat;
     position: absolute;
-    left: 20px;
+    left: 25px;
     top: 18px;
 }
 .rightB {
@@ -257,7 +258,7 @@ table a{color: #5a5a5a;}
     background: url("/resources/img/right_icon02.png")center no-repeat;
     position: absolute;
     top: 18px;
-    right: 20px;
+    right: 25px;
 }
 
 .gui_table th:nth-child(5), .gui_table th:nth-child(6){ min-width:110px;}
@@ -270,7 +271,7 @@ table tr.select{border: 2px solid #acb1d2; background-color: #acb1d2;}
 .txt_con .defaultBtn {
     color: #fff;
     margin-right: 0;
-    background: #3371ff;
+    background: #198aeb;
     font-weight: 500;
 }
 .defaultBtn:hover{background: #6e9aff;border:1px solid #5f95b8;}
@@ -392,6 +393,6 @@ table tr td input.selected{border:2px solid #eb6d2c;}
     width: 1645px !important;
 }
 .cbp-spmenu .gui_text td input {
-    width: 65px;
+    width: 58px;
     text-align: center;
 }

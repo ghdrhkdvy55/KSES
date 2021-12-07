@@ -47,7 +47,10 @@
 					OR 
 					CENTER_NM LIKE '%' || #{params.searchKeyword} || '%'  
 				)
-			</if>		
+			</if>	
+			<if test="params.authorCd != 'ROLE_ADMIN' and params.authorCd != 'ROLE_SYSTEM'">
+				   AND A.CENTER_CD = #{params.centerCd}
+			</if>	
 		) TB
 		WHERE RNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
 		ORDER BY TB.CENTER_CD DESC
