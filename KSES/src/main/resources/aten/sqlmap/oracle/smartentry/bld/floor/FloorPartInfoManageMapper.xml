@@ -61,11 +61,9 @@
 			A.CENTER_CD, A.FLOOR_CD, A.PART_CD, A.PART_NM, A.PART_MAP1, 
 			A.PART_MAP2, A.PART_CLASS, A.PART_PAY_COST, A.PART_CSS, A.PART_SEAT_RULE, 
 			A.PART_MINI_CSS, A.PART_MINI_TOP, A.PART_MINI_LEFT, A.PART_MINI_WIDTH, A.PART_MINI_HEIGHT, 
-			A.USE_YN, A.PART_ORDER, A.FRST_REGIST_DTM, A.FRST_REGTER_ID, A.LAST_UPDT_DTM, 
-			A.LAST_UPDUSR_ID, B.FLOOR_NM, C.CENTER_NM
-			A.PART_MAP2, A.PART_CSS, A.PART_SEAT_RULE, A.PART_MINI_CSS, A.PART_MINI_TOP, 
-			A.PART_MINI_LEFT, A.PART_MINI_WIDTH, A.PART_MINI_HEIGHT, A.PART_MINI_ROTATE, A.USE_YN, A.PART_ORDER, A.PART_PAY_COST,
-			A.FRST_REGIST_DTM, A.FRST_REGTER_ID, A.LAST_UPDT_DTM, A.LAST_UPDUSR_ID, B.FLOOR_NM, C.CENTER_NM
+			A.PART_MAP2, A.PART_CSS, A.PART_SEAT_RULE, A.PART_MINI_ROTATE, A.USE_YN, 
+			A.PART_ORDER, A.FRST_REGIST_DTM, A.FRST_REGTER_ID, A.LAST_UPDT_DTM, A.LAST_UPDUSR_ID, 
+			B.FLOOR_NM, C.CENTER_NM
 		FROM TSEB_PART_INFO_D A, TSEB_FLOOR_INFO_M B, TSEB_CENTER_INFO_M C
 		WHERE PART_CD = #{partCd}  
 		AND A.FLOOR_CD = B.FLOOR_CD
@@ -79,21 +77,15 @@
 			PART_MAP2, PART_CLASS, PART_PAY_COST, PART_CSS, PART_SEAT_RULE, 
 			PART_MINI_CSS, PART_MINI_TOP, PART_MINI_LEFT, PART_MINI_WIDTH, PART_MINI_HEIGHT, 
 			USE_YN, PART_ORDER, FRST_REGIST_DTM, FRST_REGTER_ID, LAST_UPDT_DTM, 
-			LAST_UPDUSR_ID
-			PART_MAP2, PART_CSS, PART_SEAT_RULE, PART_MINI_CSS, PART_MINI_TOP, 
-			PART_MINI_LEFT, PART_MINI_WIDTH, PART_MINI_HEIGHT, USE_YN, PART_ORDER, 
-			FRST_REGIST_DTM, FRST_REGTER_ID, LAST_UPDT_DTM, LAST_UPDUSR_ID, PART_MINI_ROTATE, PART_PAY_COST
+			LAST_UPDUSR_ID, PART_MINI_ROTATE
 		)
 		VALUES 
 		(
 			#{centerCd}, #{floorCd}, FN_PARTCODE(#{floorCd}), #{partNm, jdbcType=VARCHAR}, #{partMap1, jdbcType=VARCHAR}, 
 			#{partMap2, jdbcType=VARCHAR}, #{partClass, jdbcType=VARCHAR}, #{partPayCost, jdbcType=VARCHAR}, #{partCss, jdbcType=VARCHAR}, #{partSeatRule, jdbcType=VARCHAR}, 
 			#{partMiniCss, jdbcType=VARCHAR}, #{partMiniTop, jdbcType=VARCHAR}, #{partMiniLeft, jdbcType=VARCHAR}, #{partMiniWidth, jdbcType=VARCHAR}, #{partMiniHeight, jdbcType=VARCHAR}, 
-			#{useYn, jdbcType=VARCHAR}, #{partOrder, jdbcType=VARCHAR}, SYSDATE, #{frstRegterId, jdbcType=VARCHAR},  SYSDATE, 
-			#{lastUpdusrId, jdbcType=VARCHAR}
-			#{partMap2, jdbcType=VARCHAR}, #{partCss, jdbcType=VARCHAR}, #{partSeatRule, jdbcType=VARCHAR}, #{partMiniCss, jdbcType=VARCHAR}, #{partMiniTop, jdbcType=VARCHAR}, 
-			#{partMiniLeft, jdbcType=VARCHAR}, #{partMiniWidth, jdbcType=VARCHAR}, #{partMiniHeight, jdbcType=VARCHAR}, #{useYn, jdbcType=VARCHAR}, #{partOrder, jdbcType=VARCHAR},
-			SYSDATE, #{frstRegterId, jdbcType=VARCHAR},  SYSDATE, #{lastUpdusrId, jdbcType=VARCHAR}, #{partMiniRotate, jdbcType=VARCHAR} , #{partPayCost, jdbcType=VARCHAR}
+			#{useYn, jdbcType=VARCHAR}, #{partOrder, jdbcType=VARCHAR}, SYSDATE, #{frstRegterId, jdbcType=VARCHAR}, SYSDATE, 
+			#{lastUpdusrId, jdbcType=VARCHAR}, #{partMiniRotate, jdbcType=VARCHAR}
 		)        
     </insert>
     

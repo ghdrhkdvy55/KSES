@@ -1424,12 +1424,7 @@
 		    formData.append('partMiniTop', fn_emptyReplace($("#partMiniTop").val(), "0"));
 		    formData.append('partMiniLeft', fn_emptyReplace($("#partMiniLeft").val(), "0"));
 		    formData.append('partMiniWidth', fn_emptyReplace($("#partMiniWidth").val(), "0"));
-<<<<<<< HEAD
-		    formData.append('partMiniHeight', fn_emptyReplace($("#partMiniHeight").val(), "0")); 
-=======
 		    formData.append('partMiniHeight', fn_emptyReplace($("#partMiniHeight").val(), "0"));
-		    formData.append('partMiniRotate', fn_emptyReplace($("#partMiniRotate").val(), "0"));
->>>>>>> refs/remotes/origin/master
 		    formData.append('partPayCost', fn_emptyReplace($("#partPayCost").val(), "0"));
 		    formData.append('partOrder', fn_emptyReplace($("#partOrder").val(), "0"));
 		    formData.append('useYn', fn_emptyReplace($('input[name=part_use_yn]:checked').val(), "Y"));
@@ -1475,14 +1470,8 @@
                 $("#partMiniLeft").val("");
                 $("#partMiniWidth").val("");
                 $("#partMiniHeight").val("");
-<<<<<<< HEAD
-                $("#partPayCost").val("");
-=======
                 $("#partMiniRotate").val("");
                 $("#partPayCost").val("");
-                
-                
->>>>>>> refs/remotes/origin/master
                 $("#partOrder").val("");
 				$("input:radio[name='part_use_yn']:radio[value='Y']").prop('checked', true);
 		        
@@ -1516,12 +1505,8 @@
 			                $("#partMiniTop").val(obj.part_mini_top);
 			                $("#partMiniLeft").val(obj.part_mini_left);
 			                $("#partMiniWidth").val(obj.part_mini_width);
-<<<<<<< HEAD
-			                $("#partMiniHeight").val(obj.part_mini_height);
-=======
 			                $("#partMiniHeight").val(obj.part_mini_height);	
 			                $("#partMiniRotate").val(obj.part_mini_rotate);	
->>>>>>> refs/remotes/origin/master
 			                $("#partPayCost").val(obj.part_pay_cost);
 			                $("#partOrder").val(obj.part_order);
 			                $("input:radio[name='part_use_yn']:radio[value='" + obj.use_yn + "']").prop('checked', true);
