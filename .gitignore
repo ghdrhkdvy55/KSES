@@ -3,3 +3,5 @@
 target/
 .settings/
 *.erd
+*.bak
+/Servers/

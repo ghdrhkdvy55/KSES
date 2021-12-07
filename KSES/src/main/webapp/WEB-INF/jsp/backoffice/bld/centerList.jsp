@@ -911,7 +911,7 @@
 					</tr>
 					<tr>
 						<th>시범 지점 여부</th>
-	                  	<td colspan="3">
+	                  	<td>
                     		<label for="useYn_Y"><input id="centerPilotYn_Y" type="radio" name="centerPilotYn" value="Y" checked>Y</label>
                     		<label for="useYn_N"><input id="centerPilotYn_N" type="radio" name="centerPilotYn" value="N">N</label>
                   		</td>

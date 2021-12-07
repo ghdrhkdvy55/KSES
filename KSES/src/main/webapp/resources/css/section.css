@@ -1,24 +1,28 @@
 /*섹션 레이어*/
 
 .circle {
-    display: inline-block;
+    height: 70%;
+}
+.section {
     position: relative;
-    top: 20px;
-    z-index: 999;
-    left: 10px;
-    margin-right: 1rem;
+    width: 70%;
+    margin: auto;
+    height: 100%;
+    display: grid;
+    align-items: center;
 }
 .circle span {
-    padding: 1.3rem;
-    border-radius: 5rem;
+    border-radius: 50%;
     color: #fff;
     font-weight: 700;
     opacity: 0.9;
     width: 100%;
     display: block;
-    font-size: 3em;
-    text-align: center;
-    line-height: 1.5em;
+    font-size: 2em;
+    height: 100%;
+    position: re;
+    display: grid;
+    align-items: center;
 }
 .a_sec {background: #ffbc26;}
 .b_sec {background: #4abcff;}

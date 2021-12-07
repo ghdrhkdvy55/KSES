@@ -866,6 +866,7 @@
 		},
 		imageFomatter : function(cellvalue, options, rowObject){
 			var floorMap1 = (rowObject.floor_map1 == "no_image.png" || rowObject.floor_map1 == undefined ) ? "/resources/img/no_image.png" : "/upload/" + rowObject.floor_map1;
+			
 			return '<img src="' + floorMap1 + ' " style="width:100px">';
 		},
 		centerInfoButton : function (cellvalue, options, rowObject) {
