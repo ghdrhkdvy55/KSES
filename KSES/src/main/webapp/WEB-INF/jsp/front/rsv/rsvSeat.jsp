@@ -779,20 +779,20 @@
 					setHtml += '    </div>';
 			         
 			         //검은 막 띄우기
-			         $(document).on("click",".openMask",function(){ 
+			         $(document).on("click",".openMask",function() { 
 			             e.preventDefault();
 			             wrapWindowByMask();
 		 			});
 			            
 					//닫기 버튼을 눌렀을 때
-					$(document).on("click",".window .close",function(){ 
+					$(document).on("click",".window .close",function() { 
 						//링크 기본동작은 작동하지 않도록 한다.
 						e.preventDefault();
 						$('#mask, .window').hide();
 		 			});
 			            
 					//검은 막을 눌렀을 때
-					$(document).on("click","#mask",function(){ 
+					$(document).on("click","#mask",function() { 
 						$(this).hide();
 						$('.window').hide();
 		 			});
@@ -853,7 +853,8 @@
 					fn_openPopup("전자문진표 작성여부에 동의해주세요", "red", "ERROR", "확인", "");
 					return;
 				}
-				if(!$("input:checkbox[id='" + enterDvsn + "_person_agree']").is(":checked")) {
+				
+				if(!$("input:checkbox[id='" + enterDvsn + "_person_agree']").is(":checked") && !isMember) {
 					fn_openPopup("개인정보 수집 이용여부에 대하여 동의해주세요", "red", "ERROR", "확인", "");
 					return;
 				}
@@ -889,8 +890,6 @@
 					params.resvRcptDvsn = "";
 					params.resvRcptNumber =  "";
 				}
-				
-				return;
 				
 				fn_Ajax
 				(
