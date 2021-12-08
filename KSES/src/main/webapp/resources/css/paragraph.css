@@ -757,7 +757,7 @@ padding-left: 5px;
 /*0930*/
 #fulltxt {width: 90%;}
 .inTxt td input[type="text"]{ text-align: center; }
-.orangeBtn{vertical-align:sub;display: inline-block;background:#ffa536!important; color: #fff;padding: 4px 20px;border-radius: 2px; font-size: 14px;}
+.orangeBtn{vertical-align:sub;display: inline-block;background:#6fa2ff!important; color: #fff;padding: 4px 20px;border-radius: 2px; font-size: 14px;}
 .orangeBtn:hover{background: #ffa344;}
 .section_add img {vertical-align: bottom; margin-right: 5px;}
 .branch {  

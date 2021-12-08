@@ -158,7 +158,7 @@ bottom:0;
     width: 82%;
 }
 .self_pop { width: 85%; }
-.pop_con{padding:40px 30px 85px; font-size: 1.7em;}
+.pop_con{padding:40px 25px 45px; font-size: 1.7em;}
 .pop_tit{font-size: 2rem;color: #fff; }
 .login_pop_tit 
 .pop_noti { font-size: 1.6rem; color: #808080;letter-spacing: -0.6px; word-break: keep-all; padding-top: 30px}
@@ -1996,7 +1996,7 @@ ul.tabs li{
 .rsv_history {text-align: center; width: 90%;}
 .rsv_num {color: red; font-weight: 600;}
 .my_box .close {float: right; margin-right: 10px;}
-.receipt_cash {padding: 0}
+.receipt_cash {padding: 0 0.5rem; font-size:1.7em;}
 .receipt_cash div {
     border-bottom: 2px solid #e0e0e0;
     padding-bottom: 3rem;
@@ -2008,11 +2008,11 @@ ul.tabs li{
     display: block;
     background: #FFD04E;
     padding: 2rem 0;
-    text-align: center;
     border-radius: 8px;
     font-size: 1.1em;
     color: #000;
     margin-top: 5rem;
+    text-align:center;
 }
 .cash_refund li input {
     width: -webkit-fill-available;
@@ -2076,7 +2076,7 @@ ul.tabs li{
     margin-top: 5rem;
 }
 
-.pop_wrap h4 {font-size: 1.1em; line-height: 2em; text-align: center;}
+.pop_wrap h4 {font-size: 1em; line-height: 2em; text-align: center;}
 .pop_wrap p {
     font-size: .8em;
     text-decoration: none;
@@ -2103,9 +2103,10 @@ ul.tabs li{
 }
 .cancel_btn a {
     color: #fff;
-    padding: 2rem 8rem;
+    padding: 2rem 0;
     background: #393939;
     border-radius: 8px;
+    display:block;
 }
 .summit_btn {
     position: relative;
@@ -2114,13 +2115,15 @@ ul.tabs li{
 }
 .summit_btn a {
     color: #fff;
-    padding: 2rem 3rem;
+    padding: 2rem 0;
     background: #47D6BE;
     border-radius: 8px;
+    display:block;
+    width:100%;
 }
 .pop_wrap h4 img {
     vertical-align: middle;
-    width: 22px;
+    width: 19px;
     margin-right: 5px;
 }
 .qrEnter {text-align: center; font-size: .9em;} 
@@ -2331,7 +2334,41 @@ ul.tabs li{
 }
 .common_pop_btn a {
     color: #fff;
-    padding: 1.5rem 5rem;
+    padding: 2rem 5rem;
     background: #4d4d4d;
     border-radius: 8px;
+    display:block;
+}
+/*1207*/
+#mask_qr {
+    z-index: 9;
+    background-color: #2e2e2e;
+    height: 256px;
+    width: 256px;
+    opacity: 0.9;
+    position: absolute;
+    top: 0;
+}
+#mask_qr img {width: 35%;}
+.pay_btn a {width: 110px; padding: 2rem 10rem!important;}
+.info_img a {display: block; color: #fff; font-size: 1.2em;}
+
+/*1208*/
+.pay_passWord {margin-top: 2rem;}
+.pay_passWord li {display: inline-block;}
+.pay_passWord li input {
+    width: 95%;
+    font-size: 14px;
+    line-height: 1.2em;
+    padding: 1rem 0.5rem;
+    border: 1px solid #d5d5d5;
+    vertical-align: middle;
+}
+
+.pay_passWord li:nth-child(2) a {
+    padding: 1rem 1.5rem;
+    display: block;
+    background: #ff5252;
+    border-radius: 4px;
+    color: #fff;
 }

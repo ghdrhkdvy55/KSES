@@ -178,11 +178,11 @@
   .srchBtn {padding: 4px 15px !important;}
   .login_num_info li {width: 13rem!important;}
   .detail_srch li {width: 24%;}
-  .main_user .main_user_info, .main_user .main_user_reser {margin-top: -10px!important;}
+  .main_user .main_user_info, .main_user .main_user_reser {margin-top: -1px!important;}
   .non_member li:first-child a {padding: 10px 0}
   .detail_srch li span {padding-left: 0;} 
   .popup {width: 92%;}
-  .main_user_pad {padding: 2.1rem 1.6rem 1.8rem 2.4rem;}
+  .main_user_pad {padding: 2rem 1.6rem 1.8rem 2.4rem;}
   .main_user_rsv li em {margin-top: 0; }
   .mo_user_info_txt ul li:first-child .thvac {margin-left: 0;}
   .price table td span {display: inline-block; margin-top: 5px; float: none;}
@@ -190,7 +190,7 @@
   .pay_btn li {margin: 1rem 0; }
   .grayBtn a {padding: 1.5rem 10rem;}
   .mintBtn a {padding: 1.5rem 10rem;}
-  .pop_wrap h4 {font-size: 1.1em;}
+  .pop_wrap h4 {font-size: 1em;}
   .rsv_list {width: 100%}
   .summit_btn a, .cancel_btn a {padding: 2rem 4rem}
   .slogan {font-size: 1.5em;}
