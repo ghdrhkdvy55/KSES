@@ -1,9 +1,9 @@
 package com.kses.backoffice.sym.log.web;
 
 
-import java.net.Inet4Address;
 import java.util.List;
 import java.util.Map;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
@@ -52,11 +52,10 @@ public class LoginLogController {
 	 * @return sym/log/clg/EgovLoginLogList
 	 * @throws Exception
 	 */
-	
-	@RequestMapping(value = "selectLoginLogList.do")
+	@RequestMapping(value = "loginLogList.do")
 	public ModelAndView selectLoginLogInf(@ModelAttribute("searchVO") LoginLog loginLog) throws Exception {
 		
-		ModelAndView model = new ModelAndView("/backoffice/sys/LoginLogList");
+		ModelAndView model = new ModelAndView("/backoffice/sys/loginLogList");
 		return model;
 	}
 	@RequestMapping(value = "selectLoginLogListAjax.do")

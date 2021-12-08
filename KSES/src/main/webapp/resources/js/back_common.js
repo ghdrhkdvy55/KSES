@@ -1,6 +1,5 @@
 /*이미지 썸네일*/
 $(document).ready(function() {
-openNav();
 var xOffset = 10;
 var yOffset = 30;
 
@@ -78,22 +77,11 @@ panel.style.display = "block";
 });
 }
 /* popup */
-$('[data-popup-open]').bind('click', function () {
+$('[data-popup-open]').bind('click', function (e) {
   var targeted_popup_class = jQuery(this).attr('data-popup-open');
   $('[data-popup="' + targeted_popup_class + '"]').bPopup();
   e.preventDefault();
   });
-
-/* rsv_blacklist tab (table) */
-$('.blacklist.tabs>.tab').on('click', function(){
-  var tabIdx = $(this).index();
-  var $tabBtn = $('.blacklist.tabs>.tab');
-  var $tbody = $('.blacklist.main_table>tbody');
-  $tabBtn.removeClass('active');
-  $(this).addClass('active');
-  $tbody.removeClass('active');
-  $tbody.eq(tabIdx).addClass('active');
-})
 
 // 맨 마지막 문자 얻어 오기 
 function fn_Endstring(_field){

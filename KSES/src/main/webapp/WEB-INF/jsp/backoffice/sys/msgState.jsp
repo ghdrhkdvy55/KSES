@@ -1,183 +1,135 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="ui" uri="http://egovframework.gov/ctl/ui"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=no;" />
-    <title>경륜경정 스마트입장 관리자</title>
-    <link rel="stylesheet" href="/resources/css/reset.css">
-	<link rel="stylesheet" href="/resources/css/paragraph.css">
-    <link rel="stylesheet" href="/resources/css/common.css">
-    <link rel="stylesheet" href="/resources/css/toggle.css">
-    <script src="/resources/js/jquery-3.5.1.min.js"></script>
-    <script src="/resources/js/bpopup.js"></script>
-    
-    <link rel="stylesheet" type="text/css" href="/resources/css/jquery-ui.css">
-    <link rel="stylesheet" type="text/css" href="/resources/jqgrid/src/css/ui.jqgrid.css">
-    <script type="text/javascript" src="/resources/jqgrid/src/i18n/grid.locale-kr.js"></script>
-    <script type="text/javascript" src="/resources/jqgrid/js/jquery.jqGrid.min.js"></script>
-    
-    <!-- datepicker-->
-    <script src="/resources/js/jquery-ui.js"></script>
-    <!-- 체크 -->
-    <link rel="stylesheet" href="/resources/css/jquery-ui.css">
-    
-    <style type="text/css">
-     .ui-jqgrid .ui-jqgrid-htable th div{
-		outline-style: none;
-		height: 30px;
-	 }
-     .ui-jqgrid tr.jqgrow {
-		outline-style: none;
-		height: 30px;
-	}
-    </style>
-</head>
-<body>
-<div class="wrapper">
-  <!--// header -->
-  <input type="hidden" id="mode" name="mode" />
-  <input type="hidden" id="pageIndex" name="pageIndex" />
-  <input type="hidden" id="result" name="result" />
-  <c:import url="/backoffice/inc/top_inc.do" />
-  <!-- header //-->
-  <!--// contents-->
-  <div id="contents">
-    <div class="breadcrumb">
-      <ol class="breadcrumb-item">
-        <li>고객 관리</li>
-        <li class="active">　> 메시지 전송 관리</li>
-      </ol>
-    </div>
-
-    <h2 class="title">메시지 전송 관리</h2><div class="clear"></div>
-    <!--// dashboard -->
-    <div class="dashboard">
-      <!--contents-->
-      <div class="boardlist mms_mng_container">
-        <div class="mms_select whiteBox">
-          <div class="mms_select_check">
-            <div class="mms_title">
-              <label for="user_select01"><input type="checkbox" name="user_select01" id="user_select01">수신자 선택</label>
-            </div>
-            <table class="detail_table">
-              <tbody>
-                <tr>
-                  <th>
-                    <label for="userArea"><input type="radio" name="user_SendGubn" id="userArea" value="E">지점 관리자</label>
-                  </th>
-                  <td>
-                    <select id="send_G">
-                       <option value="">관리자 전체 </option>
-		               <c:forEach items="${centerCombo}" var="centerCombo">
-		                      <option value="${centerCombo.center_cd}">${centerCombo.center_nm}</option>
-					   </c:forEach>
-                    </select>
-                  </td>
-                </tr>
-                <tr>
-                  <th>
-                    <label for="userDate"><input type="radio" name="user_SendGubn" id="userDate"  value="U">예약자 일자별 </label>
-                  </th>
-                  <td>
-                    <select id="send_U">
-                      <option value="">지점 전체</option>
-                      <c:forEach items="${centerCombo}" var="centerCombo">
-		                      <option value="${centerCombo.center_cd}">${centerCombo.center_nm}</option>
-					   </c:forEach>
-                    </select>
-                    <br />
-                    <input type="text" id="search_from" readonly="readonly" class="cal_icon"> ~
-                    <input type="text" id="search_to" readonly="readonly" class="cal_icon">
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="mms_select_input">
-            <div class="mms_title">
-              <label for="user_select02"><input type="checkbox" name="user_select02" id="user_select02">수신자 입력</label>
-              <a href="#" onClick="msgFunction.fn_userSerach()" class="grayBtn">사용자 검색</a>
-            </div>
-            <div class="search">
-               <input type="text" name="sms_addUser" id="sms_addUser" placeholder="전화번호를 입력하세요." onChange="fn_autoHyphen(this);">
-              <a href="#" onClick="msgFunction.fn_indivUser()">추가</a>
-            </div>
-            <table id="tb_UserSendInfo" class="detail_table srch_option">
-              <tbody>
-                
-              </tbody>
-            </table>
-          </div>
-          <div class="mms_select_group">
-            <div class="mms_title">
-              <label for="user_select03"><input type="checkbox" name="user_select03" id="user_select03">수신 그룹</label>
-              <a href="#" onClick="msgFunction.fn_GroupPop()" class="grayBtn">그룹 검색</a>
-              <a href="#" onClick="msgFunction.fn_MsgInfo('Ins', '')" class="grayBtn">그룹 등록</a>
-            </div>
-            <table class="detail_table srch_option" id="tb_GroupSendInfo">
-              <tbody>
-              </tbody>
-            </table>
-          </div>
-          <a href="#" onClick="msgFunction.fn_receiver()" class="blueBtn right_box">수신 목록에 추가</a>
+<!-- JQuery Grid -->
+<link rel="stylesheet" href="/resources/jqgrid/src/css/ui.jqgrid.css">
+<script type="text/javascript" src="/resources/jqgrid/src/i18n/grid.locale-kr.js"></script>
+<script type="text/javascript" src="/resources/jqgrid/js/jquery.jqGrid.min.js"></script>
+<!-- //contents -->
+<input type="hidden" id="mode" name="mode" />
+<input type="hidden" id="pageIndex" name="pageIndex" />
+<input type="hidden" id="result" name="result" />
+<div class="breadcrumb">
+  	<ol class="breadcrumb-item">
+    	<li>고객 관리</li>
+    	<li class="active">　> 메시지 전송 관리</li>
+  	</ol>
+</div>
+<h2 class="title">메시지 전송 관리</h2>
+<div class="clear"></div>
+<div class="dashboard">
+  <div class="boardlist mms_mng_container">
+    <div class="mms_select whiteBox">
+      <div class="mms_select_check">
+        <div class="mms_title">
+          <label for="user_select01"><input type="checkbox" name="user_select01" id="user_select01">수신자 선택</label>
         </div>
-        <div class="mms_selectedUserList whiteBox">
-          <div class="mms_title"> ▶ 수신자 </div>
-          <table class="detail_table" id="tb_receiver">
-            <tbody>
-              <tr>
-                <th>받는 사람</th>
-                <td>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="mms_message whiteBox">
-          <div class="mms_title"> ▶ 메시지 </div>
-          <div class="mms_messageBox">
-              <textarea id="textMessage" onChange="javascript:updateInputCount('textMessage','sp_msgByte')" 
-                                         onKeyUp="javascript:updateInputCount('textMessage','sp_msgByte')"></textarea>
-              <span id="sp_msgByte"></span>
-              <a href="#" onClick="msgFunction.fn_megReset()" class="grayBtn">새로쓰기</a>
-              <a href="#" onClick="msgFunction.fn_megPop('1')" class="grayBtn">메시지 보관함</a>
-              <a href="#" onClick="msgFunction.fn_megSave()" class="grayBtn">메시지 저장</a>
-          </div>
-          <div class="mms_title"> ▶ 발신자 </div>
-          <table class="detail_table">
-            <tbody>
-              <tr>
-                <th>보내는 사람</th>
-                <td>
-                  <input type="text" value="${empClphn }" id="sendTel">
-                </td>
-              </tr>
-              <tr>
-                <th>전송방법</th>
-                <td>
-                  <a href="#" onClick="msgFunction.fn_msgSendSave('D')" class="blueBtn">즉시전송</a>
-                  <a href="#" onClick="msgFunction.fn_msgSendSave('R')" class="blueBtn">예약전송</a>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <table class="detail_table">
+          <tbody>
+            <tr>
+              <th>
+                <label for="userArea"><input type="radio" name="user_SendGubn" id="userArea" value="E">지점 관리자</label>
+              </th>
+              <td>
+                <select id="send_G">
+                   <option value="">관리자 전체 </option>
+	               <c:forEach items="${centerCombo}" var="centerCombo">
+	                      <option value="${centerCombo.center_cd}">${centerCombo.center_nm}</option>
+				   </c:forEach>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <th>
+                <label for="userDate"><input type="radio" name="user_SendGubn" id="userDate"  value="U">예약자 일자별 </label>
+              </th>
+              <td>
+                <select id="send_U">
+                  <option value="">지점 전체</option>
+                  <c:forEach items="${centerCombo}" var="centerCombo">
+	                      <option value="${centerCombo.center_cd}">${centerCombo.center_nm}</option>
+				   </c:forEach>
+                </select>
+                <br />
+                <input type="text" id="search_from" readonly="readonly" class="cal_icon"> ~
+                <input type="text" id="search_to" readonly="readonly" class="cal_icon">
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
+      <div class="mms_select_input">
+        <div class="mms_title">
+          <label for="user_select02"><input type="checkbox" name="user_select02" id="user_select02">수신자 입력</label>
+          <a href="#" onClick="msgFunction.fn_userSerach()" class="grayBtn">사용자 검색</a>
+        </div>
+        <div class="search">
+           <input type="text" name="sms_addUser" id="sms_addUser" placeholder="전화번호를 입력하세요." onChange="fn_autoHyphen(this);">
+          <a href="#" onClick="msgFunction.fn_indivUser()">추가</a>
+        </div>
+        <table id="tb_UserSendInfo" class="detail_table srch_option">
+          <tbody>
+            
+          </tbody>
+        </table>
+      </div>
+      <div class="mms_select_group">
+        <div class="mms_title">
+          <label for="user_select03"><input type="checkbox" name="user_select03" id="user_select03">수신 그룹</label>
+          <a href="#" onClick="msgFunction.fn_GroupPop()" class="grayBtn">그룹 검색</a>
+          <a href="#" onClick="msgFunction.fn_MsgInfo('Ins', '')" class="grayBtn">그룹 등록</a>
+        </div>
+        <table class="detail_table srch_option" id="tb_GroupSendInfo">
+          <tbody>
+          </tbody>
+        </table>
+      </div>
+      <a href="#" onClick="msgFunction.fn_receiver()" class="blueBtn right_box">수신 목록에 추가</a>
+    </div>
+    <div class="mms_selectedUserList whiteBox">
+      <div class="mms_title"> ▶ 수신자 </div>
+      <table class="detail_table" id="tb_receiver">
+        <tbody>
+          <tr>
+            <th>받는 사람</th>
+            <td>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="mms_message whiteBox">
+      <div class="mms_title"> ▶ 메시지 </div>
+      <div class="mms_messageBox">
+          <textarea id="textMessage" onChange="javascript:updateInputCount('textMessage','sp_msgByte')" 
+                                     onKeyUp="javascript:updateInputCount('textMessage','sp_msgByte')"></textarea>
+          <span id="sp_msgByte"></span>
+          <a href="#" onClick="msgFunction.fn_megReset()" class="grayBtn">새로쓰기</a>
+          <a href="#" onClick="msgFunction.fn_megPop('1')" class="grayBtn">메시지 보관함</a>
+          <a href="#" onClick="msgFunction.fn_megSave()" class="grayBtn">메시지 저장</a>
+      </div>
+      <div class="mms_title"> ▶ 발신자 </div>
+      <table class="detail_table">
+        <tbody>
+          <tr>
+            <th>보내는 사람</th>
+            <td>
+              <input type="text" value="${empClphn }" id="sendTel">
+            </td>
+          </tr>
+          <tr>
+            <th>전송방법</th>
+            <td>
+              <a href="#" onClick="msgFunction.fn_msgSendSave('D')" class="blueBtn">즉시전송</a>
+              <a href="#" onClick="msgFunction.fn_msgSendSave('R')" class="blueBtn">예약전송</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
-  <!-- contents//-->
 </div>
-<!-- wrapper_end-->
-<!-- popup -->
+<!-- contents//-->
+<!-- //popup -->
 <!--권한분류 추가 팝업-->
 <div id="dv_messageGroupSearch" class="popup">
     <div class="pop_con">
@@ -220,7 +172,6 @@
         <div class="clear"></div>
     </div>
 </div>
-
 <div id="dv_messageUserSerach" class="popup m_pop">
     <div class="pop_con">
         <a class="button b-close">X</a>
@@ -261,8 +212,6 @@
         <div class="clear"></div>
     </div>
 </div>
-
-
 <div id="dv_messageGroup" class="popup m_pop">
     <div class="pop_con">
         <a class="button b-close">X</a>
@@ -300,7 +249,6 @@
         <div class="clear"></div>
     </div>
 </div>
-
 <!-- // 메시지 보관함 팝업 -->
 <div data-popup="save_mms_list" id="save_mms_list" class="popup m_pop">
   <div class="pop_con">
@@ -322,7 +270,6 @@
       <div class="clear"></div>
   </div>
 </div>
-
 <!-- // 예약전송 팝업 -->
 <div data-popup="rsv_mms_sum" id="rsv_mms_sum" class="popup m_pop">
   <div class="pop_con">
@@ -385,8 +332,6 @@
       <div class="clear"></div>
   </div>
 </div>
-<!-- 팝업 // -->
-
 <div id="dv_messageGroup_user" class="popup">
   <div class="pop_con">
       <a class="button b-close" onClick="msgFunction.fn_MsgUserCloseInfo()">X</a>
@@ -446,10 +391,8 @@
       <div class="clear"></div>
   </div>
 </div>
-
-
-</div>
-    <script type="text/javascript">
+<!-- pooup// -->
+<script type="text/javascript">
     $(document).ready(function() { 
 		var clareCalendar = {
 		monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
@@ -1062,8 +1005,5 @@
          }
     }
     
-    </script>
-    <c:import url="/backoffice/inc/popup_common.do" />
-    <script type="text/javascript" src="/resources/js/back_common.js"></script>
-</body>
-</html>
+</script>
+<c:import url="/backoffice/inc/popup_common.do" />

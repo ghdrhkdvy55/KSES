@@ -1,51 +1,159 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="ui" uri="http://egovframework.gov/ctl/ui"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=no;" />
-    <title>경륜경정 스마트입장 관리자</title>
-    <link rel="stylesheet" href="/resources/css/reset.css">
-	<link rel="stylesheet" href="/resources/css/paragraph.css">
-    <link rel="stylesheet" href="/resources/css/common.css">
-    <link rel="stylesheet" href="/resources/css/toggle.css">
-    <script src="/resources/js/jquery-3.5.1.min.js"></script>
-    <script src="/resources/js/bpopup.js"></script>
-    <script>
-	jQuery.browser = {};
-	(function () {
-	    jQuery.browser.msie = false;
-	    jQuery.browser.version = 0;
-	    if (navigator.userAgent.match(/MSIE ([0-9]+)\./)) {
-	        jQuery.browser.msie = true;
-	        jQuery.browser.version = RegExp.$1;
-	    }
-	})();
-	</script>
-    <link rel="stylesheet" type="text/css" href="/resources/css/jquery-ui.css">
-    <link rel="stylesheet" type="text/css" href="/resources/jqgrid/src/css/ui.jqgrid.css">
-    <script type="text/javascript" src="/resources/jqgrid/src/i18n/grid.locale-kr.js"></script>
-    <script type="text/javascript" src="/resources/jqgrid/js/jquery.jqGrid.min.js"></script>
-    
-    <style type="text/css">
-     .ui-jqgrid .ui-jqgrid-htable th div{
-		outline-style: none;
-		height: 30px;
-	 }
-     .ui-jqgrid tr.jqgrow {
-		outline-style: none;
-		height: 30px;
-	}
-    </style>
-    <script type="text/javascript">
+<!-- JQuery Grid -->
+<link rel="stylesheet" href="/resources/jqgrid/src/css/ui.jqgrid.css">
+<script type="text/javascript" src="/resources/jqgrid/src/i18n/grid.locale-kr.js"></script>
+<script type="text/javascript" src="/resources/jqgrid/js/jquery.jqGrid.min.js"></script>
+<style type="text/css">
+.ui-jqgrid .ui-jqgrid-htable th div{
+	outline-style: none;
+	height: 30px;
+}
+.ui-jqgrid tr.jqgrow {
+	outline-style: none;
+	height: 30px;
+}
+</style>
+<!-- //contents -->
+<div class="breadcrumb">
+	<ol class="breadcrumb-item">
+    	<li>인사 관리</li>
+    	<li class="active">　> 사용자 관리</li>
+	</ol>
+</div>
+<h2 class="title">사용자 관리</h2>
+<div class="clear"></div>
+<div class="dashboard">
+      <div class="boardlist">
+        <div class="whiteBox searchBox">
+              <div class="sName">
+                <h3>검색 옵션</h3>
+              </div>
+          <div class="top">
+            <p>부서</p>
+            <select id="searchDepth" name="searchDepth">
+               <option value="">지점 선택</option>
+               <c:forEach items="${DEPT}" var="dept">
+                  <option value="${dept.code_cd}">${dept.code_nm}</option>
+               </c:forEach>
+            </select>
+            <p>검색어</p>
+            <select id="searchCondition" name="searchCondition">
+              <option value="EMP_NM">이름</option>
+              <option value="EMP_NO">아이디</option>
+            </select>
+            <input type="text" id="searchKeyword" name="searchKeyword" placeholder="검색어를 입력하세요.">
+          </div>
+          <div class="inlineBtn">
+            <a href="#" onClick="jqGridFunc.fn_search()" class="grayBtn">검색</a>
+          </div>
+        </div>
+        <div class="left_box mng_countInfo">
+          <p>총 : <span id="sp_totcnt"></span>건</p>
+         
+        </div>
+        <div class="right_box">
+            <a href="#" onClick="jqGridFunc.fn_empInfo('Ins', '')" class="blueBtn">사용자 등록</a> 
+            <a href="#" onClick="jqGridFunc.fn_empDel()" class="grayBtn">삭제</a>
+        </div>
+        <div class="clear"></div>
+        <div class="whiteBox">
+            <table id="mainGrid"></table>
+            <div id="pager" class="scroll" style="text-align:center;"></div>  
+        </div> 
+      </div>
+</div>
+<!-- contents//-->
+<!-- //popup -->
+<!-- // 관리자ㅏ용자 등록 팝업 -->
+<div data-popup="mng_user_add" id="mng_user_add" class="popup">
+  <div class="pop_con">
+      <a class="button b-close">X</a>
+      <h2 class="pop_tit">사용자 등록</h2>
+      <div class="pop_wrap">
+          <table class="detail_table">
+              <tbody>
+                <tr>
+                  <th>사번</th>
+                  <td><input type="text" id="empNo" name="empNo">
+                      <span id="sp_Unqi">
+                      <a href="javascript:jqGridFunc.fn_idCheck()" class="blueBtn">중복확인</a>
+                      <input type="hidden" id="idCheck">
+                      </span>
+                  </td>
+                  <th>이름</th>
+                  <td><input type="text" id="empNm" name="empNm"></td>
+                </tr>
+                <tr>
+                   <th>사진</th>
+                   <td><input type="file" id="empPic" name="empPic"></td>
+                </tr>
+                <tr>
+                  <th>부서</th>
+                  <td>
+                     <select id="deptCd" name="deptCd">
+			               <option value="">부서 선택</option>
+			               <c:forEach items="${DEPT}" var="dept">
+			                  <option value="${dept.code_cd}">${dept.code_nm}</option>
+			               </c:forEach>
+			          </select> 
+                  </td>
+                  <th>직급</th>
+                  <td><select id="gradCd" name="gradCd">
+			               <option value="">직급 선택</option>
+			               <c:forEach items="${GRAD}" var="grad">
+			                  <option value="${grad.code_cd}">${grad.code_nm}</option>
+			               </c:forEach>
+			          </select> 
+			      </td>
+                </tr>
+                <tr>
+                  <th>직책</th>
+                  <td>
+                     <select id="psitCd" name="psitCd">
+			               <option value="">직책 선택</option>
+			               <c:forEach items="${POST}" var="post">
+			                  <option value="${post.code_cd}">${post.code_nm}</option>
+			               </c:forEach>
+			          </select> 
+                  </td>
+                  <th>이메일</th>
+                  <td><input type="text" id="empEmail" name="empEmail" onClick="fn_join('empEmail',  'mng_user_add')"></td>
+                </tr>
+                <tr>
+                  <th>내선번호</th>
+                  <td><input type="text" id="empTlphn" name="empTlphn"></td>
+                  <th>핸드폰</th>
+                  <td><input type="text" id="empClphn" name="empClphn"></td>
+                </tr>
+                <tr>
+                  <th>사용여부</th>
+                  <td>
+                    <label for="useAt_Y"><input name="useYn" type="radio" id="useAt_Y" value="Y"/>사용</label>
+                    <label for="useAt_N"><input name="useYn" type="radio" id="useAt_N" value="N"/>사용 안함</label>
+                  </td>
+                  <th>사용자상태</th>
+                  <td><select id="empState" name="empState">
+			               <option value="">상태</option>
+			               <c:forEach items="${userState}" var="userState">
+			                  <option value="${userState.code}">${userState.codenm}</option>
+			               </c:forEach>
+			          </select> 
+			      </td>
+                </tr>
+                
+              </tbody>
+          </table>
+      </div>
+      <div class="right_box">
+          <a href="#" onClick="jqGridFunc.fn_close()" class="grayBtn">취소</a>
+          <a href="#" onClick="jqGridFunc.fn_CheckForm()" id="btnUpdate" class="blueBtn">저장</a>
+      </div>
+      <div class="clear"></div>
+  </div>
+</div>
+<!-- popup// -->
+<script type="text/javascript">
 	$(document).ready(function() { 
 		   jqGridFunc.setGrid("mainGrid");
 	 });
@@ -340,164 +448,5 @@
 		 } 
     }
     
-  </script>
-</head>
-<body>
-<form:form name="regist" commandName="regist" method="post" action="/backoffice/bas/msgList.do">
-  <!--// header -->
-  <input type="hidden" id="mode" name="mode" />
-  
-<div class="wrapper">
-  <!--// header -->
-  <c:import url="/backoffice/inc/top_inc.do" />
-  <!-- header //-->
-  <!--// contents-->
-  <div id="contents">
-    <div class="breadcrumb">
-      <ol class="breadcrumb-item">
-        <li>인사 관리</li>
-        <li class="active">　> 사용자 관리</li>
-      </ol>
-    </div>
-
-    <h2 class="title">사용자 관리</h2><div class="clear"></div>
-    <!--// dashboard -->
-    <div class="dashboard">
-      <!--contents-->
-      <div class="boardlist">
-        <div class="whiteBox searchBox">
-              <div class="sName">
-                <h3>검색 옵션</h3>
-              </div>
-          <div class="top">
-            <p>부서</p>
-            <select id="searchDepth" name="searchDepth">
-               <option value="">지점 선택</option>
-               <c:forEach items="${DEPT}" var="dept">
-                  <option value="${dept.code_cd}">${dept.code_nm}</option>
-               </c:forEach>
-            </select>
-            <p>검색어</p>
-            <select id="searchCondition" name="searchCondition">
-              <option value="EMP_NM">이름</option>
-              <option value="EMP_NO">아이디</option>
-            </select>
-            <input type="text" id="searchKeyword" name="searchKeyword" placeholder="검색어를 입력하세요.">
-          </div>
-          <div class="inlineBtn">
-            <a href="#" onClick="jqGridFunc.fn_search()" class="grayBtn">검색</a>
-          </div>
-        </div>
-        <div class="left_box mng_countInfo">
-          <p>총 : <span id="sp_totcnt"></span>건</p>
-         
-        </div>
-        <div class="right_box">
-            <a href="#" onClick="jqGridFunc.fn_empInfo('Ins', '')" class="blueBtn">사용자 등록</a> 
-            <a href="#" onClick="jqGridFunc.fn_empDel()" class="grayBtn">삭제</a>
-        </div>
-        <div class="clear"></div>
-        <div class="whiteBox">
-            <table id="mainGrid"></table>
-            <div id="pager" class="scroll" style="text-align:center;"></div>  
-        </div> 
-      </div>
-    </div>
-  </div>
-  <!-- contents//-->
-</div>
-</form:form>
-<!-- wrapper_end-->
-<!-- popup -->
-<!-- // 관리자ㅏ용자 등록 팝업 -->
-<div data-popup="mng_user_add" id="mng_user_add" class="popup">
-  <div class="pop_con">
-      <a class="button b-close">X</a>
-      <h2 class="pop_tit">사용자 등록</h2>
-      <div class="pop_wrap">
-          <table class="detail_table">
-              <tbody>
-                <tr>
-                  <th>사번</th>
-                  <td><input type="text" id="empNo" name="empNo">
-                      <span id="sp_Unqi">
-                      <a href="javascript:jqGridFunc.fn_idCheck()" class="blueBtn">중복확인</a>
-                      <input type="hidden" id="idCheck">
-                      </span>
-                  </td>
-                  <th>이름</th>
-                  <td><input type="text" id="empNm" name="empNm"></td>
-                </tr>
-                <tr>
-                   <th>사진</th>
-                   <td><input type="file" id="empPic" name="empPic"></td>
-                </tr>
-                <tr>
-                  <th>부서</th>
-                  <td>
-                     <select id="deptCd" name="deptCd">
-			               <option value="">부서 선택</option>
-			               <c:forEach items="${DEPT}" var="dept">
-			                  <option value="${dept.code_cd}">${dept.code_nm}</option>
-			               </c:forEach>
-			          </select> 
-                  </td>
-                  <th>직급</th>
-                  <td><select id="gradCd" name="gradCd">
-			               <option value="">직급 선택</option>
-			               <c:forEach items="${GRAD}" var="grad">
-			                  <option value="${grad.code_cd}">${grad.code_nm}</option>
-			               </c:forEach>
-			          </select> 
-			      </td>
-                </tr>
-                <tr>
-                  <th>직책</th>
-                  <td>
-                     <select id="psitCd" name="psitCd">
-			               <option value="">직책 선택</option>
-			               <c:forEach items="${POST}" var="post">
-			                  <option value="${post.code_cd}">${post.code_nm}</option>
-			               </c:forEach>
-			          </select> 
-                  </td>
-                  <th>이메일</th>
-                  <td><input type="text" id="empEmail" name="empEmail" onClick="fn_join('empEmail',  'mng_user_add')"></td>
-                </tr>
-                <tr>
-                  <th>내선번호</th>
-                  <td><input type="text" id="empTlphn" name="empTlphn"></td>
-                  <th>핸드폰</th>
-                  <td><input type="text" id="empClphn" name="empClphn"></td>
-                </tr>
-                <tr>
-                  <th>사용여부</th>
-                  <td>
-                    <label for="useAt_Y"><input name="useYn" type="radio" id="useAt_Y" value="Y"/>사용</label>
-                    <label for="useAt_N"><input name="useYn" type="radio" id="useAt_N" value="N"/>사용 안함</label>
-                  </td>
-                  <th>사용자상태</th>
-                  <td><select id="empState" name="empState">
-			               <option value="">상태</option>
-			               <c:forEach items="${userState}" var="userState">
-			                  <option value="${userState.code}">${userState.codenm}</option>
-			               </c:forEach>
-			          </select> 
-			      </td>
-                </tr>
-                
-              </tbody>
-          </table>
-      </div>
-      <div class="right_box">
-          <a href="#" onClick="jqGridFunc.fn_close()" class="grayBtn">취소</a>
-          <a href="#" onClick="jqGridFunc.fn_CheckForm()" id="btnUpdate" class="blueBtn">저장</a>
-      </div>
-      <div class="clear"></div>
-  </div>
-</div>
-<!-- 사용자 등록 팝업 // -->
-    <c:import url="/backoffice/inc/popup_common.do" />
-    <script type="text/javascript" src="/resources/js/back_common.js"></script>
-</body>
-</html>
+</script>
+<c:import url="/backoffice/inc/popup_common.do" />

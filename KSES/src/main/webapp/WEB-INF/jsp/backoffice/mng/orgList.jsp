@@ -1,50 +1,95 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="ui" uri="http://egovframework.gov/ctl/ui"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=no;" />
-    <title>경륜경정 스마트입장 관리자</title>
-    <link rel="stylesheet" href="/resources/css/reset.css">
-	<link rel="stylesheet" href="/resources/css/paragraph.css">
-    <link rel="stylesheet" href="/resources/css/common.css">
-    <link rel="stylesheet" href="/resources/css/toggle.css">
-    <script src="/resources/js/jquery-3.5.1.min.js"></script>
-    <script src="/resources/js/bpopup.js"></script>
-    <script>
-	jQuery.browser = {};
-	(function () {
-	    jQuery.browser.msie = false;
-	    jQuery.browser.version = 0;
-	    if (navigator.userAgent.match(/MSIE ([0-9]+)\./)) {
-	        jQuery.browser.msie = true;
-	        jQuery.browser.version = RegExp.$1;
-	    }
-	})();
-	</script>
-    <link rel="stylesheet" type="text/css" href="/resources/css/jquery-ui.css">
-    <link rel="stylesheet" type="text/css" href="/resources/jqgrid/src/css/ui.jqgrid.css">
-    <script type="text/javascript" src="/resources/jqgrid/src/i18n/grid.locale-kr.js"></script>
-    <script type="text/javascript" src="/resources/jqgrid/js/jquery.jqGrid.min.js"></script>
-    <style type="text/css">
-     .ui-jqgrid .ui-jqgrid-htable th div{
-		outline-style: none;
-		height: 30px;
-	 }
-     .ui-jqgrid tr.jqgrow {
-		outline-style: none;
-		height: 30px;
-	}
-    </style>
-    <script type="text/javascript">
+<!-- JQuery Grid -->
+<link rel="stylesheet" href="/resources/jqgrid/src/css/ui.jqgrid.css">
+<script type="text/javascript" src="/resources/jqgrid/src/i18n/grid.locale-kr.js"></script>
+<script type="text/javascript" src="/resources/jqgrid/js/jquery.jqGrid.min.js"></script>
+<style type="text/css">
+.ui-jqgrid .ui-jqgrid-htable th div{
+	outline-style: none;
+	height: 30px;
+}
+.ui-jqgrid tr.jqgrow {
+	outline-style: none;
+	height: 30px;
+}
+</style>
+<!-- //contents -->
+<div class="breadcrumb">
+	<ol class="breadcrumb-item">
+    	<li>인사 관리</li>
+    	<li class="active">　>  인사정보 관리</li>
+  	</ol>
+</div>
+<h2 class="title" id="h_title">${regist.orgTitle }</h2>
+<div class="clear"></div>
+<div class="dashboard">
+    <div class="boardlist">
+        <div class="left_box mng_countInfo">
+            <p>총 : <span id="sp_totcnt"></span>건</p>
+        </div>
+        <a href="#" onClick="jqGridFunc.fn_SearchList('Dept')" class="right_box blueBtn">부서 관리</a>
+        <a href="#" onClick="jqGridFunc.fn_SearchList('Grad')" class="right_box blueBtn">직급 관리</a>
+        <a href="#" onClick="jqGridFunc.fn_SearchList('Post')" class="right_box blueBtn">직책 관리</a>
+        <a href="#" onClick="jqGridFunc.fn_orgInfo('Ins', '')" class="right_box blueBtn">추가</a>  
+        <div class="clear"></div>
+        <div class="whiteBox">
+            <table id="mainGrid"></table>
+            <div id="pager" class="scroll" style="text-align:center;"></div>  
+        </div>
+    </div>
+</div>
+<!-- contents//-->
+<!-- //popup -->
+<!--권한분류 추가 팝업-->
+<div data-popup="bas_code_add" id="bas_code_add" class="popup m_pop">
+    <div class="pop_con">
+        <a class="button b-close">X</a>
+        <h2 class="pop_tit" id="h2_title">${regist.orgTitle }</h2>
+        <div class="pop_wrap">
+            <table class="detail_table">
+                <tbody>
+                    <tr>
+                        <th id="th_orgCode">${regist.orgCode }</th>
+                        <td>
+                            <input type="text" id="code" name="code">
+                            <span id="sp_Unqi">
+                            <a href="javascript:jqGridFunc.fn_idCheck()" class="blueBtn">중복확인</a>
+                            <input type="hidden" id="idCheck">
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th id="th_orgCodeNm">${regist.orgCodeNm }</th>
+                        <td>
+                            <input type="text" id="codeNm" name="codeNm">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>상세설명</th>
+                        <td>
+                            <input type="text" id="codeDc" name="codeDc">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>사용 유무</th>
+                        <td>
+                            <label for="useAt_Y"><input name="useYn" type="radio" id="useAt_Y" value="Y"/>사용</label>
+                            <label for="useAt_N"><input name="useYn" type="radio" id="useAt_N" value="N"/>사용 안함</label>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="right_box">
+            <a href="#" onClick="jqGridFunc.fn_close()" class="grayBtn">취소</a>
+            <a href="#" onClick="jqGridFunc.fn_CheckForm()" id="btnSave" class="blueBtn">저장</a>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+<!-- poopup// -->
+<script type="text/javascript">
 	$(document).ready(function() { 
 		   jqGridFunc.setGrid("mainGrid");
 		   
@@ -292,32 +337,32 @@
 		 }, fn_orgGubunChange : function(){
 			 switch($("#orgGubun").val()){
 			     case "Dept" : 
-			    	 $("#h_title").html("부서관리");
-					 $("#h2_title").html("부서관리");
+			    	 $("#h_title").html("부서 관리");
+					 $("#h2_title").html("부서 관리");
 					 $("#th_orgCode").text("부서코드");
 					 $("#th_orgCodeNm").text("부서명");
 					 $("#mainGrid").jqGrid('setLabel', "code_cd","부서코드"); 
 					 $("#mainGrid").jqGrid('setLabel', "code_nm","부서명"); 
 			    	 break;
 			     case "Grad" : 
-			    	 $("#h_title").html("직급관리");
-					 $("#h2_title").html("직급관리");
+			    	 $("#h_title").html("직급 관리");
+					 $("#h2_title").html("직급 관리");
 					 $("#th_orgCode").text("직급코드");
 					 $("#th_orgCodeNm").text("직급명");
 					 $("#mainGrid").jqGrid('setLabel', "code_cd","직급코드"); 
 					 $("#mainGrid").jqGrid('setLabel', "code_nm","직급명"); 
 			    	 break;
 			     case "Post" : 
-			    	 $("#h_title").html("직책관리");
-					 $("#h2_title").html("직책관리");
+			    	 $("#h_title").html("직책 관리");
+					 $("#h2_title").html("직책 관리");
 					 $("#th_orgCode").text("직책코드");
 					 $("#th_orgCodeNm").text("직책명");
 					 $("#mainGrid").jqGrid('setLabel', "code_cd","직책코드"); 
 					 $("#mainGrid").jqGrid('setLabel', "code_nm","직책명"); 
 			    	 break;
 			     default : 
-			    	 $("#h_title").html("부서관리");
-					 $("#h2_title").html("부서관리");
+			    	 $("#h_title").html("부서 관리");
+					 $("#h2_title").html("부서 관리");
 					 $("#th_orgCode").text("부서코드");
 					 $("#th_orgCodeNm").text("부서명");
 					 $("#mainGrid").jqGrid('setLabel', "code_cd","부서코드"); 
@@ -330,105 +375,5 @@
 		
     }
 
-  </script>
-</head>
-<body>
-<div class="wrapper">
-<form:form name="regist" commandName="regist" method="post" action="/backoffice/bas/msgList.do">
-  <!--// header -->
-  <input type="hidden" id="mode" name="mode" />
-  <input type="hidden" id="orgGubun" name="orgGubun" value="${regist.orgGubun }" />
-  <!--// header -->
-  <c:import url="/backoffice/inc/top_inc.do" />
-  
-  <!-- header //-->
-  <!--// contents-->
-  <div id="contents">
-    <div class="breadcrumb">
-      <ol class="breadcrumb-item">
-        <li>인사 관리</li>
-        <li class="active">　>  인사정보 관리</li>
-      </ol>
-    </div>
-
-    <h2 class="title" id="h_title">${regist.orgTitle }</h2><div class="clear"></div>
-    <!--// dashboard -->
-    <div class="dashboard">
-        <!--contents-->
-        <div class="boardlist">
-            <div class="left_box mng_countInfo">
-                <p>총 : <span id="sp_totcnt"></span>건</p>
-                
-            </div>
-            <a href="#" onClick="jqGridFunc.fn_SearchList('Dept')" class="right_box blueBtn">부서 관리</a>
-            <a href="#" onClick="jqGridFunc.fn_SearchList('Grad')" class="right_box blueBtn">직급 관리</a>
-            <a href="#" onClick="jqGridFunc.fn_SearchList('Post')" class="right_box blueBtn">직책 관리</a>
-            <a href="#" onClick="jqGridFunc.fn_orgInfo('Ins', '')" class="right_box blueBtn">추가</a>  
-            <div class="clear"></div>
-            <div class="whiteBox">
-                <table id="mainGrid"></table>
-                <div id="pager" class="scroll" style="text-align:center;"></div>  
-            </div>
-            
-        </div>
-
-    </div>
-    
-  </div>
-  <!-- contents//-->
-</div>
-</form:form>
-<!-- wrapper_end-->
-<!-- popup -->
-<!--권한분류 추가 팝업-->
-<div data-popup="bas_code_add" id="bas_code_add" class="popup m_pop">
-    <div class="pop_con">
-        <a class="button b-close">X</a>
-        <h2 class="pop_tit" id="h2_title">${regist.orgTitle }</h2>
-        <div class="pop_wrap">
-            <table class="detail_table">
-                <tbody>
-                    <tr>
-                        <th id="th_orgCode">${regist.orgCode }</th>
-                        <td>
-                            <input type="text" id="code" name="code">
-                            <span id="sp_Unqi">
-                            <a href="javascript:jqGridFunc.fn_idCheck()" class="blueBtn">중복확인</a>
-                            <input type="hidden" id="idCheck">
-                            </span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th id="th_orgCodeNm">${regist.orgCodeNm }</th>
-                        <td>
-                            <input type="text" id="codeNm" name="codeNm">
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>상세설명</th>
-                        <td>
-                            <input type="text" id="codeDc" name="codeDc">
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>사용 유무</th>
-                        <td>
-                            <label for="useAt_Y"><input name="useYn" type="radio" id="useAt_Y" value="Y"/>사용</label>
-                            <label for="useAt_N"><input name="useYn" type="radio" id="useAt_N" value="N"/>사용 안함</label>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="right_box">
-            <a href="#" onClick="jqGridFunc.fn_close()" class="grayBtn">취소</a>
-            <a href="#" onClick="jqGridFunc.fn_CheckForm()" id="btnSave" class="blueBtn">저장</a>
-        </div>
-        <div class="clear"></div>
-    </div>
-</div>
-    <c:import url="/backoffice/inc/popup_common.do" />
-    <script type="text/javascript" src="/resources/js/common.js"></script>
-    <script type="text/javascript" src="/resources/js/back_common.js"></script>
-</body>
-</html>
+</script>
+<c:import url="/backoffice/inc/popup_common.do" />

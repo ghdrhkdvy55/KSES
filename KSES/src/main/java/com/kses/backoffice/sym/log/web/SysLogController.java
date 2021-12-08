@@ -50,9 +50,9 @@ public class SysLogController {
 	
 	@NoLogging
 	@RequestMapping(value="syslogList.do")
-	public ModelAndView selectSysLog(@ModelAttribute("loginVO") LoginVO loginVO)throws Exception {
+	public ModelAndView syslogList(@ModelAttribute("loginVO") LoginVO loginVO)throws Exception {
 	
-		      ModelAndView mav = new ModelAndView("/backoffice/sys/sysLog");
+		      ModelAndView mav = new ModelAndView("/backoffice/sys/syslogList");
 		      try{
 		    	  
 		    	  Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
