@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.Globals;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kses.backoffice.bas.code.service.EgovCcmCmmnDetailCodeManageService;
 import com.kses.backoffice.mng.admin.service.AdminInfoService;
 import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
@@ -349,21 +351,25 @@ public class MessageInfoManageController {
 			if (!SmartUtil.NVL(vo.get("msgArray"), "").toString().equals("\"\"")) {
 				//지점 담당자 메세지 보내기
 				LOGGER.debug("step:" + SmartUtil.NVL(vo.get("msgArray"), "").toString());
-				Map<String, String> hMapData = new HashMap<String, String>();
-		        
+				/*
 				HashMap<String, String> map = (HashMap<String, String>) Arrays.asList(SmartUtil.NVL(vo.get("msgArray"), "").toString().split(","))
 						                .stream()
 						                .map(s -> s.split(":"))
 						                .collect(Collectors.toMap(e -> e[0], e -> e[1]));
+				*/
+				Map<String, Object>  map = new ObjectMapper().readValue(SmartUtil.NVL(vo.get("msgArray"), "").toString(), Map.class) ;
 				MessageInfo msgInfo = new MessageInfo();
+				
 				if (map.size() > 0) {
-					if (hMapData.get("step").equals("U")) {
+					if (map.get("step").equals("U")) {
 						Map<String, Object>  searchVO_U = new HashMap<String, Object>();
 						searchVO_U.put("firstIndex", 0);
-						searchVO_U.put("recordCountPerPage", 1000);
-						searchVO_U.put("searchCenter", SmartUtil.NVL(vo.get("searchCenter"), "").toString());
-						searchVO_U.put("searchFrom",  SmartUtil.NVL(vo.get("from"), "").toString());
-						searchVO_U.put("searchTo",  SmartUtil.NVL(vo.get("to"), "").toString());
+						searchVO_U.put("recordCountPerPage", 10);
+						
+						searchVO_U.put("searchCenter", SmartUtil.NVL(map.get("searchCenter"), "").toString());
+						searchVO_U.put("searchFrom",  SmartUtil.NVL(map.get("from"), "").toString());
+						searchVO_U.put("searchTo",  SmartUtil.NVL(map.get("to"), "").toString());
+						searchVO_U.put("searchDayCondition",  "resvDate");
 						
 						List<Map<String, Object>>  userInfo = resService.selectResInfoManageListByPagination(searchVO_U);
 						
@@ -375,16 +381,17 @@ public class MessageInfoManageController {
 						
 						searchVO_U =  null;
 					}else {
+						
 						Map<String, Object>  searchVO_A = new HashMap<String, Object>();
 						searchVO_A.put("firstIndex", 0);
 						searchVO_A.put("recordCountPerPage", 1000);
-						searchVO_A.put("searchCenter", SmartUtil.NVL(vo.get("searchCenter"), "").toString());
-						
+						searchVO_A.put("searchCenter", SmartUtil.NVL(map.get("sendCnt"), "").toString());
+						LOGGER.debug("sendCnt:" + map.get("sendCnt"));
 						List<Map<String, Object>> adminInfos = adminService.selectAdminUserManageListByPagination(searchVO_A);
 						
 						adminInfos.forEach(x->{
 					   		 msgInfo.setCallname(x.get("emp_nm").toString());
-						   	 msgInfo.setCallphone(x.get("emp_clphn").toString());
+						   	 msgInfo.setCallphone(SmartUtil.NVL(x.get("emp_clphn"), "").toString());
 						   	 info.add(msgInfo);
 					   	 });
 						

@@ -104,9 +104,14 @@ public class MessageGroupInfoController {
 	    		return model;
 		      }
 		      loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
-		      
+		      //내용 수정 
 		      model.addObject("centerCombo", centerInfoManageService.selectCenterInfoComboList());
-		      model.addObject("empClphn" , loginVO.getEmpClphn());
+		      
+		      
+		      model.addObject("loginVO" , loginVO);
+		      if (!loginVO.getAuthorCd().equals("ROLE_ADMIN") && !loginVO.getAuthorCd().equals("ROLE_SYSTEM"))
+		    	  model.addObject("centerInfo" , centerInfoManageService.selectCenterInfoDetail(loginVO.getCenterCd()));
+		      
 		}catch (Exception e){
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject("message", egovMessageSource.getMessage("fail.common.list"));
@@ -143,6 +148,7 @@ public class MessageGroupInfoController {
 			searchVO.put("firstIndex", paginationInfo.getFirstRecordIndex());
 			searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
 			searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
+			//여기도 필요 한지 여부 
 			  
 			
 			List<Map<String, Object>> list =  msgGroupService.selectMessageGroupInfoList(searchVO);

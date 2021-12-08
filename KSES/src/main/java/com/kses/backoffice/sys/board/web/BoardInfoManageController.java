@@ -305,6 +305,8 @@ public class BoardInfoManageController {
 			      
 				  //공지사항의 경우, 공지기한이 지난 게시물은 board_notice_useyn을 N으로 변경
 				  //boardInfoService.updateBoardNoticeUseYn();
+			      loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
+			      
 			      
 			      
 			      //페이징 처리 
@@ -339,6 +341,9 @@ public class BoardInfoManageController {
 				      } 
 				  }
 				  
+				  
+				  
+				  
 			      
 			      int pageUnit = searchVO.get("pageUnit") == null ?   propertiesService.getInt("pageUnit") : Integer.valueOf((String) searchVO.get("pageUnit"));
 				  
@@ -353,6 +358,14 @@ public class BoardInfoManageController {
 				  searchVO.put("firstIndex", paginationInfo.getFirstRecordIndex());
 				  searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
 				  searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
+				  
+				  //사용자 계정 정리 
+				  loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
+				  searchVO.put("authorCd", loginVO.getAuthorCd());
+				  searchVO.put("centerCd", loginVO.getCenterCd());
+				  
+				  
+				  
 				  
 				  LOGGER.debug("searchVO" + searchVO.get("adminYn"));
 				  

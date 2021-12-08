@@ -76,10 +76,18 @@
                   </th>
                   <td>
                     <select id="send_G">
-                       <option value="">관리자 전체 </option>
-		               <c:forEach items="${centerCombo}" var="centerCombo">
-		                      <option value="${centerCombo.center_cd}">${centerCombo.center_nm}</option>
-					   </c:forEach>
+                       
+                       <c:choose>
+                         <c:when test="${loginVO.authorCd ne 'ROLE_ADMIN' && loginVO.authorCd ne 'ROLE_SYSTEM' }">
+                             <option value="${loginVO.centerCd}">${centerInfo.center_nm}</option>
+                         </c:when>
+                         <c:otherwise>
+                             <option value="">관리자 전체 </option>
+                             <c:forEach items="${centerCombo}" var="centerCombo">
+                                <option value="${centerCombo.center_cd}">${centerCombo.center_nm}</option>
+							 </c:forEach>
+                         </c:otherwise>
+                       </c:choose>
                     </select>
                   </td>
                 </tr>
@@ -89,10 +97,17 @@
                   </th>
                   <td>
                     <select id="send_U">
-                      <option value="">지점 전체</option>
-                      <c:forEach items="${centerCombo}" var="centerCombo">
-		                      <option value="${centerCombo.center_cd}">${centerCombo.center_nm}</option>
-					   </c:forEach>
+                      <c:choose>
+                         <c:when test="${(loginVO.authorCd ne 'ROLE_ADMIN' && loginVO.authorCd ne 'ROLE_SYSTEM') }">
+                             <option value="${loginVO.centerCd}">${centerInfo.center_nm}</option>
+                         </c:when>
+                         <c:otherwise>
+                             <option value="">관리자 전체 </option>
+                             <c:forEach items="${centerCombo}" var="centerCombo">
+                                <option value="${centerCombo.center_cd}">${centerCombo.center_nm}</option>
+							 </c:forEach>
+                         </c:otherwise>
+                       </c:choose>
                     </select>
                     <br />
                     <input type="text" id="search_from" readonly="readonly" class="cal_icon"> ~

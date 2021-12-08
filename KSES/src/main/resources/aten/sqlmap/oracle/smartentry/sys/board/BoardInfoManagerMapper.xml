@@ -39,6 +39,9 @@
 									                  )
 												]]> 
 
+									</if>
+									<if test="params.authorCd != 'ROLE_ADMIN' and params.authorCd != 'ROLE_SYSTEM'">
+									    AND #{params.centerCd} IN (SELECT COLUMN_VALUE FROM TABLE(UF_SPLICT(a.BOARD_CENTER_ID, ',')) )  
 									</if>		 
 									START WITH BOARD_REFNO=0
 			                        CONNECT BY PRIOR BOARD_SEQ = BOARD_REFNO
