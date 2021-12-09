@@ -81,7 +81,7 @@
         destroy-method="destroy">
         <property name="dataSource" ref="dataSource" />
         <property name="strategy"   ref="trsmrcvLogStrategy" />
-        <property name="blockSize"  value="10"/>
+        <property name="blockSize"  value="1"/>
         <property name="table"      value="ids"/>
         <property name="tableName"  value="TRSMRCVLOG_ID"/>
     </bean>
