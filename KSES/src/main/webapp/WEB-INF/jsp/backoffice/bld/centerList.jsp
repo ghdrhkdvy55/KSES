@@ -186,6 +186,8 @@
 	            	<th>요일</th>
 	            	<th>회원 오픈 시간</th>
 	            	<th>비회원 오픈 시간</th>
+	            	<th>회원 예약 종료 시간</th>
+	            	<th>비회원 예약 종료 시간</th>
 	            	<th>최종 수정 일자</th>
             	</tr>
           </thead>
@@ -612,6 +614,8 @@
 								setHtml += "<td>" + obj.open_day + "</td>";
 								setHtml += "<td><input type='text' id='" + obj.optm_cd + "_open_member_tm" + "'value='" + obj.open_member_tm + "' onKeyup='inputTimeFormat(this);' placeholder='HH:MM' maxlength='5'/></td>";
 								setHtml += "<td><input type='text' id='" + obj.optm_cd + "_open_guest_tm" +"'value='" + obj.open_guest_tm + "' onKeyup='inputTimeFormat(this);' placeholder='HH:MM' maxlength='5'/></td>";
+								setHtml += "<td><input type='text' id='" + obj.optm_cd + "_close_member_tm" + "'value='" + obj.close_member_tm + "' onKeyup='inputTimeFormat(this);' placeholder='HH:MM' maxlength='5'/></td>";
+								setHtml += "<td><input type='text' id='" + obj.optm_cd + "_close_guest_tm" +"'value='" + obj.close_guest_tm + "' onKeyup='inputTimeFormat(this);' placeholder='HH:MM' maxlength='5'/></td>";
 								setHtml += "<td>" + obj.last_updt_dtm + "</td>";
 								setHtml += "</tr>";
 							}
