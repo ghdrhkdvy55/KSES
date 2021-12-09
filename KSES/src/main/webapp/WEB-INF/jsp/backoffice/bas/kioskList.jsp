@@ -403,7 +403,7 @@
 		fn_CheckForm  : function () {
 			if (any_empt_line_span("bas_kiosk_add", "ticketMchnSno", "장비 Serial 입력해주세요.","sp_message", "savePage") == false) return;
 			if ($("#mode").val() == "Ins" && $("#idCheck").val() != "Y"){
-				   if (any_empt_line_span("bas_kiosk_add", "ticketMchnSno", "중복체크가 안되었습니다.","sp_message", "savePage") == false) return;
+				   if (any_empt_line_span("bas_kiosk_add", "idCheck", "중복체크가 안되었습니다.","sp_message", "savePage") == false) return;
 			}
 			if (any_empt_line_span("bas_kiosk_add", "centerCd", "지점을 선택해주세요.","sp_message", "savePage") == false) return;
 			if (any_empt_line_span("bas_kiosk_add", "machDvsn", "장비구분을 선택해주세요.","sp_message", "savePage") == false) return;
