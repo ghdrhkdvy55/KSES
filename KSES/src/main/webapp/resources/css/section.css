@@ -1,7 +1,7 @@
 /*섹션 레이어*/
 
 .circle {
-    height: 70%;
+    height: 90%;
 }
 .section {
     position: relative;
@@ -18,7 +18,7 @@
     opacity: 0.9;
     width: 100%;
     display: block;
-    font-size: 2em;
+    font-size: 3em;
     height: 100%;
     position: re;
     display: grid;

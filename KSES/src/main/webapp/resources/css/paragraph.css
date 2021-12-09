@@ -103,6 +103,7 @@ table tr td{
   overflow: hidden;
 
 }
+.search_tab tr td {text-align:right;}
 .main_table{width: 100%;text-align: center;}
 .main_table tr th{font-weight: 400; background:#f6f6f6}
 .main_table tr td{border-bottom: 1px solid #e4e4e4;}
@@ -891,3 +892,5 @@ padding-left: 5px;
       vertical-align:middle;
     }
 #ui-datepicker-div {border: 1px solid #e0e0e0}
+
+
