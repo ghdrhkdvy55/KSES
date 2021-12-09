@@ -15,7 +15,6 @@
 }
 </style>
 <!-- GUI js/css -->
-<link rel="stylesheet" href="/resources/css/paragraph_new.css">
 <script type="text/javascript" src="/resources/js/modernizr.custom.js"></script>
 <script type="text/javascript" src="/resources/js/classie.js"></script>
 <script type="text/javascript" src="/resources/js/dragmove.js"></script>
@@ -67,6 +66,7 @@
         transition: all 150ms ease-out;
     }
 </style>
+<link rel="stylesheet" href="/resources/css/paragraph_new.css">
 <!-- //contents -->
 <input type="hidden" id="mode" name="mode">
 <input type="hidden" id="floorCd" name="floorCd">

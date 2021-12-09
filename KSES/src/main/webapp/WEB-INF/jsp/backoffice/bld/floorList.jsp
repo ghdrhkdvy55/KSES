@@ -1,231 +1,169 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="ui" uri="http://egovframework.gov/ctl/ui"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=no;" />
-    <title>경륜경정 스마트입장 관리자</title>
-    
-    <link rel="stylesheet" href="/resources/css/reset.css">
-	<link rel="stylesheet" href="/resources/css/paragraph.css">
-    <link rel="stylesheet" href="/resources/css/common.css">
-    <link rel="stylesheet" href="/resources/css/section.css">
-    <link rel="stylesheet" type="text/css" href="/resources/css/toggle.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
-    
-    <script src="/resources/js/jquery-3.5.1.min.js"></script>
-    <script src="/resources/js/bpopup.js"></script>
-    <script src="/resources/js/jquery-ui.js"></script>
-    
-    <!-- jquery-ui.css -->
-    <link rel="stylesheet" href="/resources/css/jquery-ui.css">
-	<!-- <link rel="stylesheet" href="/css/jquery-ui.css"> -->
-	
-	
-    
-   	<script src="/resources/js/common.js"></script>
-    
-    <!-- jqGrid js/css -->
-	<link rel="stylesheet" type="text/css" href="/resources/jqgrid/src/css/ui.jqgrid.css">
-    <script type="text/javascript" src="/resources/jqgrid/src/i18n/grid.locale-kr.js"></script>
-    <script type="text/javascript" src="/resources/jqgrid/js/jquery.jqGrid.min.js"></script>
-    
-    <!-- excel upload downlod -->
-    <script src="/resources/js/xlsx.full.min.js"></script>
-    <script src="/resources/js/FileSaver.min.js"></script>
-    <script type="text/javascript" src="/resources/js/xlsx.js"></script>
-    
-	<style type="text/css">
-    	 .ui-jqgrid .ui-jqgrid-htable th div{
-			outline-style: none;
-			height: 30px;
-	 	}
-     	.ui-jqgrid tr.jqgrow {
-			outline-style: none;
-			height: 30px;
-	 	}
-	 	.member tr:hover {
-		    background-color: rgba(41, 103, 182, 0.89);
-		    color: #FFF;
-		}
-		.selected tr{
-		    background-color: rgba(41, 103, 182, 0.89);
-		    color: #FFF;
-		}
-		.ui-rotatable-handle {
-		  background: url("https://cdn.jsdelivr.net/jquery.ui.rotatable/1.0.1/rotate.png");
-		  background-repeat: no-repeat;
-		  background-size: 100% 100%;
-		  height: 25px;
-		  width: 25px;
-		  position: absolute;
-		}
-		.ui-rotatable-handle-sw {
-		  bottom: -27px;
-		  left: -27px;
-		}
-		.ui-rotatable-handle-nw {
-		  top: -27px;
-		  left: -27px;
-		}
-		.ui-rotatable-handle-se {
-		  bottom: -27px;
-		  right: -27px;
-		}
-		.ui-rotatable-handle-ne {
-		  top: -27px;
-		  right: -27px;
-		}
-    </style>
-    
-    <!-- GUI js/css -->
-	<script type="text/javascript" src="/resources/js/modernizr.custom.js"></script>
-    <script type="text/javascript" src="/resources/js/classie.js"></script>
-    <script type="text/javascript" src="/resources/js/dragmove.js"></script>
-    <script type="text/javascript" src="/resources/js/common.js"></script>
-    <script type="text/javascript" src="/resources/js/back_common.js"></script>
-    
-	<style>
-		.cbp-spmenu {
-			background: #3670c5;
-			position: fixed;
-	  	}
-      	.cbp-spmenu a {
-			display: block;
-			color: #fff;
-			font-size: 1.1em;
-			font-weight: 300;
-		}
-/* 		.cbp-spmenu a:hover {
+<!-- JQuery Grid -->
+<link rel="stylesheet" type="text/css" href="/resources/jqgrid/src/css/ui.jqgrid.css">
+<script type="text/javascript" src="/resources/jqgrid/src/i18n/grid.locale-kr.js"></script>
+<script type="text/javascript" src="/resources/jqgrid/js/jquery.jqGrid.min.js"></script>
+<style type="text/css">
+.ui-jqgrid .ui-jqgrid-htable th div{
+	outline-style: none;
+	height: 30px;
+}
+.ui-jqgrid tr.jqgrow {
+	outline-style: none;
+	height: 30px;
+}
+</style>
+<!-- Xlsx -->
+<script type="text/javascript" src="/resources/js/xlsx.js"></script>
+<script type="text/javascript" src="/resources/js/xlsx.full.min.js"></script>
+<!-- jszip -->
+<script type="text/javascript" src="/resources/js/jszip.min.js"></script>
+<!-- FileSaver -->
+<script src="/resources/js/FileSaver.min.js"></script>
+<style type="text/css">
+ 	.member tr:hover {
+	    background-color: rgba(41, 103, 182, 0.89);
+	    color: #FFF;
+	}
+	.selected tr{
+	    background-color: rgba(41, 103, 182, 0.89);
+	    color: #FFF;
+	}
+	.ui-rotatable-handle {
+	  background: url("https://cdn.jsdelivr.net/jquery.ui.rotatable/1.0.1/rotate.png");
+	  background-repeat: no-repeat;
+	  background-size: 100% 100%;
+	  height: 25px;
+	  width: 25px;
+	  position: absolute;
+	}
+	.ui-rotatable-handle-sw {
+	  bottom: -27px;
+	  left: -27px;
+	}
+	.ui-rotatable-handle-nw {
+	  top: -27px;
+	  left: -27px;
+	}
+	.ui-rotatable-handle-se {
+	  bottom: -27px;
+	  right: -27px;
+	}
+	.ui-rotatable-handle-ne {
+	  top: -27px;
+	  right: -27px;
+	}
+</style>
+<!-- GUI js/css -->
+<script type="text/javascript" src="/resources/js/modernizr.custom.js"></script>
+<script type="text/javascript" src="/resources/js/classie.js"></script>
+<script type="text/javascript" src="/resources/js/dragmove.js"></script>
+<style type="text/css">
+	.cbp-spmenu {
+		background: #3670c5;
+		position: fixed;
+  	}
+	.cbp-spmenu a {
+		display: block;
+		color: #fff;
+		font-size: 1.1em;
+		font-weight: 300;
+	}
+/*
+	.cbp-spmenu a:hover {
 			background: #258ecd;
-		} */
-		.cbp-spmenu a:active {
-			background: #afdefa;
-			color: #47a3da;
-		}
-		.cbp-spmenu-right {
-			right: -1700px;
-		}
-		.cbp-spmenu-right.cbp-spmenu-open {
-			right: 0px;
-		}
-		.cbp-spmenu-vertical {
-			width: 1700px;
-			height: 100%;
-			top: 0;
-			z-index: 1000;
-		}
-		.cbp-spmenu-push {
-			overflow-x: hidden;
-			position: relative;
-			left: 0;
-		}
-		.cbp-spmenu-push-toright {
-			left: 840px;
-		}
-		.cbp-spmenu,
-		.cbp-spmenu-push {
-			-webkit-transition: all 0.3s ease;
-			-moz-transition: all 0.3s ease;
-			transition: all 0.3s ease;
-		}
-		.drag {
-            -webkit-transition: all 150ms ease-out;
-            -moz-transition: all 150ms ease-out;
-            -o-transition: all 150ms ease-out;
-            transition: all 150ms ease-out;
-        }
-    </style>
-    <link rel="stylesheet" href="/resources/css/paragraph_new.css">
-    
-	<script>
-		jQuery.browser = {};
-		(function () {
-		    jQuery.browser.msie = false;
-		    jQuery.browser.version = 0;
-		    if (navigator.userAgent.match(/MSIE ([0-9]+)\./)) {
-		        jQuery.browser.msie = true;
-		        jQuery.browser.version = RegExp.$1;
-		    }
-		})();
-	</script>
-    
-<form:form name="regist" commandName="regist" method="post" action="/backoffice/bld/floorList.do">
+	} 
+*/
+	.cbp-spmenu a:active {
+		background: #afdefa;
+		color: #47a3da;
+	}
+	.cbp-spmenu-right {
+		right: -1700px;
+	}
+	.cbp-spmenu-right.cbp-spmenu-open {
+		right: 0px;
+	}
+	.cbp-spmenu-vertical {
+		width: 1700px;
+		height: 100%;
+		top: 0;
+		z-index: 1000;
+	}
+	.cbp-spmenu-push {
+		overflow-x: hidden;
+		position: relative;
+		left: 0;
+	}
+	.cbp-spmenu-push-toright {
+		left: 840px;
+	}
+	.cbp-spmenu,
+	.cbp-spmenu-push {
+		-webkit-transition: all 0.3s ease;
+		-moz-transition: all 0.3s ease;
+		transition: all 0.3s ease;
+	}
+	.drag {
+		-webkit-transition: all 150ms ease-out;
+		-moz-transition: all 150ms ease-out;
+		-o-transition: all 150ms ease-out;
+		transition: all 150ms ease-out;
+	}
+</style>
+<link rel="stylesheet" href="/resources/css/paragraph_new.css">
+<!-- //contents -->
 <input type="hidden" name="centerCd" id="centerCd" value="${regist.center_cd}">
 <input type="hidden" name="floorCd" id="floorCd">
 <input type="hidden" name="partCd" id="partCd">
 <input type="hidden" id="mode" name="mode">
 <input type="hidden" id="hid_guiMode" name="hid_guiMode">
-
-<div class="wrapper">
-	<c:import url="/backoffice/inc/top_inc.do" />
-	<!--// header -->
-  	<!-- header //-->
-  	<!--// contents-->
-	
-	<div id="contents">
-    	<div class="breadcrumb">
-      		<ol class="breadcrumb-item">
-        		<li>시설 관리 > 지점 시설 관리</li>
-        		<li class="active">　> 층 관리</li>
-      		</ol>
-    	</div>
-
-		<h2 class="title">${regist.center_nm} 층 정보 관리</h2><div class="clear"></div>
-    	<!--// dashboard -->
-    	<div class="dashboard">
-	    	<!--contents-->
-	      	<div class="boardlist">
-	        	<div class="whiteBox searchBox">
-					<div class="sName">
-	            		<h3>검색 옵션</h3>
-	          		</div>
-	          		<div class="top">
-	            		<p>지점명</p>
-						<select id="searchCenterCd">
-							<option value="">지점 선택</option>
-							<c:forEach items="${centerInfoComboList}" var="centerInfoComboList">
-								<option value="${centerInfoComboList.center_cd}">${centerInfoComboList.center_nm}</option>
-							</c:forEach>
-						</select>
-<!-- 	            	<p>검색어</p>
-	            		<select>
-	            			<option value="0">층 명</option>
-	              			<option value="0">수정자</option>
-	            		</select> -->
-	            		<input type="text" placeholder="검색어를 입력하세요.">
-	          		</div>
-	          		<div class="inlineBtn">
-	            		<a href=""class="grayBtn">검색</a>
-	          		</div>
-	        	</div>
-	        	<div class="left_box mng_countInfo">
-	        		총 : <span id="sp_totcnt"></span>건
-	        	</div>
-	        	<div class="clear"></div>
-	
-				<div class="whiteBox">
-					<table id="mainGrid">
-	        				
-					</table>
-					<div id="pager" class="scroll" style="text-align:center;"></div>     
-					
-					<div id="paginate"></div>
-				</div>
-	      	</div>
-		</div>
-   	</div>
-  	<!-- contents//-->
+<div class="breadcrumb">
+	<ol class="breadcrumb-item">
+		<li>시설 관리&nbsp;&gt;&nbsp;지점 관리&nbsp;&gt;&nbsp;</li>
+		<li class="active">층 관리</li>
+	</ol>
 </div>
-
-<!-- wrapper_end-->
+<h2 class="title">${regist.center_nm} 층 관리</h2>
+<div class="clear"></div>
+<div class="dashboard">
+  	<div class="boardlist">
+    	<div class="whiteBox searchBox">
+			<div class="sName">
+        		<h3>검색 옵션</h3>
+      		</div>
+      		<div class="top">
+        		<p>지점명</p>
+				<select id="searchCenterCd">
+					<option value="">지점 선택</option>
+					<c:forEach items="${centerInfoComboList}" var="centerInfoComboList">
+						<option value="${centerInfoComboList.center_cd}">${centerInfoComboList.center_nm}</option>
+					</c:forEach>
+				</select>
+        		<input type="text" placeholder="검색어를 입력하세요.">
+      		</div>
+      		<div class="inlineBtn">
+        		<a href=""class="grayBtn">검색</a>
+      		</div>
+    	</div>
+    	<div class="left_box mng_countInfo">
+    		총 : <span id="sp_totcnt"></span>건
+    	</div>
+    	<div class="clear"></div>
+	
+		<div class="whiteBox">
+			<table id="mainGrid">
+    				
+			</table>
+			<div id="pager" class="scroll" style="text-align:center;"></div>     
+			
+			<div id="paginate"></div>
+		</div>
+  	</div>
+</div>
+<!-- contents//-->
+<!-- //popup -->
 <!-- // 층 정보 관리 팝업 -->
 <div id="bld_floor_add" data-popup="bld_floor_add" class="popup">
 	<div class="pop_con">
@@ -270,7 +208,6 @@
       	<div class="clear"></div>
   	</div>
 </div>
-
 <!-- 층 정보 관리 팝업 // -->
 <!-- // 좌석구역 생성 팝업 -->
 <div id="bld_seat_add" data-popup="bld_seat_add" class="popup">
@@ -344,7 +281,6 @@
 		<div class="clear"></div>
 	</div>
 </div>
-
 <!-- 좌석구역 생성 팝업 // -->
 <!-- // 구역 생성 팝업 -->
 <div id="bld_section_add" data-popup="bld_section_add" class="popup">
@@ -421,7 +357,6 @@
       <div class="clear"></div>
   </div>
 </div>
-
 <!-- 좌석 GUI설정 팝업 -->
 <nav class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right" id="cbp-spmenu-s2">
 	<a href="javascript:seatService.fn_showLeft()">닫기</a>
@@ -543,7 +478,6 @@
 		</div>
 	</div>
 </nav>
-
 <!-- 구역 생성 팝업 // -->
 <!-- // 좌석 위치 세팅 팝업 -->
 <div data-popup="bld_seat_setting" class="popup">
@@ -749,11 +683,7 @@
   </div>
 </div>
 <!-- 좌석 위치 세팅 팝업 // -->
-<c:import url="/backoffice/inc/popup_common.do" />
-<script type="text/javascript" src="/resources/js/common.js"></script>
-<script type="text/javascript" src="/resources/js/back_common.js"></script>
-</form:form>
-
+<!-- popup// -->
 <script type="text/javascript">
 	$(document).ready(function() { 
 		jqGridFunc.setGrid("mainGrid");
@@ -1916,7 +1846,7 @@
 		);
  	}
 </script>
-<script>
+<script type="text/javascript">
     // ArrayBuffer 만들어주는 함수
     function s2ab(s) {
         var buf = new ArrayBuffer(s.length); //convert s to arrayBuffer
@@ -1984,5 +1914,4 @@
     }
     
 </script>
-</body>
-</html>
+<c:import url="/backoffice/inc/popup_common.do" />
