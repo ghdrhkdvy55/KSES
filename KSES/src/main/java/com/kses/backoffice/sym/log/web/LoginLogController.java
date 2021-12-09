@@ -53,7 +53,7 @@ public class LoginLogController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "loginLogList.do")
-	public ModelAndView selectLoginLogInf(@ModelAttribute("searchVO") LoginLog loginLog) throws Exception {
+	public ModelAndView loginLogInf(@ModelAttribute("searchVO") LoginLog loginLog) throws Exception {
 		
 		ModelAndView model = new ModelAndView("/backoffice/sys/loginLogList");
 		return model;
