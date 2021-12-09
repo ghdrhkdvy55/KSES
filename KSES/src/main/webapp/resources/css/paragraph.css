@@ -101,12 +101,13 @@ table tr td{
   white-space: nowrap;
   /*text-overflow: ellipsis;*/
   overflow: hidden;
+
 }
 .main_table{width: 100%;text-align: center;}
 .main_table tr th{font-weight: 400; background:#f6f6f6}
 .main_table tr td{border-bottom: 1px solid #e4e4e4;}
 .main_table tr:last-child td{border-bottom: 0;}
-.main_table tr th, .main_table tr td{padding: 8px;position: relative;border-left:1px solid #ebebeb;border-bottom: 1px solid #ebebeb;}
+.main_table tr th, .main_table tr td{padding: 8px 2rem;position: relative;border-left:1px solid #ebebeb;border-bottom: 1px solid #ebebeb;}
 
 .edit, .del {border: none; background:unset; cursor: pointer;}
 
@@ -210,8 +211,9 @@ margin-right: 6px;
 
 .detail_table {border-top:1px solid #e2e2e2!important; }
 .detail_table input{vertical-align: top;}
-.detail_table tr th, .detail_table tr td{border-bottom: 1px solid #e2e2e2;padding: 8px 10px;}
-.detail_table tr th{background: #eee;text-align: center;font-weight: 400;}
+.detail_table tr th, .detail_table tr td{border-bottom: 1px solid #e2e2e2;}
+.detail_table tr th{background: #eee;text-align: center;font-weight: 400; padding: 8px 2rem;}
+.detail_table tr td {padding:8px 1rem;}
 
 .input_tit{width: 100%;}
 .input_text{
@@ -664,13 +666,14 @@ canvas {
 }
 /* popup Design */
 .pop_wrap{margin-bottom: 20px;}
-.popup th{width: 240px;}
+/*.popup th{width: 20%;}*/
 .popup input[type="text"], .popup select, .popup textarea{
   width: 140px;
   vertical-align: top;
   border: 1px solid #c0c0c0;
   padding: 4px;
 }
+.popup textarea {width:100%!important;}
 /* 20210924 */
 .tabs{float: left;}
 .tabs>.tab{
