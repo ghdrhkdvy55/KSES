@@ -17,15 +17,13 @@
 <!-- //contents -->
 <div class="breadcrumb">
   <ol class="breadcrumb-item">
-    <li>기초 관리</li>
-    <li class="active">　> 시스템 로그</li>
+    <li>시스템 관리&nbsp;&gt;&nbsp;</li>
+    <li class="active">시스템 로그</li>
   </ol>
 </div>
-
-<h2 class="title">시스템 로그</h2><div class="clear"></div>
-<!--// dashboard -->
+<h2 class="title">시스템 로그</h2>
+<div class="clear"></div>
 <div class="dashboard">
-    <!--contents-->
     <div class="boardlist">
         <div class="whiteBox searchBox">
             <div class="sName">

@@ -20,10 +20,13 @@
 <!-- jszip -->
 <script type="text/javascript" src="/resources/js/jszip.min.js"></script>
 <!-- //contents -->
+<input type="hidden" name="mode" id="mode" >
+<input type="hidden" name="holySeq" id="holySeq" >
+<input type="hidden" name="targetHolyDt" id="targetHolyDt">
 <div class="breadcrumb">
 	<ol class="breadcrumb-item">
-		<li>기초 관리</li>
-		<li class="active">　> 휴일 관리</li>
+		<li>기초 관리&nbsp;&gt;&nbsp;</li>
+		<li class="active">휴일 관리</li>
 	</ol>
 </div>
 <h2 class="title">휴일 관리</h2>

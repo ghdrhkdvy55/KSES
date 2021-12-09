@@ -20,11 +20,11 @@
 <input type="hidden" id="hid_DelCode" name="hid_DelCode" />
 <div class="breadcrumb">
 	<ol class="breadcrumb-item">
-		<li>기초 관리</li>
-		<li class="active">　> 공통코드 관리</li>
+		<li>기초 관리&nbsp;&gt;&nbsp;</li>
+		<li class="active">공통 코드 관리</li>
 	</ol>
 </div>
-<h2 class="title">공통코드 관리</h2>
+<h2 class="title">공통 코드 관리</h2>
 <div class="clear"></div>
 <div class="dashboard">
     <div class="boardlist">

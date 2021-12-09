@@ -15,10 +15,12 @@
 }
 </style>
 <!-- //contents -->
+<input type="hidden" id="mode" name="mode" />
+<input type="hidden" id="orgGubun" name="orgGubun" value="${regist.orgGubun }" />
 <div class="breadcrumb">
 	<ol class="breadcrumb-item">
-    	<li>인사 관리</li>
-    	<li class="active">　>  인사정보 관리</li>
+    	<li>인사 관리&nbsp;&gt;&nbsp;</li>
+    	<li class="active">조직도 관리</li>
   	</ol>
 </div>
 <h2 class="title" id="h_title">${regist.orgTitle }</h2>
@@ -224,6 +226,7 @@
             },clearGrid : function() {
                 $("#mainGrid").clearGridData();
             },fn_orgInfo : function (mode, code){
+            	console.log('-------------')
             	$("#mode").val(mode);
         	    if (mode == "Edt"){
 		        	$("#code").val(code);

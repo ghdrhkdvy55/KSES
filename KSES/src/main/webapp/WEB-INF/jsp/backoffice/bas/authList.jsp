@@ -18,10 +18,11 @@
 <link rel="stylesheet" href="/resources/css/style.min.css">
 <script type="text/javascript" src="/resources/js/jstree.min.js"></script>
 <!-- //contents -->
+<input type="hidden" id="mode" name="mode" />
 <div class="breadcrumb">
  	<ol class="breadcrumb-item">
-    	<li>기초 관리</li>
-    	<li class="active">　> 권한 관리</li>
+    	<li>기초 관리&nbsp;&gt;&nbsp;</li>
+    	<li class="active">권한 관리</li>
 	</ol>
 </div>
 <h2 class="title">권한 관리</h2>

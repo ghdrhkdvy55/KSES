@@ -18,11 +18,11 @@
 <input type="hidden" name="mode" id="mode" >
 <div class="breadcrumb">
 	<ol class="breadcrumb-item">
-		<li>시스템 관리</li>
-		<li class="active">　> 시스템 관리</li>
+		<li>시스템 관리&nbsp;&gt;&nbsp;</li>
+		<li class="active">사용자 로그인 현황</li>
 	</ol>
 </div>
-<h2 class="title">시스템 관리</h2>
+<h2 class="title">사용자 로그인 현황</h2>
 <div class="clear">
 <div class="dashboard">
 	<div class="boardlist">

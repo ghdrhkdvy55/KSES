@@ -7,11 +7,11 @@
 <!-- //contents -->
 <div class="breadcrumb">
 	<ol class="breadcrumb-item">
-		<li>기초 관리</li>
-		<li class="active">　> 환경설정</li>
+		<li>기초 관리&nbsp;&gt;&nbsp;</li>
+		<li class="active">환경 설정</li>
 	</ol>
 </div>
-<h2 class="title">환경설정</h2>
+<h2 class="title">환경 설정</h2>
 <div class="clear"></div>
 <div class="dashboard">
 	<div class="boardlist">

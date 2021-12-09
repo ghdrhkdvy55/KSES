@@ -23,11 +23,12 @@
 <input type="hidden" id="changeFloorCd" name="changeFloorCd">
 <div class="breadcrumb">
 	<ol class="breadcrumb-item">
-		<li>시설 관리</li>
-		<li class="active"> > 좌석 추가</li>
+		<li>시설 관리&nbsp;&gt;&nbsp;</li>
+		<li class="active">좌석 관리</li>
 	</ol>
 </div>
-<h2 class="title">좌석 관리</h2><div class="clear"></div>
+<h2 class="title">좌석 관리</h2>
+<div class="clear"></div>
 <div class="dashboard">
 	<div class="boardlist">
         <div class="whiteBox searchBox">

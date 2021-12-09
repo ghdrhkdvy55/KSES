@@ -19,8 +19,8 @@
 <input type="hidden" id="resvSeq" name="resvSeq">
 <div class="breadcrumb">
 	<ol class="breadcrumb-item">
-		<li>예약 현황</li>
-		<li class="active">　> 예약 현황</li>
+		<li>고객 관리&nbsp;&gt;&nbsp;</li>
+		<li class="active">예약 현황</li>
 	</ol>
 </div>
 <h2 class="title">예약 현황</h2>

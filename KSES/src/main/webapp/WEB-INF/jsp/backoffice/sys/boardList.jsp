@@ -58,8 +58,8 @@
 <input type="hidden" id="boardCn" name="boardCn">
 <div class="breadcrumb">
 	<ol class="breadcrumb-item">
-    	<li>게시판</li>
-    	<li class="active">　> ${regist.board_title }</li>
+    	<li>공용 게시판&nbsp;&gt;&nbsp;</li>
+    	<li class="active">${regist.board_title}</li>
 	</ol>
 </div>
 <h2 class="title"> ${regist.board_title }</h2><div class="clear"></div>

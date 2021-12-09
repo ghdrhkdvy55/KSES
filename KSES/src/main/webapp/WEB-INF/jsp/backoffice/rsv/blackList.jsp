@@ -20,11 +20,11 @@
 <input type="hidden" id="searchBlklstDvsn" name="searchBlklstDvsn" value="BLKLST_DVSN_1">
 <div class="breadcrumb">
  	<ol class="breadcrumb-item">
- 		<li>고객 관리</li>
- 		<li class="active">　> 출입통제 관리</li>
+ 		<li>고객 관리&nbsp;&gt;&nbsp;</li>
+ 		<li class="active">출입 통제 관리</li>
  	</ol>
 </div>
-<h2 class="title">출입통제 관리</h2>
+<h2 class="title">출입 통제 관리</h2>
 <div class="clear"></div>
 <div class="dashboard">
   	<div class="boardlist">

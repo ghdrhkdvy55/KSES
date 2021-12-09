@@ -22,11 +22,11 @@
 <input type="hidden" id="targetCenterHolySeq" name="targetCenterHolySeq">
 <div class="breadcrumb">
 	<ol class="breadcrumb-item">
-		<li>시설 관리</li>
-		<li class="active">　> 지점 시설 관리</li>
+		<li>시설 관리&nbsp;&gt;&nbsp;</li>
+		<li class="active">지점 관리</li>
 	</ol>
 </div>
-<h2 class="title">지점 시설 관리</h2>
+<h2 class="title">지점 관리</h2>
 <div class="clear"></div>
 <div class="dashboard">
 	<div class="boardlist">

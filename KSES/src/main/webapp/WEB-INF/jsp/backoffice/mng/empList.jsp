@@ -15,10 +15,11 @@
 }
 </style>
 <!-- //contents -->
+<input type="hidden" id="mode" name="mode" />
 <div class="breadcrumb">
 	<ol class="breadcrumb-item">
-    	<li>인사 관리</li>
-    	<li class="active">　> 사용자 관리</li>
+    	<li>인사 관리&nbsp;&gt;&nbsp;</li>
+    	<li class="active">사용자 관리</li>
 	</ol>
 </div>
 <h2 class="title">사용자 관리</h2>
