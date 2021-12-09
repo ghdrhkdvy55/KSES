@@ -645,9 +645,11 @@
 				var optmCd = $(item).attr('id');
 				var param = new Object();
 					param['optmCd'] = optmCd;
-				param['openMemberTm'] = $("#" + optmCd + "_open_member_tm").val().replace(/\:/g, "");
-				param['openGuestTm'] = $("#" + optmCd + "_open_guest_tm").val().replace(/\:/g, "");	
-				params.push(param);
+					param['openMemberTm'] = $("#" + optmCd + "_open_member_tm").val().replace(/\:/g, "");
+					param['openGuestTm'] = $("#" + optmCd + "_open_guest_tm").val().replace(/\:/g, "");	
+					param['closeMemberTm'] = $("#" + optmCd + "_close_member_tm").val().replace(/\:/g, "");	
+					param['closeGuestTm'] = $("#" + optmCd + "_close_guest_tm").val().replace(/\:/g, "");	
+					params.push(param);
 			});
 			
 			
@@ -662,7 +664,7 @@
 						common_popup(result.meesage, "Y","bld_early_set");
 						location.href="/backoffice/login.do";
 					} else if (result.status == "SUCCESS") {
-						common_popup("정상적으로 저장 되었습니다.", "Y", "bld_early_set");
+						common_modelCloseM(result.message, "bld_early_set");
 					} else{
 						common_popup("저장 도중 문제가 발생 하였습니다.", "N", "bld_early_set");
 					}

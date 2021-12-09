@@ -22,6 +22,12 @@ public class PreOpenInfo {
 	
 	 // 비회원 입장시간
 	 private String openGuestTm;
+	 
+	 // 회원 예약 종료시간
+	 private String closeMemberTm;
+		
+	 // 비회원 예약 종료시간
+	 private String closeGuestTm;
 	
 	 // 사용유무
 	 private String useYn;
