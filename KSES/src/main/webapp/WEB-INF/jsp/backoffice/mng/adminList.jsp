@@ -176,7 +176,6 @@
 		   jqGridFunc.setGrid("mainGrid");
 	 });
 	
-	
     var jqGridFunc  = {
     		
     		setGrid : function(gridOption){
@@ -271,7 +270,7 @@
 		    		          	  postData : JSON.stringify(  {
 							    		          			"pageIndex": gridPage,
 							    		          			"searchAuthorCd" : $("#searchAuthorCd").val(),
-							    		          			"searchDepth" : $("#searchDepth").val(),
+							    		          			"searchDeptCd" : $("#searchDeptCd").val(),
 							    		          			"searchCondition" : $("#searchCondition").val(),
 							    		          			"searchKeyword" : $("#searchKeyword").val(),
 							    		          			"pageUnit":$('.ui-pg-selbox option:selected').val()
@@ -424,6 +423,19 @@
 		 				    	common_modelCloseM("Error:" + request.status,"mng_admin_add");
 		 				    }    		
 		        );
+		  }, fn_search : function() {
+			  $("#mainGrid").setGridParam({
+				  datatype	: "json",
+	          	  postData : JSON.stringify(  {
+			    		          			"pageIndex": $("#pager .ui-pg-input").val(),
+			    		          			"searchAuthorCd" : $("#searchAuthorCd").val(),
+			    		          			"searchDeptCd" : $("#searchDeptCd").val(),
+			    		          			"searchCondition" : $("#searchCondition").val(),
+			    		          			"searchKeyword" : $("#searchKeyword").val(),
+			    		          			"pageUnit":$('.ui-pg-selbox option:selected').val()
+			    	}),
+			    	loadComplete	: function(data) {$("#sp_totcnt").text(data.paginationInfo.totalRecordCount);}
+      	 		}).trigger("reloadGrid");
 		  }, fn_adminDel : function (){
 			  var empArray = new Array();
 			  getEquipArray("mainGrid", empArray);

@@ -82,7 +82,7 @@ public class AdminInfoManageController {
 		try {
 			
 			model.addObject("authorCd", authoService.selectAuthInfoComboList());
-			model.addObject("DEPT", deptService.selectDeptInfoComboList());
+			model.addObject("dept", deptService.selectDeptInfoComboList());
 			model.addObject("centerCd", centerInfoManageService.selectCenterInfoComboList());
 			
 			
