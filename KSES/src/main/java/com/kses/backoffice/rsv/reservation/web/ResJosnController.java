@@ -131,17 +131,14 @@ public class ResJosnController{
 					 user.setMode("Ins");
 					 userService.updateUserInfo(user);
 					 //메세지 전송 확인 				 
-				 }else {
-					
+				 } else {
 					  for (speedon direction : speedon.values()) {
                          if (direction.getCode().equals(node.get("Error_Cd").asText())) {
                         	 Message = direction.getName();
                          }
 					  }
-					 
 				 }
-				
-			 }else if ( SmartUtil.NVL(sendInfo.get("gubun"), "").toString().equals("fep") ) {
+			 } else if ( SmartUtil.NVL(sendInfo.get("gubun"), "").toString().equals("fep") ) {
 				 //출급 정보
 				 Url =  propertiesService.getString("sppeedUrl_T") +"trade/fepWithdraw";
 				 node = SmartUtil.requestHttpJson(Url, jsonObject.toJSONString(), "SPEEDWITHDRAW", "SPEEDON", "KSES");
@@ -151,9 +148,9 @@ public class ResJosnController{
 					 resInfo.setResvSeq( SmartUtil.NVL(sendInfo.get("resvSeq"), "").toString());
 					 resInfo.setResvPayDvsn("RESV_PAY_DVSN_2");
 					 resInfo.setTradNo(node.get("Trade_No").asText());
-					 resService.resPriceChange(resInfo);
 					 
-				 }else {
+					 resService.resPriceChange(resInfo);
+				 } else {
 					 for (speedon direction : speedon.values()) {
                          if (direction.getCode().equals(node.get("Error_Cd").asText())) {
                         	 Message = direction.getName();
@@ -248,12 +245,8 @@ public class ResJosnController{
         		String user_card_password = attempInfos[11];
         		String center_speed_cd = attempInfos[12];
         		
-        		
-        		
-        		
-        		
         		//시간 비교 
-        		if (  Integer.valueOf( SmartUtil.timeCheck(qrTime)) < -30  &&  gubun.equals("INTERVAL") ) {
+        		if (Integer.valueOf( SmartUtil.timeCheck(qrTime)) < -30  &&  gubun.equals("INTERVAL")) {
         			ERROR_CD = "ERROR_01";
         			ERROR_MSG = "30초 시간이 경과된 QR입니다.";
         			model.addObject("ERROR_CD", ERROR_CD);
