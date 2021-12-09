@@ -387,7 +387,7 @@ var jqGridFunc  = {
        },fn_CheckForm:function (){
     	   if (any_empt_line_span("bas_code_add", "codeId", "코드를 입력해 주세요.","sp_message", "savePage") == false) return;
     	   if ($("#mode").val() == "Ins" && $("#idCheck").val() != "Y"){
-			   if (any_empt_line_span("bas_code_add", "codeId", "중복체크가 안되었습니다.","sp_message", "savePage") == false) return;
+			   if (any_empt_line_span("bas_code_add", "idCheck", "중복체크가 안되었습니다.","sp_message", "savePage") == false) return;
 		   }
 		   if (any_empt_line_span("bas_code_add", "codeIdNm", "코드명을 입력해 주세요.","sp_message", "savePage") == false) return;
 		   var commentTxt = ($("#mode").val() == "Ins") ?  "등록 하시겠습니까?" : "수정 하시겠습니까?" ;
