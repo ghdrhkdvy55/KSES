@@ -45,6 +45,9 @@
 						  <if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchDeptCd)">	        
 						         AND b.DEPT_CD = #{params.searchDeptCd}
 						  </if>	
+						  <if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchCenter)">	        
+						         AND A.CENTER_CD = #{params.searchCenter}
+						  </if>	
 
 	            ) TB 
 	        ) TA 
