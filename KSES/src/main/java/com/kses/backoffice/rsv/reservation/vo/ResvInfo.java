@@ -60,9 +60,9 @@ public class ResvInfo {
 	
 	// 문진표 작성 여부
 	private String resvUserAskYn;
-	
+
 	// 개인정보 수집 이용 여부
-	private String indvdlinfoAgreYn;
+	private String resvIndvdlinfoAgreYn;
 	
 	// 발권 구분
 	private String resvTicketYn;

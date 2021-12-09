@@ -28,7 +28,7 @@
 </head>
 
 <body>
-<form:form name="regist" commandName="regist" method="get" action="/front/rsvSeat.do">	
+<form:form name="regist" commandName="regist" method="get" action="/front/rsvCenter.do">	
 	<input type="hidden" id="userDvsn" name="userDvsn" value="${sessionScope.userLoginInfo.userDvsn}">
 	<input type="hidden" name="userId" id="userId" value="${sessionScope.userLoginInfo.userId}">
 	
@@ -60,7 +60,7 @@
                 </div>
 
                 <div class="selBtn branch_btn">
-                    <a href="javascript:centerService.fn_centerResvVaildCheck();">지점 선택</a>
+                    <a href="javascript:centerService.fn_checkForm();">지점 선택</a>
                 </div>
             </div>
 
@@ -87,7 +87,6 @@
 			var today = date.format("yyyy-MM-dd");
 			$(".date").html(today);
 			
-			$("#resvDate").val(sessionStorage.getItem("resvDate"));
 			resvUsingTimeCheck(sessionStorage.getItem("resvUsingTime"));
     		centerService.fn_makeCenterInfoArea(sessionStorage.getItem("resvDate"));
     	});
@@ -129,14 +128,20 @@
 				);	    						
 			},
 			fn_checkForm : function() {
-				var centerCd = $("#centerCd").val();
+				if($("#centerCd").val() == "") {
+					fn_openPopup("지점을 선택해주세요.", "red", "ERROR", "확인", "");
+					return;
+				}
 				
-				// 현재 시간 기준 해당 지점이 예약가능한 지점인가에 대한 Ajax 통신 처리 필요
-				// 잔여석에 따른 버튼 disabled처리 유무 확인
+				var params = {
+					"centerCd" : $("#centerCd").val(),
+					"seatCd" : "",
+					"checkDvsn" : "CENTER"
+				}
 				
-				///////////////////////////////////////////////////////
+				var result = centerService.fn_resvVaildCheck(params);
 				
-				sessionStorage.setItem("centerCd", centerCd);
+				$("#resvDate").val(result.resvDate);
 				fn_pageMove('regist','/front/rsvSeat.do');
 			},
 			fn_centerButtonSetting : function() {
@@ -147,20 +152,9 @@
 					$("#centerCd").val($(this).attr("id"));
 				})
 			},
-			// 로그인 시작
-			fn_centerResvVaildCheck : function() {
-				if($("#centerCd").val() == "") {
-					fn_openPopup("지점을 선택해주세요.", "red", "ERROR", "확인", "");
-					return;
-				}
-				
-				var centerCd = $("#centerCd").val();
+			fn_resvVaildCheck : function(params) {
 				var url = "/front/resvValidCheck.do";
-				var params = {
-					"centerCd" : centerCd,
-					"seatCd" : "",
-					"checkDvsn" : "CENTER"
-				}
+				var validResult;
 				
 				fn_Ajax
 				(
@@ -174,7 +168,7 @@
 								fn_openPopup(result.validResult.resultMessage, "red", "ERROR", "확인", "");
 								return;
 							} else {
-								centerService.fn_checkForm();
+								validResult = result.validResult;
 							}
 						} else if (result.status == "LOGIN FAIL"){
 							fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "location.href='/front/login.do'");
@@ -183,7 +177,9 @@
 					function(request) {
 						alert("ERROR : " + request.status);	       						
 					}    		
-				);	
+				);
+				
+				return validResult;
 			}
 		}
     </script>

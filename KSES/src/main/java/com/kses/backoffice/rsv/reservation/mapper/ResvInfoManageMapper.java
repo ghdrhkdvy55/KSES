@@ -15,6 +15,7 @@ public interface ResvInfoManageMapper {
 	
 	public Map<String, Object> selectResInfoDetail(String resvSeq);
 	
+	public String selectResvUserId(@Param("resvSeq") String resvSeq) throws Exception;
 	
 	public String selectResvEntryDvsn(@Param("resvSeq") String paramString);
 	

@@ -35,18 +35,26 @@
 
 <body>
 	<form:form name="regist" commandName="regist" method="post" action="/front/rsvSeat.do">
-	<input type="hidden" name="resvDate" id="resvDate" value="${resvInfo.resvDate}">	
-	<input type="hidden" name="resvUserDvsn" id="resvUserDvsn" value="${sessionScope.userLoginInfo.userDvsn}">
-	<input type="hidden" name="resvUserNm" id="resvUserNm" value="">
+	<input type="hidden" name="isReSeat" id="isReSeat" value="${resvInfo.isReSeat}">
 	
-	<input type="hidden" name="centerCd" id="centerCd" value="${resvInfo.center_cd}">
+	<input type="hidden" name="userId" id="userId" value="${sessionScope.userLoginInfo.userId}">
+	<input type="hidden" name="userDvsn" id="userDvsn" value="${sessionScope.userLoginInfo.userDvsn}">
+	<input type="hidden" name="resvUserNm" id="resvUserNm" value="">
+	<input type="hidden" name="resvSeq" id="resvSeq" value="">
+	<input type="hidden" name="resvDate" id="resvDate" value="${resvInfo.resvDate}">	
+	
+	<input type="hidden" name="centerCd" id="centerCd" value="${resvInfo.centerCd}">
 	<input type="hidden" name="partCd" id="partCd" value="">
 	<input type="hidden" name="floorCd" id="floorCd" value="">
 	<input type="hidden" name="seatCd" id="seatCd" value="">
 	<input type="hidden" name="enterDvsn" id="enterDvsn" value="">
+	
+	<input type="hidden" name="reSeatCenterCd" id="reSeatCenterCd" value="${resvInfo.centerCd}">
+	<input type="hidden" name="rePartCd" id="rePartCd" value="${resvInfo.partCd}">
+	<input type="hidden" name="reFloorCd" id="reFloorCd" value="${resvInfo.floorCd}">
+	<input type="hidden" name="reSeatCd" id="reSeatCd" value="${resvInfo.seatCd}">
+	<input type="hidden" name="reEnterDvsn" id="reEnterDvsn" value="${resvInfo.entryDvsn}">
 
-	
-	
     <div class="wrapper rsvBack">
         <!--// header -->
         <div id="rsv_header">
@@ -82,12 +90,12 @@
                     <h4>입장 유형을 선택하세요.</h4>
                     <div class="enter_type">
                         <ul>
-							<li onclick="seatService.fn_enterTypeChange('ENTRY_DVSN_1');">
+							<li id="ENTRY_DVSN_1" onclick="seatService.fn_enterTypeChange('ENTRY_DVSN_1');">
 								<ul>
 									<li>입석</li>
 								</ul>
 							</li>
-							<li onclick="seatService.fn_enterTypeChange('ENTRY_DVSN_2');">
+							<li id="ENTRY_DVSN_2" onclick="seatService.fn_enterTypeChange('ENTRY_DVSN_2');">
 								<ul>
 									<li>좌석</li>
 								</ul>
@@ -404,52 +412,51 @@
     </div>
     <!-- 예약취소 팝업 // -->
     
-        <!-- // 개인정보 수집이용 약관 팝업 -->
+	<!-- // 개인정보 수집이용 약관 팝업 -->
     <div id="" data-popup="person_agree" class="popup">
-      <div class="pop_con rsv_popup">
-          <a class="button b-close">X</a>
-          <div class="pop_wrap">
-            <div class="text privacy_text">
-                <p class="font14 mg_l20">개인정보 수집·이용 및  제 3자 제공 동의서</p><br>                
-                <p class="font13 mg_l20">코로나19 확산방지를 위하여 경주사업총괄본부에서는 다음과 같이 개인정보 수집·이용 및 제 3자 제공에 대한 동의를 얻고자 합니다.</p>
+    	<div class="pop_con rsv_popup">
+          	<a class="button b-close">X</a>
+          	<div class="pop_wrap">
+            	<div class="text privacy_text">
+                	<p class="font14 mg_l20">개인정보 수집·이용 및  제 3자 제공 동의서</p><br>                
+                	<p class="font13 mg_l20">코로나19 확산방지를 위하여 경주사업총괄본부에서는 다음과 같이 개인정보 수집·이용 및 제 3자 제공에 대한 동의를 얻고자 합니다.</p>
                 
-                <div class="tablet_wrap">
-                         
-                    <div class="pd_l10 pd_r10">
-                        <p class="font13 mg_l10">▶ 개인정보수집·이용 동의</p>
-                        <table class="tb3" summary="개인정보수집·이용 동의">
-                            <caption>개인정보수집·이용 동의</caption>
-                            <colgroup>
-                                <col width="34%">
-                                <col width="33%">
-                                <col width="33%">
-                            </colgroup>
-                            <thead>
-                                <tr>
-                                    <th scope="col">항목</th>
-                                    <th scope="col">수집목적</th>
-                                    <th scope="col">보유기간</th>
-                                </tr>
-                            </thead>
-                            <tbody>             
-                                <tr>
-                                    <td>성명,전화번호,<br>출입시설,출입시간</td>
-                                    <td>코로나19 확진자<br>발생시 역학조사 및 <br>안내문자 발송</td>
-                                    <td class="text_center" style="color:red; font-size:12px; font-weight:bold;">4주</td>
-                                </tr>                                              
-                            </tbody>
-                        </table><br>
+                	<div class="tablet_wrap">
+                         <div class="pd_l10 pd_r10">
+                        	<p class="font13 mg_l10">▶ 개인정보수집·이용 동의</p>
+                        	<table class="tb3" summary="개인정보수집·이용 동의">
+                            	<caption>개인정보수집·이용 동의</caption>
+                            	<colgroup>
+                                	<col width="34%">
+                                	<col width="33%">
+                                	<col width="33%">
+                            	</colgroup>
+                            	<thead>
+                                	<tr>
+                                    	<th scope="col">항목</th>
+                                    	<th scope="col">수집목적</th>
+                                    	<th scope="col">보유기간</th>
+                                	</tr>
+                            	</thead>
+                            	<tbody>             
+	                                <tr>
+	                                    <td>성명,전화번호,<br>출입시설,출입시간</td>
+	                                    <td>코로나19 확진자<br>발생시 역학조사 및 <br>안내문자 발송</td>
+	                                    <td class="text_center" style="color:red; font-size:12px; font-weight:bold;">4주</td>
+	                                </tr>                                              
+                            	</tbody>
+                        	</table><br>
                         
-                        <p class="font13 mg_l10">▶ 개인정보 제3자 제공 동의</p>
-                        <table class="tb3" summary="개인정보 제3자 제공 동의">
-                            <caption>개인정보 제3자 제공 동의</caption>
-                            <colgroup>
-                                <col width="27%">
-                                <col width="29%">
-                                <col width="26%">
-                                <col width="18%">
-                            </colgroup>
-                            <thead>
+                        	<p class="font13 mg_l10">▶ 개인정보 제3자 제공 동의</p>
+                        	<table class="tb3" summary="개인정보 제3자 제공 동의">
+                            	<caption>개인정보 제3자 제공 동의</caption>
+                            	<colgroup>
+	                                <col width="27%">
+	                                <col width="29%">
+	                                <col width="26%">
+	                                <col width="18%">
+                            	</colgroup>
+								<thead>
                                 <tr>
                                     <th scope="col">제공받는 기관</th>
                                     <th scope="col">제공목적</th>
@@ -472,10 +479,8 @@
                     <!-- 기금조성총괄본부로 바뀌어서 일단 삭제 
                     <ui><li style="text-align: center;" class="first_type"><img src="/kcycle/images/new/sub7-1-3-img05.jpg" alt="경륜경정총괄본부"/></li></ui><br/>
                      -->
-                    
                 </div>                
             </div>
-
           </div>
           <div class="cancel_btn">
               <a href="" class="grayBtn">닫기</a>
@@ -487,32 +492,51 @@
 
     <!--층 선택 시 show/hide-->
     <script>
-    	var isMember = $("#resvUserDvsn").val() == "USER_DVSN_1" ? true : false;
+    	var isMember = $("#userDvsn").val() == "USER_DVSN_1" ? true : false;
     	var pinchzoom = "";
     	var pinchInit = true;
     	var certification = false;
     	var center ="";
     	
 		$(document).ready(function() {
-			if($("#centerCd").val() == null){
-				alert("지점정보가 존재하지 않습니다.\n처음부터 예약을 진행해주세요");
-				location.href = "/front/main.do";
-			}
-						
+/* 			$("body").css({
+				"background" : "#fff url(/resources/img/front/loading.gif)",
+				'background-repeat' : 'no-repeat',
+				'background-position' : 'center center'
+				
+			}); */
+			
+			//입석 좌석 버튼 이벤트 정의
+			$(function(){
+				var sBtn = $(".section_menu ul > li, .enter_type ul > li");   //  ul > li 이를 sBtn으로 칭한다. (클릭이벤트는 li에 적용 된다.)
+				sBtn.find("ul").click(function(){   // sBtn에 속해 있는  ul 찾아 클릭 하면.
+					sBtn.removeClass("active");     // sBtn 속에 (active) 클래스를 삭제 한다.
+					$(this).parent().addClass("active"); // 클릭한 a에 (active)클래스를 넣는다.
+				})
+			});
+			
+			$('.section_menu ul.tabs li').click(function(){
+            	var tab_id = $(this).attr('data-tab');
+
+            	$('.section ul.tabs li').removeClass('current');
+            	$('.tab-content').removeClass('current');
+
+            	$(this).addClass('current');
+            	$("#"+tab_id).addClass('current');
+    		});
+			
 			var date = new Date();
 			var today = date.format("yyyy-MM-dd");
 			$(".date").html(today);
 			resvUsingTimeCheck(sessionStorage.getItem("resvUsingTime"));
-
-        	$('.section_menu ul.tabs li').click(function(){
-	            var tab_id = $(this).attr('data-tab');
-	
-	            $('.section ul.tabs li').removeClass('current');
-	            $('.tab-content').removeClass('current');
-	
-	            $(this).addClass('current');
-	            $("#"+tab_id).addClass('current');
-        	});
+			
+			if($("#isReSeat").val() == "Y"){
+				seatService.fn_reSeat();
+			}
+			
+			if($("#centerCd").val() == null) {
+				fn_openPopup("지점정보가 존재하지 않습니다.\n처음부터 예약을 진행해주세요", "red", "ERROR", "확인", "/front/main.do");
+			}
 		});
 		
 		var seatService =
@@ -520,7 +544,7 @@
 			fn_makeResvArea: function(centerCd) {
 				var url = "/front/rsvSeatAjax.do";
 				
-				var parmas = {"resvDate" : sessionStorage.getItem("resvDate")};
+				var parmas = {"resvDate" : $("resv")};
 				
 				fn_Ajax
 				(
@@ -551,6 +575,18 @@
 					}    		
 				);	    						
 			},
+			fn_reSeat : function() {		
+				$("#" + $("#reEnterDvsn").val()).addClass("active");
+				$("#" + $("#reEnterDvsn").val()).trigger("click");
+				$("#selectFloorCd").val($("#reFloorCd").val());
+				seatService.fn_floorChange();
+				
+				$("#" + $("#rePartCd").val()).trigger("click");
+				seatService.fn_partChange($("#rePartCd").val());
+				
+				$("#" + $("#reSeatCd").val()).trigger("click");
+				$("#mask").trigger("click");
+			},
 			fn_enterTypeChange : function(enterDvsn) {
 				if($("#enterDvsn").val() != enterDvsn) {
 					if(enterDvsn == "ENTRY_DVSN_1") {
@@ -568,7 +604,6 @@
 						seatService.fn_initializing("ALL");
 					}
 					
-				
 					$("#enterDvsn").val(enterDvsn);
 					
 					$("#" + enterDvsn + "_cash_area").hide();
@@ -605,7 +640,7 @@
 				var params = 
 				{
 					"floorCd" : $("#floorCd").val(),
-					"resvDate" : sessionStorage.getItem("resvDate")
+					"resvDate" : $("#resvDate").val()
 				}
 				
 				fn_Ajax
@@ -616,12 +651,7 @@
 					false,
 					function(result) {
 				    	if (result.status == "SUCCESS"){
-/* 				            if (result.seatMapInfo != null) {
-			 	                var img = result.seatMapInfo.floor_map1;
-								img = (img == undefined) ? "#fff url(/resources/img/no_image.png)" : "/upload/" + img;
-			 	                
-			 	                $('.section_map img').attr("src", img);
-			 	            } */
+							
 							seatService.fn_initPinch("floor");
 				    		if (result.seatMapInfo != null) {
 				    		    var img = result.seatMapInfo.floor_map1;
@@ -669,18 +699,12 @@
 				);
 			},
 			fn_partChange : function(partCd) {
-				/* $("#tab-a").show(); */
-				if(partCd != $("#partCd").val()) {
-					seatService.fn_initializing("PART");
-				} else {
-					return;
-				}
-				
+				seatService.fn_initializing("PART");
 				var url = "/front/rsvSeatListAjax.do";
 				var params = 
 				{
 					"partCd" : partCd,
-					"resvDate" : sessionStorage.getItem("resvDate")
+					"resvDate" : $("#resvDate").val()
 				}
 				
 				fn_Ajax
@@ -751,8 +775,6 @@
  										var seatNm = $(this).attr("name");
 										$(".sel_seat_nm").html(seatNm);
 				    		    	}
-				    		    	
-
 								});
 				    		}					
 				    	}
@@ -809,8 +831,9 @@
 					seat_select.append(setHtml);
 
 					var el = document.querySelector('.part_map');
-					console.log(el);
 					var pinchzoom = new PinchZoom.default(el, {});
+					
+
 				} else {
 					var part_select = $("#part_select");
 					part_select.empty();
@@ -863,7 +886,7 @@
 				var params = {
 					"mode" : "Ins",
 					"resvDate" : $("#resvDate").val(),
-					"resvUserDvsn" : $("#resvUserDvsn").val(),
+					"resvUserDvsn" : $("#userDvsn").val(),
 					"resvEntryDvsn" : enterDvsn,
 					"centerCd" : $("#centerCd").val(),
 					"floorCd" : $("#floorCd").val(),
@@ -873,7 +896,7 @@
 					"resvUserNm" : $("#" + enterDvsn + "_resvUserNm").val(),
 					"resvUserClphn" : $("#" +  enterDvsn + "_resvUserClphn").val(),
 					"resvUserAskYn" : $("input:checkbox[id='" + enterDvsn + "_qna_check']").val(),
-					"indvdlinfoAgreYn" : $("#" + enterDvsn + "_person_agree").val()
+					"resvIndvdlinfoAgreYn" : $("#" + enterDvsn + "_person_agree").val()
 				}
 				
 				if($("input:checkbox[id='" + enterDvsn + "_bill_confirm']").is(":checked")) {
@@ -890,7 +913,7 @@
 					params.resvRcptDvsn = "";
 					params.resvRcptNumber =  "";
 				}
-				
+
 				fn_Ajax
 				(
 				    url,
@@ -899,7 +922,7 @@
 					false,
 					function(result) {
 				    	if (result.status == "SUCCESS"){
-				    		if(result.resvInfo != null) {				    			
+				    		if(result.resvInfo != null) {	
 				    			$("#rsv_num").html(result.resvInfo.resv_seq);   
 								$("#rsv_brch").html(result.resvInfo.center_nm)
 								$("#rsv_seat").html(result.resvInfo.seat_nm);
@@ -943,17 +966,6 @@
 				}
 			}
 		}  
-    </script>
-
-    <!--입석/좌석 버튼속성-->
-    <script>
-		$(function(){
-			var sBtn = $(".section_menu ul > li, .enter_type ul > li");   //  ul > li 이를 sBtn으로 칭한다. (클릭이벤트는 li에 적용 된다.)
-			sBtn.find("ul").click(function(){   // sBtn에 속해 있는  ul 찾아 클릭 하면.
-				sBtn.removeClass("active");     // sBtn 속에 (active) 클래스를 삭제 한다.
-				$(this).parent().addClass("active"); // 클릭한 a에 (active)클래스를 넣는다.
-			})
-		})
     </script>
  
  	<c:import url="/front/inc/popup_common.do" />

@@ -45,7 +45,7 @@ public class InterfaceController {
 	@Autowired
 	protected EgovMessageSource egovMessageSource;
 	
-	@RequestMapping(value = "interfaceList.do")
+	@RequestMapping(value = "interfaceLog.do")
 	public ModelAndView selectLoginLogInf(@ModelAttribute("searchVO") LoginLog loginLog) throws Exception {
 		
 		ModelAndView model = new ModelAndView("/backoffice/sys/interfaceLog");

@@ -56,7 +56,7 @@ public class ProgrmInfoManageController {
 											 HttpServletRequest request, 
 											 BindingResult bindingResult) throws Exception {
 		
-		ModelAndView model = new ModelAndView("/backoffice/bas/progrmList");
+		ModelAndView model = new ModelAndView("/backoffice/bas/programList");
 
 		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
 		if(!isAuthenticated) {

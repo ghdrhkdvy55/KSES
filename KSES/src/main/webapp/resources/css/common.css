@@ -210,7 +210,7 @@ header ul li a{display: inline-block;width: 80px;text-align: center;padding-top:
 .sidenav .panel a.active {color: #fff}
 
 /* menu icon */
-.sidenav li:first-child{}
+/*.sidenav li:first-child{}
 .sidenav li:nth-child(2){}
 .sidenav li:nth-child(3){background: url(/resources/img/menu03.png) no-repeat left;}
 .sidenav li:nth-child(4){background: url(/resources/img/menu04.png) no-repeat left;}
@@ -219,6 +219,7 @@ header ul li a{display: inline-block;width: 80px;text-align: center;padding-top:
 .sidenav li:nth-child(7){background: url(/resources/img/menu07.png) no-repeat left;}
 .sidenav li:nth-child(8){background: url(/resources/img/menu08.png) no-repeat left top 6px;}
 .sidenav li:nth-child(9){background: url(/resources/img/menu09.png) no-repeat left top 6px;}
+*/
 .header_wrap{position: fixed;width: 100%; z-index: 999}
 
 /*breadcrumb*/
@@ -226,7 +227,6 @@ header ul li a{display: inline-block;width: 80px;text-align: center;padding-top:
 .breadcrumb li {float: left; margin-bottom: 8px; color:#9c9c9c; font-size: 13px;}
 .breadcrumb li.active {color: #006ece;}
 
-/*로그인*/
 .input_reset {
 position: absolute;
 width: 16px !important;

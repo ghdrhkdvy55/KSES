@@ -1,205 +1,164 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="ui" uri="http://egovframework.gov/ctl/ui"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="viewport" content="initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=no;" />
-    <title>경륜경정 스마트입장 관리자</title>
-    <link rel="stylesheet" href="/resources/css/reset.css">
-	<link rel="stylesheet" href="/resources/css/paragraph.css">
-    <link rel="stylesheet" href="/resources/css/common.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
-    <script src="/resources/js/jquery-3.5.1.min.js"></script>
-    <script src="/resources/js/bpopup.js"></script>
-    <!-- datepicker-->
-    <script src="/resources/js/jquery-ui.js"></script>
-    <!-- 체크 -->
-    <link rel="stylesheet" href="/resources/css/jquery-ui.css">
-
-    <!-- jqGrid -->
-	<link rel="stylesheet" type="text/css" href="/resources/jqgrid/src/css/ui.jqgrid.css">
-    <script type="text/javascript" src="/resources/jqgrid/src/i18n/grid.locale-kr.js"></script>
-    <script type="text/javascript" src="/resources/jqgrid/js/jquery.jqGrid.min.js"></script>
-    
-	<script>
-		jQuery.browser = {};
-		(function () {
-		    jQuery.browser.msie = false;
-		    jQuery.browser.version = 0;
-		    if (navigator.userAgent.match(/MSIE ([0-9]+)\./)) {
-		        jQuery.browser.msie = true;
-		        jQuery.browser.version = RegExp.$1;
-		    }
-		})();
-	</script>
-	
-	<style type="text/css">
-	    .ui-jqgrid .ui-jqgrid-htable th div{
-			outline-style: none;
-			height: 30px;
-		}
-	    
-	    .ui-jqgrid tr.jqgrow {
-			outline-style: none;
-			height: 30px;
-		}
-    </style>
-	
-
-</head>
-
-<body>
-	<form:form name="regist" commandName="regist" method="post" action="/backoffice/rsv/blackList.do">
-	<input type="hidden" id="mode" name="mode">
-	<input type="hidden" id="blklstSeq" name="blklstSeq">
-	<input type="hidden" id="searchBlklstDvsn" name="searchBlklstDvsn" value="BLKLST_DVSN_1">
-	
-	<div class="wrapper">
-		<c:import url="/backoffice/inc/top_inc.do" />
-  		<!--// contents-->
-  		<div id="contents">
-    		<div class="breadcrumb">
-      			<ol class="breadcrumb-item">
-        			<li>고객 관리</li>
-        			<li class="active">　> 출입통제 관리</li>
-      			</ol>
-    		</div>
-
-		    <h2 class="title">출입통제 관리</h2><div class="clear"></div>
-		    <!--// dashboard -->
-		    <div class="dashboard">
-				<!--contents-->
-		      	<div class="boardlist">
-		        	<div class="whiteBox searchBox">
-		            	<div class="sName">
-		                	<h3>검색 옵션</h3>
-		              	</div>
-		          		<div class="top">
-		            		<p>검색 구분</p>
-		            		<select id="searchCondition">
-		              			<option value="0">아이디</option>
-		              			<option value="">이름</option>
-		              			<option value="">전화번호</option>
-		            		</select>
-		            		<input type="text" id="searchKeyword" placeholder="검색어를 입력하세요.">
-		          		</div>
-		          		<div class="inlineBtn">
-		            		<a href="javascript:jqGridFunc.fn_search();"class="grayBtn">검색</a>
-		          		</div>
-		        	</div>
-		        	
-		        	<div class="left_box mng_countInfo">
-		          		<p>총 : <span id="sp_totcnt">100</span>건</p>
-		        	</div>	
-		        	<div class="clear"></div>
-		        	
-		        	<div class="tabs blacklist">
-		          		<div id="BLKLST_DVSN_1" class="tab active" onclick="blackUserService.fn_changeBlklstDvsn(this);">블랙리스트</div>
-		          		<div id="BLKLST_DVSN_2" class="tab" onclick="blackUserService.fn_changeBlklstDvsn(this);">자가출입통제</div>
-		          		<div id="BLKLST_DVSN_3" class="tab" onclick="blackUserService.fn_changeBlklstDvsn(this);">패널티 고객</div>
-		        	</div>
-		        	
-		        	<div class="right_box">
-		            	<a data-popup-open="blacklist_add" class="blueBtn">입장 제한 고객 등록</a>
-					</div>
-					<div class="clear"></div>
-		        	
-					<div class="whiteBox">
-						<table id="mainGrid">
-				        				
-						</table>
-						<div id="pager" class="scroll" style="text-align:center;"></div>     
-								
-						<div id="paginate"></div>
-					</div>
-		    	</div>
-		  	</div>
-  		</div>
+<!-- JQuery Grid -->
+<link rel="stylesheet" href="/resources/jqgrid/src/css/ui.jqgrid.css">
+<script type="text/javascript" src="/resources/jqgrid/src/i18n/grid.locale-kr.js"></script>
+<script type="text/javascript" src="/resources/jqgrid/js/jquery.jqGrid.min.js"></script>
+<style type="text/css">
+.ui-jqgrid .ui-jqgrid-htable th div{
+	outline-style: none;
+	height: 30px;
+}
+.ui-jqgrid tr.jqgrow {
+	outline-style: none;
+	height: 30px;
+}
+</style>
+<!-- //contents -->
+<input type="hidden" id="mode" name="mode">
+<input type="hidden" id="blklstSeq" name="blklstSeq">
+<input type="hidden" id="searchBlklstDvsn" name="searchBlklstDvsn" value="BLKLST_DVSN_1">
+<div class="breadcrumb">
+ 	<ol class="breadcrumb-item">
+ 		<li>고객 관리&nbsp;&gt;&nbsp;</li>
+ 		<li class="active">출입 통제 관리</li>
+ 	</ol>
+</div>
+<h2 class="title">출입 통제 관리</h2>
+<div class="clear"></div>
+<div class="dashboard">
+  	<div class="boardlist">
+    	<div class="whiteBox searchBox">
+        	<div class="sName">
+            	<h3>검색 옵션</h3>
+          	</div>
+      		<div class="top">
+        		<p>검색 구분</p>
+        		<select id="searchCondition">
+          			<option value="0">아이디</option>
+          			<option value="">이름</option>
+          			<option value="">전화번호</option>
+        		</select>
+        		<input type="text" id="searchKeyword" placeholder="검색어를 입력하세요.">
+      		</div>
+      		<div class="inlineBtn">
+        		<a href="javascript:jqGridFunc.fn_search();"class="grayBtn">검색</a>
+      		</div>
+    	</div>
+    	
+    	<div class="left_box mng_countInfo">
+      		<p>총 : <span id="sp_totcnt">100</span>건</p>
+    	</div>	
+    	<div class="clear"></div>
+    	
+    	<div class="tabs blacklist">
+      		<div id="BLKLST_DVSN_1" class="tab active" onclick="blackUserService.fn_changeBlklstDvsn(this);">블랙리스트</div>
+      		<div id="BLKLST_DVSN_2" class="tab" onclick="blackUserService.fn_changeBlklstDvsn(this);">자가출입통제</div>
+      		<div id="BLKLST_DVSN_3" class="tab" onclick="blackUserService.fn_changeBlklstDvsn(this);">패널티 고객</div>
+    	</div>
+    	
+    	<div class="right_box">
+        	<a data-popup-open="blacklist_add" class="blueBtn">입장 제한 고객 등록</a>
+		</div>
+		<div class="clear"></div>
+    	
+		<div class="whiteBox">
+			<table id="mainGrid">
+	        				
+			</table>
+			<div id="pager" class="scroll" style="text-align:center;"></div>     
+					
+			<div id="paginate"></div>
+		</div>
 	</div>
-
-	<!-- wrapper_end-->
-	<!-- // 입장제한고객 등록 팝업 -->
-	<div id="blacklist_add" data-popup="blacklist_add" class="popup">
-	  <div class="pop_con">
-	      <a class="button b-close">X</a>
-	      <h2 class="pop_tit">입장 제한 고객 등록</h2>
-	      <div class="pop_wrap">
-	          <table class="detail_table blacklist_add_table">
-	              <tbody>
-	                  <tr>
-	                    <th>회원 조회</th>
-	                    <td>
-	                      <select id="userSearchCondition">
-	                          <option value="user_id">아이디</option>
-	                          <option value="user_nm">이름</option>    
-	                          <option value="user_phone">전화번호</option>             
-	                      </select>
-	                      <input type="text" id="userSearchKeyword">
-	                      <a href="javascript:blackUserService.fn_searchResult('user');" class="blueBtn">조회</a>
-	                    </td>
-	                      <th>아이디 </th>
-	                      <td><input type="text" id="userId" readonly></td>
-	                  </tr>
-	                  <tr>
-	                      <th>이름 </th>
-	                      <td><input type="text" id="userNm" readonly></td>
-	                      <th>전화번호 </th>
-	                      <td><input type="text" id="userPhone" readonly></td>
-	                  </tr>
-	                  <tr>
-	                    <th>제한 유형</th>
-	                    <td>
-	                        <select id="blklstDvsn">
-	                          <option value="BLKLST_DVSN_1">블랙리스트</option>
-	                          <option value="BLKLST_DVSN_2">자가출입통제</option>
-	                          <option value="BLKLST_DVSN_3">패널티 고객</option>
-	                        </select>
-	                    </td>
-	<!--                     <th>회원 구분</th>
-	                    <td><input type="text" id=""></td> -->
-	                  </tr>
-	                  <tr>
-	                    <th>상세 내역</th>
-	                      <td colspan="3">
-	                        <input type="text" id="blklstReason">
-	                      </td>
-	                  </tr>
-	              </tbody>
-	          </table>
-	      </div>
-	      <div class="right_box">
-	          <a href="javascript:$('#blacklist_add').bPopup().close();" class="grayBtn">취소</a>
-	          <a href="javascript:blackUserService.fn_checkForm();" class="blueBtn">저장</a>
-	      </div>
-	      <div class="clear"></div>
-	  </div>
-	</div>
-
-	<!-- 관리자 등록 팝업 // -->
-	<!-- // 관리자 검색 팝업 -->
-	<div id="search_result" class="popup">
-		<div class="pop_con">
-			<a href="javascript:common_modalOpenAndClose('blacklist_add', 'search_result');" class="button pop-close">X</a>
-			<h2 class="pop_tit">검색 결과</h2>
-	      	<div id="searchResult" class="pop_wrap">
-	        	<table id="searchResultTable" class="whiteBox main_table">
-	        	
-	        	</table>
-	      	</div>
-	  	</div>
-	</div>
-	<!-- 관리자 검색 팝업 // -->
-
+</div>
+<!-- contents// -->
+<!-- //popup -->
+<!-- // 입장제한고객 등록 팝업 -->
+<div id="blacklist_add" data-popup="blacklist_add" class="popup">
+  <div class="pop_con">
+      <a class="button b-close">X</a>
+      <h2 class="pop_tit">입장 제한 고객 등록</h2>
+      <div class="pop_wrap">
+          <table class="detail_table blacklist_add_table">
+              <tbody>
+                  <tr>
+                    <th>회원 조회</th>
+                    <td>
+                      <select id="userSearchCondition">
+                          <option value="user_id">아이디</option>
+                          <option value="user_nm">이름</option>    
+                          <option value="user_phone">전화번호</option>             
+                      </select>
+                      <input type="text" id="userSearchKeyword">
+                      <a href="javascript:blackUserService.fn_searchResult('user');" class="blueBtn">조회</a>
+                    </td>
+                      <th>아이디 </th>
+                      <td><input type="text" id="userId" readonly></td>
+                  </tr>
+                  <tr>
+                      <th>이름 </th>
+                      <td><input type="text" id="userNm" readonly></td>
+                      <th>전화번호 </th>
+                      <td><input type="text" id="userPhone" readonly></td>
+                  </tr>
+                  <tr>
+                    <th>제한 유형</th>
+                    <td>
+                        <select id="blklstDvsn">
+                          <option value="BLKLST_DVSN_1">블랙리스트</option>
+                          <option value="BLKLST_DVSN_2">자가출입통제</option>
+                          <option value="BLKLST_DVSN_3">패널티 고객</option>
+                        </select>
+                    </td>
+<!--                     <th>회원 구분</th> -->
+<!--                     <td><input type="text" id=""></td> -->
+                  </tr>
+                  <tr>
+                    <th>상세 내역</th>
+                      <td colspan="3">
+                        <input type="text" id="blklstReason">
+                      </td>
+                  </tr>
+              </tbody>
+          </table>
+      </div>
+      <div class="right_box">
+          <a href="javascript:$('#blacklist_add').bPopup().close();" class="grayBtn">취소</a>
+          <a href="javascript:blackUserService.fn_checkForm();" class="blueBtn">저장</a>
+      </div>
+      <div class="clear"></div>
+  </div>
+</div>
+<!-- 관리자 등록 팝업 // -->
+<!-- // 관리자 검색 팝업 -->
+<div id="search_result" class="popup">
+	<div class="pop_con">
+		<a href="javascript:common_modalOpenAndClose('blacklist_add', 'search_result');" class="button pop-close">X</a>
+		<h2 class="pop_tit">검색 결과</h2>
+      	<div id="searchResult" class="pop_wrap">
+        	<table id="searchResultTable" class="whiteBox main_table">
+        	
+        	</table>
+      	</div>
+  	</div>
+</div>
+<!-- 관리자 검색 팝업 // -->
+<!-- popup// -->
 <script type="text/javascript">
 	$(document).ready(function() { 
 		jqGridFunc.setGrid("mainGrid");
+		
+		/* rsv_blacklist tab (table) */
+		$('.blacklist.tabs>.tab').on('click', function(){
+		  var tabIdx = $(this).index();
+		  var $tabBtn = $('.blacklist.tabs>.tab');
+		  var $tbody = $('.blacklist.main_table>tbody');
+		  $tabBtn.removeClass('active');
+		  $(this).addClass('active');
+		  $tbody.removeClass('active');
+		  $tbody.eq(tabIdx).addClass('active');
+		})
 	});
     
 	var jqGridFunc = {
@@ -553,9 +512,4 @@
 		}
 	}
 </script>
-
 <c:import url="/backoffice/inc/popup_common.do" />
-<script type="text/javascript" src="/resources/js/back_common.js"></script>
-</form:form>
-</body>
-</html>

@@ -231,45 +231,44 @@
 	
 	<!-- // 예약취소 팝업 -->
     <div id="cancel_rsv_info" class="popup">
-      <div class="pop_con rsv_popup">
-          <a class="button b-close">X</a>
-          <div class="pop_wrap">
-              <h4>예약 취소 하시겠습니까?</h4>
-              <p>15시 까지 미 입장시 입장예약이 취소됩니다.</p>
-
-               <ul class="rsv_list">
-                   <li>
-                        <ol>
-                            <li>예약번호</li>
-                            <li><span id="cancel_rsv_num" class="rsv_num">123458960</span></li>
-                        </ol>
-                    </li>
-                    <li>
-                        <ol>
-                            <li>지점</li>
-                            <li><span id="cancel_rsv_brch" class="rsv_brch">대전지점</span></li>
-                        </ol>
-                    </li>
-                    <li>
-                        <ol>
-                            <li>좌석</li>
-                            <li><span id="cancel_rsv_seat" class="rsv_seat">A-3F-001</span></li>
-                        </ol>
-                    </li>
-                    <li>
-                        <ol>
-                            <li>일시</li>
-                            <li><span id="cancel_rsv_date" class="rsv_date">2021-12-01 12:00</span></li>
-                        </ol>
-                    </li> 
-               </ul>
-          </div>
-          <div class="cancel_btn">
-              <a href="" id="resvCancleBtn" class="grayBtn">예약취소</a>
-          </div>
-          <div class="clear"></div>
-      </div>
-    </div>
+      	<div class="pop_con rsv_popup">
+          	<a class="button b-close">X</a>
+          	<div class="pop_wrap">
+              	<h4>예약 취소 하시겠습니까?</h4>
+              	<p>15시 까지 미 입장시 입장예약이 취소됩니다.</p>
+				<ul class="rsv_list">
+                	<li>
+                    	<ol>
+                        	<li>예약번호</li>
+                        	<li><span id="cancel_rsv_num" class="rsv_num">123458960</span></li>
+                    	</ol>
+                	</li>
+                	<li>
+                    	<ol>
+                        	<li>지점</li>
+                        	<li><span id="cancel_rsv_brch" class="rsv_brch">대전지점</span></li>
+                    	</ol>
+                	</li>
+                	<li>
+                    	<ol>
+                        	<li>좌석</li>
+                        	<li><span id="cancel_rsv_seat" class="rsv_seat">A-3F-001</span></li>
+                    	</ol>
+                	</li>
+                	<li>
+                    	<ol>
+                        	<li>일시</li>
+                        	<li><span id="cancel_rsv_date" class="rsv_date">2021-12-01 12:00</span></li>
+                    	</ol>
+                	</li> 
+               	</ul>
+          	</div>
+          	<div class="cancel_btn">
+              	<a href="" id="resvCancleBtn" class="grayBtn">예약취소</a>
+          	</div>
+          	<div class="clear"></div>
+      	</div>
+	</div>
     <!-- 최근입장정보 팝업 // -->
     
 	<!-- // 최근입장정보 팝업 -->
@@ -302,7 +301,7 @@
 				</ul>
 			</div>
 			<div class="summit_btn">
-				<a href="" id="rebookBtn" class="mintBtn">최근 좌석으로 예약하기</a>
+				<a href="javascript:void(0);" id="rebookBtn" class="mintBtn">최근 좌석으로 예약하기</a>
           	</div>
 			<div class="clear"></div>
 		</div>
@@ -329,7 +328,6 @@
     <!-- mainpage.jsp script -->
     <script>
     	$(document).ready(function() {
-
 			// 예약일자생성
 			var test_time = "1700";
 			
@@ -352,7 +350,7 @@
     	
     	var mainService =
 		{ 
-			fn_makeUserInfoArea: function(userId, callback) {
+			fn_makeUserInfoArea : function(userId, callback) {
 				var userInfoTopArea = $("#user_info_top_area");
 				var userInfoBottomArea = $("#user_info_bottom_area");
 				var qrEnterArea = $("#qr_enter_area");
@@ -365,7 +363,7 @@
 				if(userId != "") {
 					// 로그인 상태(회원)
 					var url = "/front/userInfo.do";
-					var params = { "userId" : userId }
+					var params = {"userId" : userId}
 					
 					// 예약 단계별 화면처리를 위한 sessionStorage
 					// loginType : 회원 -> 1  비회원 -> 2 
@@ -463,7 +461,7 @@
 							}
 						},
 						function(request) {
-							alert("ERROR : " +request.status);	       						
+							fn_openPopup("ERROR : " + request.status, "red", "ERROR", "확인", "");	       						
 						}    		
 					);	
 					
@@ -500,7 +498,6 @@
 					params,
 					false,
 					function(result) {
-				    	console.log(result);
 				    	if (result.status == "SUCCESS") {
 				    		if(result.resultlist != null) {
 				    			var obj = result.resultlist;
@@ -517,13 +514,16 @@
 									$("#re_rsv_seat").html(obj.seat_nm);
 									$("#re_rsv_date").html(obj.resv_req_date);
 									
-									var rebookBtnText = obj.re_resv_yn == "Y" ? "최근 좌석으로 예약하기" : "현재 예약할수 없는 좌석입니다.";
-									var rebookBtnHref = obj.re_resv_yn == "Y" ? "mainService.fn_rebook('" + obj.resv_seq + "');" : "void(0);"
-									var rebookBtnColor = obj.re_resv_yn == "Y" ? "#47D6BE" : "#808080";
-									
-									$("#rebookBtn").css("background",rebookBtnColor);
-									$("#rebookBtn").html(rebookBtnText)
-									$("#rebookBtn").attr("href","javascript:" + rebookBtnHref);
+									if(obj.re_resv_yn == "Y") {
+										$("#rebookBtn").css("background","#47D6BE");
+										$("#rebookBtn").html("최근 좌석으로 예약하기")
+										$("#rebookBtn").click(function (e) {
+											mainService.fn_reSeat(obj);
+										});										
+									} else {
+										$("#rebookBtn").css("background","#808080");
+										$("#rebookBtn").html("현재 예약할수 없는 좌석입니다.")
+									}
 								} else {
 									$("#cancel_rsv_info .name").html(userLoginInfo.userNm);
 									$("#cancel_rsv_num").html(obj.resv_seq);
@@ -541,7 +541,7 @@
 						}
 					},
 					function(request) {
-						alert("ERROR : " + request.status);	       						
+						fn_openPopup("ERROR : " + request.status, "red", "ERROR", "확인", "");	       						
 					}    		
 				);	
 			},
@@ -568,22 +568,37 @@
 						}
 					},
 					function(request) {
-						alert("ERROR : " + request.status);	       						
-					}    		
+						fn_openPopup("ERROR : " + request.status, "red", "ERROR", "확인", "");	       						
+					}
 				);	
 			},
-			fn_rebook : function(resvSeq) {
-				
-			},
-			fn_moveQrPage : function(resvSeq) {
-				location.href = "/front/qrEnter.do?resvSeq=" + resvSeq;
-			},
-			// 로그인 시작
-			test : function() {
-				var url = "/front/rsv/resvValidCheck.do";
+			fn_reSeat : function(resvInfo) {
+				console.log(resvInfo);
 				var params = {
-					"centerCd" : "C21110401"
+					"isReSeat" : "Y",
+					"entryDvsn" : resvInfo.resv_entry_dvsn,
+					"centerCd" : resvInfo.center_cd,
+					"floorCd" : resvInfo.floor_cd,
+					"partCd" : resvInfo.part_cd,
+					"seatCd" : resvInfo.seat_cd,
+					"userId" : resvInfo.user_id,
+					"checkDvsn" : "ALL"
 				}
+				
+				var result = mainService.fn_resvVaildCheck(params);
+				
+				if(result != ""){
+					params.resvDate = result.resvDate;
+					console.log(params.resvDate);
+					$.each(result, function(index, item) {
+						$("form[name=regist]").append($('<input/>', {type: 'hidden', name: index, value:item }));
+						$("form[name=regist]").attr("action", "/front/rsvSeat.do").attr("method","get").submit();
+					});
+				}
+			},
+			fn_resvVaildCheck : function(params) {
+				var url = "/front/resvValidCheck.do";
+				var validResult;
 				
 				fn_Ajax
 				(
@@ -592,18 +607,26 @@
 					params,
 					false,
 					function(result) {
-				    	console.log(result);
 						if (result.status == "SUCCESS") {
-							loginService.createUserSession(result.RESULT);
-						} else {
-							fn_openPopup("등록되지 않은 아이디이거나 비밀번호를 잘못 입력하였습니다.", "red", "ERROR", "확인", "");
+							if(result.validResult.resultCode != "SUCCESS") {
+								fn_openPopup(result.validResult.resultMessage, "red", "ERROR", "확인", "");
+							} else {
+								validResult = result.validResult;
+							}
+						} else if (result.status == "LOGIN FAIL"){
+							fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "location.href='/front/login.do'");
 						}
 					},
 					function(request) {
 						alert("ERROR : " + request.status);	       						
 					}    		
 				);	
+				
+				return validResult;
 			},
+			fn_moveQrPage : function(resvSeq) {
+				location.href = "/front/qrEnter.do?resvSeq=" + resvSeq;
+			}
 		}
     </script>
 

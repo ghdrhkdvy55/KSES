@@ -96,7 +96,7 @@
                         </li>                                                                                    
                     </ul>
                     <ul class="non_memBtn">
-                        <li class="cancelBtn"><a href="">예약취소</a></li>
+                        <li class="cancelBtn"><a href="javascript:$('#cancel_rsv_info').bPopup();">예약취소</a></li>
                         <li class="close_btn"><a href="javascript:location.reload();">닫기</a></li>
                     </ul>
                 </div>
@@ -120,11 +120,52 @@
 	<script src="/resources/js/front/jquery-spinner.min.js"></script>
 	<script src="/resources/js/front/common.js"></script>
 	<script src="/resources/js/front/front_common.js"></script>
+	
+	<!-- // 예약취소 팝업 -->
+    <div id="cancel_rsv_info" class="popup">
+      	<div class="pop_con rsv_popup">
+          	<a class="button b-close">X</a>
+          	<div class="pop_wrap">
+              	<h4>예약 취소 하시겠습니까?</h4>
+              	<p>15시 까지 미 입장시 입장예약이 취소됩니다.</p>
+				<ul class="rsv_list">
+                	<li>
+                    	<ol>
+                        	<li>예약번호</li>
+                        	<li><span id="cancel_rsv_num" class="rsv_num"></span></li>
+                    	</ol>
+                	</li>
+                	<li>
+                    	<ol>
+                        	<li>지점</li>
+                        	<li><span id="cancel_rsv_brch" class="rsv_brch"></span></li>
+                    	</ol>
+                	</li>
+                	<li>
+                    	<ol>
+                        	<li>좌석</li>
+                        	<li><span id="cancel_rsv_seat" class="rsv_seat"></span></li>
+                    	</ol>
+                	</li>
+                	<li>
+                    	<ol>
+                        	<li>일시</li>
+                        	<li><span id="cancel_rsv_date" class="rsv_date"></span></li>
+                    	</ol>
+                	</li> 
+               	</ul>
+          	</div>
+          	<div class="cancel_btn">
+              	<a href="" id="resvCancleBtn" class="grayBtn">예약취소</a>
+          	</div>
+          	<div class="clear"></div>
+      	</div>
+	</div>
 
     <!--메뉴버튼 속성-->
     <script>
 		var guestResvService = {
-			fn_checkform : function() {  
+			fn_checkform : function() {
 				var url = "/front/guestMyResvInfo.do";
 				var params = {
 					"resvUserNm" : $("#resvUserNm").val(),
@@ -143,14 +184,14 @@
 							if(result.guestResvInfo != null) {
 								var guestResvInfo = result.guestResvInfo;
 								
-								console.log(guestResvInfo);
-								
-								$("#rsv_num").html(guestResvInfo.resv_seq);
+								$("#rsv_num, #cancel_rsv_num").html(guestResvInfo.resv_seq);
 								$("#rsv_name").html(guestResvInfo.resv_user_nm);
-								$("#rsv_brch").html(guestResvInfo.resv_center_nm);
-								$("#rsv_seat").html(guestResvInfo.resv_seat_nm);
-								$("#rsv_date").html(guestResvInfo.resv_req_date);
-								   
+								$("#rsv_brch, #cancel_rsv_brch").html(guestResvInfo.center_nm);
+								$("#rsv_seat, #cancel_rsv_seat").html(guestResvInfo.seat_nm);
+								$("#rsv_date, #cancel_rsv_date").html(guestResvInfo.resv_req_date);
+								
+								$("#resvCancleBtn").attr("href","javascript:guestResvService.fn_resvCancel('" + guestResvInfo.resv_seq + "');");
+								
 								$(".search").hide();
 								$(".result").show();
 							} else {
@@ -162,6 +203,31 @@
 						alert("ERROR : " + request.status);	       						
 					}    		
 				);
+			},
+			fn_resvCancel : function(resvSeq) {
+				var url = "/front/resvInfoCancel.do";
+				var params = {
+					"userDvsn" : $("#userDvsn").val(),
+					"resvSeq" : resvSeq
+				}
+				
+				fn_Ajax
+				(
+				    url,
+				    "POST",
+					params,
+					false,
+					function(result) {
+						if (result.status == "SUCCESS") {
+							fn_openPopup("예약이 정상적으로 취소되었습니다.", "blue", "SUCCESS", "확인", "/front/main.do");
+						} else {
+							fn_openPopup("처리중 에러가 발생하였습니다.", "red", "ERROR", "확인", "");
+						}
+					},
+					function(request) {
+						alert("ERROR : " + request.status);	       						
+					}    		
+				);	
 			}
 		}
     </script>

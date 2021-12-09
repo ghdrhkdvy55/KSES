@@ -6,7 +6,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +24,6 @@ import com.kses.backoffice.bas.menu.service.MenuInfoService;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
 import egovframework.let.uat.uap.service.EgovLoginPolicyService;
-import egovframework.let.uat.uap.vo.LoginPolicyVO;
 import egovframework.let.uat.uia.service.EgovLoginService;
 import egovframework.let.utl.sim.service.EgovClntInfo;
 import egovframework.rte.fdl.cmmn.trace.LeaveaTrace;
@@ -203,29 +201,29 @@ public class EgovLoginController {
 	    	LoginVO loginVO = (LoginVO)httpSession.getAttribute("LoginVO");
 	    	loginVO.setIp(EgovClntInfo.getClntIP(request));
 	    	*/
-	    	LoginVO loginvo = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
-	    	String url = "";
-	    	switch (loginvo.getAuthorCd()) {
-	    	    case "ROLE_ADMIN" : 
-	    	    	url = "forward:/backoffice/bas/codeList.do";
-	    	    	break;
-	    	    case "ROLE_SYSTEM":
-		    	    url = "forward:/backoffice/bas/codeList.do";
-	    	    	break;
-	    	    case "ROLE_MANAGER":
-		    	    url = "forward:/backoffice/rsv/rsvList.do";
-	    	    	break;
-	    	    case "ROLE_USER":
-		    	    url = "forward:/backoffice/rsv/rsvList.do";
-	    	    	break;
-	    	}
+//	    	LoginVO loginvo = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
+//	    	String url = "";
+//	    	switch (loginvo.getAuthorCd()) {
+//	    	    case "ROLE_ADMIN" : 
+//	    	    	url = "forward:/backoffice/bas/codeList.do";
+//	    	    	break;
+//	    	    case "ROLE_SYSTEM":
+//		    	    url = "forward:/backoffice/bas/codeList.do";
+//	    	    	break;
+//	    	    case "ROLE_MANAGER":
+//		    	    url = "forward:/backoffice/rsv/rsvList.do";
+//	    	    	break;
+//	    	    case "ROLE_USER":
+//		    	    url = "forward:/backoffice/rsv/rsvList.do";
+//	    	    	break;
+//	    	}
 	    	
-	    	return url;
+	    	return "/backoffice/index";
     	} catch(Exception e){
     		LOGGER.debug("login Error:" + e.toString());
     		model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
         	return "/backoffice/login";
-    	}		    	
+    	}
 	}
 
 	/**
