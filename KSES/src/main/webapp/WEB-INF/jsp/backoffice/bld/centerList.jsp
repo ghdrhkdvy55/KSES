@@ -960,7 +960,7 @@
 			$("#searchCenterCd").val(centerCd);
 			//location.href= "/backoffice/bld/floorList.do?centerCd=" + centerCd;
 			//$("form[name=regist]").attr("action", "/backoffice/bld/floorList.do").submit();
-			$('#contents').load('/backoffice/bld/floorList.do');
+			$('#contents').load('/backoffice/bld/floorList.do?searchCenterCd='+ centerCd);
 		},
 		fn_CheckForm : function () {
 			if (any_empt_line_span("bld_branch_add", "centerNm",  "지점명을 입력해주세요.","sp_message", "savePage") == false) return;
