@@ -438,7 +438,6 @@ var jqGridFunc  = {
     	    	loadComplete	: function(data) {$("#sp_totcnt").text(data.paginationInfo.totalRecordCount);}
     	  }).trigger("reloadGrid");
 	 }, fn_idCheck : function (){
-		 	console.log('----------')
         	//공용으로 활용 할지 정리 필요 
 		    var url = "/backoffice/bas/codeIDCheck.do"
         	var param =  {"codeId" : $("#codeId").val()};
@@ -517,10 +516,14 @@ var detailFunc  = {
         	   return '<a href="javascript:detailFunc.delRow(&#34;'+rowObject.code_id+'&#34;,&#34;'+rowObject.code+'&#34;);">삭제</a>';
        },delRow : function (codeId, code){
     	   if(code != "") {       		   
-    		   var params = {'code':code };
-    		   fn_uniDelAction("/backoffice/bas/codeDetailCodeDelete.do","GET",params,false, "");
-    		   detailFunc.fn_search(codeId);
+				$("#id_ConfirmInfo").attr("href", "javascript:detailFunc.fn_codeDel('"+ codeId +"', '"+ code +"')");
+       			fn_ConfirmPop("삭제 하시겠습니까?");
     	   }
+       }, fn_codeDel: function(codeId, code) {
+    	   var params = {'code':code };
+    	   fn_uniDelAction("/backoffice/bas/codeDetailCodeDelete.do","GET",params,false, "");
+		   detailFunc.fn_search(codeId);
+		   
        }, fn_detailUp : function (){
     	   if (any_empt_line_span("bas_detailcode_add", "codeNm", "분류명 입력해 주세요.","sp_message", "savePage") == false) return;
     	   var commentTxt = ($("#mode").val() == "Ins") ? "등록 하시겠습니까?":"저장 하시겠습니까?";
