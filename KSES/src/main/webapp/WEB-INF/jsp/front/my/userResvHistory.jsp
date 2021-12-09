@@ -43,7 +43,7 @@
                 <div class="navi_left">
                     <a href="javascript:history.back();" class="before_close"></a>
                 </div>
-                <h1>나의 입장예약 내역 <a href="javascript:history.back();" class="close"><img src="/resources/img/front/x_box.svg" alt="닫기"></a></h1>
+                <h1>나의 입장예약 내역</h1>
             </div>           
         </div>
         <!-- header //-->
@@ -126,16 +126,13 @@
                         </ul>
 
                         <ul class="rsv_stat_btn">
-                            <li><a href="">QR코드 발행</a></li>
-                            <li><a href="">예약 취소</a></li>
+
                         </ul>
                     </div>
                 </div>
                 <div id="my_rsv_stat_list">
                     <div class="notice_con list_con">
-                        <p class="notice_date">2021.12.01 12:00</p>
-                        <p class="notice_stat"><span class="cancel">취소됨</span></p>
-                        <p class="notice_tit">대전지점 A-3F-001</p>
+
                     </div>
                 </div>                
             </div>
@@ -154,7 +151,8 @@
         <!--contents //-->
     </div>  
 	</form:form>
-
+	
+	<c:import url="/front/inc/popup_common.do" />
 	<script src="/resources/js/front/jquery-spinner.min.js"></script>
 	<script src="/resources/js/front/common.js"></script>
 	<script src="/resources/js/front/front_common.js"></script>
@@ -221,7 +219,7 @@
 								$("#my_rsv_stat_list").empty();
 								
 								$.each(userResvInfo, function(index, item) {
-									if(item.resv_state == "RESV_STATE_1") {
+									if(item.resv_state == "RESV_STATE_1" || item.resv_state == "RESV_STATE_2") {
 										var setHtml = "";
 					                	setHtml += "<ul class='my_rsv'>";
 					                    setHtml += "    <li>";
@@ -251,10 +249,12 @@
 				                        setHtml += "</ul>";
 				                        
 				                        setHtml += "<ul class='rsv_stat_btn'>";
-			                            setHtml += "    <li><a href='/front/qrEnter.do?resvSeq=" + item.resv_seq + "'>QR코드 발행</a></li>";
-			                            setHtml += "	<li><a href='javascript:userResvService.fn_resvCancel(&#39;" + item.resv_seq +"&#39;)'>예약 취소</a></li>";
+				                        if(item.resv_state == "RESV_STATE_1") {
+			                            	setHtml += "	<li><a href='javascript:userResvService.fn_resvCancel(&#39;" + item.resv_seq +"&#39;)'>예약 취소</a></li>";
+				                        }
 			                            setHtml += "</ul>";
-				                        $("#my_rsv_stat").append(setHtml);
+				                        
+			                            $("#my_rsv_stat").append(setHtml);
 									} else {
 										var setHtml = "";
 					                    setHtml += "<div class='notice_con list_con'>";

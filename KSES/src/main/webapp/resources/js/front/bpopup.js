@@ -117,7 +117,8 @@
         function M() {
             k.data("bPopup", v);
             b.delegate(".bClose, ." + a.closeClass, "click." + e, r);
-            a.modalClose && c(".b-modal." + e).css("cursor", "pointer").bind("click", r);
+            //배경 클릭시 팝업창 종료되지 않게 주석처리(해당 기능 재사용시 주석 해제하면됨)
+/*          a.modalClose && c(".b-modal." + e).css("cursor", "pointer").bind("click", r);
             N || !a.follow[0] && !a.follow[1] || k.bind("scroll." + e, function() {
                 if (h.x || h.y) {
                     var d = {};
@@ -130,7 +131,7 @@
             });
             a.escClose && f.bind("keydown." + e, function(a) {
                 27 == a.which && r()
-            })
+            })*/
         }
 
         function G(d) {
