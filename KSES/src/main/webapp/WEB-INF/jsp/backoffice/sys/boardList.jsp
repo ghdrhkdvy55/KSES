@@ -14,7 +14,7 @@
 	height: 30px;
 }
 </style>
-<script type="text/jscript" src="/resources/SE/js/HuskyEZCreator.js" ></script>
+<script type="text/javascript" src="/resources/SE/js/HuskyEZCreator.js" ></script>
 <style type="text/css">
 	.upload-btn-wrapper {
 			position: relative;
@@ -62,7 +62,8 @@
     	<li class="active">${regist.board_title}</li>
 	</ol>
 </div>
-<h2 class="title"> ${regist.board_title }</h2><div class="clear"></div>
+<h2 class="title"> ${regist.board_title }</h2>
+<div class="clear"></div>
 <div class="dashboard">
     <div class="boardlist">
         <div class="whiteBox searchBox">
