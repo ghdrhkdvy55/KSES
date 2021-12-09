@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <!-- JQuery Grid -->
 <link rel="stylesheet" href="/resources/jqgrid/src/css/ui.jqgrid.css">
 <script type="text/javascript" src="/resources/jqgrid/src/i18n/grid.locale-kr.js"></script>
@@ -437,6 +438,7 @@ var jqGridFunc  = {
     	    	loadComplete	: function(data) {$("#sp_totcnt").text(data.paginationInfo.totalRecordCount);}
     	  }).trigger("reloadGrid");
 	 }, fn_idCheck : function (){
+		 	console.log('----------')
         	//공용으로 활용 할지 정리 필요 
 		    var url = "/backoffice/bas/codeIDCheck.do"
         	var param =  {"codeId" : $("#codeId").val()};
