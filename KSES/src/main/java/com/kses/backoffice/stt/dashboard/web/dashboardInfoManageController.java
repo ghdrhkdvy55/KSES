@@ -1,4 +1,4 @@
-package com.kses.backoffice.rsv.vaccine.web;
+package com.kses.backoffice.stt.dashboard.web;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -19,20 +19,20 @@ import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
 
 
 @RestController
-@RequestMapping("/backoffice/rsv")
-public class VaccineInfoManageController {
+@RequestMapping("/backoffice/stt")
+public class dashboardInfoManageController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(VaccineInfoManageController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(dashboardInfoManageController.class);
     
     @Autowired
     EgovMessageSource egovMessageSource;	
 
-	@RequestMapping(value="vaccineList.do")
+	@RequestMapping(value="dashboardList.do")
 	public ModelAndView selectBlackUserInfoList(	@ModelAttribute("loginVO") LoginVO loginVO,
 													HttpServletRequest request, 
 													BindingResult bindingResult) throws Exception {
 		
-		ModelAndView model = new ModelAndView("/backoffice/rsv/vaccineList"); 
+		ModelAndView model = new ModelAndView("/backoffice/stt/dashboardList"); 
 		try {
 			Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
 			
@@ -47,7 +47,7 @@ public class VaccineInfoManageController {
 			}			
 		    model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		} catch(Exception e) {
-			LOGGER.error("selectVaccineInfoList : " + e.toString());
+			LOGGER.error("selectDashboardInfoList : " + e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg")); 
 		}
