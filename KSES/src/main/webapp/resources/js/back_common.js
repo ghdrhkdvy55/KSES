@@ -133,6 +133,13 @@ function common_modelOpen(_closeModel, _openModel){
    $("#"+_closeModel).bPopup().close();  
    $("#"+_openModel).bPopup();   
 }
+
+//공통 팝업 Close & Open
+function common_modalOpenAndClose(openPopup, closePopup) {
+	$("#" + closePopup).bPopup().close();
+	$("#" + openPopup).bPopup();
+}
+
 //페이지 이동 
 function view_Page(code, code1, code_value, action_page, frm_nm){
 	document.getElementById("mode").value = code;	

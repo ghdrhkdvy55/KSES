@@ -58,7 +58,7 @@
     	</div>
     	
     	<div class="right_box">
-        	<a data-popup-open="blacklist_add" class="blueBtn">입장 제한 고객 등록</a>
+        	<a href="javascript:$('#blacklist_add').bPopup()" class="blueBtn">입장 제한 고객 등록</a>
 		</div>
 		<div class="clear"></div>
     	
