@@ -2,14 +2,12 @@ package com.kses.backoffice.rsv.reservation.web;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -168,7 +166,7 @@ public class ResJosnController{
 				 if (node.get("Error_Cd").asText().equals("SUCCESS")  ) {
 					 //예약 테이블 출금 정보 처리 하기 
 					 ResvInfo resInfo = new ResvInfo();
-					 resInfo.setResvSeq( SmartUtil.NVL(sendInfo.get("resv_seq"), "").toString());
+					 resInfo.setResvSeq( SmartUtil.NVL(resvInfo.get("resv_seq"), "").toString());
 					 resInfo.setResvPayDvsn("RESV_PAY_DVSN_2");
 					 resInfo.setTradNo(node.get("Trade_No").asText());
 					 
@@ -206,18 +204,18 @@ public class ResJosnController{
 					 resInfo.setTradNo(node.get("Trade_No").asText());
 					 resService.resPriceChange(resInfo);
 					
-				}else {
-					 for (speedon direction : speedon.values()) {
-                         if (direction.getCode().equals(node.get("Error_Cd").asText())) {
-                        	 Message = direction.getName();
-                         }
-					  }
+				} else {
+					for (speedon direction : speedon.values()) {
+						if (direction.getCode().equals(node.get("Error_Cd").asText())) {
+							Message = direction.getName();
+						}
+					}
 				 }
 			 }
 			 model.addObject(Globals.STATUS, errorCd);
 			 model.addObject(Globals.STATUS_MESSAGE, Message);
 			 model.addObject(Globals.STATUS_REGINFO, node);
-		}catch(Exception e) {
+		} catch(Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
 			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
@@ -293,7 +291,7 @@ public class ResJosnController{
         					"        \"System_Type\" : \"E\"}";
         			
         			JsonNode node = SmartUtil.requestHttpJson(Url, jsonInfo, "SPEEDWITHDRAW", "SPEEDON", "KSES");
-	   				if (node.get("Error_Cd").asText().equals("SUCCESS")  ) {
+	   				if(node.get("Error_Cd").asText().equals("SUCCESS")) {
 	   					 //예약 테이블 출금 정보 처리 하기 
 	   					 ResvInfo resInfo = new ResvInfo();
 	   					 resInfo.setResvSeq(resSeq);
@@ -301,8 +299,8 @@ public class ResJosnController{
 	   					 resInfo.setTradNo(node.get("Trade_No").asText());
 	   					 resService.resPriceChange(resInfo);
 	   					 
-	   				}else {
-	   					for (speedon direction : speedon.values()) {
+	   				} else {
+	   					for(speedon direction : speedon.values()) {
                             if (direction.getCode().equals(node.get("Error_Cd").asText())) {
                             	ERROR_MSG = direction.getName();
                             }
@@ -312,7 +310,6 @@ public class ResJosnController{
 	                	model.addObject("ERROR_MSG", ERROR_MSG);
 	                	return model;
 	   				}
-	   				
         		}
         		
         		String formatedNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
@@ -323,24 +320,21 @@ public class ResJosnController{
         		sendInfo.setQrCheckTm(formatedNow);
         		sendInfo.setRcvCd("OK");
         		sendInfo.setQrCode(sendInfo.getQrCode());
-        		
-        		
+
         		sendInfo = attendService.insertAttendInfo(sendInfo);
         		
-        		
-        		
-        		if (sendInfo.getRcvCd().equals("OK")) {
+        		if(sendInfo.getRcvCd().equals("OK")) {
         			ERROR_CD = "OK";
         			ERROR_MSG = "";
         			IOGUBUN = inOt;
         			USER_NM = sendInfo.getUserNm();
         			
-        		}else {
+        		} else {
         			String errorMessage =  sendInfo.getRcvCd().equals("ERROR_02") ? "입/출입 잘못 시도" : "시스템 에러";
         			ERROR_CD = sendInfo.getRcvCd();
         			ERROR_MSG = errorMessage;
         		}
-        	}else {
+        	} else {
         		ERROR_CD = "ERROR_04";
     			ERROR_MSG = "잘못된 파라미터 입니다.";
     			
@@ -351,13 +345,12 @@ public class ResJosnController{
         	model.addObject("USER_NM", USER_NM);
         	
         	
-        }catch(Exception e) {
+        } catch(Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
 			LOGGER.error("selectQrCheckInfo error:" + e.toString() + ":" + lineNumber);
 			model.addObject("ERROR_CD", "ERROR_03");
         	model.addObject("ERROR_MSG", "시스템 에러");
-        	
 		}
         return model;
 	}
@@ -404,12 +397,13 @@ public class ResJosnController{
                                 + ":" + SmartUtil.NVL(resInfo.get("user_card_seq"), "").toString()
                                 + ":" + SmartUtil.NVL(resInfo.get("user_card_password"), "").toString()
                                 + ":" + SmartUtil.NVL(resInfo.get("center_speed_cd"), "").toString()) ;
-				fileScrty =  null;
+				fileScrty = null;
 				
-				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+				model.addObject("resvInfo", resInfo);
 				model.addObject("QRCODE", qrCode);
+				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			}
-		}catch(Exception e) {
+		} catch(Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
 			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
@@ -472,7 +466,7 @@ public class ResJosnController{
 				seatName = SmartUtil.NVL(resInfo.get("seat_nm") , "").toString();
 				resPersonCnt = "1";
 				returnCode = "OK";
-			}else {
+			} else {
 				returnCode = "ERROR_01";
 				returnMessage = "예약 정보가 없습니다.";
 			}
@@ -490,7 +484,7 @@ public class ResJosnController{
 	        info.setSendMessage(jsonObject.toString());
 	        info.setRqesterId("admin");
 	        
-		}catch(Exception e) {
+		} catch(Exception e) {
 			
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
@@ -500,10 +494,6 @@ public class ResJosnController{
 			info.setTrsmrcvSeCode(sendEnum.RPF.getCode() );
 		}
 		
-		
-        
-        
-          
 		model.addObject("RES_NAME", resName);
 		model.addObject("RES_PRICE", resPrice  );
 		model.addObject("RES_DAY", resDay  );
@@ -588,14 +578,12 @@ public class ResJosnController{
 				int ret = resService.resPriceChange(resInfoU);
 				if (ret > 0) {
 					returnCode = "OK";
-					
-					
-				}else {
+				} else {
 					returnCode = "ERROR_02";
 					returnMessage = "시스템 애러.";
 				}
-						
 			}
+			
 			// 인터페이스 연계
 			info.setRequstSysId(SmartUtil.NVL(jsonInfo.get("MACHINE_SERIAL").toString(), "").toString() );
 			info.setRequstInsttId("MACHIN");

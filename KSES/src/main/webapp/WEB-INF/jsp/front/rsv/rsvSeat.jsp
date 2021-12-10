@@ -651,7 +651,7 @@
 					false,
 					function(result) {
 				    	if (result.status == "SUCCESS"){
-							
+							console.log(result.resultlist);
 							seatService.fn_initPinch("floor");
 				    		if (result.seatMapInfo != null) {
 				    		    var img = result.seatMapInfo.floor_map1;

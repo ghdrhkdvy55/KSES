@@ -116,14 +116,15 @@
     <!--  신규 추가  -->
     <update id="updateFloorPartInfPositionInfo" parameterType="java.util.List">
 		<foreach collection="floorPartInfo" item="item" separator=";" open="DECLARE BEGIN" close="; END;">
-			UPDATE TSEB_PART_INFO_D SET PART_CSS = #{item.partCss, jdbcType=VARCHAR},
-										PART_MINI_LEFT = #{item.partMiniLeft, jdbcType=VARCHAR},
-										PART_MINI_TOP = #{item.partMiniTop,jdbcType=VARCHAR}, 
-										PART_MINI_WIDTH = #{item.partMiniWidth,jdbcType=VARCHAR},
-			                            PART_MINI_HEIGHT = #{item.partMiniHeight,jdbcType=VARCHAR}, 
-			                            PART_MINI_ROTATE = #{item.partMiniRotate,jdbcType=VARCHAR}, 
-										LAST_UPDT_DTM = SYSDATE, 
-				                        LAST_UPDUSR_ID = #{item.userId, jdbcType=VARCHAR}
+			UPDATE TSEB_PART_INFO_D SET 
+				PART_CSS = #{item.partCss, jdbcType=VARCHAR},
+				PART_MINI_LEFT = #{item.partMiniLeft, jdbcType=VARCHAR},
+				PART_MINI_TOP = #{item.partMiniTop,jdbcType=VARCHAR}, 
+				PART_MINI_WIDTH = #{item.partMiniWidth,jdbcType=VARCHAR},
+				PART_MINI_HEIGHT = #{item.partMiniHeight,jdbcType=VARCHAR}, 
+				PART_MINI_ROTATE = #{item.partMiniRotate,jdbcType=VARCHAR}, 
+				LAST_UPDT_DTM = SYSDATE, 
+				LAST_UPDUSR_ID = #{item.userId, jdbcType=VARCHAR}
 			WHERE PART_CD = #{item.partCd} 
 		</foreach> 
     </update> 
@@ -132,7 +133,8 @@
 	<select id="selectResvPartList" resultType="lmap">
 	<![CDATA[
         SELECT  
-         	A.PART_CD, A.PART_NM,
+         	A.PART_CD, A.PART_NM, A.PART_MINI_TOP, A.PART_MINI_LEFT, PART_MINI_WIDTH,
+         	A.PART_MINI_HEIGHT, A.PART_MINI_ROATE, A.PART_CSS,
 			(
          		SELECT NVL(COUNT(*),0) 
          		FROM TSEB_SEAT_INFO_D 
