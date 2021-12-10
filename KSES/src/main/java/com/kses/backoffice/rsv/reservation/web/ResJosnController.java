@@ -219,23 +219,24 @@ public class ResJosnController{
         		String inOt = attempInfos[2];
         		String gubun = attempInfos[3];
         		String userId = attempInfos[4];
-        		
-        		
-        		
         		String centerPilotYn = attempInfos[5];
         		String tradNo = attempInfos[6];
         		String resvEntryDvsn = attempInfos[7];
         		String resvPayCost = attempInfos[8];
+        		String center_speed_cd = attempInfos[9];
         		
-        		String user_card_id = attempInfos[9];
-        		String user_card_seq = attempInfos[10];
-        		String user_card_password = attempInfos[11];
-        		String center_speed_cd = attempInfos[12];
+        		String formatedNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
         		
+        		LOGGER.debug("qrTime:" + qrTime.substring(0,8));
+        		LOGGER.debug("formatedNow:" + formatedNow);
         		
-        		
-        		
-        		
+        		if (!qrTime.substring(0,8).equals(formatedNow.substring(0,8)) ) {
+        			ERROR_CD = "ERROR_05";
+        			ERROR_MSG = "사용일이 아닌 QR번호 입니다.";
+        			model.addObject("ERROR_CD", ERROR_CD);
+                	model.addObject("ERROR_MSG", ERROR_MSG);
+                	return model;
+        		}
         		//시간 비교 
         		if (  Integer.valueOf( SmartUtil.timeCheck(qrTime)) < -30  &&  gubun.equals("INTERVAL") ) {
         			ERROR_CD = "ERROR_01";
@@ -248,7 +249,7 @@ public class ResJosnController{
         		// 현재 날짜/시간
         		if (centerPilotYn.equals("Y") && !tradNo.equals("") && Integer.valueOf( resvPayCost) > 0) {
         			//결제 먼저 하기 
-        		
+        		    /*
         			String Url =  propertiesService.getString("sppeedUrl_T") +"trade/fepWithdraw";
         			
         			String jsonInfo = "{\"External_Key\" : \""+ resSeq+"\"," + 
@@ -282,10 +283,18 @@ public class ResJosnController{
 	                	model.addObject("ERROR_MSG", ERROR_MSG);
 	                	return model;
 	   				}
+	   				*/
 	   				
+        		}else {
+        			ERROR_CD = "ERROR_04";
+        			ERROR_MSG = "결제가 되지 않은 고객 입니다.";
+        			model.addObject("ERROR_CD", ERROR_CD);
+                	model.addObject("ERROR_MSG", ERROR_MSG);
+                	return model;
+        			
         		}
         		
-        		String formatedNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        		
         		sendInfo.setUserId(userId);
         		sendInfo.setResvSeq(resSeq);
         		sendInfo.setInoutDvsn(inOt);
@@ -311,7 +320,7 @@ public class ResJosnController{
         			ERROR_MSG = errorMessage;
         		}
         	}else {
-        		ERROR_CD = "ERROR_04";
+        		ERROR_CD = "ERROR_03";
     			ERROR_MSG = "잘못된 파라미터 입니다.";
     			
         	}
@@ -325,7 +334,7 @@ public class ResJosnController{
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
 			LOGGER.error("selectQrCheckInfo error:" + e.toString() + ":" + lineNumber);
-			model.addObject("ERROR_CD", "ERROR_03");
+			model.addObject("ERROR_CD", "ERROR_02");
         	model.addObject("ERROR_MSG", "시스템 에러");
         	
 		}
@@ -371,15 +380,10 @@ public class ResJosnController{
 				
 				
 				String qrCode = fileScrty.encode(resvSeq+":"+qrTime+":"+inOt+":"+ gubun + ":" + SmartUtil.NVL(resInfo.get("user_id"), "").toString()
-				             
-						
-						        + ":" + SmartUtil.NVL(resInfo.get("center_pilot_yn"), "").toString() 
+				                + ":" + SmartUtil.NVL(resInfo.get("center_pilot_yn"), "").toString() 
                                 + ":" + SmartUtil.NVL(resInfo.get("trad_no"), "").toString()
                                 + ":" + SmartUtil.NVL(resInfo.get("resv_entry_dvsn"), "").toString() 
                                 + ":" + SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString()
-                                + ":" + SmartUtil.NVL(resInfo.get("user_card_id"), "").toString()
-                                + ":" + SmartUtil.NVL(resInfo.get("user_card_seq"), "").toString()
-                                + ":" + SmartUtil.NVL(resInfo.get("user_card_password"), "").toString()
                                 + ":" + SmartUtil.NVL(resInfo.get("center_speed_cd"), "").toString()) ;
 				fileScrty =  null;
 				
