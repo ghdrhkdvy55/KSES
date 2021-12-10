@@ -2,12 +2,14 @@ package com.kses.backoffice.rsv.reservation.web;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -166,7 +168,7 @@ public class ResJosnController{
 				 if (node.get("Error_Cd").asText().equals("SUCCESS")  ) {
 					 //예약 테이블 출금 정보 처리 하기 
 					 ResvInfo resInfo = new ResvInfo();
-					 resInfo.setResvSeq( SmartUtil.NVL(resvInfo.get("resv_seq"), "").toString());
+					 resInfo.setResvSeq( SmartUtil.NVL(sendInfo.get("resv_seq"), "").toString());
 					 resInfo.setResvPayDvsn("RESV_PAY_DVSN_2");
 					 resInfo.setTradNo(node.get("Trade_No").asText());
 					 
@@ -204,18 +206,18 @@ public class ResJosnController{
 					 resInfo.setTradNo(node.get("Trade_No").asText());
 					 resService.resPriceChange(resInfo);
 					
-				} else {
-					for (speedon direction : speedon.values()) {
-						if (direction.getCode().equals(node.get("Error_Cd").asText())) {
-							Message = direction.getName();
-						}
-					}
+				}else {
+					 for (speedon direction : speedon.values()) {
+                         if (direction.getCode().equals(node.get("Error_Cd").asText())) {
+                        	 Message = direction.getName();
+                         }
+					  }
 				 }
 			 }
 			 model.addObject(Globals.STATUS, errorCd);
 			 model.addObject(Globals.STATUS_MESSAGE, Message);
 			 model.addObject(Globals.STATUS_REGINFO, node);
-		} catch(Exception e) {
+		}catch(Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
 			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
@@ -255,14 +257,23 @@ public class ResJosnController{
         		String userId = attempInfos[4];
         		
         		String centerPilotYn = attempInfos[5];
-        		String tradNo = attempInfos[6];
+				String tradNo = attempInfos[6];
         		String resvEntryDvsn = attempInfos[7];
         		String resvPayCost = attempInfos[8];
+        		String center_speed_cd = attempInfos[9];
         		
-        		String user_card_id = attempInfos[9];
-        		String user_card_seq = attempInfos[10];
-        		String user_card_password = attempInfos[11];
-        		String center_speed_cd = attempInfos[12];
+        		String formatedNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        		
+        		LOGGER.debug("qrTime:" + qrTime.substring(0,8));
+        		LOGGER.debug("formatedNow:" + formatedNow);
+        		
+        		if (!qrTime.substring(0,8).equals(formatedNow.substring(0,8)) ) {
+        			ERROR_CD = "ERROR_05";
+        			ERROR_MSG = "사용일이 아닌 QR번호 입니다.";
+        			model.addObject("ERROR_CD", ERROR_CD);
+                	model.addObject("ERROR_MSG", ERROR_MSG);
+                	return model;
+        		}
         		
         		//시간 비교 
         		if (Integer.valueOf( SmartUtil.timeCheck(qrTime)) < -30  &&  gubun.equals("INTERVAL")) {
@@ -276,7 +287,7 @@ public class ResJosnController{
         		// 현재 날짜/시간
         		if (centerPilotYn.equals("Y") && !tradNo.equals("") && Integer.valueOf( resvPayCost) > 0) {
         			//결제 먼저 하기 
-        		
+        		    /*
         			String Url =  propertiesService.getString("sppeedUrl_T") +"trade/fepWithdraw";
         			
         			String jsonInfo = "{\"External_Key\" : \""+ resSeq+"\"," + 
@@ -291,7 +302,7 @@ public class ResJosnController{
         					"        \"System_Type\" : \"E\"}";
         			
         			JsonNode node = SmartUtil.requestHttpJson(Url, jsonInfo, "SPEEDWITHDRAW", "SPEEDON", "KSES");
-	   				if(node.get("Error_Cd").asText().equals("SUCCESS")) {
+	   				if (node.get("Error_Cd").asText().equals("SUCCESS")  ) {
 	   					 //예약 테이블 출금 정보 처리 하기 
 	   					 ResvInfo resInfo = new ResvInfo();
 	   					 resInfo.setResvSeq(resSeq);
@@ -299,8 +310,8 @@ public class ResJosnController{
 	   					 resInfo.setTradNo(node.get("Trade_No").asText());
 	   					 resService.resPriceChange(resInfo);
 	   					 
-	   				} else {
-	   					for(speedon direction : speedon.values()) {
+	   				}else {
+	   					for (speedon direction : speedon.values()) {
                             if (direction.getCode().equals(node.get("Error_Cd").asText())) {
                             	ERROR_MSG = direction.getName();
                             }
@@ -310,9 +321,18 @@ public class ResJosnController{
 	                	model.addObject("ERROR_MSG", ERROR_MSG);
 	                	return model;
 	   				}
+	   				*/
+	   				
+        		}else {
+        			ERROR_CD = "ERROR_04";
+        			ERROR_MSG = "결제가 되지 않은 고객 입니다.";
+        			model.addObject("ERROR_CD", ERROR_CD);
+                	model.addObject("ERROR_MSG", ERROR_MSG);
+                	return model;
+        			
         		}
         		
-        		String formatedNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        		
         		sendInfo.setUserId(userId);
         		sendInfo.setResvSeq(resSeq);
         		sendInfo.setInoutDvsn(inOt);
@@ -320,22 +340,25 @@ public class ResJosnController{
         		sendInfo.setQrCheckTm(formatedNow);
         		sendInfo.setRcvCd("OK");
         		sendInfo.setQrCode(sendInfo.getQrCode());
-
+        		
+        		
         		sendInfo = attendService.insertAttendInfo(sendInfo);
         		
-        		if(sendInfo.getRcvCd().equals("OK")) {
+        		
+        		
+        		if (sendInfo.getRcvCd().equals("OK")) {
         			ERROR_CD = "OK";
         			ERROR_MSG = "";
         			IOGUBUN = inOt;
         			USER_NM = sendInfo.getUserNm();
         			
-        		} else {
+        		}else {
         			String errorMessage =  sendInfo.getRcvCd().equals("ERROR_02") ? "입/출입 잘못 시도" : "시스템 에러";
         			ERROR_CD = sendInfo.getRcvCd();
         			ERROR_MSG = errorMessage;
         		}
-        	} else {
-        		ERROR_CD = "ERROR_04";
+        	}else {
+        		ERROR_CD = "ERROR_03";
     			ERROR_MSG = "잘못된 파라미터 입니다.";
     			
         	}
@@ -345,12 +368,13 @@ public class ResJosnController{
         	model.addObject("USER_NM", USER_NM);
         	
         	
-        } catch(Exception e) {
+        }catch(Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
 			LOGGER.error("selectQrCheckInfo error:" + e.toString() + ":" + lineNumber);
-			model.addObject("ERROR_CD", "ERROR_03");
+			model.addObject("ERROR_CD", "ERROR_02");
         	model.addObject("ERROR_MSG", "시스템 에러");
+        	
 		}
         return model;
 	}
@@ -389,21 +413,17 @@ public class ResJosnController{
 				String gubun = tickPlace.equals("ONLINE") ? "INTERVAL" : "PAPER";
 				
 				String qrCode = fileScrty.encode(resvSeq+":"+qrTime+":"+inOt+":"+ gubun + ":" + SmartUtil.NVL(resInfo.get("user_id"), "").toString()
-						        + ":" + SmartUtil.NVL(resInfo.get("center_pilot_yn"), "").toString() 
-                                + ":" + SmartUtil.NVL(resInfo.get("trad_no"), "").toString()
-                                + ":" + SmartUtil.NVL(resInfo.get("resv_entry_dvsn"), "").toString() 
-                                + ":" + SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString()
-                                + ":" + SmartUtil.NVL(resInfo.get("user_card_id"), "").toString()
-                                + ":" + SmartUtil.NVL(resInfo.get("user_card_seq"), "").toString()
-                                + ":" + SmartUtil.NVL(resInfo.get("user_card_password"), "").toString()
-                                + ":" + SmartUtil.NVL(resInfo.get("center_speed_cd"), "").toString()) ;
-				fileScrty = null;
+		                + ":" + SmartUtil.NVL(resInfo.get("center_pilot_yn"), "").toString() 
+                        + ":" + SmartUtil.NVL(resInfo.get("trad_no"), "").toString()
+                        + ":" + SmartUtil.NVL(resInfo.get("resv_entry_dvsn"), "").toString() 
+                        + ":" + SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString()
+                        + ":" + SmartUtil.NVL(resInfo.get("center_speed_cd"), "").toString()) ;
+				fileScrty =  null;
 				
-				model.addObject("resvInfo", resInfo);
-				model.addObject("QRCODE", qrCode);
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+				model.addObject("QRCODE", qrCode);
 			}
-		} catch(Exception e) {
+		}catch(Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
 			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
@@ -466,7 +486,7 @@ public class ResJosnController{
 				seatName = SmartUtil.NVL(resInfo.get("seat_nm") , "").toString();
 				resPersonCnt = "1";
 				returnCode = "OK";
-			} else {
+			}else {
 				returnCode = "ERROR_01";
 				returnMessage = "예약 정보가 없습니다.";
 			}
@@ -484,7 +504,7 @@ public class ResJosnController{
 	        info.setSendMessage(jsonObject.toString());
 	        info.setRqesterId("admin");
 	        
-		} catch(Exception e) {
+		}catch(Exception e) {
 			
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
@@ -494,6 +514,10 @@ public class ResJosnController{
 			info.setTrsmrcvSeCode(sendEnum.RPF.getCode() );
 		}
 		
+		
+        
+        
+          
 		model.addObject("RES_NAME", resName);
 		model.addObject("RES_PRICE", resPrice  );
 		model.addObject("RES_DAY", resDay  );
@@ -578,12 +602,14 @@ public class ResJosnController{
 				int ret = resService.resPriceChange(resInfoU);
 				if (ret > 0) {
 					returnCode = "OK";
-				} else {
+					
+					
+				}else {
 					returnCode = "ERROR_02";
 					returnMessage = "시스템 애러.";
 				}
+						
 			}
-			
 			// 인터페이스 연계
 			info.setRequstSysId(SmartUtil.NVL(jsonInfo.get("MACHINE_SERIAL").toString(), "").toString() );
 			info.setRequstInsttId("MACHIN");

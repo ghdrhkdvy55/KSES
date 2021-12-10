@@ -208,6 +208,7 @@
 			<div class="custom_bg">
 				<div class="txt_con">
 					<p>Business area</p>
+					<a href="javascript:jqGridFunc.fn_SeasonGuiSearch()" class="defaultBtn">검색</a>
 					<div class="btn_bot">
 					</div>
 				</div>
@@ -221,6 +222,8 @@
 									<option value="">검색 지점</option>
 								</select>
 							</td>
+						</tr>
+						<tr>
 							<th>층</th>
 							<td>
 								<select id="searchFloorCd" name="searchFloorCd">
@@ -235,9 +238,7 @@
 									<option value="">검색 구역</option>						
 								</select>
 							</td>
-							<td colspan="2">
-							    <a href="javascript:jqGridFunc.fn_SeasonGuiSearch()" class="defaultBtn">검색</a>
-							</td>
+							
 						</tr>
 					</tbody>
 				</table>
@@ -285,9 +286,7 @@ $(document).ready(function() {
 	   changeMonth: true, //월변경가능
 	   changeYear: true, //년변경가능
 	   showMonthAfterYear: true, //년 뒤에 월 표시
-	   buttonImageOnly: true, //이미지표시
-	   buttonText: '달력선택', //버튼 텍스트 표시
-	   buttonImage: '/resource/img/invisible_image.png', //이미지주소
+	   buttonImageOnly: false, //이미지표시
 	   yearRange: '2021:2099' //1990년부터 2020년까지
     };	       
 	   $("#seasonStartDay").datepicker(clareCalendar);

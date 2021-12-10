@@ -301,13 +301,10 @@
 		changeMonth: true, //월변경가능
 		changeYear: true, //년변경가능
 		showMonthAfterYear: true, //년 뒤에 월 표시
-		buttonImageOnly: true, //이미지표시
-		buttonText: '달력선택', //버튼 텍스트 표시
-		buttonImage: '/images/invisible_image.png', //이미지주소
+		buttonImageOnly: false, //이미지표시
 		yearRange: '1970:2030' //1990년부터 2020년까지
         };	       
 	    $("#holyDt").datepicker(clareCalendar);
-	    $("input[name=updateHolyDt]").datepicker(clareCalendar);
 		$("img.ui-datepicker-trigger").attr("style", "margin-left:3px; vertical-align:middle; cursor:pointer;"); //이미지버튼 style적용
 		$("#ui-datepicker-div").hide(); //자동으로 생성되는 div객체 숨김			
  	});

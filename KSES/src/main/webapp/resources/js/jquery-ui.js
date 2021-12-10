@@ -18959,16 +18959,26 @@ var widgetsTooltip = $.ui.tooltip;
           defaultDate: "+1w",
           changeMonth: true,
           changeYear: true,
-          numberOfMonths: 1
+          numberOfMonths: 1,
+		  dateFormat: 'yy-mm-dd',
+		  dayNames: ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'],
+		  dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
+		  monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+		  monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월']
         })
         .on( "change", function() {
           to.datepicker( "option", "minDate", getDate( this ) );
         }),
       to = $( "#to" ).datepicker({
         defaultDate: "+1w",
-        changeMonth: true,
-        changeYear: true,
-        numberOfMonths: 1
+		changeMonth: true,
+		changeYear: true,
+        numberOfMonths: 1,
+		dateFormat: 'yy-mm-dd',
+		dayNames: ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'],
+		dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
+		monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+		monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월']
       })
       .on( "change", function() {
         from.datepicker( "option", "maxDate", getDate( this ) );

@@ -166,9 +166,9 @@
 	                    <tr>
                       		<th>공지기간</th>
 	                        <td style="text-align:left" colspan="3">
-	                        <input type="text"  name="boardNoticeStartDay" style="width:150px" maxlength="8" id="boardNoticeStartDay" />
+	                        <input type="text"  name="boardNoticeStartDay" class="cal_icon" style="width:150px" maxlength="8" id="boardNoticeStartDay" />
 	                        ~
-	                        <input type="text"  name="boardNoticeEndDay"  style="width:150px"  maxlength="8" id="boardNoticeEndDay" />	                        
+	                        <input type="text"  name="boardNoticeEndDay" class="cal_icon" style="width:150px"  maxlength="8" id="boardNoticeEndDay" />	                        
 	                        </td>
 	                    </tr>
 	                    <tr>
@@ -242,10 +242,7 @@
 		           changeMonth: true, //월변경가능
 		           changeYear: true, //년변경가능
 		           showMonthAfterYear: true, //년 뒤에 월 표시
-		           buttonImageOnly: true, //이미지표시
-		           buttonText: '달력선택', //버튼 텍스트 표시
-		           buttonImage: '/images/invisible_image.png', //이미지주소
-		           showOn: "both", //엘리먼트와 이미지 동시 사용(both,button)
+		           buttonImageOnly: false, //이미지표시
 		           yearRange: '1970:2030' //1990년부터 2020년까지
 	    };	      
 	    $("#boardNoticeStartDay").datepicker(clareCalendar);

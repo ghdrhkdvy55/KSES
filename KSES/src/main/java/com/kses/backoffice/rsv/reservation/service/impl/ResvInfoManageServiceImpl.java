@@ -22,6 +22,10 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	@Override
 	public List<Map<String, Object>> selectResInfoManageListByPagination(Map<String, Object> params) throws Exception {
 		// TODO Auto-generated method stub
+		params.forEach((key, value)
+			    -> System.out.println("key: " + key + ", value: " + value));
+		
+		
 		return resvMapper.selectResInfoManageListByPagination(params);
 	}
 	

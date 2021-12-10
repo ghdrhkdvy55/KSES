@@ -45,6 +45,12 @@ import com.kses.backoffice.sys.msg.service.MessageInfoManageService;
 import com.kses.backoffice.sys.msg.vo.MessageInfo;
 import com.kses.backoffice.util.SmartUtil;
 
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+
 
 @RestController
 @RequestMapping("/backoffice/sys")
@@ -328,7 +334,10 @@ public class MessageInfoManageController {
 	}
 	
 	
-	
+	public static <T> Predicate<T> distinctByKey(Function<? super T,Object> keyExtractor) {
+        Map<Object,Boolean> seen = new ConcurrentHashMap<>();
+        return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
+    }
 	@RequestMapping (value="msgUpdate.do")
 	public ModelAndView updatemsgInfoManage( @ModelAttribute("loginVO") LoginVO loginVO
 											 , @RequestBody Map<String, Object> vo	                				 
@@ -348,9 +357,12 @@ public class MessageInfoManageController {
 			loginVO = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
 	    	String userNm = loginVO.getEmpNm();
 			
+	    	
+	    	//LOGGER.debug("step:" + SmartUtil.NVL(vo.get("msgArray"), "").toString());
+	    	
+	    	
 			if (!SmartUtil.NVL(vo.get("msgArray"), "").toString().equals("\"\"")) {
 				//지점 담당자 메세지 보내기
-				LOGGER.debug("step:" + SmartUtil.NVL(vo.get("msgArray"), "").toString());
 				/*
 				HashMap<String, String> map = (HashMap<String, String>) Arrays.asList(SmartUtil.NVL(vo.get("msgArray"), "").toString().split(","))
 						                .stream()
@@ -364,14 +376,14 @@ public class MessageInfoManageController {
 					if (map.get("step").equals("U")) {
 						Map<String, Object>  searchVO_U = new HashMap<String, Object>();
 						searchVO_U.put("firstIndex", 0);
-						searchVO_U.put("recordCountPerPage", 10);
+						searchVO_U.put("recordCountPerPage", 1000);
 						
-						searchVO_U.put("searchCenter", SmartUtil.NVL(map.get("searchCenter"), "").toString());
+						searchVO_U.put("searchCenterCd", SmartUtil.NVL(map.get("searchCenter"), "").toString());
 						searchVO_U.put("searchFrom",  SmartUtil.NVL(map.get("from"), "").toString());
 						searchVO_U.put("searchTo",  SmartUtil.NVL(map.get("to"), "").toString());
 						searchVO_U.put("searchDayCondition",  "resvDate");
-						
 						List<Map<String, Object>>  userInfo = resService.selectResInfoManageListByPagination(searchVO_U);
+						
 						
 						userInfo.forEach(x->{
 					   		 msgInfo.setCallname(x.get("user_nm").toString());
@@ -411,6 +423,7 @@ public class MessageInfoManageController {
 				searchVO.put("firstIndex", 0);
 				searchVO.put("recordCountPerPage", 1000);
 				
+				LOGGER.debug("==================="+ arrays.size());
 				
 			    for (int i = 0; i < arrays.size(); i ++) {
 			    	MessageInfo msgInfo = new MessageInfo();
@@ -427,8 +440,11 @@ public class MessageInfoManageController {
 				    	 }
 				    	 info.add(msgInfo);
 				    }else {
+				    //group 이면 
 				    	 searchVO.put("searchGroupCode", jsonObject.get("groupCode"));
 					   	 LOGGER.debug("groupCode:" + searchVO);
+					   	 
+					   	 
 					   	 List<Map<String, Object>> groupInfo = msgGroupUserService.selectMessageGroupUserInfoList(searchVO);
 					   	 
 					   	 groupInfo.forEach(x->{
@@ -445,17 +461,24 @@ public class MessageInfoManageController {
 			String reqtime = vo.get("result").toString().equals("O") ? "00000000000000" : vo.get("sendDate").toString()+vo.get("send_hour").toString()+vo.get("send_minute").toString()+"00";
 					
 			String kind =   vo.get("sendDate").toString().equals("mms Send") ? "M" : "S";
+			if (info.size() > 0) {
+				
+				
+				
+				
+				info.forEach(MessageInfo -> {
+					        MessageInfo.setReqname(userNm);
+					        MessageInfo.setReqphone(vo.get("sendTel").toString());
+					        MessageInfo.setResult(vo.get("result").toString());
+					        MessageInfo.setReqtime(reqtime);
+					        MessageInfo.setKind(kind);
+					        MessageInfo.setMsg(vo.get("Message").toString());
+				});
+				
+				//중복 제거 확인 필요 
+				msgService.insertMsgManage(info.stream().distinct().collect(Collectors.toList()));
+			}
 			
-			info.forEach(MessageInfo -> {
-				        MessageInfo.setReqname(userNm);
-				        MessageInfo.setReqphone(vo.get("sendTel").toString());
-				        MessageInfo.setResult(vo.get("result").toString());
-				        MessageInfo.setReqtime(reqtime);
-				        MessageInfo.setKind(kind);
-				        MessageInfo.setMsg(vo.get("Message").toString());
-			});
-			
-			msgService.insertMsgManage(info);
    	        model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.insert"));
 				

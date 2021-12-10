@@ -50,9 +50,9 @@
    	</insert>
 
 	<update id="updateGradInfo">
-		UPDATE TSEH_GRAD_INFO_M SET DEPT_NM = #{authorNm, jdbcType=VARCHAR}
-		                           , DEPT_DC = #{authorDc, jdbcType=VARCHAR}    
-		                           , USE_YN = #{authorDc, jdbcType=VARCHAR} 
+		UPDATE TSEH_GRAD_INFO_M SET GRAD_NM = #{gradNm, jdbcType=VARCHAR}
+		                           , GRAD_DC = #{gradDc, jdbcType=VARCHAR}    
+		                           , USE_YN = #{useYn, jdbcType=VARCHAR} 
 		                           , LAST_UPDT_DTM = SYSDATE            
        	WHERE GRAD_CD = #{gradCd}
    	</update>
