@@ -736,7 +736,7 @@ padding-left: 5px;
 .setTxt tr:nth-child(4) span {position: relative; left: -40px;}
 .center_box {text-align: center;}
 .salestab th{background: #e7e7e7 !important; border-right: 1px solid #d1d1d1;}
-/* 20210929 */
+/* 20210929
 .bld_innerTable{padding: 0 !important;}
 .pop_seat_setting>div{height: 500px; float: left; box-sizing: border-box;}
 .pop_seat_setting .subTitle{font-size: 16px; padding: 5px; background-color: #fff;}
@@ -758,7 +758,7 @@ padding-left: 5px;
 .pop_seat_setting>.seatLocationInfo tbody tr:last-child td{border-bottom: 1px solid #ebebeb;}
 .pop_seat_setting>.seatLocationInfo input[type="text"]{min-width: 20px; width: 100px;}
 .pop_seat_setting>.seatLocationInfo input[type="text"].positionValue{width: 40px; text-align: center;}
-.pop_seat_setting>.seatLocationInfo select{min-width: 20px; width: 80px;}
+.pop_seat_setting>.seatLocationInfo select{min-width: 20px; width: 80px;} */
 /*0930*/
 #fulltxt {width: 90%;}
 .inTxt td input[type="text"]{ text-align: center; }
