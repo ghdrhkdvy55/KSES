@@ -61,10 +61,11 @@
 						</otherwise>
 					</choose>
 				</if>
-				<if test="params.authorCd != 'ROLE_ADMIN' and params.authorCd != 'ROLE_SYSTEM'">
-				   AND A.CENTER_CD = #{params.centerCd}
+				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.authorCd)">
+					<if test="params.authorCd != 'ROLE_ADMIN' and params.authorCd != 'ROLE_SYSTEM'">
+					   AND A.CENTER_CD = #{params.centerCd}
+					</if>
 				</if>
-				
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchResvState)">
 					AND A.RESV_STATE = #{params.searchResvState}
 				</if>

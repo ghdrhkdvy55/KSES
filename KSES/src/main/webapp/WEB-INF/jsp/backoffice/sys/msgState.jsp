@@ -102,7 +102,7 @@
                              <option value="${loginVO.centerCd}">${centerInfo.center_nm}</option>
                          </c:when>
                          <c:otherwise>
-                             <option value="">관리자 전체 </option>
+                             <option value="">사용자 전체 </option>
                              <c:forEach items="${centerCombo}" var="centerCombo">
                                 <option value="${centerCombo.center_cd}">${centerCombo.center_nm}</option>
 							 </c:forEach>
@@ -1026,6 +1026,7 @@
     				      "sendDate" : $("#sendDate").val(), "send_hour" : $("#send_hour").val(), 
     				      "send_minute" : $("#send_minute").val()  
     				      };
+    		
     		var url = "/backoffice/sys/msgUpdate.do"
     		fn_Ajax(url, "POST", params, false,
 	    			function(result) {
