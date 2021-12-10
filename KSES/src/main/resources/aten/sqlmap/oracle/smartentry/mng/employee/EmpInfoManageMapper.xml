@@ -45,7 +45,7 @@
 									      </choose>
 									  </if>	
 									  <if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchDepth)">
-									      AND a.GRAD_CD= #{params.searchDepth}
+									      AND a.DEPT_CD= #{params.searchDepth}
 									  </if>
 									  <if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.groupCode)">
 									      AND a.EMP_CLPHN NOT IN 
