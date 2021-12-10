@@ -1041,9 +1041,8 @@
  	                                '-webkit-transform': 'rotate(' + fn_NVL(obj[i].part_mini_rotate) + 'deg)',
  	                               
  	                            });
- 	                            console.log(parseInt( obj[i].part_mini_rotate));
  	                            
- 	                            if ( parseInt( obj[i].part_mini_rotate) > 0   ){
+ 	                            if ( parseInt( obj[i].part_mini_rotate) != 0 ){
  	                            	 $('.mapArea ul li#s' + trim(fn_NVL(obj[i].part_cd)) + "> .section >.circle").css({
  	   	                        	    '-moz-transform': 'rotate(-'+ fn_NVL(obj[i].part_mini_rotate) + 'deg)',
  	  		                            '-webkit-transform': 'rotate(-'+ fn_NVL(obj[i].part_mini_rotate) + 'deg)',
