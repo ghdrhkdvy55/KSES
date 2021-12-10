@@ -569,7 +569,7 @@ public class SmartUtil {
             httpPost.setHeader("Content-Type", "application/json");
 
             httpPost.setEntity(new StringEntity(_jsonInfo)); //json 메시지 입력
-
+            LOGGER.debug(_jsonInfo.toString());
             HttpResponse response = client.execute(httpPost);
             
             
@@ -593,6 +593,7 @@ public class SmartUtil {
                 
             } else {
             	LOGGER.error("response is error : " + response.getStatusLine().getStatusCode());
+            	LOGGER.debug(node.toPrettyString());
             	node = objectMapper.readTree("{\"Error_Cd\":\""+ response.getStatusLine().getStatusCode() + "\"}");
             	
             }
@@ -600,6 +601,7 @@ public class SmartUtil {
            
             
             info.setRspnsRecptnTm(nowTime());
+            LOGGER.debug(node.toPrettyString());
             info.setResultCode(node.get("Error_Cd").asText());
             info.setResultMessage(node.toString());
             info.setSendMessage(_jsonInfo);
@@ -607,7 +609,7 @@ public class SmartUtil {
             interfaceService.InterfaceInsertLoginLog(info);
             
             return node;
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

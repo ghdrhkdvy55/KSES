@@ -96,7 +96,6 @@ public class ResJosnController{
 			 if ( SmartUtil.NVL(sendInfo.get("gubun"), "").toString().equals("login") ) {
 				 Url =  propertiesService.getString("sppeedUrl_T") + "user/userChk";
 				 
-				 
 				 // 스피드온 패스워드 암호화(임시)
 				 // Login_Type -> 1 = SHA-512 + Base64 : 2 = SHA-256 + Base64 
 				 String encryptType = "";
@@ -115,7 +114,6 @@ public class ResJosnController{
 				 node = SmartUtil.requestHttpJson(Url,jsonObject.toJSONString(), "SPEEDLOGIN", "SPEEDON", "KSES" );
 				 errorCd = node.get("Error_Cd").asText();
 				 if (node.get("Error_Cd").asText().equals("SUCCESS")) {
-					 
 					 
 					 UserInfo user = new UserInfo();
 					 user.setUserBirthDy(node.get("User_Birth_Dy").asText());
@@ -139,13 +137,38 @@ public class ResJosnController{
 					  }
 				 }
 			 } else if ( SmartUtil.NVL(sendInfo.get("gubun"), "").toString().equals("fep") ) {
-				 //출급 정보
+				 //출금 정보
 				 Url =  propertiesService.getString("sppeedUrl_T") +"trade/fepWithdraw";
+				 
+				 Map<String, Object> resvInfo = resService.selectUserResvInfo(jsonObject);
+				 
+				 jsonObject.put("System_Type", "E");
+				 jsonObject.put("External_Key", resvInfo.get("resv_seq"));
+				 jsonObject.put("Card_Id", resvInfo.get("user_card_id"));
+				 jsonObject.put("Card_Pw", SmartUtil.encryptPassword(jsonObject.get("Card_Pw").toString(),"SHA-256"));
+				 jsonObject.put("Card_Seq", resvInfo.get("user_card_seq"));
+				 jsonObject.put("Div_Cd", resvInfo.get("center_speed_cd"));
+				 
+				 if(resvInfo.get("resv_entry_dvsn").equals("ENTRY_DVSN_1")) {
+					jsonObject.put("Pay_Type", "001");
+				 	jsonObject.put("Trade_Cd", "20A61");
+				 	jsonObject.put("Trade_Detail", "입장시스템 입장료 출금");
+				 } else {
+					jsonObject.put("Pay_Type", "003");
+					jsonObject.put("Trade_Cd", "20A63");
+					jsonObject.put("Trade_Detail", "입장시스템 입장/좌석 이용료 출금");	
+				 }
+				 
+				 /*20A61 10404*/
+				 jsonObject.put("Trade_Pay", resvInfo.get("resv_pay_cost").toString());
+				 
+				 
+				 LOGGER.debug(jsonObject.toJSONString());
 				 node = SmartUtil.requestHttpJson(Url, jsonObject.toJSONString(), "SPEEDWITHDRAW", "SPEEDON", "KSES");
 				 if (node.get("Error_Cd").asText().equals("SUCCESS")  ) {
 					 //예약 테이블 출금 정보 처리 하기 
 					 ResvInfo resInfo = new ResvInfo();
-					 resInfo.setResvSeq( SmartUtil.NVL(sendInfo.get("resvSeq"), "").toString());
+					 resInfo.setResvSeq( SmartUtil.NVL(sendInfo.get("resv_seq"), "").toString());
 					 resInfo.setResvPayDvsn("RESV_PAY_DVSN_2");
 					 resInfo.setTradNo(node.get("Trade_No").asText());
 					 
@@ -157,14 +180,14 @@ public class ResJosnController{
                          }
 					  }
 				 }
-			 }else if (SmartUtil.NVL(sendInfo.get("gubun"), "").toString().equals("Inf")) {
+			 } else if (SmartUtil.NVL(sendInfo.get("gubun"), "").toString().equals("Inf")) {
 				 Url =  propertiesService.getString("sppeedUrl_T") +"trade/schTradeInfo";
 				 node = SmartUtil.requestHttpJson(Url, jsonObject.toJSONString(), "SPEEDSCHTRADEINFO", "SPEEDON", "KSES");
 				 if (node.get("Error_Cd").asText().equals("SUCCESS") ) {
 					 //예약 테이블 취소 정보 처리 하기 
 					 
 					
-				}else {
+				} else {
 					 for (speedon direction : speedon.values()) {
                          if (direction.getCode().equals(node.get("Error_Cd").asText())) {
                         	 Message = direction.getName();
@@ -203,8 +226,8 @@ public class ResJosnController{
 		}
 		
 		return model;
-		
 	}
+	
 	//qr checkin 검토 
 	@RequestMapping(value="qrReadCheck.do", method = {RequestMethod.POST})
 	public ModelAndView selectQrCheckInfo(	@RequestBody AttendInfo sendInfo,
@@ -232,8 +255,6 @@ public class ResJosnController{
         		String inOt = attempInfos[2];
         		String gubun = attempInfos[3];
         		String userId = attempInfos[4];
-        		
-        		
         		
         		String centerPilotYn = attempInfos[5];
         		String tradNo = attempInfos[6];
@@ -350,19 +371,15 @@ public class ResJosnController{
 			searchVO.put("resvSeq", resvSeq);
 			searchVO.put("resvDate", nowDate);
 			
-			
 			Map<String, Object> resInfo = resService.selectUserResvInfo(searchVO);
-			
-			
-			
-			
-			if (resInfo == null ||!resInfo.get("resv_start_dt").toString().equals(nowDate) ) {
+
+			if (resInfo == null || Integer.valueOf(resInfo.get("resv_start_dt").toString()) < Integer.valueOf(nowDate)) {
 				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 				model.addObject(Globals.STATUS_MESSAGE,"잘못된 예약 번호 이거나 지난 예약번호 입니다.");
-			}else if (SmartUtil.NVL( resInfo.get("resv_state"), "").toString().equals("RESV_STATE_4") ) {
+			} else if (SmartUtil.NVL( resInfo.get("resv_state"), "").toString().equals("RESV_STATE_4") ) {
 				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 				model.addObject(Globals.STATUS_MESSAGE,"예약 취소된 예약 번호 입니다.");
-			}else {
+			} else {
 				AttendInfo vo = new AttendInfo();
 				vo.setResvSeq(resvSeq);
 				vo.setUserId(resInfo.get("user_id").toString());
@@ -371,17 +388,14 @@ public class ResJosnController{
 				Map<String, Object> attend =  attendService.selectAttendInfoDetail(vo);
 				if (attend == null) {
 					inOt = "IN";
-				}else {
+				} else {
 					inOt = SmartUtil.NVL(attend.get("inout_dvsn"),"OT").toString().equals("IN") ? "OT" : "IN";
 				}
 				
 				EgovFileScrty fileScrty = new EgovFileScrty();
 				String gubun = tickPlace.equals("ONLINE") ? "INTERVAL" : "PAPER";
 				
-				
 				String qrCode = fileScrty.encode(resvSeq+":"+qrTime+":"+inOt+":"+ gubun + ":" + SmartUtil.NVL(resInfo.get("user_id"), "").toString()
-				             
-						
 						        + ":" + SmartUtil.NVL(resInfo.get("center_pilot_yn"), "").toString() 
                                 + ":" + SmartUtil.NVL(resInfo.get("trad_no"), "").toString()
                                 + ":" + SmartUtil.NVL(resInfo.get("resv_entry_dvsn"), "").toString() 
@@ -406,24 +420,21 @@ public class ResJosnController{
 	}
 	//무인 발권기만 남았음
 	@RequestMapping(value="tickMachinRes.do")
-	public ModelAndView selectTickMachinRes (@RequestBody Map<String, Object> jsonInfo )throws Exception{
+	public ModelAndView selectTickMachinRes (@RequestBody Map<String, Object> jsonInfo)throws Exception{
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-		
 		
 		model.addObject("IF_NO", jsonInfo.get("IF_NO"));
 		model.addObject("RES_NO", jsonInfo.get("RES_NO"));
 		model.addObject("RETURN_DATE", jsonInfo.get("RETURN_DATE"));
 		model.addObject("MACHINE_SERIAL", jsonInfo.get("MACHINE_SERIAL"));
 		
-		
 	    JSONObject jsonObject = new JSONObject();
-		for( Map.Entry<String, Object> entry :  jsonInfo.entrySet() ) {
-			 String key = entry.getKey();
-	         Object value = entry.getValue();
-	         jsonObject.put(key, value);
+		for(Map.Entry<String, Object> entry :  jsonInfo.entrySet()) {
+			String key = entry.getKey();
+			Object value = entry.getValue();
+			jsonObject.put(key, value);
 		}
 		 
-		
 		String resName = "";
 		String resPrice = "";
 		String resDay = "";

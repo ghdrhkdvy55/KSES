@@ -75,8 +75,8 @@
           	<div class="pop_wrap">
             	<h4>결제 비밀번호를 입력해주세요.</h4>
             	<ul class="pay_passWord">
-                	<li><input type="password" placeholder="비밀번호를 입력하세요."></li>
-                	<li><a href="" class="mintBtn">확인</a></li>
+                	<li><input type="password" id="Card_Pw" placeholder="비밀번호를 입력하세요."></li>
+                	<li><a href="javascript:qrService.fn_payment();" class="mintBtn">확인</a></li>
             	</ul>
           	</div>
       	</div>
@@ -90,6 +90,8 @@
     <!--메뉴버튼 속성-->
     <script>
     	var qrTime = 30;
+    	var qrEndTime;
+    	var setIntervalId;
     	var isFirst = true;
     
 		$(document).ready(function() {
@@ -140,15 +142,16 @@
 			fn_qrTimer : function() {
 				$("#timeStamp").css("color", "#0094DB");
 				$("#mask_qr").hide();
-				var qrEndTime = qrTime;
-				setInterval(function () {
+				
+				clearInterval(setIntervalId);
+				qrEndTime = qrTime;
+				setIntervalId = setInterval(function () {
 					if (qrEndTime == 0) {
 						$("#timeStamp").css("color","red");
 						$("#mask_qr").show();
 						return;
 					} else {
 						qrEndTime --;
-						console.log(qrEndTime);
 						$("#timeStamp").html("0" + parseInt(qrEndTime/60) + ":" +(((qrEndTime%60)>9)?(qrEndTime%60):"0"+(qrEndTime%60)));	
 					}
 				},1000);
@@ -159,14 +162,33 @@
 					"gubun" : "fep",
 					"sendInfo" : {
 						"resvSeq" : $("#resvSeq").val(),
-						"Login_Type" : $("#login_type").val(),
-						"User_Id" : $("#id").val(),
-						"User_Pw" : $("#pw").val(),
-						"Card_Id" : $("#cardNo").val(),
-						"Card_Pw" : $("#cardPw").val(),
+						"Card_Pw" : $("#Card_Pw").val(),
 						"System_Type" : "E"
 					}
 				}
+				
+				fn_Ajax
+				(
+				    url,
+				    "POST",
+					params,
+					false,
+					function(result) {
+				    	if(result.regist != null) {
+							if (result.regist.Error_Msg == "SUCCESS") {
+								console.log(result);
+								return;
+							} else {
+								fn_openPopup(result.regist.Error_Msg, "red", "ERROR", "확인", "");
+							}
+				    	} else {
+				    		fn_openPopup("로그인중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
+				    	}
+					},
+					function(request) {
+						alert("ERROR : " + request.status);	       						
+					}    		
+				);	
 			}
 		}
     </script>

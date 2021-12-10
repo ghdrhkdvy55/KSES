@@ -133,7 +133,10 @@ public class FrontResvInfoManageController {
 			
 			resvInfo.put("centerCd", centerCd);
 			resvInfo.put("resvDate", resvDate);
-			model.addObject("resvInfo", resvInfo);
+			
+			resvInfo.forEach((key, value) -> params.merge(key, value, (v1, v2) -> v2));
+			
+			model.addObject("resvInfo", params);
 			model.addObject("floorList", floorList);
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		} catch(Exception e) {
@@ -158,7 +161,6 @@ public class FrontResvInfoManageController {
 	    	model.addObject("seatMapInfo", mapInfo);
 			
 			model.addObject(Globals.JSON_RETURN_RESULTLISR, resultList);
-			
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		} catch(Exception e) {
 			LOGGER.error("selectRsvPartListAjax : " + e.toString());
