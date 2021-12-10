@@ -266,7 +266,7 @@
            },fn_CheckForm  : function (){
         	   if (any_empt_line_span("bas_code_add", "code", "코드를 입력해 주세요.","sp_message", "savePage") == false) return;
         	   if ($("#mode").val() == "Ins" && $("#idCheck").val() != "Y"){
-				   if (any_empt_line_span("bas_code_add", "codeId", "중복체크가 안되었습니다.","sp_message", "savePage") == false) return;
+				   if (any_empt_line_span("bas_code_add", "idCheck", "중복체크가 안되었습니다.","sp_message", "savePage") == false) return;
 			   }
 			   if (any_empt_line_span("bas_code_add", "codeNm", "코드명을 입력해 주세요.","sp_message", "savePage") == false) return;
 		       
@@ -285,7 +285,7 @@
 		   						   location.href="/backoffice/login.do";
 		   					   }else if (result.status == "SUCCESS"){
 		   						   //총 게시물 정리 하기'
-		   						   common_modelClose("bas_code_add");
+		   						   common_modelCloseM(result.message, "bas_code_add");
 		   						   jqGridFunc.fn_search();
 		   					   }else if (result.status == "FAIL"){
 		   						   common_popup("저장 도중 문제가 발생 하였습니다.", "Y", "bas_code_add");
@@ -329,7 +329,7 @@
 	   		    	 return;	
 		        }
 		 }, fn_close : function(){
-			 common_modelClose("bas_org_add");
+			 common_modelClose("bas_code_add");
 		 }, fn_SearchList : function(orgGubun){
 			 
 			 $("#orgGubun").val(orgGubun);
