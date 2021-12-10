@@ -292,7 +292,7 @@
       <div class="pop_wrap">
         <ul class="rsv_mms">
           <li class="rsv_mms_tit"><span>예약 날짜/시간 선택</span></li>
-          <li><input class="datepicker" id="sendDate"  name="sendDate"></li>
+          <li><input class="datepicker" id="sendDate"  name="sendDate" ></li>
           <li>
             <select name="send_hour" id="send_hour">
               <option value="00">00시</option>
@@ -417,9 +417,7 @@
 		changeMonth: true, //월변경가능
 		changeYear: true, //년변경가능
 		showMonthAfterYear: true, //년 뒤에 월 표시
-		buttonImageOnly: true, //이미지표시
-		buttonText: '달력선택', //버튼 텍스트 표시
-		buttonImage: '/images/invisible_image.png', //이미지주소
+		buttonImageOnly: false, //이미지표시
 		yearRange: '2021:2999' //1990년부터 2020년까지
         };	       
 	    $("#search_from").datepicker(clareCalendar);
