@@ -530,7 +530,7 @@
 			$(".date").html(today);
 			resvUsingTimeCheck(sessionStorage.getItem("resvUsingTime"));
 			
-			if($("#isReSeat").val() == "Y"){
+			if($("#isReSeat").val() == "Y") {
 				seatService.fn_reSeat();
 			}
 			
@@ -575,7 +575,7 @@
 					}    		
 				);	    						
 			},
-			fn_reSeat : function() {		
+			fn_reSeat : function() {
 				$("#" + $("#reEnterDvsn").val()).addClass("active");
 				$("#" + $("#reEnterDvsn").val()).trigger("click");
 				$("#selectFloorCd").val($("#reFloorCd").val());

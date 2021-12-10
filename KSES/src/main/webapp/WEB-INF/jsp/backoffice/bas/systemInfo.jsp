@@ -135,7 +135,6 @@
 					location.href="/backoffice/login.do";
 				} else if (result.status == "SUCCESS") {
 					common_popup(result.meesage, "N","");
-					location.reload();
 				}
 			},
 			function(request) {

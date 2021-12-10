@@ -640,11 +640,26 @@ function fn_cssSelect(_Field, _checkVal){
 function fn_SelectColor(id){
     var color = $("#"+id+" option:selected").text();
     $("#"+id).css("backgroundColor",color);
+
+    console.log($("#s" + id.replace("css_","") + " span").html());
+    $("#s" + id.replace("css_","") + " span").css("backgroundColor",color);
 }
 //두 배열 중복값 제거
 function findUniqElem(arr1, arr2) {
   return arr1.concat(arr2)
     	 .filter(item => !arr1.includes(item) || !arr2.includes(item));
+}
+
+/* timepicker */
+function timepicker() {
+	$('.timepicker').timepicker({
+	    timeFormat: 'HH:mm',
+	    startTime: '00:00',
+	    interval: 10,
+	    dynamic: false,
+	    dropdown: true,
+	    scrollbar: true
+	});
 }
 
 //페이징 스크립트;
