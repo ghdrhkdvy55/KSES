@@ -50,8 +50,8 @@
    	</insert>
 
 	<update id="updatePositionInfo">
-		UPDATE TSEH_PSIT_INFO_M SET DEPT_NM = #{psitNm, jdbcType=VARCHAR}
-		                           , DEPT_DC = #{psitDc, jdbcType=VARCHAR}    
+		UPDATE TSEH_PSIT_INFO_M SET PSIT_NM = #{psitNm, jdbcType=VARCHAR}
+		                           , PSIT_DC = #{psitDc, jdbcType=VARCHAR}    
 		                           , USE_YN = #{useYn, jdbcType=VARCHAR} 
 		                           , LAST_UPDT_DTM = SYSDATE            
        	WHERE PSIT_CD = #{psitCd}
