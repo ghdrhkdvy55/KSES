@@ -270,7 +270,7 @@
       <h2 class="pop_tit">메시지 보관함</h2>
       <div class="pop_wrap">
         <div class="mms_sel_num">
-          <p>총 <span id="sp_msgTempCnt"></span>개</p>
+          <p>총 <span id="sp_msgTempCnt"></span>개 <em class="point">( 적용하실 메시지를 더블클릭 해주세요. )</em></p>
         </div>
         <ul class="save_mms" id="ul_savemms"> 
         </ul>

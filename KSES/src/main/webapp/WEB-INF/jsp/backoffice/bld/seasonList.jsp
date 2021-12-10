@@ -208,6 +208,7 @@
 			<div class="custom_bg">
 				<div class="txt_con">
 					<p>Business area</p>
+					<a href="javascript:jqGridFunc.fn_SeasonGuiSearch()" class="defaultBtn">검색</a>
 					<div class="btn_bot">
 					</div>
 				</div>
@@ -221,6 +222,8 @@
 									<option value="">검색 지점</option>
 								</select>
 							</td>
+						</tr>
+						<tr>
 							<th>층</th>
 							<td>
 								<select id="searchFloorCd" name="searchFloorCd">
@@ -235,9 +238,7 @@
 									<option value="">검색 구역</option>						
 								</select>
 							</td>
-							<td colspan="2">
-							    <a href="javascript:jqGridFunc.fn_SeasonGuiSearch()" class="defaultBtn">검색</a>
-							</td>
+							
 						</tr>
 					</tbody>
 				</table>

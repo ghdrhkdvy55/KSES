@@ -651,6 +651,7 @@ canvas {
 .popup .main_table  {border-top:1px solid #ebebeb; border-bottom:1px solid #ebebeb ;}
 .popup .detail_table td select, .popup .detail_table td input[type="text"], .popup .detail_table td textarea{
   min-width:160px ;
+  vertical-align:baseline;
 }
 #selectBtn{vertical-align: sub;}
 #datePick {outline: none;border:1px solid #c0c0c0}
@@ -786,11 +787,10 @@ padding-left: 5px;
     box-shadow:0px 1px 8px 1px #808080;
 }
 .pop_con{padding: 16px;}
-.srch_bar p {display: inline;}
+.srch_bar p {display: inline; vertical-align:sub;}
 .srch_bar {margin-bottom: 10px;}
 
 .sum_srch a {
-    padding: 6px 10px;
     background: #5c5c5c;
     color: #fff;
     border-radius: 4px;
@@ -849,8 +849,9 @@ padding-left: 5px;
 #tr_C21110416_05_01 input, #tr_C21110416_05_01 select {min-width: 59px;}
 
 /*1206*/
-.footerBtn {text-align: center;}
-.mattersArea th, .mattersArea td {border: 1px solid #e0e0e0; padding: 0.5rem 1rem;}
+.footerBtn {text-align: right; margin-right:15px;}
+.mattersArea th {background:#eee;}
+.mattersArea th, .mattersArea td {border: 1px solid #e0e0e0; padding: 0.5rem 3rem;}
 .right_box {margin-left: 5px; float: right;}
 .ui-jqgrid .ui-jqgrid-htable th div{
     outline-style: none;
@@ -871,7 +872,7 @@ padding-left: 5px;
       background-color: white;
       padding: 8px 20px;
       border-radius: 8px;
-      font-size: 13px;
+      font-size: 14px!important;
       font-weight: bold;
    }
 .upload-btn-wrapper input[type=file] {
@@ -893,4 +894,7 @@ padding-left: 5px;
     }
 #ui-datepicker-div {border: 1px solid #e0e0e0}
 
-
+/*1210*/
+.point {color:#f93939; font-size:.9em; font-weight:500}
+.save_mms textarea {cursor:pointer;}
+.ui-datepicker-div {width:300px!important;}

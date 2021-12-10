@@ -396,3 +396,8 @@ table tr td input.selected{border:2px solid #eb6d2c;}
     width: 58px;
     text-align: center;
 }
+.search_tab td select {
+    width: 100%;
+    height: 30px;
+    margin-bottom: 5px;
+}
