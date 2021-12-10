@@ -1,18 +1,18 @@
 /*섹션 레이어*/
 
 .circle {
-    height: 90%;
+    height:100%;
 }
 .section {
     position: relative;
-    width: 70%;
+    width: 100%;
     margin: auto;
     height: 100%;
     display: grid;
     align-items: center;
 }
 .circle span {
-    border-radius: 50%;
+    
     color: #fff;
     font-weight: 700;
     opacity: 0.9;

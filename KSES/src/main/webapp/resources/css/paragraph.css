@@ -850,8 +850,9 @@ padding-left: 5px;
 
 /*1206*/
 .footerBtn {text-align: right; margin-right:15px;}
-.mattersArea th {background:#eee;}
-.mattersArea th, .mattersArea td {border: 1px solid #e0e0e0; padding: 0.5rem 3rem;}
+.mattersArea th {background:#eee; padding: 0.5rem 3.5rem;}
+.mattersArea td {padding: 0.5rem 1.5rem;}
+.mattersArea th, .mattersArea td {border: 1px solid #e0e0e0; }
 .right_box {margin-left: 5px; float: right;}
 .ui-jqgrid .ui-jqgrid-htable th div{
     outline-style: none;
@@ -898,3 +899,4 @@ padding-left: 5px;
 .point {color:#f93939; font-size:.9em; font-weight:500}
 .save_mms textarea {cursor:pointer;}
 .ui-datepicker-div {width:300px!important;}
+#tb_fileInfo tr td:first-child {text-align:center;}
