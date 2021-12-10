@@ -166,9 +166,9 @@
 	                    <tr>
                       		<th>공지기간</th>
 	                        <td style="text-align:left" colspan="3">
-	                        <input type="text"  name="boardNoticeStartDay" class="cal_icon" style="width:150px" maxlength="8" id="boardNoticeStartDay" />
+	                        <input type="text" class="cal_icon" name="boardNoticeStartDay" style="width:150px" maxlength="8" id="boardNoticeStartDay" />
 	                        ~
-	                        <input type="text"  name="boardNoticeEndDay" class="cal_icon" style="width:150px"  maxlength="8" id="boardNoticeEndDay" />	                        
+	                        <input type="text" class="cal_icon" name="boardNoticeEndDay"  style="width:150px"  maxlength="8" id="boardNoticeEndDay" />	                        
 	                        </td>
 	                    </tr>
 	                    <tr>
@@ -218,9 +218,8 @@
             </table>
         </div>
         <div class="right_box">
+        	<a href="#" onClick="boardinfo.fn_CheckForm()" class="blueBtn" id="btnUpdate">저장</a>
             <a href="javascript:common_modelClose('bas_board_add')" class="grayBtn">취소</a>
-            
-            <a href="#" onClick="boardinfo.fn_CheckForm()" class="blueBtn" id="btnUpdate">저장</a>
         </div>
         <div class="clear"></div>
     </div>
@@ -242,11 +241,14 @@
 		           changeMonth: true, //월변경가능
 		           changeYear: true, //년변경가능
 		           showMonthAfterYear: true, //년 뒤에 월 표시
-		           buttonImageOnly: false, //이미지표시
-		           yearRange: '1970:2030' //1990년부터 2020년까지
+		           buttonImageOnly: true, //이미지표시
+		           buttonText: '달력선택', //버튼 텍스트 표시
+		           buttonImage: '/images/invisible_image.png', //이미지주소
+		           yearRange: '1970:2030', //1990년부터 2020년까지
+				   currentText: "Today"
 	    };	      
-	    $("#boardNoticeStartDay").datepicker(clareCalendar);
-	    $("#boardNoticeEndDay").datepicker(clareCalendar);        
+	    $("#boardNoticeStartDay, #boardNoticeEndDay").datepicker(clareCalendar);   
+		/* $("#boardNoticeStartDay, #boardNoticeEndDay").val(new Date().format("yyyyMMdd")); */
 	    $("img.ui-datepicker-trigger").attr("style", "margin-left:3px; vertical-align:middle; cursor:pointer;"); //이미지버튼 style적용
 	    $("#ui-datepicker-div").hide(); //자동으로 생성되는 div객체 숨김
 	});
@@ -449,19 +451,19 @@
 			     				    }    		
 			            );
 			        }else {
+			        	$("#boardSeq").val('');
 			        	$("#btnUpdate").text("등록");
 			        	$("#boardTitle").val('');
-					    oEditors.getById["ir1"].exec("SET_IR", ['']);
-							$("#boardNoticeStartday").val('');
-							$("#boardNoticeEndDay").val('');
-							$("#boardGroup").val(''); //부모값
-							$("#boardRefno").val(''); //부모값
-							$("#boardClevel").val(''); //부모값
-							$("#h2_txt").text("등록");
-							
-							fn_EmptyField("sp_boardCenter");
-							
-			        	toggleDefault("useYn");
+						$("#boardNoticeStartDay").val('');
+						$("#boardNoticeEndDay").val('');
+						$("#boardGroup").val(''); //부모값
+						$("#boardRefno").val(''); //부모값
+						$("#boardClevel").val(''); //부모값
+						$("#h2_txt").text("등록");
+						$('#ir1').val('');
+					    /* oEditors.getById["ir1"].exec("SET_IR", [""]); */						
+						fn_EmptyField("sp_boardCenter");
+						toggleDefault("useYn");
 			        	toggleDefault("boardPopup");
 			        	
 			        	

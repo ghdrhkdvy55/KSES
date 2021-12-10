@@ -75,7 +75,7 @@
 			    ORDER BY A.RESV_SEQ DESC	
 			) TB 
 		) TA
-		WHERE ROWNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
+		WHERE RNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
 		ORDER BY TA.RNUM DESC
     </select>
     

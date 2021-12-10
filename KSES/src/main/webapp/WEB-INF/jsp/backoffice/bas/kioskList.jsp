@@ -80,12 +80,12 @@
 <div id="bas_kiosk_add" class="popup m_pop">
 	<div class="pop_con">
 		<a class="button b-close">X</a>
-    	<h2 class="pop_tit">무인발권기 등록</h2>
+    	<h2 class="pop_tit">장비 등록</h2>
     	<div class="pop_wrap">
     		<table class="detail_table">
            		<tbody>
                		<tr>
-						<th>무인발권기 Serial</th>
+						<th>장비 Serial</th>
 	                    <td>
 	                    	<input type="text" name="ticketMchnSno" id="ticketMchnSno">
 	                    	<span id="sp_Unqi">
@@ -153,8 +153,8 @@
 			</table>
 		</div>
 	    <div class="right_box">
+	    	<a href="javascript:jqGridFunc.fn_CheckForm();" id="btnSave" class="blueBtn">저장</a>
         	<a href="#" onClick="common_modelClose('bas_kiosk_add')" class="grayBtn b-close">취소</a>
-		    <a href="javascript:jqGridFunc.fn_CheckForm();" id="btnSave" class="blueBtn">저장</a>
 		</div>
 		<div class="clear"></div>
 	</div>
@@ -330,6 +330,7 @@
 	        if (mode == "Edt") {
 	           	var params = {"ticketMchnSno" : ticketMchnSno};
 	     	   	var url = "/backoffice/bas/kioskInfoDetail.do";
+	     	    $("#bas_kiosk_add > div >h2").text("장비 수정");
 	     	    $("#ticketMchnSno").val(ticketMchnSno).prop('readonly', true);
 	     	   	fn_Ajax
 	     	   	(
@@ -364,7 +365,8 @@
 						common_modelCloseM("ERROR : " +request.status, "bas_holiday_add");
 					}    		
 				);
-			} else {			
+			} else {
+				$("#bas_kiosk_add > div >h2").text("장비 등록");
 				$("#ticketMchnSno").val("").prop('readonly', false);
 				$("#useY").prop("checked", true);
 				$("#centerCd option:eq(0)").prop("selected", true);

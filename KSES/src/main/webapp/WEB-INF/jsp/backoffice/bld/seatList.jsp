@@ -66,7 +66,7 @@
         </div>
 
 		<div class="right_box">
-			<a data-popup-open="bld_seat_add" onclick="jqGridFunc.fn_seatInfo('Ins','0')" class="blueBtn">좌석 추가</a>
+			<a data-popup-open="bld_seat_add" onclick="jqGridFunc.fn_seatInfo('Ins','0')" class="blueBtn">좌석 등록</a>
 			<a onClick="jqGridFunc.fn_delCheck()" class="grayBtn">삭제</a>
 		</div>
 		<div class="clear"></div>
@@ -154,8 +154,8 @@
 			</table>
       	</div>
       	<div class="right_box">
+			<a id="btnUpdate" href="javascript:jqGridFunc.fn_CheckForm();" id="btnUpdate" class="blueBtn">등록</a>
 			<a href="javascript:bPopupClose('bld_seat_add');" class="grayBtn">취소</a>
-			<a id="btnUpdate" href="javascript:jqGridFunc.fn_CheckForm();" class="blueBtn">저장</a>
       	</div>
       	<div class="clear"></div>
   	</div>

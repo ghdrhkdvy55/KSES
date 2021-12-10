@@ -521,10 +521,17 @@
 						page : gridPage,
 						rowNum : $('.ui-pg-selbox option:selected').val(),
 						postData : JSON.stringify({
-										"pageIndex": gridPage,
-										"searchKeyword" : $("#searchKeyword").val(),
-										"pageUnit":$('.ui-pg-selbox option:selected').val()
-									})
+								"pageIndex": gridPage,
+								"searchKeyword" : $("#searchKeyword").val(),
+								"pageUnit":$('.ui-pg-selbox option:selected').val(),
+								"searchCenterCd" : $("#searchCenterCd").val(),
+								"searchDayCondition" : $('input[name=searchRsvDay]:checked').val(),
+								"searchFrom" : $("#searchResvDateFrom").val(),
+								"searchTo" : $("#searchResvDateTo").val(),
+								"searchResvState" : $("#searchResvState").val(),
+								"searchResvPayDvsn" : $("#searchResvPayDvsn").val(),
+								"searchCondition" : $("#searchCondition").val()
+						})
 					}).trigger("reloadGrid");
 				},
 				onSelectRow : function(rowId) {
