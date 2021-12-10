@@ -157,8 +157,9 @@
           <div class="top" style="padding: 0; border-bottom: none;">
             <p>검색구분</p>
             <select style="width: 100px;" id="searchEmpGubun">
-              <option value="b.EMP_NM">이름</option>
-              <option value="b.EMP_NO">사번</option>
+            	<option value="">선택</option>
+              	<option value="emp_nm">이름</option>
+              	<option value="emp_no">사번</option>
             </select>
             <input type="text" id="txtSearch" name="txtSearch" placeholder="검색어를 입력하세요.">
             <a href="#" onClick="jqGridFunc.fn_empSearch()" class="grayBtn">검색</a>
@@ -565,13 +566,11 @@
 				     			           if (result != null) {	       	
 				     			        	   if (result.status == "SUCCESS"){
 				     			        		   $("#mng_admin_search").bPopup().close(); 
-				     			        		   /*
-				     			        		        추후 팝업창 으로 수정 예정 
+
+													// 추후 팝업창 으로 수정 예정 
 				     			        		    var message = result.result == "OK" ? '등록되지 않은 사번 입니다.' : '등록된 사번 입니다.';
 				     			        		    var alertIcon =  result.result == "OK" ? "Y" : "N";
-				     			        		    
-				     			        		    common_popup(message, alertIcon, "mng_admin_add").trigger("alert('1')");
-				     			        		    */
+
 				     			        		    if ($("#mode").val() == "Ins"  && result.result == "OK"){
 				     			        		    	jqGridFunc.fn_empInfo($("#tb_EmpSearch").jqGrid('getCell', rowid, 'emp_no'),
 				     			        		    			$("#tb_EmpSearch").jqGrid('getCell', rowid, 'emp_nm'),
@@ -581,7 +580,7 @@
 						  	                			);
 				     			        		    	$("#idCheck").val("Y");
 				     			        		    }else if ($("#mode").val() == "Ins"  && result.result != "OK"){
-				     			        		    	jqGridFunc.fn_adminInfo("Edt", empNo);
+				     			        		    	common_popup(message, alertIcon, "mng_admin_search");
 				     			        		    }
 				     			        		    
 												}else {
