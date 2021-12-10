@@ -227,7 +227,6 @@
             },clearGrid : function() {
                 $("#mainGrid").clearGridData();
             },fn_orgInfo : function (mode, code){
-            	console.log('-------------')
             	$("#mode").val(mode);
         	    if (mode == "Edt"){
 		        	$("#code").val(code);
@@ -269,9 +268,14 @@
 				   if (any_empt_line_span("bas_code_add", "idCheck", "중복체크가 안되었습니다.","sp_message", "savePage") == false) return;
 			   }
 			   if (any_empt_line_span("bas_code_add", "codeNm", "코드명을 입력해 주세요.","sp_message", "savePage") == false) return;
-		       
-		       var url = "/backoffice/mng/orgUpdate.do";
-		       var params = {   'code' : $("#code").val(),
+			   var commentTxt = ($("#mode").val() == "Ins") ?  "등록 하시겠습니까?" : "수정 하시겠습니까?" ;
+		       $("#id_ConfirmInfo").attr("href", "javascript:jqGridFunc.fn_update()");
+	   		   fn_ConfirmPop(commentTxt);
+		  }, fn_update: function() {
+				$("#confirmPage").bPopup().close();
+			  
+				var url = "/backoffice/mng/orgUpdate.do";
+		       	var params = {   'code' : $("#code").val(),
 				    		    'codeNm' : $("#codeNm").val(),
 				    		    'codeDc' : $("#codeDc").val(), 
 				    		    'orgGubun' : $("#orgGubun").val(), 

@@ -238,7 +238,7 @@ public class EmpInfoManageController {
 			    	GradInfo gradInfo = new GradInfo();
 			    	gradInfo.setGradCd(searchVO.get("code").toString());
 			    	gradInfo.setGradNm(searchVO.get("codeNm").toString());
-			    	gradInfo.setGradCd(searchVO.get("codeDc").toString());
+			    	gradInfo.setGradDc(searchVO.get("codeDc").toString());
 			    	gradInfo.setUseYn(searchVO.get("useYn").toString());
 			    	gradInfo.setMode(searchVO.get("mode").toString());
 			    	ret = gradService.updateGradInfo(gradInfo);
