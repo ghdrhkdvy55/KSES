@@ -75,7 +75,7 @@
 			    ORDER BY A.RESV_SEQ DESC	
 			) TB 
 		) TA
-		WHERE ROWNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
+		WHERE RNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
 		ORDER BY TA.RNUM DESC
     </select>
     
@@ -135,7 +135,7 @@
 		WHERE A.USER_ID = #{userId}
 		AND A.SEAT_CD = B.SEAT_CD(+)
 		AND A.CENTER_CD = C.CENTER_CD
-		AND A.RESV_CANCEL_CD IS NULL
+		AND A.RESV_STATE NOT IN ('RESV_STATE_4')
 		AND ROWNUM = 1
 		ORDER BY A.RESV_SEQ DESC
 	]]>	    
@@ -154,7 +154,7 @@
 			CASE WHEN 
 			(	
 				SELECT 
-					NVL(COUNT(*),0) FROM TSER_RESV_INFO_I 
+					NVL(COUNT(*),0) FROM TSER_RESV_INFO_I
 				WHERE SEAT_CD = A.SEAT_CD
 				AND RESV_STATE NOT IN ('RESV_STATE_4') 
 				AND FN_RESVDATE(A.CENTER_CD) BETWEEN RESV_START_DT AND RESV_END_DT
