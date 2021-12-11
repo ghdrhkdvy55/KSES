@@ -278,6 +278,9 @@ public class MessageGroupInfoController {
 			searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
 			List<Map<String, Object>> list = null;
 			String searchCondition = "";
+			
+			LOGGER.debug("searchUserCondition" + searchVO.get("searchUserCondition").toString());
+			
 			if (searchVO.get("searchUserGubun").toString().equals("EMP")) {
 
                 switch (searchVO.get("searchUserCondition").toString()) {
@@ -291,22 +294,25 @@ public class MessageGroupInfoController {
 				    	  searchCondition = "emp_cell";
 				    	  break;
 				}
+                
 				searchVO.put("searchCondition", searchCondition);
 				searchVO.put("searchKeyword", searchVO.get("searchUserKeyworkd").toString());
+				
 				list = 	empService.selectEmpInfoList(searchVO);
 		    }else {
 		    	 switch (searchVO.get("searchUserCondition").toString()) {
-					     case "EMP_NO"  : 
+					     case "USERID"  : 
 					    	  searchCondition = "user_id";
 					    	  break;
-					     case "EMP_NM" : 
+					     case "USERNAME" : 
 					    	  searchCondition = "user_nm";
 					    	  break;
-					     case "EMP_CLPHN"  : 
+					     case "CELLPHNONE"  : 
 					    	  searchCondition = "user_phone";
 					    	  break;
 				  }
-				  searchVO.put("searchCondition", searchCondition);
+		    	  LOGGER.debug("searchVO:" + searchVO.get("searchCondition") + ":" + searchCondition);
+		    	  searchVO.put("searchCondition", searchCondition);
 				  searchVO.put("searchKeyword", searchVO.get("searchUserKeyworkd").toString());
 				  list = 	userService.selectUserInfoListPage(searchVO);	
 		    }

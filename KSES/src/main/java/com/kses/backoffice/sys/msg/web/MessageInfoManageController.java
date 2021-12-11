@@ -370,7 +370,7 @@ public class MessageInfoManageController {
 						                .collect(Collectors.toMap(e -> e[0], e -> e[1]));
 				*/
 				Map<String, Object>  map = new ObjectMapper().readValue(SmartUtil.NVL(vo.get("msgArray"), "").toString(), Map.class) ;
-				MessageInfo msgInfo = new MessageInfo();
+				
 				
 				if (map.size() > 0) {
 					if (map.get("step").equals("U")) {
@@ -386,9 +386,11 @@ public class MessageInfoManageController {
 						
 						
 						userInfo.forEach(x->{
+							 MessageInfo msgInfo = new MessageInfo();
 					   		 msgInfo.setCallname(x.get("user_nm").toString());
 						   	 msgInfo.setCallphone(x.get("user_phone").toString());
 						   	 info.add(msgInfo);
+						   	 msgInfo = null;
 					   	 });
 						
 						searchVO_U =  null;
@@ -402,10 +404,17 @@ public class MessageInfoManageController {
 						List<Map<String, Object>> adminInfos = adminService.selectAdminUserManageListByPagination(searchVO_A);
 						
 						adminInfos.forEach(x->{
+							 MessageInfo msgInfo = new MessageInfo();
 					   		 msgInfo.setCallname(x.get("emp_nm").toString());
 						   	 msgInfo.setCallphone(SmartUtil.NVL(x.get("emp_clphn"), "").toString());
 						   	 info.add(msgInfo);
-					   	 });
+						   	 msgInfo = null;
+					   	});
+						
+						for (MessageInfo infos : info) {
+							LOGGER.debug("infos:" + infos.toString());
+						}
+						
 						
 						searchVO_A =  null;
 						adminInfos = null;
@@ -426,12 +435,14 @@ public class MessageInfoManageController {
 				LOGGER.debug("==================="+ arrays.size());
 				
 			    for (int i = 0; i < arrays.size(); i ++) {
-			    	MessageInfo msgInfo = new MessageInfo();
+			    	
 				    JSONObject jsonObject =  (JSONObject)arrays.get(i);
 				    LOGGER.debug("groupGubun:" + jsonObject.get("groupGubun"));
 				    if (jsonObject.get("groupGubun").equals("S")) {
 				   	 //사용자 이면
+				    	 MessageInfo msgInfo = new MessageInfo();
 				    	 if (jsonObject.get("groupCode").toString().contains("<")) {
+				    		
 				    		 String [] callInfo  = jsonObject.get("groupCode").toString().split("<");
 						   	 msgInfo.setCallname(callInfo[0]);
 						   	 msgInfo.setCallphone(callInfo[1].replace(">", ""));
@@ -439,6 +450,7 @@ public class MessageInfoManageController {
 				    		 msgInfo.setCallname(jsonObject.get("groupCode").toString());
 				    	 }
 				    	 info.add(msgInfo);
+				    	 msgInfo = null;
 				    }else {
 				    //group 이면 
 				    	 searchVO.put("searchGroupCode", jsonObject.get("groupCode"));
@@ -448,9 +460,11 @@ public class MessageInfoManageController {
 					   	 List<Map<String, Object>> groupInfo = msgGroupUserService.selectMessageGroupUserInfoList(searchVO);
 					   	 
 					   	 groupInfo.forEach(x->{
+					   		 MessageInfo msgInfo = new MessageInfo();
 					   		 msgInfo.setCallname(x.get("group_username").toString());
 						   	 msgInfo.setCallphone(x.get("group_user_cellphone").toString());
 						   	 info.add(msgInfo);
+						   	 msgInfo = null;
 					   	 });
 				     }
 			    }                

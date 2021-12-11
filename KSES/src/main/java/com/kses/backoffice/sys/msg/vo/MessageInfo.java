@@ -1,10 +1,8 @@
 package com.kses.backoffice.sys.msg.vo;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class MessageInfo {
 
 	/**
