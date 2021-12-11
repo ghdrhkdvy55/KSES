@@ -570,7 +570,6 @@
 						page : gridPage,
 						rowNum : $('#pager .ui-pg-selbox option:selected').val(),
 						postData : JSON.stringify({
-<<<<<<< HEAD
 							"pageIndex": gridPage,
 							"pageUnit":$('#pager .ui-pg-selbox option:selected').val(),
 							"searchKeyword" : $("#searchKeyword").val(),
@@ -581,18 +580,6 @@
 							"searchResvState" : $("#searchResvState").val(),
 							"searchResvPayDvsn" : $("#searchResvPayDvsn").val(),
 							"searchCondition" : $("#searchCondition").val()
-=======
-								"pageIndex": gridPage,
-								"searchKeyword" : $("#searchKeyword").val(),
-								"pageUnit":$('.ui-pg-selbox option:selected').val(),
-								"searchCenterCd" : $("#searchCenterCd").val(),
-								"searchDayCondition" : $('input[name=searchRsvDay]:checked').val(),
-								"searchFrom" : $("#searchResvDateFrom").val(),
-								"searchTo" : $("#searchResvDateTo").val(),
-								"searchResvState" : $("#searchResvState").val(),
-								"searchResvPayDvsn" : $("#searchResvPayDvsn").val(),
-								"searchCondition" : $("#searchCondition").val()
->>>>>>> refs/remotes/origin/master
 						})
 					}).trigger("reloadGrid");
 				},
