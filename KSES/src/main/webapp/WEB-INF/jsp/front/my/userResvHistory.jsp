@@ -55,16 +55,6 @@
                 <div>
                     <div id="date_search" class="date_srch"> 
                     	<h4>조회기간 선택</h4>
-<!--                         <table> 
-                            <tbody> 
-                            	<tr>
-	                                <td><a href="javascript:userResvService.fn_userResvInfo('7');" id="7">1주일</a></td>
-	                                <td><a href="javascript:userResvService.fn_userResvInfo('30');" id="30">1개월</a></td>
-	                                <td><a href="javascript:userResvService.fn_userResvInfo('90');" id="90">3개월</a></td>
-	                                <td><a href="javascript:userResvService.fn_userResvInfo('180');" id="180">6개월</a></td>
-                                </tr>
-                            </tbody>                            
-                        </table> -->
 						<div class="detail_srch">
                             <ul>
                                 <li>
@@ -99,30 +89,7 @@
                     </div>   
                     <div id="my_rsv_stat" class="my_rsv_stat">
                         <ul class="my_rsv">
-                            <li>
-                                <ol>
-                                    <li>예약번호</li>
-                                    <li><span id="rsv_num" class="rsv_num">123458960</span></li>
-                                </ol>
-                            </li>
-                            <li>
-                                <ol>
-                                    <li>지점</li>
-                                    <li><span id="rsv_brch" class="rsv_brch">대전지점</span></li>
-                                  </ol>
-                            </li>
-                            <li>
-                                <ol>
-                                    <li>좌석</li>
-                                    <li><span id="rsv_seat" class="rsv_seat">A-3F-001</span></li>
-                                </ol>
-                            </li>
-                            <li>
-                                <ol>
-                                    <li>일시</li>
-                                    <li><span id="rsv_date" class="rsv_date">2021-12-01 12:00</span></li>
-                                </ol>
-                            </li>                                                                                    
+                                                                                                           
                         </ul>
 
                         <ul class="rsv_stat_btn">
@@ -149,7 +116,23 @@
             </div>
         </div>
         <!--contents //-->
-    </div>  
+    </div>
+    
+	<!-- // 결제인증 팝업 -->
+    <div id="pay_number" data-popup="pay_number" class="popup">
+		<div class="pop_con rsv_popup">
+			<a class="button b-close">X</a>
+          	<div class="pop_wrap">
+            	<h4>결제 비밀번호를 입력해주세요.</h4>
+            	<ul class="pay_passWord">
+                	<li><input type="password" id="Card_Pw" placeholder="비밀번호를 입력하세요."></li>
+                	<li><a href="javascript:qrService.fn_payment();" class="mintBtn">확인</a></li>
+            	</ul>
+          	</div>
+      	</div>
+    </div>
+    <!-- 결제인증 팝업 // -->
+      
 	</form:form>
 	
 	<c:import url="/front/inc/popup_common.do" />
@@ -204,7 +187,6 @@
 					"searchStateCondition" : $("input[name='searchStateCondition']:checked").val()
 				}
 
-				
 				fn_Ajax
 				(
 				    url,
@@ -250,7 +232,7 @@
 				                        
 				                        setHtml += "<ul class='rsv_stat_btn'>";
 				                        if(item.resv_state == "RESV_STATE_1") {
-			                            	setHtml += "	<li><a href='javascript:userResvService.fn_resvCancel(&#39;" + item.resv_seq +"&#39;)'>예약 취소</a></li>";
+			                            	setHtml += "<li><a href='javascript:userResvService.fn_resvCancelDvsn(&#39;" + item.resv_seq +"&#39;,&#39;" + item.resv_pay_dvsn +"&#39;)'>예약 취소</a></li>";
 				                        }
 			                            setHtml += "</ul>";
 				                        
@@ -293,36 +275,74 @@
 				
 				return className;
 			},
-			fn_resvCancel : function(resvSeq) {
-				if(confirm("해당 예약정보를 취소하시겠습니까?") == true) {
-					var url = "/front/resvInfoCancel.do";
-					var params = {
-						"userDvsn" : $("#userDvsn").val(),
-						"resvSeq" : resvSeq
-					}
-					
-					fn_Ajax
-					(
-					    url,
-					    "POST",
-						params,
-						false,
-						function(result) {
-					    	console.log(result);
-							if (result.status == "SUCCESS") {
-								alert("예약이 정상적으로 취소되었습니다.");
-								userResvService.fn_userResvInfo();
-							} else if (result.status == "LOGIN FAIL"){
-								alert(result.message);
-								locataion.href = "/front/main.do";
-							}
-						},
-						function(request) {
-							alert("ERROR : " + request.status);	       						
-						}    		
-					);
+ 			fn_resvCancelDvsn : function(resvSeq, resvPayDvsn) {
+ 				resvPayDvsn == 
+	    			"RESV_PAY_DVSN_1" ? 
+	    				userResvService.fn_resvCancel(resvSeq) : 
+						$("#pay_number").bPopup().find("a").attr("href", "javascript:userResvService.fn_payment('" + resvSeq + "')"); 
+			},
+			fn_resvCancel : function(resvSeq, payResult) {
+				var url = "/front/resvInfoCancel.do";
+				var params = {
+					"userDvsn" : $("#userDvsn").val(),
+					"resvSeq" : resvSeq
 				}
-			}
+					
+				fn_Ajax
+				(
+					url,
+					"POST",
+					params,
+					false,
+					function(result) {
+						if (result.status == "SUCCESS") {
+							payResult != null ?
+									fn_openPopup("예약이 정상적으로 취소되었습니다.<br>잔액 : " + payResult.Balance, "blue", "SUCCESS", "확인", "javascript:location.reload();") :
+									fn_openPopup("예약이 정상적으로 취소되었습니다.", "blue", "SUCCESS", "확인", "javascript:location.reload();");									
+							/* userResvService.fn_userResvInfo(); */
+						} else if (result.status == "LOGIN FAIL"){
+							alert(result.message);
+							locataion.href = "/front/main.do";
+						}
+					},
+					function(request) {
+						alert("ERROR : " + request.status);	       						
+					}    		
+				);
+			},
+			fn_payment : function(resvSeq, division) {
+				var url = "/backoffice/rsv/speedCheck.do";
+				var params = {
+					"gubun" : "dep",
+					"sendInfo" : {
+						"resvSeq" : resvSeq,
+						"Card_Pw" : $("#Card_Pw").val(),
+						"System_Type" : "E"
+					}
+				}
+				
+				fn_Ajax
+				(
+				    url,
+				    "POST",
+					params,
+					false,
+					function(result) {
+				    	if(result.regist != null) {
+							if(result.regist.Error_Msg == "SUCCESS") {
+								userResvService.fn_resvCancel(resvSeq, result.regist);
+							} else {
+								fn_openPopup(result.regist.Error_Msg, "red", "ERROR", "확인", "javascript:location.reload();");
+							}
+				    	} else {
+				    		fn_openPopup("로그인중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
+				    	}
+					},
+					function(request) {
+						alert("ERROR : " + request.status);	       						
+					}    		
+				);	
+			} 
 		}
     </script>
 </body>  

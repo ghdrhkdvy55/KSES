@@ -72,29 +72,19 @@ import java.security.NoSuchAlgorithmException;
 
 @Service
 public class SmartUtil {
-
 	private static final Logger LOGGER = LoggerFactory.getLogger(SmartUtil.class);
 	
-			
 	@Autowired
 	protected EgovPropertyService propertiesService;
 	
     public static InterfaceInfoManageService interfaceService;
-	
-	
+
 	@Autowired
     private void InterfaceInfoManageService(InterfaceInfoManageService interfaceService) {
         this.interfaceService = interfaceService;
     }
 	
-	
-	
-	
 	public void XMLParse(String xmlData) throws ParserConfigurationException, SAXException, IOException{
-		
-		
-		
-		
 		InputSource is = new InputSource(new StringReader(xmlData));
 		
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -108,32 +98,30 @@ public class SmartUtil {
 			if (node.getNodeType() == Node.ELEMENT_NODE){
 				Element ele = (Element)node;
 				String nodeName = ele.getNodeName();
-				if ( nodeName.equals("")){
+				if(nodeName.equals("")) {
 					
-				}else{
+				} else {
 					
 				}
-				
 			}
-			
 		}		
 	}
+	
 	/*
 	 *  오늘의 날자
 	 * 
 	 */
 	public static String reqDay( int _number  ){
-		
 		LocalDate now = LocalDate.now();
 		String dayFormat = _number == 0  ? now.format(DateTimeFormatter.ofPattern("yyyyMMdd")) :  now.plusDays(_number).format((DateTimeFormatter.ofPattern("yyyyMMdd")));
 		return  dayFormat;
 	}
+	
 	/*
 	 *  해당 월 마지막 일자  날 구하기 
 	 *  추후 월 일자, 요일 도 같이 하기 
 	*/
     public static String reqEndDay(String _day){
-		
     	//String day = LocalDate.parse("20181211", DateTimeFormatter.BASIC_ISO_DATE).with(TemporalAdjusters.firstDayOfMonth()).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 		String dayFormat = LocalDate.parse(_day, DateTimeFormatter.BASIC_ISO_DATE).with(TemporalAdjusters.lastDayOfMonth()).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 		
@@ -195,7 +183,6 @@ public class SmartUtil {
             BufferedImage bufferedImage = MatrixToImageWriter.toBufferedImage(bitMatrix,matrixToImageConfig);
             // ImageIO를 사용한 바코드 파일쓰기
             ImageIO.write(bufferedImage, "png", new File(path + "/" + file_nm + ".png" ));
-             
         } catch (Exception e) {
         	data = "FAIL";
         	LOGGER.error("getQrCode ERROR" + e.toString());
@@ -216,9 +203,9 @@ public class SmartUtil {
 		Calendar cal = Calendar.getInstance();
 		cal.set(_year, _month-1, day);
 		
-		if (_gubun.equals("pre")){
+		if(_gubun.equals("pre")) {
 			cal.add(Calendar.MONTH, -1);
-		}else if (_gubun.equals("nxt")){
+		} else if (_gubun.equals("nxt")) {
 			cal.add(Calendar.MONTH, 1);
 		}
 		
@@ -232,9 +219,8 @@ public class SmartUtil {
         cal.set(Calendar.DATE, 1);
         int w = cal.get(Calendar.DAY_OF_WEEK);        
         String lYMD = String.valueOf(cal.getActualMaximum(Calendar.DAY_OF_MONTH));
-        // 이쪽 수정 끝       
-
         
+        // 이쪽 수정 끝       
         StringBuilder sb = new StringBuilder();
         sb.append("<table class='data_cal'>");
         sb.append(" <caption>달력</caption>");
@@ -264,8 +250,6 @@ public class SmartUtil {
         }
 
         String fc;
-
-
         String _res_remark = null;
         String _res_day_ck = null;
         //신규 추가 구문 
@@ -483,8 +467,8 @@ public class SmartUtil {
 					}
 				   */
 			  }
-		}catch (Exception e){
-		LOGGER.error(" sendSMS ERROR:" + e.toString());
+		} catch (Exception e){
+			LOGGER.error(" sendSMS ERROR:" + e.toString());
 		}
 		
 		return ret;
@@ -534,10 +518,7 @@ public class SmartUtil {
                 String body = handler.handleResponse(response);
                 System.out.println("[RESPONSE] requestHttpForm() " + body);
 
-                
                 node = objectMapper.readTree(body);
-                
-
             } else {
             	LOGGER.error("response is error:" + response.getStatusLine().getStatusCode());
                 node = objectMapper.readTree("{\"ERROR CODE\":\""+ response.getStatusLine().getStatusCode() + "\"}");
@@ -572,7 +553,6 @@ public class SmartUtil {
             LOGGER.debug(_jsonInfo.toString());
             HttpResponse response = client.execute(httpPost);
             
-            
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode node = null;
             //Response 출력
@@ -588,20 +568,13 @@ public class SmartUtil {
                 ResponseHandler<String> handler = new BasicResponseHandler();
                 String body = handler.handleResponse(response);
                 node = objectMapper.readTree(body);       
-                
-                
-                
             } else {
             	LOGGER.error("response is error : " + response.getStatusLine().getStatusCode());
-            	LOGGER.debug(node.toPrettyString());
             	node = objectMapper.readTree("{\"Error_Cd\":\""+ response.getStatusLine().getStatusCode() + "\"}");
-            	
             }
-            //전송 내용 //수신 요청 
-           
             
+            //전송 내용 & 수신 요청 
             info.setRspnsRecptnTm(nowTime());
-            LOGGER.debug(node.toPrettyString());
             info.setResultCode(node.get("Error_Cd").asText());
             info.setResultMessage(node.toString());
             info.setSendMessage(_jsonInfo);
