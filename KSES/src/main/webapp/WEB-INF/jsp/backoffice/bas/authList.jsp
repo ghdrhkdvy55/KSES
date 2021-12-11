@@ -33,7 +33,7 @@
 		<div class="left_box mng_countInfo">
             <p>총 : <span id="sp_totcnt"></span>건</p>
         </div>
-        <a href="#" onClick="jqGridFunc.fn_AuthorInfo('Ins', '0');" class="right_box blueBtn">권한분류추가</a>  
+        <a href="#" onClick="jqGridFunc.fn_AuthorInfo('Ins', '0');" class="right_box blueBtn">권한 분류 등록</a>  
         <div class="clear"></div>
         <div class="whiteBox">
             <table id="mainGrid"></table>
@@ -47,7 +47,7 @@
 <div id="bas_auth_add" class="popup m_pop">
     <div class="pop_con">
         <a class="button b-close">X</a>
-        <h2 class="pop_tit">권한 분류 추가</h2>
+        <h2 class="pop_tit">권한 분류 등록</h2>
         <div class="pop_wrap">
             <table class="detail_table">
                 <tbody>
@@ -77,8 +77,8 @@
             </table>
         </div>
         <div class="right_box">
-            <a href="#" onClick="common_modelClose('bas_auth_add')" class="grayBtn">취소</a>
-            <a href="#" class="blueBtn" id="btnUpdate" onClick="jqGridFunc.fn_CheckForm()">저장</a>
+        	<a href="#" class="blueBtn" id="btnUpdate" onClick="jqGridFunc.fn_CheckForm()">등록</a>
+            <a href="#" onClick="common_modelClose('bas_auth_add')" class="grayBtn">취소</a>            
         </div>
         <div class="clear"></div>
     </div>
@@ -259,6 +259,7 @@
 	     	$("#mode").val(mode);
 	 	    if (mode == "Edt"){
 		        	$("#authorCode").val(authorCode).prop('readonly', true);
+		        	$("#bas_auth_add > div >h2").text("권한 분류 수정");
 		        	$("#btnUpdate").text("수정");
 		        	var params = {"authorCode" : authorCode};
 		        	var url = "/backoffice/bas/authInfoDetail.do";
@@ -283,11 +284,12 @@
 			     			}
 		               );
 		        }else{
+		        	$("#bas_auth_add > div >h2").text("권한 분류 등록");
 		        	$("#authorCode").val('').prop('readonly', false);
 		        	$("#authorNm").val('');
 		        	$("#authorDc").val('');
 		        	$("#sp_Unqi").show();
-		        	$("#btnSave").text("입력");
+		        	$("#btnUpdate").text("등록");
 		        }
 		        $("#bas_auth_add").bPopup();
 	    },fn_CheckForm  : function (){

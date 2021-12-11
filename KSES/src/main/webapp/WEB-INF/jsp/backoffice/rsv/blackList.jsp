@@ -124,8 +124,8 @@
           </table>
       </div>
       <div class="right_box">
+          <a href="javascript:blackUserService.fn_checkForm();" class="blueBtn">등록</a>
           <a href="javascript:$('#blacklist_add').bPopup().close();" class="grayBtn">취소</a>
-          <a href="javascript:blackUserService.fn_checkForm();" class="blueBtn">저장</a>
       </div>
       <div class="clear"></div>
   </div>

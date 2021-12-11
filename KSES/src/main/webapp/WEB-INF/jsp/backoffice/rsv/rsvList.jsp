@@ -115,7 +115,7 @@
                   	<tr> 
                     	<th>좌석 정보</th>
                     	<td>
-                      		<a href="javascript:jqGridFunc.fn_resvSeatInfo();" class="blueBtn">좌석변경</a>
+                      		<a data-popup-open="seat_change" class="blueBtn">좌석 변경</a>
                     	</td>
                     	<th>예약 번호</th>
                     	<td id="rsvPopResvSeq">KSP7968</td>
@@ -321,7 +321,7 @@
   	</div>
 </div>
 <!-- // 좌석변경 팝업 -->
-<!-- <div data-popup="seat_change" class="popup">
+<div data-popup="seat_change" class="popup">
   	<div class="pop_con">
 		<a class="button b-close">X</a>
 		<h2 class="pop_tit">좌석 변경 </h2>
@@ -351,7 +351,7 @@
       	</div>
       	<div class="clear"></div>
   	</div>
-</div> -->
+</div>
 <!-- 관리자 등록 팝업 // -->
 <!-- // 관리자 검색 팝업 -->
 <div id="search_result" class="popup">
@@ -391,56 +391,6 @@
         <div class="clear"></div>
     </div>
 </div>
-
-<!-- 구역 생성 팝업 // -->
-<!-- // 사용자 좌석 변경 팝업 -->
-<div id="seat_change" class="popup">
-	<div class="pop_con">
-		<a class="button b-close">X</a>
-      	<h2 class="pop_tit">사용자 좌석 변경</h2>
-      	<div class="pop_wrap pop_seat_change">
-        	<div class="searchBox left_box">
-          		<p>지점
-            		<select>
-              			<option value="">지점 선택</option>
-            		</select>
-          		</p>
-          		<p>층
-            		<select>
-              			<option value="">층 선택</option>
-            		</select>
-          		</p>
-          		<p>구역
-            		<select>
-              			<option value="">구역 선택</option>
-            		</select>
-          		</p>
-          		<p>날짜 
-            		<input type="text" id="from" readonly="readonly" class="cal_icon"> ~
-            		<input type="text" id="to" readonly="readonly" class="cal_icon">
-          		</p>
-          		<a href="" class="grayBtn left_box">검색</a>
-        	</div>
-        	<a href="" class="blueBtn right_box">저장</a>
-        <div class="clear"></div>
-        	<div class="pop_mapArea" style="background: url(../../img/area_bg.png) no-repeat center;">
-          		<div class="pop_seat_label left_box">
-            		<ul>
-              			<li class="disable"><i></i>신청불가</li>
-              			<li class="usable"><i></i>신청가능</li>
-              			<li class="selected"><i></i>선택좌석</li>
-            		</ul>
-          		</div>
-          		<ul class="pop_seat">
-            		<li class="disable">1</li>
-            		<li class="usable">2</li>
-            		<li class="selected">3</li>
-          		</ul>
-        	</div>
-      	</div>
-  	</div>
-</div>
-
 <!-- popup// -->
 <script type="text/javascript">
 	$(document).ready(function() { 
@@ -506,9 +456,10 @@
 					{label: '신청일자', name:'resv_req_date', index:'resv_req_date', align:'center'},
 					{label: '예약일자', name:'resv_start_dt', index:'resv_start_dt', align:'center'},
 					{label: '예약상태', name:'resv_state', index:'resv_state', align:'center'},
+					{label: '백신', name:'resv_user_ask_yn', index:'resv_user_ask_yn', align:'center', width : "50px"},
 					{label: '문진', name:'resv_user_ask_yn', index:'resv_user_ask_yn', align:'center', width : "50px"},
-					{label: '결재상태', name:'resv_pay_dvsn', index:'resv_pay_dvsn', align:'center'},
 					{label: 'QR출력', name:'resv_qr_print', index:'resv_qr_print', align:'center', sortable : false, formatter:jqGridFunc.buttonSetting},
+					{label: '결재상태', name:'resv_pay_dvsn', index:'resv_pay_dvsn', align:'center'},
 					{label: '현금영수증출력', name:'cash_receipts_print', index:'cash_receipts_print', align:'center', sortable : false, formatter:jqGridFunc.buttonSetting},
 				], 
 				rowNum : 10,  //레코드 수
@@ -568,18 +519,18 @@
 					
 					grid.setGridParam({
 						page : gridPage,
-						rowNum : $('#pager .ui-pg-selbox option:selected').val(),
+						rowNum : $('.ui-pg-selbox option:selected').val(),
 						postData : JSON.stringify({
-							"pageIndex": gridPage,
-							"pageUnit":$('#pager .ui-pg-selbox option:selected').val(),
-							"searchKeyword" : $("#searchKeyword").val(),
-							"searchCenterCd" : $("#searchCenterCd").val(),
-							"searchDayCondition" : $('input[name=searchRsvDay]:checked').val(),
-							"searchFrom" : $("#searchResvDateFrom").val(),
-							"searchTo" : $("#searchResvDateTo").val(),
-							"searchResvState" : $("#searchResvState").val(),
-							"searchResvPayDvsn" : $("#searchResvPayDvsn").val(),
-							"searchCondition" : $("#searchCondition").val()
+								"pageIndex": gridPage,
+								"searchKeyword" : $("#searchKeyword").val(),
+								"pageUnit":$('.ui-pg-selbox option:selected').val(),
+								"searchCenterCd" : $("#searchCenterCd").val(),
+								"searchDayCondition" : $('input[name=searchRsvDay]:checked').val(),
+								"searchFrom" : $("#searchResvDateFrom").val(),
+								"searchTo" : $("#searchResvDateTo").val(),
+								"searchResvState" : $("#searchResvState").val(),
+								"searchResvPayDvsn" : $("#searchResvPayDvsn").val(),
+								"searchCondition" : $("#searchCondition").val()
 						})
 					}).trigger("reloadGrid");
 				},
@@ -632,7 +583,7 @@
 					"searchResvPayDvsn" : $("#searchResvPayDvsn").val(),
 					"searchCondition" : $("#searchCondition").val(),
 					"searchKeyword" : $("#searchKeyword").val(),
-					"pageUnit":$('#pager .ui-pg-selbox option:selected').val()
+					"pageUnit":$('.ui-pg-selbox option:selected').val()
 				}),
 				loadComplete : function(data) {
 					$("#sp_totcnt").text(data.paginationInfo.totalRecordCount);
@@ -675,9 +626,6 @@
 					common_popup("Error:" + request.status,"");
 				}    		
 			);
-		},
-		fn_resvSeatInfo : function() {
-			$("#seat_change").bPopup();
 		},
 		fn_centerChange : function() {
 	 		var url = "/backoffice/bld/floorComboInfo.do"

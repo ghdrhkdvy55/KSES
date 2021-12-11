@@ -37,7 +37,7 @@
         </div>
         <div class="right_box">
 			<a id="export" onClick="jqGridFunc.fn_excelDown()" class="blueBtn">엑셀 다운로드</a> 
-        	<a href="#" onClick="jqGridFunc.fn_ProgramInfo('Ins', '')" class="blueBtn">프로그램 추가</a>             	
+        	<a href="#" onClick="jqGridFunc.fn_ProgramInfo('Ins', '')" class="blueBtn">프로그램 등록</a>             	
         </div>
          
         <div class="clear"></div>
@@ -91,8 +91,8 @@
             </table>
         </div>
         <div class="right_box">
+        	<a href="#" class="blueBtn" onClick="jqGridFunc.fn_CheckForm()" id="btnUpdate" class="blueBtn">등록</a>
             <a href="#" onClick="common_modelClose('bas_program_add')" class="grayBtn">취소</a>
-            <a href="#" class="blueBtn" onClick="jqGridFunc.fn_CheckForm()" id="btnUpdate" class="blueBtn">저장</a>
         </div>
         <div class="clear"></div>
     </div>
@@ -245,6 +245,7 @@
 		   						   location.href="/backoffice/login.do";
 	       					   }else if (result.status == "SUCCESS"){
        						       var obj  = result.regist;
+       						       $("#bas_program_add > div >h2").text("프로그램 수정");
        						       $("#progrmStrePath").val(obj.progrm_stre_path);
        						       $("#progrmKoreannm").val(obj.progrm_koreannm);
        						       $("#progrmDc").val(obj.progrm_dc);
@@ -260,12 +261,13 @@
 			     			}
 		               );
 		        }else{
+		        	$("#bas_program_add > div >h2").text("프로그램 등록");
 		        	$("#progrmFileNm").val('').prop('readonly', false);
 		        	$("#progrmStrePath").val('');
 		        	$("#progrmKoreannm").val('');
 		        	$("#progrmDc").val('');
 		        	$("#url").val('');
-		        	$("#btnUpdate").text("입력");
+		        	$("#btnUpdate").text("등록");
 		        }
 		        $("#bas_program_add").bPopup();
            },fn_CheckForm  : function (){

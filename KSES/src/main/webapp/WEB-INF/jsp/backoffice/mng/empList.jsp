@@ -148,8 +148,8 @@
           </table>
       </div>
       <div class="right_box">
-          <a href="#" onClick="jqGridFunc.fn_close()" class="grayBtn">취소</a>
           <a href="#" onClick="jqGridFunc.fn_CheckForm()" id="btnUpdate" class="blueBtn">저장</a>
+          <a href="#" onClick="jqGridFunc.fn_close()" class="grayBtn">취소</a>
       </div>
       <div class="clear"></div>
   </div>
@@ -301,7 +301,6 @@
             	$("#mode").val(mode);
             	if (mode == "Edt"){
 		        	$("#empNo").val(empNo).prop('readonly', true);
-		        	$("#btnUpdate").text("수정");
 		        	var params = {"empNo" : empNo};
 		        	var url = "/backoffice/mng/empDetail.do";
 		        	fn_Ajax
@@ -327,7 +326,8 @@
        						       $("#empState").val(obj.emp_state);
        						       $("input:radio[name='useYn']:radio[value='"+obj.use_yn+"']").prop('checked', true);
        						       $("#sp_Unqi").hide();
-       						       $("#btnSave").text("수정");
+       				        	   $("#mng_user_add > div >h2").text("사용자 수정");
+       				        	   $("#btnUpdate").text("수정");
 	       					   }else{
 	       						   common_popup(result.meesage, "Y", "mng_user_add");
 	       					   }
@@ -349,7 +349,8 @@
 				    $("#empState").val('');
 				    $("#useAt_Y").prop("checked", true);
 		        	$("#sp_Unqi").show();
-		        	$("#btnSave").text("입력");
+		        	$("#btnUpdate").text("등록");
+		        	$("#mng_user_add > div >h2").text("사용자 등록");
 		        }
 		        $("#mng_user_add").bPopup();
            },fn_CheckForm  : function (){

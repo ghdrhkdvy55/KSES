@@ -358,8 +358,9 @@
 	        $("#board_add").bPopup();
           },fn_CheckForm  : function (){
        	   if (any_empt_line_span("board_add", "boardCd", "게시물 아이디를 입력해 주세요.","sp_message", "savePage") == false) return;
-       	   if ($("#mode").val() == "Ins" && $("#idCheck").val() != "Y"){
-			   if (any_empt_line_span("board_add", "boardCd", "중복체크가 안되었습니다.","sp_message", "savePage") == false) return;
+
+      	   if ($("#mode").val() == "Ins" && $("#idCheck").val() != "Y"){
+		      if (any_empt_line_span("board_add", "idCheck", "중복체크가 안되었습니다.","sp_message", "savePage") == false) return;
 		   }
        	   if (any_empt_line_span("board_add", "boardTitle", "게시판명을 입력해 주세요.","sp_message", "savePage") == false) return;
        	   if (any_empt_line_span("board_add", "boardSize", "게시판 페이지 수를  선택해 주세요.","sp_message", "savePage") == false) return;
@@ -395,7 +396,7 @@
 	   						   location.href="/backoffice/login.do";
 	   					   }else if (result.status == "SUCCESS"){
 	   						   //총 게시물 정리 하기'
-	   						   common_modelClose("mng_admin_add");
+	   						   common_modelCloseM(result.message ,"board_add");
 	   						   jqGridFunc.fn_search();
 	   					   }else if (result.status == "FAIL"){
 	   						   common_popup("저장 도중 문제가 발생 하였습니다.", "Y", "board_add");

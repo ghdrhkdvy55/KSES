@@ -114,6 +114,7 @@
 	}
 </style>
 <link rel="stylesheet" href="/resources/css/paragraph_new.css">
+<script type="text/javascript" src="/resources/js/jquery.ui.rotatable.js"></script>
 <!-- //contents -->
 <input type="hidden" name="centerCd" id="centerCd" value="${regist.center_cd}">
 <input type="hidden" name="floorCd" id="floorCd">
@@ -1098,37 +1099,38 @@
 			 	                   	
 	 	                    	}
 	 	                    });
-	 	                    //신규 추가
-	 	                    var nw = $("<div>", {
-	 	                	    class: "ui-rotatable-handle"
-	 	                	});
-	 	                	var ne = nw.clone();
-	 	                	var se = nw.clone();
-	 	                	$('.seat div.ui-rotatable-handle').addClass("ui-rotatable-handle-sw");
-	 	                	nw.addClass("ui-rotatable-handle-nw");
+	 	                    //신규 추가 - 불필요한 소스
+// 	 	                    var nw = $("<div>", {
+// 	 	                	    class: "ui-rotatable-handle"
+// 	 	                	});
+// 	 	                	var ne = nw.clone();
+// 	 	                	var se = nw.clone();
+// 	 	                	$('.seat div.ui-rotatable-handle').addClass("ui-rotatable-handle-sw");
+// 	 	                	nw.addClass("ui-rotatable-handle-nw");
 	 	                	  // Assign handles to box
-	 	                	$(".seat").append(nw);  
-	 	                	$(".seat div[class*='ui-rotatable-handle-']").draggable({
-	 	                		
-	 	                		
-	 	                	    drag: function(e, ui){
-	 	                	   	    
-		 	                   	    var get_id = $(this).parent().attr("id").substring(1);
-		 	                   	   	var top = parseInt(parseInt(ui.position.top) -27);
-	 	                	    	var left = parseInt(parseInt(ui.position.left) -27);
-	 	                	    	console.log("top:" + top + ": left"  + parseInt(ui.position.left) );
+// 	 	                	$(".seat").append(nw);  
+// 	 	                	$(".seat div[class*='ui-rotatable-handle-']").draggable({
+// 	 	                	    drag: function(e, ui){
+// 		 	                   	    var get_id = $(this).parent().attr("id").substring(1);
+// 		 	                   	   	var top = parseInt(parseInt(ui.position.top) -27);
+// 	 	                	    	var left = parseInt(parseInt(ui.position.left) -27);
+// 	 	                	    	console.log("top:" + top + ", left: "  + parseInt(ui.position.left) );
 	 	                	    	
-	 	                	    	var rotateCSS = 'rotate(' + ui.position.left + 'deg)';
-	 	                	    	$('#rotate_'+get_id).val( ui.position.left);
+// 	 	                	    	var rotateCSS = 'rotate(' + ui.position.left + 'deg)';
+// 	 	                	    	$('#rotate_'+get_id).val( ui.position.left);
 	 	                	    	
-	 	                	        $(this).parent().css({
-	 	                	            '-moz-transform': rotateCSS,
-	 	                	            '-webkit-transform': rotateCSS
-	 	                	        });
-	 	                	        
-	 	                	    }
-	 	                	}); 
-	 	                	  
+// 	 	                	        $(this).parent().css({
+// 	 	                	            '-moz-transform': rotateCSS,
+// 	 	                	            '-webkit-transform': rotateCSS
+// 	 	                	        });
+// 	 	                	        $(this).css({
+// 	 	                	        	'-moz-transform': rotateCSS,
+// 	 	                	            '-webkit-transform': rotateCSS
+// 	 	                	        });
+// 	 	                	    }
+// 	 	                	});
+							// 수정
+	 	                	$(".seat").rotatable()
 	 	                } else {
 	 	                    $('#seat_list').html('');
 	 	                }

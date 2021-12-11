@@ -141,8 +141,8 @@
           </table>
       </div>
       <div class="right_box">
+          <a href="#" onClick="jqGridFunc.fn_CheckForm()" id="btnUpdate" class="blueBtn">등록</a>
           <a href="#" onClick="common_modelClose('mng_admin_add')" class="grayBtn">취소</a>
-          <a href="#" onClick="jqGridFunc.fn_CheckForm()" class="blueBtn">저장</a>
       </div>
       <div class="clear"></div>
   </div>
@@ -350,7 +350,6 @@
        						       $("#sp_Unqi").hide();
        						       $("#mng_admin_add > div >h2").text("관리자 수정");
        						       $("#btn_empSarch").hide();
-       						       $("#btnSave").text("수정");
 	       					   }else{
 	       						  common_modelCloseM(result.message, "mng_admin_add");
 	       					   }
@@ -371,7 +370,7 @@
 		        	$("#sp_Unqi").show();
 		        	$("#mng_admin_add > div >h2").text("관리자 등록");
 		        	$("#btn_empSarch").show();
-		        	$("#btnSave").text("입력");
+		        	$("#btnUpdate").text("등록");
 		        }
 		        $("#mng_admin_add").bPopup();
            },fn_CheckForm  : function (){

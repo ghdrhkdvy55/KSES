@@ -150,10 +150,10 @@
    		            },
     		        colModel :  [
 	    		 	                { label: '문자 시쿼스', key: true,  name:'seqno',    index:'seqno', align:'left', hidden:true},
-	    		 	                { label: '회신자',  name:'reqname', index:'reqname', align:'left'},
-	    		 	                { label: '회신 전화번호',  name:'reqphone',  index:'reqphone',        align:'left'},
+	    		 	                { label: '담당자',  name:'reqname', index:'reqname', align:'left'},
+	    		 	                { label: '발신 전화번호',  name:'reqphone',  index:'reqphone',        align:'left'},
 	    		 	                { label: '수신자', name:'callname', index:'callname', align:'center'},
-	      			                { label: '수신자번호', name:'callphone', index:'callphone', align:'center'},
+	      			                { label: '수신 전화번호', name:'callphone', index:'callphone', align:'center'},
 		      			            { label: '전송구분', name:'result', index:'result', align:'center', 
 	      			                  formatter:jqGridFunc.result},
 			      			        { label: '문자구분', name:'kind', index:'kind', align:'center', 

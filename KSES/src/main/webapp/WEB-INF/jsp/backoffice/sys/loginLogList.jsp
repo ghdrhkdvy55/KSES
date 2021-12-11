@@ -162,10 +162,12 @@
 		    		          	  page : gridPage,
 		    		          	  rowNum : $('.ui-pg-selbox option:selected').val(),
 		    		          	  postData : JSON.stringify(  {
-							    		          			"pageIndex": gridPage,
-							    		          			"searchKeyword" : $("#searchKeyword").val(),
-							    		          			"pageUnit":$('.ui-pg-selbox option:selected').val()
-							    		          		})
+									  "pageIndex": gridPage,
+									  "searchKeyword" : $("#searchKeyword").val(),
+									  "pageUnit":$('.ui-pg-selbox option:selected').val(),							    		          			    	    		
+				    	    		  "searchFrom" : $("#searchFrom").val(),
+				    	    		  "searchTo" : $("#searchTo").val()
+								})
     		          		}).trigger("reloadGrid");
     		        },onSelectRow: function(rowId){
     	                if(rowId != null) {  }// 체크 할떄
@@ -198,10 +200,10 @@
     	    		"searchTo" : $("#searchTo").val(),
           			"searchKeyword" : $("#searchKeyword").val(),
          			"pageUnit":$('.ui-pg-selbox option:selected').val()
-	         		}),
+	         	}),
 	    	    	loadComplete	: function(data) {$("#sp_totcnt").text(data.paginationInfo.totalRecordCount);}
-	    	     }).trigger("reloadGrid");
-    		}
+	    	}).trigger("reloadGrid");
+    	}
     }
 </script>
 <c:import url="/backoffice/inc/popup_common.do" />
