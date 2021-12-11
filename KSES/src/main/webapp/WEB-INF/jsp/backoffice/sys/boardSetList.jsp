@@ -372,7 +372,7 @@
 		   $("#confirmPage").bPopup().close();
 		   var url = "/backoffice/sys/boardSetUpdate.do";
 		   var boardCenterId = "";
-		   if ($("#boardAuthor").val() == "ROLE_SYSTEM"){
+		   if ($("#boardAuthor").val() != "ROLE_SYSTEM" && $("#boardAuthor").val() != "ROLE_ADMIN"){
 			   boardCenterId = ckeckboxValue("체크된 지점이 없습니다.", "boardCenterId", "board_add");
 		   }
 		   
@@ -439,7 +439,7 @@
 	        }
 	 }, fn_CenterCheck : function (){
 		 //체크 박스 보여 주기 
-		 if ($("#boardAuthor").val() == "ROLE_SYSTEM"){
+		 if ($("#boardAuthor").val() != "ROLE_SYSTEM" && $("#boardAuthor").val() != "ROLE_ADMIN"){
 			 var url = "/backoffice/bld/centerCombo.do"
 		     var returnVal = uniAjaxReturn(url, "GET", false, null, "lst");
 			 fn_checkboxListJson("sp_boardCenter", returnVal, "", "boardCenterId");

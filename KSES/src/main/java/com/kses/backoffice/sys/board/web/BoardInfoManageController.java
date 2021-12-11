@@ -307,10 +307,9 @@ public class BoardInfoManageController {
 				  //boardInfoService.updateBoardNoticeUseYn();
 			      loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
 			      
-			      
-			      
 			      //페이징 처리 
 				  model.addObject(Globals.STATUS_REGINFO, boardSetService.selectBoardSettingInfoDetail(boardCd));
+				  model.addObject("loginVO", loginVO);
 			}catch (Exception e){
 				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 				model.addObject("message", egovMessageSource.getMessage("fail.common.list"));
@@ -345,24 +344,24 @@ public class BoardInfoManageController {
 				  
 				  
 			      
-			      int pageUnit = searchVO.get("pageUnit") == null ?   propertiesService.getInt("pageUnit") : Integer.valueOf((String) searchVO.get("pageUnit"));
-				  
-				  searchVO.put("pageSize", propertiesService.getInt("pageSize"));
-				  LOGGER.info("pageUnit:" + pageUnit);
-				  
-			              
-			   	  PaginationInfo paginationInfo = new PaginationInfo();
-				  paginationInfo.setCurrentPageNo( Integer.parseInt( SmartUtil.NVL(searchVO.get("pageIndex"), "1") ) );
-				  paginationInfo.setRecordCountPerPage(pageUnit);
-				  paginationInfo.setPageSize(propertiesService.getInt("pageSize"));
-				  searchVO.put("firstIndex", paginationInfo.getFirstRecordIndex());
-				  searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
-				  searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
-				  
-				  //사용자 계정 정리 
-				  loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
-				  searchVO.put("authorCd", loginVO.getAuthorCd());
-				  searchVO.put("centerCd", loginVO.getCenterCd());
+			     int pageUnit = searchVO.get("pageUnit") == null ?   propertiesService.getInt("pageUnit") : Integer.valueOf((String) searchVO.get("pageUnit"));
+				 
+				 searchVO.put("pageSize", propertiesService.getInt("pageSize"));
+				 LOGGER.info("pageUnit:" + pageUnit);
+				 
+			             
+			   	 PaginationInfo paginationInfo = new PaginationInfo();
+				 paginationInfo.setCurrentPageNo( Integer.parseInt( SmartUtil.NVL(searchVO.get("pageIndex"), "1") ) );
+				 paginationInfo.setRecordCountPerPage(pageUnit);
+				 paginationInfo.setPageSize(propertiesService.getInt("pageSize"));
+				 searchVO.put("firstIndex", paginationInfo.getFirstRecordIndex());
+				 searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
+				 searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
+				 
+				 //사용자 계정 정리 
+				 loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
+				 searchVO.put("authorCd", loginVO.getAuthorCd());
+				 searchVO.put("centerCd", loginVO.getCenterCd());
 				  
 				  
 				  
@@ -377,7 +376,7 @@ public class BoardInfoManageController {
 				  paginationInfo.setTotalRecordCount(totCnt);
 				  model.addObject(Globals.JSON_PAGEINFO, paginationInfo);
 				  model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-				
+				 
 			}catch (Exception e){
 				  model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 				  model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.list"));
