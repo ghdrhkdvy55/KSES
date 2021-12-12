@@ -42,7 +42,7 @@
             <p>검색어</p>
             <select id="searchCondition" name="searchCondition">
               <option value="EMP_NM">이름</option>
-              <option value="EMP_NO">아이디</option>
+              <option value="EMP_NO">사번</option>
             </select>
             <input type="text" id="searchKeyword" name="searchKeyword" placeholder="검색어를 입력하세요.">
           </div>
@@ -326,7 +326,7 @@
        						       $("#empState").val(obj.emp_state);
        						       $("input:radio[name='useYn']:radio[value='"+obj.use_yn+"']").prop('checked', true);
        						       $("#sp_Unqi").hide();
-       				        	   $("#mng_user_add > div >h2").text("사용자 수정");
+       				        	   $("#mng_user_add > div >h2").text("사용자 정보 수정");
        				        	   $("#btnUpdate").text("수정");
 	       					   }else{
 	       						   common_popup(result.meesage, "Y", "mng_user_add");
@@ -350,7 +350,7 @@
 				    $("#useAt_Y").prop("checked", true);
 		        	$("#sp_Unqi").show();
 		        	$("#btnUpdate").text("등록");
-		        	$("#mng_user_add > div >h2").text("사용자 등록");
+		        	$("#mng_user_add > div >h2").text("사용자 정보 등록");
 		        }
 		        $("#mng_user_add").bPopup();
            },fn_CheckForm  : function (){

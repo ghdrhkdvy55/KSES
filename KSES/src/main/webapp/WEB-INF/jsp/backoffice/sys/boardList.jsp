@@ -81,7 +81,7 @@
         <div class="left_box mng_countInfo">
             <p>총 : <span id="sp_totcnt"></span>건</p>
         </div>
-        <a onClick="boardinfo.fn_boardInfo('Ins', '0');" class="right_box blueBtn">등록</a>  
+        <a onClick="boardinfo.fn_boardInfo('Ins', '0');" class="right_box blueBtn">게시글 등록</a>  
         <div class="clear"></div>
         <div class="whiteBox">
             <table id="mainGrid"></table>
@@ -446,7 +446,7 @@
 			        $("#fileListTable > tbody").empty();
 			        if (mode == "Edt"){
 			           $("#btnUpdate").text("수정");
-			           $("#h2_txt").text("수정");
+			           $("#bas_board_add > div >h2").text("게시글 수정");
 			     	   var params = {"boardSeq" : boardSeq, "boardVisited": 0};
 			     	   var url = "/backoffice/sys/boardView.do";
 			     	   fn_Ajax(url, "GET", params, false, 
@@ -533,6 +533,7 @@
 						$("#boardGroup").val(''); //부모값
 						$("#boardRefno").val(''); //부모값
 						$("#boardClevel").val(''); //부모값
+						$("#bas_board_add > div >h2").text("게시글 등록");
 						$("input:checkbox[id='boardAllNotice']").prop("checked", false); 
 						$("#h2_txt").text("등록");
 						$('#ir1').val('');

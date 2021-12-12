@@ -267,7 +267,7 @@
      	    if (mode == "Edt"){
 		        	$("#menuNo").val(menuNo).prop('readonly', true);
 		        	$("#btnUpdate").text("수정");
-		        	$("#bas_menu_add > div >h2").text("메뉴 수정");
+		        	$("#bas_menu_add > div >h2").text("메뉴 정보 수정");
 		        	var params = {"menuNo" : menuNo};
 		        	var url = "/backoffice/bas/menuDetailInfo.do";
 		        	fn_Ajax(url, "GET", params, false, 
@@ -294,7 +294,7 @@
 			     			}
 		               );
 		        }else{
-		        	$("#bas_menu_add > div >h2").text("메뉴 등록");	
+		        	$("#bas_menu_add > div >h2").text("메뉴 정보 등록");	
 		        	$("#menuNo").val('').prop('readonly', false);
 		        	$("#menuNm").val('');
 				    $("#progrmFileNm").val('');

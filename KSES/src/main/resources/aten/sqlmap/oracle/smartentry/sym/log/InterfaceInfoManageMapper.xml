@@ -55,7 +55,7 @@
 				AND TO_CHAR(A.FRST_REGIST_PNTTM, 'yyyymmdd') BETWEEN #{params.searchFrom} AND #{params.searchTo} 
 			</if>
 			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
-				AND A.CONECT_ID LIKE  '%'|| #{params.searchKeyword} ||'%'
+				AND A.INTEG_ID LIKE  '%'|| #{params.searchKeyword} ||'%'
 			</if>
 		)TB  
 	   	WHERE RNUM  BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}   

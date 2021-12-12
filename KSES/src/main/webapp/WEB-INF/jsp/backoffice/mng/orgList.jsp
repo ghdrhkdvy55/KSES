@@ -245,11 +245,11 @@
        						       $("#sp_Unqi").hide();
        				        	   $("#btnUpdate").text("수정");
 	       				           if($("#orgGubun").val() == "Dept"){
-	       				           	$("#h2_title").html("부서 수정");
+	       				           	$("#h2_title").html("부서 정보 수정");
 	       				           } else if($("#orgGubun").val() == "Grad"){
-	       				           	$("#h2_title").html("직급 수정");
+	       				           	$("#h2_title").html("직급 정보 수정");
 	       				           } else {
-	       				           	$("#h2_title").html("직책 수정");
+	       				           	$("#h2_title").html("직책 정보 수정");
 	       				           }
 	       					   }else{
 	       						   alert(result.meesage);
@@ -267,11 +267,11 @@
 		        	$("#sp_Unqi").show();
 		        	$("#useAt_Y").prop("checked", true);
 		        	if($("#orgGubun").val() == "Dept"){
-		        		$("#h2_title").html("부서 등록");
+		        		$("#h2_title").html("부서 정보 등록");
 		        	} else if($("#orgGubun").val() == "Grad"){
-		        		$("#h2_title").html("직급 등록");
+		        		$("#h2_title").html("직급 정보 등록");
 		        	} else {
-		        		$("#h2_title").html("직책 등록");
+		        		$("#h2_title").html("직책 정보등록");
 		        	}
 		        	$("#btnUpdate").text("등록");
 		        }
