@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.kses.backoffice.bld.center.service.CenterInfoManageService;
 import com.kses.backoffice.cus.usr.service.UserInfoManageService;
 import com.kses.backoffice.cus.usr.vo.UserInfo;
 import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
@@ -42,6 +43,9 @@ public class MyPageInfoManageController {
 	
 	@Autowired
 	private UserInfoManageService userService;
+	
+	@Autowired
+	private CenterInfoManageService centerInfoManageService;
 	
 	@RequestMapping (value="mypage.do")
 	public ModelAndView selectFrontMypage(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo,
@@ -266,6 +270,24 @@ public class MyPageInfoManageController {
 			
 			model.addObject("guestResvInfo", guestResvInfo);
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+		} catch(Exception e) {
+			LOGGER.error("selectGuestMyResvInfo : " + e.toString());
+			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg")); 
+		}
+		return model;
+	}
+	@RequestMapping (value="notice.do")
+	public ModelAndView selectnoticeInfo() throws Exception {
+		
+		ModelAndView model = new ModelAndView("/front/my/notice");
+		try {
+			
+			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+			model.addObject("centerInfo", centerInfoManageService.selectCenterInfoComboList());
+			
+			
+			
 		} catch(Exception e) {
 			LOGGER.error("selectGuestMyResvInfo : " + e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);

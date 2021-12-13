@@ -92,7 +92,7 @@
                 <div class="main_notice" id="main_notice">
                     <div class="footer_tit">
                         <h2><span class="branch" id="sp_centerBoard"></span>공지사항</h2>
-                        <a href="" class="main_noti_link">더보기</a>
+                        <a href="/front/notice.do" class="main_noti_link">더보기</a>
                         <div class="clear"></div>
                     </div>
                     <!-- 공지사항 데이터 -->
@@ -453,8 +453,9 @@
     	    	var url = "/front/boardInfo.do";
     	    	var params = {
     	    			"boardCd" : "Not",
-    	    			"firstIndex" : 0,
-    	    			"recordCountPerPage" : 5,
+    	    			"firstIndex" : "0",
+    	    			"pageSize" : "5",
+    	    			"pageUnit" : "5",
     	    			"searchCenterCd" : centerCd
     	    	}
     	    	fn_Ajax 
@@ -472,15 +473,55 @@
     	    							var cssClass = (i == 0) ? "class='main_noti_list'":"";
     	    							var obj = result.resultlist[i];
     	    							sHTML += "<div "+cssClass+">"
-    	    		                          +  "  <div class='notice_con'> "                           
+    	    		                          +  "  <div class='notice_con' id='n_"+obj.board_seq+"'> "                           
     	    		                          +  "     <p class='notice_date'>'"+obj.last_updt_dtm+"'</p>"
     	    		                          +  "     <p class='notice_tit'><span>'"+obj.board_title+"'</span></p>"
     	    		                          +  "	</div>"
-    	    		                          +  "	<div class='notice_inner' id='"+obj.board_seq+"'></div>"
+    	    		                          +  "	<div class='notice_inner' id='c_"+obj.board_seq+"'>1231313121</div>"
     	    		                          +  "</div>"; 
     	    							$("#main_notice:last").append(sHTML);
     	    							sHTML = "";
     	    						}
+    	    						
+    	    						 $('.notice_con').click(function(e) {
+    	    					         e.preventDefault();
+    	    					         var $this = $(this);
+    	    					         var id = $(this).attr("id");
+    	    					         
+    	    					         if ($this.next().hasClass('show')) {
+    	    					        	 $("#c_"+ id.replace("n_", "") ).html("");
+    	    					             $this.next().removeClass('show');
+    	    					             $this.next().slideUp(350);
+    	    					         } else {
+    	    					        	
+    	    					        	 $this.parent().parent().find('.notice_inner').removeClass('show');
+    	    					             $this.parent().parent().find('.notice_inner').slideUp(350);
+    	    					             $this.next().toggleClass('show');
+    	    					             $this.next().slideToggle(350);
+    	    					            
+    	    					        	 fn_Ajax
+   	    									 (
+   	    										"/front/boardInfoDetail.do",
+   	    										"GET",
+   	    										{boardSeq : id.replace("n_", "")},
+   	    										false,
+   	    										function(result) {
+   	    											if (result.status == "SUCCESS") {
+   	    												var obj = result.result;
+   	    				    	    					$("#c_"+ id.replace("n_", "") ).html(obj.board_cn);
+   	    				    	    					if (result.resultlist != undefined){
+   	    				    	    						//파일 리스트 표출 
+   	    				    	    					}
+   	    								            }
+   	    								         },
+   	    								         function(request) {
+   	    								        	 fn_openPopup("ERROR : " + request.status, "red", "ERROR", "확인", "");	
+   	    								         }
+   	    								     );
+    	    					        	
+    	    					             
+    	    					         }
+    	    					     });
     	    						
     	    						
     	    					}	
@@ -636,7 +677,6 @@
 			}
 		}
     </script>
-
 	<c:import url="/front/inc/popup_common.do" />
     <script src="/resources/js/front/common.js"></script>
 	<script src="/resources/js/front/front_common.js"></script>

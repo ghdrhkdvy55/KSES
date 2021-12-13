@@ -543,6 +543,9 @@
  						       var returnVal = uniAjaxReturn(url, "GET", false, null, "lst");
 					    	   fn_checkboxListJsonOnChange("sp_boardCenter", returnVal, "", "boardCenterId", "boardinfo.fn_BoardCheck()"); 
 					    }
+						//여기 파일 정리 하기 
+						$("#tb_fileInfoList").hide();
+						$("#tb_fileInfoList > tbody").empty();
 						
 					    /* oEditors.getById["ir1"].exec("SET_IR", [""]); */						
 						toggleDefault("useYn");

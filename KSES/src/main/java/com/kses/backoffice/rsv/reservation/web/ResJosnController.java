@@ -658,6 +658,7 @@ public class ResJosnController{
 		        
 		return model;
 	}
+	
 	//현금 영수증
 	@RequestMapping(value="billPrint.do")
 	public ModelAndView selectPopBillInfo (@RequestParam("resvSeq") String resvSeq,
