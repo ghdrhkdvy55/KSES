@@ -535,7 +535,7 @@
 								} else {
 									$("#cancel_rsv_info .name").html(userLoginInfo.userNm);
 									$("#cancel_rsv_num").html(obj.resv_seq);
-									$("#cancel_rsv_center").html(obj.center_nm);
+									$("#cancel_rsv_brch").html(obj.center_nm);
 									$("#cancel_rsv_seat").html(obj.seat_nm);
 									$("#cancel_rsv_date").html(obj.resv_req_date);
 									$("#resvCancleBtn").attr("href","javascript:mainService.fn_resvCancel('" + obj.resv_seq + "');");

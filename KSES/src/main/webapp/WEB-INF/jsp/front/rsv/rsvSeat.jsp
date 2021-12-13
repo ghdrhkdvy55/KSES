@@ -477,7 +477,9 @@
     	var isMember = $("#userDvsn").val() == "USER_DVSN_1" ? true : false;
     	var pinchzoom = "";
     	var pinchInit = true;
-    	var certification = false;
+    	var certificationYn = false;
+    	var certificationName = "";
+    	var certificationNumber = "";
     	var center ="";
     	
 		$(document).ready(function() {
@@ -654,7 +656,7 @@
 	                                  +  ' </div>'
 	                                  +  '</li></div>';
 	                             
-	                            	$('#floor_area_Map').html(setHtml);
+	                            	$('#floor_area_Map').append(setHtml);
 	                            	
 	 	                            $('.floor_map ul li#s' + trim(fn_NVL(item.part_cd))).css({
 	 	                                "top": fn_NVL(item.part_mini_top) + "px",

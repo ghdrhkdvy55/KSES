@@ -411,18 +411,14 @@ public class ResJosnController{
 			searchVO.put("resvDate", nowDate);
 			
 			Map<String, Object> resInfo = resService.selectUserResvInfo(searchVO);
-			LOGGER.debug(resInfo.toString());
-			LOGGER.debug("1");
-			if (resInfo == null || Integer.valueOf(resInfo.get("resv_start_dt").toString()) < Integer.valueOf(nowDate)) {
-				LOGGER.debug("2");
+
+			if (resInfo == null || Integer.valueOf(resInfo.get("resv_end_dt").toString()) < Integer.valueOf(nowDate)) {
 				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 				model.addObject(Globals.STATUS_MESSAGE,"잘못된 예약 번호 이거나 지난 예약번호 입니다.");
 			} else if (SmartUtil.NVL( resInfo.get("resv_state"), "").toString().equals("RESV_STATE_4") ) {
-				LOGGER.debug("3");
 				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 				model.addObject(Globals.STATUS_MESSAGE,"예약 취소된 예약 번호 입니다.");
 			} else {
-				LOGGER.debug("4");
 				AttendInfo vo = new AttendInfo();
 				vo.setResvSeq(resvSeq);
 				vo.setUserId(resInfo.get("user_id").toString());
