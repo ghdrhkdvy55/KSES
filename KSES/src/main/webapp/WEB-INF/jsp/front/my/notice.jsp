@@ -110,7 +110,7 @@
         });
         $(document).ready(function() {
         	$("#centerCd").val("NOT");
-        	notice.fn_boardINfo();
+        	notice.fn_boardInfo("New");
         	
         });
         $(window).scroll(function(){            
@@ -118,15 +118,15 @@
             	  if( parseInt( $("#pageIndex").val()) < parseInt( $("#totalPageCount").val()) ) {
             		  var pageIndex =  parseInt( parseInt($("#pageIndex").val()) + 1 );
             		  $("#pageIndex").val( pageIndex);
-                	  notice.fn_boardINfo();
+                	  notice.fn_boardInfo("page");
                   }
             }
         });
         
         var notice = {
-        		
-        		fn_boardINfo  : function (){
-           	    	var url = "/front/boardInfo.do";
+        		fn_boardInfo  : function (emptyGubun){
+        			var url = "/front/boardInfo.do";
+        	    	
            	    	var params = {
            	    			"boardCd" : "Not",
            	    			"pageIndex" : $("#pageIndex").val(),
@@ -145,7 +145,9 @@
            	    					
            	    					if (result.resultlist.length>0){
            	    						var sHTML = "";
-           	    						//$("#container > div> div").empty();
+           	    						if (emptyGubun == "New"){
+           	    							$("#container > div> div").empty();
+           	    						}
            	    						
            	    						for (var i in result.resultlist){
            	    							var obj = result.resultlist[i];
@@ -210,8 +212,11 @@
            	    			}
            	    	)
         		}, 
-        		fn_boardCng : function(){
-        			notice.fn_boardINfo();
+        		fn_boardCng : function(centerCd){
+        			$("#centerCd").val(centerCd);
+        			console.log(centerCd);
+        			$("#pageIndex").val("1");
+        			notice.fn_boardInfo("New");
         		}
         }
     </script>
