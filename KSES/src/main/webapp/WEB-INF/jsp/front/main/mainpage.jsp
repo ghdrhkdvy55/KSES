@@ -133,25 +133,25 @@
                    <li>
                         <ol>
                             <li>예약번호</li>
-                            <li><span class="rsv_num">123458960</span></li>
+                            <li><span class="rsv_num"></span></li>
                         </ol>
                     </li>
                     <li>
                         <ol>
                             <li>지점</li>
-                            <li><span class="rsv_brch">대전지점</span></li>
+                            <li><span class="rsv_brch"></span></li>
                         </ol>
                     </li>
                     <li>
                         <ol>
                             <li>좌석</li>
-                            <li><span class="rsv_seat">A-3F-001</span></li>
+                            <li><span class="rsv_seat"></span></li>
                         </ol>
                     </li>
                     <li>
                         <ol>
                             <li>일시</li>
-                            <li><span class="rsv_date">2021-12-01 12:00</span></li>
+                            <li><span class="rsv_date"></span></li>
                         </ol>
                     </li> 
                </ul>
@@ -176,19 +176,19 @@
 					<li>
 						<ol>
                             <li>지점</li>
-                            <li><span id="rsv_center" class="rsv_brch">대전지점</span></li>
+                            <li><span id="rsv_center" class="rsv_brch"></span></li>
                         </ol>
                     </li>
                     <li>
                         <ol>
                             <li>좌석</li>
-                            <li><span id="rsv_seat" class="rsv_seat">A-3F-001</span></li>
+                            <li><span id="rsv_seat" class="rsv_seat"></span></li>
                         </ol>
                     </li>
                     <li>
                         <ol>
                             <li>일시</li>
-                            <li><span id="rsv_date" class="rsv_date">2021-12-01 12:00</span></li>
+                            <li><span id="rsv_date" class="rsv_date"></span></li>
 						</ol>
 					</li> 
 				</ul>
@@ -212,25 +212,25 @@
                 	<li>
                     	<ol>
                         	<li>예약번호</li>
-                        	<li><span id="cancel_rsv_num" class="rsv_num">123458960</span></li>
+                        	<li><span id="cancel_rsv_num" class="rsv_num"></span></li>
                     	</ol>
                 	</li>
                 	<li>
                     	<ol>
                         	<li>지점</li>
-                        	<li><span id="cancel_rsv_brch" class="rsv_brch">대전지점</span></li>
+                        	<li><span id="cancel_rsv_brch" class="rsv_brch"></span></li>
                     	</ol>
                 	</li>
                 	<li>
                     	<ol>
                         	<li>좌석</li>
-                        	<li><span id="cancel_rsv_seat" class="rsv_seat">A-3F-001</span></li>
+                        	<li><span id="cancel_rsv_seat" class="rsv_seat"></span></li>
                     	</ol>
                 	</li>
                 	<li>
                     	<ol>
                         	<li>일시</li>
-                        	<li><span id="cancel_rsv_date" class="rsv_date">2021-12-01 12:00</span></li>
+                        	<li><span id="cancel_rsv_date" class="rsv_date"></span></li>
                     	</ol>
                 	</li> 
                	</ul>
@@ -255,19 +255,19 @@
 					<li>
 						<ol>
                             <li>지점</li>
-                            <li><span id="re_rsv_center" class="rsv_brch">대전지점</span></li>
+                            <li><span id="re_rsv_center" class="rsv_brch"></span></li>
                         </ol>
                     </li>
                     <li>
                         <ol>
                             <li>좌석</li>
-                            <li><span id="re_rsv_seat" class="rsv_seat">A-3F-001</span></li>
+                            <li><span id="re_rsv_seat" class="rsv_seat"></span></li>
                         </ol>
                     </li>
                     <li>
                         <ol>
                             <li>일시</li>
-                            <li><span id="re_rsv_date" class="rsv_date">2021-12-01 12:00</span></li>
+                            <li><span id="re_rsv_date" class="rsv_date"></span></li>
 						</ol>
 					</li> 
 				</ul>
@@ -300,26 +300,9 @@
     <!-- mainpage.jsp script -->
     <script>
     	$(document).ready(function() {
-			// 예약일자생성
-			var test_time = "1700";
-			
-			var date = new Date();
-			
-			var time = date.format("HHmm");
-			var today = date.format("yyyyMMdd");
-			
-			date.setDate(date.getDate() +1);
-			var tomorrow = date.format("yyyyMMdd");
-			
-			var resvDate = (time < test_time) ? today : tomorrow;
-			
-			sessionStorage.setItem("resvDate",resvDate);
-
 			// 메인영역생성
     		var userId = $("#userId").val();
     		mainService.fn_makeUserInfoArea(userId, mainService.fn_makeNoticeArea);
-    		
-    		
     	});
     	
     	var mainService =
@@ -593,7 +576,7 @@
 								} else {
 									$("#cancel_rsv_info .name").html(userLoginInfo.userNm);
 									$("#cancel_rsv_num").html(obj.resv_seq);
-									$("#cancel_rsv_center").html(obj.center_nm);
+									$("#cancel_rsv_brch").html(obj.center_nm);
 									$("#cancel_rsv_seat").html(obj.seat_nm);
 									$("#cancel_rsv_date").html(obj.resv_req_date);
 									$("#resvCancleBtn").attr("href","javascript:mainService.fn_resvCancel('" + obj.resv_seq + "');");
@@ -639,7 +622,6 @@
 				);	
 			},
 			fn_reSeat : function(resvInfo) {
-				console.log(resvInfo);
 				var params = {
 					"isReSeat" : "Y",
 					"entryDvsn" : resvInfo.resv_entry_dvsn,

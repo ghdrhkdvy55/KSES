@@ -12,7 +12,7 @@
                 <entry key="pageSize" value="10"/>
                 <entry key="pageSizeImage" value="12"/>
                 <entry key="posblAtchFileSize" value="5242880"/>                
-                <entry key="Globals.filePath" value="C:\projectkses\KSES\KSES\src\main\webapp\upload"/>
+                <entry key="Globals.filePath" value="C:\Users\82102\git\KSES\KSES\src\main\webapp\upload"/>
                 <!-- <entry key="Globals.filePath" value="/home/ec2-user/front/webapps/ROOT/upload"/> -->
                 <entry key="Globals.addedOptions" value="false"/>
                 

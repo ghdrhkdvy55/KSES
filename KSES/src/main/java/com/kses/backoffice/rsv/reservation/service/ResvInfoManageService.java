@@ -118,6 +118,15 @@ public interface ResvInfoManageService {
 	public Map<String, Object> selectGuestMyResvInfo(Map<String, Object> params) throws Exception;
 	
 	/**
+	 * SPDM 예약 좌석 변경
+	 * 
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 */
+	public int resvSeatChange(Map<String, Object> params) throws Exception;
+	
+	/**
 	 * SPDM 예약 정보 취소
 	 * 
 	 * @param params

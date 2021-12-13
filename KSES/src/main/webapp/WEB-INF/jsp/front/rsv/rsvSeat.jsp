@@ -477,7 +477,9 @@
     	var isMember = $("#userDvsn").val() == "USER_DVSN_1" ? true : false;
     	var pinchzoom = "";
     	var pinchInit = true;
-    	var certification = false;
+    	var certificationYn = false;
+    	var certificationName = "";
+    	var certificationNumber = "";
     	var center ="";
     	
 		$(document).ready(function() {
@@ -519,7 +521,7 @@
 			fn_makeResvArea: function(centerCd) {
 				var url = "/front/rsvSeatAjax.do";
 				
-				var parmas = {"resvDate" : $("resv")};
+				var parmas = {"resvDate" : $("resvDate").val()};
 				
 				fn_Ajax
 				(
@@ -597,14 +599,14 @@
 				}
 			},
 			fn_floorChange : function() {
-				if($("#selectFloorCd").val() == "" || $("#selectFloorCd").val() == $("#floorCd")) {
+				if($("#selectFloorCd").val() != "" && $("#selectFloorCd").val() != $("#floorCd")) {
+					seatService.fn_initializing("FLOOR");
+					$("#floorCd").val($("#selectFloorCd").val());
+					$(".sel_floor_nm").html($("#selectFloorCd option:checked").text());
+					$("#section_sel").show();
+				} else {
 					return;
 				}
-				
-				seatService.fn_initializing("FLOOR");
-				$("#floorCd").val($("#selectFloorCd").val());
-				$(".sel_floor_nm").html($("#selectFloorCd option:checked").text());
-				$("#section_sel").show();
 				
 				var url = "/front/rsvPartListAjax.do";
 				var params = 
@@ -654,7 +656,7 @@
 	                                  +  ' </div>'
 	                                  +  '</li></div>';
 	                             
-	                            	$('#floor_area_Map').html(setHtml);
+	                            	$('#floor_area_Map').append(setHtml);
 	                            	
 	 	                            $('.floor_map ul li#s' + trim(fn_NVL(item.part_cd))).css({
 	 	                                "top": fn_NVL(item.part_mini_top) + "px",
@@ -704,17 +706,18 @@
 				);
 			},
 			fn_partChange : function() {
-				if($("#selectPartCd").val() == "" || $("#selectPartCd").val() == $("#partCd")) {
+				if($("#selectPartCd").val() != "" && $("#selectPartCd").val() != $("#partCd")) {
+					seatService.fn_initializing("PART");
+					$("#partCd").val($("#selectPartCd").val());
+					$(".sel_part_nm").html($("#selectPartCd option:selected").html() + "구역");
+				} else {
 					return;
-				}
-				
-				seatService.fn_initializing("PART");
-				$(".sel_part_nm").html($("#selectPartCd option:selected").html() + "구역");
-				
+				} 
+									
 				var url = "/front/rsvSeatListAjax.do";
 				var params = 
 				{
-					"partCd" : $("#selectPartCd").val(),
+					"partCd" : $("#partCd").val(),
 					"resvDate" : $("#resvDate").val()
 				}
 				

@@ -412,7 +412,7 @@ public class ResJosnController{
 			
 			Map<String, Object> resInfo = resService.selectUserResvInfo(searchVO);
 
-			if (resInfo == null || Integer.valueOf(resInfo.get("resv_start_dt").toString()) < Integer.valueOf(nowDate)) {
+			if (resInfo == null || Integer.valueOf(resInfo.get("resv_end_dt").toString()) < Integer.valueOf(nowDate)) {
 				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 				model.addObject(Globals.STATUS_MESSAGE,"잘못된 예약 번호 이거나 지난 예약번호 입니다.");
 			} else if (SmartUtil.NVL( resInfo.get("resv_state"), "").toString().equals("RESV_STATE_4") ) {
