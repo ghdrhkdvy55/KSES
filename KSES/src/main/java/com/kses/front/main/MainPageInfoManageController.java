@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
+import egovframework.com.cmm.service.EgovFileMngService;
 import egovframework.com.cmm.service.Globals;
 
 import org.slf4j.Logger;
@@ -49,6 +50,9 @@ public class MainPageInfoManageController {
 	
 	@Autowired
     protected BoardInfoManageService boardInfoService;
+	
+	@Autowired
+	private EgovFileMngService egocFileService;
 	
 		
 	@RequestMapping (value="main.do")
@@ -116,12 +120,51 @@ public class MainPageInfoManageController {
 			if ( SmartUtil.NVL(searchVO.get("searchCenterCd") , "").toString().equals("NOT") ) {
 				searchVO.remove("searchCenterCd");
 			}
+			   
+		    int pageUnit = searchVO.get("pageUnit") == null ?   propertiesService.getInt("pageUnit") : Integer.valueOf((String) searchVO.get("pageUnit"));
+			int pageSize = searchVO.get("pageSize") == null ?   propertiesService.getInt("pageSize") : Integer.valueOf((String) searchVO.get("pageSize"));
+			
+	                
+	   	    PaginationInfo paginationInfo = new PaginationInfo();
+		    paginationInfo.setCurrentPageNo( Integer.parseInt( SmartUtil.NVL(searchVO.get("pageIndex"), "1") ) );
+		    paginationInfo.setRecordCountPerPage(pageUnit);
+		    paginationInfo.setPageSize(pageSize);
+		    searchVO.put("firstIndex", paginationInfo.getFirstRecordIndex());
+		    searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
+		    searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
+		    searchVO.put("boardCd", "Not");
+		    
 			
 			List<Map<String, Object>> list =  boardInfoService.selectBoardManageListByPagination(searchVO) ;
 			int totCnt = list.size() > 0 ?  Integer.valueOf( list.get(0).get("total_record_count").toString()) : 0;
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS); 
 			model.addObject(Globals.JSON_RETURN_RESULTLISR, list);
 			model.addObject(Globals.PAGE_TOTALCNT, totCnt);
+			paginationInfo.setTotalRecordCount(totCnt);
+			model.addObject(Globals.JSON_PAGEINFO, paginationInfo);
+		}catch (Exception e) {
+			LOGGER.error("selectUserInfo : " + e.toString());
+			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
+		}
+		return model;
+	}
+	@RequestMapping (value="boardInfoDetail.do")
+	public ModelAndView selectFrontDetailBoardLst (@RequestParam("boardSeq") String boardSeq) throws Exception{
+		
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+		try {
+			
+			Map<String, Object> search = new HashMap<String, Object>();
+		    search.put("fileGubun", "BBS");
+		    search.put("fileSeq",boardSeq);
+			List<Map<String, Object>> fileList = egocFileService.selectFileInfs(search);
+			
+			
+			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS); 
+			model.addObject(Globals.JSON_RETURN_RESULT, boardInfoService.selectBoardManageDetail(boardSeq));
+			if (fileList.size() > 0)
+				model.addObject(Globals.JSON_RETURN_RESULTLISR, fileList);
 		}catch (Exception e) {
 			LOGGER.error("selectUserInfo : " + e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
