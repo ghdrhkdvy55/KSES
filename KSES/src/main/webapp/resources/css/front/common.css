@@ -1173,7 +1173,7 @@ p.myPin {
   z-index: 9;
 
 }
-#foot_btn .contents {background: #fff; border-top: 1px solid #e0e0e0;}
+#foot_btn .contents {background: #fff; }
 .main_pop{width:300px; height:350px;}
 .main_noti_pop{width:100%; height: 300px;}
 .main_noti_pop .main_noti_img{width:100%; height:100%;}
@@ -1539,7 +1539,7 @@ h2.guide_tit {
 .branchSel {margin-top: 2rem; padding-bottom: 20rem; }
 .branch_list >li {width: 48%; border-radius: 8px; background: #F3F3F3; display: inline-block; margin-bottom: 2rem; cursor: pointer; }
 .branch_list >li span {font-weight: 700;}
-.branch_list >li:nth-child(even) {margin-left: 0.9rem;}
+.branch_list >li:nth-child(even) {float:right;}
 .branch_list >li ul {text-align: center; padding: 2.5rem 1rem; }
 .branch_list >li ul li:last-child {color: #8E8E8E; font-size: 0.9em;}
 
