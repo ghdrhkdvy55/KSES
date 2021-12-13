@@ -2400,3 +2400,25 @@ ul.tabs li{
 	  top: -27px;
 	  right: -27px;
 	}
+	
+	.box-wrapper {
+		position: absolute;
+	}
+	
+	/*첨부파일*/
+.fileDown {margin-top: 12px; float: right;}
+.fileDown a {color: #000;}
+.fileDown a img {vertical-align: bottom;}
+
+/*현금영수증*/
+.cash_receipt {width: 300px; margin: auto; font-size: .8em; border: 1px solid #cfcfcf; padding: 1rem;}
+.cash_receipt table .cash_tit td {border: none;}
+.cash_receipt table th {width: 1%; background: #eee;}
+.cash_receipt table td {width: 3%; padding-left: 5px;}
+.cash_receipt table th, .cash_receipt table td {border: 1px solid #cfcfcf; }
+.cash_receipt table {
+    margin-top: 2rem;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+.info_txt {font-size: .9em;}

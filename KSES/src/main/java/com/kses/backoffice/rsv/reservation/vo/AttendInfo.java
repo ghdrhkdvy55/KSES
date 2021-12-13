@@ -20,4 +20,8 @@ public class AttendInfo {
 	private String userNm = "";
 	private String mode = "";
 	private int ret = 0;
+	
+	private String qrInot = "";
+	private String qrCneterCd = "";
+			
 }

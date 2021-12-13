@@ -85,8 +85,8 @@
     		<mvc:exclude-mapping path="/backoffice/login.do"/>
     		<mvc:exclude-mapping path="/backoffice/SecurityLogin.do"/>
     		<mvc:exclude-mapping path="/backoffice/billPrint.do"/>
-    		<mvc:exclude-mapping path="/backoffice/rsv/*.do"/> 	 		
-   
+    		<mvc:exclude-mapping path="/backoffice/rsv/qrReadCheck.do"/> 
+    		<mvc:exclude-mapping path="/backoffice/rsv/qrSend.do"/> 
     		
     		<bean class="egovframework.com.cmm.interceptor.AuthenticInterceptor" />
         </mvc:interceptor>
