@@ -154,6 +154,38 @@ public class ResvInfoManageController {
 		return model;
 	}
 	
+	@RequestMapping (value="rsvSeatChange.do")
+	public ModelAndView rsvSeatChange(	HttpServletRequest request, 
+										@RequestBody Map<String,Object> params, 
+										BindingResult result) throws Exception {
+		
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+		
+		if(!isAuthenticated) {
+			model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
+			return model;
+		}
+		
+		try {
+			String meesage = "";
+			LoginVO loginVO = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
+			params.put("userId", loginVO.getAdminId());
+			int ret = resvService.resvSeatChange(params);
+			System.out.println(ret);
+			
+			if(ret > 0) {
+				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
+			}
+		} catch (Exception e){
+			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.insert"));	
+		}	
+		return model;
+	}
+	
 	@RequestMapping (value="rsvInfoDetail.do")
 	public ModelAndView selectCenterInfoDetail(	@ModelAttribute("loginVO") LoginVO loginVO, 
 												@RequestParam("resvSeq") String resvSeq , 
@@ -221,8 +253,7 @@ public class ResvInfoManageController {
 	}
 	
 	@RequestMapping (value="attendInfoUpdate.do")
-	public ModelAndView updateAttendInfo(	HttpServletRequest request, 
-											@ModelAttribute("LoginVO") LoginVO loginVO, 
+	public ModelAndView updateAttendInfo(	HttpServletRequest request,  
 											@RequestBody AttendInfo vo, 
 											BindingResult result) throws Exception {
 		

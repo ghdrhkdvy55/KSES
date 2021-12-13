@@ -7,7 +7,7 @@
 		( 
 			SELECT 	
 				SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT, 
-				ROW_NUMBER() OVER (ORDER BY ROWNUM DESC) AS RNUM, 
+				ROW_NUMBER() OVER (ORDER BY TB.RESV_SEQ DESC) AS RNUM, 
 				TB.* 
 			FROM 	
 			(	
@@ -72,27 +72,27 @@
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchResvPayDvsn)">
 					AND A.RESV_PAY_DVSN = #{params.searchResvPayDvsn}
 				</if>
-			    ORDER BY A.RESV_SEQ DESC	
-			) TB 
+			) TB
+			ORDER BY TB.RESV_SEQ DESC	
 		) TA
 		WHERE RNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
-		ORDER BY TA.RNUM DESC
+		ORDER BY TA.RESV_SEQ DESC
     </select>
     
 	<select id="selectResInfoDetail" resultType="lmap">
 		SELECT  
 			A.RESV_SEQ, A.SEAT_CD, A.SEASON_CD, A.RESV_START_DT, A.RESV_END_DT, A.RESV_DVSN,
 			A.RESV_START_TM, A.RESV_END_TM, TO_CHAR(A.RESV_REQ_DATE, 'YYYY-MM-DD HH24:MI') AS RESV_REQ_DATE, A.USER_ID,
-			A.RESV_USER_ASK_YN, A.RESV_RCPT_YN, A.RESV_RCPT_NUMBER, A.RESV_PAY_COST,
-			FN_DETAILCODENM(A.RESV_USER_DVSN) AS RESV_USER_DVSN,
-			FN_DETAILCODENM(A.RESV_TICKET_DVSN) AS RESV_TICKET_DVSN,
-			FN_DETAILCODENM(A.RESV_PAY_DVSN) AS RESV_PAY_DVSN,
-			FN_DETAILCODENM(A.RESV_STATE) AS RESV_STATE,
+			A.RESV_STATE, A.RESV_USER_ASK_YN, A.RESV_RCPT_YN, A.RESV_RCPT_NUMBER, A.RESV_PAY_COST,
+			FN_DETAILCODENM(A.RESV_USER_DVSN) AS RESV_USER_DVSN_TEXT,
+			FN_DETAILCODENM(A.RESV_TICKET_DVSN) AS RESV_TICKET_DVSN_TEXT,
+			FN_DETAILCODENM(A.RESV_PAY_DVSN) AS RESV_PAY_DVSN_TEXT,
+			FN_DETAILCODENM(A.RESV_STATE) AS RESV_STATE_TEXT,
 			CASE  
 				WHEN A.RESV_ENTRY_DVSN = 'ENTRY_DVSN_1'  THEN '입석' 
 				ELSE D.FLOOR_NM || ' ' || E.PART_NM || '구역 ' || F.SEAT_NM
 			END AS SEAT_NM, 
-			C.CENTER_NM, B.USER_NM, B.USER_PHONE
+			C.CENTER_CD, C.CENTER_NM, B.USER_NM, B.USER_PHONE, D.FLOOR_CD, E.PART_CD
 		FROM TSER_RESV_INFO_I A, TEST_USER_INFO B, TSEB_CENTER_INFO_M C, TSEB_FLOOR_INFO_M D, TSEB_PART_INFO_D E, TSEB_SEAT_INFO_D F
 		WHERE A.RESV_SEQ = #{resvSeq}
 		AND A.USER_ID = B.USER_ID
@@ -252,7 +252,7 @@
 		AND A.RESV_STATE = 'RESV_STATE_1'
     </select>  
     
-	<!-- 입석 좌석 구분값 조회 -->
+	<!-- 예약 고객 아이디 조회 -->
     <select id="selectResvUserId" resultType="String">
     	SELECT USER_ID FROM TSER_RESV_INFO_I WHERE RESV_SEQ = #{resvSeq}
     </select>
@@ -284,7 +284,7 @@
 		VALUES 
 		(
 			#{resvSeq}, #{centerCd, jdbcType=VARCHAR}, #{floorCd, jdbcType=VARCHAR}, #{partCd, jdbcType=VARCHAR}, #{seatCd, jdbcType=VARCHAR},
-			#{resvDate, jdbcType=VARCHAR}, #{resvDate, jdbcType=VARCHAR}, 'TEMP', '0000', '1900',
+			TO_CHAR(TO_DATE(#{resvDate, jdbcType=VARCHAR}) - (INTERVAL '1' DAY),'YYYYMMDD'), #{resvDate, jdbcType=VARCHAR}, 'TEMP', '0000', '2359',
 			SYSDATE, #{resvUserDvsn, jdbcType=VARCHAR}, 
 			<choose>
            		<when test='resvUserDvsn == "USER_DVSN_1"'>
@@ -300,6 +300,17 @@
 			SYSDATE, 'admin'  	
 		)
     </insert>
+    
+	<update id="resvSeatChange">
+    	UPDATE TSER_RESV_INFO_I SET
+    		CENTER_CD = #{params.centerCd},
+    		FLOOR_CD = #{params.floorCd},
+    		PART_CD = #{params.partCd},
+    		SEAT_CD = #{params.seatCd},
+    		LAST_UPDUSR_ID = #{params.userId},
+    		LAST_UPDT_DTM = SYSDATE
+    	WHERE RESV_SEQ = #{params.resvSeq}
+    </update>
     
     <update id="resvInfoCancel">
     	UPDATE TSER_RESV_INFO_I SET
@@ -333,6 +344,7 @@
 		(
 			#{params.centerCd, mode=IN, jdbcType=VARCHAR, javaType=string},
 			#{params.seatCd, mode=IN, jdbcType=VARCHAR, javaType=string},
+			#{params.inResvDate, mode=IN, jdbcType=VARCHAR, javaType=string},
 			#{params.checkDvsn, mode=IN, jdbcType=VARCHAR, javaType=string},
 			<!-- #{params.userId, mode=IN, jdbcType=VARCHAR, javaType=string}, -->
 			#{params.resultCode, mode=OUT, jdbcType=VARCHAR, javaType=string},

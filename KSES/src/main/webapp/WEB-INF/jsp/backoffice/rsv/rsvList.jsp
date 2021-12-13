@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!-- JQuery Grid -->
+<link rel="stylesheet" href="/resources/css/paragraph_new.css">
 <link rel="stylesheet" href="/resources/jqgrid/src/css/ui.jqgrid.css">
 <script type="text/javascript" src="/resources/jqgrid/src/i18n/grid.locale-kr.js"></script>
 <script type="text/javascript" src="/resources/jqgrid/js/jquery.jqGrid.min.js"></script>
@@ -17,6 +18,7 @@
 <!-- //contents -->
 <input type="hidden" id="mode" name="mode">
 <input type="hidden" id="resvSeq" name="resvSeq">
+<input type="hidden" id="resvDate" name="resvDate">
 <div class="breadcrumb">
 	<ol class="breadcrumb-item">
 		<li>고객 관리&nbsp;&gt;&nbsp;</li>
@@ -109,13 +111,13 @@
                   	<tr>
                       <th>지점 </th>
                       <td id="rsvPopCenterNm">장안지점</td>
-                      <th>구역 정보 </th>
+                      <th>좌석 정보 </th>
                       <td id="rsvPopAreaInfo">1층 B-003</td>
                   	</tr> 
                   	<tr> 
-                    	<th>좌석 정보</th>
-                    	<td>
-                      		<a href="javascript:jqGridFunc.fn_resvSeatInfo();" class="blueBtn">좌석변경</a>
+                    	<th>좌석 변경</th>
+                    	<td id="rsvPopSeatChange">
+                      		<a class="blueBtn">좌석변경</a>
                     	</td>
                     	<th>예약 번호</th>
                     	<td id="rsvPopResvSeq">KSP7968</td>
@@ -174,36 +176,14 @@
       	<div class="pop_wrap">
 			<table class="detail_table">
 				<tbody>
-					<tr>
-						<th>지점 </th>
-                      	<td>
-							<select id="longPopSearchCenterCd" onChange="jqGridFunc.fn_centerChange();">
-								<option value="">지점 선택</option>
-								<c:forEach items="${centerInfo}" var="centerInfo">
-									<option value="${centerInfo.center_cd}">${centerInfo.center_nm}</option>
-								</c:forEach>
-							</select>
-                      	</td>
-                      	<th>구역 정보 </th>
-                      	<td>
-	                        <select id="longPopSearchFloorCd" onChange="jqGridFunc.fn_floorChange();">
-                          		<option value=""></option>
-                        	</select>층
-							<select id="longPopSearchPartCd" onChange="jqGridFunc.fn_partChange();" >
-                          		<option value=""></option>                 
-                        	</select>구역                        
-                      	</td>
-                  	</tr>
                   	<tr>
                     	<th>좌석 정보</th>
                       	<td colspan="3">
-                        	<select id="longPopSearchSeatCd">
-                          		<option value="">B-003</option>
-                          		<option value="">B-004</option>                 
-                        	</select>
+							<input type="text" id="longResvSeatNm" readonly>
+							<input type="hidden" id="longResvSeatCd" readonly>
                       	</td>
                   	</tr>
-                  						<tr>
+					<tr>
                     	<th>예약 일자 </th>
                     	<td>                      
                       		<p>
@@ -320,39 +300,7 @@
       	<div class="clear"></div>
   	</div>
 </div>
-<!-- // 좌석변경 팝업 -->
-<!-- <div data-popup="seat_change" class="popup">
-  	<div class="pop_con">
-		<a class="button b-close">X</a>
-		<h2 class="pop_tit">좌석 변경 </h2>
-      	<div class="pop_wrap">
-			<table class="detail_table">
-				<tbody>
-                  	<tr>
-						<th>지점 </th>
-                      	<td>장안지점</td>
-                      	<th>구역 정보 </th>
-                      	<td>B001</td>
-                  	</tr>
-                  	<tr>
-                    	<th>좌석 정보</th>
-                      	<td>
-                        	<a data-popup-open="seat_change" class="blueBtn">좌석 변경</a>
-                      	</td>
-                    	<th>예약번호</th>
-						<td>KSP7968</td>
-                  	</tr>
-              	</tbody>
-          	</table>
-      	</div>
-      	<div class="right_box">
-          	<a href="" class="grayBtn">취소</a>
-          	<a href="" class="blueBtn">저장</a>
-      	</div>
-      	<div class="clear"></div>
-  	</div>
-</div> -->
-<!-- 관리자 등록 팝업 // -->
+
 <!-- // 관리자 검색 팝업 -->
 <div id="search_result" class="popup">
 	<div class="pop_con">
@@ -401,17 +349,19 @@
       	<div class="pop_wrap pop_seat_change">
         	<div class="searchBox left_box">
           		<p>지점
-            		<select>
-              			<option value="">지점 선택</option>
+            		<select id="resvCenterCd" onChange="jqGridFunc.fn_centerChange()">
+						<c:forEach items="${centerInfo}" var="centerInfo">
+							<option value="${centerInfo.center_cd}">${centerInfo.center_nm}</option>
+						</c:forEach>
             		</select>
           		</p>
           		<p>층
-            		<select>
+            		<select id="resvFloorCd" onChange="jqGridFunc.fn_floorChange()">
               			<option value="">층 선택</option>
             		</select>
           		</p>
           		<p>구역
-            		<select>
+            		<select id="resvPartCd">
               			<option value="">구역 선택</option>
             		</select>
           		</p>
@@ -419,11 +369,11 @@
             		<input type="text" id="from" readonly="readonly" class="cal_icon"> ~
             		<input type="text" id="to" readonly="readonly" class="cal_icon">
           		</p>
-          		<a href="" class="grayBtn left_box">검색</a>
+          		<a href="javascript:jqGridFunc.fn_resvSeatSearch('search');" class="grayBtn left_box">검색</a>
         	</div>
-        	<a href="" class="blueBtn right_box">저장</a>
+        	<a href="javascript:jqGridFunc.fn_resvSeatUpdate('change')" class="blueBtn right_box">저장</a>
         <div class="clear"></div>
-        	<div class="pop_mapArea" style="background: url(../../img/area_bg.png) no-repeat center;">
+        	<div class="pop_mapArea" style="background: url(/resources/img/area_bg.png) no-repeat center;">
           		<div class="pop_seat_label left_box">
             		<ul>
               			<li class="disable"><i></i>신청불가</li>
@@ -459,12 +409,12 @@
 			currentText: "Today"
 		};	       
 		$("#searchResvDateFrom, #searchResvDateTo, #longResvDateFrom, #longResvDateTo").datepicker(clareCalendar);
-		$("#searchResvDateFrom, #searchResvDateTo, #longResvDateFrom, #longResvDateTo").val(new Date().format("yyyyMMdd"));
+		/* $("#searchResvDateFrom, #searchResvDateTo, #longResvDateFrom, #longResvDateTo").val(new Date().format("yyyyMMdd")); */
 		
 		$("img.ui-datepicker-trigger").attr("style", "margin-left:3px; vertical-align:middle; cursor:pointer;"); //이미지버튼 style적용
 		$("#ui-datepicker-div").hide(); //자동으로 생성되는 div객체 숨김
 	});
-    
+	
 	var jqGridFunc = {
 		setGrid : function(gridOption) {
 			var grid = $('#'+gridOption);
@@ -660,14 +610,23 @@
 						$("#rsvPopCenterNm").html(obj.center_nm);
 						$("#rsvPopAreaInfo").html(obj.seat_nm);
 						$("#rsvPopResvSeq").html(obj.resv_seq);
-						$("#rsvPopResvUserDvsn").html(obj.resv_user_dvsn);
+						$("#rsvPopResvUserDvsn").html(obj.resv_user_dvsn_text);
 						$("#rsvPopUserId").html(obj.user_id);
 						$("#rsvPopResvUserNm").html(obj.user_nm);
 						$("#rsvPopResvUserPhone").html(obj.user_phone);
-						$("#rsvPopResvPayDvsn").html(obj.resv_pay_dvsn);
+						$("#rsvPopResvPayDvsn").html(obj.resv_pay_dvsn_text);
 						obj.resv_user_ask_yn = obj.resv_user_ask_yn == "Y" ? "동의" : "미동의"; 
 						$("#rsvPopResvUserAskYn").html(obj.resv_user_ask_yn);
 						
+						if(obj.seat_nm != "입석" && obj.resv_state == "RESV_STATE_1") { 
+							$("#rsvPopSeatChange a").show().click(function (e) {
+								jqGridFunc.fn_resvSeatInfo("change",obj);
+							});		
+						} else {
+							$("#rsvPopSeatChange a").hide();
+						}
+						
+						//입퇴장 이력
 						attendService.fn_attendInfo(resvSeq);
 					}
 				},
@@ -676,44 +635,172 @@
 				}    		
 			);
 		},
-		fn_resvSeatInfo : function() {
+		fn_resvSeatInfo : function(division,resvInfo) {
+			if(division == "change") {
+				$("#resvSeq").val(resvInfo.resv_seq);
+				$("#resvDate").val(resvInfo.resv_end_dt);
+				$("#resvCenterCd").val(resvInfo.center_cd).trigger("change");
+ 				$("#resvFloorCd").val(resvInfo.floor_cd).trigger("change");
+				$("#resvPartCd").val(resvInfo.part_cd);
+				$("#seat_change p:eq(3)").hide();
+				
+				jqGridFunc.fn_resvSeatSearch("change");
+			}
+			
 			$("#seat_change").bPopup();
 		},
+		fn_resvSeatSearch : function(division) {
+			var url = "/front/rsvSeatListAjax.do";
+			var params = {};
+			
+			params = {
+				"division" : division,
+				"resvSeq" : $("#resvSeq").val(),
+				"resvDate" : $("#resvDate").val(),
+				"partCd" : $("#resvPartCd").val(),
+			};
+			
+			fn_Ajax
+			(
+			    url,
+			    "POST",
+			    params,
+				false,
+				function(result) {
+			    	if (result.status == "SUCCESS"){
+			    		
+			    		if (result.seatMapInfo != null) {
+			    		    var img = result.seatMapInfo.part_map1;
+			    		    $('.pop_mapArea').css({
+			    		        "background": "#fff url(/upload/" + img + ")"
+			    		    });
+			    		} else {
+			    		    $('.part_mapArea').css({
+			    		        "background": "#fff url()"
+			    		    });
+			    		}
+							
+						if (result.resultlist.length > 0) {
+			    		    var shtml = "";
+			    		    var obj = result.resultlist;
+			    		    for (var i in result.resultlist) {
+			    		    	switch(obj[i].status){
+			    		    		case "1" : addClass = "usable"; break;
+			    		    		case "2" : addClass = "disable"; break;
+			    		    		default : addClass = "selected"; break;
+			    		    	}
+
+			    		        shtml += '<li id="' + fn_NVL(obj[i].seat_cd) + '" class="' + addClass + '" seat-id="' + obj[i].seat_cd + '" name="' + obj[i].seat_nm + '" >' + obj[i].seat_order + '</li>';
+			    		    }
+
+			    		    $(".pop_seat").html(shtml);
+			    		    
+			    		    for (var i in result.resultlist) {
+			    		        $("#" + fn_NVL(obj[i].seat_cd)).css({
+			    		            "top": fn_NVL(obj[i].seat_top) + "px",
+			    		            "left": fn_NVL(obj[i].seat_left) + "px"
+			    		        });
+			    		    }
+			    		    
+ 			    		    var seatList = $(".pop_seat li");
+			    		    $(seatList).click(function() {
+			    		    	if(!$(this).hasClass("disable")) {
+			    		    		var oldSel = $(".pop_seat li.usable");
+			    		    		oldSel.removeClass("usable").addClass("selected");
+			    		    		$(this).removeClass("selected").addClass("usable");
+			    		    	}
+							});
+			    		}					
+			    	}
+				},
+				function(request) {
+					alert("ERROR : " +request.status);	       						
+				}    		
+			);	
+		},
+		fn_resvSeatUpdate : function(division) {
+			if($(".pop_seat li.usable").length <= 0) {
+				common_popup("변경할 좌석을 선택해주세요.", "N", "");
+				return;	
+			}
+			
+			var params = {
+				"resvSeq" : $("#resvSeq").val(),
+				"inResvDate" : $("#resvDate").val(),
+				"centerCd" : $("#resvCenterCd").val(),
+				"floorCd" : $("#resvFloorCd").val(),
+				"partCd" : $("#resvPartCd").val(),
+				"seatCd" : $(".pop_seat li.usable").attr("id"),
+				"checkDvsn" : "CHANGE"
+			}
+			
+			var validResult = jqGridFunc.fn_resvVaildCheck(params);
+			
+			if(validResult != null) {
+				var url = "/backoffice/rsv/rsvSeatChange.do"; 
+				
+				fn_Ajax
+				(
+				    url,
+				    "POST",
+					params,
+					false,
+					function(result) {
+				    	if(result.status == "SUCCESS") {
+							common_popup("좌석이 정상적으로 변경되었습니다.", "Y", "");
+				    	} else if (result.status == "LOGIN FAIL") {
+				    		common_popup("로그인 정보가 올바르지않습니다 다시 로그인해주세요", "Y", "");
+				    	} else {
+				    		common_popup("처리중 오류가 발생하였습니다.", "Y", "");
+				    	}
+					},
+					function(request) {
+						alert("ERROR : " + request.status);	       						
+					}    		
+				);	
+			}		
+		},
+		fn_resvVaildCheck : function(params) {
+			var url = "/front/resvValidCheck.do";
+			var validResult;
+			
+			fn_Ajax
+			(
+			    url,
+			    "POST",
+				params,
+				false,
+				function(result) {
+					if (result.status == "SUCCESS") {
+						if(result.validResult.resultCode != "SUCCESS") {
+							common_popup(result.validResult.resultMessage, "N", "");
+							return;
+						} else {
+							validResult = result.validResult;
+						}
+					} else if (result.status == "LOGIN FAIL"){
+						common_popup("로그인 정보가 올바르지 않습니다.", "N", "");
+					}
+				},
+				function(request) {
+					common_popup("ERROR : " + request.status, "N", "");	       						
+				}    		
+			);
+			
+			return validResult;
+		},
+
 		fn_centerChange : function() {
 	 		var url = "/backoffice/bld/floorComboInfo.do"
-	 		var params = {"centerCd" : $("#longPopSearchCenterCd").val()}
+	 		var params = {"centerCd" : $("#resvCenterCd").val()}
 	 		var returnVal = uniAjaxReturn(url, "GET", false, params, "lst");
-	 		fn_comboListJson("longPopSearchFloorCd", returnVal, "jqGridFunc.fn_floorChange", "100px;", "");
-	 		if (returnVal.length > 0) {
-	 			$("#longPopSearchFloorCd option:eq(1)").prop("selected", true);
-	 		}else {
-	 			$("#longPopSearchFloorCd").hide();
-	 		}
-	 		$("#searchPartCd").hide();
+	 		fn_comboListJson("resvFloorCd", returnVal, "jqGridFunc.fn_floorChange", "100px;", "");
 		},
 		fn_floorChange : function() {
 			var url = "/backoffice/bld/partInfoComboList.do"
-		    var params = {"floorCd" : $("#longPopSearchFloorCd").val()}
+		    var params = {"floorCd" : $("#resvFloorCd").val()}
 		 	var returnVal = uniAjaxReturn(url, "GET", false, params, "lst");
-			fn_comboListJson("longPopSearchPartCd", returnVal, "jqGridFunc.fn_partChange", "100px;", "");
-			if (returnVal.length > 0) {
-	 			$("#longPopSearchPartCd option:eq(1)").prop("selected", true);
-	 			$("#longPopSearchPartCd").show();
-	 		} else {
-	 			$("#longPopSearchPartCd").hide();
-	 		}
-		},
-		fn_partChange : function() {
-			var url = "/backoffice/bld/partInfoComboList.do"
-		    var params = {"floorCd" : $("#longPopSearchFloorCd").val()}
-		 	var returnVal = uniAjaxReturn(url, "GET", false, params, "lst");
-			fn_comboListJson("longPopSearchPartCd", returnVal, "", "100px;", "");
-			if (returnVal.length > 0){
-	 			$("#longPopSearchSeatCd option:eq(1)").prop("selected", true);
-	 			$("#longPopSearchSeatCd").show();
-	 		} else {
-	 			$("#longPopSearchPartCd").hide();
-	 		}
+			fn_comboListJson("resvPartCd", returnVal, "", "100px;", "");
 		},
 		fn_longSeatAdd : function() {
 			$("#longPopSearchCenterCd").val("");
