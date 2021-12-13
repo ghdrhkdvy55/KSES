@@ -141,8 +141,8 @@
           </table>
       </div>
       <div class="right_box">
+          <a href="#" onClick="jqGridFunc.fn_CheckForm()" id="btnUpdate" class="blueBtn">등록</a>
           <a href="#" onClick="common_modelClose('mng_admin_add')" class="grayBtn">취소</a>
-          <a href="#" onClick="jqGridFunc.fn_CheckForm()" class="blueBtn">저장</a>
       </div>
       <div class="clear"></div>
   </div>
@@ -348,9 +348,8 @@
 		       					   }
        						       $("input:radio[name='useYn']:radio[value='"+obj.use_yn+"']").prop('checked', true);
        						       $("#sp_Unqi").hide();
-       						       $("#mng_admin_add > div >h2").text("관리자 수정");
+       						       $("#mng_admin_add > div >h2").text("관리자 정보 수정");
        						       $("#btn_empSarch").hide();
-       						       $("#btnSave").text("수정");
 	       					   }else{
 	       						  common_modelCloseM(result.message, "mng_admin_add");
 	       					   }
@@ -369,9 +368,9 @@
 					$("#centerCd").prop('style','display:none');
 					$("#useAt_Y").prop("checked", true);
 		        	$("#sp_Unqi").show();
-		        	$("#mng_admin_add > div >h2").text("관리자 등록");
+		        	$("#mng_admin_add > div >h2").text("관리자 정보 등록");
 		        	$("#btn_empSarch").show();
-		        	$("#btnSave").text("입력");
+		        	$("#btnUpdate").text("등록");
 		        }
 		        $("#mng_admin_add").bPopup();
            },fn_CheckForm  : function (){
@@ -409,11 +408,11 @@
 		      fn_Ajax(url, "POST", params, false,
 		      			function(result) {
 		 				       if (result.status == "LOGIN FAIL"){
-		 				    	   common_popup(result.meesage, "Y","mng_admin_add");
+		 				    	   common_popup(result.message, "Y","mng_admin_add");
 		   						   location.href="/backoffice/login.do";
 		   					   }else if (result.status == "SUCCESS"){
 		   						   //총 게시물 정리 하기'
-		   						   common_modelClose("mng_admin_add");
+		   						   common_modelCloseM(result.message, "mng_admin_add");
 		   						   jqGridFunc.fn_search();
 		   					   }else if (result.status == "FAIL"){
 		   						   common_modelCloseM("저장 도중 문제가 발생 하였습니다.", "Y", "mng_admin_add");

@@ -59,7 +59,7 @@
                     <div class="pay_btn">
                         <ul>
                             <li class="mintBtn"><a data-popup-open="pay_number">결제</a></li>
-                            <li class="grayBtn"><a href="javascript:history.back();">닫기</a></li>
+                            <li class="grayBtn"><a href="/front/main.do">닫기</a></li>
                         </ul>  
                     </div>
                 </div>
@@ -82,7 +82,8 @@
       	</div>
     </div>
     <!-- 결제인증 팝업 // -->
-
+	
+	<c:import url="/front/inc/popup_common.do" />
 	<script src="/resources/js/front/jquery-spinner.min.js"></script>
 	<script src="/resources/js/front/common.js"></script>
 	<script src="/resources/js/front/front_common.js"></script>
@@ -111,6 +112,7 @@
 					params,
 					false,
 					function(result) {
+				    	console.log(result);
 				    	if (result.status == "SUCCESS") {
 				    		if(isFirst){
 				    			isFirst = false;
@@ -118,6 +120,11 @@
 				    			$("#qr_enter_code img").last().remove();
 				    			$("#qr_enter_code canvas").remove();
 				    		}
+				    		
+				    		result.resvInfo.resv_pay_dvsn == 
+				    			"RESV_PAY_DVSN_1" ? 
+				    			$(".pay_btn ul li:eq(0)").show() : 
+								$(".pay_btn ul li:eq(0)").hide(); 
 				    		
 							var qrcode = new QRCode("qr_enter_code", {
 							    text: result.QRCODE,
@@ -131,7 +138,7 @@
 							$("#qr_enter_code > img").css("margin", "auto");
 							qrService.fn_qrTimer();
 						} else {
-							alert("QR코드 생성에 실패하였습니다.");
+							fn_openPopup("QR코드 생성에 실패하였습니다.", "red", "ERROR", "확인", "/front/main.do");
 						}
 					},
 					function(request) {
@@ -156,7 +163,7 @@
 					}
 				},1000);
 			},
-			fn_payment : function() {
+			fn_payment : function(division) {
 				var url = "/backoffice/rsv/speedCheck.do";
 				var params = {
 					"gubun" : "fep",
@@ -175,14 +182,13 @@
 					false,
 					function(result) {
 				    	if(result.regist != null) {
-							if (result.regist.Error_Msg == "SUCCESS") {
-								console.log(result);
-								return;
+							if(result.regist.Error_Msg == "SUCCESS") {
+								fn_openPopup("결제가 완료되었습니다.<br>잔액 : " + result.regist.Balance + "원", "blue", "SUCCESS", "확인", "javascript:location.reload();");
 							} else {
-								fn_openPopup(result.regist.Error_Msg, "red", "ERROR", "확인", "");
+								fn_openPopup(result.regist.Error_Msg, "red", "ERROR", "확인", "javascript:location.reload();");
 							}
 				    	} else {
-				    		fn_openPopup("로그인중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
+				    		fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
 				    	}
 					},
 					function(request) {

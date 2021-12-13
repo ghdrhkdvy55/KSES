@@ -51,11 +51,11 @@
 			    TO_CHAR( A.FRST_REGIST_PNTTM, 'YYYY-MM-DD HH24:MI:SS') FRST_REGIST_PNTTM, A.RQESTER_ID
 			FROM COMTNTRSMRCVLOG A 
 			WHERE 1=1
-			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchFloorSeq)">
-				AND A.CONECT_MTHD LIKE  '%'|| #{params.searchWrd} ||'%' 
+			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchFrom) and !@org.apache.commons.lang3.StringUtils@isEmpty(params.searchTo)">
+				AND TO_CHAR(A.FRST_REGIST_PNTTM, 'yyyymmdd') BETWEEN #{params.searchFrom} AND #{params.searchTo} 
 			</if>
-			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchBgnDe)">
-				AND DATE_FORMAT(a.CREAT_DT, '%Y%m%d') BETWEEN #{params.searchBgnDe} AND #{params.searchEndDe} 
+			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
+				AND A.INTEG_ID LIKE  '%'|| #{params.searchKeyword} ||'%'
 			</if>
 		)TB  
 	   	WHERE RNUM  BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}   

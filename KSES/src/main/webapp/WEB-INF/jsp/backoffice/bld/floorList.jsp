@@ -114,6 +114,7 @@
 	}
 </style>
 <link rel="stylesheet" href="/resources/css/paragraph_new.css">
+<script type="text/javascript" src="/resources/js/jquery.ui.rotatable.js"></script>
 <!-- //contents -->
 <input type="hidden" name="centerCd" id="centerCd" value="${regist.center_cd}">
 <input type="hidden" name="floorCd" id="floorCd">
@@ -195,10 +196,6 @@
 							<label for="floor_use_yn_n"><input id="floor_use_yn_n" type="radio" name="floor_use_yn" value="N">N</label>
                     	</td>
                   	</tr>
-                  	<tr>
-                      	<th>층 이름 규칙</th>
-                      	<td colspan="3"><input type="text" id="floorSeatRule"></td>
-                  	</tr>
 				</tbody>
           	</table>
       	</div>
@@ -232,19 +229,6 @@
 			                  	</c:forEach> 
 			             	</select>
                     	</td>
-                  	</tr>
-                  	<tr>
-                    	<th>좌석 등급</th>
-                    	<td>
-							<select id="seatClass">
-								<option value="">좌석 등급 선택</option>
-								<c:forEach items="${seatClass}" var="seatClass">
-									<option value="${seatClass.code}">${seatClass.codenm}</option>
-								</c:forEach>
-							</select>
-                    	</td>
-                    	<th>금액</th>
-						<td><input type="number" id="payCost"></td>
                   	</tr>
                   	<tr>
 						<th>좌석 구분</th>
@@ -320,13 +304,9 @@
 					<td><input type="number" id="partPayCost"></td>
 				</tr>
 				<tr>
-					<th>좌석 네이밍</th>
-                    <td><input type="text" id="partSeatRule"></td>
 					<th>구역 CSS</th>
                     <td><input id="partCss" type="text"></td>
-				</tr>
-				<tr>
-                    <th>미니맵 CSS</th>
+					<th>미니맵 CSS</th>
                     <td><input type="text" id="partMiniCss"></td>
                     <td colspan="2"></td>
 				</tr>
@@ -345,8 +325,6 @@
 				<tr>
                     <th>미니맵 Rotate</th>
                     <td><input type="number" id="partMiniRotate" onkeyup="this.value=this.value.replace(/[^0-9]/g,'');"></td>
-                    <th>구역금액</th>
-                    <td><input type="number" id="partPayCost" onkeyup="this.value=this.value.replace(/[^0-9]/g,'');"></td>
 				</tr>                
 			</tbody>
 		</table>
@@ -857,7 +835,7 @@
 			(rowObject.floor_part_dvsn === "FLOOR_PART_1") ? "<a href=\"#\" onClick='partService.fn_partInfo(\"Ins\", \"0\",\"" 
 						+ rowObject.floor_cd+"\",\"" 
 						+ rowObject.floor_nm+"\",\"" + rowObject.center_nm +"\")' class=\"blueBtn\" style=\"padding: 4px 10px;\">구역 등록</a>"
-						+ "<a href=\"#\" onClick='floorService.fn_ChangeFloor(\""+ rowObject.floor_cd +"\")' class=\"blueBtn\" style=\"padding: 4px 10px;\">층 도면관리</a>"
+						+ "<a href=\"#\" onClick='floorService.fn_ChangeFloor(\""+ rowObject.floor_cd +"\")' class=\"blueBtn\" style=\"padding: 4px 10px;\">구역 지정</a>"
 						: "<a href=\"#\" onClick='seatService.fn_seatSetting(\""+ rowObject.floor_cd+"\", \"0\")' class=\"blueBtn\">좌석 설정</a>";
 			return info;
 		}
@@ -895,9 +873,8 @@
 						} else if (result.status == "SUCCESS") {
 							var obj = result.regist;
 							
-							$("#bld_floor_add .pop_tit").html(obj.center_nm + " " + obj.floor_nm + " 층 정보 수정");
-							$("#floorInfoUpdateBtn").text('저장');
-							
+							$("#bld_floor_add .pop_tit").html(obj.center_nm + " " + obj.floor_nm + " 정보 수정");
+							$("#floorInfoUpdateBtn").text('저장');	
 							$("#floorNm").val(obj.floor_nm);
 							$("#floorPartDvsn").val(obj.floor_part_dvsn);
 							$("#floorSeatRule").val(obj.floor_seat_rule);
@@ -1098,37 +1075,38 @@
 			 	                   	
 	 	                    	}
 	 	                    });
-	 	                    //신규 추가
-	 	                    var nw = $("<div>", {
-	 	                	    class: "ui-rotatable-handle"
-	 	                	});
-	 	                	var ne = nw.clone();
-	 	                	var se = nw.clone();
-	 	                	$('.seat div.ui-rotatable-handle').addClass("ui-rotatable-handle-sw");
-	 	                	nw.addClass("ui-rotatable-handle-nw");
+	 	                    //신규 추가 - 불필요한 소스
+// 	 	                    var nw = $("<div>", {
+// 	 	                	    class: "ui-rotatable-handle"
+// 	 	                	});
+// 	 	                	var ne = nw.clone();
+// 	 	                	var se = nw.clone();
+// 	 	                	$('.seat div.ui-rotatable-handle').addClass("ui-rotatable-handle-sw");
+// 	 	                	nw.addClass("ui-rotatable-handle-nw");
 	 	                	  // Assign handles to box
-	 	                	$(".seat").append(nw);  
-	 	                	$(".seat div[class*='ui-rotatable-handle-']").draggable({
-	 	                		
-	 	                		
-	 	                	    drag: function(e, ui){
-	 	                	   	    
-		 	                   	    var get_id = $(this).parent().attr("id").substring(1);
-		 	                   	   	var top = parseInt(parseInt(ui.position.top) -27);
-	 	                	    	var left = parseInt(parseInt(ui.position.left) -27);
-	 	                	    	console.log("top:" + top + ": left"  + parseInt(ui.position.left) );
+// 	 	                	$(".seat").append(nw);  
+// 	 	                	$(".seat div[class*='ui-rotatable-handle-']").draggable({
+// 	 	                	    drag: function(e, ui){
+// 		 	                   	    var get_id = $(this).parent().attr("id").substring(1);
+// 		 	                   	   	var top = parseInt(parseInt(ui.position.top) -27);
+// 	 	                	    	var left = parseInt(parseInt(ui.position.left) -27);
+// 	 	                	    	console.log("top:" + top + ", left: "  + parseInt(ui.position.left) );
 	 	                	    	
-	 	                	    	var rotateCSS = 'rotate(' + ui.position.left + 'deg)';
-	 	                	    	$('#rotate_'+get_id).val( ui.position.left);
+// 	 	                	    	var rotateCSS = 'rotate(' + ui.position.left + 'deg)';
+// 	 	                	    	$('#rotate_'+get_id).val( ui.position.left);
 	 	                	    	
-	 	                	        $(this).parent().css({
-	 	                	            '-moz-transform': rotateCSS,
-	 	                	            '-webkit-transform': rotateCSS
-	 	                	        });
-	 	                	        
-	 	                	    }
-	 	                	}); 
-	 	                	  
+// 	 	                	        $(this).parent().css({
+// 	 	                	            '-moz-transform': rotateCSS,
+// 	 	                	            '-webkit-transform': rotateCSS
+// 	 	                	        });
+// 	 	                	        $(this).css({
+// 	 	                	        	'-moz-transform': rotateCSS,
+// 	 	                	            '-webkit-transform': rotateCSS
+// 	 	                	        });
+// 	 	                	    }
+// 	 	                	});
+							// 수정
+	 	                	$(".seat").rotatable()
 	 	                } else {
 	 	                    $('#seat_list').html('');
 	 	                }
@@ -1247,7 +1225,6 @@
 				{ label: 'floor_nm', name:'floor_nm', index:'floor_nm', align:'center', hidden:true },
 				{ label: '구역명', name:'part_nm', index:'part_nm', align:'center' },
 				{ label: '도면이미지', name:'part_map1', index:'part_map1', align:'center', formatter:partService.imageFomatter },
-				{ label: '좌석 네이밍', name:'part_seat_rule', index:'part_seat_rule', align:'center' },
 				{ label: '미니맵Top', name:'part_mini_top', index:'part_mini_top', align:'center' },
 				{ label: '미니맵Left', name:'part_mini_left', index:'part_mini_left', align:'center' },
 				{ label: '미니맵Left', name:'part_mini_left', index:'part_mini_left', align:'center' },
@@ -1346,7 +1323,6 @@
 		    formData.append('partClass', $("#partClass").val());
 		    formData.append('partMap1', $('#partMap1')[0].files[0]);
 		    formData.append('partCss', $("#partCss").val());
-		    formData.append('partSeatRule', $("#partSeatRule").val());
 		    formData.append('partNm', $("#partNm").val());
 		    formData.append('partMiniCss', $("#partMiniCss").val());
 		    formData.append('partMiniTop', fn_emptyReplace($("#partMiniTop").val(), "0"));
@@ -1392,7 +1368,6 @@
                 $("#partCss").val("");
                 $("#partClass").val("");
                 $("#partMap1").val("");
-                $("#partSeatrule").val("");
                 $("#partMiniCss").val("");
                 $("#partMiniTop").val("");
                 $("#partMiniLeft").val("");
@@ -1428,7 +1403,6 @@
 			                $("#partNm").val(obj.part_nm);
 			                $("#partCss").val(obj.part_css);
 			                $("#partClass").val(obj.part_class);
-			                $("#partSeatRule").val(obj.part_seat_rule);
 			                $("#partMiniCss").val(obj.part_mini_css);
 			                $("#partMiniTop").val(obj.part_mini_top);
 			                $("#partMiniLeft").val(obj.part_mini_left);
@@ -1500,10 +1474,7 @@
 		fn_checkForm : function() {
 		    if (any_empt_line_span("bld_seat_add", "seatStr", "좌석 시작 카운터을 선택해주세요.","sp_message", "savePage") == false) return;
 		    if (any_empt_line_span("bld_seat_add", "seatEnd", "좌석 종료 카운터를 선택해주세요.","sp_message", "savePage") == false) return;
-		    if (any_empt_line_span("bld_seat_add", "seatClass", "좌석 등급을 선택해주세요.","sp_message", "savePage") == false) return;
 		    if (any_empt_line_span("bld_seat_add", "seatDvsn", "좌석 구분을 선택해주세요.","sp_message", "savePage") == false) return;
-		    if (any_empt_line_span("bld_seat_add", "payCost", "금액을 입력해주세요.","sp_message", "savePage") == false) return;
-
 		    if (fnIntervalCheck($("#seatStr").val(), $("#seatEnd").val(), "시작이 종료 보다 클수 없습니다.") == false) return;
 		    
 			var commentTxt = ($("#mode").val() == "Ins") ? "신규 구역 정보를 등록 하시겠습니까?" : "입력한 구역 정보를 저장 하시겠습니까?";
@@ -1521,10 +1492,8 @@
 		        "partCd": $("#partCd").val(),
 		        "seatStr": $("#seatStr").val(),
 		        "seatEnd": $("#seatEnd").val(),
-		        "seatClass": $("#seatClass").val(),
 		        "seatDvsn": $("#seatDvsn").val(),
 		        "payDvsn": $("#payDvsn").val(),
-		        "payCost": fn_emptyReplace($('#payCost').val(), "0"),
 		        "payAmCost": fn_emptyReplace($('#payAmCost').val(), "0"),
 		        "payPmCost": fn_emptyReplace($('#payPmCost').val(), "0"),
 		    };
@@ -1563,10 +1532,8 @@
 	 	    } else {
 	 	        $("#seatStr").val("1");
 	 	        $("#seatEnd").val("1");
-	 	        $("#seatClass").val("");
 	 	       	$("#seatDvsn").val("");
 	 	      	$("#payDvsn").val("");
-	 	        $("#payCost").val("0");
 	 	       	$("#payAmCost").val("0");
 	 	      	$("#payPmCost").val("0");
 	 	        $("#bld_seat_add").bPopup();
@@ -1645,7 +1612,9 @@
 	 	                                    "   <td><a href='javascript:top_up(&#34;" + obj[i].seat_cd + "&#34;)' class='up'></a>" +
 	 	                                    "   <input type='text' id='top_" + obj[i].seat_cd + "' name='top_" + obj[i].seat_cd + "' value='" + obj[i].seat_top + "' onchange='top_chage(&#34;" + obj[i].seat_cd + "&#34;, this.value)'>" +
 	 	                                    "   <a href='javascript:top_down(&#34;" + obj[i].seat_cd + "&#34;)' class='down'></a></td>" +
+	 	                                    "   <td><a href='javascript:left_up(&#34;" + obj[i].seat_cd + "&#34;)' class='up'></a>" +
 	 	                                    "   <input type='text' id='left_" + obj[i].seat_cd + "' name='left_" + obj[i].seat_cd + "' value='" + obj[i].seat_left + "' onchange='left_chage(&#34;" + obj[i].seat_cd + "&#34, this.value)'>" +
+	 	                                    "   <a href='javascript:left_down(&#34;" + obj[i].seat_cd + "&#34;)' class='down'></a></td>" +
 	 	                                    "</tr>";
 	 	                                $("#seat_resultList > tbody:last").append(shtml);
 	 	                                shtml = "";

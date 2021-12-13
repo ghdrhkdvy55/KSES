@@ -102,6 +102,12 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	}
 	
 	@Override
+	public int resvSeatChange(Map<String, Object> params) throws Exception {
+		// TODO Auto-generated method stub
+		return resvMapper.resvSeatChange(params);
+	}
+	
+	@Override
 	public int resvInfoCancel(Map<String, Object> params) throws Exception {
 		// TODO Auto-generated method stub
 		return resvMapper.resvInfoCancel(params);
@@ -130,5 +136,11 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	public String selectFindPassword(Map<String, Object> paramMap) throws Exception {
 		// TODO Auto-generated method stub
 		return resvMapper.selectFindPassword(paramMap);
+	}
+
+	@Override
+	public int resbillChange(ResvInfo vo) throws Exception {
+		// TODO Auto-generated method stub
+		return resvMapper.resbillChange(vo);
 	}
 }

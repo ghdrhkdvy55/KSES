@@ -32,8 +32,8 @@
         <div class="left_box mng_countInfo">
             <p>총 : <span id="sp_totcnt"></span>건</p>
         </div>
-        <a href="#" class="right_box blueBtn">일괄등록</a> 
-        <a href="#" onClick="jqGridFunc.fn_MenuInfo('Ins', '')" class="right_box blueBtn">등록</a>  
+        <a href="#" class="right_box blueBtn">일괄 등록</a> 
+        <a href="#" onClick="jqGridFunc.fn_MenuInfo('Ins', '')" class="right_box blueBtn">메뉴 등록</a>  
         <a href="#" onClick="jqGridFunc.fn_menuDel()" class="right_box blueBtn">삭제</a> 
         <a href="#" onClick="jqGridFunc.fn_menuAllDel()" class="right_box blueBtn">전체 삭제</a>  
         <div class="clear"></div>
@@ -49,7 +49,7 @@
 <div id="bas_menu_add" class="popup m_pop">
     <div class="pop_con">
         <a class="button b-close">X</a>
-        <h2 class="pop_tit">메뉴 관리</h2>
+        <h2 class="pop_tit">메뉴 등록</h2>
         <div class="pop_wrap">
             <table class="detail_table" id="tb_menuInfo">
                 <tbody>
@@ -99,8 +99,8 @@
              </table>
         </div>
         <div class="right_box">
-            <a href="" onClick="common_modelClose('bas_menu_add')"  class="grayBtn">취소</a>
-            <a href="#" onClick="jqGridFunc.fn_CheckForm()" id="btnUpdate" class="blueBtn">저장</a>
+        	<a href="#" onClick="jqGridFunc.fn_CheckForm()" id="btnUpdate" class="blueBtn">저장</a>
+            <a href="" onClick="common_modelClose('bas_menu_add')"  class="grayBtn">취소</a>           
         </div>
         <div class="clear"></div>
     </div>
@@ -267,6 +267,7 @@
      	    if (mode == "Edt"){
 		        	$("#menuNo").val(menuNo).prop('readonly', true);
 		        	$("#btnUpdate").text("수정");
+		        	$("#bas_menu_add > div >h2").text("메뉴 정보 수정");
 		        	var params = {"menuNo" : menuNo};
 		        	var url = "/backoffice/bas/menuDetailInfo.do";
 		        	fn_Ajax(url, "GET", params, false, 
@@ -293,6 +294,7 @@
 			     			}
 		               );
 		        }else{
+		        	$("#bas_menu_add > div >h2").text("메뉴 정보 등록");	
 		        	$("#menuNo").val('').prop('readonly', false);
 		        	$("#menuNm").val('');
 				    $("#progrmFileNm").val('');

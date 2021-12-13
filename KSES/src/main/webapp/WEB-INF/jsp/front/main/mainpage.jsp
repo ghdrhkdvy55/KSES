@@ -89,42 +89,14 @@
         <!--// footer -->
         <div id="footer">
             <div class="contents">
-                <div class="main_notice">
+                <div class="main_notice" id="main_notice">
                     <div class="footer_tit">
-                        <h2><span class="branch">분당지점</span>공지사항</h2>
+                        <h2><span class="branch" id="sp_centerBoard"></span>공지사항</h2>
                         <a href="" class="main_noti_link">더보기</a>
                         <div class="clear"></div>
                     </div>
-
                     <!-- 공지사항 데이터 -->
-                    <div class="main_noti_list">
-                        <div class="notice_con">                            
-                            <p class="notice_date">2021.12.01</p>
-                            <p class="notice_tit"><span>코로나 19 방역에 따라 경기 일정이 변경 되었습니다.</span></p>
-                        </div>
-                        <!--공지사항 내용 -->
-                        <div class="notice_inner">
-                            	코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나
-                        </div>
-                    </div>
-                    <div>
-                        <div class="notice_con">                           
-                            <p class="notice_date">2021.12.01</p>
-                            <p class="notice_tit"><span>[공지] 코로나 19 방역수칙에 따른 이용자 명부 작성을 의무화합니다.</span></p>
-                        </div>
-                        <!--공지사항 내용 -->
-                        <div class="notice_inner">내용 
-                        </div>
-                    </div>   
-                    <div>
-                        <div class="notice_con">                            
-                            <p class="notice_date">2021.12.01</p>
-                            <p class="notice_tit"><span>[공지] 시스템 개선 및 점검 안내</span></p>
-                        </div>
-                        <!--공지사항 내용 -->
-                        <div class="notice_inner">내용
-                        </div>
-                    </div>                     
+                                                           
                 </div>
             </div>
             <div class="f_logo_box">
@@ -161,25 +133,25 @@
                    <li>
                         <ol>
                             <li>예약번호</li>
-                            <li><span class="rsv_num">123458960</span></li>
+                            <li><span class="rsv_num"></span></li>
                         </ol>
                     </li>
                     <li>
                         <ol>
                             <li>지점</li>
-                            <li><span class="rsv_brch">대전지점</span></li>
+                            <li><span class="rsv_brch"></span></li>
                         </ol>
                     </li>
                     <li>
                         <ol>
                             <li>좌석</li>
-                            <li><span class="rsv_seat">A-3F-001</span></li>
+                            <li><span class="rsv_seat"></span></li>
                         </ol>
                     </li>
                     <li>
                         <ol>
                             <li>일시</li>
-                            <li><span class="rsv_date">2021-12-01 12:00</span></li>
+                            <li><span class="rsv_date"></span></li>
                         </ol>
                     </li> 
                </ul>
@@ -204,19 +176,19 @@
 					<li>
 						<ol>
                             <li>지점</li>
-                            <li><span id="rsv_center" class="rsv_brch">대전지점</span></li>
+                            <li><span id="rsv_center" class="rsv_brch"></span></li>
                         </ol>
                     </li>
                     <li>
                         <ol>
                             <li>좌석</li>
-                            <li><span id="rsv_seat" class="rsv_seat">A-3F-001</span></li>
+                            <li><span id="rsv_seat" class="rsv_seat"></span></li>
                         </ol>
                     </li>
                     <li>
                         <ol>
                             <li>일시</li>
-                            <li><span id="rsv_date" class="rsv_date">2021-12-01 12:00</span></li>
+                            <li><span id="rsv_date" class="rsv_date"></span></li>
 						</ol>
 					</li> 
 				</ul>
@@ -240,25 +212,25 @@
                 	<li>
                     	<ol>
                         	<li>예약번호</li>
-                        	<li><span id="cancel_rsv_num" class="rsv_num">123458960</span></li>
+                        	<li><span id="cancel_rsv_num" class="rsv_num"></span></li>
                     	</ol>
                 	</li>
                 	<li>
                     	<ol>
                         	<li>지점</li>
-                        	<li><span id="cancel_rsv_brch" class="rsv_brch">대전지점</span></li>
+                        	<li><span id="cancel_rsv_brch" class="rsv_brch"></span></li>
                     	</ol>
                 	</li>
                 	<li>
                     	<ol>
                         	<li>좌석</li>
-                        	<li><span id="cancel_rsv_seat" class="rsv_seat">A-3F-001</span></li>
+                        	<li><span id="cancel_rsv_seat" class="rsv_seat"></span></li>
                     	</ol>
                 	</li>
                 	<li>
                     	<ol>
                         	<li>일시</li>
-                        	<li><span id="cancel_rsv_date" class="rsv_date">2021-12-01 12:00</span></li>
+                        	<li><span id="cancel_rsv_date" class="rsv_date"></span></li>
                     	</ol>
                 	</li> 
                	</ul>
@@ -283,19 +255,19 @@
 					<li>
 						<ol>
                             <li>지점</li>
-                            <li><span id="re_rsv_center" class="rsv_brch">대전지점</span></li>
+                            <li><span id="re_rsv_center" class="rsv_brch"></span></li>
                         </ol>
                     </li>
                     <li>
                         <ol>
                             <li>좌석</li>
-                            <li><span id="re_rsv_seat" class="rsv_seat">A-3F-001</span></li>
+                            <li><span id="re_rsv_seat" class="rsv_seat"></span></li>
                         </ol>
                     </li>
                     <li>
                         <ol>
                             <li>일시</li>
-                            <li><span id="re_rsv_date" class="rsv_date">2021-12-01 12:00</span></li>
+                            <li><span id="re_rsv_date" class="rsv_date"></span></li>
 						</ol>
 					</li> 
 				</ul>
@@ -328,21 +300,6 @@
     <!-- mainpage.jsp script -->
     <script>
     	$(document).ready(function() {
-			// 예약일자생성
-			var test_time = "1700";
-			
-			var date = new Date();
-			
-			var time = date.format("HHmm");
-			var today = date.format("yyyyMMdd");
-			
-			date.setDate(date.getDate() +1);
-			var tomorrow = date.format("yyyyMMdd");
-			
-			var resvDate = (time < test_time) ? today : tomorrow;
-			
-			sessionStorage.setItem("resvDate",resvDate);
-
 			// 메인영역생성
     		var userId = $("#userId").val();
     		mainService.fn_makeUserInfoArea(userId, mainService.fn_makeNoticeArea);
@@ -425,7 +382,7 @@
 										
 										// 유저정보하단 HTML생성
 										setHtml = "";
-										setHtml += "<li><span><a href='javascript:mainService.fn_userResvInfo(&#39;PRE&#39;, &#39;" + obj.resv_seq + "&#39;,&#39;re_rsv_info&#39;);' >다시 앉기<img src='/resources/img/front/arrow.png' alt='예약하기'></a></span></li>";
+										setHtml += "<li><span><a href='javascript:mainService.fn_userResvInfo(&#39;PRE&#39;, &#39;" + obj.resv_seq + "&#39;,&#39;re_rsv_info&#39;);' >최근 좌석으로 다시 앉기<img src='/resources/img/front/arrow.png' alt='예약하기'></a></span></li>";
 										setHtml += "<li><em><img src='/resources/img/front/alert_icon.svg' alt='알림'>과거 예약한 정보로 다시 앉으실 수 있습니다.</em></li>";
 										userInfoBottomArea.append(setHtml);
 										
@@ -463,7 +420,9 @@
 						function(request) {
 							fn_openPopup("ERROR : " + request.status, "red", "ERROR", "확인", "");	       						
 						}    		
-					);	
+					);
+					
+					//여기 부분 공지 사항 들어가는 자리 
 					
 				} else {
 					// 비로그인 상태(비회원)
@@ -482,8 +441,57 @@
 					setHtml += "<li><a href='/front/login.do'>로그인</a></li>";
 					setHtml += "<li><a href='javascript:fn_moveReservation();'>비회원 예약</a></li>";
 					userInfoBottomArea.append(setHtml);
+					//일반 공지 정리 하기 
 				}
-			},
+				// 공지값 넣기 
+				mainService.fn_boardINfo("NOT");
+				
+			}
+    	    ,
+    	    fn_boardINfo  : function (centerCd){
+    	    	
+    	    	var url = "/front/boardInfo.do";
+    	    	var params = {
+    	    			"boardCd" : "Not",
+    	    			"firstIndex" : 0,
+    	    			"recordCountPerPage" : 5,
+    	    			"searchCenterCd" : centerCd
+    	    	}
+    	    	fn_Ajax 
+    	    	(
+    	    			url,
+    	    			"POST",
+    	    			params,
+    	    			false,
+    	    			function(result){
+    	    				if (result.status == "SUCCESS") {
+    	    					if (result.resultlist.length>0){
+    	    						var sHTML = "";
+    	    						
+    	    						for (var i in result.resultlist){
+    	    							var cssClass = (i == 0) ? "class='main_noti_list'":"";
+    	    							var obj = result.resultlist[i];
+    	    							sHTML += "<div "+cssClass+">"
+    	    		                          +  "  <div class='notice_con'> "                           
+    	    		                          +  "     <p class='notice_date'>'"+obj.last_updt_dtm+"'</p>"
+    	    		                          +  "     <p class='notice_tit'><span>'"+obj.board_title+"'</span></p>"
+    	    		                          +  "	</div>"
+    	    		                          +  "	<div class='notice_inner' id='"+obj.board_seq+"'></div>"
+    	    		                          +  "</div>"; 
+    	    							$("#main_notice:last").append(sHTML);
+    	    							sHTML = "";
+    	    						}
+    	    						
+    	    						
+    	    					}	
+    	    				}else{
+    	    					fn_openPopup("ERROR : " + request.status, "red", "ERROR", "확인", "");	
+    	    				} 
+    	    				
+    	    			}
+    	    	)
+    	    }
+    	    ,
 			fn_userResvInfo : function(division, resvSeq, popup) {				
 				var url = "/front/userResvInfo.do";
 				var params = {
@@ -527,7 +535,7 @@
 								} else {
 									$("#cancel_rsv_info .name").html(userLoginInfo.userNm);
 									$("#cancel_rsv_num").html(obj.resv_seq);
-									$("#cancel_rsv_center").html(obj.center_nm);
+									$("#cancel_rsv_brch").html(obj.center_nm);
 									$("#cancel_rsv_seat").html(obj.seat_nm);
 									$("#cancel_rsv_date").html(obj.resv_req_date);
 									$("#resvCancleBtn").attr("href","javascript:mainService.fn_resvCancel('" + obj.resv_seq + "');");
@@ -573,7 +581,6 @@
 				);	
 			},
 			fn_reSeat : function(resvInfo) {
-				console.log(resvInfo);
 				var params = {
 					"isReSeat" : "Y",
 					"entryDvsn" : resvInfo.resv_entry_dvsn,

@@ -77,7 +77,7 @@
 <div id='bas_holiday_add' class="popup m_pop">
 	<div class="pop_con">
 		<a class="button b-close">X</a>
-    	<h2 class="pop_tit">휴일 등록</h2>
+    	<h2 class="pop_tit">휴일 정보 등록</h2>
     	<div class="pop_wrap">
     		<table class="detail_table">
            		<tbody>
@@ -110,8 +110,8 @@
 			</table>
 		</div>
 	    <div class="right_box">
-        	<a href="#" onClick="common_modelClose('bas_holiday_add')" class="grayBtn b-close">취소</a>
-		    <a href="javascript:jqGridFunc.fn_CheckForm();" class="blueBtn">저장</a>
+	    	<a href="javascript:jqGridFunc.fn_CheckForm();" id="btnUpdate" class="blueBtn">등록</a>
+        	<a href="#" onClick="common_modelClose('bas_holiday_add')" id="btnUpdate" class="grayBtn b-close">취소</a>
 		</div>
 		<div class="clear"></div>
 	</div>
@@ -348,6 +348,8 @@
 			if (mode == "Edt") {
 	           	var params = {"holySeq" : holySeq};
 	     	   	var url = "/backoffice/bas/holyInfoDetail.do";
+	     	   $("#bas_holiday_add > div >h2").text("휴일 정보 수정");
+	     	   $("#btnUpdate").text("수정");
 	     	    fn_Ajax
 	     	   	(
 					url, 
@@ -376,6 +378,8 @@
 					}    		
 				);
 			} else {
+				$("#btnUpdate").text("등록");
+				$("#bas_holiday_add > div >h2").text("휴일 정보 등록");
 				$("#bas_holiday_add input[type='text']").val("");
 				$("#useY").prop("checked", true);
 	        }

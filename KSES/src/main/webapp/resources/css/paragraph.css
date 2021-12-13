@@ -701,7 +701,7 @@ canvas {
 .searchBox.searchBox_bottom .top{border-bottom: none; display: inline-block; position: relative; left: 50%; top: 20px; transform: translateX(-50%);}
 /* 20210927 */
 
-.mms_mng_container>div{width: calc(100% / 3 - 50px); height: 680px; padding: 20px; margin-right: 1rem;}
+.mms_mng_container>div{width: calc(100% / 2 + 150px); height: 680px; padding: 20px; margin-right: 1rem;}
 .mms_mng_container .detail_table th{width: 100px;}
 .mms_mng_container span.delBtn{float: right; font-size: 16px; font-weight: 700; padding: 0 5px;}
 .mms_title{font-size: 16px; font-weight: 700; line-height: 30px; margin-bottom: 5px; padding-left: 5px;}

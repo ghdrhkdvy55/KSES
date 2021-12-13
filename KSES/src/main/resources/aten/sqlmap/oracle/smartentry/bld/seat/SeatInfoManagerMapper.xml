@@ -57,40 +57,33 @@
 		ORDER BY TO_NUMBER(B.CODE_DC) ASC
     </select>
     
-<!-- 	<select id="" resultType="lmap">
-	<![CDATA[
-		SELECT 
-			A.PART_CD, A.PART_NM, B.SEAT_CD, B.SEAT_NM, B.SEAT_ORDER, B.SEAT_TOP, B.SEAT_LEFT,
-			(
-				SELECT NVL(COUNT(*),0) 
-         		FROM TSER_RESV_INFO_I 
-         		WHERE A.PART_CD = PART_CD
-         		AND SEAT_CD = B.SEAT_CD 
-         		AND #{params.resvDate} BETWEEN RESV_START_DT AND RESV_END_DT
-         		AND RESV_CANCEL_CD IS NULL
-			) AS status
-		FROM TSEB_PART_INFO_D A, TSEB_SEAT_INFO_D B
-		WHERE A.PART_CD = B.PART_CD
-		AND B.PART_CD = #{params.partCd}
-	]]>    
-    </select> -->
-    
-    <!-- Front -->
 	<select id="selectReservationSeatList" resultType="lmap">
 	<![CDATA[
 		SELECT 
-			A.PART_CD, A.PART_NM, B.SEAT_CD, B.SEAT_NM, B.SEAT_ORDER, B.SEAT_TOP, B.SEAT_LEFT,
+		A.PART_CD, A.PART_NM, B.SEAT_CD, B.SEAT_NM, B.SEAT_ORDER, B.SEAT_TOP, B.SEAT_LEFT,
+			CASE WHEN 
+			(
+				SELECT NVL(COUNT(*),0) 
+         		FROM  TSER_RESV_INFO_I
+         		WHERE PART_CD = A.PART_CD
+         		AND SEAT_CD = B.SEAT_CD 
+         		AND RESV_SEQ = #{params.resvSeq, jdbcType=VARCHAR}
+         		AND RESV_END_DT = #{params.resvDate}
+         		AND RESV_STATE NOT IN ('RESV_STATE_4')
+			) > 0  THEN '1'
+			WHEN
 			(
 				SELECT NVL(COUNT(*),0) 
          		FROM TSER_RESV_INFO_I 
-         		WHERE A.PART_CD = PART_CD
+         		WHERE PART_CD = A.PART_CD
          		AND SEAT_CD = B.SEAT_CD 
-         		AND #{params.resvDate} BETWEEN RESV_START_DT AND RESV_END_DT
-         		AND RESV_CANCEL_CD IS NULL
-			) AS status
+         		AND RESV_END_DT = #{params.resvDate}
+         		AND RESV_STATE NOT IN ('RESV_STATE_4')
+			) > 0  THEN '2'
+			ELSE '0' END AS status
 		FROM TSEB_PART_INFO_D A, TSEB_SEAT_INFO_D B
-		WHERE A.PART_CD = B.PART_CD
-		AND B.PART_CD = #{params.partCd}
+		WHERE A.PART_CD = #{params.partCd}
+		AND A.PART_CD = B.PART_CD
 	]]>    
     </select>
     
@@ -118,7 +111,7 @@
 		)
 		VALUES
 		(            
-			#{centerCd}, #{floorCd}, #{partCd,jdbcType=VARCHAR}, #{seatCd}, #{seatNm}, 
+			#{centerCd}, #{floorCd}, #{partCd, jdbcType=VARCHAR}, #{seatCd}, #{seatNm}, 
 			'Y', #{seatTop, jdbcType=VARCHAR}, #{seatLeft, jdbcType=VARCHAR}, #{seatClass, jdbcType=VARCHAR}, #{seatDvsn, jdbcType=VARCHAR},
 			#{payDvsn, jdbcType=VARCHAR}, #{payCost, jdbcType=VARCHAR}, 0, 0, 0,
 			#{frstRegterId, jdbcType=VARCHAR}, SYSDATE, #{lastUpdusrId, jdbcType=VARCHAR}, SYSDATE
@@ -152,15 +145,15 @@
 				SELECT 
 					FN_SEATCODEINSERT(TA.PART_CD, 'PART', RNUM), TA.CENTER_CD, TA.FLOOR_CD, TA.PART_CD, TA.RN, 
 					'Y', 0, 0, #{params.frstRegterId}, SYSDATE, 
-					#{params.lastUpdusrId}, SYSDATE, #{params.seatDvsn, jdbcType=VARCHAR}, #{params.seatClass}, #{params.payDvsn, jdbcType=VARCHAR}, 
-					#{params.payCost}, #{params.payAmCost}, #{params.payPmCost}, TA.RNUM 
+					#{params.lastUpdusrId}, SYSDATE, #{params.seatDvsn, jdbcType=VARCHAR}, TA.PART_CLASS, #{params.payDvsn, jdbcType=VARCHAR}, 
+					TA.PART_PAY_COST, #{params.payAmCost}, #{params.payPmCost}, TA.RNUM 
 				FROM 
 				(
 					<![CDATA[
 					SELECT  
 						A.CENTER_CD, A.FLOOR_CD, A.PART_CD, #{floorNm, jdbcType=VARCHAR}|| '_' || A.PART_NM || '_' || B.RN AS RN,  
-						ROW_NUMBER() OVER(ORDER BY B.RN ASC) AS RNUM
-					FROM TSEB_PART_INFO_D A, 
+						ROW_NUMBER() OVER(ORDER BY B.RN ASC) AS RNUM, A.PART_CLASS, A.PART_PAY_COST
+					FROM TSEB_PART_INFO_D A,
 					( 
 						SELECT NUM AS RN FROM TABLE(FN_ROWTABLE(${params.seatStr}, ${params.seatEnd}))
 					) B 
@@ -192,12 +185,13 @@
 					(
 						SELECT NUM AS RN FROM TABLE(FN_ROWTABLE(${params.seatStr}, ${params.seatEnd})) 
 					) B 
-					WHERE FLOOR_CD = #{params.floorCd}
+					WHERE FLOOR_CD = #{params.floorCd};
 					]]>
 				) TA
-				ORDER BY TA.RN DESC ;
+				ORDER BY TA.RN DESC
 			</otherwise>
 		</choose>
+		
 		UPDATE TSEB_FLOOR_INFO_M SET 
 			FLOOR_SEAT_CNT = 
 			(

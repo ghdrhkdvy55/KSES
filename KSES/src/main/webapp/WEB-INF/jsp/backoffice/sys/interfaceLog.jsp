@@ -169,7 +169,6 @@
     		        autowidth:true,
     		        shrinkToFit : true,
     		        refresh : true,
-    		        loadonce: true,
     				viewrecords: true,
                     footerrow: true,
                     loadComplete : function (data){
@@ -212,10 +211,14 @@
 		    		          	  page : gridPage,
 		    		          	  rowNum : $('.ui-pg-selbox option:selected').val(),
 		    		          	  postData : JSON.stringify(  {
-							    		          			"pageIndex": gridPage,
-							    		          			"searchKeyword" : $("#searchKeyword").val(),
-							    		          			"pageUnit":$('.ui-pg-selbox option:selected').val()
-							    		          		})
+							    		     	"pageIndex": gridPage,
+							    		     	"searchKeyword" : $("#searchKeyword").val(),
+							    		        "pageUnit":$('.ui-pg-selbox option:selected').val(),
+	       	    								"searchFrom" : $("#searchFrom").val(),
+	       	    								"searchTo" : $("#searchTo").val()
+
+
+							   	  			})
     		          		}).trigger("reloadGrid");
     		        },onSelectRow: function(rowId){
     	                if(rowId != null) {  }// 체크 할떄
@@ -244,7 +247,19 @@
 	    		    	resultTxt = "애러";
 	    		}
     			return resultTxt;
-    		}, fn_interfaceInfo : function (requstId){
+    		},fn_Search : function(){
+    			$("#mainGrid").setGridParam({
+	       	    	datatype	: "json",
+	       	    	postData	: JSON.stringify(  {
+	       	    		"pageIndex": $("#pager .ui-pg-input").val(),
+	       	    		"searchFrom" : $("#searchFrom").val(),
+	       	    		"searchTo" : $("#searchTo").val(),
+	             		"searchKeyword" : $("#searchKeyword").val(),
+	            		"pageUnit":$('.ui-pg-selbox option:selected').val()
+	   	         	}),
+   	    	    loadComplete	: function(data) {$("#sp_totcnt").text(data.paginationInfo.totalRecordCount);}
+   	    		}).trigger("reloadGrid");
+       		},  fn_interfaceInfo : function (requstId){
     			var url = "/backoffice/sys/selectInterfaceDetail.do";
  		       
  		        var params = {'requstId' : requstId}; 

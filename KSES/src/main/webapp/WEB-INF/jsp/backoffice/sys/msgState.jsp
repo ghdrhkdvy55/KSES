@@ -602,21 +602,21 @@
         	if (returnval.length > 0){
         		var sHtml = "";
         		$("#tb_searchT > tbody> tr> td> ul").append("<li>이름</li>");
-        		if ($("#searchUserGubun").val() == "EMP"){
-        			for (var i in returnval){
-            			var obj = returnval[i];
-            			sHtml = "<li>"+ obj.emp_nm +"("+ obj.dept_nm +")<span>&lt;"
-            			      + ""+ obj.emp_clphn+ "&gt;</span>"
-            			      + "<span class='delBtn' onClick='msgFunction.fn_GroupUserUpdate(\""+obj.emp_no+"\",\""+obj.emp_nm+"\",\""+obj.emp_clphn+"\")'>&raquo;</span></li>";
-            			$("#tb_searchT > tbody> tr> td> ul").append(sHtml);
-            		} 	
-        		}else {
-        			//사용자 검색 
+        		
+        		for (var i in returnval){
         			var obj = returnval[i];
-        			sHtml = "<li>"+ obj.user_nm +"("+ obj.user_id +")<span>&lt;"
-        			      + ""+ obj.user_phone+ "&gt;</span>"
-        			      + "<span class='delBtn' onClick='msgFunction.fn_GroupUserUpdate(\""+obj.user_id+"\",\""+obj.user_nm+"\",\""+obj.user_phone+"\")'>&raquo;</span></li>";
-        			$("#tb_searchT > tbody> tr> td> ul").append(sHtml);
+	        		if ($("#searchUserGubun").val() == "EMP"){
+	        			sHtml = "<li>"+ obj.emp_nm +"("+ obj.dept_nm +")<span>&lt;<br/>"
+		            	      + ""+ obj.emp_clphn+ "&gt;</span>"
+		            	
+	            	}else {
+	        			//사용자 검색 
+	        			sHtml = "<li>"+ obj.user_nm +"("+ obj.user_id +")<span>&lt;"
+	        			      + ""+ obj.user_phone+ "&gt;</span><br />"
+	        			      + "<span class='delBtn' onClick='msgFunction.fn_GroupUserUpdate(\""+obj.user_id+"\",\""+obj.user_nm+"\",\""+obj.user_phone+"\")'>&raquo;</span></li>";
+	        		}
+	        		$("#tb_searchT > tbody> tr> td> ul").append(sHtml);
+	        		sHtml = "";
         		}
         		
         	}else {

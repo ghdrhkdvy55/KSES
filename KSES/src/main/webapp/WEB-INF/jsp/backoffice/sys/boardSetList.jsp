@@ -31,7 +31,7 @@
             <p>총 : <span id="sp_totcnt"></span>건</p>
         </div>
         <div class="right_box">
-        <a href="#" onClick="jqGridFunc.fn_BoardSetInfo('Ins', '')"  class="blueBtn">게시판 추가</a> 
+        <a href="#" onClick="jqGridFunc.fn_BoardSetInfo('Ins', '')"  class="blueBtn">게시판 등록</a> 
         <a href="#" onClick="jqGridFunc.fn_BoradDel()"  class="grayBtn">삭제</a>
        </div>
     
@@ -132,8 +132,8 @@
           </table>
       </div>
       <div class="right_box">
-          <a href="#" onClick="common_modelClose('board_add')" class="grayBtn b-close">취소</a>
           <a href="#" onClick="jqGridFunc.fn_CheckForm()" class="blueBtn" id="btnUpdate">저장</a>
+          <a href="#" onClick="common_modelClose('board_add')" class="grayBtn b-close">취소</a>
       </div>
       <div class="clear"></div>
   </div>
@@ -314,24 +314,19 @@
       						       var obj  = result.regist;
     						       $("#boardTitle").val(obj.board_title);
     						       $("#boardDvsn").val(obj.board_dvsn);
-    						       $("#boardAuthor").val(obj.board_author);
-    						       
+    						       $("#boardAuthor").val(obj.board_author);  
     						       $("#boardSize").val(obj.board_size);
     						       $("#boardNoticeDvsn").val(obj.board_notice_dvsn);
-    						       $("input:radio[name='useYn']:radio[value='"+obj.use_yn+"']").prop('checked', true)
-    						       
-    						       $("input:radio[name='boardFileUploadYn']:radio[value='"+obj.board_file_upload_yn+"']").prop('checked', true)
-    						       $("input:radio[name='boardCmntUse']:radio[value='"+obj.board_cmnt_use+"']").prop('checked', true)
-    						       
+    						       $("input:radio[name='useYn']:radio[value='"+obj.use_yn+"']").prop('checked', true);
+    						       $("input:radio[name='boardFileUploadYn']:radio[value='"+obj.board_file_upload_yn+"']").prop('checked', true);
+    						       $("input:radio[name='boardCmntUse']:radio[value='"+obj.board_cmnt_use+"']").prop('checked', true);
+    						       $("#board_add > div >h2").text("게시판 수정");
     						       $("#sp_Unqi").hide();
     						       if (obj.board_center_id != ""){
     						    	   var url = "/backoffice/bld/centerCombo.do"
     	    						   var returnVal = uniAjaxReturn(url, "GET", false, null, "lst");
     	    						   fn_checkboxListJson("sp_boardCenter", returnVal,obj.board_center_id, "boardCenterId");  
     						       }
-    						       
-    									 
-    						       $("#btnSave").text("수정");
       						   }else{
        						  common_modelCloseM(result.message, "board_add");
        					   }
@@ -350,7 +345,8 @@
 	        	$("#boardAuthor").val('');
 	        	$("input:radio[name='useYn']:radio[value='Y']").prop('checked', true);
 	        	$("#sp_Unqi").show();
-	        	$("#btnSave").text("입력");
+	        	$("#btnUpdate").text("등록");
+	        	$("#board_add > div >h2").text("게시판 등록");
 	        	
 	        	fn_EmptyField("sp_boardCenter");
 	        	
@@ -358,8 +354,9 @@
 	        $("#board_add").bPopup();
           },fn_CheckForm  : function (){
        	   if (any_empt_line_span("board_add", "boardCd", "게시물 아이디를 입력해 주세요.","sp_message", "savePage") == false) return;
-       	   if ($("#mode").val() == "Ins" && $("#idCheck").val() != "Y"){
-			   if (any_empt_line_span("board_add", "boardCd", "중복체크가 안되었습니다.","sp_message", "savePage") == false) return;
+
+      	   if ($("#mode").val() == "Ins" && $("#idCheck").val() != "Y"){
+		      if (any_empt_line_span("board_add", "idCheck", "중복체크가 안되었습니다.","sp_message", "savePage") == false) return;
 		   }
        	   if (any_empt_line_span("board_add", "boardTitle", "게시판명을 입력해 주세요.","sp_message", "savePage") == false) return;
        	   if (any_empt_line_span("board_add", "boardSize", "게시판 페이지 수를  선택해 주세요.","sp_message", "savePage") == false) return;
@@ -371,7 +368,7 @@
 		   $("#confirmPage").bPopup().close();
 		   var url = "/backoffice/sys/boardSetUpdate.do";
 		   var boardCenterId = "";
-		   if ($("#boardAuthor").val() == "ROLE_SYSTEM"){
+		   if ($("#boardAuthor").val() != "ROLE_SYSTEM" && $("#boardAuthor").val() != "ROLE_ADMIN"){
 			   boardCenterId = ckeckboxValue("체크된 지점이 없습니다.", "boardCenterId", "board_add");
 		   }
 		   
@@ -395,7 +392,7 @@
 	   						   location.href="/backoffice/login.do";
 	   					   }else if (result.status == "SUCCESS"){
 	   						   //총 게시물 정리 하기'
-	   						   common_modelClose("mng_admin_add");
+	   						   common_modelCloseM(result.message ,"board_add");
 	   						   jqGridFunc.fn_search();
 	   					   }else if (result.status == "FAIL"){
 	   						   common_popup("저장 도중 문제가 발생 하였습니다.", "Y", "board_add");
@@ -438,7 +435,7 @@
 	        }
 	 }, fn_CenterCheck : function (){
 		 //체크 박스 보여 주기 
-		 if ($("#boardAuthor").val() == "ROLE_SYSTEM"){
+		 if ($("#boardAuthor").val() != "ROLE_SYSTEM" && $("#boardAuthor").val() != "ROLE_ADMIN"){
 			 var url = "/backoffice/bld/centerCombo.do"
 		     var returnVal = uniAjaxReturn(url, "GET", false, null, "lst");
 			 fn_checkboxListJson("sp_boardCenter", returnVal, "", "boardCenterId");

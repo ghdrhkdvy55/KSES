@@ -45,7 +45,7 @@
 			<p>총 : <span id="sp_totcnt"></span>건</p>
         </div>
         <div class="right_box">
-            <a href="#" onClick="jqGridFunc.fn_CodeInfo('Ins','0')" class="right_box blueBtn">분류코드추가</a> 
+            <a href="#" onClick="jqGridFunc.fn_CodeInfo('Ins','0')" class="right_box blueBtn">분류 코드 등록</a> 
         </div>
         <div class="clear"></div>
         <div class="whiteBox">
@@ -59,7 +59,7 @@
 <div id="bas_code_add" data-popup="bas_code_add" class="popup m_pop">
 	<div class="pop_con">
         <a class="button b-close">X</a>
-        <h2 class="pop_tit">분류 코드 추가</h2>
+        <h2 class="pop_tit">분류 코드 등록</h2>
         <div class="pop_wrap">
             <table class="detail_table">
 	            <tbody>
@@ -357,6 +357,7 @@ var jqGridFunc  = {
 	       					   }else if (result.status == "SUCCESS"){
        						       //총 게시물 정리 하기
        						       var obj  = result.regist;
+       						  	   $("#bas_code_add > div >h2").text("분류 코드 수정");
        						       $("#codeId").val(obj.code_id).attr('readonly', true);
        						       $("#codeIdNm").val(obj.code_id_nm);
        						       $("#codeIdDc").val(obj.code_id_dc);
@@ -374,12 +375,12 @@ var jqGridFunc  = {
 	     				    }    		
 	               );
 	        }else{
-	        	
+	        	$("#bas_code_add > div >h2").text("분류 코드 등록");
 	        	$("#codeId").val('').attr('readonly', false);
 	        	$("#codeIdNm").val('');
 	        	$("#codeIdDc").val('');
 	        	$("#sp_Unqi").show();
-	        	$("#btnSave").text("입력");
+	        	$("#btnSave").text("등록");
 	        	$("#useAt_Y").prop("checked", true);
 	        }
     	    $("#bas_code_add").bPopup();
@@ -475,6 +476,7 @@ var detailFunc  = {
 		    $("#mode").val(mode);
 		    $("#codeId").val(codeId);
 		    if (mode == "Ins"){
+		    	$("#bas_detailcode_add > div >h2").text("상세 코드 등록");
 		    	$("#code").val('');
 			    $("#codeNm").val('');
 			    $("#codeDc").val('');
@@ -482,7 +484,7 @@ var detailFunc  = {
 	            $("#btnDetailUpdate").text("등록");
 	            $("#detailUseAtY").prop("checked", true);
 		    }else {
-		    	
+		    	$("#bas_detailcode_add > div >h2").text("상세 코드 수정");
 			    $("#btnDetailUpdate").text("수정");
 			    $("#code").val(code);
 			    var url = "/backoffice/bas/CmmnDetailView.do";

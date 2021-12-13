@@ -19,6 +19,8 @@
                 <entry key="sppeedUrl_T" value="https://wdev.speedon.or.kr/externalApi/"/>
                 <entry key="sppeedUrl_R" value="https://www.speedon.or.kr/externalApi/"/>
                 
+                <entry key="Company.Number" value="2158200063"/>
+                
                 <entry key="Globals.qrPath" value="C:\dev\git\conference\videoConference\src\main\webapp\qrcode"/>
                 <entry key="qrCodePath" value="qrcode"/>
             </map>

@@ -267,7 +267,6 @@ public class FrontResvInfoManageController {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
-			
 			HttpSession httpSession = request.getSession(true);
 			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
 			

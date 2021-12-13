@@ -166,7 +166,7 @@ public class EgovLoginController {
 					
 			springSecurity.doFilter(new RequestWrapperForSecurity(request, resultVO.getAdminId() , resultVO.getAdminPwd()), response, null);
 						
-			return "forward:/backoffice/actionMain.do"; // 성공 시 페이지.. (redirect 불가)
+			return "forward:/backoffice/actionLoginCheck.do"; // 성공 시 페이지.. (redirect 불가)
 
 		} else {
 
@@ -174,7 +174,26 @@ public class EgovLoginController {
 			return "backoffice/login";
 		}
 	}
-
+	@RequestMapping(value="/backoffice/actionLoginCheck.do")
+	public String actionLoginCheck( HttpServletRequest request, ModelMap model)  {
+        try{
+    		
+    		// 1. Spring Security 사용자권한 처리
+		    Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+	    	if(!isAuthenticated) {
+	    		LOGGER.debug("=== fail:" + isAuthenticated);
+	    		model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
+	    		return "/backoffice/login";
+	    	}
+	    	
+	    	return "forward:/backoffice/actionMain.do";
+    	} catch(Exception e){
+    		LOGGER.debug("login Error:" + e.toString());
+    		model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
+        	return "/backoffice/login";
+    	}
+		
+	}
 	
 	/**
 	 * 로그인 후 메인화면으로 들어간다
@@ -195,28 +214,6 @@ public class EgovLoginController {
 	    	}
 	    	
 	    	//2메뉴 정리 하기 
-	    	
-	    	/*
-	    	HttpSession httpSession = request.getSession(true);
-	    	LoginVO loginVO = (LoginVO)httpSession.getAttribute("LoginVO");
-	    	loginVO.setIp(EgovClntInfo.getClntIP(request));
-	    	*/
-//	    	LoginVO loginvo = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
-//	    	String url = "";
-//	    	switch (loginvo.getAuthorCd()) {
-//	    	    case "ROLE_ADMIN" : 
-//	    	    	url = "forward:/backoffice/bas/codeList.do";
-//	    	    	break;
-//	    	    case "ROLE_SYSTEM":
-//		    	    url = "forward:/backoffice/bas/codeList.do";
-//	    	    	break;
-//	    	    case "ROLE_MANAGER":
-//		    	    url = "forward:/backoffice/rsv/rsvList.do";
-//	    	    	break;
-//	    	    case "ROLE_USER":
-//		    	    url = "forward:/backoffice/rsv/rsvList.do";
-//	    	    	break;
-//	    	}
 	    	
 	    	return "/backoffice/index";
     	} catch(Exception e){

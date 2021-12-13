@@ -114,7 +114,7 @@
     		        refresh : true,
     	            rownumbers : false, // 리스트 순번
     		        viewrecord : true,    // 하단 레코드 수 표기 유무
-    		        //loadonce : false,     // true 데이터 한번만 받아옴 
+    		        loadonce : false,     // true 데이터 한번만 받아옴 
     		        loadui : "enable",
     		        loadtext:'데이터를 가져오는 중...',
     		        emptyrecords : "조회된 데이터가 없습니다", //빈값일때 표시 
@@ -162,10 +162,12 @@
 		    		          	  page : gridPage,
 		    		          	  rowNum : $('.ui-pg-selbox option:selected').val(),
 		    		          	  postData : JSON.stringify(  {
-							    		          			"pageIndex": gridPage,
-							    		          			"searchKeyword" : $("#searchKeyword").val(),
-							    		          			"pageUnit":$('.ui-pg-selbox option:selected').val()
-							    		          		})
+									  "pageIndex": gridPage,
+									  "searchKeyword" : $("#searchKeyword").val(),
+									  "pageUnit":$('.ui-pg-selbox option:selected').val(),							    		          			    	    		
+				    	    		  "searchFrom" : $("#searchFrom").val(),
+				    	    		  "searchTo" : $("#searchTo").val()
+								})
     		          		}).trigger("reloadGrid");
     		        },onSelectRow: function(rowId){
     	                if(rowId != null) {  }// 체크 할떄
@@ -198,10 +200,10 @@
     	    		"searchTo" : $("#searchTo").val(),
           			"searchKeyword" : $("#searchKeyword").val(),
          			"pageUnit":$('.ui-pg-selbox option:selected').val()
-	         		}),
+	         	}),
 	    	    	loadComplete	: function(data) {$("#sp_totcnt").text(data.paginationInfo.totalRecordCount);}
-	    	     }).trigger("reloadGrid");
-    		}
+	    	}).trigger("reloadGrid");
+    	}
     }
 </script>
 <c:import url="/backoffice/inc/popup_common.do" />

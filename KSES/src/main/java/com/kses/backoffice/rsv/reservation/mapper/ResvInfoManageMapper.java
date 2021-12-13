@@ -29,6 +29,8 @@ public interface ResvInfoManageMapper {
 	
 	public Map<String, Object> selectGuestMyResvInfo(@Param("params") Map<String, Object> paramMap);
 	
+	public int resvSeatChange(@Param("params") Map<String, Object> paramMap);
+	
 	public int resvInfoCancel(@Param("params") Map<String, Object> paramMap);
 	
 	public int checkUserResvInfo(@Param("params") Map<String, Object> params);
@@ -40,6 +42,8 @@ public interface ResvInfoManageMapper {
 	public int insertUserResvInfo(ResvInfo vo);
 	
 	public int updateUserResvInfo(ResvInfo vo);
+	
+	public int resbillChange(ResvInfo vo);
 	
 	public int resPriceChange(ResvInfo vo);
 	

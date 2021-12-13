@@ -81,7 +81,7 @@
         <div class="left_box mng_countInfo">
             <p>총 : <span id="sp_totcnt"></span>건</p>
         </div>
-        <a onClick="boardinfo.fn_boardInfo('Ins', '0');" class="right_box blueBtn">등록</a>  
+        <a onClick="boardinfo.fn_boardInfo('Ins', '0');" class="right_box blueBtn">게시글 등록</a>  
         <div class="clear"></div>
         <div class="whiteBox">
             <table id="mainGrid"></table>
@@ -119,18 +119,9 @@
 	                        	<th>첨부파일</th>
 	                        	<td style='text-align:left' colspan='3' class='preview_in_file'>
 	                        	 <table class="detail_table" id="tb_fileInfo">
-						            <thead>
-						            	<tr>
-						                	<th><input type="checkbox" id="allCheck" name="allCheck" onClick="boardinfo.fn_FileCheck()"></th>
-						                	<th>파일명</th>
-						                	<th><a href="#" onClick="boardinfo.fn_FileDel()" class="grayBtn">삭제</a></th>
-						                </tr>
-						            </thead>
 						            <tbody>
-						              
 						            </tbody>
 						          </table>
-	                        	
 	                        	</td>
 	                        </tr>
 				     		<tr>
@@ -146,7 +137,9 @@
        	</div>
         <div class="footerBtn">
             <a href="javascript:common_modelClose('bas_board_preview');" class="grayBtn" style="margin-bottom:16px;">닫기</a>
+            <c:if test="${regist.board_cmnt_use} == 'Y'">
             <a href="#" onClick="boardinfo.fn_Ref()" class="blueBtn" id="btnRef">답글</a>
+            </c:if>
         </div>
     </div>
 </div>	
@@ -166,9 +159,9 @@
 	                    <tr>
                       		<th>공지기간</th>
 	                        <td style="text-align:left" colspan="3">
-	                        <input type="text"  name="boardNoticeStartDay" class="cal_icon" style="width:150px" maxlength="8" id="boardNoticeStartDay" />
+	                        <input type="text" class="cal_icon" name="boardNoticeStartDay" style="width:200px" maxlength="20" id="boardNoticeStartDay" />
 	                        ~
-	                        <input type="text"  name="boardNoticeEndDay" class="cal_icon" style="width:150px"  maxlength="8" id="boardNoticeEndDay" />	                        
+	                        <input type="text" class="cal_icon" name="boardNoticeEndDay"  style="width:200px"  maxlength="20" id="boardNoticeEndDay" />	                        
 	                        </td>
 	                    </tr>
 	                    <tr>
@@ -187,13 +180,40 @@
 			                    </label> 
 		                    </td>
 	                    </tr>
-	                    <tr>
-	                        <th>지점 선택</th>
-	                        <td colspan="3"><span id="sp_boardCenter"></span>
-	                    </tr>
+	                    <c:choose>
+	                       <c:when test="${loginVO.authorCd ne 'ROLE_ADMIN' && loginVO.authorCd ne 'ROLE_SYSTEM' }">
+	                            <input type="hidden" id="boardCenterId" name="boardCenterId" value="${loginVO.centerCd}">
+                                <input type="hidden" id="boardAllNotice" name="boardAllNotice" value="N">
+	                       </c:when>
+	                       <c:otherwise>
+                                <tr>
+			                        <th>지점 선택</th>
+			                        <td><span id="sp_boardCenter"></span>
+			                        <th>전 지점  선택</th>
+			                        <td><input type="checkbox" id="boardAllNotice" name="boardAllNotice" onClick="fn_CheckboxAllChangeInfo('boardAllNotice', 'boardCenterId');">
+			                        </td>
+			                    </tr>
+			                    
+                                
+	                       </c:otherwise>
+	                    </c:choose>
+	                   
 	                    <tr id="tr_fileUpload">
 	                       <th><span class="redText" id="sp_returntxt">파일 업로드</span></th>
 	                       <td colspan="3">
+	                       
+	                            <table class="detail_table" id="tb_fileInfoList">
+						            <thead>
+						            	<tr>
+						                	<th><input type="checkbox" id="allCheck" name="allCheck" onClick="boardinfo.fn_FileCheck()"></th>
+						                	<th>파일명</th>
+						                	<th><a href="#" onClick="boardinfo.fn_FileDel()" id="btn_FileDel" class="grayBtn">삭제</a></th>
+						                </tr>
+						            </thead>
+						            <tbody>
+						            </tbody>
+						        </table>
+						          
 		                        <div class="upload-btn-wrapper">
 									<input type="file" id="input_file" multiple="multiple" style="height: 100%;" />
 									<button class="upload-btn">파일선택</button>
@@ -218,9 +238,8 @@
             </table>
         </div>
         <div class="right_box">
-            <a href="javascript:common_modelClose('bas_board_add')" class="grayBtn">취소</a>
-            
             <a href="#" onClick="boardinfo.fn_CheckForm()" class="blueBtn" id="btnUpdate">저장</a>
+            <a href="javascript:common_modelClose('bas_board_add')" class="grayBtn">취소</a>
         </div>
         <div class="clear"></div>
     </div>
@@ -242,11 +261,14 @@
 		           changeMonth: true, //월변경가능
 		           changeYear: true, //년변경가능
 		           showMonthAfterYear: true, //년 뒤에 월 표시
-		           buttonImageOnly: false, //이미지표시
-		           yearRange: '1970:2030' //1990년부터 2020년까지
+		           buttonImageOnly: true, //이미지표시
+		           buttonText: '달력선택', //버튼 텍스트 표시
+		           buttonImage: '/images/invisible_image.png', //이미지주소
+		           yearRange: '1970:2030', //1990년부터 2020년까지
+				   currentText: "Today"
 	    };	      
-	    $("#boardNoticeStartDay").datepicker(clareCalendar);
-	    $("#boardNoticeEndDay").datepicker(clareCalendar);        
+	    $("#boardNoticeStartDay, #boardNoticeEndDay").datepicker(clareCalendar);   
+		/* $("#boardNoticeStartDay, #boardNoticeEndDay").val(new Date().format("yyyyMMdd")); */
 	    $("img.ui-datepicker-trigger").attr("style", "margin-left:3px; vertical-align:middle; cursor:pointer;"); //이미지버튼 style적용
 	    $("#ui-datepicker-div").hide(); //자동으로 생성되는 div객체 숨김
 	});
@@ -375,8 +397,22 @@
 				 if ( rowObject.board_notice_startday != "")
 				 return fn_emptyReplace(rowObject.board_notice_start_day,"")+"~"+fn_emptyReplace(rowObject.board_notice_end_day, "");
 			 },rowBtn : function (cellvalue, options, rowObject){
-	            if (rowObject.board_seq != "")
-	           	   return '<a href="javascript:jqGridFunc.delRow(&#34;'+rowObject.board_seq+'&#34;);">삭제</a>';
+				 
+				 //삭제 값 정리 하기 
+				 <c:choose>
+	                       <c:when test="${loginVO.authorCd ne 'ROLE_ADMIN' && loginVO.authorCd ne 'ROLE_SYSTEM' }">
+	                          if (rowObject.board_seq != "" &&  rowObject.last_updusr_id == "${loginVO.empNo}" )
+	        	           	  	 return '<a href="javascript:jqGridFunc.delRow(&#34;'+rowObject.board_seq+'&#34;);">삭제</a>';
+	        	           	  else
+	        	           		  return "";
+	                       </c:when>
+	                       <c:otherwise>
+	                          if (rowObject.board_seq != "" )
+	        	           	  	 return '<a href="javascript:jqGridFunc.delRow(&#34;'+rowObject.board_seq+'&#34;);">삭제</a>';
+	                       </c:otherwise>
+	             </c:choose>
+				 
+	           
 	        }, delRow : function (board_seq){
 	       	 $("#hid_DelCode").val(board_seq)
 				 $("#id_ConfirmInfo").attr("href", "javascript:jqGridFunc.fn_del()");
@@ -410,7 +446,7 @@
 			        $("#fileListTable > tbody").empty();
 			        if (mode == "Edt"){
 			           $("#btnUpdate").text("수정");
-			           $("#h2_txt").text("수정");
+			           $("#bas_board_add > div >h2").text("게시글 수정");
 			     	   var params = {"boardSeq" : boardSeq, "boardVisited": 0};
 			     	   var url = "/backoffice/sys/boardView.do";
 			     	   fn_Ajax(url, "GET", params, false, 
@@ -422,26 +458,66 @@
 			       						    var obj  = result.regist;
 			       						    $("#boardTitle").val(obj.board_title);
 			       						    $("#ir1").val(obj.board_cn);
+			       						    
 			       						    $("#boardNoticeStartDay").val(obj.board_notice_start_day);
 				       						$("#boardNoticeEndDay").val(obj.board_notice_end_day);
 				       						$("#board_clevel").val(obj.board_clevel); //몇번째
 				       						$("#board_refno").val(obj.board_refno); //부모값
 				       						$("#boardGroup").val(obj.board_group); //부모값
-				       						console.log("board_center_id:" + obj.board_center_id )
+				       						var allCheck = (obj.board_all_notice == "Y") ? true : false;
+				       						
+				       						$("input:checkbox[id='boardAllNotice']").prop("checked", allCheck); 	
+				       						
+				       						
 				       						if ("${regist.board_cd }"  == "Not"){
 			    						    	   var url = "/backoffice/bld/centerCombo.do"
 			    	    						   var returnVal = uniAjaxReturn(url, "GET", false, null, "lst");
-			    	    						   fn_checkboxListJson("sp_boardCenter", returnVal,obj.board_center_id, "boardCenterId");  
+			    						    	   fn_checkboxListJsonOnChange("sp_boardCenter", returnVal,obj.board_center_id, "boardCenterId", "boardinfo.fn_BoardCheck()");   
 			    						    }
-				       						
-				       						if (obj.board_center_id != ""){
-			    						    	   var url = "/backoffice/bld/centerCombo.do"
-			    	    						   var returnVal = uniAjaxReturn(url, "GET", false, null, "lst");
-			    	    						   fn_checkboxListJson("sp_boardCenter", returnVal,obj.board_center_id, "boardCenterId");  
-			    						    }
-				       						
-				       						toggleClick("useYn", obj.use_yn);
+				       						var fileViewCss = "";
+				       						<c:choose>
+						 	                       <c:when test="${loginVO.authorCd ne 'ROLE_ADMIN' && loginVO.authorCd ne 'ROLE_SYSTEM' }">
+						 	                          if (obj.last_updusr_id == "${loginVO.empNo}" ){
+						 	                        	 $("#btnUpdate").show();
+						 	                        	 fileViewCss = "display:block;"
+						 	                          }else{
+						 	                        	 fileViewCss = "display:none;"; 
+						 	                        	 $("#btnUpdate").hide(); 
+						 	                          }
+						 	        	           		 
+						 	                       </c:when>
+						 	                       <c:otherwise>
+						 	                           fileViewCss = "display:block;"
+						 	                           $("#btnUpdate").show();
+						 	                       </c:otherwise>
+							 	            </c:choose>
+							 	            toggleClick("useYn", obj.use_yn);
 								    		toggleClick("boardPopup", obj.board_popup);
+								    		
+								    		
+								    		if (result.resultlist.length > 0){
+				  						    	var sHtml = "";
+				  						    	$("#allCheck").prop("style", fileViewCss);
+				  						    	$("#btn_FileDel").prop("style", fileViewCss);
+				  						    	
+				  						    	$("#tb_fileInfoList > tbody").empty();
+				  						    	for (var i in result.resultlist){
+				  						    		var obj = result.resultlist[i];
+				  						    		
+				  						    		sHtml += "<tr>"
+				  						    		      +  " <td><input type=\"checkbox\" id=\"fileInfo"+obj.stre_file_nm+"\" name=\"fileInfo\" value=\""+obj.stre_file_nm+"\" style='"+fileViewCss+"'></td>"
+				  						    		      +  " <td colspan=\"2\"><a href=\"#\" onClick=\"boardinfo.fn_FileDown('"+obj.stre_file_nm+"')\">"
+				  						    		      +  " "+obj.orignl_file_nm +" </a></td>"
+				  						    		      +  "</tr>";
+				  						    		
+				  						    		 $("#tb_fileInfoList > tbody:last").append(sHtml);
+				  						    		 sHtml = "";
+				  						    	}
+				  						    	$("#tb_fileInfoList").show();
+				  						    }else {
+				  						    	$("#tb_fileInfoList").hide();
+				  						    }
+								    		
 								       }
 			     				    },
 			     				    function(request){
@@ -449,33 +525,41 @@
 			     				    }    		
 			            );
 			        }else {
+			        	$("#boardSeq").val('');
 			        	$("#btnUpdate").text("등록");
 			        	$("#boardTitle").val('');
-					    oEditors.getById["ir1"].exec("SET_IR", ['']);
-							$("#boardNoticeStartday").val('');
-							$("#boardNoticeEndDay").val('');
-							$("#boardGroup").val(''); //부모값
-							$("#boardRefno").val(''); //부모값
-							$("#boardClevel").val(''); //부모값
-							$("#h2_txt").text("등록");
-							
-							fn_EmptyField("sp_boardCenter");
-							
-			        	toggleDefault("useYn");
+						$("#boardNoticeStartDay").val('');
+						$("#boardNoticeEndDay").val('');
+						$("#boardGroup").val(''); //부모값
+						$("#boardRefno").val(''); //부모값
+						$("#boardClevel").val(''); //부모값
+						$("#bas_board_add > div >h2").text("게시글 등록");
+						$("input:checkbox[id='boardAllNotice']").prop("checked", false); 
+						$("#h2_txt").text("등록");
+						$('#ir1').val('');
+						
+						if ("${regist.board_cd }"  == "Not"){
+							   var url = "/backoffice/bld/centerCombo.do"
+ 						       var returnVal = uniAjaxReturn(url, "GET", false, null, "lst");
+					    	   fn_checkboxListJsonOnChange("sp_boardCenter", returnVal, "", "boardCenterId", "boardinfo.fn_BoardCheck()"); 
+					    }
+						
+					    /* oEditors.getById["ir1"].exec("SET_IR", [""]); */						
+						toggleDefault("useYn");
 			        	toggleDefault("boardPopup");
 			        	
 			        	
 			        }
 			        $("#bas_board_add").bPopup();
+			 }, fn_BoardCheck : function(){
+				 var checked = ($("input[name=boardCenterId]").length != $("input[name=boardCenterId]:checked").length ) ? false : true;
+				 $("input[id=boardAllNotice]").prop("checked", checked);
+				 
 			 },fn_CheckForm  : function (){
 				    var sHTML = oEditors.getById["ir1"].getIR();
 				    $("#boardCn").val(sHTML);
 				    if (any_empt_line_span("bas_board_add", "boardTitle", "제목을 입력해 주세요.","sp_message", "savePage") == false) return;
 				    //시작일 종료일 체크 
-	/* 				    if (dateIntervalCheck("bas_board_add", 
-				    		              fn_emptyReplace($("#boardNoticeStartday").val(),"0"), 
-				    		              fn_emptyReplace($("#boardNoticeEndDay").val(),"0") ,
-				    		              "시작일이 종료일 보다 앞서 있습니다.","sp_message", "savePage") == false) return; */
 					if (dateIntervalCheck(fn_emptyReplace($("#boardNoticeStartday").val(),"0"), 
 										  fn_emptyReplace($("#boardNoticeEndDay").val(),"0") ,
 										  "시작일이 종료일 보다 앞서 있습니다.") == false) return;	
@@ -490,9 +574,18 @@
 				    for (var i = 0; i < uploadFileList.length; i++) {
 						formData.append('files', fileList[uploadFileList[i]]);
 					}
-				    
-				    
-				    boardCenterId = ckeckboxValueNoPopup("boardCenterId");
+				    //사용자 값에 따른 변경값
+				    <c:choose>
+		                      <c:when test="${loginVO.authorCd ne 'ROLE_ADMIN' && loginVO.authorCd ne 'ROLE_SYSTEM' }">
+		                          boardCenterId = $("#boardCenterId").val();
+		                          boardAllCk = "N";
+		                      </c:when>
+		                      <c:otherwise>
+			                      var boardAllCk =  $("#boardAllNotice").is(":checked") == true ? "Y" : "N";
+			  				      boardCenterId = ckeckboxValueNoPopup("boardCenterId");
+		                      </c:otherwise>
+		            </c:choose>
+		            
 				    
 				    formData.append('mode' , $("#mode").val());
 				    formData.append('boardSeq' , $("#boardSeq").val());
@@ -507,6 +600,7 @@
 				    formData.append('useYn' , fn_emptyReplace($("#useYn").val(),"N"));
 				    formData.append('boardPopup' , fn_emptyReplace($("#boardPopup").val(),"N"));
 				    formData.append('boardCenterId' , boardCenterId);
+				    formData.append('boardAllNotice' , boardAllCk);
 				    
 				    
 				    
@@ -532,8 +626,8 @@
 		    	 //파일 전체 선택
 		    	 var checked = $("input:checkbox[name=allCheck]").is(":checked");
 		    	 fn_CheckboxAllChange("fileInfo", checked);
-		    	
 		     }, fn_FileDown : function(streFileNm){
+		    	 //파일 다운 확인 하기 
 		    	 
 		     }, fn_FileDel : function (){
 		    	 var url = "/backoffice/sys/boardFileDelete.do"
@@ -542,17 +636,17 @@
 		    	 fn_Ajax(url, "GET", params, false,
 			      			function(result) {
 			    	               if (result.status == "LOGIN FAIL"){
-			 				    	   common_popup(result.message, "Y","bas_board_preview");
+			 				    	   common_popup(result.message, "Y","bas_board_add");
 			   						   location.href="/backoffice/login.do";
 			   					   }else if (result.status == "SUCCESS"){
 			   						   //총 게시물 정리 하기'
 			   						    preview($("#boardSeq").val());
 			   					   }else if (result.status == "FAIL"){
-			   						   common_popup("삭제 도중 문제가 발생 하였습니다.", "Y", "bas_board_preview");
+			   						   common_popup("삭제 도중 문제가 발생 하였습니다.", "Y", "bas_board_add");
 			   					   }
 			 				    },
 			 				    function(request){
-			 					    common_popup("Error:" + request.status, "Y", "bas_board_preview");
+			 					    common_popup("Error:" + request.status, "Y", "bas_board_add");
 			 				    }    		
 			      );
 		     }, fn_Ref : function (){
@@ -613,17 +707,13 @@
 	  						    if (fn_emptyReplace(obj.board_notice_start_day, "") != ""){
 	  						    	$("#sp_interval").html(fn_emptyReplace(obj.board_notice_start_day, "") + "~"+ fn_emptyReplace(obj.board_notice_end_day, ""));
 	  						    }
-	  						    	
-	  						 
 	  						    $("#sp_boardContent").html(obj.board_cn);
-	  						    
 	  						    if (result.resultlist.length > 0){
 	  						    	var sHtml = "";
 	  						    	$("#tb_fileInfo > tbody").empty();
 	  						    	for (var i in result.resultlist){
 	  						    		var obj = result.resultlist[i];
 	  						    		sHtml += "<tr>"
-	  						    		      +  " <td><input type=\"checkbox\" id=\"fileInfo"+obj.stre_file_nm+"\" name=\"fileInfo\" value=\""+obj.stre_file_nm+"\"></td>"
 	  						    		      +  " <td colspan=\"2\"><a href=\"#\" onClick=\"boardinfo.fn_FileDown('"+obj.stre_file_nm+"')\">"
 	  						    		      +  " "+obj.orignl_file_nm +" </a></td>"
 	  						    		      +  "</tr>";

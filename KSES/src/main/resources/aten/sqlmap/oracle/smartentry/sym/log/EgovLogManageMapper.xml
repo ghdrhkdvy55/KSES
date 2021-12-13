@@ -37,14 +37,14 @@
 	           	B.EMP_NM AS LOGIN_NM
 			FROM COMTNLOGINLOG A, VW_EMPINFO B 
 			WHERE A.CONECT_ID = B.EMP_NO
-			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
-				AND A.CONECT_MTHD LIKE  '%'|| #{params.searchKeyword} ||'%' 
+			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchFrom) and !@org.apache.commons.lang3.StringUtils@isEmpty(params.searchTo)">
+				AND TO_CHAR(A.CREAT_DT, 'yyyymmdd') BETWEEN #{params.searchFrom} AND #{params.searchTo} 
 			</if>
-			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchBgnDe)">
-				AND DATE_FORMAT(a.CREAT_DT, '%Y%m%d') BETWEEN #{params.searchFrom} AND #{params.searchTo} 
+			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
+				AND A.CONECT_ID LIKE  '%'|| #{params.searchKeyword} ||'%'
 			</if>
 		)TB  
 	   	WHERE RNUM  BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}   
-	   	ORDER BY TB.CREAT_DT DESC
+	   	ORDER BY TB.LOG_ID DESC
 	</select>
 </mapper>

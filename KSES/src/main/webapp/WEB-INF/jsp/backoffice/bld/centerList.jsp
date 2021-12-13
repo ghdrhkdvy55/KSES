@@ -636,6 +636,7 @@
 			fn_ConfirmPop("입력된 지점 사전예약정보를 저장하시겠습니까?");
 		},
 		fn_preOpenInfoUpdate : function() {
+			$("#confirmPage").bPopup().close();
 			var url = "/backoffice/bld/preOpenInfoUpdate.do";
 			var params = new Array();
 			$("#bld_early_set .inTxt tr").each(function(index, item) {

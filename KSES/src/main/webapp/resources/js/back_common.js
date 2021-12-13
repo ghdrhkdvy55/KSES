@@ -483,6 +483,11 @@ function yesterDayConfirm(res_day, alert_message){
 function fn_CheckboxAllChange(ck_nm, boolean){
    $("input[name="+ck_nm+"]").prop("checked", boolean);
 }
+//체크 박스 체크 에 따른 전체 선택 여부 
+function fn_CheckboxAllChangeInfo(ck_boxNm, ck_ChangeNm){
+   var all_ck =  ($("input[id="+ck_boxNm+"]").is(":checked") == true) ? true : false;
+   $("input[name="+ck_ChangeNm+"]").prop("checked", all_ck);
+}
 function fn_CheckboxChoice(ck_nm, choiceValue){
    $("input[name="+ck_nm+"]").prop("checked", false);
    if (choiceValue != "" && choiceValue != undefined){
@@ -591,6 +596,40 @@ function fn_checkboxListJson(_returnObject, _result, _checkVal, _checkboxNm){
 		   $("#"+_returnObject).append("<br/>").css('height',(object_height * 60));
 		}
 		$("#"+_returnObject).append("&nbsp;<input type='checkbox' name='"+_checkboxNm+"'  value='"+array[0]+"' "+checked+">" + array[1]);
+	}
+}
+// 신규 동적 체크 박스 생성 체크 함수 설정 
+function fn_checkboxListJsonOnChange(_returnObject, _result, _checkVal, _checkboxNm, _onChangeFunction){
+	var checked = "";
+	$("#"+_returnObject).empty();
+	var count = 0;
+	var object_height = 1;
+	//console.log(JSON.stringify(_result));
+	
+	
+	for (var i in _result) {
+	
+	   
+	    
+	    
+	    var array = Object.values(_result[i])
+	    if (_checkVal != undefined  && _checkVal != "")
+	       checked = _checkVal.includes(array[0]) ? "checked" : "";
+	       
+	    if (_onChangeFunction != undefined  && _onChangeFunction != "")
+	       onChangeFunction = "onChange='"+ _onChangeFunction + "'";
+	       
+		count += 1;
+		if (count%6 === 0){
+		   object_height += 1;
+		   $("#"+_returnObject).append("<br/>").css('height',(object_height * 60));
+		}
+		
+		if (_onChangeFunction != ""){
+		   console.log("&nbsp;<input type='checkbox' name='"+_checkboxNm+"'  value='"+array[0]+"' onChange='"+_onChangeFunction+"' "+checked+" >" + array[1]);
+		   $("#"+_returnObject).append("&nbsp;<input type='checkbox' name='"+_checkboxNm+"'  value='"+array[0]+"' onChange='"+_onChangeFunction+"' "+checked+" >" + array[1]);
+		}else 
+		   $("#"+_returnObject).append("&nbsp;<input type='checkbox' name='"+_checkboxNm+"'  value='"+array[0]+"' "+checked+">" + array[1]);
 	}
 }
 // 공백값 치환

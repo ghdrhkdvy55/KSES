@@ -29,6 +29,12 @@
     <!-- popup-->    
     <script src="/resources/js/front/bpopup.js"></script>
     
+    <link rel="stylesheet" href="/resources/css/section.css">
+	<script type="text/javascript" src="/resources/js/modernizr.custom.js"></script>
+	<script type="text/javascript" src="/resources/js/classie.js"></script>
+	<script type="text/javascript" src="/resources/js/dragmove.js"></script>
+	<script type="text/javascript" src="/resources/js/modernizr.custom.js"></script>
+    
 	<link href="/resources/css/front/widescreen_temp.css" rel="stylesheet" media="only screen and (min-width : 1080px)">
 	<link href="/resources/css/front/mobile_temp.css" rel="stylesheet" media="only screen and (max-width:1079px)">
 </head>
@@ -213,32 +219,11 @@
 
                                 <!--구역선택 메뉴-->
                                 <div id="part_area" class="section_menu">                                                                         
-                                    <ul id="menu_ul" class="tabs">
-                                        <li class="tab-link" data-tab="tab-a">
-                                            <ul>
-                                                <li><span>A</span>구역</li>
-                                                <li><span class="rest">65</span>석 신청 / <span class="total">150</span>석</li>
-                                            </ul>
-                                        </li>
-                                        <li class="tab-link" data-tab="tab-a">
-                                            <ul>
-                                                <li><span>B</span>구역</li>
-                                                <li><span class="rest">65</span>석 신청 / <span class="total">150</span>석</li>
-                                            </ul>
-                                        </li>
-                                        <li class="tab-link" data-tab="tab-a">
-                                            <ul>
-                                                <li><span>C</span>구역</li>
-                                                <li><span class="rest">65</span>석 신청 / <span class="total">150</span>석</li>
-                                            </ul>
-                                        </li>
-                                        <li class="tab-link" data-tab="tab-a">
-                                            <ul>
-                                                <li><span>D</span>구역</li>
-                                                <li><span class="rest">65</span>석 신청 / <span class="total">150</span>석</li>
-                                            </ul>
-                                        </li> 
-                                    </ul>                                                 
+                            		<div id="part_sel" class="part_sel">
+                                		<select id="selectPartCd" class="select_box" onchange="seatService.fn_partChange();">
+                                    		
+                                		</select>
+                            		</div>                                             
                                 </div>
                                 <!--좌석선택-->
                                 <div id="tab-a" class="tab-content">
@@ -476,9 +461,6 @@
                     </div><br>
                     
                     <p class="font13 mg_l20">※위의 개인정보 수집·이용 및 3자 제공에 대한 동의를 거부할 권리가 있습니다. 그러나 동의를 거부할 경우 출입이 제한될 수 있습니다. </p><br>
-                    <!-- 기금조성총괄본부로 바뀌어서 일단 삭제 
-                    <ui><li style="text-align: center;" class="first_type"><img src="/kcycle/images/new/sub7-1-3-img05.jpg" alt="경륜경정총괄본부"/></li></ui><br/>
-                     -->
                 </div>                
             </div>
           </div>
@@ -495,17 +477,12 @@
     	var isMember = $("#userDvsn").val() == "USER_DVSN_1" ? true : false;
     	var pinchzoom = "";
     	var pinchInit = true;
-    	var certification = false;
+    	var certificationYn = false;
+    	var certificationName = "";
+    	var certificationNumber = "";
     	var center ="";
     	
 		$(document).ready(function() {
-/* 			$("body").css({
-				"background" : "#fff url(/resources/img/front/loading.gif)",
-				'background-repeat' : 'no-repeat',
-				'background-position' : 'center center'
-				
-			}); */
-			
 			//입석 좌석 버튼 이벤트 정의
 			$(function(){
 				var sBtn = $(".section_menu ul > li, .enter_type ul > li");   //  ul > li 이를 sBtn으로 칭한다. (클릭이벤트는 li에 적용 된다.)
@@ -544,7 +521,7 @@
 			fn_makeResvArea: function(centerCd) {
 				var url = "/front/rsvSeatAjax.do";
 				
-				var parmas = {"resvDate" : $("resv")};
+				var parmas = {"resvDate" : $("resvDate").val()};
 				
 				fn_Ajax
 				(
@@ -578,13 +555,10 @@
 			fn_reSeat : function() {
 				$("#" + $("#reEnterDvsn").val()).addClass("active");
 				$("#" + $("#reEnterDvsn").val()).trigger("click");
-				$("#selectFloorCd").val($("#reFloorCd").val());
-				seatService.fn_floorChange();
-				
-				$("#" + $("#rePartCd").val()).trigger("click");
-				seatService.fn_partChange($("#rePartCd").val());
-				
+				$("#selectFloorCd").val($("#reFloorCd").val()).trigger("change");
+				$("#selectPartCd").val($("#rePartCd").val()).trigger("change");
 				$("#" + $("#reSeatCd").val()).trigger("click");
+				
 				$("#mask").trigger("click");
 			},
 			fn_enterTypeChange : function(enterDvsn) {
@@ -625,16 +599,14 @@
 				}
 			},
 			fn_floorChange : function() {
-				if($("#selectFloorCd").val() != "" ) {
+				if($("#selectFloorCd").val() != "" && $("#selectFloorCd").val() != $("#floorCd")) {
 					seatService.fn_initializing("FLOOR");
-				} else {					
+					$("#floorCd").val($("#selectFloorCd").val());
+					$(".sel_floor_nm").html($("#selectFloorCd option:checked").text());
+					$("#section_sel").show();
+				} else {
 					return;
 				}
-				
-				$("#floorCd").val($("#selectFloorCd").val());
-				$(".sel_floor_nm").html($("#selectFloorCd option:checked").text());
-				$("#section_sel").show();
-				//seatService.fn_initializing("FLOOR");
 				
 				var url = "/front/rsvPartListAjax.do";
 				var params = 
@@ -651,7 +623,6 @@
 					false,
 					function(result) {
 				    	if (result.status == "SUCCESS"){
-							
 							seatService.fn_initPinch("floor");
 				    		if (result.seatMapInfo != null) {
 				    		    var img = result.seatMapInfo.floor_map1;
@@ -669,25 +640,61 @@
 				    		}
 				            
 							if (result.resultlist.length > 0){
-								$("#menu_ul").empty();
+								$("#selectPartCd").empty();
+								$("#selectPartCd").append("<option value=''>구역 선택</option>");
+
 								$.each(result.resultlist, function(index, item) {
+									$("#selectPartCd").append("<option value='" + item.part_cd + "'>" + item.part_nm + "</option>");
+									
 									var setHtml = "";
 									
-									setHtml += "<li class='tab-link' data-tab='tab-a'>";
-									setHtml += "<ul id='" + item.part_cd + "' name='" + item.part_nm + "'onClick='seatService.fn_partChange(&#39;" + item.part_cd + "&#39;);'><li><span>" + item.part_nm + "</span>구역</li>";
-									setHtml += "<li><span class='rest'>" + item.part_seat_use_count + "</span>석 신청 / <span class='total'>" + item.part_seat_max_count + "</span>석</li></ul>"
-									setHtml += "</li>";
-									$("#menu_ul").append(setHtml);
+									setHtml = '<div class="box-wrapper"><li id="s' + trim(fn_NVL(item.part_cd)) + '" class="seat" seat-id="' + item.part_cd + '" style="opacity: 0.7;text-align: center; display: inline-block;" name="' + item.part_cd + '" >' 
+	                                  +  '<div class="section">'
+	                                  +  '   <div class="circle">'
+	                                  +  '       <span class=' + fn_NVL(item.part_css) + '>' + fn_NVL(item.part_nm) + '</span>'
+	                                  +  '   </div>'
+	                                  +  ' </div>'
+	                                  +  '</li></div>';
+	                             
+	                            	$('#floor_area_Map').append(setHtml);
+	                            	
+	 	                            $('.floor_map ul li#s' + trim(fn_NVL(item.part_cd))).css({
+	 	                                "top": fn_NVL(item.part_mini_top) + "px",
+	 	                                "left": fn_NVL(item.part_mini_left) + "px",
+	 	                                "width": fn_NVL(item.part_mini_width) + "px",
+	 	                                "height": fn_NVL(item.part_mini_height) + "px",
+	 	                                '-moz-transform': 'rotate(' + fn_NVL(item.part_mini_rotate) + 'deg)',
+	 	                                '-webkit-transform': 'rotate(' + fn_NVL(item.part_mini_rotate) + 'deg)',
+	 	                            });
+	 	                            
+	 	                            if ( parseInt( item.part_mini_rotate) != 0 ){
+	 	                            	 $('.floor_map ul li#s' + trim(fn_NVL(item.part_cd)) + "> .section >.circle").css({
+	 	   	                        	    '-moz-transform': 'rotate(-'+ fn_NVL(item.part_mini_rotate) + 'deg)',
+	 	  		                            '-webkit-transform': 'rotate(-'+ fn_NVL(item.part_mini_rotate) + 'deg)',
+	 	   	                             });
+		                        	} else {
+										$('.floor_map ul li#s' + trim(fn_NVL(item.part_cd)) + "> .section >.circle").css({
+											'-moz-transform': 'rotate('+ Math.abs(fn_NVL(item.part_mini_rotate)) + 'deg)',
+											'-webkit-transform': 'rotate(+'+ Math.abs(fn_NVL(item.part_mini_rotate)) + 'deg)',
+										});
+		                            }
+	 		 	                   
+	 		 	                    $('.seat').draggable({
+	 		 	                      	stop : function(e, ui){
+											var obj = e.target;
+		 				 	                var get_id = obj.id;
+		 				 	                var top_id = 'top_' + $('#'+get_id)[0].attributes.name.value;
+		 				 	                var left_id ='left_' + $('#'+get_id)[0].attributes.name.value;
+		 				 	                $('#'+top_id).val(item.part_mini_top);
+		 				 	                $('#'+left_id).val(item.part_mini_left);
+	 		 	                    	}
+	 		 	                    });
+									$('.seat').draggable("option", "disabled", true );
+									$(".box-wrapper li").click(function () {
+										var partCd = $(this).attr("id").substring(1);
+										$("#selectPartCd").val(partCd).trigger("change");
+									});
 								});
-								
-								var sBtn = $(".section_menu ul > li"); //  ul > li 이를 sBtn으로 칭한다. (클릭이벤트는 li에 적용 된다.)
-								sBtn.find("ul").click(function() { // sBtn에 속해 있는  a 찾아 클릭 하면.
-									sBtn.removeClass("active"); // sBtn 속에 (active) 클래스를 삭제 한다.
-									$(this).parent().addClass("active"); // 클릭한 a에 (active)클래스를 넣는다.
-									$("#partCd").val($(this).attr("id"));
-									
-									$(".sel_part_nm").html($(this).attr("name") + "구역");
-								})
 							} else {
 								fn_openPopup("해당층은 현재 선택 가능한 구역이 존재하지 않습니다.", "red", "ERROR", "확인", "");
 							}
@@ -698,12 +705,19 @@
 					}    		
 				);
 			},
-			fn_partChange : function(partCd) {
-				seatService.fn_initializing("PART");
+			fn_partChange : function() {
+				if($("#selectPartCd").val() != "" && $("#selectPartCd").val() != $("#partCd")) {
+					seatService.fn_initializing("PART");
+					$("#partCd").val($("#selectPartCd").val());
+					$(".sel_part_nm").html($("#selectPartCd option:selected").html() + "구역");
+				} else {
+					return;
+				} 
+									
 				var url = "/front/rsvSeatListAjax.do";
 				var params = 
 				{
-					"partCd" : partCd,
+					"partCd" : $("#partCd").val(),
 					"resvDate" : $("#resvDate").val()
 				}
 				
@@ -741,6 +755,7 @@
 				    		        var onClick = "seatService.fn_seatChange(this);"; 
 				    		        shtml += '<li id="' + fn_NVL(obj[i].seat_cd) + '" class="' + addClass + '" seat-id="' + obj[i].seat_cd + '" name="' + obj[i].seat_nm + '" >' + obj[i].seat_order + '</li>';
 				    		    }
+				    		    
 				    		    $('#area_Map').html(shtml);
 				    		    
 				    		    for (var i in result.resultlist) {
@@ -800,12 +815,6 @@
 					setHtml += '        </div>';
 					setHtml += '    </div>';
 			         
-			         //검은 막 띄우기
-			         $(document).on("click",".openMask",function() { 
-			             e.preventDefault();
-			             wrapWindowByMask();
-		 			});
-			            
 					//닫기 버튼을 눌렀을 때
 					$(document).on("click",".window .close",function() { 
 						//링크 기본동작은 작동하지 않도록 한다.

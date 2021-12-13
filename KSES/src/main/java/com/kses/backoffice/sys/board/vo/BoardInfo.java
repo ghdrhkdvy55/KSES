@@ -30,4 +30,5 @@ public class BoardInfo {
 	private String boardGroup = "";
 	private int seq = 0;
 	private String boardCenterId = "";
+	private String boardAllNotice = "";
 }

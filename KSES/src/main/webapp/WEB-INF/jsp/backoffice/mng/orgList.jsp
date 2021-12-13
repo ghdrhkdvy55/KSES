@@ -34,7 +34,7 @@
         <a href="#" onClick="jqGridFunc.fn_SearchList('Dept')" class="right_box blueBtn">부서 관리</a>
         <a href="#" onClick="jqGridFunc.fn_SearchList('Grad')" class="right_box blueBtn">직급 관리</a>
         <a href="#" onClick="jqGridFunc.fn_SearchList('Post')" class="right_box blueBtn">직책 관리</a>
-        <a href="#" onClick="jqGridFunc.fn_orgInfo('Ins', '')" class="right_box blueBtn">추가</a>  
+        <a href="#" onClick="jqGridFunc.fn_orgInfo('Ins', '')" id="orgCreate" class="right_box blueBtn">부서 등록</a>  
         <div class="clear"></div>
         <div class="whiteBox">
             <table id="mainGrid"></table>
@@ -48,7 +48,7 @@
 <div data-popup="bas_code_add" id="bas_code_add" class="popup m_pop">
     <div class="pop_con">
         <a class="button b-close">X</a>
-        <h2 class="pop_tit" id="h2_title">${regist.orgTitle }</h2>
+        <h2 class="pop_tit" id="h2_title">부서 등록</h2>
         <div class="pop_wrap">
             <table class="detail_table">
                 <tbody>
@@ -85,8 +85,8 @@
             </table>
         </div>
         <div class="right_box">
+            <a href="#" onClick="jqGridFunc.fn_CheckForm()" id="btnUpdate" class="blueBtn">등록</a>
             <a href="#" onClick="jqGridFunc.fn_close()" class="grayBtn">취소</a>
-            <a href="#" onClick="jqGridFunc.fn_CheckForm()" id="btnSave" class="blueBtn">저장</a>
         </div>
         <div class="clear"></div>
     </div>
@@ -230,7 +230,6 @@
             	$("#mode").val(mode);
         	    if (mode == "Edt"){
 		        	$("#code").val(code);
-		        	$("#btnUpdate").text("수정");
 		        	var params = {"code" : code, 'orgGubun' : $("#orgGubun").val()};
 		        	var url = "/backoffice/mng/orgDetail.do";
 		     	    fn_Ajax(url, "GET", params, false,
@@ -244,7 +243,14 @@
        						       $("#codeDc").val(obj.code_dc);
        						       $("input:radio[name='useYn']:radio[value='"+obj.use_yn+"']").prop('checked', true); 
        						       $("#sp_Unqi").hide();
-       						       $("#btnSave").text("수정");
+       				        	   $("#btnUpdate").text("수정");
+	       				           if($("#orgGubun").val() == "Dept"){
+	       				           	$("#h2_title").html("부서 정보 수정");
+	       				           } else if($("#orgGubun").val() == "Grad"){
+	       				           	$("#h2_title").html("직급 정보 수정");
+	       				           } else {
+	       				           	$("#h2_title").html("직책 정보 수정");
+	       				           }
 	       					   }else{
 	       						   alert(result.meesage);
 	       					   }
@@ -254,12 +260,20 @@
 			     			}
 		               );
 		        }else{
+
 		        	$("#code").val('');
 		        	$("#codeNm").val('');
 		        	$("#codeDc").val('');
 		        	$("#sp_Unqi").show();
-		        	$("#btnSave").text("입력");
 		        	$("#useAt_Y").prop("checked", true);
+		        	if($("#orgGubun").val() == "Dept"){
+		        		$("#h2_title").html("부서 정보 등록");
+		        	} else if($("#orgGubun").val() == "Grad"){
+		        		$("#h2_title").html("직급 정보 등록");
+		        	} else {
+		        		$("#h2_title").html("직책 정보등록");
+		        	}
+		        	$("#btnUpdate").text("등록");
 		        }
 		        $("#bas_code_add").bPopup();
            },fn_CheckForm  : function (){
@@ -345,30 +359,34 @@
 		 }, fn_orgGubunChange : function(){
 			 switch($("#orgGubun").val()){
 			     case "Dept" : 
+			    	 $("#orgCreate").html("부서 등록");
 			    	 $("#h_title").html("부서 관리");
-					 $("#h2_title").html("부서 관리");
+					 $("#h2_title").html("부서 등록");
 					 $("#th_orgCode").text("부서코드");
 					 $("#th_orgCodeNm").text("부서명");
 					 $("#mainGrid").jqGrid('setLabel', "code_cd","부서코드"); 
 					 $("#mainGrid").jqGrid('setLabel', "code_nm","부서명"); 
 			    	 break;
 			     case "Grad" : 
+			    	 $("#orgCreate").html("직급 등록");
 			    	 $("#h_title").html("직급 관리");
-					 $("#h2_title").html("직급 관리");
+					 $("#h2_title").html("직급 등록");
 					 $("#th_orgCode").text("직급코드");
 					 $("#th_orgCodeNm").text("직급명");
 					 $("#mainGrid").jqGrid('setLabel', "code_cd","직급코드"); 
 					 $("#mainGrid").jqGrid('setLabel', "code_nm","직급명"); 
 			    	 break;
 			     case "Post" : 
+			    	 $("#orgCreate").html("직책 등록");
 			    	 $("#h_title").html("직책 관리");
-					 $("#h2_title").html("직책 관리");
+					 $("#h2_title").html("직책 등록");
 					 $("#th_orgCode").text("직책코드");
 					 $("#th_orgCodeNm").text("직책명");
 					 $("#mainGrid").jqGrid('setLabel', "code_cd","직책코드"); 
 					 $("#mainGrid").jqGrid('setLabel', "code_nm","직책명"); 
 			    	 break;
 			     default : 
+			    	 $("#orgCreate").html("부서 등록");
 			    	 $("#h_title").html("부서 관리");
 					 $("#h2_title").html("부서 관리");
 					 $("#th_orgCode").text("부서코드");
