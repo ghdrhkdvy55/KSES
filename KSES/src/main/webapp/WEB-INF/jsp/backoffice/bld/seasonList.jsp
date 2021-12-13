@@ -130,7 +130,7 @@
 <div data-popup="bld_season_add" id="bld_season_add" class="popup">
   <div class="pop_con">
       <a class="button b-close">X</a>
-      <h2 class="pop_tit">시즌 정보</h2>
+      <h2 class="pop_tit">시즌 등록</h2>
       <div class="pop_wrap">
           <table class="detail_table">
               <tbody>
@@ -170,8 +170,8 @@
           </table>
       </div>
       <div class="right_box">
-          <a href="javascript:common_modelClose('bld_season_add')" class="grayBtn">취소</a>
-          <a href="javascript:jqGridFunc.fn_CheckForm()" class="blueBtn" id="btnUpdate">저장</a>
+		  <a href="javascript:jqGridFunc.fn_CheckForm()" class="blueBtn" id="btnUpdate">저장</a>
+          <a href="javascript:common_modelClose('bld_season_add')" class="grayBtn">취소</a>  
       </div>
       <div class="clear"></div>
   </div>
@@ -417,6 +417,7 @@ var jqGridFunc  = {
 						       $("input:radio[name='useYn']:radio[value='"+obj.use_yn+"']").prop('checked', true)
 						       fn_CheckboxChoice("seasonCenterinfo", obj.season_centerinfo);
 						       $("#btnSave").text("수정");
+						       $("#bld_season_add > div >h2").text("시즌 정보 수정");
     					   }else{
     						   common_modelCloseM(result.message, "bas_menu_add");
     					   }
@@ -432,8 +433,9 @@ var jqGridFunc  = {
 			    $("#seasonEndDay").val('');
 			    fn_CheckboxAllChange("seasonCenterinfo", false);
 			    $("#seasonDc").val('');				  
-	        	$("#btnUpdate").text("입력");
-	        	$("#useAt_Y").prop("checked", true);
+	        	$("#btnUpdate").text("등록");
+	        	$("#useAt_Y").prop("checked", true)
+	        	$("#bld_season_add > div >h2").text("시즌 정보 등록");
 	        }
 	        $("#bld_season_add").bPopup();
     },fn_CheckForm  : function (){

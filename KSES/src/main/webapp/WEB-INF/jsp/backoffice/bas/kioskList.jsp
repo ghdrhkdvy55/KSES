@@ -80,7 +80,7 @@
 <div id="bas_kiosk_add" class="popup m_pop">
 	<div class="pop_con">
 		<a class="button b-close">X</a>
-    	<h2 class="pop_tit">장비 등록</h2>
+    	<h2 class="pop_tit">장비 정보 등록</h2>
     	<div class="pop_wrap">
     		<table class="detail_table">
            		<tbody>
@@ -330,7 +330,7 @@
 	        if (mode == "Edt") {
 	           	var params = {"ticketMchnSno" : ticketMchnSno};
 	     	   	var url = "/backoffice/bas/kioskInfoDetail.do";
-	     	    $("#bas_kiosk_add > div >h2").text("장비 수정");
+	     	    $("#bas_kiosk_add > div >h2").text("장비 정보 수정");
 	     	    $("#ticketMchnSno").val(ticketMchnSno).prop('readonly', true);
 	     	   	fn_Ajax
 	     	   	(
@@ -366,7 +366,7 @@
 					}    		
 				);
 			} else {
-				$("#bas_kiosk_add > div >h2").text("장비 등록");
+				$("#bas_kiosk_add > div >h2").text("장비 정보 등록");
 				$("#ticketMchnSno").val("").prop('readonly', false);
 				$("#useY").prop("checked", true);
 				$("#centerCd option:eq(0)").prop("selected", true);

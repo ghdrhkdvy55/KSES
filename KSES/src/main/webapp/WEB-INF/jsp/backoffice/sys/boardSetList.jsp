@@ -31,7 +31,7 @@
             <p>총 : <span id="sp_totcnt"></span>건</p>
         </div>
         <div class="right_box">
-        <a href="#" onClick="jqGridFunc.fn_BoardSetInfo('Ins', '')"  class="blueBtn">게시판 추가</a> 
+        <a href="#" onClick="jqGridFunc.fn_BoardSetInfo('Ins', '')"  class="blueBtn">게시판 등록</a> 
         <a href="#" onClick="jqGridFunc.fn_BoradDel()"  class="grayBtn">삭제</a>
        </div>
     
@@ -132,8 +132,8 @@
           </table>
       </div>
       <div class="right_box">
-          <a href="#" onClick="common_modelClose('board_add')" class="grayBtn b-close">취소</a>
           <a href="#" onClick="jqGridFunc.fn_CheckForm()" class="blueBtn" id="btnUpdate">저장</a>
+          <a href="#" onClick="common_modelClose('board_add')" class="grayBtn b-close">취소</a>
       </div>
       <div class="clear"></div>
   </div>
@@ -314,24 +314,19 @@
       						       var obj  = result.regist;
     						       $("#boardTitle").val(obj.board_title);
     						       $("#boardDvsn").val(obj.board_dvsn);
-    						       $("#boardAuthor").val(obj.board_author);
-    						       
+    						       $("#boardAuthor").val(obj.board_author);  
     						       $("#boardSize").val(obj.board_size);
     						       $("#boardNoticeDvsn").val(obj.board_notice_dvsn);
-    						       $("input:radio[name='useYn']:radio[value='"+obj.use_yn+"']").prop('checked', true)
-    						       
-    						       $("input:radio[name='boardFileUploadYn']:radio[value='"+obj.board_file_upload_yn+"']").prop('checked', true)
-    						       $("input:radio[name='boardCmntUse']:radio[value='"+obj.board_cmnt_use+"']").prop('checked', true)
-    						       
+    						       $("input:radio[name='useYn']:radio[value='"+obj.use_yn+"']").prop('checked', true);
+    						       $("input:radio[name='boardFileUploadYn']:radio[value='"+obj.board_file_upload_yn+"']").prop('checked', true);
+    						       $("input:radio[name='boardCmntUse']:radio[value='"+obj.board_cmnt_use+"']").prop('checked', true);
+    						       $("#board_add > div >h2").text("게시판 수정");
     						       $("#sp_Unqi").hide();
     						       if (obj.board_center_id != ""){
     						    	   var url = "/backoffice/bld/centerCombo.do"
     	    						   var returnVal = uniAjaxReturn(url, "GET", false, null, "lst");
     	    						   fn_checkboxListJson("sp_boardCenter", returnVal,obj.board_center_id, "boardCenterId");  
     						       }
-    						       
-    									 
-    						       $("#btnSave").text("수정");
       						   }else{
        						  common_modelCloseM(result.message, "board_add");
        					   }
@@ -350,7 +345,8 @@
 	        	$("#boardAuthor").val('');
 	        	$("input:radio[name='useYn']:radio[value='Y']").prop('checked', true);
 	        	$("#sp_Unqi").show();
-	        	$("#btnSave").text("입력");
+	        	$("#btnUpdate").text("등록");
+	        	$("#board_add > div >h2").text("게시판 등록");
 	        	
 	        	fn_EmptyField("sp_boardCenter");
 	        	

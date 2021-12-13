@@ -5,6 +5,7 @@
         xmlns:mvc="http://www.springframework.org/schema/mvc"
         xmlns:aop="http://www.springframework.org/schema/aop"
         xmlns:task="http://www.springframework.org/schema/task"
+        xmlns:util="http://www.springframework.org/schema/util"
         xsi:schemaLocation="http://www.springframework.org/schema/beans 
                             http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
                             http://www.springframework.org/schema/context 
@@ -14,7 +15,9 @@
                             http://www.springframework.org/schema/aop 
                             http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
                             http://www.springframework.org/schema/task 
-                            http://www.springframework.org/schema/task/spring-task-4.0.xsd">
+                            http://www.springframework.org/schema/task/spring-task-4.0.xsd
+                            http://www.springframework.org/schema/util 
+                            http://www.springframework.org/schema/util/spring-util-4.0.xsd">
 
     <!-- 패키지 내 Controller, Service, Repository 클래스의 auto detect를 위한 mvc 설정 -->
     <context:component-scan base-package="egovframework, com.kses">
@@ -80,7 +83,8 @@
         <mvc:interceptor>
             <mvc:mapping path="/backoffice/**/*.do" />
     		<mvc:exclude-mapping path="/backoffice/login.do"/>
-    		<mvc:exclude-mapping path="/backoffice/SecurityLogin.do"/> 		
+    		<mvc:exclude-mapping path="/backoffice/SecurityLogin.do"/>
+    		<mvc:exclude-mapping path="/backoffice/billPrint.do"/> 		
    
     		
     		<bean class="egovframework.com.cmm.interceptor.AuthenticInterceptor" />
@@ -110,7 +114,36 @@
 	        </bean>
 	    </mvc:message-converters> 
     </mvc:annotation-driven> -->
+    
+    
 
+   
+    <util:properties id="KCYCLE_CONFIG">
+        <!-- 링크아이디 -->
+        <prop key="LinkID">KCYCLE</prop>
+        <!-- 비밀키 -->
+        <prop key="SecretKey">smN+pkH9NJHZhcSIIVKyYF9Et18E1/amWJBW+Pb6iJo= </prop>
+        <!-- 연동환경 설정값 true(개발용), false(상업용) -->
+        <prop key="IsTest">true</prop>
+        <!-- 인증토큰 아이피 제한 기능 사용여부 권장(true) -->
+        <prop key="IsIPRestrictOnOff">true</prop>
+        <!-- 팝빌 API 서비스 고정 IP 사용여부, true-사용, false-미사용, 기본값(false) -->
+        <prop key="UseStaticIP">false</prop>
+        <!-- 로컬시스템 시간 사용여부 true-사용(기본값-권장), false-미사용 -->
+        <prop key="UseLocalTimeYN">true</prop>
+    </util:properties>
+
+
+    <bean id="cashbillService" class="com.popbill.api.cashbill.CashbillServiceImp" >
+        <property name="linkID" value="#{KCYCLE_CONFIG.LinkID}"/>
+        <property name="secretKey" value="#{KCYCLE_CONFIG.SecretKey}" />
+        <property name="test" value="#{KCYCLE_CONFIG.IsTest}"/>
+        <property name="IPRestrictOnOff" value="#{KCYCLE_CONFIG.IsIPRestrictOnOff}"/>
+        <property name="useStaticIP" value="#{KCYCLE_CONFIG.UseStaticIP}"/>
+        <property name="useLocalTimeYN" value="#{KCYCLE_CONFIG.UseLocalTimeYN}"></property>
+    </bean>
+    
+    
     <!-- 화면처리용 JSP 파일명의  prefix, suffix 처리에 대한 mvc 설정  -->
     <bean class="org.springframework.web.servlet.view.BeanNameViewResolver" p:order="0"/>    
     <bean class="org.springframework.web.servlet.view.UrlBasedViewResolver" p:order="1"

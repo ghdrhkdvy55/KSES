@@ -77,7 +77,7 @@
 <div id='bas_holiday_add' class="popup m_pop">
 	<div class="pop_con">
 		<a class="button b-close">X</a>
-    	<h2 class="pop_tit">휴일 등록</h2>
+    	<h2 class="pop_tit">휴일 정보 등록</h2>
     	<div class="pop_wrap">
     		<table class="detail_table">
            		<tbody>
@@ -348,7 +348,7 @@
 			if (mode == "Edt") {
 	           	var params = {"holySeq" : holySeq};
 	     	   	var url = "/backoffice/bas/holyInfoDetail.do";
-	     	   $("#bas_holiday_add > div >h2").text("휴일 수정");
+	     	   $("#bas_holiday_add > div >h2").text("휴일 정보 수정");
 	     	   $("#btnUpdate").text("수정");
 	     	    fn_Ajax
 	     	   	(
@@ -379,7 +379,7 @@
 				);
 			} else {
 				$("#btnUpdate").text("등록");
-				$("#bas_holiday_add > div >h2").text("휴일 등록");
+				$("#bas_holiday_add > div >h2").text("휴일 정보 등록");
 				$("#bas_holiday_add input[type='text']").val("");
 				$("#useY").prop("checked", true);
 	        }

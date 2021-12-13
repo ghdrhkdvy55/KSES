@@ -145,15 +145,15 @@
 				SELECT 
 					FN_SEATCODEINSERT(TA.PART_CD, 'PART', RNUM), TA.CENTER_CD, TA.FLOOR_CD, TA.PART_CD, TA.RN, 
 					'Y', 0, 0, #{params.frstRegterId}, SYSDATE, 
-					#{params.lastUpdusrId}, SYSDATE, #{params.seatDvsn, jdbcType=VARCHAR}, #{params.seatClass}, #{params.payDvsn, jdbcType=VARCHAR}, 
-					#{params.payCost}, #{params.payAmCost}, #{params.payPmCost}, TA.RNUM 
+					#{params.lastUpdusrId}, SYSDATE, #{params.seatDvsn, jdbcType=VARCHAR}, TA.PART_CLASS, #{params.payDvsn, jdbcType=VARCHAR}, 
+					TA.PART_PAY_COST, #{params.payAmCost}, #{params.payPmCost}, TA.RNUM 
 				FROM 
 				(
 					<![CDATA[
 					SELECT  
 						A.CENTER_CD, A.FLOOR_CD, A.PART_CD, #{floorNm, jdbcType=VARCHAR}|| '_' || A.PART_NM || '_' || B.RN AS RN,  
-						ROW_NUMBER() OVER(ORDER BY B.RN ASC) AS RNUM
-					FROM TSEB_PART_INFO_D A, 
+						ROW_NUMBER() OVER(ORDER BY B.RN ASC) AS RNUM, A.PART_CLASS, A.PART_PAY_COST
+					FROM TSEB_PART_INFO_D A,
 					( 
 						SELECT NUM AS RN FROM TABLE(FN_ROWTABLE(${params.seatStr}, ${params.seatEnd}))
 					) B 
@@ -185,12 +185,13 @@
 					(
 						SELECT NUM AS RN FROM TABLE(FN_ROWTABLE(${params.seatStr}, ${params.seatEnd})) 
 					) B 
-					WHERE FLOOR_CD = #{params.floorCd}
+					WHERE FLOOR_CD = #{params.floorCd};
 					]]>
 				) TA
-				ORDER BY TA.RN DESC ;
+				ORDER BY TA.RN DESC
 			</otherwise>
 		</choose>
+		
 		UPDATE TSEB_FLOOR_INFO_M SET 
 			FLOOR_SEAT_CNT = 
 			(

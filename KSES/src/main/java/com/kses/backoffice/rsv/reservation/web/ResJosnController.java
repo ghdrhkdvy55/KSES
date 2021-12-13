@@ -40,7 +40,10 @@ import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.Globals;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 import egovframework.rte.fdl.property.EgovPropertyService;
-
+import com.popbill.api.CashbillService;
+import com.popbill.api.PopbillException;
+import com.popbill.api.CBIssueResponse;
+import com.popbill.api.cashbill.Cashbill;
 
 
 
@@ -69,7 +72,10 @@ public class ResJosnController{
 	@Autowired
 	private InterfaceInfoManageService interfaceService;
 	
-	
+    @Autowired
+    private CashbillService cashbillService;
+    
+    
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="speedCheck.do", method = {RequestMethod.POST})
     public ModelAndView selectPreOpenInfo(	@ModelAttribute("loginVO") LoginVO loginVO,
@@ -655,5 +661,140 @@ public class ResJosnController{
         interfaceService.InterfaceInsertLoginLog(info);
 		        
 		return model;
+	}
+	//현금 영수증
+	@RequestMapping(value="billPrint.do")
+	public ModelAndView selectPopBillInfo (@RequestParam("resvSeq") String resvSeq,
+			                               @RequestParam("tranGubun") String tranGubun)throws Exception{
+		// 가맹점 사업자번호
+		
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+		
+		
+		
+	  
+
+	    try {
+	    	String corpNum = propertiesService.getString("Company.Number");
+	    
+	    	Map<String, Object> resInfo = resService.selectResInfoDetail(resvSeq);
+	    	
+	    	String msgKey = tranGubun.equals("bill") ? resvSeq+"_001" :resvSeq+"_002";
+	    	String msgTradType = tranGubun.equals("bill") ? "승인거래" : "취소거래";
+	    	
+	    	
+	  	    // 메모
+	  	    String Memo = "현금영수증 즉시발행 메모";
+
+	  	    // 현금영수증 정보 객체
+	  	    Cashbill cashbill = new Cashbill();
+
+	  	    // 문서번호, 최대 24자리, 영문, 숫자 '-', '_'로 구성
+	  	    cashbill.setMgtKey(msgKey);
+
+	  	    // 문서형태, {승인거래, 취소거래} 중 기재
+	  	    cashbill.setTradeType(msgTradType);
+
+	  	    // 취소거래시 기재, 원본 현금영수증 국세청 승인번호 - getInfo API를 통해 confirmNum 값 기재
+	  	    cashbill.setOrgConfirmNum("");
+
+	  	    // 취소거래시 기재, 원본 현금영수증 거래일자 - getInfo API를 통해 tradeDate 값 기재
+	  	    cashbill.setOrgTradeDate("");
+
+	  	    // 과세형태, {과세, 비과세} 중 기재
+	  	    cashbill.setTaxationType("비과세");
+
+	  	    // 거래처 식별번호, 거래유형에 따라 작성
+	  	    // 소득공제용 - 주민등록/휴대폰/카드번호 기재가능
+	  	    // 지출증빙용 - 사업자번호/주민등록/휴대폰/카드번호 기재가능
+	  	    
+	  	    cashbill.setIdentityNum(SmartUtil.NVL(resInfo.get("user_phone"), "").toString());
+
+	  	    // 거래구분, {소득공제용, 지출증빙용} 중 기재
+	  	    cashbill.setTradeUsage(SmartUtil.NVL(resInfo.get("resv_rcpt_dvsn_nm"), "소득공제용").toString());
+
+	  	    // 거래유형, {읿반, 도서공연, 대중교통} 중 기재
+	  	    cashbill.setTradeOpt("읿반");
+	  	    
+	  	    int payAmt =  Integer.valueOf( SmartUtil.NVL(resInfo.get("resv_pay_cost"), "0").toString());
+        	int payCost =  0 ;
+            int payTxt = 0;	
+            		
+            if (payAmt > 0) {
+            	payCost = ((payAmt/11) * 10);
+            	payTxt = payAmt - payCost;
+            }
+        	// 공급가액, 숫자만 가능
+	  	    cashbill.setSupplyCost(String.valueOf(payCost));
+	  	    // 부가세, 숫자만 가능
+	  	    cashbill.setTax(String.valueOf( payTxt));
+	  	    // 합계금액, 숫자만 가능, 봉사료 + 공급가액 + 부가세
+	  	    cashbill.setTotalAmount(String.valueOf( payAmt));
+	  	    // 봉사료, 숫자만 가능
+	  	    cashbill.setServiceFee("0");
+
+	  	    
+
+
+	  	    // 발행자 사업자번호, '-'제외 10자리
+	  	    cashbill.setFranchiseCorpNum(corpNum);
+
+	  	    // 발행자 상호
+	  	    cashbill.setFranchiseCorpName("국민체육진흥공단");
+
+	  	    // 발행자 대표자명
+	  	    cashbill.setFranchiseCEOName("발행자 대표자");
+
+	  	    // 발행자 주소
+	  	    cashbill.setFranchiseAddr("서울시 송파구 올림픽로 424 올림픽문화센터(올림픽컨벤션센터)");
+
+	  	    // 발행자 연락처
+	  	    cashbill.setFranchiseTEL("07043042991");
+
+	  	    // 발행안내 문자 전송여부
+	  	    cashbill.setSmssendYN(false);
+
+
+	  	    // 거래처 고객명
+	  	    cashbill.setCustomerName( SmartUtil.NVL(resInfo.get("user_nm"), "0").toString());
+
+	  	    // 거래처 주문상품명
+	  	    cashbill.setItemName( SmartUtil.NVL(resInfo.get("seat_nm"), "입석").toString()    );
+
+	  	    // 거래처 주문번호
+	  	    cashbill.setOrderNumber(resvSeq);
+
+	  	    // 거래처 이메일
+	  	    // 팝빌 개발환경에서 테스트하는 경우에도 안내 메일이 전송되므로,
+	  	    // 실제 거래처의 메일주소가 기재되지 않도록 주의
+	  	    cashbill.setEmail(SmartUtil.NVL(resInfo.get("user_email"), "").toString() );
+	  	    // 거래처 휴대폰
+	  	    cashbill.setHp( SmartUtil.NVL(resInfo.get("user_phone"), "").toString() );
+	  	 
+	        CBIssueResponse response = cashbillService.registIssue(corpNum, cashbill, Memo);
+	        //현금 영수증 출력 번호 
+	        ResvInfo info = new ResvInfo();
+	        info.setResvSeq(resvSeq);
+	        info.setResvRcptNumber(response.getConfirmNum());
+	        int ret = resService.resbillChange(info);
+	        //현금 영수증 거래 끝 부분 
+	        
+	        model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+	        model.addObject("popBill",response);
+
+	    } catch (PopbillException e) {
+	        // 예외 발생 시, e.getCode() 로 오류 코드를 확인하고, e.getMessage()로 오류 메시지를 확인합니다.
+	        System.out.println("오류 코드" + e.getCode());
+	        System.out.println("오류 메시지" + e.getMessage());
+	          
+	        StackTraceElement[] ste = e.getStackTrace();
+			int lineNumber = ste[0].getLineNumber();
+			LOGGER.error("selectPopBillInfo error:" + e.toString() + ":" + lineNumber);
+			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			model.addObject(Globals.STATUS_MESSAGE,  e.getCode()+ ":" +  e.getMessage());
+			
+	    }
+
+	    return model;
 	}
 }
