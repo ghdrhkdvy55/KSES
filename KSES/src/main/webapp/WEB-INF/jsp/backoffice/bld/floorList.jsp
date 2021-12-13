@@ -1854,7 +1854,7 @@
  			        wb.Props = {
  			            Title: "좌석 설절 엑셀",
  			            Subject: "site info",
- 			            Author: "sohoki",
+ 			            Author: "atensystem",
  			            Manager: "Manager",
  			            Company: "Company",
  			            Category: "Category",

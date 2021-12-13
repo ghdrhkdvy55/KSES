@@ -458,6 +458,7 @@ public class ResJosnController{
                         + ":" + SmartUtil.NVL(resInfo.get("seat_nm"), "").toString()) ;
 				fileScrty =  null;
 				
+				model.addObject("resvInfo", resInfo);
 				model.addObject("QRCODE", qrCode);
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			}

@@ -41,7 +41,7 @@
                 <div class="navi_left">
                     <a href="/front/main.do" class="before_close"></a>
                 </div>
-                <h1>공지사항<a href="" class="close"><img src="/resources/img/x_box.svg" alt="닫기"></a></h1>
+                <h1>공지사항<a href="" class="close"><img src="/resources/img/front/x_box.svg" alt="닫기"></a></h1>
                 <button class="noti_h_icon ui-dropper" data-drop="notice_view_de"">필터</button>              
                 <div class="clear"></div>
             </div>           

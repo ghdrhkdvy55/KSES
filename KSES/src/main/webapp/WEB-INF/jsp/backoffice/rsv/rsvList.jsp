@@ -748,6 +748,7 @@
 					function(result) {
 				    	if(result.status == "SUCCESS") {
 							common_popup("좌석이 정상적으로 변경되었습니다.", "Y", "");
+							jqGridFunc.fn_resvInfo("Edt", $("#resvSeq").val());
 				    	} else if (result.status == "LOGIN FAIL") {
 				    		common_popup("로그인 정보가 올바르지않습니다 다시 로그인해주세요", "Y", "");
 				    	} else {

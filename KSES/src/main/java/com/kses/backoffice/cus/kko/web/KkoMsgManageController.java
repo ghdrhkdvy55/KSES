@@ -28,7 +28,7 @@ import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 
 @RestController
-@RequestMapping("/backoffice/bld")
+@RequestMapping("/backoffice/companyManage")
 public class KkoMsgManageController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(KkoMsgManageController.class);
@@ -43,7 +43,10 @@ public class KkoMsgManageController {
 	
 	@Autowired
     protected EgovPropertyService propertiesService;
-
+	
+	@Autowired
+	private SmartUtil util;
+	
 	public ModelAndView selectKkoList(@ModelAttribute("LoginVO") LoginVO loginVO
 				                               , @ModelAttribute("kkoinfo") KkoMsgInfo kkoinfo
 											   , HttpServletRequest request
@@ -62,7 +65,7 @@ public class KkoMsgManageController {
 		    	   
 			  }
 			
-		      model.setViewName("/backoffice/bld/kkolist");
+		      model.setViewName("/backoffice/companyManage/kkolist");
 		}catch(Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			LOGGER.info(e.toString() + ':' + ste[0].getLineNumber());
@@ -86,7 +89,7 @@ public class KkoMsgManageController {
 		  
 	              
 	   	    PaginationInfo paginationInfo = new PaginationInfo();
-		    paginationInfo.setCurrentPageNo( Integer.parseInt( SmartUtil.NVL(searchVO.get("pageIndex"), "1") ) );
+		    paginationInfo.setCurrentPageNo( Integer.parseInt( util.NVL(searchVO.get("pageIndex"), "1") ) );
 		    paginationInfo.setRecordCountPerPage(pageUnit);
 		    paginationInfo.setPageSize(propertiesService.getInt("pageSize"));
 

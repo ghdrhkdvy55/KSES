@@ -227,7 +227,7 @@ public class FrontResvInfoManageController {
 				UserInfo user = new UserInfo();
 				if("USER_DVSN_2".equals(vo.getResvUserDvsn())) {
 					user.setUserDvsn("USER_DVSN_2");
-					user.setUserId(vo.getUserId());
+					user.setUserId(resvInfo.get("user_id").toString());
 					user.setUserBirthDy("19700000");
 					user.setUserSexMf("N");
 					user.setUserPhone(vo.getResvUserClphn());

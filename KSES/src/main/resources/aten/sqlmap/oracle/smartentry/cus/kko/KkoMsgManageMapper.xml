@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kses.backoffice.cus.kko.mapper.KkoMsgManageMapper">
   
-  <select id="selectKkoMsgInfoList"  resultType="lmap">
+   <select id="selectKkoMsgInfoList"  resultType="lmap">
 	     SELECT TB.* 
          FROM (
 				    SELECT SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT,
@@ -30,9 +30,9 @@
     </select>
     <insert id="kkoMsgInsertSevice" >
          INSERT INTO KKO_MSG(REQDATE, STATUS, PHONE, CALLBACK, PROFILE_KEY, 
-							 MSG, TEMPLATE_CODE, FAILED_TYPE, FAILED_SUBJECT, FAILED_MSG)
-         VALUES (SYSDATE, 1, #{phone}, #{callback}, 'XXXXXXXXX', 
-                 #{msg,jdbcType=VARCHAR},  #{templateCode,jdbcType=VARCHAR},  
+							 MSG, BUTTON_JSON, TEMPLATE_CODE, FAILED_TYPE, FAILED_SUBJECT, FAILED_MSG)
+         VALUES (getdate(), 1, #{phone}, #{callback}, '431d7fcc52bbb4f0275c6abdf86970655c972d0a', 
+                 #{msg,jdbcType=VARCHAR}, #{buttonJson,jdbcType=VARCHAR},  #{templateCode,jdbcType=VARCHAR},  
                  #{failedType,jdbcType=VARCHAR}, #{failedSubject,jdbcType=VARCHAR},  #{failedMsg,jdbcType=VARCHAR});
                 
     </insert>
