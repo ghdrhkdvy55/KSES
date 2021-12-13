@@ -131,4 +131,10 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 		// TODO Auto-generated method stub
 		return resvMapper.selectFindPassword(paramMap);
 	}
+
+	@Override
+	public int resbillChange(ResvInfo vo) throws Exception {
+		// TODO Auto-generated method stub
+		return resvMapper.resbillChange(vo);
+	}
 }

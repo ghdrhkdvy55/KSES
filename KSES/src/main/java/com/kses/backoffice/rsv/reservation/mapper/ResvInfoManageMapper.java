@@ -41,6 +41,8 @@ public interface ResvInfoManageMapper {
 	
 	public int updateUserResvInfo(ResvInfo vo);
 	
+	public int resbillChange(ResvInfo vo);
+	
 	public int resPriceChange(ResvInfo vo);
 	
 	public String resvValidCheck(@Param("params") Map<String, Object> params);

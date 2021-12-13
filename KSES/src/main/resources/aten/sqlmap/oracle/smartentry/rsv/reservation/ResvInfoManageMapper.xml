@@ -92,7 +92,9 @@
 				WHEN A.RESV_ENTRY_DVSN = 'ENTRY_DVSN_1'  THEN '입석' 
 				ELSE D.FLOOR_NM || ' ' || E.PART_NM || '구역 ' || F.SEAT_NM
 			END AS SEAT_NM, 
-			C.CENTER_NM, B.USER_NM, B.USER_PHONE
+			C.CENTER_NM, B.USER_NM, B.USER_PHONE,
+			FN_DETAILCODENM(A.RESV_RCPT_DVSN) RESV_RCPT_DVSN_NM, A.RESV_RCPT_DVSN,
+			B.USER_EMAIL
 		FROM TSER_RESV_INFO_I A, TEST_USER_INFO B, TSEB_CENTER_INFO_M C, TSEB_FLOOR_INFO_M D, TSEB_PART_INFO_D E, TSEB_SEAT_INFO_D F
 		WHERE A.RESV_SEQ = #{resvSeq}
 		AND A.USER_ID = B.USER_ID
@@ -323,6 +325,11 @@
 			</otherwise>
 		</choose>
 		RESV_PAY_DVSN = #{resvPayDvsn}
+        WHERE RESV_SEQ = #{resvSeq}
+    </update>
+    <!--  현금 영수증 출력  -->
+    <update id="resbillChange">
+		UPDATE TSER_RESV_INFO_I SET RESV_RCPT_NUMBER = #{resvRcptNumber}
         WHERE RESV_SEQ = #{resvSeq}
     </update>
 

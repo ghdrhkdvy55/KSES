@@ -132,6 +132,9 @@ public interface ResvInfoManageService {
 	 */
 	public int resPriceChange(ResvInfo vo)throws Exception;
 	
+	
+	public int resbillChange(ResvInfo vo)throws Exception;
+	
 	/**
 	 * SPDM 예약전 유효성 검사
 	 * 

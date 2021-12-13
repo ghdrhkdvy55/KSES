@@ -109,6 +109,9 @@
 		    <version>2.5</version>
         </dependency>
 		
+		
+		
+		
 		<!-- https://mvnrepository.com/artifact/com.oracle.ojdbc/orai18n -->
 		<dependency>
     		<groupId>com.oracle.ojdbc</groupId>
@@ -339,6 +342,15 @@
 		    <artifactId>javase</artifactId>
 		    <version>3.4.0</version>
 		</dependency>
+		
+        <!--  팝빌 연동  --> 		
+		<dependency>
+		    <groupId>kr.co.linkhub</groupId>
+		    <artifactId>popbill-sdk</artifactId>
+		    <version>1.51.0</version>
+		</dependency>
+		
+
 	</dependencies>
 
 	<build>
