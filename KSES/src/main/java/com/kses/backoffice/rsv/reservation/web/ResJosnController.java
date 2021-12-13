@@ -264,15 +264,16 @@ public class ResJosnController{
         	EgovFileScrty fileScrty = new EgovFileScrty();	
         	
         	String qrInfo = fileScrty.decode(sendInfo.getQrCode())  ;
-        	
+        	String qrCneterCd = sendInfo.getQrCneterCd(); //qr 지점 정보
+        	String qrInot = sendInfo.getQrInot();         //qrIO 구분  
         	LOGGER.debug("qrInfo:" + qrInfo);
         	
         	String result = "";
-        	
         	String ERROR_CD = "";
         	String ERROR_MSG = "";
         	String IOGUBUN = "";
         	String USER_NM = "";
+        	String IOGUBUN_TXT = "";
         	
         	if (qrInfo.contains(":")) {
         		String [] attempInfos = qrInfo.split(":");
@@ -287,6 +288,16 @@ public class ResJosnController{
         		String resvEntryDvsn = attempInfos[7];
         		String resvPayCost = attempInfos[8];
         		String center_speed_cd = attempInfos[9];
+        		String inotMsg =  attempInfos[10];
+        		
+        		String userPhone =  attempInfos[11];
+        		String centerNm =  attempInfos[12];
+        		String seatNm =  attempInfos[13];
+        		
+        		
+        		
+        		
+        		
         		
         		String formatedNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
         		
@@ -313,42 +324,7 @@ public class ResJosnController{
         		// 현재 날짜/시간
         		if (centerPilotYn.equals("Y") && !tradNo.equals("") && Integer.valueOf( resvPayCost) > 0) {
         			//결제 먼저 하기 
-        		    /*
-        			String Url =  propertiesService.getString("sppeedUrl_T") +"trade/fepWithdraw";
         			
-        			String jsonInfo = "{\"External_Key\" : \""+ resSeq+"\"," + 
-        					"        \"Card_Id\" : \"1080149960\"," + 
-        					"        \"Card_Pw\" : \"4LxgyCcT9k74pXwMQNAs4k/QFB1cwwhiWcGbHmKmK+o=\"," + 
-        					"        \"Card_Seq\" : \"1\"," + 
-        					"        \"Div_Cd\" : \"10404\"," + 
-        					"        \"Pay_Type\" : \"001\"," + 
-        					"        \"Trade_Cd\" : \"20A61\"," + 
-        					"        \"Trade_Pay\" : \""+ resvPayCost +"\"," + 
-        					"        \"Trade_Detail\" : \"입장료 테스트\"," + 
-        					"        \"System_Type\" : \"E\"}";
-        			
-        			JsonNode node = SmartUtil.requestHttpJson(Url, jsonInfo, "SPEEDWITHDRAW", "SPEEDON", "KSES");
-	   				if (node.get("Error_Cd").asText().equals("SUCCESS")  ) {
-	   					 //예약 테이블 출금 정보 처리 하기 
-	   					 ResvInfo resInfo = new ResvInfo();
-	   					 resInfo.setResvSeq(resSeq);
-	   					 resInfo.setResvPayDvsn("RESV_PAY_DVSN_2");
-	   					 resInfo.setTradNo(node.get("Trade_No").asText());
-	   					 resService.resPriceChange(resInfo);
-	   					 
-	   				}else {
-	   					for (speedon direction : speedon.values()) {
-                            if (direction.getCode().equals(node.get("Error_Cd").asText())) {
-                            	ERROR_MSG = direction.getName();
-                            }
-	   					}
-	   					//예약 결계 최소 관련  내용
-	   					model.addObject("ERROR_CD", node.get("Error_Cd").asText());
-	                	model.addObject("ERROR_MSG", ERROR_MSG);
-	                	return model;
-	   				}
-	   				*/
-	   				
         		} else {
         			ERROR_CD = "ERROR_04";
         			ERROR_MSG = "결제가 되지 않은 고객 입니다.";
@@ -356,6 +332,20 @@ public class ResJosnController{
                 	model.addObject("ERROR_MSG", ERROR_MSG);
                 	return model;
         			
+        		}
+        		if (!center_speed_cd.equals(qrCneterCd)) {
+        			ERROR_CD = "ERROR_06";
+        			ERROR_MSG = "지점 정보가 불일치 합니다.";
+        			model.addObject("ERROR_CD", ERROR_CD);
+                	model.addObject("ERROR_MSG", ERROR_MSG);
+                	return model;
+        		}
+        		if (!qrInot.equals(inOt)) {
+        			ERROR_CD = "ERROR_07";
+        			ERROR_MSG = "입출입 구분이 잘못 되었습니다.";
+        			model.addObject("ERROR_CD", ERROR_CD);
+                	model.addObject("ERROR_MSG", ERROR_MSG);
+                	return model;
         		}
         		
         		sendInfo.setUserId(userId);
@@ -367,6 +357,7 @@ public class ResJosnController{
         		sendInfo.setQrCode(sendInfo.getQrCode());
         		
         		sendInfo = attendService.insertAttendInfo(sendInfo);
+        		IOGUBUN_TXT = inotMsg;
 
         		if(sendInfo.getRcvCd().equals("OK")) {
         			ERROR_CD = "OK";
@@ -374,21 +365,39 @@ public class ResJosnController{
         			IOGUBUN = inOt;
         			USER_NM = sendInfo.getUserNm();
         			
+                	
+                	model.addObject("ERROR_CD", ERROR_CD);
+                	model.addObject("ERROR_MSG", ERROR_MSG);
+                	model.addObject("IOGUBUN", IOGUBUN);
+                	model.addObject("USER_NM", USER_NM);
+                	model.addObject("CENTER_NM", USER_NM);
+                	model.addObject("SEATNM", seatNm);
+                	//자리수 수정 
+                	if (userPhone.length() > 4){
+                		userPhone =  userPhone.substring(userPhone.length()-4, userPhone.length());
+                	}
+                	model.addObject("USERPHONE", userPhone);
+                	model.addObject("CENTERNM", centerNm);
+                	model.addObject("INOTMSG", IOGUBUN_TXT);
+                	return model;
+        			
         		} else {
         			String errorMessage =  sendInfo.getRcvCd().equals("ERROR_02") ? "입/출입 잘못 시도" : "시스템 에러";
         			ERROR_CD = sendInfo.getRcvCd();
         			ERROR_MSG = errorMessage;
+        			model.addObject("ERROR_CD", ERROR_CD);
+                	model.addObject("ERROR_MSG", ERROR_MSG);
+                	return model;
         		}
         	} else {
         		ERROR_CD = "ERROR_03";
     			ERROR_MSG = "잘못된 파라미터 입니다.";
+    			model.addObject("ERROR_CD", ERROR_CD);
+            	model.addObject("ERROR_MSG", ERROR_MSG);
+            	return model;
     			
         	}
-        	
-        	model.addObject("ERROR_CD", ERROR_CD);
-        	model.addObject("ERROR_MSG", ERROR_MSG);
-        	model.addObject("IOGUBUN", IOGUBUN);
-        	model.addObject("USER_NM", USER_NM);
+
         } catch(Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
@@ -425,10 +434,13 @@ public class ResJosnController{
 				String qrTime =  LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
 				String inOt = "";
 				Map<String, Object> attend =  attendService.selectAttendInfoDetail(vo);
+				String inotMsg = "";
 				if(attend == null) {
 					inOt = "IN";
+					inotMsg = "입장기록 없음";
 				} else {
 					inOt = SmartUtil.NVL(attend.get("inout_dvsn"),"OT").toString().equals("IN") ? "OT" : "IN";
+					inotMsg =  (attend.size() > 2) ? "재입장" : "정상";
 				}
 				
 				EgovFileScrty fileScrty = new EgovFileScrty();
@@ -439,10 +451,13 @@ public class ResJosnController{
                         + ":" + SmartUtil.NVL(resInfo.get("trad_no"), "").toString()
                         + ":" + SmartUtil.NVL(resInfo.get("resv_entry_dvsn"), "").toString() 
                         + ":" + SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString()
-                        + ":" + SmartUtil.NVL(resInfo.get("center_speed_cd"), "").toString()) ;
+                        + ":" + SmartUtil.NVL(resInfo.get("center_speed_cd"), "").toString()
+                        + ":" + inotMsg
+                        + ":" + SmartUtil.NVL(resInfo.get("user_phone"), "").toString()
+                        + ":" + SmartUtil.NVL(resInfo.get("center_nm"), "").toString()
+                        + ":" + SmartUtil.NVL(resInfo.get("seat_nm"), "").toString()) ;
 				fileScrty =  null;
 				
-				model.addObject("resvInfo", resInfo);
 				model.addObject("QRCODE", qrCode);
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			}

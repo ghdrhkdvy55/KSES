@@ -126,8 +126,7 @@
         var notice = {
         		fn_boardInfo  : function (emptyGubun){
         			var url = "/front/boardInfo.do";
-        	    	
-           	    	var params = {
+        	    	var params = {
            	    			"boardCd" : "Not",
            	    			"pageIndex" : $("#pageIndex").val(),
            	    			"pageSize" : $("#pageSize").val(),
@@ -198,12 +197,8 @@
           	    								        	 fn_openPopup("ERROR : " + request.status, "red", "ERROR", "확인", "");	
           	    								         }
           	    								     );
-           	    					        	
-           	    					             
            	    					         }
            	    					     });
-           	    						
-           	    						
            	    					}	
            	    				}else{
            	    					fn_openPopup("ERROR : " + request.status, "red", "ERROR", "확인", "");	
