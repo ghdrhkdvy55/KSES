@@ -116,7 +116,9 @@
                             <ul id="standing_resv_area">
                                 <li><input type="text" id="ENTRY_DVSN_1_resvUserNm" class="nonMemberArea" placeholder="이름을 입력해주세요."></li>
                                 <li><input type="text" id="ENTRY_DVSN_1_resvUserClphn" class="nonMemberArea" onkeypress="onlyNum();" placeholder="전화번호를 '-'없이 입력해주세요."></li>
-                                <li class="certify nonMemberArea" onclick="javascript:seatService.fn_certification();"><a href=""><img src="/resources/img/front/certify.svg" alt="">인증 하기</a></li>
+                                <li class="certify nonMemberArea" onclick="javascript:seatService.fn_certification();">
+                                	<a href="javascript:void(0);"><img src="/resources/img/front/certify.svg" alt="">인증 하기</a>
+                                </li>
                                 <!--전자문진표-->
                                 <li class="covid19_qna">
                                     <p>
@@ -260,7 +262,9 @@
                                     <ul id="ENTRY_DVSN_2_resv_area">
                                         <li class="nonMemberArea"><input type="text" id="ENTRY_DVSN_2_resvUserNm" placeholder="이름을 입력해주세요."></li>
                                         <li class="nonMemberArea"><input type="text" id="ENTRY_DVSN_2_resvUserClphn" onkeypress="onlyNum();" placeholder="전화번호를 '-'없이 입력해주세요."></li>
-                                        <li class="certify nonMemberArea" onclick="javascript:seatService.fn_certification();"><a href=""><img src="/resources/img/front/certify.svg" alt="">인증 하기</a></li>
+                                        <li class="certify nonMemberArea" onclick="javascript:seatService.fn_certification();">
+                                        	<a href="javascript:void(0);"><img src="/resources/img/front/certify.svg" alt="">인증 하기</a>
+                                        </li>
                                         <!--전자문진표-->
                                         <li class="covid19_qna">
                                             <p>
@@ -594,6 +598,9 @@
 					if(isMember) {
 						$(".nonMemberArea").hide();
 					} else {
+						certificationYn = false;
+				    	certificationName = "";
+				    	certificationNumber = "";
 						$(".nonMemberArea").show();
 					}
 				}
@@ -642,11 +649,10 @@
 							if (result.resultlist.length > 0){
 								$("#selectPartCd").empty();
 								$("#selectPartCd").append("<option value=''>구역 선택</option>");
-
+								
+								var setHtml = "";
 								$.each(result.resultlist, function(index, item) {
 									$("#selectPartCd").append("<option value='" + item.part_cd + "'>" + item.part_nm + "</option>");
-									
-									var setHtml = "";
 									
 									setHtml = '<div class="box-wrapper"><li id="s' + trim(fn_NVL(item.part_cd)) + '" class="seat" seat-id="' + item.part_cd + '" style="opacity: 0.7;text-align: center; display: inline-block;" name="' + item.part_cd + '" >' 
 	                                  +  '<div class="section">'
@@ -657,7 +663,9 @@
 	                                  +  '</li></div>';
 	                             
 	                            	$('#floor_area_Map').append(setHtml);
-	                            	
+								});
+								
+                            	$.each(result.resultlist, function(index, item) {
 	 	                            $('.floor_map ul li#s' + trim(fn_NVL(item.part_cd))).css({
 	 	                                "top": fn_NVL(item.part_mini_top) + "px",
 	 	                                "left": fn_NVL(item.part_mini_left) + "px",
@@ -678,22 +686,23 @@
 											'-webkit-transform': 'rotate(+'+ Math.abs(fn_NVL(item.part_mini_rotate)) + 'deg)',
 										});
 		                            }
+                            	});
+                            	
 	 		 	                   
-	 		 	                    $('.seat').draggable({
-	 		 	                      	stop : function(e, ui){
-											var obj = e.target;
-		 				 	                var get_id = obj.id;
-		 				 	                var top_id = 'top_' + $('#'+get_id)[0].attributes.name.value;
-		 				 	                var left_id ='left_' + $('#'+get_id)[0].attributes.name.value;
-		 				 	                $('#'+top_id).val(item.part_mini_top);
-		 				 	                $('#'+left_id).val(item.part_mini_left);
-	 		 	                    	}
-	 		 	                    });
-									$('.seat').draggable("option", "disabled", true );
-									$(".box-wrapper li").click(function () {
-										var partCd = $(this).attr("id").substring(1);
-										$("#selectPartCd").val(partCd).trigger("change");
-									});
+ 		 	                    $('.seat').draggable({
+ 		 	                      	stop : function(e, ui){
+										var obj = e.target;
+	 				 	                var get_id = obj.id;
+	 				 	                var top_id = 'top_' + $('#'+get_id)[0].attributes.name.value;
+	 				 	                var left_id ='left_' + $('#'+get_id)[0].attributes.name.value;
+	 				 	                $('#'+top_id).val(item.part_mini_top);
+	 				 	                $('#'+left_id).val(item.part_mini_left);
+ 		 	                    	}
+ 		 	                    });
+								$('.seat').draggable("option", "disabled", true );
+								$(".box-wrapper li").click(function () {
+									var partCd = $(this).attr("id").substring(1);
+									$("#selectPartCd").val(partCd).trigger("change");
 								});
 							} else {
 								fn_openPopup("해당층은 현재 선택 가능한 구역이 존재하지 않습니다.", "red", "ERROR", "확인", "");
@@ -869,7 +878,26 @@
 				$("#" + searchSeatCd).attr("tabindex", -1).focus();
 			},
 			fn_certification : function() {
-				alert("인터페이스 연계 일정에 작업 예정");
+				var enterDvsn = $("#enterDvsn").val();
+				
+				if(certificationYn) {
+					fn_openPopup("이미 인증을 진행하였습니다.", "red", "ERROR", "확인", "");
+					return;
+				} else {
+					if($("#" + enterDvsn + "_resvUserNm").val() == "") {
+						fn_openPopup("이름을 입력해주세요.", "red", "ERROR", "확인", "");
+						return;
+					} else if ($("#" + enterDvsn + "_resvUserClphn").val() == "") {
+						fn_openPopup("인증번호를 입력해주세요.", "red", "ERROR", "확인", "");
+						return;
+					}
+
+			    	certificationYn = true;
+			    	certificationName = $("#" + enterDvsn + "_resvUserNm").val();
+			    	certificationNumber = $("#" + enterDvsn + "_resvUserClphn").val();
+					
+					fn_openPopup("정상적으로 인증되었습니다.", "blue", "SUCCESS", "확인", "");
+				}
 			},
 			fn_checkForm : function() {
 				var enterDvsn = $("#enterDvsn").val();
@@ -879,6 +907,11 @@
 						fn_openPopup("좌석을 선택해주세요", "red", "ERROR", "확인", "");
 						return;
 					} 
+				}
+				
+				if(!isMember && !certificationYn){
+					fn_openPopup("인증을 진행해주세요", "red", "ERROR", "확인", "");
+					return;					
 				}
 				
 				if(!$("input:checkbox[id='" + enterDvsn + "_qna_check']").is(":checked")) {
@@ -902,8 +935,8 @@
 					"partCd" : $("#partCd").val(),
 					"seatCd" : $("#seatCd").val(),
 					"checkDvsn" : "ALL",
-					"resvUserNm" : $("#" + enterDvsn + "_resvUserNm").val(),
-					"resvUserClphn" : $("#" +  enterDvsn + "_resvUserClphn").val(),
+					"resvUserNm" : certificationName,
+					"resvUserClphn" : certificationNumber,
 					"resvUserAskYn" : $("input:checkbox[id='" + enterDvsn + "_qna_check']").val(),
 					"resvIndvdlinfoAgreYn" : $("#" + enterDvsn + "_person_agree").val()
 				}
