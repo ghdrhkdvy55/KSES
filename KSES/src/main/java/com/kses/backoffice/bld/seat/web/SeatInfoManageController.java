@@ -107,9 +107,9 @@ public class SeatInfoManageController {
         model.addObject("centerList", centerInfoManageService.selectCenterInfoComboList()); 
         model.addObject("seatClass", cmmnDetailService.selectCmmnDetailCombo("SEAT_CLASS"));
         model.addObject("seatDvsn", cmmnDetailService.selectCmmnDetailCombo("SEAT_DVSN"));
-        model.addObject("payDvsn", cmmnDetailService.selectCmmnDetailCombo("PAY_DVSN"));
-	      
+        model.addObject("payDvsn", cmmnDetailService.selectCmmnDetailCombo("PAY_DVSN"));	      
         model.setViewName("/backoffice/bld/seatList");
+        model.addObject("loginVO" , loginVO);
         return model;	
 	}
 	

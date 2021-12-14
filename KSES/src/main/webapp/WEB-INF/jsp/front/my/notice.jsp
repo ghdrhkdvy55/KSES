@@ -41,7 +41,7 @@
                 <div class="navi_left">
                     <a href="/front/main.do" class="before_close"></a>
                 </div>
-                <h1>공지사항<a href="" class="close"><img src="/resources/img/x_box.svg" alt="닫기"></a></h1>
+                <h1>공지사항<a href="" class="close"><img src="/resources/img/front/x_box.svg" alt="닫기"></a></h1>
                 <button class="noti_h_icon ui-dropper" data-drop="notice_view_de"">필터</button>              
                 <div class="clear"></div>
             </div>           
@@ -126,8 +126,7 @@
         var notice = {
         		fn_boardInfo  : function (emptyGubun){
         			var url = "/front/boardInfo.do";
-        	    	
-           	    	var params = {
+        	    	var params = {
            	    			"boardCd" : "Not",
            	    			"pageIndex" : $("#pageIndex").val(),
            	    			"pageSize" : $("#pageSize").val(),
@@ -198,12 +197,8 @@
           	    								        	 fn_openPopup("ERROR : " + request.status, "red", "ERROR", "확인", "");	
           	    								         }
           	    								     );
-           	    					        	
-           	    					             
            	    					         }
            	    					     });
-           	    						
-           	    						
            	    					}	
            	    				}else{
            	    					fn_openPopup("ERROR : " + request.status, "red", "ERROR", "확인", "");	

@@ -1,4 +1,4 @@
-package com.kses.backoffice.rsv.vaccine.vo;
+package com.kses.backoffice.rsv.userInfo.vo;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -6,7 +6,7 @@ import lombok.Setter;
 //휴일정보
 @Getter
 @Setter
-public class VaccineInfo {
+public class User {
 
 
 }

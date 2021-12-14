@@ -56,6 +56,7 @@
 <input type="hidden" id="boardClevel" name="boardClevel">
 <input type="hidden" id="boardGroup" name="boardGroup">
 <input type="hidden" id="boardCn" name="boardCn">
+<input type="hidden" id="authorCd" name="authorCd" value="${loginVO.authorCd}">
 <div class="breadcrumb">
 	<ol class="breadcrumb-item">
     	<li>공용 게시판&nbsp;&gt;&nbsp;</li>
@@ -246,7 +247,16 @@
 </div>
 <!-- popup// -->
 <script type="text/javascript">
+	var insertBoardCenterId = ""
+	var insertBoardAllCk = ""
 	$(document).ready(function() { 
+		 if($("#authorCd").val() != "ROLE_ADMIN" && $("#authorCd").val() != "ROLE_SYSTEM") {
+			 insertBoardCenterId = $("#boardCenterId").val();
+			 insertBoardAllCk = "N"
+		 } else {
+			 insertBoardAllCk =  $("#boardAllNotice").is(":checked") == true ? "Y" : "N";
+			 insertBoardCenterId = ckeckboxValueNoPopup("boardCenterId");
+		 }
 		 
 		 ("${regist.board_file_upload_yn }" == "Y") ? $("#tr_fileUpload").show() : $("#tr_fileUpload").hide();
 		
@@ -422,6 +432,7 @@
 	   		var params = {'boardSeq': $.trim($("#hid_DelCode").val()) };
 				fn_uniDelAction("/backoffice/sys/boardDelete.do", "GET", params, false, "jqGridFunc.fn_search");
 	        },fn_search : function(){
+	        	alert($("#authorCd").val());
 				  $("#mainGrid").setGridParam({
 		    	    	 datatype	: "json",
 		    	    	 postData	: JSON.stringify(  {
@@ -483,8 +494,7 @@
 						 	                          }else{
 						 	                        	 fileViewCss = "display:none;"; 
 						 	                        	 $("#btnUpdate").hide(); 
-						 	                          }
-						 	        	           		 
+						 	                          } 
 						 	                       </c:when>
 						 	                       <c:otherwise>
 						 	                           fileViewCss = "display:block;"
@@ -533,9 +543,9 @@
 						$("#boardGroup").val(''); //부모값
 						$("#boardRefno").val(''); //부모값
 						$("#boardClevel").val(''); //부모값
-						$("#bas_board_add > div >h2").text("게시글 등록");
 						$("input:checkbox[id='boardAllNotice']").prop("checked", false); 
-						$("#h2_txt").text("등록");
+						$("#bas_board_add > div >h2").text("게시글 등록");
+						$("#btnUpdate").show();
 						$('#ir1').val('');
 						
 						if ("${regist.board_cd }"  == "Not"){
@@ -578,18 +588,9 @@
 						formData.append('files', fileList[uploadFileList[i]]);
 					}
 				    //사용자 값에 따른 변경값
-				    <c:choose>
-		                      <c:when test="${loginVO.authorCd ne 'ROLE_ADMIN' && loginVO.authorCd ne 'ROLE_SYSTEM' }">
-		                          boardCenterId = $("#boardCenterId").val();
-		                          boardAllCk = "N";
-		                      </c:when>
-		                      <c:otherwise>
-			                      var boardAllCk =  $("#boardAllNotice").is(":checked") == true ? "Y" : "N";
-			  				      boardCenterId = ckeckboxValueNoPopup("boardCenterId");
-		                      </c:otherwise>
-		            </c:choose>
-		            
-				    
+		            boardCenterId = insertBoardCenterId
+		            boardAllCk = insertBoardAllCk
+
 				    formData.append('mode' , $("#mode").val());
 				    formData.append('boardSeq' , $("#boardSeq").val());
 				    formData.append('boardTitle' , $("#boardTitle").val());
@@ -634,7 +635,7 @@
 		    	 
 		     }, fn_FileDel : function (){
 		    	 var url = "/backoffice/sys/boardFileDelete.do"
-		    	 var files = ckeckboxValue("체크된 값이 없습니다.", "fileInfo", "bas_board_preview");
+		    	 var files = ckeckboxValue("체크된 값이 없습니다.", "fileInfo", "bas_board_add");
 		    	 var params = {'fileSeqs' : files  };
 		    	 fn_Ajax(url, "GET", params, false,
 			      			function(result) {
@@ -643,14 +644,14 @@
 			   						   location.href="/backoffice/login.do";
 			   					   }else if (result.status == "SUCCESS"){
 			   						   //총 게시물 정리 하기'
-			   						    preview($("#boardSeq").val());
+			   						 	common_modelCloseM(result.message, "bas_board_add");
 			   					   }else if (result.status == "FAIL"){
 			   						   common_popup("삭제 도중 문제가 발생 하였습니다.", "Y", "bas_board_add");
 			   					   }
 			 				    },
 			 				    function(request){
 			 					    common_popup("Error:" + request.status, "Y", "bas_board_add");
-			 				    }    		
+			 				    }
 			      );
 		     }, fn_Ref : function (){
 		    	 //답글 달기

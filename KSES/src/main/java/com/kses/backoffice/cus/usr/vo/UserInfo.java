@@ -56,4 +56,16 @@ public class UserInfo {
 	
 	// 카드 시퀀스
 	private String userCardSeq = "";
+	
+	// 카드 비밀번호
+	private String userCardPassword = "";
+	
+	// 카드 비밀번호
+	private String vacntnDt = "";
+
+	// 카드 비밀번호
+	private String vacntnDvsn = "";
+	
+	// 카드 비밀번호
+	private String vacntnRound = "";
 }

@@ -81,7 +81,7 @@ public class ResvInfoManageController {
 			model.addObject("centerInfo", centerInfoComboList);
 			model.addObject("resvPayDvsn", codeDetailService.selectCmmnDetailCombo("RESV_PAY_DVSN"));
 			model.addObject("resvState", codeDetailService.selectCmmnDetailCombo("RESV_STATE"));
-			
+			model.addObject("loginVO" , loginVO);
 		    model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		} catch(Exception e) {
 			LOGGER.error("selectRsvInfoList : " + e.toString());
@@ -169,7 +169,6 @@ public class ResvInfoManageController {
 		}
 		
 		try {
-			String meesage = "";
 			LoginVO loginVO = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
 			params.put("userId", loginVO.getAdminId());
 			int ret = resvService.resvSeatChange(params);
@@ -177,9 +176,12 @@ public class ResvInfoManageController {
 			
 			if(ret > 0) {
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
+				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("sucess.common.update"));
 			}
 		} catch (Exception e){
+			StackTraceElement[] ste = e.getStackTrace();
+			int lineNumber = ste[0].getLineNumber();
+			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.insert"));	
 		}	

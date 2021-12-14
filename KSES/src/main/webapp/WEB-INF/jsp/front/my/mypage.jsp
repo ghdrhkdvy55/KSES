@@ -117,7 +117,7 @@
 					
 					setHtml = "";
 					setHtml += "<p>주요 서비스</p>";
-					setHtml += "<li><a href=''>공지사항</a></li>";
+					setHtml += "<li><a href='/front/notice.do'>공지사항</a></li>";
 					$("#service").html(setHtml);
 				}
 			}
