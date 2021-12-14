@@ -63,6 +63,7 @@
     </div>
 	</form:form>
 	
+	<c:import url="/front/inc/popup_common.do" />
 	<script src="/resources/js/front/jquery-spinner.min.js"></script>
 	<script src="/resources/js/front/common.js"></script>
 	<script src="/resources/js/front/front_common.js"></script>

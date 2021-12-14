@@ -55,6 +55,21 @@
 		FROM TEST_USER_INFO 
 		WHERE USER_ID = #{userId}
    	</select>
+   	
+	<select id="selectUserVacntnInfo" resultType="lmap">
+	<![CDATA[
+   		SELECT 
+   			FN_DETAILCODENM(A.VACNTN_ROUND) AS VACNTN_ROUND_TEXT, 
+   			FN_DETAILCODENM(A.VACNTN_DVSN) AS VACNTN_DVSN_TEXT, 
+   			TO_CHAR(TO_DATE(A.VACNTN_DT,'YYYY-MM-DD'),'YYYY-MM-DD') AS VACNTN_DT,  
+			CASE 
+				WHEN A.VACNTN_DT IS NULL THEN 'NO_INFO'  
+				WHEN A.VACNTN_DT > TO_CHAR(ADD_MONTHS(SYSDATE,-6),'YYYYMMDD') THEN 'Y'
+			ELSE 'N' END AS PASS_YN
+		FROM TEST_USER_INFO A
+		WHERE USER_ID = #{userId, jdbcType=VARCHAR}
+	]]>	
+   	</select>
 	
 	<insert id="insertUserInfo">
 	    MERGE INTO TEST_USER_INFO A

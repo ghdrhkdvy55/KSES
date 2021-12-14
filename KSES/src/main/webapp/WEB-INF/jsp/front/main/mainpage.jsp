@@ -348,8 +348,8 @@
 										
 										// 유저정보상단 HTML생성
 										var setHtml = "";
-										setHtml += "<li><em class='user_name'>" + userLoginInfo.userNm + "</em>님 입장예약 현황. <span class='thvac'></span></li>";
-										setHtml += "<li><span class='today_date'>" + today + "</span></li>";  
+										setHtml += "<li class='vacStat'><em class='user_name'>" + userLoginInfo.userNm + "</em>님 입장예약 현황. <span class=''></span></li>";
+										setHtml += "<li><span class='today_date'>" + today + "</span></li>";
 										
 										userInfoTopArea.append(setHtml);
 										
@@ -375,7 +375,7 @@
 									} else {								
 										// 유저정보상단 HTML생성
 										var setHtml = "";
-										setHtml += "<li><em class='user_name'>" + userLoginInfo.userNm + "</em>님 예약내역이 없습니다. <span class='thvac'></span></li>";
+										setHtml += "<li class='vacStat'><em class='user_name'>" + userLoginInfo.userNm + "</em>님 예약내역이 없습니다. <span class=''></span></li>";
 										setHtml += "<li><span class='today_date'>" + today + "</span></li>";  
 										
 										userInfoTopArea.append(setHtml);
@@ -400,7 +400,7 @@
 									$("#user_rsv_area").addClass("main_user_rsv");
 									// 유저정보상단 HTML생성
 									var setHtml = "";
-									setHtml += "<li><em class='user_name'>" + userLoginInfo.userNm + "</em>님 예약내역이 없습니다. <span class='thvac'></span></li>";
+									setHtml += "<li class='vacStat'><em class='user_name'>" + userLoginInfo.userNm + "</em>님 예약내역이 없습니다. <span class=''></span></li>";
 									setHtml += "<li><span class='today_date'>" + today + "</span></li>";  
 									
 									userInfoTopArea.append(setHtml);
@@ -412,6 +412,15 @@
 
 									// 처음부터 예약하기 영역 활성화
 									$("#rsv_reset_area").hide();
+								}
+								
+								//백신접종정보 표출
+								if(result.vacntnInfo != null) {
+						    		switch (result.vacntnInfo.pass_yn) {
+										case "Y" : $(".vacStat span").addClass("thVac").html("백신접종 완료상태입니다."); break;
+										case "N" : $(".vacStat span").addClass("nonVac").html("백신패스 만료상태입니다."); break;  
+										default: $(".vacStat span").addClass("nonVac").html("접종정보 없음"); break;
+									}	
 								}
 							} else if(result.status == "LOGINFAIL"){
 								

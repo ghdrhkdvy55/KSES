@@ -64,7 +64,7 @@ public class FrontResvInfoManageController {
 		
 	@RequestMapping (value="rsvCenter.do")
 	public ModelAndView selectRsvCenterList(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo,
-												@RequestParam Map<String, Object> param,
+												@RequestParam Map<String, Object> params,
 												HttpServletRequest request,
 												BindingResult result) throws Exception {
 		
@@ -203,7 +203,6 @@ public class FrontResvInfoManageController {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
-			
 			HttpSession httpSession = request.getSession(true);
 			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
 			

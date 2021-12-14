@@ -75,7 +75,6 @@ public class ResJosnController{
     @Autowired
     private CashbillService cashbillService;
     
-    
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="speedCheck.do", method = {RequestMethod.POST})
     public ModelAndView selectPreOpenInfo(	@ModelAttribute("loginVO") LoginVO loginVO,
@@ -453,6 +452,7 @@ public class ResJosnController{
                         + ":" + SmartUtil.NVL(resInfo.get("seat_nm"), "").toString()) ;
 				fileScrty =  null;
 				
+				model.addObject("vacntnInfo", userService.selectUserVacntnInfo(resInfo.get("user_id").toString()));
 				model.addObject("resvInfo", resInfo);
 				model.addObject("QRCODE", qrCode);
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);

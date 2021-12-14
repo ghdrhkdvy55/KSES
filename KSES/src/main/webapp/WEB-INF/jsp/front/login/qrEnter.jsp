@@ -48,11 +48,11 @@
                     <div class="qr_info">
                         <ul>
                             <li class="timer">남은시간<span id="timeStamp">00:00</span></li>
-                            <!--//접종완료
-                            <li class="vacState"><span class="vacDone" >접종 완료</span></li>-->
+                            <!--//접종완료-->
                             <!--접종완료//-->
                             <!--//백신패스 만료-->
-                            <li class="vacState"><span class="vacNon"><img alt="" src="/resources/img/front/error_outline_black_24dp.svg">백신패스 만료</span></li>
+                            <!-- <li class="vacState"><span class="vacNon"><img alt="" src="/resources/img/front/error_outline_black_24dp.svg">백신패스 만료</span></li> -->
+                            <li class="vacState"><span class="vacNon">백신패스 만료</span></li>
                             <!--백신패스 만료//-->
                             <li class="qr_tit">입장을 위한 QR코드</li>
                             <li>
@@ -131,6 +131,13 @@
 				    			"RESV_PAY_DVSN_1" ? 
 				    			$(".pay_btn ul li:eq(0)").show() : 
 								$(".pay_btn ul li:eq(0)").hide(); 
+				    			
+							$(".vacState span").removeClass()
+				    		switch (result.vacntnInfo.pass_yn) {
+								case "Y" : $(".vacState span").addClass("vacDone").html("접종 완료"); break;
+								case "N" : $(".vacState span").addClass("vacNon").html("백신패스 만료"); break;  
+								default: $(".vacState span").addClass("vacNon").html("접종정보 없음"); break;
+							}				    			
 				    		
 							var qrcode = new QRCode("qr_enter_code", {
 							    text: result.QRCODE,

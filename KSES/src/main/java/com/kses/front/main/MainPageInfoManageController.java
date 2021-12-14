@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.kses.backoffice.cus.usr.service.UserInfoManageService;
 import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
 import com.kses.backoffice.sym.log.annotation.NoLogging;
 import com.kses.backoffice.sys.board.service.BoardInfoManageService;
@@ -54,7 +55,9 @@ public class MainPageInfoManageController {
 	@Autowired
 	private EgovFileMngService egocFileService;
 	
-		
+	@Autowired
+	private UserInfoManageService userService;
+	
 	@RequestMapping (value="main.do")
 	public ModelAndView selectFrontMainPage(	@ModelAttribute("loginVO") LoginVO loginVO, 
 												@RequestParam Map<String, String> param,
@@ -188,6 +191,7 @@ public class MainPageInfoManageController {
 				return model;	
 			}
 			
+			model.addObject("vacntnInfo", userService.selectUserVacntnInfo(userId));
 			model.addObject("reservationInfo", resvService.selectUserLastResvInfo(userId));
 			model.addObject("userLoginInfo", userLoginInfo);
 			
