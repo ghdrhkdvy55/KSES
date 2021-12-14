@@ -320,7 +320,7 @@ select[multiple]{max-height: 100px; overflow: auto;}
 .select:hover {text-decoration: underline;}
 .redsel {color: red; cursor: pointer; font-weight: 600; background: #949697;}
 .redsel:hover {text-decoration: underline;}
-.button.b-close, .button.bClose {
+.button.b-close, .button.bClose, .button.bCloseT {
     position: absolute;
     right: 14px;
     top: 14px;

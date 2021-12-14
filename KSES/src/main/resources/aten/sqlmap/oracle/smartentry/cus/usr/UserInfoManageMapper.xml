@@ -86,7 +86,7 @@
 		(
 			#{userId}, #{userNm}, #{userPhone, jdbcType=VARCHAR}, #{userDvsn, jdbcType=VARCHAR}, #{userCardId, jdbcType=VARCHAR}, 
 			#{userCardNo, jdbcType=VARCHAR}, #{userCardSeq, jdbcType=VARCHAR}, #{userSexMf, jdbcType=VARCHAR}, #{userBirthDy, jdbcType=VARCHAR}, #{indvdlinfoAgreYn, jdbcType=VARCHAR}, 
-			TO_CHAR(SYSDATE, 'YYYYMMDD'), #{userId, jdbcType=VARCHAR}, SYSDATE
+			TO_CHAR(TO_DATE(SYSDATE,'YYYYMMDD'), 'YYYYMMDD'), #{userId, jdbcType=VARCHAR}, SYSDATE
 		)		
 	</insert>
 

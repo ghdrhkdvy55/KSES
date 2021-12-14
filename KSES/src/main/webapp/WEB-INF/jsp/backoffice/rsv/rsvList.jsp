@@ -208,9 +208,11 @@
                       		<input type="text" id="userSearchKeyword">
                       		<a href="javascript:jqGridFunc.fn_searchResult('user')" class="blueBtn">조회</a>
                     	</td>
-						<th>예약 회원</th>
+						<th>예약 회원(아이디)</th>
                     	<td>
                       		<input type="text" id="longResvUserId" readonly>
+                      		<input type="hidden" id="longResvUserName">
+                      		<input type="hidden" id="longResvUserPhone">
                     	</td>
                   	</tr>
                   	<tr>
@@ -223,7 +225,7 @@
 	                    	<input type="text" id="empSearchKeyword">
 	                    	<a href="javascript:jqGridFunc.fn_searchResult('emp')" class="blueBtn">조회</a>
                     	</td>
-						<th>예약 담당자</th>
+						<th>예약 담당자(사번)</th>
                     	<td>
                       		<input type="text" id="longResvEmpNo" readonly>
                     	</td>
@@ -235,6 +237,7 @@
 			</table>
       	</div>
       	<div class="right_box">
+      		<a href="javascript:jqGridFunc.fn_longSeatUpdate();" class="blueBtn">등록</a>
 			<a href="javascript:$('#long_seat_add').bPopup().close();" class="grayBtn">닫기</a>
       	</div>
       	<div class="clear"></div>
@@ -299,9 +302,9 @@
 <!-- // 관리자 검색 팝업 -->
 <div id="search_result" class="popup">
 	<div class="pop_con">
-		<a class="button b-close">X</a>
+		<a href="javascript:$('#long_seat_add').bPopup(); $('#search_result').bPopup().close();" class="button bCloseT"></a>
 		<h2 class="pop_tit">검색 결과</h2>
-      	<div id="searchResult" class="pop_wrap">
+      	<div id="searchResultWrap" class="pop_wrap">
         	<table id="searchResultTable" class="whiteBox main_table">
         	
         	</table>
@@ -508,7 +511,7 @@
 					/* {label: '발권구분', name: 'resv_ticket_dvsn',  index:'resv_ticket_dvsn', align:'center'}, */
 					{label: '금액', name: 'resv_pay_cost', index:'resv_pay_cost', align:'center'},
 					{label: '신청일자', name:'resv_req_date', index:'resv_req_date', align:'center'},
-					{label: '예약일자', name:'resv_start_dt', index:'resv_start_dt', align:'center'},
+					{label: '예약일자', name:'resv_end_dt', index:'resv_end_dt', align:'center'},
 					{label: '예약상태', name:'resv_state', index:'resv_state', align:'center'},
 					{label: '문진', name:'resv_user_ask_yn', index:'resv_user_ask_yn', align:'center', width : "50px"},
 					{label: '결재상태', name:'resv_pay_dvsn', index:'resv_pay_dvsn', align:'center'},
@@ -706,14 +709,19 @@
 				} else {
 					$("#resvCenterCd").val("");
 				}
+				$("#resvFloorCd").children("option:not(:first)").remove();
+				$("#resvPartCd").children("option:not(:first)").remove();
  				$("#resvSeq").val("");
 				$("#resvDate").val("");
+				$("#resvDateFrom").val("");
+				$("#resvDateTo").val("");
 				$("#seat_change p:eq(3)").show();
 				$("#seat_change a:eq(1)").attr("href","javascript:jqGridFunc.fn_resvSeatSearch('LONG');");
 				$("#seat_change a:eq(2)").html("좌석선택").attr("href","javascript:jqGridFunc.fn_setLongSeatInfo()");
 				/* $("#seat_change a:eq(2)").html("좌석선택").attr("href","javascript:jqGridFunc.fn_resvSeatUpdate('LONG')"); */
 				$("#seat_change .pop_tit").html("사용자 좌석 선택");
 				$(".pop_mapArea").css("background","");
+				$(".pop_seat").html("");
 			}
 			
 			seatSearchInfo = {};
@@ -926,22 +934,77 @@
 				common_popup("좌석을 선택하세요.", "N", "");
 				return;	
 			}
-			
-			
+
 			$("#longResvCenterCd").val(seatSearchInfo.centerCd);
 			$("#longResvFloorCd").val(seatSearchInfo.floorCd);
 			$("#longResvPartCd").val(seatSearchInfo.partCd);
 			$("#longResvSeatCd").val($(".pop_seat li.usable").attr("id"));
-			$("#longResvSeatNm").val($(".pop_seat li.usable").data("seat-name"));
-			console.log($(".pop_seat li.usable").data("seat-name"));
+			$("#longResvSeatNm").val(
+				$("#resvCenterCd option:checked").text() + " " +
+				$("#resvFloorCd option:checked").text() + " " +
+				$("#resvPartCd option:checked").text() + "구역 " +
+				$(".pop_seat li.usable").data("seat-name")
+			);
+					
 			$("#longResvDateFrom").val($("#resvDateFrom").val());
 			$("#longResvDateTo").val($("#resvDateTo").val());
 			$("#seat_change").bPopup().close();
 		},
+		fn_longSeatUpdate : function() {
+			if (any_empt_line_span("long_seat_add", "longResvSeatCd", "예약할 좌석을 선택하세요","sp_message", "savePage") == false) return;
+			if (any_empt_line_span("long_seat_add", "longResvUserId", "에약 회원을 선택하세요","sp_message", "savePage") == false) return;
+			if (any_empt_line_span("long_seat_add", "longResvEmpNo", "예약 담당자를 선택하세요","sp_message", "savePage") == false) return;
+			
+			var params = {
+				"mode" : "Ins",
+				"checkDvsn" : "LONG",
+				"resvDateFrom" : $("#longResvDateFrom").val(),
+				"resvDateTo" : $("#longResvDateTo").val(),
+				"resvUserDvsn" : "USER_DVSN_1",
+				"resvEntryDvsn" : "ENTRY_DVSN_2",
+				"centerCd" : $("#longResvCenterCd").val(),
+				"floorCd" : $("#longResvFloorCd").val(),
+				"partCd" : $("#longResvPartCd").val(),
+				"seatCd" : $("#longResvSeatCd").val(),
+				"userId" : $("#longResvUserId").val(),
+				"resvUserNm" : $("#longResvUserName").val(),
+				"resvUserClphn" : $("#longResvUserPhone").val(),
+				"resvUserAskYn" : "Y",
+				"resvIndvdlinfoAgreYn" : "Y"
+			}
+			
+			var validResult = jqGridFunc.fn_resvVaildCheck(params);
+			
+			if(validResult != null) {
+				var url = "/backoffice/rsv/longResvInfoUpdate.do"; 
+				
+				fn_Ajax
+				(
+				    url,
+				    "POST",
+					params,
+					false,
+					function(result) {
+				    	if(result.status == "SUCCESS") {
+							common_modelCloseM("장기 예약 정보가 정상적으로 등록되었습니다.", "long_seat_add");
+							jqGridFunc.fn_search();
+				    	} else if (result.status == "LOGIN FAIL") {
+				    		alert("로그인 정보가 올바르지 않습니다 다시 로그인 해주세요");
+				    		location.href = "/backoffice/login.do";
+				    	} else {
+				    		common_popup("처리중 오류가 발생하였습니다.", "Y", "");
+				    	}
+					},
+					function(request) {
+						common_popup("ERROR : " + request.status, "N", "");	       						
+					}    		
+				);
+			}
+		},
 		fn_searchResult : function (searchDvsn){
 			var setHtml = "<table id='searchResultTable' class='whiteBox main_table'>";
-			$("#searchResult").empty();
-			$("#searchResult").append(setHtml);
+			$("#searchResultWrap").empty();
+			$("#searchResultWrap").append(setHtml);
 			
 			var checkTag = "";
 			var colModel = "";
@@ -1020,9 +1083,16 @@
 				onCellSelect : function (rowid, index, contents, action){
 					var cm = $('#searchResultTable').jqGrid('getGridParam', 'colModel');
 					if (cm[index].name !='btn' ){
-						var id = searchDvsn == "user" ? "user_id" : "emp_no"; 
+						var id = searchDvsn == "user" ? "user_id" : "emp_no";
+						var name = searchDvsn == "user" ? "user_nm" : "";
+						var phone = searchDvsn == "user" ? "user_phone" : "";
 						
-						jqGridFunc.fn_inSearchInfo(searchDvsn, $(this).jqGrid('getCell', rowid, id));
+						jqGridFunc.fn_inSearchInfo(
+							searchDvsn, 
+							$(this).jqGrid('getCell', rowid, id), 
+							$(this).jqGrid('getCell', rowid, name), 
+							$(this).jqGrid('getCell', rowid, phone)
+						);
 					}
 				}
 			});
@@ -1034,9 +1104,11 @@
 				loadComplete : function(data) {}
 			}).trigger("reloadGrid");
 		},
-		fn_inSearchInfo : function(searchDvsn, id) {
+		fn_inSearchInfo : function(searchDvsn, id, name, phone) {
 			if(searchDvsn == "user") {
-				$("#longResvUserId").val(id);	
+				$("#longResvUserId").val(id);
+				$("#longResvUserName").val(name);
+				$("#longResvUserPhone").val(phone);
 			} else {
 				$("#longResvEmpNo").val(id);
 			}

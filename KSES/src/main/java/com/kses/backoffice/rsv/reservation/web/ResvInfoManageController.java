@@ -23,6 +23,7 @@ import com.kses.backoffice.bld.center.vo.CenterInfo;
 import com.kses.backoffice.rsv.reservation.service.AttendInfoManageService;
 import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
 import com.kses.backoffice.rsv.reservation.vo.AttendInfo;
+import com.kses.backoffice.rsv.reservation.vo.ResvInfo;
 import com.kses.backoffice.util.SmartUtil;
 
 import egovframework.com.cmm.LoginVO;
@@ -178,6 +179,43 @@ public class ResvInfoManageController {
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("sucess.common.update"));
 			}
+		} catch (Exception e){
+			StackTraceElement[] ste = e.getStackTrace();
+			int lineNumber = ste[0].getLineNumber();
+			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
+			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.insert"));	
+		}	
+		return model;
+	}
+	
+	@RequestMapping (value="longResvInfoUpdate.do")
+	public ModelAndView rsvLongSeatUpdate(	HttpServletRequest request, 
+											@RequestBody ResvInfo vo, 
+											BindingResult result) throws Exception {
+		
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+		
+		if(!isAuthenticated) {
+			model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
+			return model;
+		}
+		
+		try {
+			LoginVO loginVO = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
+			vo.setAdminId(loginVO.getAdminId());
+			
+			List<String> resvDateList = resvService.selectResvDateList(vo);
+			
+			vo.setResvDateList(resvDateList);
+			int ret = resvService.updateUserLongResvInfo(vo);
+			
+			/*if(ret > 0) {*/
+				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("sucess.common.update"));
+			/*}*/
 		} catch (Exception e){
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();

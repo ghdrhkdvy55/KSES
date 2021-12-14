@@ -1,5 +1,7 @@
 package com.kses.backoffice.rsv.reservation.vo;
 
+import java.util.List;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -105,9 +107,21 @@ public class ResvInfo {
 
 	// 최종 수정 ID
 	private String lastUpdusrId;
-
+	
+	// 관리자 아이디
+	private String adminId;
+	
 	// 예약일
 	private String resvDate;
+	
+	// 장기예약 시작일
+	private String resvDateFrom;
+	
+	// 장기예약 종료일
+	private String resvDateTo;
+	
+	// 장기예약일 리스트
+	private List<String> resvDateList;
 	
 	// 입력 구분
 	private String mode;

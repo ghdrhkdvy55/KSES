@@ -28,6 +28,15 @@ public interface ResvInfoManageService {
 	String selectFindPassword(Map<String, Object> paramMap ) throws Exception;
 	
 	/**
+	 * SPDM 장기예약 지점 휴일을 제외한 예약가능일자 조회
+	 * 
+	 * @param vo
+	 * @return
+	 * @throws Exception
+	 */
+	public List<String> selectResvDateList(ResvInfo vo) throws Exception;
+	
+	/**
 	 * SPDM 회원 마지막 예약 정보 조회
 	 * 
 	 * @param userId
@@ -53,6 +62,15 @@ public interface ResvInfoManageService {
 	 * @throws Exception
 	 */
 	public int updateUserResvInfo(ResvInfo vo) throws Exception;
+	
+	/**
+	 * SPDM 회원 장기예약 정보 등록 및 수정
+	 * 
+	 * @param vo
+	 * @return
+	 * @throws Exception
+	 */
+	public int updateUserLongResvInfo(ResvInfo vo) throws Exception;
 	
 	/**
 	 * SPDM 회원 예약 현시간 예약한 정보 조회

@@ -46,11 +46,23 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 		// TODO Auto-generated method stub
 		return resvMapper.selectUserResvInfo(params);
 	}
+	
+	@Override
+	public List<String> selectResvDateList(ResvInfo vo) throws Exception {
+		// TODO Auto-generated method stub
+		return resvMapper.selectResvDateList(vo);
+	}
 
 	@Override
 	public int updateUserResvInfo(ResvInfo vo) throws Exception {
 		// TODO Auto-generated method stub
 		return vo.getMode().equals("Ins") ? resvMapper.insertUserResvInfo(vo) : resvMapper.updateUserResvInfo(vo);
+	}
+	
+	@Override
+	public int updateUserLongResvInfo(ResvInfo vo) throws Exception {
+		// TODO Auto-generated method stub
+		return vo.getMode().equals("Ins") ? resvMapper.insertUserLongResvInfo(vo) : resvMapper.updateUserLongResvInfo(vo);
 	}
 	
 	@Override

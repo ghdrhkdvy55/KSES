@@ -3,6 +3,7 @@ package com.kses.backoffice.rsv.reservation.mapper;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 import com.kses.backoffice.rsv.reservation.vo.ResvInfo;
 
@@ -20,6 +21,8 @@ public interface ResvInfoManageMapper {
 	public String selectResvEntryDvsn(@Param("resvSeq") String paramString);
 	
 	public String selectFindPassword(@Param("params") Map<String, Object> paramMap );
+	
+	public List<String> selectResvDateList(ResvInfo vo) throws Exception;
 	
 	public Map<String, Object> selectInUserResvInfo(ResvInfo paramResvInfo);
 	
@@ -41,7 +44,11 @@ public interface ResvInfoManageMapper {
 	
 	public int insertUserResvInfo(ResvInfo vo);
 	
+	public int insertUserLongResvInfo(ResvInfo vo);
+	
 	public int updateUserResvInfo(ResvInfo vo);
+	
+	public int updateUserLongResvInfo(ResvInfo vo);
 	
 	public int resbillChange(ResvInfo vo);
 	

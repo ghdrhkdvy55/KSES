@@ -13,7 +13,7 @@
 			(	
 				SELECT  
 					A.RESV_SEQ, A.SEAT_CD, A.SEASON_CD, A.RESV_START_DT, A.RESV_END_DT, A.RESV_DVSN,
-					A.RESV_START_TM, A.RESV_END_TM, TO_CHAR(A.RESV_REQ_DATE, 'YYYY-MM-DD HH24:MI') AS RESV_REQ_DATE, A.USER_ID, A.RESV_USER_DVSN,
+					A.RESV_START_TM, A.RESV_END_TM, TO_CHAR(A.RESV_REQ_DATE,'YYYY-MM-DD HH24:MI') AS RESV_REQ_DATE, A.USER_ID, A.RESV_USER_DVSN,
 					A.RESV_USER_ASK_YN, A.RESV_RCPT_YN, A.RESV_RCPT_NUMBER, A.RESV_PAY_COST, 
 					FN_DETAILCODENM(A.RESV_TICKET_DVSN) AS RESV_TICKET_DVSN,
 					FN_DETAILCODENM(A.RESV_PAY_DVSN) AS RESV_PAY_DVSN,
@@ -36,7 +36,7 @@
 							AND A.RESV_END_DT BETWEEN #{params.searchFrom} AND #{params.searchTo}
 						</when>
 						<otherwise>
-							 AND TO_CHAR(A.RESV_REQ_DATE,'YYYYMMDD') BETWEEN #{params.searchFrom} AND #{params.searchTo}
+							 AND TO_CHAR(TO_DATE(A.RESV_REQ_DATE,'YYYY-MM-DD HH24:MI'),'YYYY-MM-DD HH24:MI') BETWEEN #{params.searchFrom} AND #{params.searchTo}
 						</otherwise>
 					</choose>
 				</if>
@@ -82,7 +82,7 @@
 	<select id="selectResInfoDetail" resultType="lmap">
 		SELECT  
 			A.RESV_SEQ, A.SEAT_CD, A.SEASON_CD, A.RESV_START_DT, A.RESV_END_DT, A.RESV_DVSN,
-			A.RESV_START_TM, A.RESV_END_TM, TO_CHAR(A.RESV_REQ_DATE, 'YYYY-MM-DD HH24:MI') AS RESV_REQ_DATE, A.USER_ID,
+			A.RESV_START_TM, A.RESV_END_TM, TO_CHAR(A.RESV_REQ_DATE,'YYYY-MM-DD HH24:MI') AS RESV_REQ_DATE, A.USER_ID,
 			A.RESV_STATE, A.RESV_USER_ASK_YN, A.RESV_RCPT_YN, A.RESV_RCPT_NUMBER, A.RESV_PAY_COST,
 			FN_DETAILCODENM(A.RESV_USER_DVSN) AS RESV_USER_DVSN_TEXT,
 			FN_DETAILCODENM(A.RESV_TICKET_DVSN) AS RESV_TICKET_DVSN_TEXT,
@@ -148,7 +148,7 @@
 	<![CDATA[
 		SELECT  
 			A.RESV_SEQ, A.CENTER_CD, A.PART_CD, A.FLOOR_CD, A.SEAT_CD, A.SEASON_CD, A.RESV_START_DT, A.RESV_END_DT, A.RESV_DVSN,
-			A.RESV_START_TM, A.RESV_END_TM, TO_CHAR(A.RESV_REQ_DATE, 'YYYY-MM-DD HH24:MI') AS RESV_REQ_DATE, B.CENTER_NM, A.RESV_ENTRY_DVSN,
+			A.RESV_START_TM, A.RESV_END_TM, TO_CHAR(A.RESV_REQ_DATE,'YYYY-MM-DD HH24:MI') AS RESV_REQ_DATE, B.CENTER_NM, A.RESV_ENTRY_DVSN,
 			CASE  
     			WHEN A.RESV_ENTRY_DVSN = 'ENTRY_DVSN_1' THEN '입석' 
     			ELSE (SELECT SEAT_NM FROM TSEB_SEAT_INFO_D WHERE SEAT_CD = A.SEAT_CD)
@@ -186,7 +186,7 @@
     		A.RESV_STATE,
     		FN_DETAILCODENM(A.RESV_STATE) AS RESV_STATE_TEXT,
     		TO_CHAR(TO_DATE(A.RESV_START_DT,'YYYYMMDD'),'YYYY-MM-DD') AS RESV_START_DT,
-    		TO_CHAR(A.RESV_REQ_DATE, 'YYYY-MM-DD HH24:MI') AS RESV_REQ_DATE,
+    		TO_CHAR(A.RESV_REQ_DATE,'YYYY-MM-DD HH24:MI') AS RESV_REQ_DATE,
     		A.RESV_PAY_DVSN
 		FROM TSER_RESV_INFO_I A, TSEB_CENTER_INFO_M B 
 		WHERE A.CENTER_CD = B.CENTER_CD
@@ -219,7 +219,7 @@
     			WHEN A.SEAT_CD IS NULL THEN '입석'
     			ELSE (SELECT SEAT_NM FROM TSEB_SEAT_INFO_D WHERE SEAT_CD = A.SEAT_CD)
     		END AS SEAT_NM,
-    		TO_CHAR(A.RESV_REQ_DATE, 'YYYY-MM-DD HH24:MI') AS RESV_REQ_DATE
+    		TO_CHAR(A.RESV_REQ_DATE,'YYYY-MM-DD HH24:MI') AS RESV_REQ_DATE
 		FROM TSER_RESV_INFO_I A, TSEB_CENTER_INFO_M B 
 		WHERE A.CENTER_CD = B.CENTER_CD
 		AND A.RESV_USER_NM = #{params.resvUserNm}
@@ -233,7 +233,7 @@
     <!-- 현재 예약 완료한 정보 조회 -->
 	<select id="selectInUserResvInfo" resultType="lmap">
 		SELECT 
-			A.RESV_SEQ, TO_CHAR(A.RESV_REQ_DATE, 'YYYY-MM-DD HH24:MI') AS RESV_REQ_DATE, A.RESV_ENTRY_DVSN, A.USER_ID, B.CENTER_NM, C.FLOOR_NM, D.PART_NM,
+			A.RESV_SEQ, TO_CHAR(A.RESV_REQ_DATE,'YYYY-MM-DD HH24:MI') AS RESV_REQ_DATE, A.RESV_ENTRY_DVSN, A.USER_ID, B.CENTER_NM, C.FLOOR_NM, D.PART_NM,
 			CASE  
     			WHEN A.RESV_ENTRY_DVSN = 'ENTRY_DVSN_1'  THEN '입석' 
     			ELSE (SELECT SEAT_NM FROM TSEB_SEAT_INFO_D WHERE SEAT_CD = A.SEAT_CD)
@@ -269,6 +269,23 @@
 	    SELECT FN_HASH (#{params.length}, #{params.password)) FROM DUAL
 	</select>
 	
+	<!-- 예약지점 휴일을 제외한 예약일자 조회 -->
+	<select id="selectResvDateList" resultType="String">
+	<![CDATA[
+		SELECT A.RESV_DATE FROM 
+		(
+			SELECT TO_CHAR(TO_DATE(#{resvDateFrom},'YYYYMMDD') + (LEVEL-1), 'YYYYMMDD') AS RESV_DATE 
+			FROM DUAL
+			CONNECT BY TO_CHAR(TO_DATE(#{resvDateFrom},'YYYYMMDD') + (LEVEL-1), 'YYYYMMDD') <= #{resvDateTo}
+		) A
+		WHERE A.RESV_DATE NOT IN (
+			SELECT HOLY_DT FROM TSEB_CENTERHOLY_INFO_I 
+			WHERE CENTER_CD = #{centerCd}
+		)
+		ORDER BY A.RESV_DATE ASC
+	]]>
+	</select>
+	
 	<!-- 예약정보 등록 -->
     <insert id="insertUserResvInfo">
 		<selectKey resultType="String" keyProperty="resvSeq" order="BEFORE">
@@ -287,7 +304,7 @@
 		VALUES 
 		(
 			#{resvSeq}, #{centerCd, jdbcType=VARCHAR}, #{floorCd, jdbcType=VARCHAR}, #{partCd, jdbcType=VARCHAR}, #{seatCd, jdbcType=VARCHAR},
-			TO_CHAR(TO_DATE(#{resvDate, jdbcType=VARCHAR}) - (INTERVAL '1' DAY),'YYYYMMDD'), #{resvDate, jdbcType=VARCHAR}, 'TEMP', '0000', '2359',
+			TO_CHAR(TO_DATE(#{resvDate, jdbcType=VARCHAR},'YYYYMMDD') - (INTERVAL '1' DAY),'YYYYMMDD'), #{resvDate, jdbcType=VARCHAR}, 'TEMP', '0000', '2359',
 			SYSDATE, #{resvUserDvsn, jdbcType=VARCHAR}, 
 			<choose>
            		<when test='resvUserDvsn == "USER_DVSN_1"'>
@@ -302,6 +319,30 @@
 			#{resvEntryDvsn, jdbcType=VARCHAR}, 'RESV_PAY_DVSN_1', FN_PAYCOST(#{centerCd, jdbcType=VARCHAR}, #{seatCd, jdbcType=VARCHAR}, #{resvEntryDvsn, jdbcType=VARCHAR}), SYSDATE, 'admin', 
 			SYSDATE, 'admin'  	
 		)
+    </insert>
+    
+	<!-- 장기 예약정보 등록 -->
+    <insert id="insertUserLongResvInfo">
+    	<foreach collection="resvDateList" item="resvDate" index="index" separator=";" open="DECLARE BEGIN" close="; END;">
+	    	INSERT INTO TSER_RESV_INFO_I 
+	    	(
+				RESV_SEQ, CENTER_CD, FLOOR_CD, PART_CD, SEAT_CD, 
+				RESV_START_DT, RESV_END_DT, RESV_DVSN, RESV_START_TM, RESV_END_TM, 
+				RESV_REQ_DATE, RESV_USER_DVSN, USER_ID, RESV_USER_NM, RESV_USER_CLPHN, RESV_USER_ASK_YN, RESV_TICKET_DVSN, 
+				RESV_STATE, RESV_RCPT_YN, RESV_RCPT_DVSN, RESV_RCPT_NUMBER, RESV_INDVDLINFO_AGRE_YN,
+				RESV_ENTRY_DVSN, RESV_PAY_DVSN, RESV_PAY_COST, 
+				FRST_REGIST_DTM, FRST_REGTER_ID, LAST_UPDT_DTM, LAST_UPDUSR_ID  
+			)
+			VALUES 
+			(
+				SEQ_SER_RERV_INFO.NEXTVAL, #{centerCd, jdbcType=VARCHAR}, #{floorCd, jdbcType=VARCHAR}, #{partCd, jdbcType=VARCHAR}, #{seatCd, jdbcType=VARCHAR},
+				TO_CHAR(TO_DATE(#{resvDate, jdbcType=VARCHAR},'YYYYMMDD') - (INTERVAL '1' DAY),'YYYYMMDD'), #{resvDate, jdbcType=VARCHAR}, 'TEMP', '0000', '2359',
+				SYSDATE, #{resvUserDvsn, jdbcType=VARCHAR}, #{userId, jdbcType=VARCHAR}, #{resvUserNm}, #{resvUserClphn}, #{resvUserAskYn, jdbcType=VARCHAR}, 'RESV_TICKET_DVSN_1',
+				'RESV_STATE_1', #{resvRcptYn, jdbcType=VARCHAR}, #{resvRcptDvsn, jdbcType=VARCHAR}, #{resvRcptNumber, jdbcType=VARCHAR}, #{resvIndvdlinfoAgreYn, jdbcType=VARCHAR},
+				#{resvEntryDvsn, jdbcType=VARCHAR}, 'RESV_PAY_DVSN_1', FN_PAYCOST(#{centerCd, jdbcType=VARCHAR}, #{seatCd, jdbcType=VARCHAR}, #{resvEntryDvsn, jdbcType=VARCHAR}), 
+				SYSDATE, #{adminId, jdbcType=VARCHAR}, SYSDATE, #{adminId, jdbcType=VARCHAR}  	
+			)
+		</foreach>
     </insert>
     
 	<update id="resvSeatChange">
@@ -344,17 +385,20 @@
 		UPDATE TSER_RESV_INFO_I SET RESV_RCPT_NUMBER = #{resvRcptNumber}
         WHERE RESV_SEQ = #{resvSeq}
     </update>
-
+    
 	<!-- 입력은 대소문자구분 (to의 필드값)-->
 	<select id="resvValidCheck" resultType="string" statementType="CALLABLE">
 	{CALL
 		KSES_USER.SP_RESV_CENTER_VALID
 		(
+			#{params.checkDvsn, mode=IN, jdbcType=VARCHAR, javaType=string},
+			#{params.userDvsn, mode=IN, jdbcType=VARCHAR, javaType=string},
+			#{params.userId, mode=IN, jdbcType=VARCHAR, javaType=string},
 			#{params.centerCd, mode=IN, jdbcType=VARCHAR, javaType=string},
 			#{params.seatCd, mode=IN, jdbcType=VARCHAR, javaType=string},
 			#{params.inResvDate, mode=IN, jdbcType=VARCHAR, javaType=string},
-			#{params.checkDvsn, mode=IN, jdbcType=VARCHAR, javaType=string},
-			<!-- #{params.userId, mode=IN, jdbcType=VARCHAR, javaType=string}, -->
+			#{params.resvDateFrom, mode=IN, jdbcType=VARCHAR, javaType=string},
+			#{params.resvDateTo, mode=IN, jdbcType=VARCHAR, javaType=string},
 			#{params.resultCode, mode=OUT, jdbcType=VARCHAR, javaType=string},
 			#{params.resvDate, mode=OUT, jdbcType=VARCHAR, javaType=string}
 		)
