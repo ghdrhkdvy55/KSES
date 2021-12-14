@@ -15,6 +15,7 @@
 				       TO_CHAR( LAST_UPDT_DTM , 'yyyy-MM-dd') LAST_UPDT_DTM, LAST_UPDUSR_ID
 				FROM TEST_USER_INFO A
 				WHERE 1=1
+				AND USER_DVSN = 'USER_DVSN_1'
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
 					 <choose>
 					    <when test="params.searchCondition == 'user_id'">

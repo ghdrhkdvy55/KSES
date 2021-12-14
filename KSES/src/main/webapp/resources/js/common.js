@@ -404,6 +404,7 @@ function dateCheck (_date, _addDay, alert_message){
     	return true;
     }
 }
+
 function dateIntervalCheck (_date1, _date2, alert_message){
    if (parseInt(_date1) > parseInt(_date2)){
     	alert(alert_message);
@@ -412,6 +413,15 @@ function dateIntervalCheck (_date1, _date2, alert_message){
     	return true;
     }
 }
+
+// 임시
+function dateIntervalCheckTemp(_date1, _date2, alert_message){
+	   if (parseInt(_date1) > parseInt(_date2)){
+	    	return false;
+	    }else {
+	    	return true;
+	    }
+	}
 
 
 //공백 제거

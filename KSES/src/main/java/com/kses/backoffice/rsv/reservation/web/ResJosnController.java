@@ -126,7 +126,7 @@ public class ResJosnController{
 					 user.setUserPhone(node.get("User_Phone").asText());
 					 user.setUserNm(node.get("User_Nm").asText());
 					 user.setUserId(node.get("User_Id").asText());
-					 
+					 user.setUserDvsn("USER_DVSN_1");
 					 user.setUserCardNo(node.get("Card_Id").asText());
 					 user.setUserCardId(node.get("Card_No").asText());
 					 user.setUserCardSeq(node.get("Card_Seq").asText());

@@ -33,7 +33,7 @@
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchFrom) and !@org.apache.commons.lang3.StringUtils@isEmpty(params.searchTo)">
 					<choose>
 						<when test="@org.apache.commons.lang3.StringUtils@equals(params.searchDayCondition,'resvDate')">
-							AND A.RESV_START_DT BETWEEN #{params.searchFrom} AND #{params.searchTo}
+							AND A.RESV_END_DT BETWEEN #{params.searchFrom} AND #{params.searchTo}
 						</when>
 						<otherwise>
 							 AND TO_CHAR(A.RESV_REQ_DATE,'YYYYMMDD') BETWEEN #{params.searchFrom} AND #{params.searchTo}

@@ -20,6 +20,8 @@
     <script src="/resources/js/bpopup.js"></script>
 </head>
 <body>
+<input type="hidden" id="loginAuthorCd" name="loginAuthorCd" value="${LoginVO.authorCd}">
+<input type="hidden" id="loginCenterCd" name="loginCenterCd" value="${LoginVO.centerCd}">
 <div class="wrapper">
 	<div class="header_wrap">
 		<header>

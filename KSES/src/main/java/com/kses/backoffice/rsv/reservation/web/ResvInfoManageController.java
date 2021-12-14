@@ -269,12 +269,11 @@ public class ResvInfoManageController {
 		}
 		
 		try {
-			String meesage = "";
 			vo = attendService.insertAttendInfo(vo);
 			
 			if(vo.getRet() > 0) {
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
+				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.insert"));
 			} else {
 				throw new Exception();
 			}

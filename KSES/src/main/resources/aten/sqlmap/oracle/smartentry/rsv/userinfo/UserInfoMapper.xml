@@ -11,7 +11,8 @@
 				TB.* 
 			FROM 	
 			(	
-				SELECT A.USER_ID, A.USER_NM, A.USER_PHONE, A.USER_EMAIL, A.USER_SEX_MF, TO_CHAR(TO_DATE(A.USER_BIRTH_DY, 'yyyy-mm-dd'), 'yyyy-mm-dd') AS USER_BIRTH_DY
+				SELECT A.USER_ID, A.USER_NM,
+				A.USER_PHONE, A.USER_EMAIL, A.USER_SEX_MF, TO_CHAR(TO_DATE(A.USER_BIRTH_DY, 'yyyy-mm-dd'), 'yyyy-mm-dd') AS USER_BIRTH_DY
 				FROM TEST_USER_INFO A
 				WHERE A.USER_DVSN = 'USER_DVSN_1'
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
@@ -47,18 +48,19 @@
    	</select>
    		
    	   	<select id="selectUserDetail" resultType="lmap">
-		SELECT A.USER_ID, A.USER_NM, A.USER_PHONE, A.USER_EMAIL, A.USER_SEX_MF, A.USER_BIRTH_DY,
-		A.INDVDLINFO_AGRE_YN, A.INDVDLINFO_AGRE_DT, A.VACNTN_DVSN, A.VACNTN_DT, A.VACNTN_ROUND
+		SELECT A.USER_ID, A.USER_NM, A.USER_PHONE,
+		A.USER_EMAIL, CASE A.USER_SEX_MF WHEN 'M' THEN '남성' ELSE '여성' END AS USER_SEX_MF, TO_CHAR(TO_DATE(A.USER_BIRTH_DY, 'yyyy-mm-dd'), 'yyyy-mm-dd') AS USER_BIRTH_DY,
+		CASE A.INDVDLINFO_AGRE_YN WHEN 'Y' THEN '동의' ELSE '반대' END AS INDVDLINFO_AGRE_YN, TO_CHAR(TO_DATE(A.INDVDLINFO_AGRE_DT, 'yyyy-mm-dd'), 'yyyy-mm-dd') AS INDVDLINFO_AGRE_DT, A.VACNTN_DVSN,
+		
+		A.VACNTN_DT, A.VACNTN_ROUND
 		FROM TEST_USER_INFO A
 		WHERE A.USER_ID = #{userId}
    	</select>
    	
-   	 <update id="updateHolyInfo">
-		UPDATE TSEC_HOLY_INFO_M SET HOLY_DT = #{holyDt, jdbcType=VARCHAR}, 
-		                            HOLY_NM = #{holyNm, jdbcType=VARCHAR}, 
-		                            USE_YN = #{useYn, jdbcType=VARCHAR},
-		                            LAST_UPDT_DTM = SYSDATE,
-		                            LAST_UPDUSR_ID =  #{userId,jdbcType=VARCHAR}       
-       	WHERE HOLY_SEQ = #{holySeq, jdbcType=VARCHAR}
+   	 <update id="updateUser">
+		UPDATE TEST_USER_INFO SET VACNTN_DVSN = #{vacntnDvsn, jdbcType=VARCHAR}, 
+		                            VACNTN_DT = #{vacntnDt, jdbcType=VARCHAR}, 
+		                            VACNTN_ROUND = #{vacntnRound, jdbcType=VARCHAR} 
+       	WHERE USER_ID = #{userId, jdbcType=VARCHAR}
    	</update>
 </mapper>
