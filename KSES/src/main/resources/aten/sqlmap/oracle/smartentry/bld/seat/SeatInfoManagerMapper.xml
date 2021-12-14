@@ -107,10 +107,10 @@
 		<selectKey resultType="String" keyProperty="seatCd" order="BEFORE">
         	<choose>
            		<when test='partCd == "0"'>
-            		SELECT FN_SEATCODE(#{floorCd},'FLOOR') AS seatCd
+            		SELECT FN_SEATCODE(#{floorCd},'FLOOR') AS seatCd FROM DUAL
 				</when>
 				<otherwise>
-					SELECT FN_SEATCODE(#{partCd},'PART') AS seatCd				
+					SELECT FN_SEATCODE(#{partCd},'PART') AS seatCd FROM DUAL				
 				</otherwise>
 			</choose>
 		</selectKey>
@@ -256,19 +256,17 @@
 		BEGIN
 		
 		UPDATE 
-			TSEB_FLOOR_INFO_M SET FLOOR_SEAT_CNT = FLOOR_SEAT_CNT - B.CNT
-		FROM TSEB_FLOOR_INFO_M A, 
-		(
-			SELECT 
-				COUNT(*) CNT, FLOOR_CD 
-			FROM TSEB_SEAT_INFO_D
-			WHERE SEAT_CD IN 
-			<foreach collection="seatInfoList" item="item"  open="(" separator="," close=")">
-				#{item}
-			</foreach>
-			GROUP BY FLOOR_CD
-		) B
-        WHERE A.FLOOR_CD = B.FLOOR_CD;
+			TSEB_FLOOR_INFO_M A SET A.FLOOR_SEAT_CNT = 
+				A.FLOOR_SEAT_CNT - 
+				(
+					SELECT NVL(COUNT(*),0) 
+					FROM TSEB_SEAT_INFO_D
+					WHERE FLOOR_CD = A.FLOOR_CD
+					AND SEAT_CD IN
+					<foreach collection="seatInfoList" item="item"  open="(" separator="," close=")">
+            			#{item}
+        			</foreach>
+				);
         
         DELETE FROM TSEB_SEAT_INFO_D WHERE SEAT_CD IN
         <foreach collection="seatInfoList" item="item"  open="(" separator="," close=")">

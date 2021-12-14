@@ -476,47 +476,51 @@
 			}
 			
 			var commentTxt = ($("#mode").val() == "Ins") ? "신규 좌석 정보를 등록 하시겠습니까?" : "입력한 좌석 정보를 저장 하시겠습니까?";
-			var resultTxt = ($("#mode").val() == "Ins") ? "신규 좌석 정보가 정상적으로 등록 되었습니다." : "지점 좌석가 정상적으로 저장 되었습니다.";
-     		
-			if (confirm(commentTxt)== true) {
-				var params = {
-		     	    'seatCd' : $("#seatCd").val(),
-		     	    'seatNm' : $("#seatNm").val(),
-		     	    'centerCd' : $("#centerCd").val(),
-		     	    'floorCd' : $("#floorCd").val(),
-		     	    'partCd' : $("#partCd").val(),
-		     	    'seatClass' : $("#seatClass").val(),
-		     	   	'seatDvsn' : $("#seatDvsn").val(),
-		     	   	'payDvsn' : $("#payDvsn").val(),
-		     	   	'payCost' : $("#payCost").val(),
-		     	   	'useYn': $('input[name=useYn]:checked').val(),
-		     	    'mode' : $("#mode").val()
-				};
-				var url = "/backoffice/bld/seatInfoUpdate.do";
-				fn_Ajax
-				(
-					url,
-					"POST",
-					params,
-					false,
-					function(result) {
-	 				       if (result.status == "LOGIN FAIL"){
-	 				    	   common_popup(result.meesage, "Y","bas_holiday_add");
-	   						   location.href="/backoffice/login.do";
-	   					   }else if (result.status == "SUCCESS"){
-	   						   //총 게시물 정리 하기'
-	   						   common_modelClose("bld_seat_add");
-	   						   jqGridFunc.fn_search();
-	   					   }else if (result.status == "FAIL"){
-	   						   common_modelCloseM("저장 도중 문제가 발생 하였습니다.", "Y", "bld_seat_add");
-	   						   jqGridFunc.fn_search();
-	   					   }
-	 				    },
-	 				    function(request){
-	 				    	common_modelCloseM("Error:" + request.status,"bld_seat_add");
-	 				    }    		 		
-				);
-			} 
+			/* var resultTxt = ($("#mode").val() == "Ins") ? "신규 좌석 정보가 정상적으로 등록 되었습니다." : "지점 좌석가 정상적으로 저장 되었습니다."; */
+     		$("#id_ConfirmInfo").attr("href", "javascript:jqGridFunc.fn_update()");
+       		fn_ConfirmPop(commentTxt);
+		},
+		fn_update : function () {
+			$("#confirmPage").bPopup().close();
+			var params = {
+			    'seatCd' : $("#seatCd").val(),
+			    'seatNm' : $("#seatNm").val(),
+			    'centerCd' : $("#centerCd").val(),
+			    'floorCd' : $("#floorCd").val(),
+			    'partCd' : $("#partCd").val(),
+			    'seatClass' : $("#seatClass").val(),
+			   	'seatDvsn' : $("#seatDvsn").val(),
+			   	'payDvsn' : $("#payDvsn").val(),
+			   	'payCost' : $("#payCost").val(),
+			   	'useYn': $('input[name=useYn]:checked').val(),
+			    'mode' : $("#mode").val()
+			};
+			var url = "/backoffice/bld/seatInfoUpdate.do";
+			fn_Ajax
+			(
+				url,
+				"POST",
+				params,
+				false,
+				function(result) {
+					alert(result.message);
+				       if (result.status == "LOGIN FAIL"){
+				    	   common_popup(result.meesage, "Y","bld_seat_add");
+						   location.href="/backoffice/login.do";
+					   }else if (result.status == "SUCCESS"){
+						   //총 게시물 정리 하기'
+						   common_modelCloseM("등록이 완료 되었습니다.", "bld_seat_add");
+						   jqGridFunc.fn_search();
+					   }else if (result.status == "FAIL"){
+						   common_modelCloseM("저장 도중 문제가 발생 하였습니다.", "Y", "bld_seat_add");
+						   jqGridFunc.fn_search();
+					   }
+				    },
+				    function(request){
+				    	common_modelCloseM("Error:" + request.status,"bld_seat_add");
+				    }    		 		
+			);
+ 
 		}   
 	}
 </script>
