@@ -13,6 +13,8 @@ public interface UserInfoManageService {
     
     Map<String, Object> selectUserInfoDetail(String userId) throws Exception;
     
+    Map<String, Object> selectUserVacntnInfo(String userId) throws Exception;
+    
     int updateUserInfo(UserInfo vo) throws Exception;
     
     int updateUserRcptInfo(UserInfo vo) throws Exception;

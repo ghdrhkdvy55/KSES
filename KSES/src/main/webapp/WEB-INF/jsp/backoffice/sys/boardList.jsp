@@ -255,7 +255,6 @@
 			 insertBoardAllCk = "N"
 		 } else {
 			 insertBoardAllCk =  $("#boardAllNotice").is(":checked") == true ? "Y" : "N";
-			 insertBoardCenterId = ckeckboxValueNoPopup("boardCenterId");
 		 }
 		 
 		 ("${regist.board_file_upload_yn }" == "Y") ? $("#tr_fileUpload").show() : $("#tr_fileUpload").hide();
@@ -432,7 +431,6 @@
 	   		var params = {'boardSeq': $.trim($("#hid_DelCode").val()) };
 				fn_uniDelAction("/backoffice/sys/boardDelete.do", "GET", params, false, "jqGridFunc.fn_search");
 	        },fn_search : function(){
-	        	alert($("#authorCd").val());
 				  $("#mainGrid").setGridParam({
 		    	    	 datatype	: "json",
 		    	    	 postData	: JSON.stringify(  {
@@ -588,7 +586,8 @@
 						formData.append('files', fileList[uploadFileList[i]]);
 					}
 				    //사용자 값에 따른 변경값
-		            boardCenterId = insertBoardCenterId
+		            boardCenterId = ($("#authorCd").val() != "ROLE_ADMIN" && $("#authorCd").val() != "ROLE_SYSTEM")  
+		            	? insertBoardCenterId : ckeckboxValueNoPopup("boardCenterId");
 		            boardAllCk = insertBoardAllCk
 
 				    formData.append('mode' , $("#mode").val());

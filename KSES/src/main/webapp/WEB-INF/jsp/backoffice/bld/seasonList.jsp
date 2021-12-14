@@ -329,7 +329,7 @@ var jqGridFunc  = {
  		 	                { label: '설정',  name:'seasonSetting',  index:'seasonSetting', align:'left',   width:'10%', 
  		 	                	formatter:jqGridFunc.seasonSetting },
  		 	                { label: '수정자', name:'last_updusr_id',      index:'last_updusr_id',     align:'center', width:'14%'},
- 			                { label: '수정 일자', name:'last_updt_pnttm', index:'last_updt_pnttm', align:'center', width:'12%', 
+ 			                { label: '수정 일자', name:'last_updt_dtm', index:'last_updt_dtm', align:'center', width:'12%', 
  			                  sortable: 'date' ,formatter: "date", formatoptions: { newformat: "Y-m-d"}}
 			                ],  //상단면 
 		        rowNum : 10,  //레코드 수

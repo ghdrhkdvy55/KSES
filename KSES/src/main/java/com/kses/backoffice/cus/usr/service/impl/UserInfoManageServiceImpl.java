@@ -36,6 +36,12 @@ public class UserInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 		// TODO Auto-generated method stub
 		return userMapper.selectUserInfoDetail(userId);
 	}
+	
+	@Override
+	public Map<String, Object> selectUserVacntnInfo(String userId) throws Exception {
+		// TODO Auto-generated method stub
+		return userMapper.selectUserVacntnInfo(userId);
+	}
 
 	@Override
 	public int updateUserInfo(UserInfo vo) throws Exception {
@@ -60,6 +66,4 @@ public class UserInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 			return false;
 		}
 	}
-	
-	
 }

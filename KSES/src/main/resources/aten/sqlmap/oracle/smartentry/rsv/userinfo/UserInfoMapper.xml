@@ -47,20 +47,44 @@
 		ORDER BY TA.RNUM DESC 
    	</select>
    		
-   	   	<select id="selectUserDetail" resultType="lmap">
-		SELECT A.USER_ID, A.USER_NM, A.USER_PHONE,
-		A.USER_EMAIL, CASE A.USER_SEX_MF WHEN 'M' THEN '남성' ELSE '여성' END AS USER_SEX_MF, TO_CHAR(TO_DATE(A.USER_BIRTH_DY, 'yyyy-mm-dd'), 'yyyy-mm-dd') AS USER_BIRTH_DY,
-		CASE A.INDVDLINFO_AGRE_YN WHEN 'Y' THEN '동의' ELSE '반대' END AS INDVDLINFO_AGRE_YN, TO_CHAR(TO_DATE(A.INDVDLINFO_AGRE_DT, 'yyyy-mm-dd'), 'yyyy-mm-dd') AS INDVDLINFO_AGRE_DT, A.VACNTN_DVSN,
-		
-		A.VACNTN_DT, A.VACNTN_ROUND
+	<select id="selectUserDetail" resultType="lmap">
+		SELECT 
+			A.USER_ID, A.USER_NM, A.USER_PHONE, A.USER_EMAIL, 
+			CASE A.USER_SEX_MF 
+				WHEN 'M' THEN '남성' 
+				ELSE '여성' 
+			END AS USER_SEX_MF, 
+			TO_CHAR(TO_DATE(A.USER_BIRTH_DY, 'yyyy-mm-dd'), 'yyyy-mm-dd') AS USER_BIRTH_DY,
+			CASE A.INDVDLINFO_AGRE_YN 
+				WHEN 'Y' THEN '동의' 
+				ELSE '반대' 
+			END AS INDVDLINFO_AGRE_YN, 
+			TO_CHAR(TO_DATE(A.INDVDLINFO_AGRE_DT, 'yyyy-mm-dd'), 'yyyy-mm-dd') AS INDVDLINFO_AGRE_DT, 
+			A.VACNTN_DVSN, A.VACNTN_DT, A.VACNTN_ROUND
 		FROM TEST_USER_INFO A
 		WHERE A.USER_ID = #{userId}
    	</select>
    	
-   	 <update id="updateUser">
-		UPDATE TEST_USER_INFO SET VACNTN_DVSN = #{vacntnDvsn, jdbcType=VARCHAR}, 
-		                            VACNTN_DT = #{vacntnDt, jdbcType=VARCHAR}, 
-		                            VACNTN_ROUND = #{vacntnRound, jdbcType=VARCHAR} 
+   	<select id="selectUserVacntnInfo" resultType="lmap">
+	<![CDATA[
+   		SELECT 
+   			FN_DETAILCODENM(A.VACNTN_ROUND) AS VACNTN_ROUND_TEXT, 
+   			FN_DETAILCODENM(A.VACNTN_DVSN) AS VACNTN_DVSN_TEXT, 
+   			TO_CHAR(TO_DATE(A.VACNTN_DT,'YYYY-MM-DD'),'YYYY-MM-DD') AS VACNTN_DT,  
+			CASE 
+				WHEN A.VACNTN_DT IS NULL THEN 'NO_INFO'  
+				WHEN A.VACNTN_DT < TO_CHAR(ADD_MONTHS(SYSDATE,-6),'YYYYMMDD') THEN 'Y'
+			ELSE 'N' END AS PASS_YN
+		FROM TEST_USER_INFO A
+		WHERE USER_ID = #{userId, jdbcType=VARCHAR}
+	]]>	
+   	</select>
+   	
+	<update id="updateUser">
+		UPDATE TEST_USER_INFO SET 
+			VACNTN_DVSN = #{vacntnDvsn, jdbcType=VARCHAR}, 
+			VACNTN_DT = #{vacntnDt, jdbcType=VARCHAR}, 
+			VACNTN_ROUND = #{vacntnRound, jdbcType=VARCHAR} 
        	WHERE USER_ID = #{userId, jdbcType=VARCHAR}
    	</update>
 </mapper>
