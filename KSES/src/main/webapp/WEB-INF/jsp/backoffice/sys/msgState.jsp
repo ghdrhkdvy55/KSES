@@ -8,6 +8,7 @@
 <input type="hidden" id="mode" name="mode" />
 <input type="hidden" id="pageIndex" name="pageIndex" />
 <input type="hidden" id="result" name="result" />
+<input type="hidden" id="authorCd" name="authorCd" value="${loginVO.authorCd}">
 <div class="breadcrumb">
   	<ol class="breadcrumb-item">
     	<li>고객 관리&nbsp;&gt;&nbsp;</li>
@@ -408,6 +409,10 @@
 <!-- pooup// -->
 <script type="text/javascript">
     $(document).ready(function() { 
+		if($("#authorCd").val() != "ROLE_ADMIN" && $("#authorCd").val() != "ROLE_SYSTEM") {
+			$(".hideAuthor").hide();
+		}
+		
 		var clareCalendar = {
 		monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
 		dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
@@ -606,8 +611,9 @@
         		for (var i in returnval){
         			var obj = returnval[i];
 	        		if ($("#searchUserGubun").val() == "EMP"){
-	        			sHtml = "<li>"+ obj.emp_nm +"("+ obj.dept_nm +")<span>&lt;<br/>"
+	        			sHtml = "<li>"+ obj.emp_nm +"("+ obj.dept_nm +")<span>&lt;"
 		            	      + ""+ obj.emp_clphn+ "&gt;</span>"
+		            	      + "<span class='delBtn' onClick='msgFunction.fn_GroupUserUpdate(\""+obj.emp_nm+"\",\""+obj.dept_nm+"\",\""+obj.emp_clphn+"\")'>&raquo;</span></li>";
 		            	
 	            	}else {
 	        			//사용자 검색 
@@ -717,7 +723,7 @@
             $("#dv_messageUserSerach").bPopup().close();
         }, fn_indivUser : function (){
         	if (any_empt_line_span_noPop("sms_addUser", "전화번호를 입력해 주세요.") == false) return;
-        	msgFunction.fn_smsUserTable($("#sms_addUser").val());
+        	msgFunction.fn_smsUserTable( $("#sms_addUser").val() + "<" + $("#sms_addUser").val() + ">");
         	$("#sms_addUser").val('');
         	
         }, fn_smsUserTable : function(telArray){
@@ -974,7 +980,8 @@
 	   					   location.href="/backoffice/login.do";
 	   				   }else if (result.status == "SUCCESS"){
 	   					   //총 게시물 정리 하기'
-	   					   common_reloadPopup("정상적으로 저장되었습니다.", "Y");
+	   					   alert(result.message);
+	   					common_popup(result.message, "Y", "");
 	   				   }else if (result.status == "FAIL"){
 	   					   common_popup("저장 도중 문제가 발생 하였습니다.", "N", "");
 	   				   }

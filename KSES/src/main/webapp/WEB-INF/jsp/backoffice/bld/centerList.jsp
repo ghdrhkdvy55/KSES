@@ -20,6 +20,7 @@
 <input type="hidden" id="floorInfo" name="floorInfo">
 <input type="hidden" id="centerHolySeq" name="centerHolySeq">
 <input type="hidden" id="targetCenterHolySeq" name="targetCenterHolySeq">
+<input type="hidden" id="authorCd" name="authorCd" value="${loginVO.authorCd}">
 <div class="breadcrumb">
 	<ol class="breadcrumb-item">
 		<li>시설 관리&nbsp;&gt;&nbsp;</li>
@@ -290,8 +291,16 @@
 <!-- 휴일관리 팝업 // -->
 <!-- popup// -->
 <script type="text/javascript">
+	var isMultiSelect = true;
+
 	$(document).ready(function() { 
+		if($("#authorCd").val() != "ROLE_ADMIN" && $("#authorCd").val() != "ROLE_SYSTEM") {
+			isMultiSelect = false;
+			$(".right_box").hide();
+		}
+		
 		jqGridFunc.setGrid("mainGrid");
+		
 		var clareCalendar = {
 		monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
 		dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
@@ -310,7 +319,7 @@
  	});
    		    
 	var jqGridFunc  = {
-		setGrid : function(gridOption){
+		setGrid : function(gridOption){			
 			var grid = $('#'+gridOption);
 			
 			//ajax 관련 내용 정리 하기 
@@ -355,7 +364,7 @@
 				rowList : [10,20,30,40,50,100],  // 페이징 수
 				pager : pager,
 				refresh : true,
-			    multiselect : true, // 좌측 체크박스 생성
+			    multiselect : isMultiSelect, // 좌측 체크박스 생성
 				rownumbers : false, // 리스트 순번
 				viewrecord : true,  // 하단 레코드 수 표기 유무
 				//loadonce : false, // true 데이터 한번만 받아옴 

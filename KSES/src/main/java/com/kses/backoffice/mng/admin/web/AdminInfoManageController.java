@@ -199,7 +199,7 @@ public class AdminInfoManageController {
 		
 		return model;
 	}
-	@RequestMapping (value="adminUpdate.do")
+    @RequestMapping (value="adminUpdate.do")
 	public ModelAndView adminUpdate(@RequestBody AdminInfo info 
 						            , HttpServletRequest request
 								    , BindingResult result) throws Exception{
@@ -208,7 +208,7 @@ public class AdminInfoManageController {
 		String meesage = null;
 		
 		try {
-			 Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+            Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
 			 if(!isAuthenticated) {
 				 model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
 				 model.addObject(Globals.STATUS,  Globals.STATUS_LOGINFAIL);
@@ -217,15 +217,21 @@ public class AdminInfoManageController {
 			 LoginVO loginVO = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
 			 info.setUserId(loginVO.getAdminId());
 			 
-			 int ret = adminService.updateAdminUserManage(info); 
+			 int ret = adminService.updateAdminUserManage(info);
+			 		
 			 LOGGER.debug("ret:"  + ret);
 			 meesage = (info.getMode().equals("Ins")) ? "sucess.common.insert" : "sucess.common.update";
-			 if (ret > 0){
-				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
-			 } else {
-				throw new Exception();
-			 }
+			 
+			 // hgp 2021.12.12 오라클 멀티쿼리 반환값 이슈로 임시 주석처리			
+             model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+			 model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
+			 
+//			 if (ret > 0){
+//				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+//				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
+//			 } else {
+//				throw new Exception();
+//			 }
 		} catch (Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();

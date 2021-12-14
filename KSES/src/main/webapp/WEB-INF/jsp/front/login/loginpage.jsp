@@ -102,7 +102,37 @@
         <div id="loading" class="loading"></div>
     </div>
     
-<!-- 	<script type="text/javascript">
+	<!-- //1214 개인정보동의 팝업 -->
+	<div id="agreeCheck" class="popup">
+		<div class="pop_con rsv_popup">
+			<a class="button b-close">X</a>
+          	<div class="pop_wrap">
+				<h4>&lt;개인정보 수집 이용 동의 안내&gt;</h4>
+              	<!--개인정보동의-->
+				<div class="person_check nonMemberArea">
+					<p>										
+						<ol>
+							<li>코로나 19 확산 방지를 위하여 다음과 같이 개인정보 수집 이용 및 제 3자 제공에 대한 동의를 얻고자 합니다.</li>
+							<li class="prsn_agree"><a data-popup-open="person_agree">자세히 ></a></li>
+							<br>
+							<li class="check_impnt">
+								<input class="magic-checkbox qna_check" type="checkbox" name="layout" id="ENTRY_DVSN_1_person_agree" value="Y">
+								<label for="ENTRY_DVSN_1_person_agree">동의합니다.</label>     
+							</li>
+						</ol>
+					</p>
+				</div>
+			</div>
+			<div class="cancel_btn">
+              	<a href="javascript:common_modelClose('rsv_info');" class="grayBtn">확인</a>
+          	</div>
+			<div class="clear"></div>
+		</div>
+    </div>		
+    				     
+    <!--1214 개인정보동의 팝업 // -->
+
+	<!--<script type="text/javascript">
 	    $('form input[type="text"], form input[type="password"]').on('input propertychange', function() {
 	        var $this = $(this);
 	        var visible = Boolean($this.val());

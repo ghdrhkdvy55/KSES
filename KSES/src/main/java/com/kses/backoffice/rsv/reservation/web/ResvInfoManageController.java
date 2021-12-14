@@ -81,7 +81,7 @@ public class ResvInfoManageController {
 			model.addObject("centerInfo", centerInfoComboList);
 			model.addObject("resvPayDvsn", codeDetailService.selectCmmnDetailCombo("RESV_PAY_DVSN"));
 			model.addObject("resvState", codeDetailService.selectCmmnDetailCombo("RESV_STATE"));
-			
+			model.addObject("loginVO" , loginVO);
 		    model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		} catch(Exception e) {
 			LOGGER.error("selectRsvInfoList : " + e.toString());

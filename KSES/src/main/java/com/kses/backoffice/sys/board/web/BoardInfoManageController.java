@@ -106,9 +106,7 @@ public class BoardInfoManageController {
 			      model.addObject("boardNotice", codeDetailService.selectCmmnDetailCombo("BOARD_NOTICE"));
 			      model.addObject("boardGubun", codeDetailService.selectCmmnDetailCombo("BOARD_GUBUN"));
 			      model.addObject("boardSize", codeDetailService.selectCmmnDetailCombo("BOARD_SIZE"));
-			      
 			      model.addObject("authorInfo", authService.selectAuthInfoComboList());
-			      
 			}catch (Exception e){
 				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 				model.addObject("message", egovMessageSource.getMessage("fail.common.list"));
