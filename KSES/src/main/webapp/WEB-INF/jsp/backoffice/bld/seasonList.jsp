@@ -70,6 +70,7 @@
 <!-- //contents -->
 <input type="hidden" id="mode" name="mode">
 <input type="hidden" id="floorCd" name="floorCd">
+<input type="hidden" id="seasonCdGui" name="seasonCdGui">
 <input type="hidden" id="partExits" name="partExits">
 <input type="hidden" id="seasonCenterinfo" name="seasonCenterinfo">
 <div class="breadcrumb">
@@ -505,6 +506,7 @@ var jqGridFunc  = {
 		  $("#dv_Title").html("시즌 좌석 설정");
 		  	
 		  showLeft(); //좌측 메뉴 나오게 하기 
+		  $("#seasonCdGui").val(seasonCd);
 		  var url = "/backoffice/bld/seasonCenterLst.do"
 		  var params = {"seasonCd": seasonCd};
 		  fn_Ajax(url, "GET", params, false,
@@ -529,7 +531,7 @@ var jqGridFunc  = {
 	   						   }else {
 	   							   $("#searchPartCd").hide();
 	   						   }
-	   						   fn_GuiSearch();
+	   						   fn_GuiSearch($("#seasonCdGui").val());
 	   					   }else if (result.status == "FAIL"){
 	   						   showLeft(); 
 	   						   common_popup(result.message, "N", "");
@@ -546,7 +548,7 @@ var jqGridFunc  = {
 			if($("#searchPartCd option").length > 1 && $("#searchPartCd").val() == ""){
 				if (any_empt_line_span_noPop("searchPartCd", "구역을 선택해주세요.") == false) return;	
 			}
-	    	fn_GuiSearch();
+	    	fn_GuiSearch($("#seasonCdGui").val());
 	 	}
 }
  	var menuRight = document.getElementById('cbp-spmenu-s2')
@@ -563,10 +565,11 @@ var jqGridFunc  = {
  		$("#s"+code).css("backgroundColor", color);
  	
  	}
- 	function fn_GuiSearch() {	 		
+ 	function fn_GuiSearch(seasonCd) {	
 		var title = "시즌 좌석 관리";
 	    $(".sp_title").text(title);
  	    var params = {
+ 	        "seasonCd": seasonCd,
  	        "searchCenter": $("#searchCenterCd").val(),
  	        "searchFloorCd": $("#searchFloorCd").val(),
  	        "searchPartCd": fn_emptyReplace($("#searchPartCd").val(), "0"),
@@ -684,7 +687,7 @@ var jqGridFunc  = {
  			
  			$("#searchPartCd").hide();
  			//검색으로 바로 가기 
- 			fn_GuiSearch();
+ 			fn_GuiSearch($("#seasonCdGui").val());
  		}
 	}
 
@@ -723,7 +726,7 @@ var jqGridFunc  = {
 	                	location.href = "/backoffice/login.do";
 	                } else if (result.status == "SUCCESS") {
 	                    common_popup('수정되었습니다.', "Y", "");
-	                    fn_GuiSearch();
+	                    fn_GuiSearch($("#seasonCdGui").val());
 	                }else {
 	                	common_popup(result.message, "N", "");
 	                } 

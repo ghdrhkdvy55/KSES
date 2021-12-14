@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.kses.backoffice.rsv.userInfo.mapper.UserInfoMapper;
 import com.kses.backoffice.rsv.userInfo.service.UserInfoService;
+import com.kses.backoffice.rsv.userInfo.vo.User;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
@@ -30,5 +31,10 @@ public class UserInfoServiceImpl extends EgovAbstractServiceImpl implements User
 	public List<Map<String, Object>> selectCmmnDetailCombo(String code) throws Exception {
 		// TODO Auto-generated method stub
 		return userMapper.selectCmmnDetailCombo(code);
+	}
+	
+	@Override
+	public int updateUser(User vo) throws Exception {
+		return userMapper.updateUser(vo) ;
 	}
 }

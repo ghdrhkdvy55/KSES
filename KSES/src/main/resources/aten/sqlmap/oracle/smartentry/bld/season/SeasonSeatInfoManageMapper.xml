@@ -30,7 +30,10 @@
 			</if>
 			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchPartCd)">
 				AND TRIM(A.PART_CD) = #{params.searchPartCd}
-			</if>	
+			</if>
+			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.seasonCd)">
+				AND E.SEASON_CD = #{params.seasonCd}
+			</if>		
 		) TB  
 		WHERE RNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}
 		ORDER BY TB.SEASON_SEAT_CD DESC  	 	    

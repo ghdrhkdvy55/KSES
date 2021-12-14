@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kses.backoffice.bas.code.service.EgovCcmCmmnDetailCodeManageService;
+import com.kses.backoffice.bas.holy.vo.HolyInfo;
 import com.kses.backoffice.rsv.userInfo.service.UserInfoService;
+import com.kses.backoffice.rsv.userInfo.vo.User;
 import com.kses.backoffice.util.SmartUtil;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -142,5 +144,39 @@ public class UserInfoManageController {
 	    return model;
 	}
 	
-    
+	@RequestMapping (value="userUpdate.do")
+	public ModelAndView updateHolyInfo(	@ModelAttribute("loginVO") LoginVO loginVO, 
+										@RequestBody User vo, 
+										HttpServletRequest request, 
+										BindingResult result) throws Exception{
+		
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+		String meesage = null;
+		
+		try {
+			 Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+			 if(!isAuthenticated) {
+				 model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
+				 model.addObject(Globals.STATUS,  Globals.STATUS_LOGINFAIL);
+				 return model;	
+		     }
+			 //사용자 등록
+			 loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
+			/* vo.setUserId(loginVO.getAdminId()); */
+			 
+			 int ret  = userService.updateUser(vo);
+			 meesage = "sucess.common.update";
+			 if (ret > 0){
+				 model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+				 model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
+			 } else {
+				 throw new Exception();
+			 }
+		} catch (Exception e) {
+			meesage = "fail.common.update";
+			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));			
+		}
+		return model;
+	}
 }

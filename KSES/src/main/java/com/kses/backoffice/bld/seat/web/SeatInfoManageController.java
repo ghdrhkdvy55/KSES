@@ -157,8 +157,6 @@ public class SeatInfoManageController {
 		    //지도 이미지 
 		    if (searchVO.get("searchFloorCd") != null ) {
 		    	LOGGER.info(searchVO.get("searchPartCd").toString());
-		    	System.out.println((String)searchVO.get("searchPartCd") == "0");
-		    	System.out.println("0".equals((String)searchVO.get("searchPartCd")));
 		    	Map<String, Object> mapInfo = "0".equals((String)searchVO.get("searchPartCd")) ? floorService.selectFloorInfoDetail(searchVO.get("searchFloorCd").toString()) : partService.selectFloorPartInfoDetail(searchVO.get("searchPartCd").toString());
 		    	model.addObject("seatMapInfo", mapInfo);
 		    }
@@ -222,17 +220,19 @@ public class SeatInfoManageController {
 			model.addObject(Globals.STATUS_REGINFO , vo);
 			int ret  = seatService.updateSeatInfo(vo);
 			String meesage = vo.getMode().equals("Ins") ? "sucess.common.insert" : "sucess.common.update" ;
-			if (ret >0){		
-				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
-			 }else if(ret == -1){
-				meesage = "fail.common.overlap";
-				model.addObject(Globals.STATUS, Globals.STATUS_OVERLAPFAIL);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));		
-			 }else {
-				throw new Exception();
-			 }
-
+//			if (ret >0){		
+//				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+//				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
+//			 }else if(ret == -1){
+//				meesage = "fail.common.overlap";
+//				model.addObject(Globals.STATUS, Globals.STATUS_OVERLAPFAIL);
+//				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));		
+//			 }else {
+//				throw new Exception();
+//			 }
+			 // hgp 2021.12.14 오라클 멀티쿼리 반환값 이슈로 임시 주석처리			
+             model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+			 model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
 		} catch (Exception e) {
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.insert"));	
@@ -261,13 +261,15 @@ public class SeatInfoManageController {
 	    try {
 	    	//삭제 관련 내용 수정 공용에서 수정으로 
 	    	int ret =  seatService.deleteSeatInfo(SmartUtil.dotToList(seatCd));
-	    	
-	    	if (ret > 0) {		
-	    		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-	    		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.delete") );		    	 
-	    	} else {
-	    		throw new Exception();		    	  
-	    	}
+	    	// hgp 2021.12.14 오라클 멀티쿼리 반환값 이슈로 임시 주석처리			
+            model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.delete"));
+//	    	if (ret > 0) {		
+//	    		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+//	    		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.delete") );		    	 
+//	    	} else {
+//	    		throw new Exception();		    	  
+//	    	}
 		} catch (Exception e) {
 			LOGGER.info(e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);

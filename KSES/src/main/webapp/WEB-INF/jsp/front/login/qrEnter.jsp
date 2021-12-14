@@ -48,6 +48,12 @@
                     <div class="qr_info">
                         <ul>
                             <li class="timer">남은시간<span id="timeStamp">00:00</span></li>
+                            <!--//접종완료
+                            <li class="vacState"><span class="vacDone" >접종 완료</span></li>-->
+                            <!--접종완료//-->
+                            <!--//백신패스 만료-->
+                            <li class="vacState"><span class="vacNon"><img alt="" src="/resources/img/front/error_outline_black_24dp.svg">백신패스 만료</span></li>
+                            <!--백신패스 만료//-->
                             <li class="qr_tit">입장을 위한 QR코드</li>
                             <li>
                                 <p> QR코드 유출(양도)로 인한 책임은 본인에게 있으며, <br>  해당 QR코드는 인식 시 즉시 폐기됩니다. <br>    타인에게 양도시 본인의 출입이 금지될 수 있습니다.
