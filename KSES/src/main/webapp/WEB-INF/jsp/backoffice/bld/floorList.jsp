@@ -995,7 +995,7 @@
 		                                "   <td><a href='javascript:fn_FloopTopUp(&#34;" + obj[i].seat_cd + "&#34;)' class='up'></a>" +
 		                                "   <input type='text' id='top_" + obj[i].part_cd + "' value='" + obj[i].part_mini_top + "' onchange='top_chage(&#34;" + obj[i].part_cd + "&#34;, this.value)'>" +
 		                                "   <a href='javascript:fn_FloopTopDown(&#34;" + obj[i].part_cd + "&#34;)' class='down'></a></td>" +
-		                                "   <input type='text' id='left_" + obj[i].part_cd + "' value='" + obj[i].part_mini_left + "' onchange='left_chage(&#34;" + obj[i].part_cd + "&#34, this.value)'>" +
+		                                "   <td><input type='text' id='left_" + obj[i].part_cd + "' value='" + obj[i].part_mini_left + "' onchange='left_chage(&#34;" + obj[i].part_cd + "&#34, this.value)'></td>" +
 		                                "   <td><input type='text' id='width_" + obj[i].part_cd + "' style='width:80px;' value='" + obj[i].part_mini_width + "' onchange='width_chage(&#34;" + obj[i].part_cd + "&#34;, this.value)'></td>"+
 		                                "   <td><input type='text' id='height_" + obj[i].part_cd + "' style='width:80px;' value='" + obj[i].part_mini_height + "' onchange='height_chage(&#34;" + obj[i].part_cd + "&#34;, this.value)'></td>"+
 		                                "   <td><input type='text' id='rotate_" + obj[i].part_cd + "' style='width:80px;' value='" + obj[i].part_mini_rotate + "' onchange='rotate_chage(&#34;" + obj[i].part_cd + "&#34;, this.value)'></td>"+
@@ -1071,8 +1071,6 @@
 			 	                   	var left_id ='left_' + $('#'+get_id)[0].attributes.name.value;
 			 	                    $('#'+top_id).val(ui.position.top);
 			 	                   	$('#'+left_id).val(ui.position.left);
-			 	                   	
-			 	                   	
 	 	                    	}
 	 	                    });
 	 	                    //신규 추가 - 불필요한 소스
