@@ -58,7 +58,7 @@ p.info {background: unset; color: #de0e0e;}
 }
 input[type='radio'],
 input[type='radio']:checked {
-vertical-align: top;
+vertical-align: middle;
 }
 
 .refresh {    
@@ -900,3 +900,7 @@ padding-left: 5px;
 .save_mms textarea {cursor:pointer;}
 .ui-datepicker-div {width:300px!important;}
 #tb_fileInfo tr td:first-child {text-align:center;}
+
+/*qr출력*/
+.pint_a {float: right;}
+.qrPrint {width: 50%; margin: auto;}

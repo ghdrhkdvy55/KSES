@@ -6,14 +6,14 @@
 <script type="text/javascript" src="/resources/jqgrid/src/i18n/grid.locale-kr.js"></script>
 <script type="text/javascript" src="/resources/jqgrid/js/jquery.jqGrid.min.js"></script>
 <style type="text/css">
-.ui-jqgrid .ui-jqgrid-htable th div{
-	outline-style: none;
-	height: 30px;
-}
-.ui-jqgrid tr.jqgrow {
-	outline-style: none;
-	height: 30px;
-}
+	.ui-jqgrid .ui-jqgrid-htable th div{
+		outline-style: none;
+		height: 30px;
+	}
+	.ui-jqgrid tr.jqgrow {
+		outline-style: none;
+		height: 30px;
+	}
 </style>
 <!-- //contents -->
 <input type="hidden" id="mode" name="mode">
@@ -89,11 +89,10 @@
 		<div class="clear"></div>
 		
 		<div class="whiteBox">
-			<table id="mainGrid">
-    				
+			<table id="mainGrid">    				
 			</table>
-			<div id="pager" class="scroll" style="text-align:center;"></div>     
-			
+
+			<div id="pager" class="scroll" style="text-align:center;"></div>     			
 			<div id="paginate"></div>
 		</div>
 	</div>
@@ -388,6 +387,54 @@
           		</ul>
         	</div>
       	</div>
+  	</div>
+</div>
+
+<!--1214 QR출력 팝업-->
+<div data-popup="qr_print" class="popup">
+	<div class="pop_con">
+		<a class="button b-close">X</a>
+      	<h2 class="pop_tit">QR 출력</h2>
+      	<div class="pop_wrap">
+      		<div class="pint_a">
+      			<a href="">출력<img src="/resources/img/print_black_24dp.svg" alt="출력"></a>
+      		</div>
+      		<!--QR 영역-->
+      		<p class="qrPrint">
+      			<img src="/resources/img/qrcode.png" alt="">
+      		</p>
+			<!--QR 영역//-->
+
+			<table class="detail_table">
+				<tbody>
+					<tr>
+						<th>지점 </th>
+                      	<td>장안지점</td>
+                      	<th>구역 정보 </th>
+                      	<td>B001</td>
+                  	</tr>
+                  	<tr>
+                    	<th>좌석 정보</th>
+                    	<td>023</td>
+                    	<th>예약 번호</th>
+                    	<td>KSP7968</td>
+                  	</tr>
+                  	<tr>
+                    	<th>회원 구분 </th>
+                    	<td>일반 회원</td>
+                    	<th>아이디</th>
+                    	<td>id5678</td>
+                  	</tr>
+                  	<tr>
+                    	<th>이름 </th>
+                    	<td>홍길동</td>
+                    	<th>전화번호</th>
+                    	<td>010-1234-5678</td>
+                  	</tr>
+              	</tbody>
+			</table>
+		</div>
+      	<div class="clear"></div>
   	</div>
 </div>
 
