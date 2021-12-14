@@ -113,7 +113,7 @@
                 </tr>
                 <tr>
                   <th>관리등급</th>
-                  <td><select id="authorCd" onChange="jqGridFunc.fn_centerSearch()">
+                  <td><select id="selectAuthorCd" onChange="jqGridFunc.fn_centerSearch()">
                            <option value="">권한 선택</option>
 			               <c:forEach items="${authorCd}" var="authorCd">
 			                  <option value="${authorCd.author_code}">${authorCd.author_nm}</option>
@@ -338,7 +338,7 @@
        						       $("#sp_empDeptNm").html(obj.dept_nm);
 		       					   $("#sp_empClphn").html(obj.emp_clphn);
 		       					   $("#sp_empEmail").html(obj.emp_email);
-		       					   $("#authorCd").val(obj.author_cd);
+		       					   $("#selectAuthorCd").val(obj.author_cd);
 		       					   if (obj.author_cd != "ROLE_ADMIN" && obj.author_cd != "ROLE_SYSTEM"){
 		       						   $("#centerCd").prop('style','display:block');
 		       						   $("#centerCd").val(obj.center_cd);
@@ -363,7 +363,7 @@
 		        	$("#empNo").val('');
 				    $("#adminPwd").val('');
 				    $("#adminPwd2").val('');
-					$("#authorCd").val('');
+					$("#selectAuthorCd").val('');
 					$("#centerCd").val('');
 					$("#centerCd").prop('style','display:none');
 					$("#useAt_Y").prop("checked", true);
@@ -389,7 +389,8 @@
     			   }
 				   
 			   }
-			   if (any_empt_line_span("mng_admin_add", "authorCd", "권한을 선택해 주세요.","sp_message", "savePage") == false) return;
+/*         	   alert($("#selectAuthorCd").val()); */
+			   if (any_empt_line_span("mng_admin_add", "selectAuthorCd", "권한을 선택해 주세요.","sp_message", "savePage") == false) return;
 		       var commentTxt = ($("#mode").val() == "Ins") ?  "등록 하시겠습니까?" : "수정 하시겠습니까?" ;
 		       $("#id_ConfirmInfo").attr("href", "javascript:jqGridFunc.fn_update()");
        		   fn_ConfirmPop(commentTxt);
@@ -400,7 +401,7 @@
 		      var params = {   'adminId' : $("#adminId").val(),
 				    		    'empNo' : $("#empNo").val(),
 				    		    'adminPwd' : $("#adminPwd").val(), 
-				    		    'authorCd' : $("#authorCd").val(), 
+				    		    'authorCd' : $("#selectAuthorCd").val(), 
 				    		    'centerCd' : fn_emptyReplace($("#centerCd").val(),""), 
 				    		    'useYn' : fn_emptyReplace($("input[name='useYn']:checked").val(),"Y"),
 				    		    'mode' : $("#mode").val()
@@ -611,7 +612,7 @@
 	    	    	loadComplete	: function(data) {}
 	    	     }).trigger("reloadGrid");
 		 }, fn_centerSearch : function (){
-			 if ($("#authorCd").val() != "ROLE_SYSTEM" && $("#authorCd").val() != "ROLE_ADMIN" &&  $("#authorCd").val()  != ""){
+			 if ($("#selectAuthorCd").val() != "ROLE_SYSTEM" && $("#selectAuthorCd").val() != "ROLE_ADMIN" &&  $("#selectAuthorCd").val()  != ""){
 				 $("#centerCd").val('');
 				 $("#centerCd").prop('style','display:block');
 			 } else {

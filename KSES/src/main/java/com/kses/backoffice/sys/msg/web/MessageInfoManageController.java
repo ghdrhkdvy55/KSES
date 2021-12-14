@@ -490,7 +490,7 @@ public class MessageInfoManageController {
 				});
 				
 				//중복 제거 확인 필요 
-				msgService.insertMsgManage(info.stream().distinct().collect(Collectors.toList()));
+				msgService.insertMsgManage(info);
 			}
 			
    	        model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);

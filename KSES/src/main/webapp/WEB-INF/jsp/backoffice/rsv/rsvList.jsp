@@ -19,6 +19,7 @@
 <input type="hidden" id="mode" name="mode">
 <input type="hidden" id="resvSeq" name="resvSeq">
 <input type="hidden" id="resvDate" name="resvDate">
+<input type="hidden" id="authorCd" name="authorCd" value="${loginVO.authorCd}">
 <div class="breadcrumb">
 	<ol class="breadcrumb-item">
 		<li>고객 관리&nbsp;&gt;&nbsp;</li>
@@ -36,8 +37,8 @@
       		<div class="top">
       			<!--// Date Picker -->
 				<div>
-              		<p>지점</p>
-              		<select id="searchCenterCd">
+              		<p class="hideAuthor">지점</p>
+              		<select id="searchCenterCd" class="hideAuthor">
 						<option value="">지점 선택</option>
 							<c:forEach items="${centerInfo}" var="centerInfo">
 						<option value="${centerInfo.center_cd}">${centerInfo.center_nm}</option>
@@ -394,6 +395,12 @@
 <!-- popup// -->
 <script type="text/javascript">
 	$(document).ready(function() { 
+		if($("#authorCd").val() != "ROLE_ADMIN" && $("#authorCd").val() != "ROLE_SYSTEM") {
+			/* $(".hideAuthor").hide(); */
+			$(".top > div > p").eq(0).hide();
+			$(".top > div > select").eq(0).hide();
+		}
+		
 		jqGridFunc.setGrid("mainGrid");
 		var clareCalendar = {
 			monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],

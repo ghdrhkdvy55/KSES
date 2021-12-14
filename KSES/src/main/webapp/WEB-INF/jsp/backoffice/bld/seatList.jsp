@@ -21,6 +21,8 @@
 <input type="hidden" id="selectFloorCd" name="selectFloorCd">
 <input type="hidden" id="selectPartCd" name="selectPartCd">
 <input type="hidden" id="changeFloorCd" name="changeFloorCd">
+<input type="hidden" id="authorCd" name="authorCd" value="${loginVO.authorCd}">
+<input type="hidden" id="loginCenterCd" name="loginCenterCd" value="${loginVO.centerCd}">
 <div class="breadcrumb">
 	<ol class="breadcrumb-item">
 		<li>시설 관리&nbsp;&gt;&nbsp;</li>
@@ -163,7 +165,13 @@
 <!-- 좌석 추가 팝업 // -->
 <!-- poopup// -->
 <script type="text/javascript">
-	$(document).ready(function() { 
+	$(document).ready(function() {
+		if($("#authorCd").val() != "ROLE_ADMIN" && $("#authorCd").val() != "ROLE_SYSTEM") {
+			/* $(".hideAuthor").hide(); */
+			$(".top > p").eq(0).hide();
+			$(".top > select").eq(0).hide();
+		}
+		
 		jqGridFunc.setGrid("mainGrid");
 	});
     

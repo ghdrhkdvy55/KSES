@@ -83,6 +83,7 @@ public class CenterInfoManageController {
 		
 		List<Map<String, Object>> centerInfoComboList = centerInfoManageService.selectCenterInfoComboList();
 		
+		model.addObject("loginVO", loginVO);
 		model.addObject("centerInfoComboList", centerInfoComboList);
 		model.addObject("floorInfo", codeDetailService.selectCmmnDetailCombo("CENTER_FLOOR"));
 		model.addObject(Globals.STATUS_REGINFO , searchVO);
