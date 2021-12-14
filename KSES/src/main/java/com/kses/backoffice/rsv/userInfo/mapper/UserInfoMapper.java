@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.kses.backoffice.rsv.userInfo.vo.User;
+
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 
 @Mapper
@@ -15,5 +17,9 @@ public interface UserInfoMapper {
 	public Map<String, Object> selectUserDetail(String userId);
 	
 	public List<Map<String, Object>> selectCmmnDetailCombo (String code);
+	
+	public int updateUser(User vo);
+	
+	
 	
 }

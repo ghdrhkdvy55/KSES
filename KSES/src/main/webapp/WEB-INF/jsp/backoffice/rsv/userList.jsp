@@ -335,9 +335,9 @@
 						$("#sp_userBirthDy").html(obj.user_birth_dy);								
 						$("#sp_indvdlinfoAgreYn").html(obj.indvdlinfo_agre_yn);								
 						$("#sp_indvdlinfoAgreDt").html(obj.indvdlinfo_agre_dt);														
-						$("#vacntnRound").val(obj.vactnt_round);
-						$("#vacntnDvsn").val(obj.vactnt_dvsn);
-						$("#vacntnDt").val(obj.vactnt_dt);
+						$("#vacntnRound").val(obj.vacntn_round);
+						$("#vacntnDvsn").val(obj.vacntn_dvsn);
+						$("#vacntnDt").val(obj.vacntn_dt);
 					}else {
 					    common_modelCloseM(result.message, "rsv_user_add");
 					}
@@ -362,6 +362,7 @@
 			var url = "/backoffice/rsv/userUpdate.do";
 			var params = 
 			{ 	
+				'userId' : $("#sp_userId").html(),
 				'vacntnRound' : $("#vacntnRound").val(),
 				'vacntnDvsn' : $("#vacntnDvsn").val(),
 				'vacntnDt' : $("#vacntnDt").val()
