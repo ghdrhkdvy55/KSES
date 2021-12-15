@@ -214,7 +214,11 @@ margin-right: 6px;
 .detail_table input{vertical-align: top;}
 .detail_table tr th, .detail_table tr td{border-bottom: 1px solid #e2e2e2;}
 .detail_table tr th{background: #eee;text-align: center;font-weight: 400; padding: 8px 2rem;}
-.detail_table tr td {padding:8px 1rem;}
+.detail_table tr td {
+    padding: 8px 1rem;
+    max-width: 1000px;
+    overflow-x: auto;
+}
 
 .input_tit{width: 100%;}
 .input_text{
