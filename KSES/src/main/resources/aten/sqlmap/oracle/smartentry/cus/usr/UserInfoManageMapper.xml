@@ -84,25 +84,39 @@
 			USER_PHONE = #{userPhone, jdbcType=VARCHAR},
 			USER_DVSN = #{userDvsn, jdbcType=VARCHAR}, 
 			USER_SEX_MF = #{userSexMf, jdbcType=VARCHAR}, 
-			USER_BIRTH_DY = #{userBirthDy, jdbcType=VARCHAR}, 
+			USER_BIRTH_DY = #{userBirthDy, jdbcType=VARCHAR},
+			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(indvdlinfoAgreYn)">
+				INDVDLINFO_AGRE_YN = #{indvdlinfoAgreYn, jdbcType=VARCHAR},
+				INDVDLINFO_AGRE_DT = SYSDATE,
+			</if>
 			USER_CARD_ID = #{userCardId, jdbcType=VARCHAR}, 
             USER_CARD_NO = #{userCardNo, jdbcType=VARCHAR},
             USER_CARD_SEQ = #{userCardSeq, jdbcType=VARCHAR},
             LAST_UPDUSR_ID = #{userId},  
-			LAST_UPDT_DTM = SYSDATE  
+			LAST_UPDT_DTM = SYSDATE,  
+			LAST_LOGIN_DT = SYSDATE 
 		WHEN NOT MATCHED THEN
 		INSERT	
 		(
 			USER_ID, USER_NM, USER_PHONE, USER_DVSN, USER_CARD_ID,  
-			USER_CARD_NO, USER_CARD_SEQ, USER_SEX_MF, USER_BIRTH_DY, INDVDLINFO_AGRE_YN, 
-			INDVDLINFO_AGRE_DT, LAST_UPDUSR_ID, LAST_UPDT_DTM 
+			USER_CARD_NO, USER_CARD_SEQ, USER_SEX_MF, USER_BIRTH_DY, LAST_UPDUSR_ID, 
+			LAST_UPDT_DTM 
 		)
 		VALUES 
 		(
 			#{userId}, #{userNm}, #{userPhone, jdbcType=VARCHAR}, #{userDvsn, jdbcType=VARCHAR}, #{userCardId, jdbcType=VARCHAR}, 
-			#{userCardNo, jdbcType=VARCHAR}, #{userCardSeq, jdbcType=VARCHAR}, #{userSexMf, jdbcType=VARCHAR}, #{userBirthDy, jdbcType=VARCHAR}, #{indvdlinfoAgreYn, jdbcType=VARCHAR}, 
-			TO_CHAR(SYSDATE,'YYYYMMDD'), #{userId, jdbcType=VARCHAR}, SYSDATE
+			#{userCardNo, jdbcType=VARCHAR}, #{userCardSeq, jdbcType=VARCHAR}, #{userSexMf, jdbcType=VARCHAR}, #{userBirthDy, jdbcType=VARCHAR}, #{userId, jdbcType=VARCHAR}, 
+			SYSDATE
 		)		
+		
+		<selectKey resultType="com.kses.front.login.vo.UserLoginInfo" keyProperty="indvdlinfoAgreDt,userRcptYn,userRcptDvsn,userRcptNumber" order="AFTER">
+        	SELECT
+        		INDVDLINFO_AGRE_DT AS indvdlinfoAgreDt,
+        		USER_RCPT_YN AS userRcptYn,
+        		USER_RCPT_DVSN AS userRcptDvsn,
+        		USER_RCPT_NUMBER AS userRcptNumber 
+        	FROM TEST_USER_INFO WHERE USER_ID = #{userId, jdbcType=VARCHAR}   
+    	</selectKey>    
 	</insert>
 
 	<update id="updateUserInfo">

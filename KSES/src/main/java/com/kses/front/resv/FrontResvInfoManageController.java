@@ -82,7 +82,7 @@ public class FrontResvInfoManageController {
 			HttpSession httpSession = request.getSession(true);
 			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
 			
-			if(userLoginInfo ==  null) {
+			if(userLoginInfo == null) {
 				userLoginInfo = new UserLoginInfo();
 				userLoginInfo.setUserDvsn("USER_DVSN_2");
 				httpSession.setAttribute("userLoginInfo", userLoginInfo);
@@ -105,7 +105,6 @@ public class FrontResvInfoManageController {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
-			
 			List<Map<String, Object>> resultList = centerService.selectResvCenterList(resvDate);
 			model.addObject(Globals.JSON_RETURN_RESULTLISR, resultList);
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
@@ -128,10 +127,11 @@ public class FrontResvInfoManageController {
 			HttpSession httpSession = request.getSession(true);
 			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
 			
-			if(userLoginInfo ==  null) {
+			if(userLoginInfo == null) {
 				userLoginInfo = new UserLoginInfo();
 				userLoginInfo.setUserDvsn("USER_DVSN_2");
 				httpSession.setAttribute("userLoginInfo", userLoginInfo);
+				model.setViewName("redirect:/front/main.do");
 			}
 			
 			String centerCd = (String)params.get("centerCd");
@@ -188,21 +188,25 @@ public class FrontResvInfoManageController {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
 			String seasonCd = seasonService.selectCenterSeasonCd(params);
-			LOGGER.debug(seasonCd);
-			params.put("seasonCd", seasonCd);
+			List<Map<String, Object>> resultList = null;
 			
-			List<Map<String, Object>> resultList = StringUtils.isBlank(seasonCd) ? seatService.selectReservationSeatList(params) : seasonSeatService.selectReservationSeasonSeatList(params);
-	    	
+			if(StringUtils.isBlank(seasonCd)) {
+				resultList = seatService.selectReservationSeatList(params);
+			} else {
+				resultList = seasonSeatService.selectReservationSeasonSeatList(params);
+				params.put("seasonCd", seasonCd);
+				model.addObject("seasonCd", seasonCd);
+			}
+			
 			Map<String, Object> mapInfo = floorPartService.selectFloorPartInfoDetail(params.get("partCd").toString());
-	    	model.addObject("seatMapInfo", mapInfo);
-			
+	    	
+			model.addObject("seatMapInfo", mapInfo);
 			model.addObject(Globals.JSON_RETURN_RESULTLISR, resultList);
-			
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		} catch(Exception e) {
-			LOGGER.error("selectRsvPartListAjax : " + e.toString());
+			LOGGER.error("selectRsvSeatListAjax : " + e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg")); 
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 		}
 		return model;
 	}
@@ -219,7 +223,7 @@ public class FrontResvInfoManageController {
 			HttpSession httpSession = request.getSession(true);
 			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
 			
-			if("USER_DVSN_1".equals(vo.getResvUserDvsn()) && userLoginInfo == null) {
+			if(userLoginInfo == null) {
 				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
 				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
 				return model;
@@ -227,9 +231,6 @@ public class FrontResvInfoManageController {
 				vo.setUserId(userLoginInfo.getUserId());
 			}
 			
-			/*resvService.resvValidCheck();*/
-			
-			// resvService.resvInfoValidCheck(vo);
 			int ret = resvService.updateUserResvInfo(vo);
 			if(ret > 0) {
 				// 방금 예약한 정보 조회 (지점,층,구역,좌석 명칭)
@@ -244,6 +245,7 @@ public class FrontResvInfoManageController {
 					user.setUserSexMf("N");
 					user.setUserPhone(vo.getResvUserClphn());
 					user.setUserNm(vo.getResvUserNm());
+					user.setIndvdlinfoAgreYn(vo.getResvIndvdlinfoAgreYn());
 					user.setMode("Ins");
 					
 					userService.updateUserInfo(user);
@@ -305,11 +307,11 @@ public class FrontResvInfoManageController {
 		return model;
 	}
 	
-	@RequestMapping (value="checkUserResvInfo.do")
-	public ModelAndView checkUserResvInfo(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo, 
-											@RequestBody Map<String, Object> params,
-											HttpServletRequest request,
-											BindingResult result) throws Exception {
+	@RequestMapping (value="resvInfoDuplicateCheck.do")
+	public ModelAndView resvInfoDuplicateCheck(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo, 
+												@RequestBody Map<String, Object> params,
+												HttpServletRequest request,
+												BindingResult result) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
@@ -327,7 +329,7 @@ public class FrontResvInfoManageController {
 			}
 			
 			params.put("userId", userLoginInfo.getUserId());
-			int resvCount = resvService.checkUserResvInfo(params);
+			int resvCount = resvService.resvInfoDuplicateCheck(params);
 	    	
 	    	model.addObject("resvCount", resvCount);
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);

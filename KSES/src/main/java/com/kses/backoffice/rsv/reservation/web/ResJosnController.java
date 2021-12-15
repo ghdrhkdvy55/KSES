@@ -45,8 +45,6 @@ import com.popbill.api.PopbillException;
 import com.popbill.api.CBIssueResponse;
 import com.popbill.api.cashbill.Cashbill;
 
-
-
 @RestController
 @RequestMapping("/backoffice/rsv")
 public class ResJosnController{
@@ -110,10 +108,12 @@ public class ResJosnController{
 					 encryptType = "SHA-512";
 					 password = jsonObject.get("User_Pw").toString();
 					 jsonObject.put("User_Pw", SmartUtil.encryptPassword(password, encryptType));
+					 LOGGER.debug("1 : " + SmartUtil.encryptPassword(password, encryptType));
 				 } else {
 					 encryptType = "SHA-256";
 					 password = jsonObject.get("Card_Pw").toString();
 					 jsonObject.put("Card_Pw", SmartUtil.encryptPassword(password, encryptType));
+					 LOGGER.debug("2 : " + SmartUtil.encryptPassword(password, encryptType));
 				 }
 
 				 node = SmartUtil.requestHttpJson(Url,jsonObject.toJSONString(), "SPEEDLOGIN", "SPEEDON", "KSES" );
@@ -132,7 +132,9 @@ public class ResJosnController{
 					 
 					 user.setMode("Ins");
 					 userService.updateUserInfo(user);
-					 //메세지 전송 확인 				 
+					 
+					 // 최초 로그인시 개인정보 동의를 위한 고객정보 전송
+					 model.addObject("userInfo", user);
 				 } else {
 					  for (speedon direction : speedon.values()) {
                          if (direction.getCode().equals(node.get("Error_Cd").asText())) {
@@ -677,10 +679,6 @@ public class ResJosnController{
 		// 가맹점 사업자번호
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-		
-		
-		
-	  
 
 	    try {
 	    	String corpNum = propertiesService.getString("Company.Number");
@@ -689,7 +687,6 @@ public class ResJosnController{
 	    	
 	    	String msgKey = tranGubun.equals("bill") ? resvSeq+"_001" :resvSeq+"_002";
 	    	String msgTradType = tranGubun.equals("bill") ? "승인거래" : "취소거래";
-	    	
 	    	
 	  	    // 메모
 	  	    String Memo = "현금영수증 즉시발행 메모";
@@ -741,9 +738,6 @@ public class ResJosnController{
 	  	    // 봉사료, 숫자만 가능
 	  	    cashbill.setServiceFee("0");
 
-	  	    
-
-
 	  	    // 발행자 사업자번호, '-'제외 10자리
 	  	    cashbill.setFranchiseCorpNum(corpNum);
 
@@ -761,7 +755,6 @@ public class ResJosnController{
 
 	  	    // 발행안내 문자 전송여부
 	  	    cashbill.setSmssendYN(false);
-
 
 	  	    // 거래처 고객명
 	  	    cashbill.setCustomerName( SmartUtil.NVL(resInfo.get("user_nm"), "0").toString());

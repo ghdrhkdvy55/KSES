@@ -78,9 +78,9 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	}
 	
 	@Override
-	public int checkUserResvInfo(Map<String, Object> params) throws Exception {
+	public int resvInfoDuplicateCheck(Map<String, Object> params) throws Exception {
 		// TODO Auto-generated method stub
-		return resvMapper.checkUserResvInfo(params);
+		return resvMapper.resvInfoDuplicateCheck(params);
 	}
 	
 	@Override

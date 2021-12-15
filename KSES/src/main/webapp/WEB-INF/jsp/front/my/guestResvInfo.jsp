@@ -107,7 +107,7 @@
 				<div class="contents">
 					<ul>
 						<li class="home"><a href="javascript:fn_pageMove('regist','/front/main.do');">home</a><span>HOME</span></li>
-						<li class="rsv"><a href="javascript:fn_moveReservation();">rsv</a><span>입장예약</span></li>
+						<li class="rsv"><a href="/front/rsvCenter.do">rsv</a><span>입장예약</span></li>
 						<li class="my active"><a href="javascript:fn_pageMove('regist','/front/mypage.do');">my</a><span>마이페이지</span></li>
 		            </ul>
 				<div class="clear"></div>

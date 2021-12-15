@@ -36,7 +36,7 @@
 							AND A.RESV_END_DT BETWEEN #{params.searchFrom} AND #{params.searchTo}
 						</when>
 						<otherwise>
-							 AND TO_CHAR(TO_DATE(A.RESV_REQ_DATE,'YYYY-MM-DD HH24:MI'),'YYYY-MM-DD HH24:MI') BETWEEN #{params.searchFrom} AND #{params.searchTo}
+							AND TO_CHAR(TO_DATE(A.RESV_REQ_DATE,'YYYY-MM-DD HH24:MI'),'YYYY-MM-DD HH24:MI') BETWEEN #{params.searchFrom} AND #{params.searchTo}
 						</otherwise>
 					</choose>
 				</if>
@@ -248,12 +248,19 @@
     </select>
     
 	<!-- 회원 현재 예약일자에 대한 예약 유무 조회 -->
-	<select id="checkUserResvInfo" resultType="int">
+	<select id="resvInfoDuplicateCheck" resultType="int">
 		SELECT NVL(COUNT(*),0) AS CNT
 		FROM TSER_RESV_INFO_I A
-		WHERE A.USER_ID = #{params.userId}
-		AND CONCAT(#{params.resvDate}, TO_CHAR(SYSDATE,'HH24MI')) BETWEEN CONCAT(RESV_START_DT, RESV_START_TM) AND CONCAT(RESV_END_DT, RESV_END_TM)
-		AND A.RESV_STATE = 'RESV_STATE_1'
+		<choose>
+			<when test="@org.apache.commons.lang3.StringUtils@equals(params.userDvsn,'USER_DVSN_1')">
+				WHERE (A.USER_ID = #{params.userId} OR A.RESV_USER_CLPHN = #{params.userPhone}) 
+			</when>
+			<when test="@org.apache.commons.lang3.StringUtils@equals(params.userDvsn,'USER_DVSN_2')">
+				WHERE A.USER_ID = #{params.userPhone}
+			</when>
+		</choose>
+		AND A.RESV_END_DT = #{params.resvDate}
+		AND A.RESV_STATE NOT IN ('RESV_STATE_4')
     </select>  
     
 	<!-- 예약 고객 아이디 조회 -->

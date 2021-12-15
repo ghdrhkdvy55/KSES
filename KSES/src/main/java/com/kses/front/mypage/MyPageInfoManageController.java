@@ -171,22 +171,27 @@ public class MyPageInfoManageController {
 			HttpSession httpSession = request.getSession(true);
 			UserLoginInfo userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
 			
-			if(userLoginInfo == null) {
-				userLoginInfo = new UserLoginInfo();
-				userLoginInfo.setUserDvsn("USER_DVSN_2");
-				httpSession.setAttribute("userLoginInfo", userLoginInfo);
-				
+			if(userLoginInfo == null) {				
 				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
 				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
 				return model;
-			} 
+			}
 			
 			userInfo.setUserId(userLoginInfo.getUserId());
+			int ret = userService.updateUserRcptInfo(userInfo);
 			
-			int userRcptInfo = userService.updateUserRcptInfo(userInfo);
 			
-			model.addObject("userRcptInfo", userRcptInfo);
-			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+			if(ret > 0) {
+				userLoginInfo.setUserRcptYn(userInfo.getUserRcptYn());
+				userLoginInfo.setUserRcptDvsn(userInfo.getUserRcptDvsn());
+				userLoginInfo.setUserRcptNumber(userInfo.getUserRcptNumber());
+				
+				httpSession.setAttribute("userLoginInfo", userLoginInfo);
+				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.insert"));
+			} else {
+				throw new Exception();
+			}
 		} catch(Exception e) {
 			LOGGER.error("selectFrontUserRcptInfo : " + e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);

@@ -42,13 +42,13 @@
 <body>
 	<form:form name="regist" commandName="regist" method="post" action="/front/rsvSeat.do">
 	<input type="hidden" name="isReSeat" id="isReSeat" value="${resvInfo.isReSeat}">
-	
 	<input type="hidden" name="userId" id="userId" value="${sessionScope.userLoginInfo.userId}">
 	<input type="hidden" name="userDvsn" id="userDvsn" value="${sessionScope.userLoginInfo.userDvsn}">
 	<input type="hidden" name="resvUserNm" id="resvUserNm" value="">
 	<input type="hidden" name="resvSeq" id="resvSeq" value="">
 	<input type="hidden" name="resvDate" id="resvDate" value="${resvInfo.resvDate}">	
 	
+	<input type="hidden" name="centerCd" id="seasonCd">
 	<input type="hidden" name="centerCd" id="centerCd" value="${resvInfo.centerCd}">
 	<input type="hidden" name="partCd" id="partCd" value="">
 	<input type="hidden" name="floorCd" id="floorCd" value="">
@@ -84,7 +84,7 @@
                     <h3>
 						선택한 지점 
                         <span class="change_br">
-                            <a href="javascript:fn_moveReservation();"><img src="/resources/img/front/refresh.svg" alt="change">지점변경</a>
+                            <a href="/front/rsvCenter.do"><img src="/resources/img/front/refresh.svg" alt="change">지점변경</a>
                         </span>
                     </h3>
                     <div class="branch">
@@ -165,11 +165,11 @@
                             </ul>
                             <ul id="ENTRY_DVSN_1_cash_area" class="cash_refund">
                                 <li>
-                                    <input class="cash_radio" type="radio" checked name="ENTRY_DVSN_1_rcpt_dvsn" id="ENTRY_DVSN_1_rcpt_dvsn1" value="RCPT_DVSN1">
+                                    <input class="cash_radio" type="radio" checked name="ENTRY_DVSN_1_rcpt_dvsn" id="ENTRY_DVSN_1_rcpt_dvsn1" value="RCPT_DVSN_1">
                                     <label for="ENTRY_DVSN_1_rcpt_dvsn1"><span></span>소득 공제용</label>
                                 </li>
                                 <li>
-                                    <input class="cash_radio" type="radio" name="ENTRY_DVSN_1_rcpt_dvsn" id="ENTRY_DVSN_1_rcpt_dvsn2" value="RCPT_DVSN2">
+                                    <input class="cash_radio" type="radio" name="ENTRY_DVSN_1_rcpt_dvsn" id="ENTRY_DVSN_1_rcpt_dvsn2" value="RCPT_DVSN_2">
                                     <label for="ENTRY_DVSN_1_rcpt_dvsn2"><span></span>지출 증빙용</label>
                                 </li>
                                 <li><input type="text" id="ENTRY_DVSN_1_cash_number" onkeypress="onlyNum();" placeholder="'-'없이 입력해 주세요."></li>
@@ -310,11 +310,11 @@
 		                            </ul>
                                     <ul id="ENTRY_DVSN_2_cash_area" class="cash_refund">
                                         <li>
-                                            <input class="cash_radio" type="radio" checked name="ENTRY_DVSN_2_rcpt_dvsn" id="ENTRY_DVSN_2_rcpt_dvsn1" value="RCPT_DVSN1">
+                                            <input class="cash_radio" type="radio" checked name="ENTRY_DVSN_2_rcpt_dvsn" id="ENTRY_DVSN_2_rcpt_dvsn1" value="RCPT_DVSN_1">
                                             <label for="ENTRY_DVSN_2_rcpt_dvsn1"><span></span>소득 공제용</label>
                                         </li>
                                         <li>
-                                            <input class="cash_radio" type="radio" name="ENTRY_DVSN_2_rcpt_dvsn" id="ENTRY_DVSN_2_rcpt_dvsn2" value="RCPT_DVSN2">
+                                            <input class="cash_radio" type="radio" name="ENTRY_DVSN_2_rcpt_dvsn" id="ENTRY_DVSN_2_rcpt_dvsn2" value="RCPT_DVSN_2">
                                             <label for="ENTRY_DVSN_2_rcpt_dvsn2"><span></span>지출 증빙용</label>
                                         </li>
                                         <li><input type="text" id="ENTRY_DVSN_2_cash_number" onkeypress="onlyNum();" placeholder="'-'없이 입력해 주세요."></li>
@@ -337,7 +337,7 @@
             <div class="contents">
                 <ul>
                     <li class="home"><a href="javascript:fn_pageMove('regist','/front/main.do');">home</a><span>HOME</span></li>
-                    <li class="rsv active"><a href="javascript:fn_moveReservation();">rsv</a><span>입장예약</span></li>
+                    <li class="rsv active"><a href="/front/rsvCenter.do">rsv</a><span>입장예약</span></li>
                     <li class="my"><a href="/front/mypage.do">my</a><span>마이페이지</span></li>
                 </ul>
                 <div class="clear"></div>
@@ -478,12 +478,18 @@
 
     <!--층 선택 시 show/hide-->
     <script>
-    	var isMember = $("#userDvsn").val() == "USER_DVSN_1" ? true : false;
+    	var isMember = "${sessionScope.userLoginInfo.userDvsn}" == "USER_DVSN_1" ? true : false;
+
+    	var certificationYn = false;
+    	var certificationName = isMember ? "${sessionScope.userLoginInfo.userNm}" : "";
+    	var certificationNumber = isMember ? "${sessionScope.userLoginInfo.userPhone}" : "";
+    	
+    	var userRcptYn = isMember ? "${sessionScope.userLoginInfo.userRcptYn}" : "";
+    	var userRcptDvsn = isMember ? "${sessionScope.userLoginInfo.userRcptDvsn}" : "";
+    	var userRcptNumber = isMember ? "${sessionScope.userLoginInfo.userRcptNumber}" : "";
+    	
     	var pinchzoom = "";
     	var pinchInit = true;
-    	var certificationYn = false;
-    	var certificationName = "";
-    	var certificationNumber = "";
     	var center ="";
     	
 		$(document).ready(function() {
@@ -596,6 +602,12 @@
 					$("input:checkbox[id='" + enterDvsn + "_bill_confirm']").prop("checked", false);
 					
 					if(isMember) {
+						if(userRcptYn == "Y") {
+							$("input:checkbox[id='" + enterDvsn + "_bill_confirm']").trigger("click");
+							$("input:radio[name='" + enterDvsn + "_rcpt_dvsn'][value='" + userRcptDvsn +"']").prop("checked", true);	  
+							$("#" + enterDvsn + "_cash_number").val(userRcptNumber);							
+						}
+
 						$(".nonMemberArea").hide();
 					} else {
 						certificationYn = false;
@@ -646,7 +658,7 @@
 				    		    });
 				    		}
 				            
-							if (result.resultlist.length > 0){
+							if (result.resultlist.length > 0) {
 								$("#selectPartCd").empty();
 								$("#selectPartCd").append("<option value=''>구역 선택</option>");
 								
@@ -742,6 +754,9 @@
 				    		// 좌석 GUI HTML세팅(PinchZoom)
 				    		seatService.fn_initPinch("seat");
 				    		
+				    		// 시즌유무확인
+				    		result.seasonCd != null ? $("#seasonCd").val(result.seasonCd) : $("#seasonCd").val("");
+				    		
 				    		if (result.seatMapInfo != null) {
 				    		    var img = result.seatMapInfo.part_map1;
 				    		    $('.part_map').css({
@@ -773,6 +788,8 @@
 				    		            "top": fn_NVL(obj[i].seat_top) + "px",
 				    		            "left": fn_NVL(obj[i].seat_left) + "px"
 				    		        });
+				    		        
+				    		        $("#" + fn_NVL(obj[i].seat_cd)).data("seat-paycost", obj[i].pay_cost);
 				    		    }
 				    		    
 				    		    var seatList = $("#area_Map li");
@@ -851,8 +868,6 @@
 
 					var el = document.querySelector('.part_map');
 					var pinchzoom = new PinchZoom.default(el, {});
-					
-
 				} else {
 					var part_select = $("#part_select");
 					part_select.empty();
@@ -902,6 +917,8 @@
 			},
 			fn_checkForm : function() {
 				var enterDvsn = $("#enterDvsn").val();
+				var url = "/front/updateUserResvInfo.do";
+				var params = {};
 
 				if(enterDvsn != "ENTRY_DVSN_1") {
 					if($("#seatCd").val() == "") {
@@ -911,7 +928,7 @@
 				}
 				
 				if(!isMember && !certificationYn){
-					fn_openPopup("인증을 진행해주세요", "red", "ERROR", "확인", "");
+					fn_openPopup("본인인증을 진행해주세요", "red", "ERROR", "확인", "");
 					return;					
 				}
 				
@@ -925,17 +942,32 @@
 					return;
 				}
 				
- 				var url = "/front/updateUserResvInfo.do";
-				var params = {
+				// 동일자 예약 중복 체크
+				params = {
+					"userDvsn" : $("#userDvsn").val(), 
+					"userId" : $("#userId").val(), 
+					"userPhone" : certificationNumber,
+					"resvDate" : $("#resvDate").val()
+				};
+				
+				if(fn_resvDuplicateCheck(params)) {
+					fn_openPopup("현재 예약일자에 이미 예약정보가 존재합니다.", "red", "ERROR", "확인", "");
+					return;	
+				}
+				
+				// 예약 유효성 검사 추가
+				
+				params = {
 					"mode" : "Ins",
 					"resvDate" : $("#resvDate").val(),
 					"resvUserDvsn" : $("#userDvsn").val(),
 					"resvEntryDvsn" : enterDvsn,
+					"seasonCd" : $("#seasonCd").val(),
 					"centerCd" : $("#centerCd").val(),
 					"floorCd" : $("#floorCd").val(),
 					"partCd" : $("#partCd").val(),
 					"seatCd" : $("#seatCd").val(),
-					"checkDvsn" : "ALL",
+					"resvPayCost" : $("#seatCd").data("seat-paycost"),
 					"resvUserNm" : certificationName,
 					"resvUserClphn" : certificationNumber,
 					"resvUserAskYn" : $("input:checkbox[id='" + enterDvsn + "_qna_check']").val(),
@@ -973,12 +1005,14 @@
 								
 				    			$("#rsv_done").bPopup();
 				    		}
+				    	} else if(result.status == "LOGIN FAIL") {
+				    		fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
 				    	} else {
-				    		alert("ERROR : " + result.status);	
+				    		fn_openPopup("ERROR : " + result.status, "red", "ERROR", "확인", "/front/main.do");
 				    	}
 					},
 					function(request) {
-						alert("ERROR : " + request.status);
+						fn_openPopup("ERROR : " + result.status, "red", "ERROR", "확인", "/front/main.do");
 					}
 				);	
 			},
@@ -1007,6 +1041,8 @@
 					$("#seatCd").val("");
 					$(".sel_seat_nm").html("");
 				}
+				
+				$("#seasonCd").val("");
 			}
 		}  
     </script>
