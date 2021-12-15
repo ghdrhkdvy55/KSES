@@ -62,6 +62,7 @@
                                 <ul id="user_info_bottom_area">
 
                                     <li class="rsv_cancel"><a data-popup-open="rsv_cancel_pop">예약취소</a></li>
+                                    <li class="closeBtn"><a data-popup-open="">닫기</a></li>
 
                                 </ul>
                             </div>
@@ -204,7 +205,7 @@
 	<!-- // 예약취소 팝업 -->
     <div id="cancel_rsv_info" class="popup">
       	<div class="pop_con rsv_popup">
-          	<a class="button b-close">X</a>
+          	<!-- 닫기버튼으로 대체 <a class="button b-close">X</a>-->
           	<div class="pop_wrap">
               	<h4>예약 취소 하시겠습니까?</h4>
               	<p>15시 까지 미 입장시 입장예약이 취소됩니다.</p>
@@ -235,8 +236,12 @@
                 	</li> 
                	</ul>
           	</div>
+          	<!--1215 닫기버튼 추가 -->
           	<div class="cancel_btn">
-              	<a href="" id="resvCancleBtn" class="grayBtn">예약취소</a>
+          		<ul>
+          			<li><a href="" id="resvCancleBtn" class="grayBtn">예약취소</a></li>
+          			<li><a href="" id="resvCancleBtn" class="dislBtn">닫기</a></li>
+          		</ul>              	
           	</div>
           	<div class="clear"></div>
       	</div>
@@ -417,8 +422,8 @@
 								//백신접종정보 표출
 								if(result.vacntnInfo != null) {
 						    		switch (result.vacntnInfo.pass_yn) {
-										case "Y" : $(".vacStat span").addClass("thVac").html("백신접종 완료상태입니다."); break;
-										case "N" : $(".vacStat span").addClass("nonVac").html("백신패스 만료상태입니다."); break;  
+										case "Y" : $(".vacStat span").addClass("thVac").html("접종 완료상태"); break;
+										case "N" : $(".vacStat span").addClass("nonVac").html("백신패스 만료상태"); break;  
 										default: $(".vacStat span").addClass("nonVac").html("접종정보 없음"); break;
 									}	
 								}

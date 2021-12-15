@@ -1452,6 +1452,8 @@ h2.guide_tit {
     right: 1rem;
 }
 .rsv_cancel a{padding: 10px 20px; background: #545454; color: #fff;}
+.closeBtn
+
 .today_date {font-weight: 900;}
 
 /*다시앉기*/
@@ -1695,6 +1697,7 @@ h2.guide_tit {
   background:#FFD154 ; 
   border-radius: 8px; 
 }
+.certify a {color:#000}
 .certify img {vertical-align: sub; margin-right: 1rem;}
 .covid19_qna {padding: 1rem; border: 1px solid #e0e0e0; margin-top: 2rem; font-size: 0.8em; color: #878787;}
 .covid19_qna p {color: #000; margin-bottom: 1rem; text-align: center;}
@@ -1887,7 +1890,7 @@ ul.tabs li{
     margin-left: 1.8rem;
     font-size: 1em;
 }
-.my_wrap {font-size: 1.7em;}
+.my_wrap {font-size: 1.7em; padding:0 2rem;}
 .mypage_name span {margin-right: 1rem;}
 .my_box {border-bottom: 5px solid #EAEAEA; padding: 3rem 0}
 .my_box h1 {font-size: 1.3em; line-height: 1em; text-align: center;}
@@ -2095,6 +2098,7 @@ ul.tabs li{
     margin-top:4rem;
     text-align: center;
 }
+.cancel_btn li {width:48%; display:inline-block}
 .cancel_btn a {
     color: #fff;
     padding: 2rem 0;
@@ -2102,6 +2106,7 @@ ul.tabs li{
     border-radius: 8px;
     display:block;
 }
+.cancel_btn li .dislBtn  {background: #c0c0c0;}
 .summit_btn {
 	margin-top:4rem;
     text-align: center;
@@ -2137,6 +2142,7 @@ ul.tabs li{
     background: #808080;
     border-radius: 8px;
 }
+
 .qr_info {margin-top: 7rem;}
 .qr_info p {font-size: .9em; color: #888888}
 .qr_tit {font-weight: 600; margin: 2rem 0}
