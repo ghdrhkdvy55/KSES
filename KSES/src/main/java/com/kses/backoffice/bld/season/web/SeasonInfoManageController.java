@@ -17,27 +17,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.kses.backoffice.bas.code.service.EgovCcmCmmnDetailCodeManageService;
-import com.kses.backoffice.bas.progrm.vo.ProgrmInfo;
 import com.kses.backoffice.bld.center.service.CenterInfoManageService;
-import com.kses.backoffice.bld.center.vo.CenterInfo;
 import com.kses.backoffice.bld.floor.service.FloorInfoManageService;
 import com.kses.backoffice.bld.floor.service.FloorPartInfoManageService;
 import com.kses.backoffice.bld.season.service.SeasonInfoManageService;
 import com.kses.backoffice.bld.season.service.SeasonSeatInfoManageService;
 import com.kses.backoffice.bld.season.vo.SeasonInfo;
 import com.kses.backoffice.bld.season.vo.SeasonSeatInfo;
-import com.kses.backoffice.bld.seat.vo.SeatInfo;
-import com.kses.backoffice.sym.log.annotation.NoLogging;
 import com.kses.backoffice.util.SmartUtil;
-import com.kses.backoffice.util.service.UniSelectInfoManageService;
-import com.kses.backoffice.util.service.fileService;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
@@ -58,21 +50,12 @@ public class SeasonInfoManageController {
 	
 	@Autowired
     protected EgovPropertyService propertiesService;
-	
-	@Autowired
-	private EgovCcmCmmnDetailCodeManageService cmmnDetailService;
-	
-    @Autowired
-	private fileService uploadFile;
     
 	@Autowired
 	private CenterInfoManageService centerInfoManageService;
 	
 	@Autowired
 	private SeasonInfoManageService seasonService; 
-	
-	@Autowired
-	private UniSelectInfoManageService uniService;
 	
 	@Autowired
 	private FloorInfoManageService floorService;
@@ -226,7 +209,7 @@ public class SeasonInfoManageController {
 				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
 				return model;	
 		    }	
-			searchVO.put("firstIndex", 1);
+			searchVO.put("firstIndex", 0);
 			searchVO.put("recordCountPerPage", 3000);
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			List<Map<String, Object>> seasonList = seasonSeatService.selectSeasonSeatInfoList(searchVO);

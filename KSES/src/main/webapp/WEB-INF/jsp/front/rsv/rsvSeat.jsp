@@ -725,7 +725,8 @@
 									
 				var url = "/front/rsvSeatListAjax.do";
 				var params = 
-				{
+				{	
+					"centerCd" : $("#centerCd").val(),
 					"partCd" : $("#partCd").val(),
 					"resvDate" : $("#resvDate").val()
 				}

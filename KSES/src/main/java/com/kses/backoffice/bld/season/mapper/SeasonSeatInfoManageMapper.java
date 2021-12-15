@@ -14,6 +14,8 @@ public interface SeasonSeatInfoManageMapper {
 	public List<Map<String, Object>> selectSeasonSeatInfoList(@Param("params") Map<String, Object> params);
 	
 	public Map<String, Object> selectSeasonSeatInfoDetail(String seasonSeatCd);
+	
+	public List<Map<String, Object>> selectReservationSeasonSeatList(@Param("params") Map<String, Object> params);
 		
 	public int updateSeasonSeatInfo(SeasonSeatInfo vo);
 	

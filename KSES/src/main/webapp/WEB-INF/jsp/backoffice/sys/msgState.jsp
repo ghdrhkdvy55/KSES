@@ -980,7 +980,6 @@
 	   					   location.href="/backoffice/login.do";
 	   				   }else if (result.status == "SUCCESS"){
 	   					   //총 게시물 정리 하기'
-	   					   alert(result.message);
 	   					common_popup(result.message, "Y", "");
 	   				   }else if (result.status == "FAIL"){
 	   					   common_popup("저장 도중 문제가 발생 하였습니다.", "N", "");

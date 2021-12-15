@@ -16,9 +16,9 @@
 				DECODE(A.PART_CD,'0','구역 미사용', D.PART_NM) AS PART_NM
 			FROM TSEB_SEAT_INFO_D A, TSEB_CENTER_INFO_M B, TSEB_FLOOR_INFO_M C, TSEB_PART_INFO_D D, TSEB_SEASON_STINFO_D E
 			WHERE A.CENTER_CD = B.CENTER_CD  
-			      AND A.FLOOR_CD = C.FLOOR_CD
-			      AND A.SEAT_CD = E.SEAT_CD
-			      AND A.PART_CD = D.PART_CD(+)
+			AND A.FLOOR_CD = C.FLOOR_CD
+			AND A.SEAT_CD = E.SEAT_CD
+			AND A.PART_CD = D.PART_CD(+)
 			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
 				AND ( A.SEAT_NM LIKE '%' || #{params.searchKeyword} ||'%' OR  E.SEASON_SEAT_LABEL LIKE '%' || #{params.searchKeyword} ||'%')
 			</if>	
@@ -33,7 +33,7 @@
 			</if>
 			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.seasonCd)">
 				AND E.SEASON_CD = #{params.seasonCd}
-			</if>		
+			</if>			
 		) TB  
 		WHERE RNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}
 		ORDER BY TB.SEASON_SEAT_CD DESC  	 	    
@@ -47,46 +47,58 @@
             B.SEASON_SEAT_TOP, B.SEASON_SEAT_LEFT, B.SEASON_SEAT_LABEL, B.SEASON_SEAT_ORDER
 		FROM TSEB_SEAT_INFO_D A, TSEB_SEASON_STINFO_D B
 		WHERE A.SEAT_CD = B.SEAT_CD
-		      AND B.SEASON_SEAT_CD = #{seasonSeatCd}
+		AND B.SEASON_SEAT_CD = #{seasonSeatCd}
     </select>
     
-    <insert id="insertSeatInfo" >
-	{CALL
-		DECLARE
-		BEGIN
-		
-		<selectKey resultType="String" keyProperty="seatCd" order="BEFORE">
-        	<choose>
-           		<when test='params.partCd == "0"'>
-            		SELECT FN_SEATCODE(#{floorCd},'FLOOR') AS seatCd
-				</when>
-				<otherwise>
-					SELECT FN_SEATCODE(#{partCd},'PART') AS seatCd				
-				</otherwise>
-			</choose>
-		</selectKey>
-		INSERT INTO TSEB_SEAT_INFO_D
-		(
-			CENTER_CD, FLOOR_CD, PART_CD, SEAT_CD, SEAT_NM, 
-			USE_YN, SEAT_TOP, SEAT_LEFT, SEAT_CLASS, SEAT_DVSN, 
-			PAY_DVSN, PAY_COST, PAY_AM_COST, PAY_PM_COST SEAT_REQ_DAY, 
-			FRST_REGTER_ID, FRST_REGIST_DTM, LAST_UPDUSR_ID, LAST_UPDT_DTM, 
-		)
-		VALUES
-		(            
-			#{centerCd}, #{floorCd}, #{partCd,jdbcType=VARCHAR}, #{seatCd}, #{seatNm}, 
-			'Y', #{seatTop, jdbcType=VARCHAR}, #{seatLeft, jdbcType=VARCHAR}, #{seatClass, jdbcType=VARCHAR}, #{seatDvsn, jdbcType=VARCHAR},
-			#{payDvsn, jdbcType=VARCHAR}, #{payCost, jdbcType=VARCHAR}, #{payAmCost, jdbcType=VARCHAR}, #{payPmCost, jdbcType=VARCHAR}, #{seatReqDay, jdbcType=VARCHAR},
-			#{frstRegterId, jdbcType=VARCHAR}, SYSDATE, #{lastUpdusrId, jdbcType=VARCHAR}
-		);
-                 
-		UPDATE TSEB_FLOOR_INFO_M SET FLOOR_SEAT_CNT = FLOOR_SEAT_CNT + 1 WHERE FLOOR_CD = #{floorCd};
-		
-		END
-	}
-    </insert>
-    
-    
+	<!-- 사용자 예약 화면 표출 시즌 좌석 리스트 조회 -->
+	<select id="selectReservationSeasonSeatList" resultType="lmap">
+		SELECT 
+			B.PART_CD, B.PART_NM, C.SEASON_SEAT_CD, C.SEAT_CD, C.SEASON_SEAT_LABEL AS SEAT_NM, C.SEASON_SEAT_TOP AS SEAT_TOP, 
+			C.SEASON_SEAT_LEFT AS SEAT_LEFT, C.SEASON_COST AS PAY_COST, C.SEASON_SEAT_ORDER AS SEAT_ORDER,
+			FN_DETAILCODENM(C.SEASON_CLASS) AS SEAT_CLASS_TXT,  
+			FN_DETAILCODENM(C.SEAT_DVSN) AS SEAT_DVSN_TXT,
+			CASE WHEN 
+			(
+				SELECT NVL(COUNT(*),0) 
+         		FROM TSER_RESV_INFO_I
+         		WHERE PART_CD = B.PART_CD
+         		AND SEAT_CD = C.SEAT_CD 
+         		AND RESV_SEQ = #{params.resvSeq, jdbcType=VARCHAR}
+				<choose>
+					<when test="@org.apache.commons.lang3.StringUtils@equals(params.searchCondition,'LONG')">
+						AND RESV_END_DT BETWEEN #{params.resvDateFrom} AND #{params.resvDateTo}
+					</when>
+					<otherwise> 
+						AND RESV_END_DT = #{params.resvDate, jdbcType=VARCHAR}
+					</otherwise>
+				</choose>
+         		AND RESV_STATE NOT IN ('RESV_STATE_4')
+			) > 0  THEN '1'
+			WHEN
+			(
+				SELECT NVL(COUNT(*),0) 
+         		FROM TSER_RESV_INFO_I 
+         		WHERE PART_CD = B.PART_CD
+         		AND SEAT_CD = C.SEAT_CD
+				<choose>
+					<when test="@org.apache.commons.lang3.StringUtils@equals(params.searchCondition,'LONG')">
+						AND RESV_END_DT BETWEEN #{params.resvDateFrom} AND #{params.resvDateTo}
+					</when>
+					<otherwise> 
+						AND RESV_END_DT = #{params.resvDate, jdbcType=VARCHAR}
+					</otherwise>
+				</choose>
+         		AND RESV_STATE NOT IN ('RESV_STATE_4')
+			) > 0  THEN '2'
+			ELSE '0' END AS status
+		FROM TSEB_SEASON_M A, TSEB_PART_INFO_D B, TSEB_SEASON_STINFO_D C
+		WHERE A.SEASON_CD = #{params.seasonCd}
+		AND A.SEASON_CD = C.SEASON_CD 
+		AND B.PART_CD = #{params.partCd}
+		AND B.PART_CD = C.PART_CD
+		AND C.USE_YN = 'Y'
+    </select>
+
     <update id="updateSeasonSeatInfo" >
 		UPDATE TSEB_SEASON_STINFO_D SET CENTER_CD = #{centerCd}, 
 										FLOOR_CD = #{floorCd, jdbcType=VARCHAR}, 

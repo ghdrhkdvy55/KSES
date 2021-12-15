@@ -560,7 +560,6 @@ var jqGridFunc  = {
  		var color = (layerCss == "#65a5d2") ? "#ffffff" :"#65a5d2";
  		//tr 값 확인 
  		//tr_SEASON211109001C21110405_02_01_253
- 		alert(code);
  		$("#seat_resultList tr").filter("#tr_"+tr_code).css("background-color", color);
  		$("#s"+code).css("backgroundColor", color);
  	

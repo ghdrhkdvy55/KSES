@@ -57,9 +57,12 @@
 		ORDER BY TO_NUMBER(B.CODE_DC) ASC
     </select>
     
+    
+    <!-- 사용자 예약 화면 표출 좌석 리스트 조회 -->
 	<select id="selectReservationSeatList" resultType="lmap">
 		SELECT 
-		A.PART_CD, A.PART_NM, B.SEAT_CD, B.SEAT_NM, B.SEAT_ORDER, B.SEAT_TOP, B.SEAT_LEFT,
+		A.PART_CD, A.PART_NM, B.SEAT_CD, B.SEAT_NM, B.PAY_COST, 
+		B.SEAT_ORDER, B.SEAT_TOP, B.SEAT_LEFT,
 			CASE WHEN 
 			(
 				SELECT NVL(COUNT(*),0) 
@@ -118,15 +121,21 @@
 		(
 			CENTER_CD, FLOOR_CD, PART_CD, SEAT_CD, SEAT_NM, 
 			USE_YN, SEAT_TOP, SEAT_LEFT, SEAT_CLASS, SEAT_DVSN, 
-			PAY_DVSN, PAY_COST, PAY_AM_COST, PAY_PM_COST, SEAT_REQ_DAY, 
-			FRST_REGTER_ID, FRST_REGIST_DTM, LAST_UPDUSR_ID, LAST_UPDT_DTM
+			PAY_DVSN, PAY_COST, PAY_AM_COST, PAY_PM_COST, SEAT_REQ_DAY,
+			FRST_REGTER_ID, FRST_REGIST_DTM, LAST_UPDUSR_ID, LAST_UPDT_DTM,
+			SEAT_ORDER
 		)
 		VALUES
 		(            
 			#{centerCd}, #{floorCd}, #{partCd, jdbcType=VARCHAR}, #{seatCd}, #{seatNm}, 
-			'Y', #{seatTop, jdbcType=VARCHAR}, #{seatLeft, jdbcType=VARCHAR}, #{seatClass, jdbcType=VARCHAR}, #{seatDvsn, jdbcType=VARCHAR},
+			'Y', 0, 0, #{seatClass, jdbcType=VARCHAR}, #{seatDvsn, jdbcType=VARCHAR},
 			#{payDvsn, jdbcType=VARCHAR}, #{payCost, jdbcType=VARCHAR}, 0, 0, 0,
-			#{frstRegterId, jdbcType=VARCHAR}, SYSDATE, #{lastUpdusrId, jdbcType=VARCHAR}, SYSDATE
+			#{frstRegterId, jdbcType=VARCHAR}, SYSDATE, #{lastUpdusrId, jdbcType=VARCHAR}, SYSDATE,
+			(
+				SELECT MAX(SEAT_ORDER) +1 
+				FROM TSEB_SEAT_INFO_D 
+				WHERE PART_CD = #{partCd, jdbcType=VARCHAR}
+			)
 		);
                  
 		UPDATE TSEB_FLOOR_INFO_M SET FLOOR_SEAT_CNT = FLOOR_SEAT_CNT + 1 WHERE FLOOR_CD = #{floorCd};
@@ -241,10 +250,12 @@
 				SEAT_TOP = #{item.seatTop, jdbcType=VARCHAR}, 
 				SEAT_LEFT = #{item.seatLeft, jdbcType=VARCHAR}, 
 				LAST_UPDT_DTM = SYSDATE, 
-				LAST_UPDUSR_ID = #{item.userId, jdbcType=VARCHAR},
-				SEAT_ORDER = #{item.seatOrder}
+				LAST_UPDUSR_ID = #{item.userId, jdbcType=VARCHAR}
+				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(item.seatOrder)">
+					, SEAT_ORDER = #{item.seatOrder}
+				</if>
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(item.seatNm)">
-				 , SEAT_NM = #{item.seatNm}
+					, SEAT_NM = #{item.seatNm}
 				</if>
 			WHERE SEAT_CD = #{item.seatCd}
 		</foreach> 

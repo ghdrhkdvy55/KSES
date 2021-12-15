@@ -20,6 +20,8 @@ public interface SeasonInfoManageMapper {
     
     public int selectSeasonCenterInclude(SeasonInfo vo);
     
+    public String selectCenterSeasonCd(@Param("params") Map<String, Object> params);
+    
     public int insertSeasonInfo(SeasonInfo vo);
 	
     public int updateSeasonInfo(SeasonInfo vo);

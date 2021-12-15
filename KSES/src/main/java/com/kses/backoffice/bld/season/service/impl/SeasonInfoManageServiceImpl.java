@@ -61,6 +61,12 @@ public class SeasonInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
 		// TODO Auto-generated method stub
 		return 0;
 	}
+	
+	@Override
+	public String selectCenterSeasonCd(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return sessionMapper.selectCenterSeasonCd(params);
+	}
 
 	@Override
 	public List<Map<String, Object>> selectSeasonCenterInfoList(String seasonCd) {
