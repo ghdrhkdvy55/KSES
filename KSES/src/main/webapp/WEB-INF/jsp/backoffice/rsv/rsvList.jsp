@@ -740,6 +740,7 @@
 					"searchCondition" : division,
 					"resvSeq" : $("#resvSeq").val(),
 					"resvDate" : $("#resvDate").val(),
+					"centerCd" : $("#resvCenterCd").val(),
 					"partCd" : $("#resvPartCd").val()
 				};
 			} else {
@@ -755,6 +756,7 @@
 					"searchCondition" : division,
 					"resvDateFrom" : $("#resvDateFrom").val(),
 					"resvDateTo" : $("#resvDateTo").val(),
+					"centerCd" : $("#resvCenterCd").val(),
 					"partCd" : $("#resvPartCd").val()
 				};
 			}

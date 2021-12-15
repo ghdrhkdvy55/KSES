@@ -6,7 +6,6 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.kses.backoffice.bld.season.mapper.SeasonInfoManageMapper;
 import com.kses.backoffice.bld.season.mapper.SeasonSeatInfoManageMapper;
 import com.kses.backoffice.bld.season.service.SeasonSeatInfoManageService;
 import com.kses.backoffice.bld.season.vo.SeasonSeatInfo;
@@ -29,6 +28,12 @@ public class SeasonSeatInfoManageServiceImpl extends EgovAbstractServiceImpl imp
 	public Map<String, Object> selectSeasonSeatInfoDetail(String seasonSeatCd) {
 		// TODO Auto-generated method stub
 		return seasonSeatMapper.selectSeasonSeatInfoDetail(seasonSeatCd);
+	}
+	
+	@Override
+	public List<Map<String, Object>> selectReservationSeasonSeatList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return seasonSeatMapper.selectReservationSeasonSeatList(params);
 	}
 
 	@Override

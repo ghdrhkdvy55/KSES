@@ -71,8 +71,33 @@
    	          )
    	    , ','))
    	    WHERE COLUMN_VALUE IN (SELECT COLUMN_VALUE FROM TABLE (UF_SPLICT(#{seasonCenterinfo,jdbcType=VARCHAR}, ',')))
-   	  
    	</select>
+   	
+   	<select id="selectCenterSeasonCd" resultType="String">
+   		SELECT TB.SEASON_CD 
+   		FROM 
+   		(
+			SELECT A.SEASON_CD 
+			FROM TSEB_SEASON_M A
+			WHERE A.SEASON_CENTERINFO LIKE '%' || #{params.centerCd} ||'%'
+			<choose>
+				<when test="@org.apache.commons.lang3.StringUtils@equals(params.searchCondition,'LONG')">
+					AND 
+					(
+						#{params.resvDateFrom} BETWEEN SEASON_START_DAY AND SEASON_END_DAY
+						OR 
+						#{params.resvDateTo} BETWEEN SEASON_START_DAY AND SEASON_END_DAY
+					)
+				</when>
+				<otherwise>
+					AND #{params.resvDate} BETWEEN SEASON_START_DAY AND SEASON_END_DAY
+				</otherwise>
+			</choose>
+			ORDER BY SEASON_START_DAY   		
+   		) TB
+   		WHERE ROWNUM = 1
+   	</select>
+   	
     <insert id="insertSeasonInfo">
        {CALL
 			DECLARE

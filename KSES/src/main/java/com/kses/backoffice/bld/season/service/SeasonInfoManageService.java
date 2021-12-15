@@ -2,7 +2,6 @@ package com.kses.backoffice.bld.season.service;
 
 import java.util.List;
 import java.util.Map;
-import org.apache.ibatis.annotations.Param;
 import com.kses.backoffice.bld.season.vo.SeasonInfo;
 
 public interface SeasonInfoManageService {
@@ -14,6 +13,8 @@ public interface SeasonInfoManageService {
     List<Map<String, Object>> selectSeasonCenterInfoList(String seasonCd);
     
     int selectSeasonCenterInclude(SeasonInfo vo);
+    
+    String selectCenterSeasonCd(Map<String, Object> params);
     
     int updateSeasonInfo(SeasonInfo vo);
     

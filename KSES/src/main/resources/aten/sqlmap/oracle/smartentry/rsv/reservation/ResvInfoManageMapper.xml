@@ -186,6 +186,7 @@
     		A.RESV_STATE,
     		FN_DETAILCODENM(A.RESV_STATE) AS RESV_STATE_TEXT,
     		TO_CHAR(TO_DATE(A.RESV_START_DT,'YYYYMMDD'),'YYYY-MM-DD') AS RESV_START_DT,
+    		TO_CHAR(TO_DATE(A.RESV_START_DT,'YYYYMMDD'),'YYYY-MM-DD') AS RESV_END_DT,
     		TO_CHAR(A.RESV_REQ_DATE,'YYYY-MM-DD HH24:MI') AS RESV_REQ_DATE,
     		A.RESV_PAY_DVSN
 		FROM TSER_RESV_INFO_I A, TSEB_CENTER_INFO_M B 
@@ -204,7 +205,7 @@
 				AND TO_CHAR(A.RESV_REQ_DATE,'YYYYMMDD') BETWEEN #{params.searchDayFrom} AND #{params.searchDayTo}
 			</when>
 			<otherwise>
-				AND A.RESV_START_DT BETWEEN #{params.searchDayFrom} AND #{params.searchDayTo}
+				AND A.RESV_END_DT BETWEEN #{params.searchDayFrom} AND #{params.searchDayTo}
 			</otherwise>
 		</choose>
 		ORDER BY A.RESV_REQ_DATE DESC

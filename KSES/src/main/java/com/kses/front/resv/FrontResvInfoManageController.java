@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.kses.backoffice.bld.center.service.CenterInfoManageService;
 import com.kses.backoffice.bld.floor.service.FloorInfoManageService;
 import com.kses.backoffice.bld.floor.service.FloorPartInfoManageService;
+import com.kses.backoffice.bld.season.service.SeasonInfoManageService;
+import com.kses.backoffice.bld.season.service.SeasonSeatInfoManageService;
 import com.kses.backoffice.bld.seat.service.SeatInfoManageService;
 import com.kses.backoffice.cus.usr.service.UserInfoManageService;
 import com.kses.backoffice.cus.usr.vo.UserInfo;
@@ -55,6 +58,12 @@ public class FrontResvInfoManageController {
 	
 	@Autowired
 	private SeatInfoManageService seatService;
+	
+	@Autowired
+	private SeasonInfoManageService seasonService;
+	
+	@Autowired
+	private SeasonSeatInfoManageService seasonSeatService;
 	
 	@Autowired
 	private ResvInfoManageService resvService;
@@ -178,9 +187,13 @@ public class FrontResvInfoManageController {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
+			String seasonCd = seasonService.selectCenterSeasonCd(params);
+			LOGGER.debug(seasonCd);
+			params.put("seasonCd", seasonCd);
 			
-			List<Map<String, Object>> resultList = seatService.selectReservationSeatList(params);
-	    	Map<String, Object> mapInfo = floorPartService.selectFloorPartInfoDetail(params.get("partCd").toString());
+			List<Map<String, Object>> resultList = StringUtils.isBlank(seasonCd) ? seatService.selectReservationSeatList(params) : seasonSeatService.selectReservationSeasonSeatList(params);
+	    	
+			Map<String, Object> mapInfo = floorPartService.selectFloorPartInfoDetail(params.get("partCd").toString());
 	    	model.addObject("seatMapInfo", mapInfo);
 			
 			model.addObject(Globals.JSON_RETURN_RESULTLISR, resultList);
