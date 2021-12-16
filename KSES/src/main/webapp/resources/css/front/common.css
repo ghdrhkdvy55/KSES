@@ -1991,7 +1991,7 @@ ul.tabs li{
     background: #47d6be;
     color: #fff;
 }
-.rsv_history {text-align: center; width: 94%;}
+.rsv_history {text-align: center; width: 100%;}
 .rsv_num {color: red; font-weight: 600;}
 .my_box .close {float: right; margin-right: 10px;}
 .receipt_cash {padding: 0 0.5rem; font-size:1.7em;}
