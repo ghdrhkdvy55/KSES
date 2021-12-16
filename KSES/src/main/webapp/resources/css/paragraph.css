@@ -83,11 +83,11 @@ vertical-align: middle;
 /*btn*/
 .boardlist > a:first-child {margin-left: 5px !important;}
 .skyBtn {background:#28b2e7!important ;vertical-align:sub;display: inline-block;color: #fff;padding: 4px 20px;border-radius: 5px;}
-.blueBtn{ vertical-align:bottom;display: inline-block;background: #3670c5 !important;color: #fff;padding: 4px 20px;border-radius: 5px;}
+.blueBtn{ vertical-align:top; display: inline-block;background: #3670c5 !important;color: #fff;padding: 4px 20px;border-radius: 5px;}
 .blueBtn:hover{background: #1b5fc3;}
-.grayBtn{z-index: 9999;vertical-align:bottom;display: inline-block;background:#585858 !important; color: #fff;padding: 4px 20px;border-radius: 5px; margin-left: 3px;}
+.grayBtn{z-index: 9999;vertical-align:top; display: inline-block;background:#585858 !important; color: #fff;padding: 4px 20px;border-radius: 5px; margin-left: 3px;}
 .grayBtn:hover{background: #717171;}
-.redBtn{vertical-align:sub;display: inline-block;background: #ce4848!important;color: #fff;padding: 4px 20px;border-radius: 5px;}
+.redBtn{vertical-align:top;display: inline-block;background: #ce4848!important;color: #fff;padding: 4px 20px;border-radius: 5px;}
 .redBtn:hover{background: #b92d2d;}
 .right_box a{margin-left: 3px;}
 
@@ -214,12 +214,11 @@ margin-right: 6px;
 .detail_table input{vertical-align: top;}
 .detail_table tr th, .detail_table tr td{border-bottom: 1px solid #e2e2e2;}
 .detail_table tr th{background: #eee;text-align: center;font-weight: 400; padding: 8px 2rem;}
-.detail_table tr td {
-    padding: 8px 1rem;
-    max-width: 1000px;
+.detail_table tr td {padding: 8px 1rem;}
+#bas_interfaceinfo .detail_table tr td{    
+	max-width: 1000px;
     overflow-x: auto;
 }
-
 .input_tit{width: 100%;}
 .input_text{
   width: 100%;

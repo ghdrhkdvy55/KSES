@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="/resources/css/front/swiper.min.css">
     <!-- popup-->    
     <script src="/resources/js/front/bpopup.js"></script>
-    <style>body{background:#f4f4f4 ;}</style>
+    <!--<style>body{background:#f4f4f4 ;}</style>-->
 </head>
 <body>
     <form:form name="regist" commandName="regist" method="post" action="/front/notice.do">
