@@ -224,7 +224,7 @@
    		        autowidth:true,
    		        shrinkToFit : true,
    		        refresh : true,
-   		        multiselect: true,
+   		        multiselect: false,
    				viewrecords: true,
                    footerrow: true,
    		        userDataOnFooter: true, // use the userData parameter of the JSON response to display data on footer

@@ -472,7 +472,7 @@ var jqGridFunc  = {
 	   						   jqGridFunc.fn_search();
 	   					   }else if (result.status == "SUCCESS"){
 	   						   //총 게시물 정리 하기'
-	   						   common_modelClose("bld_season_add");
+	   						   common_modelCloseM(result.message, "bld_season_add");
 	   						   jqGridFunc.fn_search();
 	   					   }else if (result.status == "FAIL"){
 	   						   common_popup("저장 도중 문제가 발생 하였습니다.", "Y", "bld_season_add");
