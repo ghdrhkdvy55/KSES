@@ -6,6 +6,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserInfo {
+	// 구분값
+	// 1: 아이디, 비밀번호 / 2: 카드번호, 비밀번호
+	private String loginType = "";
+	
 	// 회원 구분 - 회원 / 비회원
 	private String userDvsn = "";
 	
@@ -60,12 +64,15 @@ public class UserInfo {
 	// 카드 비밀번호
 	private String userCardPassword = "";
 	
-	// 카드 비밀번호
+	// 백신접종일자
 	private String vacntnDt = "";
 
-	// 카드 비밀번호
+	// 접종백신종류
 	private String vacntnDvsn = "";
 	
-	// 카드 비밀번호
+	// 백신접종회차
 	private String vacntnRound = "";
+	
+	// 마지막 접속 일자
+	private String lastLoginDt = "";
 }

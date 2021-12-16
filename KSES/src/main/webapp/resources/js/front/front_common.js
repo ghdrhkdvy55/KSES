@@ -424,38 +424,61 @@ function fn_getResvDate() {
 	return resvDate;
 }
 
-function fn_moveReservation() {
-	var resvDate = fn_getResvDate();
-	if($("#userDvsn").val() == "USER_DVSN_1"){
-		var url = "/front/checkUserResvInfo.do";
-		
-		var params = {"userDvsn" : userDvsn, "resvDate" : resvDate}
-		
-		fn_Ajax
-		(
-		    url,
-		    "POST",
-		    params,
-			false,
-			function(result) {
-		    	if (result.status == "SUCCESS") {
-		    		if(result.resvCount > 0) {
-		    			fn_openPopup("현재 예약일자에 이미 예약정보가 존재합니다.", "red", "ERROR", "확인", "");
-		    			return;
-		    		} else {
-		    			location.href = "/front/rsvCenter.do";
-		    		}
-		    	} else {
-		    		alert("ERROR : " + result.status);	
-		    	}
-			},
-			function(request) {
-				alert("ERROR : " +request.status);	       						
-			}    		
-		);	
-	} else {
-		location.href = "/front/rsvCenter.do";
-	}
+function fn_resvDuplicateCheck() {
+	var url = "/front/resvInfoDuplicateCheck.do";
+	var isResvDuplicate = true;
+	
+	fn_Ajax
+	(
+	    url,
+	    "POST",
+	    params,
+	    false,
+	    function(result) {
+	    	if (result.status == "SUCCESS") {
+	    		if(result.resvCount > 0) {
+	    			isResvDuplicate = true;
+	    		} else {
+	    			isResvDuplicate = false;
+	    		}
+	    	} else {
+	    		alert("ERROR : " + result.status);	
+	    	}
+	    },
+	    function(request) {
+	    	alert("ERROR : " +request.status);	       						
+	    }    		
+	);
+	return isResvDuplicate;
+}
+
+function fn_resvVaildCheck(params) {
+	var url = "/front/resvValidCheck.do";
+	var validResult;
+	
+	fn_Ajax
+	(
+	    url,
+	    "POST",
+		params,
+		false,
+		function(result) {
+			if (result.status == "SUCCESS") {
+				if(result.validResult.resultCode != "SUCCESS") {
+					fn_openPopup(result.validResult.resultMessage, "red", "ERROR", "확인", "");
+				} else {
+					validResult = result.validResult;
+				}
+			} else if (result.status == "LOGIN FAIL"){
+				fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "location.href='/front/login.do'");
+			}
+		},
+		function(request) {
+			alert("ERROR : " + request.status);	       						
+		}    		
+	);	
+	
+	return validResult;
 }
 
 Date.prototype.format = function (f) {

@@ -36,7 +36,7 @@ public interface ResvInfoManageMapper {
 	
 	public int resvInfoCancel(@Param("params") Map<String, Object> paramMap);
 	
-	public int checkUserResvInfo(@Param("params") Map<String, Object> params);
+	public int resvInfoDuplicateCheck(@Param("params") Map<String, Object> params);
 	//신규 추가
 	public List<Map<String, Object>> selectResInfoManageListByPagination(@Param("params") Map<String, Object> params);
 	

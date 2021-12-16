@@ -97,7 +97,7 @@ public interface ResvInfoManageService {
 	 * @return
 	 * @throws Exception
 	 */
-	public int checkUserResvInfo(Map<String, Object> params) throws Exception;
+	public int resvInfoDuplicateCheck(Map<String, Object> params) throws Exception;
 	
 	/**
 	 * SPDM 예약자 아이디 조회

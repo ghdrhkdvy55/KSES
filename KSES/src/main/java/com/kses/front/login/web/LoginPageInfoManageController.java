@@ -5,6 +5,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.kses.backoffice.cus.usr.service.UserInfoManageService;
 import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
 import com.kses.front.login.service.UserLoginService;
 import com.kses.front.login.vo.UserLoginInfo;
@@ -40,6 +42,9 @@ public class LoginPageInfoManageController {
 	
 	@Autowired
 	private ResvInfoManageService resvService;
+	
+	@Autowired
+	private UserInfoManageService userService;
 	
 	/**
 	 * 사용자페이지 테스트 로그인
@@ -94,9 +99,11 @@ public class LoginPageInfoManageController {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
-			HttpSession httpSession = request.getSession(true);
+			if(!StringUtils.isBlank(userLoginInfo.getIndvdlinfoAgreYn())) {
+				userService.updateUserInfo(userLoginInfo);
+			}
 			
-			userLoginInfo.setUserDvsn("USER_DVSN_1");
+		    HttpSession httpSession = request.getSession(true);
 			httpSession.setAttribute("userLoginInfo", userLoginInfo);
 			
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);

@@ -30,7 +30,6 @@
 <body>
 <form:form name="regist" commandName="regist" method="get" action="/front/rsvCenter.do">	
 	<input type="hidden" id="userDvsn" name="userDvsn" value="${sessionScope.userLoginInfo.userDvsn}">
-	<input type="hidden" name="userId" id="userId" value="${sessionScope.userLoginInfo.userId}">
 	
 	<input type="hidden" id="centerCd" name="centerCd" value="">
 	<input type="hidden" id="resvDate" name="resvDate" value="">
@@ -72,7 +71,7 @@
             <div class="contents">
                 <ul>
                     <li class="home"><a href="javascript:fn_pageMove('regist','/front/main.do');">home</a><span>HOME</span></li>
-                    <li class="rsv active"><a href="javascript:fn_moveReservation();">rsv</a><span>입장예약</span></li>
+                    <li class="rsv active"><a href="/front/rsvCenter.do">rsv</a><span>입장예약</span></li>
                     <li class="my"><a href="/front/mypage.do">my</a><span>마이페이지</span></li>
                 </ul>
                 <div class="clear"></div>

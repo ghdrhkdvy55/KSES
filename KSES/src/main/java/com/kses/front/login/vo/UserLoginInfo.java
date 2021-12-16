@@ -1,59 +1,81 @@
 package com.kses.front.login.vo;
 
+import com.kses.backoffice.cus.usr.vo.UserInfo;
+
 import lombok.Getter;
 import lombok.Setter;
 
 //전자카드 회원 정보 
 @Getter
 @Setter
-public class UserLoginInfo {
-
-	 // 구분값
+public class UserLoginInfo extends UserInfo{
+	// 구분값
 	// 1: 아이디, 비밀번호 / 2: 카드번호, 비밀번호
-	private String loginType;
+	private String loginType = "";
 	
-	// 로그인 성공여부
-	// Y : ID, 카드번호, 이름, 전화번호, 성별, 생년월일 / N : NULL
-	private String loginYn;
+	// 회원 구분 - 회원 / 비회원
+	private String userDvsn = "";
 	
-	// 카드 아이디
-	// 사용자 Key1
-	private String cardId;
+	// 아이디
+	private String userId = "";
 	
-	// 카드발급회차
-	// 사용자 Key2
-	private String cardSeq;
-	
-	// 사용자 구분
-	// I : 승인대기 / N : 정상 / C : 정상이지만 카드(결제) 비밀번호 미설정
-	private String userType;
-	
-	// 사용자 아이디
-	private String userId;
-	
-	// 사용자 이름
-	private String userNm;
-	
-	// 카드번호
-	private String cardNo;
+	// 이름
+	private String userNm = "";
 	
 	// 전화번호
-	private String userPhone;
+	private String userPhone = "";
 	
 	// 성별
-	// M : 남성 / F : 여성
-	private String userSexMf;
+	private String userSexMf = "";
 	
-	// 생년월일
-	private String userBirthDy;
+	// 생일
+	private String userBirthDy = "";
 	
-	// 에러코드
-	// 로그인 실패시(USER_ERROR_001, ...002, ... 003 ~) / SUCCESS
-	private String errorCd;
+	// 개인정보 동의여부
+	private String indvdlinfoAgreYn = "";
 	
-	// FEP 에러코드
-	// FEP 실패시(FEP_ERROR_001, ...002, ... 003 ~)
-	private String fepErrorCd;
+	// 개인정보 동의일자
+	private String indvdlinfoAgreDt = "";
 	
-	private String userDvsn;
+	// 현금영수증 발급여부
+	private String userRcptYn = "";
+	
+	// 현금영수증 발급구분
+	private String userRcptDvsn = "";
+	
+	// 현금영수증 번호
+	private String userRcptNumber = "";
+	
+	// 최종 수정일
+	private String lastUpdtDtm = "";
+	
+	// 최종 수정자
+	private String lastUpdusrId = "";
+	
+	// 입력 구분
+	private String mode = "";
+	
+	// 카드 아이디
+	private String userCardId = "";
+	
+	// 카드 번호
+	private String userCardNo = "";
+	
+	// 카드 시퀀스
+	private String userCardSeq = "";
+	
+	// 카드 비밀번호
+	private String userCardPassword = "";
+	
+	// 백신접종일자
+	private String vacntnDt = "";
+
+	// 접종백신종류
+	private String vacntnDvsn = "";
+	
+	// 백신접종회차
+	private String vacntnRound = "";
+	
+	// 마지막 접속 일자
+	private String lastLoginDt = "";
 }

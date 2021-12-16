@@ -116,20 +116,94 @@
 							<li class="prsn_agree"><a data-popup-open="person_agree">자세히 ></a></li>
 							<br>
 							<li class="check_impnt">
-								<input class="magic-checkbox qna_check" type="checkbox" name="layout" id="ENTRY_DVSN_1_person_agree" value="Y">
-								<label for="ENTRY_DVSN_1_person_agree">동의합니다.</label>     
+								<input class="magic-checkbox qna_check" type="checkbox" name="layout" id="person_agree_yn" value="Y">
+								<label for="person_agree_yn">동의합니다.</label>     
 							</li>
 						</ol>
 					</p>
 				</div>
 			</div>
 			<div class="cancel_btn">
-              	<a href="javascript:common_modelClose('rsv_info');" class="grayBtn">확인</a>
+              	<a href="javascript:void(0);" class="grayBtn">확인</a>
           	</div>
 			<div class="clear"></div>
 		</div>
     </div>		
-    				     
+    				
+    	<!-- // 개인정보 수집이용 약관 팝업 -->
+    <div id="person_agree" data-popup="person_agree" class="popup">
+    	<div class="pop_con rsv_popup">
+          	<a class="button b-close">X</a>
+          	<div class="pop_wrap">
+            	<div class="text privacy_text">
+                	<p class="font14 mg_l20">개인정보 수집·이용 및  제 3자 제공 동의서</p><br>                
+                	<p class="font13 mg_l20">코로나19 확산방지를 위하여 경주사업총괄본부에서는 다음과 같이 개인정보 수집·이용 및 제 3자 제공에 대한 동의를 얻고자 합니다.</p>
+                
+                	<div class="tablet_wrap">
+                         <div class="pd_l10 pd_r10">
+                        	<p class="font13 mg_l10">▶ 개인정보수집·이용 동의</p>
+                        	<table class="tb3" summary="개인정보수집·이용 동의">
+                            	<caption>개인정보수집·이용 동의</caption>
+                            	<colgroup>
+                                	<col width="34%">
+                                	<col width="33%">
+                                	<col width="33%">
+                            	</colgroup>
+                            	<thead>
+                                	<tr>
+                                    	<th scope="col">항목</th>
+                                    	<th scope="col">수집목적</th>
+                                    	<th scope="col">보유기간</th>
+                                	</tr>
+                            	</thead>
+                            	<tbody>             
+	                                <tr>
+	                                    <td>성명,전화번호,<br>출입시설,출입시간</td>
+	                                    <td>코로나19 확진자<br>발생시 역학조사 및 <br>안내문자 발송</td>
+	                                    <td class="text_center" style="color:red; font-size:12px; font-weight:bold;">4주</td>
+	                                </tr>                                              
+                            	</tbody>
+                        	</table><br>
+                        
+                        	<p class="font13 mg_l10">▶ 개인정보 제3자 제공 동의</p>
+                        	<table class="tb3" summary="개인정보 제3자 제공 동의">
+                            	<caption>개인정보 제3자 제공 동의</caption>
+                            	<colgroup>
+	                                <col width="27%">
+	                                <col width="29%">
+	                                <col width="26%">
+	                                <col width="18%">
+                            	</colgroup>
+								<thead>
+                                <tr>
+                                    <th scope="col">제공받는 기관</th>
+                                    <th scope="col">제공목적</th>
+                                    <th scope="col">제공항목</th>
+                                    <th scope="col">보유기간</th>
+                                </tr>
+                            </thead>
+                            <tbody>             
+                                <tr>
+                                    <td class="text_center" style="color:red; font-size:12px; font-weight:bold;">보건복지부,<br>질병관리청,<br>지자체</td>
+                                    <td class="text_center" style="color:red; font-size:11px; font-weight:bold;">코로나19<br>확진자 발생 시<br>역학조사</td>
+                                    <td>성명,전화번호,<br>출입시설,출입시간</td>
+                                    <td class="text_center" style="color:red; font-size:12px; font-weight:bold;">4주</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div><br>
+                    
+                    <p class="font13 mg_l20">※위의 개인정보 수집·이용 및 3자 제공에 대한 동의를 거부할 권리가 있습니다. 그러나 동의를 거부할 경우 출입이 제한될 수 있습니다. </p><br>
+                </div>                
+            </div>
+          </div>
+          <div class="cancel_btn">
+              <a href="" class="grayBtn">닫기</a>
+          </div>
+          <div class="clear"></div>
+      </div>
+    </div>				
+    				
     <!--1214 개인정보동의 팝업 // -->
 
 	<!--<script type="text/javascript">
@@ -216,6 +290,7 @@
 						"Login_Type" : $("#login_type").val(),
 						"User_Id" : $("#id").val(),
 						"User_Pw" : $("#pw").val(),
+						"Card_No" : $("#cardNo").val(),
 						"Card_Id" : $("#cardNo").val(),
 						"Card_Pw" : $("#cardPw").val(),
 						"System_Type" : "E"
@@ -230,8 +305,17 @@
 					false,
 					function(result) {
 				    	if(result.regist != null) {
-							if (result.regist.Error_Msg == "SUCCESS") {
-								loginService.createUserSession(result.regist);
+							if (result.regist.Error_Msg == "SUCCESS" || result.userInfo != null) {
+								console.log(result.userInfo.indvdlinfoAgreDt);
+								if(result.userInfo.indvdlinfoAgreDt != null) {
+									loginService.createUserSession(result.userInfo);									
+								} else {
+									$("#agreeCheck .cancel_btn a:eq(0)").click(function () {
+										loginService.indvdlinfoAgre(result.userInfo);	
+									});
+									
+									$("#agreeCheck").bPopup();	
+								}
 							} else {
 								fn_openPopup(result.regist.Error_Msg, "red", "ERROR", "확인", "");
 							}
@@ -248,43 +332,42 @@
 			createUserSession : function(userInfo) {
 				var url = "/front/userSessionCreate.do";
 				
-				var params = {
-					"cardId" : userInfo.Card_Id,
-					"cardNo" : userInfo.Card_No,
-					"cardSeq" : userInfo.Card_Seq,
-					"errorCd" : userInfo.Error_Cd,
-					"loginType" : userInfo.Login_Type,
-					"loginYn" : userInfo.Login_YN,
-					"userId" : userInfo.User_Id,
-					"userNm" : userInfo.User_Nm,
-					"userPhone" : userInfo.User_Phone,
-					"userSexMf" : userInfo.User_Sex_MF,
-					"userType" : userInfo.User_Type
-				}
-				
 				fn_Ajax
 				(
 				    url,
 				    "POST",
-				    params,
+				    userInfo,
 					false,
 					function(result) {
 				    	if (result == "SUCCESS") {
-				    		if($("#login_type").val() == "1" && $("input:checkbox[id='saveId']").is(":checked")) {
-				    			localStorage.setItem("saveId", $("#id").val());	
-				    		} else {
-				    			localStorage.removeItem("saveId");
+				    		if($("#login_type").val() == "1") {
+				    			$("input:checkbox[id='saveId']").is(":checked") ? 
+				    					localStorage.setItem("saveId", $("#id").val()) :
+										localStorage.removeItem("saveId");
+				    		} else if($("#login_type").val() == "2") {
+				    			$("input:checkbox[id='saveCardNo']").is(":checked") ? 
+				    					localStorage.setItem("saveCardNo", $("#cardNo").val()) :
+										localStorage.removeItem("saveCardNo");				    			
 				    		}
-				    		
+
 				    		location.href = "/front/main.do";
 				    	} else {
 				    		alert("ERROR : " + result.status);	
 				    	}
 					},
 					function(request) {
-						alert("ERROR : " +request.status);	       						
+						alert("ERROR : " + request.status);	       						
 					}    		
 				);	
+			},
+			indvdlinfoAgre : function(userInfo) {
+				if(!$("input:checkbox[id='person_agree_yn']").is(":checked")) {
+					fn_openPopup("개인정보 수집 이용여부에 대하여 동의해주세요", "red", "ERROR", "확인", "");
+					return;
+				}
+				
+				userInfo.indvdlinfoAgreYn = $("#person_agree_yn").val();
+				loginService.createUserSession(userInfo);
 			}
 		}	
 	</script>
