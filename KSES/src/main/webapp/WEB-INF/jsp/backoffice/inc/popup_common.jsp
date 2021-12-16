@@ -25,7 +25,7 @@
         <a id="a_closePop" class="button b-close">X</a>
         <p class="pop_tit">메세지</p>
         <p class="pop_wrap"><span id="sp_MessageAlert"></span></p>
-        <div class="left_box">
+        <div class="right_box">
           <a href="" id="id_ConfirmInfo" class="blueBtn">예</a>
           <a href="javascript:fn_ConfirmClose()" class="grayBtn">아니요</a>
       </div>
@@ -37,7 +37,7 @@
         <a id="a_closePop" class="button b-close">X</a>
         <p class="pop_tit">엑셀 업로드</p>
         <p class="pop_wrap"><input type="file" id="excel_file_input" accept="xlsx/*"></p>
-        <div class="left_box">
+        <div class="right_box">
         <div class="right_box" id="db_closePop">
             <a href="#" id="aUploadId" class="grayBtn">확인</a>
         </div>  

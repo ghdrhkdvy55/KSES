@@ -341,7 +341,7 @@ select[multiple]{max-height: 100px; overflow: auto;}
     overflow: auto;
     box-shadow:0px 1px 8px 1px #808080;
 }
-.pop_con{padding: 20px 16px;}
+.pop_con{padding: 16px 16px 40px 16px;}
 .pop_tit{font-size: 20px;font-weight: 500;margin-bottom: 20px;border-bottom: 1px solid #eee;padding-bottom: 18px;min-width: 500px;}
 .pop_serch{margin:10px 0px;}
 .pop_serch input{margin:0 6px; vertical-align: middle;}
@@ -789,7 +789,7 @@ padding-left: 5px;
     overflow: auto;
     box-shadow:0px 1px 8px 1px #808080;
 }
-.pop_con{padding: 16px;}
+
 .srch_bar p {display: inline; vertical-align:sub;}
 .srch_bar {margin-bottom: 10px;}
 
