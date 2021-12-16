@@ -35,9 +35,9 @@
       		<div class="top">
         		<p>검색 구분</p>
         		<select id="searchCondition">
-          			<option value="0">아이디</option>
-          			<option value="">이름</option>
-          			<option value="">전화번호</option>
+          			<option value="USER_ID">아이디</option>
+          			<option value="USER_NM">이름</option>
+          			<option value="USER_PHONE">전화번호</option>
         		</select>
         		<input type="text" id="searchKeyword" placeholder="검색어를 입력하세요.">
       		</div>
