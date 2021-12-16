@@ -48,7 +48,8 @@
 			<choose>
 				<when test="resvSeq != '' and userId != ''">
 					AND TO_CHAR(A.QR_CHECK_TM, 'yyyyMMdd') = TO_CHAR(SYSDATE, 'yyyyMMdd')
-					AND B.RESV_START_DT = TO_CHAR(SYSDATE, 'yyyyMMdd')
+					<!-- AND B.RESV_START_DT = TO_CHAR(SYSDATE, 'yyyyMMdd') -->
+					AND B.RESV_START_DT BETWEEN TO_CHAR(SYSDATE -1, 'yyyyMMdd') AND  TO_CHAR(SYSDATE, 'yyyyMMdd')
 					AND A.RESV_SEQ = #{resvSeq} 
 					ORDER BY A.QR_CHECK_TM DESC
 				</when>
