@@ -81,7 +81,7 @@
 				<div id="rsv_reset_area" class="rsv_reset" style="display:none;">
                     <ul>
                         <li>처음부터 예약하시려면</li>
-                        <li class="reservation"><a href="/front/rsvCenter.do">예약하기</a></li>
+                        <li class="reservation"><a href="javascript:fn_moveReservation();">예약하기</a></li>
                     </ul>
                 </div>
             </div>
@@ -113,7 +113,7 @@
             <div class="contents">
                 <ul>
                     <li class="home active"><a href="/front/main.do">home</a><span>HOME</span></li>
-                    <li class="rsv"><a href="/front/rsvCenter.do">rsv</a><span>입장예약</span></li>
+                    <li class="rsv"><a href="javascript:fn_moveReservation();">rsv</a><span>입장예약</span></li>
                     <li class="my"><a href="javascript:fn_pageMove('regist','/front/mypage.do');">my</a><span>마이페이지</span></li>
                 </ul>
                 <div class="clear"></div>
@@ -205,7 +205,7 @@
 	<!-- // 예약취소 팝업 -->
     <div id="cancel_rsv_info" class="popup">
       	<div class="pop_con rsv_popup">
-          	<a class="button b-close">X</a>
+          	<!-- 닫기버튼으로 대체 <a class="button b-close">X</a>-->
           	<div class="pop_wrap">
               	<h4>예약 취소 하시겠습니까?</h4>
               	<p>15시 까지 미 입장시 입장예약이 취소됩니다.</p>
@@ -240,7 +240,7 @@
           	<div class="cancel_btn">
           		<ul>
           			<li><a href="" id="resvCancleBtn" class="grayBtn">예약취소</a></li>
-          			<!-- <li><a href="" id="resvCancleBtn" class="dislBtn">닫기</a></li> -->
+          			<li><a href="" id="resvCancleBtn" class="dislBtn">닫기</a></li>
           		</ul>              	
           	</div>
           	<div class="clear"></div>
@@ -422,8 +422,8 @@
 								//백신접종정보 표출
 								if(result.vacntnInfo != null) {
 						    		switch (result.vacntnInfo.pass_yn) {
-										case "Y" : $(".vacStat span").addClass("thVac").html("백신접종 완료"); break;
-										case "N" : $(".vacStat span").addClass("nonVac").html("백신패스 만료"); break;  
+										case "Y" : $(".vacStat span").addClass("thVac").html("접종 완료상태"); break;
+										case "N" : $(".vacStat span").addClass("nonVac").html("백신패스 만료상태"); break;  
 										default: $(".vacStat span").addClass("nonVac").html("접종정보 없음"); break;
 									}	
 								}
@@ -453,7 +453,7 @@
 					// 유저정보하단 HTML생성
 					setHtml = "";
 					setHtml += "<li><a href='/front/login.do'>로그인</a></li>";
-					setHtml += "<li><a href='/front/rsvCenter.do'>비회원 예약</a></li>";
+					setHtml += "<li><a href='javascript:fn_moveReservation();'>비회원 예약</a></li>";
 					userInfoBottomArea.append(setHtml);
 					//일반 공지 정리 하기 
 				}
