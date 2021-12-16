@@ -307,7 +307,7 @@
 				    	if(result.regist != null) {
 							if (result.regist.Error_Msg == "SUCCESS" || result.userInfo != null) {
 								console.log(result.userInfo.indvdlinfoAgreDt);
-								if(result.userInfo.indvdlinfoAgreDt != null) {
+								if(result.userInfo.indvdlinfoAgreDt != null && result.userInfo.indvdlinfoAgreDt != "") {
 									loginService.createUserSession(result.userInfo);									
 								} else {
 									$("#agreeCheck .cancel_btn a:eq(0)").click(function () {
