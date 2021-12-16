@@ -193,9 +193,9 @@ public class FrontResvInfoManageController {
 			if(StringUtils.isBlank(seasonCd)) {
 				resultList = seatService.selectReservationSeatList(params);
 			} else {
-				resultList = seasonSeatService.selectReservationSeasonSeatList(params);
 				params.put("seasonCd", seasonCd);
 				model.addObject("seasonCd", seasonCd);
+				resultList = seasonSeatService.selectReservationSeasonSeatList(params);
 			}
 			
 			Map<String, Object> mapInfo = floorPartService.selectFloorPartInfoDetail(params.get("partCd").toString());
