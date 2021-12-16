@@ -424,7 +424,7 @@ function fn_getResvDate() {
 	return resvDate;
 }
 
-function fn_resvDuplicateCheck() {
+function fn_resvDuplicateCheck(params) {
 	var url = "/front/resvInfoDuplicateCheck.do";
 	var isResvDuplicate = true;
 	
