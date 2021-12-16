@@ -159,7 +159,7 @@
   .rsv_btn li a {padding: 2rem 3rem}
   .rsv_btn li:first-child a {padding: 2rem 6rem}  
   .rsv_cancel {float: left;margin: 1.5rem 0 0.5rem;} 
-
+  .vacStat span {display:inline-block; margin-top:4px;}
 
   
 }
@@ -168,6 +168,7 @@
   #menu_ul >li {width: 150px;}
   #showHide_seat section .cert_confirm input[type=text] ,
   #showHide section .cert_confirm input[type=text] {width: 60%;}
+
   .rsv_btn li:first-child {
     width: 63%;
     background: #47D6BE;

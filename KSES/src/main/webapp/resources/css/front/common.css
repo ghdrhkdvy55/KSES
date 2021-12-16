@@ -261,7 +261,7 @@ bottom:0;
 .main_quick span {background: url("/resources/img/front/ic_appbar_search_meeting.svg")left center no-repeat;color: #fff;font-size: 1.4rem;padding: 1.5rem 0 1.5rem 3.5rem;display: inline-block;}
 
 .main_user .main_user_info, .main_user .main_user_reser{border-radius: 1.5rem; box-sizing: border-box;margin-top: 1rem;background: #Fff;box-shadow: 0 3px 6px 0 rgb(193 193 193);}
-.main_user_pad {box-sizing: border-box;padding:2.1rem 1.6rem 3rem 2.4rem}
+.main_user_pad {box-sizing: border-box;padding:2.1rem 1.6rem 2.4rem 2.4rem}
 .main_back_tit {font-size: 1.8rem;font-weight: 700;padding-bottom: 2.4rem;}
 .main_back_txt {font-size: 1.2rem;color:#056645;padding-bottom: 0.3rem;}
 .user_seat {font-size:3.2rem;font-weight: 800;line-height:3.2rem}
