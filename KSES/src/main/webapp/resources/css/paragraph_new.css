@@ -262,7 +262,7 @@ table a{color: #5a5a5a;}
 }
 
 .gui_table th{ min-width:100px; left:0!important; font-weight:700!important;}
-.gui_table th:first-child{ min-width:50px;}
+.gui_table th:first-child{ min-width:80px;}
 
 table tr.select{border: 2px solid #acb1d2; background-color: #acb1d2;}
 
