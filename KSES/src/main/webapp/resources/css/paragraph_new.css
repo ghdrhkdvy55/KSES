@@ -311,7 +311,7 @@ table tr.select{border: 2px solid #acb1d2; background-color: #acb1d2;}
     background-color: #fff;
     z-index: 999;
     border-bottom: 1px solid #e6e6e6;
-    width: 650px;
+    max-width: 650px;
     box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.04);
     display: -webkit-inline-box;
 }
@@ -386,7 +386,7 @@ table tr td input.selected{border:2px solid #eb6d2c;}
 .userPop .modalContent, .userPop .custom_bg{height: auto;}
 
 /*20200710*/
-.ui-widget.ui-widget-content {width: 100% !important;}
+/*.ui-widget.ui-widget-content {width: 100% !important;}*/
 .meeting_map_area ul li{width: 30px !important;height: 30px !important;line-height: 30px;}
 .meeting_map_area ul li span{color:#000;line-height: 30px;}
 #area_id {width: 230px;}
