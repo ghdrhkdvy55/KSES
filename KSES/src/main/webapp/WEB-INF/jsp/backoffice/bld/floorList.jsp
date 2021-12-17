@@ -1132,11 +1132,13 @@
 				
  	            var FloorPartInfo = new Object();
  	            FloorPartInfo.partCd = $(this).val();
- 	            FloorPartInfo.partMiniTop =  $("#top_" + FloorPartInfo.partCd).val(); 
- 	            FloorPartInfo.partMiniLeft =  $("#left_" + FloorPartInfo.partCd).val(); 
- 	            FloorPartInfo.partMiniWidth =  $("#width_" + FloorPartInfo.partCd).val(); 
- 	            FloorPartInfo.partMiniHeight =  $("#height_" + FloorPartInfo.partCd).val();
- 	            FloorPartInfo.partMiniRotate =  $("#rotate_" + FloorPartInfo.partCd).val();
+ 	            FloorPartInfo.partMiniTop = fn_NVL2($("#top_" + FloorPartInfo.partCd).val(),0); 
+ 	            FloorPartInfo.partMiniLeft = fn_NVL2($("#left_" + FloorPartInfo.partCd).val(),0); 
+ 	            FloorPartInfo.partMiniWidth = fn_NVL2($("#width_" + FloorPartInfo.partCd).val(),0); 
+ 	            FloorPartInfo.partMiniHeight = fn_NVL2($("#height_" + FloorPartInfo.partCd).val(),0);
+ 	            FloorPartInfo.partMiniRotate = fn_NVL2($("#rotate_" + FloorPartInfo.partCd).val(),0);
+ 	            
+ 	           console.log(FloorPartInfo.partMiniRotate);
  	            FloorPartInfo.partCss = fn_emptyReplace( $("#css_" + FloorPartInfo.partCd).val(), "N");
  	            PartInfoArray.push(FloorPartInfo);
  	        });

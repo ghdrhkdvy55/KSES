@@ -636,6 +636,11 @@ function fn_checkboxListJsonOnChange(_returnObject, _result, _checkVal, _checkbo
 function fn_NVL(reqValue){
     return (reqValue == undefined || reqValue == "") ? "" : reqValue;
 }
+
+//공백값 치환
+function fn_NVL2(reqValue, instValue){
+    return (reqValue == "undefined" || reqValue == undefined || reqValue == "") ? instValue : reqValue;
+}
 // rgb -> hex 로 변환
 function rgb2hex(rgb) {
      if (  rgb.search("rgb") == -1 ) {
