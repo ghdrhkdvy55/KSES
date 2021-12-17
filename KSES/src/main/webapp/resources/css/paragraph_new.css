@@ -225,7 +225,7 @@ table a{color: #5a5a5a;}
 .back_map .gui_text {
     height: auto;
     overflow: hidden;
-    max-height: 652px;
+    max-height: 567px;
     width: 365px;
     background: #fff;
     border-radius: 5px;
@@ -299,14 +299,19 @@ table tr.select{border: 2px solid #acb1d2; background-color: #acb1d2;}
 #seatForm .content{overflow:inherit;}
 
 /* scroll table */
-.scroll_table{position: relative; padding-top: 40px; margin-top: 20px; overflow-x:scroll;}
+.scroll_table {
+    position: relative;
+    padding-top: 40px;
+    overflow: auto;
+    height: 500px;
+}
 .scroll_table table thead tr{
 	position: absolute; top: 0; background-color: #fff; z-index: 999;
 	border-bottom: 1px solid #e6e6e6; width: 100%; box-shadow:0px 2px 0px 0px rgba(0, 0, 0, 0.04);
 	display:-webkit-inline-box;
 }
 .scroll_table table thead tr th{border-bottom: none; font-weight: 400;}
-.scroll_div{max-height: 535px; }
+
 .top_option{border-bottom: 1px solid #e8e8e8; width: 98%; margin: 0 auto;}
 .top_option input{margin-right: 2px;}
 .top_option select{min-width: 120px;}
@@ -368,7 +373,7 @@ table tr.select{border: 2px solid #acb1d2; background-color: #acb1d2;}
 .back_map .float_left .custom_bg .btn_bot{margin-top: 0;}
 /*.back_map .float_left .custom_bg .btn_bot a:first-child{margin-right: 10px;}*/
 .back_map .float_left .custom_bg .search_tab{margin-bottom: 0px;padding:20px 0;}
-.back_map .gui_text {padding:20px 20px 10px 20px;}
+.back_map .gui_text {padding:50px 20px;}
 table tr td input.selected{border:2px solid #eb6d2c;}
 
 .userPop table tr{display: inline-block;width: 50%;}
