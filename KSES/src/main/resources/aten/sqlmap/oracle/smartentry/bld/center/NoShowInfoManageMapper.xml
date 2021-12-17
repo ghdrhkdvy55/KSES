@@ -3,16 +3,16 @@
 <mapper namespace="com.kses.backoffice.bld.center.mapper.NoshowInfoManageMapper">
 	<select id="selectNoshowInfoList" resultType="lmap">
 		SELECT 
-			A.NOSHOW_CD, 
+			A.NOSHOW_CD, A.NOSHOW_DAY,
 			CASE A.NOSHOW_DAY
-				WHEN '1' THEN '월요일'
-				WHEN '2' THEN '화요일'
-				WHEN '3' THEN '수요일'
-				WHEN '4' THEN '목요일'
-				WHEN '5' THEN '금요일'
-				WHEN '6' THEN '토요일'
-				WHEN '7' THEN '일요일'
-			END NOSHOW_DAY, 
+				WHEN '2' THEN '월요일'
+				WHEN '3' THEN '화요일'
+				WHEN '4' THEN '수요일'
+				WHEN '5' THEN '목요일'
+				WHEN '6' THEN '금요일'
+				WHEN '7' THEN '토요일'
+				WHEN '1' THEN '일요일'
+			END NOSHOW_DAY_TEXT, 
 			TO_CHAR(TO_DATE(NOSHOW_AM_TM,'HH24MI'),'HH24:MI') AS NOSHOW_AM_TM, 
 			TO_CHAR(TO_DATE(NOSHOW_PM_TM,'HH24MI'),'HH24:MI') AS NOSHOW_PM_TM,
 			TO_CHAR(TO_DATE(NOSHOW_ALL_TM,'HH24MI'),'HH24:MI') AS NOSHOW_ALL_TM, 

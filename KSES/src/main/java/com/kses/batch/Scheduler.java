@@ -5,11 +5,13 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.kses.backoffice.cus.kko.service.KkoMsgManageSevice;
 import com.kses.backoffice.rsv.reservation.mapper.ResInfoManageMapper;
 import com.kses.backoffice.rsv.reservation.mapper.ResTimeInfoManageMapper;
+import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
 import com.kses.backoffice.sym.log.service.ScheduleInfoManageService;
 
 
@@ -30,6 +32,9 @@ public class Scheduler {
 	
 	@Autowired
 	private KkoMsgManageSevice kkoSerice;
+	
+	@Autowired
+	private ResvInfoManageService resvService;
 	
 	/**
  	* 23:50 분 타임 스케줄러 생성
@@ -87,7 +92,5 @@ public class Scheduler {
 			scheduleService.insertScheduleManage("RaiSchedule10Minute", "FAIL", e.toString());
     		LOGGER.error("resRaiSchedule10Minute failed", e);
     	}
-    	
 	}
-	
 }

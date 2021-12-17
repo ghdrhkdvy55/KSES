@@ -158,6 +158,7 @@ function stringLength (str, strlength, replaceTxt){
 	}
 	return str;
 }
+
 // 공통 체크 구문
 function any_empt_line_span(close_modal, frm_nm, alert_message, spanTxt, bPopup){
      $("#"+ close_modal).bPopup().close();

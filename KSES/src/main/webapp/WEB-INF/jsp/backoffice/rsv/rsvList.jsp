@@ -8,7 +8,7 @@
 <script src="/resources/js/front/qrcode.js"></script>
 <script src="/resources/js/jQuery.print.js"></script>
 <style type="text/css">
-	.ui-jqgrid .ui-jqgrid-htable th div{
+	.ui-jqgrid .ui-jqgrid-htable th div {
 		outline-style: none;
 		height: 30px;
 	}
@@ -110,46 +110,48 @@
       	<div class="pop_wrap">
           	<table class="detail_table">
               	<tbody>
-                  	<tr>
-                      <th>지점 </th>
-                      <td id="rsvPopCenterNm">장안지점</td>
-                      <th>좌석 정보 </th>
-                      <td id="rsvPopAreaInfo">1층 B-003</td>
-                  	</tr> 
-                  	<tr> 
+					<tr> 
                     	<th>좌석 변경</th>
                     	<td id="rsvPopSeatChange">
                       		<a class="blueBtn">좌석변경</a>
                     	</td>
-                    	<th>예약 번호</th>
-                    	<td id="rsvPopResvSeq">KSP7968</td>
+                    	<td colspan="3"></td>
                   	</tr>
                   	<tr>
-                    	<th>회원 구분 </th>
-                    	<td id="rsvPopResvUserDvsn">일반 회원</td>
-                    	<th>아이디</th>
-                    	<td id="rsvPopUserId">id5678</td>
+                      <th>지점 </th>
+                      <td id="rsvPopCenterNm"></td>
+                      <th>좌석 정보 </th>
+                      <td id="rsvPopAreaInfo"></td>
+                  	</tr> 
+                  	<tr>
+						<th>예약 번호</th>
+                    	<td id="rsvPopResvSeq"></td>
+						<th>예약일자</th>
+                    	<td id="rsvPopResvDate"></td>
                   	</tr>
                   	<tr>
                     	<th>이름 </th>
-                    	<td id="rsvPopResvUserNm">홍길동</td>
+                    	<td id="rsvPopResvUserNm"></td>
                     	<th>전화번호</th>
-                    	<td id="rsvPopResvUserPhone">010-1234-5678</td>
+                    	<td id="rsvPopResvUserPhone"></td>
+                  	</tr>
+                  	<tr>
+						<th>회원 구분 </th>
+                    	<td id="rsvPopResvUserDvsn"></td>
+						<th>아이디 </th>
+                    	<td id="rsvPopUserId"></td>
                   	</tr>
                   	<tr>
                     	<th>결제 정보 </th>
                     	<td>
 							<label id="rsvPopResvPayDvsn"></label>
-                      		<!-- <a href="#" class="blueBtn">영수증 출력 </a> -->
                     	</td>
                     	<th>문진표</th>
 						<td id="rsvPopResvUserAskYn">Y</td>
                   	</tr>
                   	<tr>
-                    	<th>블랙리스트</th>
-                    	<td>대상 아님 <!-- <a href="" class="blueBtn left80">블랙리스트 등록</a></td> -->
-                    	<th>발권 구분</th>
-                    	<td>온라인</td>
+						<th>발권 구분</th>
+                    	<td id="rsvPopResvTicketDvsn"></td>
                   	</tr>
               	</tbody>
           	</table>
@@ -505,15 +507,15 @@
 					{label: '아이디', name:'user_id', index:'user_id', align:'center'},
 					{label: '이름', name:'user_nm', index:'user_nm', align:'center'},
 					{label: '전화번호', name:'user_phone', index:'user_phone', align:'center'},
-					/* {label: '발권구분', name: 'resv_ticket_dvsn',  index:'resv_ticket_dvsn', align:'center'}, */
+					/* {label: '발권구분', name: 'resv_ticket_dvsn_text',  index:'resv_ticket_dvsn_text', align:'center'}, */
 					{label: '금액', name: 'resv_pay_cost', index:'resv_pay_cost', align:'center'},
 					{label: '신청일자', name:'resv_req_date', index:'resv_req_date', align:'center'},
-					{label: '예약일자', name:'resv_end_dt', index:'resv_end_dt', align:'center'},
-					{label: '예약상태', name:'resv_state', index:'resv_state', align:'center'},
+					{label: '예약일자', name:'resv_end_dt', index:'resv_end_dt', align:'center', formatter:jqGridFunc.formSetting},
+					{label: '예약상태', name:'resv_state_text', index:'resv_state_text', align:'center'},
 					{label: '문진', name:'resv_user_ask_yn', index:'resv_user_ask_yn', align:'center', width : "50px"},
-					{label: '결재상태', name:'resv_pay_dvsn', index:'resv_pay_dvsn', align:'center'},
-					{label: 'QR출력', name:'resv_qr_print', index:'resv_qr_print', align:'center', sortable : false, formatter:jqGridFunc.buttonSetting},
-					{label: '현금영수증출력', name:'cash_receipts_print', index:'cash_receipts_print', align:'center', sortable : false, formatter:jqGridFunc.buttonSetting},
+					{label: '결재상태', name:'resv_pay_dvsn_text', index:'resv_pay_dvsn_text', align:'center'},
+					{label: 'QR출력', name:'resv_qr_print', index:'resv_qr_print', align:'center', sortable : false, formatter:jqGridFunc.formSetting},
+					{label: '현금영수증출력', name:'resv_rcpt_print', index:'resv_rcpt_print', align:'center', sortable : false, formatter:jqGridFunc.formSetting},
 				], 
 				rowNum : 10,  //레코드 수
 				rowList : [10,20,30,40,50,100],  // 페이징 수
@@ -532,6 +534,9 @@
 				refresh : true,
 				loadComplete : function (data) {
 					$("#sp_totcnt").text(data.paginationInfo.totalRecordCount);
+			        var patchWidth = $("[aria-labelledby='gbox_"+$(this).prop("id")+"']").css("width");
+			        var patchTarget = $(this).parent();
+			        $(patchTarget).css("width", patchWidth);
 				},
 				loadError:function(xhr, status, error) {
 					alert(error); 
@@ -614,14 +619,18 @@
     	useYn : function(cellvalue, options, rowObject) {
 			return (rowObject.use_yn ==  "Y") ? "사용" : "사용안함";
 		},
-		buttonSetting : function (cellvalue, options, rowObject) {
-			var btn = "";
+		formSetting : function (cellvalue, options, rowObject) {
+			var index = options.colModel.index;
+			var item = rowObject;
+			var form = "";
 			
-			if(options.colModel.index == 'resv_qr_print') {
-				btn = '<a href="javascript:jqGridFunc.fn_qrInfo(&#39;' + rowObject.resv_seq + '&#39;);" class="detailBtn">QR출력</a>';	
+			if(index == 'resv_qr_print' && item.resv_pay_dvsn == 'RESV_PAY_DVSN_2') {
+				form = '<a href="javascript:jqGridFunc.fn_qrInfo(&#39;' + item.resv_seq + '&#39;);" class="detailBtn">QR출력</a>';	
+			} else if(index == 'resv_end_dt') {
+				form = item.resv_end_dt.substring(0,4) + "-" + item.resv_end_dt.substring(4,6) + "-" + item.resv_end_dt.substring(6,8); 	
 			}
 			
-			return btn;
+			return form;
 		},			
 		refreshGrid : function(){
 			$('#mainGrid').jqGrid().trigger("reloadGrid");
@@ -670,6 +679,7 @@
 						$("#rsvPopCenterNm").html(obj.center_nm);
 						$("#rsvPopAreaInfo").html(obj.seat_nm);
 						$("#rsvPopResvSeq").html(obj.resv_seq);
+						$("#rsvPopResvDate").html(obj.resv_end_dt);
 						$("#rsvPopResvUserDvsn").html(obj.resv_user_dvsn_text);
 						$("#rsvPopUserId").html(obj.user_id);
 						$("#rsvPopResvUserNm").html(obj.user_nm);
@@ -709,6 +719,7 @@
 				params,
 				false,
 				function(result) {
+			    	console.log(result);
 			    	if (result.status == "SUCCESS") {
 			    		$("#qrPrint > img").remove();
 						var qrcode = new QRCode("qrPrint", {

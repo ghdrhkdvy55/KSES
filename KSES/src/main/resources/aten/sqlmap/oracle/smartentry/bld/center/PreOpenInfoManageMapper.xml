@@ -3,16 +3,16 @@
 <mapper namespace="com.kses.backoffice.bld.center.mapper.PreOpenInfoManageMapper">
 	<select id="selectPreOpenInfoList" resultType="lmap">
 		SELECT 
-			A.OPTM_CD, 
+			A.OPTM_CD, A.OPEN_DAY,
 			CASE A.OPEN_DAY
-				WHEN '1' THEN '월요일'
-				WHEN '2' THEN '화요일'
-				WHEN '3' THEN '수요일'
-				WHEN '4' THEN '목요일'
-				WHEN '5' THEN '금요일'
-				WHEN '6' THEN '토요일'
-				WHEN '7' THEN '일요일'
-			END OPEN_DAY, 
+				WHEN '2' THEN '월요일'
+				WHEN '3' THEN '화요일'
+				WHEN '4' THEN '수요일'
+				WHEN '5' THEN '목요일'
+				WHEN '6' THEN '금요일'
+				WHEN '7' THEN '토요일'
+				WHEN '1' THEN '일요일'
+			END OPEN_DAY_TEXT, 
 			TO_CHAR(TO_DATE(OPEN_MEMBER_TM,'HH24MI'),'HH24:MI') AS OPEN_MEMBER_TM, 
 			TO_CHAR(TO_DATE(OPEN_GUEST_TM,'HH24MI'),'HH24:MI') AS OPEN_GUEST_TM, 
 			TO_CHAR(TO_DATE(CLOSE_MEMBER_TM,'HH24MI'),'HH24:MI') AS CLOSE_MEMBER_TM, 

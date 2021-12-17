@@ -611,24 +611,32 @@
 				    	location.href="/backoffice/login.do";
 				    } else if (result.status == "SUCCESS") {
 						//지점 자동취소 정보 세팅
+						var setHtml = "";
 						if(result.regist != null) {
-							var setHtml = "";
 							$("#bld_early_set .pop_tit span").html("[" + result.result + "]");
  							for(var i in result.regist) {
+ 								setHtml = "";
  								var obj = result.regist[i];
+
+ 								var color = 
+ 									obj.open_day == "1" ? "red" : 
+ 									obj.open_day == "7" ? "blue" : "black";
+ 								
  								setHtml += "<tr id='" + obj.optm_cd + "'>";
-								setHtml += "<td>" + obj.open_day + "</td>";
+								setHtml += "<td style='color : " + color + ";'>" + obj.open_day_text + "</td>";
 								setHtml += "<td><input type='text' id='" + obj.optm_cd + "_open_member_tm" + "'value='" + obj.open_member_tm + "' onKeyup='inputTimeFormat(this);' placeholder='HH:MM' maxlength='5'/></td>";
 								setHtml += "<td><input type='text' id='" + obj.optm_cd + "_open_guest_tm" +"'value='" + obj.open_guest_tm + "' onKeyup='inputTimeFormat(this);' placeholder='HH:MM' maxlength='5'/></td>";
 								setHtml += "<td><input type='text' id='" + obj.optm_cd + "_close_member_tm" + "'value='" + obj.close_member_tm + "' onKeyup='inputTimeFormat(this);' placeholder='HH:MM' maxlength='5'/></td>";
 								setHtml += "<td><input type='text' id='" + obj.optm_cd + "_close_guest_tm" +"'value='" + obj.close_guest_tm + "' onKeyup='inputTimeFormat(this);' placeholder='HH:MM' maxlength='5'/></td>";
 								setHtml += "<td>" + obj.last_updt_dtm + "</td>";
 								setHtml += "</tr>";
+								
+								$("#bld_early_set .inTxt").append(setHtml);
 							}
 						} else {
-							setHtml += "<tr colspan='4'>등록된 정보가 존재하지 않습니다.<tr>";	
+							$("#bld_early_set .inTxt").append("<tr colspan='4'>등록된 정보가 존재하지 않습니다.<tr>");	
 						}
-						$("#bld_early_set .inTxt").append(setHtml);
+						
 						
 						$("#preOpenCenterList").val(centerCd);
 					}
@@ -746,17 +754,19 @@
 						location.href="/backoffice/login.do";
 					} else if (result.status == "SUCCESS") {
 						//지점 자동취소 정보 세팅
+						var setHtml = "";
 						if(result.regist != null) {
 							var noshowInfoList = result.regist;
-							var setHtml = "";
-							
 							$("#bld_noshow_set .pop_tit span").html("[" + result.result + "]");
 							
  							for(var i=0; i < noshowInfoList.length; i++) {
  								var obj = noshowInfoList[i];
-								
+ 								var color = 
+ 									obj.noshow_day == "1" ? "red" : 
+ 									obj.noshow_day == "7" ? "blue" : "black";
+ 								
  								setHtml += "<tr id='" + obj.noshow_cd + "'>";
-								setHtml += "<td>" + obj.noshow_day + "</td>";
+								setHtml += "<td style='color : " + color + ";'>" + obj.noshow_day_text + "</td>";
 								setHtml += "<td><input type='text' id='" + obj.noshow_cd + "_noshow_am_tm" + "'value='" + obj.noshow_am_tm + "' onKeyup='inputTimeFormat(this);' placeholder='HH:MM' maxlength='5'/></td>";
 								setHtml += "<td><input type='text' id='" + obj.noshow_cd + "_noshow_pm_tm" +"'value='" + obj.noshow_pm_tm + "' onKeyup='inputTimeFormat(this);' placeholder='HH:MM' maxlength='5'/></td>";
 								setHtml += "<td><input type='text' id='" + obj.noshow_cd + "_noshow_all_tm" +"'value='" + obj.noshow_all_tm + "' onKeyup='inputTimeFormat(this);' placeholder='HH:MM' maxlength='5'/></td>";
@@ -765,7 +775,7 @@
 								setHtml += "</tr>";
 							}
 						} else {
-							setHtml += "<tr><td colspan='5'>등록된 자동취소정보가 존재하지 않습니다.<td></tr>";	
+							$("#bld_noshow_set .inTxt").append("<tr><td colspan='5'>등록된 자동취소정보가 존재하지 않습니다.<td></tr>");	
 						}
 						$("#bld_noshow_set .inTxt").append(setHtml);
 						$("#noshowCenterList").val(centerCd);

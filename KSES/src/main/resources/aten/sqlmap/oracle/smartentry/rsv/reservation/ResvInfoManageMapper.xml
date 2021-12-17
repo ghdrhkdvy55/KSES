@@ -14,10 +14,11 @@
 				SELECT  
 					A.RESV_SEQ, A.SEAT_CD, A.SEASON_CD, A.RESV_START_DT, A.RESV_END_DT, A.RESV_DVSN,
 					A.RESV_START_TM, A.RESV_END_TM, TO_CHAR(A.RESV_REQ_DATE,'YYYY-MM-DD HH24:MI') AS RESV_REQ_DATE, A.USER_ID, A.RESV_USER_DVSN,
-					A.RESV_USER_ASK_YN, A.RESV_RCPT_YN, A.RESV_RCPT_NUMBER, A.RESV_PAY_COST, 
-					FN_DETAILCODENM(A.RESV_TICKET_DVSN) AS RESV_TICKET_DVSN,
-					FN_DETAILCODENM(A.RESV_PAY_DVSN) AS RESV_PAY_DVSN,
-					FN_DETAILCODENM(A.RESV_STATE) AS RESV_STATE,
+					A.RESV_USER_ASK_YN, A.RESV_RCPT_YN, A.RESV_RCPT_NUMBER, A.RESV_PAY_COST, A.RESV_PAY_DVSN,
+					A.RESV_TICKET_DVSN, A.RESV_STATE,
+					FN_DETAILCODENM(A.RESV_TICKET_DVSN) AS RESV_TICKET_DVSN_TEXT,
+					FN_DETAILCODENM(A.RESV_PAY_DVSN) AS RESV_PAY_DVSN_TEXT,
+					FN_DETAILCODENM(A.RESV_STATE) AS RESV_STATE_TEXT,
 					CASE  
     					WHEN A.RESV_ENTRY_DVSN = 'ENTRY_DVSN_1'  THEN '입석' 
     					ELSE (SELECT SEAT_NM FROM TSEB_SEAT_INFO_D WHERE SEAT_CD = A.SEAT_CD)
@@ -138,7 +139,7 @@
 		WHERE A.USER_ID = #{userId}
 		AND A.SEAT_CD = B.SEAT_CD(+)
 		AND A.CENTER_CD = C.CENTER_CD
-		AND A.RESV_STATE NOT IN ('RESV_STATE_4')
+		AND A.RESV_STATE NOT IN ('RESV_STATE_3')
 		AND ROWNUM = 1
 		ORDER BY A.RESV_SEQ DESC
 	]]>	    
@@ -159,7 +160,7 @@
 				SELECT 
 					NVL(COUNT(*),0) FROM TSER_RESV_INFO_I
 				WHERE SEAT_CD = A.SEAT_CD
-				AND RESV_STATE NOT IN ('RESV_STATE_4') 
+				AND RESV_STATE NOT IN ('RESV_STATE_3') 
 				AND FN_RESVDATE(A.CENTER_CD) BETWEEN RESV_START_DT AND RESV_END_DT
 			) <= 0 THEN 'Y' 
 			ELSE 'N'
@@ -195,10 +196,10 @@
 		AND A.USER_ID = #{params.userId}
 		<choose>
 			<when test='params.searchStateCondition == "RESV"'>
-				AND A.RESV_STATE NOT IN ('RESV_STATE_3','RESV_STATE_4')
+				AND A.RESV_STATE NOT IN ('RESV_STATE_3')
 			</when>
 			<when test='params.searchStateCondition == "CANCEL"'>
-				AND A.RESV_STATE = 'RESV_STATE_4'
+				AND A.RESV_STATE = 'RESV_STATE_3'
 			</when>
 		</choose>		
 		<choose>
@@ -261,7 +262,7 @@
 			</when>
 		</choose>
 		AND A.RESV_END_DT = #{params.resvDate}
-		AND A.RESV_STATE NOT IN ('RESV_STATE_4')
+		AND A.RESV_STATE NOT IN ('RESV_STATE_3')
     </select>  
     
 	<!-- 예약 고객 아이디 조회 -->
@@ -303,7 +304,7 @@
     
     	INSERT INTO TSER_RESV_INFO_I 
     	(
-			RESV_SEQ, CENTER_CD, FLOOR_CD, PART_CD, SEAT_CD, 
+			RESV_SEQ, SEASON_CD, CENTER_CD, FLOOR_CD, PART_CD, SEAT_CD, 
 			RESV_START_DT, RESV_END_DT, RESV_DVSN, RESV_START_TM, RESV_END_TM, 
 			RESV_REQ_DATE, RESV_USER_DVSN, USER_ID, RESV_USER_NM, RESV_USER_CLPHN, RESV_USER_ASK_YN, RESV_TICKET_DVSN, 
 			RESV_STATE, RESV_RCPT_YN, RESV_INDVDLINFO_AGRE_YN,
@@ -312,7 +313,7 @@
 		)
 		VALUES 
 		(
-			#{resvSeq}, #{centerCd, jdbcType=VARCHAR}, #{floorCd, jdbcType=VARCHAR}, #{partCd, jdbcType=VARCHAR}, #{seatCd, jdbcType=VARCHAR},
+			#{resvSeq}, #{seasonCd, jdbcType=VARCHAR}, #{centerCd, jdbcType=VARCHAR}, #{floorCd, jdbcType=VARCHAR}, #{partCd, jdbcType=VARCHAR}, #{seatCd, jdbcType=VARCHAR},
 			TO_CHAR(TO_DATE(#{resvDate, jdbcType=VARCHAR},'YYYYMMDD') - (INTERVAL '1' DAY),'YYYYMMDD'), #{resvDate, jdbcType=VARCHAR}, 'TEMP', '0000', '2359',
 			SYSDATE, #{resvUserDvsn, jdbcType=VARCHAR}, 
 			<choose>
@@ -325,7 +326,7 @@
 			</choose>
 			#{resvUserNm}, #{resvUserClphn}, #{resvUserAskYn, jdbcType=VARCHAR}, 'RESV_TICKET_DVSN_1',
 			'RESV_STATE_1', 'N', #{resvIndvdlinfoAgreYn, jdbcType=VARCHAR},
-			#{resvEntryDvsn, jdbcType=VARCHAR}, 'RESV_PAY_DVSN_1', FN_PAYCOST(#{centerCd, jdbcType=VARCHAR}, #{seatCd, jdbcType=VARCHAR}, #{resvEntryDvsn, jdbcType=VARCHAR}), SYSDATE, 'admin', 
+			#{resvEntryDvsn, jdbcType=VARCHAR}, 'RESV_PAY_DVSN_1', FN_PAYCOST(#{centerCd, jdbcType=VARCHAR}, #{resvPayCost, jdbcType=VARCHAR}, #{resvEntryDvsn, jdbcType=VARCHAR}), SYSDATE, 'admin', 
 			SYSDATE, 'admin'  	
 		)
     </insert>
@@ -335,7 +336,7 @@
     	<foreach collection="resvDateList" item="resvDate" index="index" separator=";" open="DECLARE BEGIN" close="; END;">
 	    	INSERT INTO TSER_RESV_INFO_I 
 	    	(
-				RESV_SEQ, CENTER_CD, FLOOR_CD, PART_CD, SEAT_CD, 
+				RESV_SEQ, SEASON_CD, CENTER_CD, FLOOR_CD, PART_CD, SEAT_CD, 
 				RESV_START_DT, RESV_END_DT, RESV_DVSN, RESV_START_TM, RESV_END_TM, 
 				RESV_REQ_DATE, RESV_USER_DVSN, USER_ID, RESV_USER_NM, RESV_USER_CLPHN, RESV_USER_ASK_YN, RESV_TICKET_DVSN, 
 				RESV_STATE, RESV_RCPT_YN, RESV_INDVDLINFO_AGRE_YN,
@@ -344,11 +345,11 @@
 			)
 			VALUES 
 			(
-				SEQ_SER_RERV_INFO.NEXTVAL, #{centerCd, jdbcType=VARCHAR}, #{floorCd, jdbcType=VARCHAR}, #{partCd, jdbcType=VARCHAR}, #{seatCd, jdbcType=VARCHAR},
+				SEQ_SER_RERV_INFO.NEXTVAL, #{seasonCd, jdbcType=VARCHAR}, #{centerCd, jdbcType=VARCHAR}, #{floorCd, jdbcType=VARCHAR}, #{partCd, jdbcType=VARCHAR}, #{seatCd, jdbcType=VARCHAR},
 				TO_CHAR(TO_DATE(#{resvDate, jdbcType=VARCHAR},'YYYYMMDD') - (INTERVAL '1' DAY),'YYYYMMDD'), #{resvDate, jdbcType=VARCHAR}, 'TEMP', '0000', '2359',
 				SYSDATE, #{resvUserDvsn, jdbcType=VARCHAR}, #{userId, jdbcType=VARCHAR}, #{resvUserNm}, #{resvUserClphn}, #{resvUserAskYn, jdbcType=VARCHAR}, 'RESV_TICKET_DVSN_1',
 				'RESV_STATE_1', 'N', #{resvIndvdlinfoAgreYn, jdbcType=VARCHAR},
-				#{resvEntryDvsn, jdbcType=VARCHAR}, 'RESV_PAY_DVSN_1', FN_PAYCOST(#{centerCd, jdbcType=VARCHAR}, #{seatCd, jdbcType=VARCHAR}, #{resvEntryDvsn, jdbcType=VARCHAR}), 
+				#{resvEntryDvsn, jdbcType=VARCHAR}, 'RESV_PAY_DVSN_1', FN_PAYCOST(#{centerCd, jdbcType=VARCHAR}, #{resvPayCost, jdbcType=VARCHAR}, #{resvEntryDvsn, jdbcType=VARCHAR}), 
 				SYSDATE, #{adminId, jdbcType=VARCHAR}, SYSDATE, #{adminId, jdbcType=VARCHAR}  	
 			)
 		</foreach>
@@ -360,6 +361,7 @@
     		FLOOR_CD = #{params.floorCd},
     		PART_CD = #{params.partCd},
     		SEAT_CD = #{params.seatCd},
+    		RESV_PAY_COST = #{params.resvPayCost},
     		LAST_UPDUSR_ID = #{params.userId},
     		LAST_UPDT_DTM = SYSDATE
     	WHERE RESV_SEQ = #{params.resvSeq}
@@ -413,5 +415,5 @@
 			#{params.resvDate, mode=OUT, jdbcType=VARCHAR, javaType=string}
 		)
 	}
-	</select>     
+	</select>   
 </mapper>

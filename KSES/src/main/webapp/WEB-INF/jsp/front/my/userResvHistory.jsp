@@ -265,9 +265,7 @@
 				switch(resvState) {
 					case "RESV_STATE_2" : className = "done"; 
 						break;
-					case "RESV_STATE_3" : className = "done"; 
-						break;
-					case "RESV_STATE_4" : className = "cancel"; 
+					case "RESV_STATE_3" : className = "cancel"; 
 						break;
 					default : className = "done" 
 						break;

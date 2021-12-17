@@ -72,7 +72,7 @@
 						AND RESV_END_DT = #{params.resvDate, jdbcType=VARCHAR}
 					</otherwise>
 				</choose>
-         		AND RESV_STATE NOT IN ('RESV_STATE_4')
+         		AND RESV_STATE NOT IN ('RESV_STATE_3')
 			) > 0  THEN '1'
 			WHEN
 			(
@@ -88,7 +88,7 @@
 						AND RESV_END_DT = #{params.resvDate, jdbcType=VARCHAR}
 					</otherwise>
 				</choose>
-         		AND RESV_STATE NOT IN ('RESV_STATE_4')
+         		AND RESV_STATE NOT IN ('RESV_STATE_3')
 			) > 0  THEN '2'
 			ELSE '0' END AS status
 		FROM TSEB_SEASON_M A, TSEB_PART_INFO_D B, TSEB_SEASON_STINFO_D C

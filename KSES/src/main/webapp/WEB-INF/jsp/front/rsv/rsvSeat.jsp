@@ -48,13 +48,15 @@
 	<input type="hidden" name="resvSeq" id="resvSeq" value="">
 	<input type="hidden" name="resvDate" id="resvDate" value="${resvInfo.resvDate}">	
 	
-	<input type="hidden" name="centerCd" id="seasonCd">
+	<!-- 예약정보 sessionStorage검토 -->
+	<input type="hidden" name="seasonCd" id="seasonCd">
 	<input type="hidden" name="centerCd" id="centerCd" value="${resvInfo.centerCd}">
 	<input type="hidden" name="partCd" id="partCd" value="">
 	<input type="hidden" name="floorCd" id="floorCd" value="">
 	<input type="hidden" name="seatCd" id="seatCd" value="">
 	<input type="hidden" name="enterDvsn" id="enterDvsn" value="">
 	
+	<!-- 좌석 다시 앉기 sessionStorage검토 -->
 	<input type="hidden" name="reSeatCenterCd" id="reSeatCenterCd" value="${resvInfo.centerCd}">
 	<input type="hidden" name="rePartCd" id="rePartCd" value="${resvInfo.partCd}">
 	<input type="hidden" name="reFloorCd" id="reFloorCd" value="${resvInfo.floorCd}">
@@ -115,7 +117,7 @@
                             <h4>예약 정보 입력</h4>
                             <ul id="standing_resv_area">
                                 <li><input type="text" id="ENTRY_DVSN_1_resvUserNm" class="nonMemberArea" placeholder="이름을 입력해주세요."></li>
-                                <li><input type="text" id="ENTRY_DVSN_1_resvUserClphn" class="nonMemberArea" onkeypress="onlyNum();" placeholder="전화번호를 '-'없이 입력해주세요."></li>
+                                <li><input type="number" id="ENTRY_DVSN_1_resvUserClphn" class="nonMemberArea" onkeypress="onlyNum();" placeholder="전화번호를 '-'없이 입력해주세요."></li>
                                 <li class="certify nonMemberArea" onclick="javascript:seatService.fn_certification();">
                                 	<a href="javascript:void(0);"><img src="/resources/img/front/certify.svg" alt="">인증 하기</a>
                                 </li>
@@ -172,7 +174,7 @@
                                     <input class="cash_radio" type="radio" name="ENTRY_DVSN_1_rcpt_dvsn" id="ENTRY_DVSN_1_rcpt_dvsn2" value="RCPT_DVSN_2">
                                     <label for="ENTRY_DVSN_1_rcpt_dvsn2"><span></span>지출 증빙용</label>
                                 </li>
-                                <li><input type="text" id="ENTRY_DVSN_1_cash_number" onkeypress="onlyNum();" placeholder="'-'없이 입력해 주세요."></li>
+                                <li><input type="number" id="ENTRY_DVSN_1_cash_number" onkeypress="onlyNum();" placeholder="'-'없이 입력해 주세요."></li>
                             </ul>
                             <ul class="rsv_btn">
                                 <li><a href="javascript:seatService.fn_checkForm();">예약하기</a></li>
@@ -247,7 +249,7 @@
                                     <h4>예약 정보 입력</h4>
                                     <ul id="ENTRY_DVSN_2_resv_area">
                                         <li class="nonMemberArea"><input type="text" id="ENTRY_DVSN_2_resvUserNm" placeholder="이름을 입력해주세요."></li>
-                                        <li class="nonMemberArea"><input type="text" id="ENTRY_DVSN_2_resvUserClphn" onkeypress="onlyNum();" placeholder="전화번호를 '-'없이 입력해주세요."></li>
+                                        <li class="nonMemberArea"><input type="number" id="ENTRY_DVSN_2_resvUserClphn" onkeypress="onlyNum();" placeholder="전화번호를 '-'없이 입력해주세요."></li>
                                         <li class="certify nonMemberArea" onclick="javascript:seatService.fn_certification();">
                                         	<a href="javascript:void(0);"><img src="/resources/img/front/certify.svg" alt="">인증 하기</a>
                                         </li>
@@ -303,7 +305,7 @@
                                             <input class="cash_radio" type="radio" name="ENTRY_DVSN_2_rcpt_dvsn" id="ENTRY_DVSN_2_rcpt_dvsn2" value="RCPT_DVSN_2">
                                             <label for="ENTRY_DVSN_2_rcpt_dvsn2"><span></span>지출 증빙용</label>
                                         </li>
-                                        <li><input type="text" id="ENTRY_DVSN_2_cash_number" onkeypress="onlyNum();" placeholder="'-'없이 입력해 주세요."></li>
+                                        <li><input type="number" id="ENTRY_DVSN_2_cash_number" onkeypress="onlyNum();" placeholder="'-'없이 입력해 주세요."></li>
                                     </ul>      -->   
                                     <ul class="rsv_btn">
                                         <li><a href="javascript:seatService.fn_checkForm();">예약하기</a></li>
@@ -375,7 +377,6 @@
     <!-- // 예약취소 팝업 -->
     <div data-popup="rsv_cancel" class="popup">
       <div class="pop_con rsv_popup">
-          <a class="button b-close">X</a>
           <div class="pop_wrap">
               <h4><img src="/resources/img/front/cancle.svg" alt="예약취소">예약이 취소 되었습니다.</h4>
           </div>
@@ -388,9 +389,8 @@
     <!-- 예약취소 팝업 // -->
     
 	<!-- // 개인정보 수집이용 약관 팝업 -->
-    <div id="" data-popup="person_agree" class="popup">
+    <div id="person_agree" data-popup="person_agree" class="popup">
     	<div class="pop_con rsv_popup">
-          	<a class="button b-close">X</a>
           	<div class="pop_wrap">
             	<div class="text privacy_text">
                 	<p class="font14 mg_l20">개인정보 수집·이용 및  제 3자 제공 동의서</p><br>                
@@ -455,7 +455,7 @@
             </div>
           </div>
           <div class="cancel_btn">
-              <a href="" class="grayBtn">닫기</a>
+              <a href="javascript:$('#person_agree').bPopup().close();" class="grayBtn">닫기</a>
           </div>
           <div class="clear"></div>
       </div>
@@ -546,7 +546,12 @@
 					function(request) {
 						alert("ERROR : " + request.status);	       						
 					}    		
-				);	    						
+				);
+				
+				window.addEventListener('beforeunload', (event) => { 
+					// 명세에 따라 preventDefault는 호출해야하며, 기본 동작을 방지합니다. 
+					event.preventDefault();
+				});	
 			},
 			fn_reSeat : function() {
 				$("#" + $("#reEnterDvsn").val()).addClass("active");
@@ -675,18 +680,6 @@
 	 	                                '-moz-transform': 'rotate(' + fn_NVL(item.part_mini_rotate) + 'deg)',
 	 	                                '-webkit-transform': 'rotate(' + fn_NVL(item.part_mini_rotate) + 'deg)',
 	 	                            });
-	 	                            
-	 	                            if ( parseInt( item.part_mini_rotate) != 0 ){
-	 	                            	 $('.floor_map ul li#s' + trim(fn_NVL(item.part_cd)) + "> .section >.circle").css({
-	 	   	                        	    '-moz-transform': 'rotate(-'+ fn_NVL(item.part_mini_rotate) + 'deg)',
-	 	  		                            '-webkit-transform': 'rotate(-'+ fn_NVL(item.part_mini_rotate) + 'deg)',
-	 	   	                             });
-		                        	} else {
-										$('.floor_map ul li#s' + trim(fn_NVL(item.part_cd)) + "> .section >.circle").css({
-											'-moz-transform': 'rotate('+ Math.abs(fn_NVL(item.part_mini_rotate)) + 'deg)',
-											'-webkit-transform': 'rotate(+'+ Math.abs(fn_NVL(item.part_mini_rotate)) + 'deg)',
-										});
-		                            }
                             	});
                             	
 	 		 	                   
