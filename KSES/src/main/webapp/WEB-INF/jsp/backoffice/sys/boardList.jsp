@@ -588,7 +588,8 @@
 				    //사용자 값에 따른 변경값
 		            boardCenterId = ($("#authorCd").val() != "ROLE_ADMIN" && $("#authorCd").val() != "ROLE_SYSTEM")  
 		            	? insertBoardCenterId : ckeckboxValueNoPopup("boardCenterId");
-		            boardAllCk = insertBoardAllCk
+		            boardAllCk = ($("#authorCd").val() != "ROLE_ADMIN" && $("#authorCd").val() != "ROLE_SYSTEM")  
+	            	? "N" : $("#boardAllNotice").is(":checked") == true ? "Y" : "N";
 
 				    formData.append('mode' , $("#mode").val());
 				    formData.append('boardSeq' , $("#boardSeq").val());

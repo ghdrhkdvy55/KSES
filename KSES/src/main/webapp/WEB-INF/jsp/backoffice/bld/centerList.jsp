@@ -296,7 +296,7 @@
 	$(document).ready(function() { 
 		if($("#authorCd").val() != "ROLE_ADMIN" && $("#authorCd").val() != "ROLE_SYSTEM") {
 			isMultiSelect = false;
-			$(".right_box").hide();
+			$(".right_box").eq(0).hide();
 		}
 		
 		jqGridFunc.setGrid("mainGrid");

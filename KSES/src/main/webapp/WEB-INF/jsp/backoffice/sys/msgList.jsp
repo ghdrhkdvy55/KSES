@@ -33,14 +33,11 @@
         <p>기간</p>
         <input type="text" id="searchFrom" class="cal_icon"> ~
         <input type="text" id="searchTo" class="cal_icon">
-        <p>검색 구분</p>
-        <select>
-          <option value="0">선택</option>
-        </select>
-        <input type="text" placeholder="검색어를 입력하세요.">
+        <p>검색어</p>
+        <input type="text" id="searchKeyword" placeholder="검색어를 입력하세요.">
       </div>
       <div class="inlineBtn">
-        <a href=""class="grayBtn">검색</a>
+        <a href="javascript:jqGridFunc.fn_search();"class="grayBtn">검색</a>
       </div>
     </div>
     <div class="left_box mng_countInfo">
@@ -221,7 +218,7 @@
 							    		          			"searchKeyword" : $("#searchKeyword").val(),
 							    		          			"pageUnit":$('.ui-pg-selbox option:selected').val()
 							    		          		})
-    		          		}).trigger("reloadGrid");
+    		          	}).trigger("reloadGrid");
     		        },onSelectRow: function(rowId){
     	                if(rowId != null) {  }// 체크 할떄
     	            },ondblClickRow : function(rowid, iRow, iCol, e){
@@ -253,7 +250,21 @@
     			return (rowObject.kind == "S") ? "SMS" : "MMS";
     		}, fn_mmsInfo : function(seq){
     			
-    		}
+    		}, fn_search: function(){
+	    			$("#mainGrid").setGridParam({
+	    				datatype : "json",
+	    				postData : JSON.stringify({
+	    					"pageIndex": $("#pager .ui-pg-input").val(),
+	    					"searchKeyword" : $("#searchKeyword").val(),
+	    					"pageUnit":$('.ui-pg-selbox option:selected').val(),
+	    					"searchFrom" : $("#searchFrom").val(),
+	    					"searchTo" : $("#searchTo").val()
+	    				}),
+	    				loadComplete : function(data) {
+	    					$("#sp_totcnt").text(data.paginationInfo.totalRecordCount);
+	    				}
+	    			}).trigger("reloadGrid");
+	     		}, 
     }
 </script>
 <c:import url="/backoffice/inc/popup_common.do" />

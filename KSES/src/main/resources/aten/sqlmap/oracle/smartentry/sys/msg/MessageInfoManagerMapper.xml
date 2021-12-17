@@ -15,12 +15,15 @@
                        SUBJECT, MSG, REQTIME, RESULT, KIND, ERRCODE, SENTTIME
 				FROM TSEB_MSG_T A
 				WHERE 1=1
+				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchFrom) and !@org.apache.commons.lang3.StringUtils@isEmpty(params.searchTo)">
+					AND TO_CHAR(A.FRST_REGIST_PNTTM, 'yyyymmdd') BETWEEN #{params.searchFrom} AND #{params.searchTo} 
+				</if>
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
 					AND 
 					( 
-						A.GROUP_TITLE LIKE '%'|| #{params.searchKeyword}||'%' 
+						A.CALLNAME LIKE '%'|| #{params.searchKeyword}||'%' 
 						OR
-						A.GROUP_DC LIKE '%'||#{params.searchKeyword}||'%'
+						A.CALLPHONE LIKE '%'||#{params.searchKeyword}||'%'
 					) 
 				</if>
 				ORDER BY A.INTIME DESC
