@@ -402,7 +402,13 @@
       			<!-- <img src="/resources/img/qrcode.png" alt=""> -->
       		</div>
 			<!--QR 영역//-->
-
+			
+			<!--접종완료//-->
+            <!--//백신패스 만료-->
+            <!-- <li class="vacState"><span class="vacNon"><img alt="" src="/resources/img/front/error_outline_black_24dp.svg">백신패스 만료</span></li> -->
+                 <li class="vacState"><span class="vacNon">백신패스 만료</span></li>
+            <!--백신패스 만료//-->
+                            			
 			<table class="detail_table">
 				<tbody>
 					<tr>

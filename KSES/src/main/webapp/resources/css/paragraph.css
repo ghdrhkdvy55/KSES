@@ -906,4 +906,28 @@ padding-left: 5px;
 
 /*qr출력*/
 .pint_a {float: right;}
-.qrPrint {width: 50%; margin: auto; padding-bottom: 60px;}
+.qrPrint {width: 50%; margin: auto; padding-bottom: 30px;}
+
+/*1217 qr코드 백신정보*/
+.vacState {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+.vacState span{
+    font-weight: 400;
+    background: #eee;
+    padding: 4px 10px;
+    border-radius: 25px;
+}
+.vacState .vacDone {color: #2667f7;}
+.vacState .vacNon {color: #f72626; }
+
+/*1217 qr코드출력버튼*/
+.pint_a a {
+    padding: 4px 10px;
+    border-radius: 4px;
+    border: 1px solid #c0c0c0;
+    background: #f5f5f5;
+    color: #000;
+}
+.pint_a img {vertical-align:bottom; margin-left: 4px;}
