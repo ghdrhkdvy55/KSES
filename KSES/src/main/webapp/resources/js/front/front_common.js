@@ -399,31 +399,13 @@ function resvUsingTimeCheck(time) {
 		}
 	},5000);
 }
-function fn_getResvDate() {
-	//예약일자
-	var test_time = "1700";
-	
-	var date = new Date();
-	
-	var time = date.format("HHmm");
-	var today = date.format("yyyyMMdd");
-	
-	date.setDate(date.getDate() + 1);
-	var tomorrow = date.format("yyyyMMdd")
-	var resvDate = (time < test_time) ? today : tomorrow;
-	
-	sessionStorage.setItem("resvDate", resvDate);
-	
-	//예약페이지 사용 만료시간
-	var date2 = new Date();
-	date2.setMinutes(date2.getMinutes() + 360);
-	var resvUsingTime = date2.format("yyyyMMddHHmm");
-	
-	sessionStorage.setItem("resvUsingTime", resvUsingTime);
-	
-	return resvDate;
-}
 
+/**
+ * 동일자 다중예약 방지
+ * @param -> userDvsn(회원구분) userId(아이디) userPhone(전화번호) resvDate(예약하려는일자)
+ * 
+ * @returns
+ */
 function fn_resvDuplicateCheck(params) {
 	var url = "/front/resvInfoDuplicateCheck.do";
 	var isResvDuplicate = true;
@@ -451,6 +433,87 @@ function fn_resvDuplicateCheck(params) {
 	);
 	return isResvDuplicate;
 }
+
+/**
+ * 사용자 예약정보 조회
+ * 
+ * @param -> resvSeq(예약번호)
+ * @returns
+ */
+function fn_getResvInfo (resvSeq) {
+	var url = "/front/getResvInfo.do";
+	var isSuccess = false;
+	var resvResult = {};
+	
+	var params = {
+	    "resvSeq" : resvSeq
+	}
+	
+	fn_Ajax
+	(
+	    url,
+	    "GET",
+		params,
+		false,
+		function(result) {
+	    	if(result.status == "SUCCESS") {
+		    	if(result.resvInfo != null) {
+		    		resvResult = result.regist;
+					isSuccess = true;
+		    	} else {
+		    		fn_openPopup("해당 예약정보가 존재하지 않습니다.", "red", "ERROR", "확인", "");
+		    	}
+	    	} else if(result.status == "LOGIN FAIL") {
+	    		fn_openPopup("로그인중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
+	    	}
+		},
+		function(request) {
+			fn_openPopup("ERROR : " + request.status, "red", "ERROR", "확인", "");	       						
+		}    		
+	);
+	
+	resvResult.isSuccess = isSuccess;  
+	return resvResult;
+}
+
+/**
+ * 결제 취소 공통
+ * 
+ * @param params
+ * @returns
+ */
+function fn_payment (params) {
+	var isSuccess = false;
+	var url = "/backoffice/rsv/speedCheck.do";
+	var payMentResult = {};
+	
+	fn_Ajax
+	(
+	    url,
+	    "POST",
+		params,
+		false,
+		function(result) {
+	    	if(result.regist != null) {
+				if(result.regist.Error_Msg == "SUCCESS") {
+					payMentResult = result.regist;
+					isSuccess = true;
+				} else {
+					fn_openPopup(result.regist.Error_Msg, "red", "ERROR", "확인", "javascript:location.reload();");
+				}
+	    	} else {
+	    		fn_openPopup("로그인중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
+	    	}
+		},
+		function(request) {
+			fn_openPopup("ERROR : " + request.status, "red", "ERROR", "확인", "");
+		}    		
+	);
+	
+	payMentResult.isSuccess = isSuccess;  
+	return payMentResult;
+}
+
 
 function fn_resvVaildCheck(params) {
 	var url = "/front/resvValidCheck.do";

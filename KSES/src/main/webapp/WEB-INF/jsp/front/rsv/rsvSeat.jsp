@@ -156,7 +156,7 @@
                             </ul>
 
                             <!--현금 영수증 발급-->
-                            <h4>현금 영수증 발급</h4>
+<!--                             <h4>현금 영수증 발급</h4>
                             <ul class="bill_confirm">
                                 <li class="check_impnt">
                                     <input class="magic-checkbox qna_check" type="checkbox" name="layout" id="ENTRY_DVSN_1_bill_confirm" value="Y" onclick="seatService.fn_billConfirmChange();">
@@ -177,7 +177,7 @@
                             <ul class="rsv_btn">
                                 <li><a href="javascript:seatService.fn_checkForm();">예약하기</a></li>
                                 <li><a data-popup-open="rsv_cancel">취소</a></li>
-                            </ul>
+                            </ul> -->
                         </section>
                     </div>
                     
@@ -241,20 +241,6 @@
                                         <div>
                                    			
                                         </div>
-                                        
-                                        <!--GUI영역-->
-<!-- 										<div class="gui_seat mapbottom">
-											<div class="mapArea pinch-zoom-parent">
-												<div class="mapBox">
-													<div class="part_map pinch-zoom"  style="background-repeat: no-repeat; background-position: center center">
-                                    					<div class="seat">
-                                        					<ul id="area_Map">
-                                        					</ul>
-                                    					</div>
-                                					</div>
-                        						</div>
-                    						</div>
-                						</div> -->
 									</div>
 
                                     <!--예약 정보 입력-->
@@ -301,7 +287,7 @@
                                     </ul>
 
 		                            <!--현금 영수증 발급-->
-		                            <h4>현금 영수증 발급</h4>
+<!-- 		                            <h4>현금 영수증 발급</h4>
 		                            <ul class="bill_confirm">
 		                                <li class="check_impnt">
 		                                    <input class="magic-checkbox qna_check" type="checkbox" name="layout" id="ENTRY_DVSN_2_bill_confirm" value="Y" onclick="seatService.fn_billConfirmChange();">
@@ -318,11 +304,11 @@
                                             <label for="ENTRY_DVSN_2_rcpt_dvsn2"><span></span>지출 증빙용</label>
                                         </li>
                                         <li><input type="text" id="ENTRY_DVSN_2_cash_number" onkeypress="onlyNum();" placeholder="'-'없이 입력해 주세요."></li>
-                                    </ul>
+                                    </ul>      -->   
                                     <ul class="rsv_btn">
                                         <li><a href="javascript:seatService.fn_checkForm();">예약하기</a></li>
                                         <li><a data-popup-open="rsv_cancel">취소</a></li>
-                                    </ul>                                 
+                                    </ul>                         
                                 </div>
                             </div>
                         </section>
@@ -348,7 +334,7 @@
     <!-- // 예약완료 팝업 -->
     <div id="rsv_done" class="popup">
       <div class="pop_con rsv_popup">
-          <a class="button b-close">X</a>
+          <!-- <a class="button b-close">X</a> -->
           <div class="pop_wrap">
               <h4><img src="/resources/img/front/done.svg" alt="예약완료">예약이 완료 되었습니다.</h4>
                <ul class="rsv_list">
@@ -484,9 +470,9 @@
     	var certificationName = isMember ? "${sessionScope.userLoginInfo.userNm}" : "";
     	var certificationNumber = isMember ? "${sessionScope.userLoginInfo.userPhone}" : "";
     	
-    	var userRcptYn = isMember ? "${sessionScope.userLoginInfo.userRcptYn}" : "";
-    	var userRcptDvsn = isMember ? "${sessionScope.userLoginInfo.userRcptDvsn}" : "";
-    	var userRcptNumber = isMember ? "${sessionScope.userLoginInfo.userRcptNumber}" : "";
+//    	var userRcptYn = isMember ? "${sessionScope.userLoginInfo.userRcptYn}" : "";
+//    	var userRcptDvsn = isMember ? "${sessionScope.userLoginInfo.userRcptDvsn}" : "";
+//    	var userRcptNumber = isMember ? "${sessionScope.userLoginInfo.userRcptNumber}" : "";
     	
     	var pinchzoom = "";
     	var pinchInit = true;
@@ -590,23 +576,26 @@
 					
 					$("#enterDvsn").val(enterDvsn);
 					
-					$("#" + enterDvsn + "_cash_area").hide();
-					$("input:radio[name='" + enterDvsn + "_rcpt_dvsn']").eq(0).prop("checked", true);
+
 					
 					$("#" + enterDvsn + "_resvUserNm").val("");
 					$("#" + enterDvsn + "_resvUserClphn").val("");
-					$("#" + enterDvsn + "_cash_number").val("");
-					$("input:radio[name='" + enterDvsn + "_rcpt_dvsn']").eq(0).prop("checked", true);
+
 					$("input:checkbox[id='" + enterDvsn + "_qna_check']").prop("checked", false);
 					$("input:checkbox[id='" + enterDvsn + "_person_agree']").prop("checked", false);
-					$("input:checkbox[id='" + enterDvsn + "_bill_confirm']").prop("checked", false);
+					
+					//$("#" + enterDvsn + "_cash_area").hide();
+					//$("input:radio[name='" + enterDvsn + "_rcpt_dvsn']").eq(0).prop("checked", true);
+					//$("input:checkbox[id='" + enterDvsn + "_bill_confirm']").prop("checked", false);
+					//$("#" + enterDvsn + "_cash_number").val("");
+					//$("input:radio[name='" + enterDvsn + "_rcpt_dvsn']").eq(0).prop("checked", true);					
 					
 					if(isMember) {
-						if(userRcptYn == "Y") {
-							$("input:checkbox[id='" + enterDvsn + "_bill_confirm']").trigger("click");
-							$("input:radio[name='" + enterDvsn + "_rcpt_dvsn'][value='" + userRcptDvsn +"']").prop("checked", true);	  
-							$("#" + enterDvsn + "_cash_number").val(userRcptNumber);							
-						}
+// 						if(userRcptYn == "Y") {
+//							$("input:checkbox[id='" + enterDvsn + "_bill_confirm']").trigger("click");
+//							$("input:radio[name='" + enterDvsn + "_rcpt_dvsn'][value='" + userRcptDvsn +"']").prop("checked", true);	  
+//							$("#" + enterDvsn + "_cash_number").val(userRcptNumber);							
+//						}
 
 						$(".nonMemberArea").hide();
 					} else {
@@ -950,10 +939,10 @@
 					"resvDate" : $("#resvDate").val()
 				};
 				
-				if(fn_resvDuplicateCheck(params)) {
-					fn_openPopup("현재 예약일자에 이미 예약정보가 존재합니다.", "red", "ERROR", "확인", "");
-					return;	
-				}
+//				if(fn_resvDuplicateCheck(params)) {
+//					fn_openPopup("현재 예약일자에 이미 예약정보가 존재합니다.", "red", "ERROR", "확인", "");
+//					return;	
+//				}
 				
 				// 예약 유효성 검사 추가
 				
@@ -974,7 +963,7 @@
 					"resvIndvdlinfoAgreYn" : $("#" + enterDvsn + "_person_agree").val()
 				}
 				
-				if($("input:checkbox[id='" + enterDvsn + "_bill_confirm']").is(":checked")) {
+/* 				if($("input:checkbox[id='" + enterDvsn + "_bill_confirm']").is(":checked")) {
 					params.resvRcptYn == "Y"
 					params.resvRcptDvsn = $("input[name='" + enterDvsn + "_rcpt_dvsn']:checked").val(); 
 					params.resvRcptNumber = $("#" + enterDvsn + "_cash_number").val();
@@ -987,7 +976,7 @@
 					params.resvRcptYn == "N"
 					params.resvRcptDvsn = "";
 					params.resvRcptNumber =  "";
-				}
+				} */
 
 				fn_Ajax
 				(

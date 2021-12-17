@@ -89,7 +89,7 @@
 					setHtml = "";
 					setHtml += "<p>나의 설정</p>";
 					setHtml += "<li><a href='/front/userResvHistory.do'>나의 입장신청 예약 이력</a></li>";
-					setHtml += "<li><a href='/front/userRcptInfo.do'>현금 영수증 관리</a></li>";
+					//setHtml += "<li><a href='/front/userRcptInfo.do'>현금 영수증 관리</a></li>";
 					$("#myset").html(setHtml);
 					
 					setHtml = "";

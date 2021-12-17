@@ -1,83 +1,90 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kses.backoffice.sys.board.mapper.BoardInfoManageMapper">
+	<select id="selectBoardManageListByPagination" resultType="lmap">
+		SELECT * 
+		FROM		
+		(	
+			SELECT	
+				SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT, 
+				ROW_NUMBER() OVER (ORDER BY BOARD_GROUP DESC) AS RNUM, 
+				TB.* 
+			FROM  
+			(	
+				SELECT 
+					LPAD(' ', 2*(LEVEL-1)) || BOARD_TITLE AS BOARD_TITLE, BOARD_SEQ, BOARD_CD, BOARD_REFNO, BOARD_CLEVEL, 
+					OARD_NOTICE_START_DAY, BOARD_NOTICE_END_DAY, BOARD_POPUP, BOARD_TOP_SEQ, BOARD_VISIT_CNT, 
+					USE_YN, LAST_UPDUSR_ID, BOARD_GROUP, TO_CHAR(LAST_UPDT_DTM, 'yyyy-MM-dd') LAST_UPDT_DTM, BOARD_ALL_NOTICE
+				FROM  TSES_BOARD_INFO_I a
+				WHERE a.BOARD_CD = #{params.boardCd}
+				<if test="params.boardGubun== 'NOT'">
+					<choose>
+						<when test="params.adminYn == 'user'">
+						<![CDATA[
+							AND  a.BOARD_SEQ NOT IN	
+							(
+								SELECT BOARD_SEQ 
+								FROM TSES_BOARD_INFO_I d 
+								WHERE d.BOARD_CD='NOT' 
+								AND  TO_CHAR(sysdate, 'yyyyMMdd') BETWEEN NVL(d.BOARD_NOTICE_STARTDAY, '20211201') AND  NVL(d.BOARD_NOTICE_ENDDAY , '20991231')
+							)
+						]]> 
+						</when>
+						<otherwise>
+						
+						</otherwise>
+					</choose>
+				</if>   
+				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
+				<![CDATA[
+					AND 
+					(	
+						BOARD_TITLE LIKE '%'||#{params.searchKeyword } ||'%'  
+						OR 
+						BOARD_CD LIKE '%'||#{params.searchKeyword } ||'%' 
+					)
+				]]> 
+				</if>
+				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.authorCd)">
+					<if test="params.authorCd != 'ROLE_ADMIN' and params.authorCd != 'ROLE_SYSTEM'">
+						AND #{params.centerCd} IN (SELECT COLUMN_VALUE FROM TABLE(UF_SPLICT(a.BOARD_CENTER_ID, ',')) )  
+					</if>		
+				</if>
+				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchCenterCd)">
+					AND #{params.searchCenterCd} IN (SELECT COLUMN_VALUE FROM TABLE(UF_SPLICT(a.BOARD_CENTER_ID, ',')) )  
+				</if>
+				START WITH BOARD_REFNO = 0
+				CONNECT BY PRIOR BOARD_SEQ = BOARD_REFNO
+				ORDER SIBLINGS BY BOARD_GROUP DESC
+			) TB 
+		)TA 
+		WHERE RNUM  BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
+     </select> 
+     
+	<select id="selectBoardMainManageListByPagination" resultType="lmap">
 	
-    <select id="selectBoardManageListByPagination"  resultType="lmap">
-		 
-		SELECT		* 
-		FROM		(	SELECT	 SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT, 
-		                         ROW_NUMBER() OVER (ORDER BY BOARD_GROUP DESC) AS RNUM, 
-		                         TB.* 
-						FROM  (	
-				                    SELECT LPAD(' ', 2*(LEVEL-1)) || BOARD_TITLE AS BOARD_TITLE , BOARD_SEQ, BOARD_CD, BOARD_REFNO, BOARD_CLEVEL, BOARD_NOTICE_START_DAY, BOARD_NOTICE_END_DAY,
-                                           BOARD_POPUP, BOARD_TOP_SEQ, BOARD_VISIT_CNT, USE_YN, LAST_UPDUSR_ID, BOARD_GROUP,
-                                           TO_CHAR(LAST_UPDT_DTM, 'yyyy-MM-dd') LAST_UPDT_DTM,
-                                           BOARD_ALL_NOTICE
-									FROM  TSES_BOARD_INFO_I a
-									WHERE a.BOARD_CD = #{params.boardCd}
-									<if test="params.boardGubun== 'NOT'">
-						            	<choose>
-						            		<when test="params.adminYn == 'user'">
-						            			<![CDATA[
-			            			             AND  a.BOARD_SEQ NOT IN	
-			            			              (SELECT BOARD_SEQ 
-     			                                   FROM TSES_BOARD_INFO_I d 
-     			                                   WHERE d.BOARD_CD='NOT' 
-     			                                          AND  TO_CHAR(sysdate, 'yyyyMMdd') BETWEEN NVL(d.BOARD_NOTICE_STARTDAY, '20211201') AND  NVL(d.BOARD_NOTICE_ENDDAY , '20991231')
-     			                                   )
-			            						]]> 
-						            		</when>
-						            		<otherwise>
-						            		</otherwise>
-						            	</choose>
-						            </if>   
-						            <if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
+		SELECT * FROM 
+		( 
+			SELECT  
+				ROW_NUMBER() OVER (ORDER BY BOARD_SEQ DESC) AS RNUM, 
+				TB.* 
+			FROM 
+			(
+				SELECT 
+					a.BOARD_SEQ, a.BOARD_TITLE, SUBSTRING(DATE_FORMAT( a.BOARD_REGDATE, '%Y-%m-%d'), 0,10) boardRegdate, a.BOARD_ALL_NOTICE, a.BOARD_NOTICE_STARTDAY, 
+					a.BOARD_NOTICE_ENDDAY
+				FROM  TSES_BOARD_INFO_I a
+				WHERE a.board_seq NOT in (SELECT board_seq FROM TSES_BOARD_INFO_I d WHERE d.BOARD_GUBUN='NOT')
+				<![CDATA[
+				AND d.BOARD_NOTICE_STARTDAY > TO_CHAR(SYSDATE, 'yyyyMMdd' ) OR d.board_notice_endday <  TO_CHAR(SYSDATE, 'yyyyMMdd') )
+				]]>         		 
+				AND	a.BOARD_NOTICE_USEYN != 'N'
+				
+			) TB
+		) 
+		WHERE RNUM  BETWEEN  1 AND 5
 
-							        			<![CDATA[
-									             AND (	BOARD_TITLE LIKE '%'||#{params.searchKeyword } ||'%'  
-									                    OR 
-									                    BOARD_CD LIKE '%'||#{params.searchKeyword } ||'%' 
-									                  )
-												]]> 
-
-									</if>
-									<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.authorCd)">
-										<if test="params.authorCd != 'ROLE_ADMIN' and params.authorCd != 'ROLE_SYSTEM'">
-										    AND #{params.centerCd} IN (SELECT COLUMN_VALUE FROM TABLE(UF_SPLICT(a.BOARD_CENTER_ID, ',')) )  
-										</if>		
-									</if>
-									
-									<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchCenterCd)">
-									     AND #{params.searchCenterCd} IN (SELECT COLUMN_VALUE FROM TABLE(UF_SPLICT(a.BOARD_CENTER_ID, ',')) )  
-									</if>
-									START WITH BOARD_REFNO=0
-			                        CONNECT BY PRIOR BOARD_SEQ = BOARD_REFNO
-			                        ORDER SIBLINGS BY BOARD_GROUP DESC
-     								) TB 
-			  )TA 
-			  WHERE RNUM  BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
-			  
-     </select> 
-     <select id="selectBoardMainManageListByPagination"  resultType="lmap">
-		 <![CDATA[
-		 	SELECT * FROM ( 
-		 	           SELECT  ROW_NUMBER() OVER (ORDER BY BOARD_SEQ DESC) AS RNUM, 
-		 	                   TB.* 
-		 	           FROM 
-		 	               (
-						    SELECT a.BOARD_SEQ,  a.BOARD_TITLE, 	SUBSTRING(DATE_FORMAT( a.BOARD_REGDATE, '%Y-%m-%d'), 0,10) boardRegdate ,
-						           a.BOARD_ALL_NOTICE
-							       , a.BOARD_NOTICE_STARTDAY
-					               , a.BOARD_NOTICE_ENDDAY
-						    FROM  TSES_BOARD_INFO_I a
-						    WHERE a.board_seq NOT in	(SELECT board_seq FROM TSES_BOARD_INFO_I d WHERE d.BOARD_GUBUN='NOT')
-						          AND d.BOARD_NOTICE_STARTDAY >  TO_CHAR(SYSDATE, 'yyyyMMdd' ) OR d.board_notice_endday <  TO_CHAR(SYSDATE, 'yyyyMMdd') )
-				                       AND	 a.BOARD_NOTICE_USEYN != 'N'
-						    ) TB
-	        ) 
-	        WHERE RNUM  BETWEEN  1 AND 5
-	        ]]>         		 	    
-     </select> 
+	</select> 
      <resultMap id="getBoardListResult" type="HashMap"> 
         <result property="board_seq" column="BOARD_SEQ" /> 
         <result property="board_cd" column="BOARD_CD" />

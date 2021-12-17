@@ -136,7 +136,7 @@ public class MainPageInfoManageController {
 		    searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
 		    searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
 		    searchVO.put("boardCd", "Not");
-		    
+		    searchVO.put("searchCondition", "ALL");
 			
 			List<Map<String, Object>> list =  boardInfoService.selectBoardManageListByPagination(searchVO) ;
 			int totCnt = list.size() > 0 ?  Integer.valueOf( list.get(0).get("total_record_count").toString()) : 0;
@@ -204,7 +204,7 @@ public class MainPageInfoManageController {
 		return model;
 	}
 	
-	@RequestMapping (value="userResvInfo.do")
+	@RequestMapping (value="userResvInfo.do") 
 	public ModelAndView selectUserResvInfo(	@RequestBody Map<String, Object> params,
 											HttpServletRequest request) throws Exception {
 		

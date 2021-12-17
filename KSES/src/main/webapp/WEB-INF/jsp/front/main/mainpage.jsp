@@ -301,6 +301,21 @@
     </div>
     <!-- 최근입장불가 팝업 // -->
     
+	<!-- // 결제인증 팝업 -->
+    <div data-popup="pay_number" class="popup">
+		<div class="pop_con rsv_popup">
+			<a class="button b-close">X</a>
+          	<div class="pop_wrap">
+            	<h4>결제 비밀번호를 입력해주세요.</h4>
+            	<ul class="pay_passWord">
+                	<li><input type="password" id="Card_Pw" placeholder="비밀번호를 입력하세요."></li>
+                	<li><a href="javascript:qrService.fn_payment();" class="mintBtn">확인</a></li>
+            	</ul>
+          	</div>
+      	</div>
+    </div>
+    <!-- 결제인증 팝업 // -->
+    
     
     <!-- mainpage.jsp script -->
     <script>
@@ -626,8 +641,7 @@
 						if (result.status == "SUCCESS") {
 							fn_openPopup("예약이 정상적으로 취소되었습니다.", "blue", "SUCCESS", "확인", "javascript:location.reload();");
 						} else if (result.status == "LOGIN FAIL"){
-							alert(result.message);
-							locataion.href = "/front/main.do";
+							fn_openPopup(result.message, "blue", "SUCCESS", "확인", "javascript:location.reload();");
 						}
 					},
 					function(request) {
@@ -650,8 +664,7 @@
 				var result = mainService.fn_resvVaildCheck(params);
 				
 				if(result != ""){
-					params.resvDate = result.resvDate;
-					console.log(params.resvDate);
+					params.resvDate = result.resvDate;;
 					$.each(result, function(index, item) {
 						$("form[name=regist]").append($('<input/>', {type: 'hidden', name: index, value:item }));
 						$("form[name=regist]").attr("action", "/front/rsvSeat.do").attr("method","get").submit();

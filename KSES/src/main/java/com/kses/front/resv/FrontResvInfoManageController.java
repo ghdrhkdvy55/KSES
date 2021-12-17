@@ -211,6 +211,33 @@ public class FrontResvInfoManageController {
 		return model;
 	}
 	
+	@RequestMapping (value="getResvInfo.do")
+	public ModelAndView getResvInfo(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo, 
+										@RequestParam("resvSeq") String resvSeq,
+										HttpServletRequest request,
+										BindingResult result) throws Exception {
+		
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+		try {
+			HttpSession httpSession = request.getSession(true);
+			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
+			
+			if(userLoginInfo == null) {
+				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
+				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
+				return model;
+			}
+			
+			model.addObject("resvInfo", resvService.selectResInfoDetail(resvSeq));
+			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+		} catch(Exception e) {
+			LOGGER.error("getResvInfo : " + e.toString());
+			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
+		}
+		return model;
+	}
+	
 	@RequestMapping (value="updateUserResvInfo.do")
 	@Transactional(rollbackFor = Exception.class)
 	public ModelAndView updateUserResvInfo(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo, 

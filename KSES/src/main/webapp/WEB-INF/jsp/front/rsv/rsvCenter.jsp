@@ -138,10 +138,9 @@
 					"checkDvsn" : "CENTER"
 				}
 				
-				var result = centerService.fn_resvVaildCheck(params);
-				
-				$("#resvDate").val(result.resvDate);
-				fn_pageMove('regist','/front/rsvSeat.do');
+				if(centerService.fn_resvVaildCheck(params)) {
+					fn_pageMove('regist','/front/rsvSeat.do');				
+				}
 			},
 			fn_centerButtonSetting : function() {
 				var sBtn = $(".branch_list > li"); //  ul > li 이를 sBtn으로 칭한다. (클릭이벤트는 li에 적용 된다.)
@@ -153,7 +152,7 @@
 			},
 			fn_resvVaildCheck : function(params) {
 				var url = "/front/resvValidCheck.do";
-				var validResult;
+				var validResult = false;
 				
 				fn_Ajax
 				(
@@ -165,9 +164,10 @@
 						if (result.status == "SUCCESS") {
 							if(result.validResult.resultCode != "SUCCESS") {
 								fn_openPopup(result.validResult.resultMessage, "red", "ERROR", "확인", "");
-								return;
 							} else {
 								validResult = result.validResult;
+								$("#resvDate").val(result.validResult.resvDate);
+								validResult = true;
 							}
 						} else if (result.status == "LOGIN FAIL"){
 							fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "location.href='/front/login.do'");

@@ -5,6 +5,8 @@
 <link rel="stylesheet" href="/resources/jqgrid/src/css/ui.jqgrid.css">
 <script type="text/javascript" src="/resources/jqgrid/src/i18n/grid.locale-kr.js"></script>
 <script type="text/javascript" src="/resources/jqgrid/js/jquery.jqGrid.min.js"></script>
+<script src="/resources/js/front/qrcode.js"></script>
+<script src="/resources/js/jQuery.print.js"></script>
 <style type="text/css">
 	.ui-jqgrid .ui-jqgrid-htable th div{
 		outline-style: none;
@@ -390,48 +392,43 @@
 </div>
 
 <!--1214 QR출력 팝업-->
-<div data-popup="qr_print" class="popup">
+<div id="qr_print" class="popup">
 	<div class="pop_con">
 		<a class="button b-close">X</a>
       	<h2 class="pop_tit">QR 출력</h2>
-      	<div class="pop_wrap">
-      		<div class="pint_a">
-      			<a href="">출력<img src="/resources/img/print_black_24dp.svg" alt="출력"></a>
-      		</div>
+      	<div id="qrWrap" class="pop_wrap">
       		<!--QR 영역-->
-      		<p class="qrPrint">
-      			<img src="/resources/img/qrcode.png" alt="">
-      		</p>
+      		<div id="qrPrint" class="qrPrint">
+      			<!-- <img src="/resources/img/qrcode.png" alt=""> -->
+      		</div>
 			<!--QR 영역//-->
 
 			<table class="detail_table">
 				<tbody>
 					<tr>
+						<th>예약 번호</th>
+                    	<td id="qrResvSeq"></td>
+                      	<th>예약일 </th>
+                      	<td id="qrResvDate">B001</td>
+                  	</tr>
+                  	<tr>
 						<th>지점 </th>
-                      	<td>장안지점</td>
-                      	<th>구역 정보 </th>
-                      	<td>B001</td>
-                  	</tr>
-                  	<tr>
+                      	<td id="qrCenter"></td>
                     	<th>좌석 정보</th>
-                    	<td>023</td>
-                    	<th>예약 번호</th>
-                    	<td>KSP7968</td>
-                  	</tr>
-                  	<tr>
-                    	<th>회원 구분 </th>
-                    	<td>일반 회원</td>
-                    	<th>아이디</th>
-                    	<td>id5678</td>
+                    	<td id="qrSeat"></td>
                   	</tr>
                   	<tr>
                     	<th>이름 </th>
-                    	<td>홍길동</td>
+                    	<td id="qrName"></td>
                     	<th>전화번호</th>
-                    	<td>010-1234-5678</td>
+                    	<td id="qrPhone"></td>
                   	</tr>
               	</tbody>
 			</table>
+		</div>
+		
+		<div class="pint_a">
+			<a href="javascript:jqGridFunc.fn_print();">출력<img src="/resources/img/print_black_24dp.svg" alt="출력"></a>
 		</div>
       	<div class="clear"></div>
   	</div>
@@ -471,7 +468,7 @@
 		$("img.ui-datepicker-trigger").attr("style", "margin-left:3px; vertical-align:middle; cursor:pointer;"); //이미지버튼 style적용
 		$("#ui-datepicker-div").hide(); //자동으로 생성되는 div객체 숨김
 	});
-	
+
 	var jqGridFunc = {
 		setGrid : function(gridOption) {
 			var grid = $('#'+gridOption);
@@ -618,7 +615,13 @@
 			return (rowObject.use_yn ==  "Y") ? "사용" : "사용안함";
 		},
 		buttonSetting : function (cellvalue, options, rowObject) {
-			return '<a href="javascript:jqGridFunc.fn_resvInfo(&#39;list&#39;,&#39;'+rowObject.center_cd+'&#39;);" class="detailBtn">설정</a>';
+			var btn = "";
+			
+			if(options.colModel.index == 'resv_qr_print') {
+				btn = '<a href="javascript:jqGridFunc.fn_qrInfo(&#39;' + rowObject.resv_seq + '&#39;);" class="detailBtn">QR출력</a>';	
+			}
+			
+			return btn;
 		},			
 		refreshGrid : function(){
 			$('#mainGrid').jqGrid().trigger("reloadGrid");
@@ -691,6 +694,54 @@
 					common_popup("Error:" + request.status,"");
 				}    		
 			);
+		},
+		fn_qrInfo : function(resvSeq) {
+			var url = "/backoffice/rsv/qrSend.do";
+			var params = {
+				"resvSeq" : resvSeq,
+				"tickPlace" : "PAPER"
+			}
+			
+			fn_Ajax
+			(
+			    url,
+			    "GET",
+				params,
+				false,
+				function(result) {
+			    	if (result.status == "SUCCESS") {
+			    		$("#qrPrint > img").remove();
+						var qrcode = new QRCode("qrPrint", {
+						    text: result.QRCODE,
+						    width: 256,
+						    height: 256,
+						    colorDark : "#000000",
+						    colorLight : "#ffffff",
+						    correctLevel : QRCode.CorrectLevel.M
+						});
+						
+						$("#qrPrint > img").css("margin", "auto");
+						
+						$("#qrResvSeq").html(result.resvInfo.resv_seq);
+						$("#qrResvDate").html(result.resvInfo.resv_end_dt);
+						$("#qrCenter").html(result.resvInfo.center_nm);
+						$("#qrSeat").html(result.resvInfo.seat_nm);
+						$("#qrName").html(result.resvInfo.user_nm);
+						$("#qrPhone").html(result.resvInfo.user_phone);
+						
+					} else {
+						
+					}
+				},
+				function(request) {
+					alert("ERROR : " + request.status);	       						
+				}    		
+			);	
+			
+			$("#qr_print").bPopup();
+		},
+		fn_print : function() {
+			$("#qrWrap").print();
 		},
 		fn_resvSeatInfo : function(division,resvInfo) {
 			if(division == "CHANGE") {

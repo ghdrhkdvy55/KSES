@@ -108,8 +108,10 @@
 		var qrService = {
 			fn_createQrCode : function() {
 				var url = "/backoffice/rsv/qrSend.do";
-				var params = {"resvSeq" : $("#resvSeq").val(),
-								"tickPlace" : "ONLINE"}
+				var params = {
+					"resvSeq" : $("#resvSeq").val(),
+					"tickPlace" : "ONLINE"
+				}
 				
 				fn_Ajax
 				(
@@ -120,7 +122,7 @@
 					function(result) {
 				    	console.log(result);
 				    	if (result.status == "SUCCESS") {
-				    		if(isFirst){
+				    		if(isFirst) {
 				    			isFirst = false;
 				    		} else {
 				    			$("#qr_enter_code img").last().remove();
