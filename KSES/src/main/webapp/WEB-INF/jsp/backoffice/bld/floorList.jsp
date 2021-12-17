@@ -1019,7 +1019,7 @@
  	                               
  	                            });
  	                            
- 	                            if ( parseInt( obj[i].part_mini_rotate) != 0 ){
+/*  	                            if ( parseInt( obj[i].part_mini_rotate) != 0 ){
  	                            	 $('.mapArea ul li#s' + trim(fn_NVL(obj[i].part_cd)) + "> .section >.circle").css({
  	   	                        	    '-moz-transform': 'rotate(-'+ fn_NVL(obj[i].part_mini_rotate) + 'deg)',
  	  		                            '-webkit-transform': 'rotate(-'+ fn_NVL(obj[i].part_mini_rotate) + 'deg)',
@@ -1029,7 +1029,7 @@
 	    	                        	  '-moz-transform': 'rotate('+ Math.abs(fn_NVL(obj[i].part_mini_rotate)) + 'deg)',
 	   		                              '-webkit-transform': 'rotate(+'+ Math.abs(fn_NVL(obj[i].part_mini_rotate)) + 'deg)',
 	    	                         });
-	                            }  
+	                            }   */
  	                          
 	 	                    }
 	 	                    //nw rotate 시키기 
@@ -1075,7 +1075,7 @@
 			 	                   	
 	 	                    	}
 	 	                    });
-	 	                    //신규 추가 - 불필요한 소스
+	 	                    
 	 	                    var nw = $("<div>", {
 	 	                	    class: "ui-rotatable-handle"
 	 	                	});
@@ -1090,8 +1090,7 @@
 		 	                   	    var get_id = $(this).parent().attr("id").substring(1);
 		 	                   	   	var top = parseInt(parseInt(ui.position.top) -27);
 	 	                	    	var left = parseInt(parseInt(ui.position.left) -27);
-	 	                	    	console.log("top:" + top + ", left: "  + parseInt(ui.position.left) );
-	 	                	    	
+
 	 	                	    	var rotateCSS = 'rotate(' + ui.position.left + 'deg)';
 	 	                	    	$('#rotate_'+get_id).val( ui.position.left);
 	 	                	    	
@@ -1099,14 +1098,12 @@
 	 	                	            '-moz-transform': rotateCSS,
 	 	                	            '-webkit-transform': rotateCSS
 	 	                	        });
-	 	                	        $(this).css({
+/* 	 	                	        $(this).css({
 	 	                	        	'-moz-transform': rotateCSS,
 	 	                	            '-webkit-transform': rotateCSS
-	 	                	        });
+	 	                	        }); */
 	 	                	    }
 	 	                	});
-							// 수정
-	 	                	//$(".seat").rotatable()
 	 	                } else {
 	 	                    $('#seat_list').html('');
 	 	                }
