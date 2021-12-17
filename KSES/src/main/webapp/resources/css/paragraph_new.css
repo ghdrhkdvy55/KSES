@@ -262,7 +262,7 @@ table a{color: #5a5a5a;}
 }
 
 .gui_table th{ min-width:100px; left:0!important; font-weight:700!important;}
-.gui_table th:first-child{ min-width:50px;}
+.gui_table th:first-child{ min-width:80px;}
 
 table tr.select{border: 2px solid #acb1d2; background-color: #acb1d2;}
 
@@ -449,3 +449,4 @@ ul.pop_seat li{
 ul.pop_seat li.usable{background-color: #0094DB; left: 565px; top: 282px;}
 ul.pop_seat li.disable{background-color: #959595; left: 522px; top: 282px;}
 ul.pop_seat li.selected{background-color: #ffb047; padding: 0 !important; left: 608px; top: 282px;}
+
