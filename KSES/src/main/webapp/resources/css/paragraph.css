@@ -906,4 +906,4 @@ padding-left: 5px;
 
 /*qr출력*/
 .pint_a {float: right;}
-.qrPrint {width: 50%; margin: auto;}
+.qrPrint {width: 50%; margin: auto; padding-bottom: 60px;}
