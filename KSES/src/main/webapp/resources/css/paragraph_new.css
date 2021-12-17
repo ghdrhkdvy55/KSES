@@ -146,7 +146,7 @@ input[type="checkbox"]:checked { border:0; background-image:url("../resources/im
 .sel_tab tr td:last-child, .sel_tab tr th:last-child { border-right: none; }
 .search_tab {font-size: 14px;margin-bottom:20px;}
 .search_tab th{text-align: left;font-weight:400;padding:0 20px 0 20px}
-.search_tab th:first-child{padding:0 20px 0 0;}
+.search_tab th:first-child{padding:0 10px;}
 .total_tab {width: 100%; font-size: 14px;box-sizing: border-box;padding:0 10px;}
 .total_tab td, .total_tab th{text-align: center; position:relative; min-width:50px; }
 .total_tab th{border-bottom: 1px solid #dce1e5; font-weight: 400;padding:14px 0;}
@@ -305,10 +305,15 @@ table tr.select{border: 2px solid #acb1d2; background-color: #acb1d2;}
     overflow: auto;
     height: 500px;
 }
-.scroll_table table thead tr{
-	position: absolute; top: 0; background-color: #fff; z-index: 999;
-	border-bottom: 1px solid #e6e6e6; width: 100%; box-shadow:0px 2px 0px 0px rgba(0, 0, 0, 0.04);
-	display:-webkit-inline-box;
+.scroll_table table thead tr {
+    position: absolute;
+    top: 0;
+    background-color: #fff;
+    z-index: 999;
+    border-bottom: 1px solid #e6e6e6;
+    width: 650px;
+    box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.04);
+    display: -webkit-inline-box;
 }
 .scroll_table table thead tr th{border-bottom: none; font-weight: 400;}
 
@@ -403,10 +408,11 @@ table tr td input.selected{border:2px solid #eb6d2c;}
     text-align: center;
 }
 .search_tab td select {
-    width: 100%;
+    width: 80px;
     height: 30px;
     margin-bottom: 5px;
 }
+.search_tab tr {display:inline-block}
 
 /* 211210 */
 div[data-popup="bld_seat_change"]{max-width: 1600px; top: 30px !important;}

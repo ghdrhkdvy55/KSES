@@ -1,7 +1,7 @@
 html,body{background: #f7f7f7;}
 .clear{clear: both;}
 a{color:inherit; cursor: pointer;}
-input, select{padding: 3px 0;min-width: 100px;display: inline-block;box-sizing: border-box;vertical-align: sub;}
+input, select{padding: 3px 0;min-width: 80px;display: inline-block;box-sizing: border-box;vertical-align: sub;}
 .srchTxt {vertical-align: baseline !important;}
 .branch_magt input, .branch_magt select {
     background: #6d8cb7;
