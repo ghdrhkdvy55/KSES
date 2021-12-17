@@ -382,6 +382,7 @@ var jqGridFunc  = {
 	        	$("#sp_Unqi").show();
 	        	$("#btnSave").text("등록");
 	        	$("#useAt_Y").prop("checked", true);
+	        	$("#idCheck").val('');
 	        }
     	    $("#bas_code_add").bPopup();
        },clearGrid : function() {

@@ -274,6 +274,7 @@
 		        		$("#h2_title").html("직책 정보등록");
 		        	}
 		        	$("#btnUpdate").text("등록");
+		        	$("#idCheck").val('');
 		        }
 		        $("#bas_code_add").bPopup();
            },fn_CheckForm  : function (){

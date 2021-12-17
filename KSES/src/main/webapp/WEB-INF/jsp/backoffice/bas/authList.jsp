@@ -290,6 +290,7 @@
 		        	$("#authorDc").val('');
 		        	$("#sp_Unqi").show();
 		        	$("#btnUpdate").text("등록");
+		        	$("#idCheck").val('');
 		        }
 		        $("#bas_auth_add").bPopup();
 	    },fn_CheckForm  : function (){

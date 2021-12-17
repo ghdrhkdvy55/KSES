@@ -333,8 +333,12 @@
 						$("#sp_userEmail").html(obj.user_email);								
 						$("#sp_userSexMf").html(obj.user_sex_mf);								
 						$("#sp_userBirthDy").html(obj.user_birth_dy);								
-						$("#sp_indvdlinfoAgreYn").html(obj.indvdlinfo_agre_yn);								
-						$("#sp_indvdlinfoAgreDt").html(obj.indvdlinfo_agre_dt);														
+						$("#sp_indvdlinfoAgreYn").html(obj.indvdlinfo_agre_yn);
+						if(obj.indvdlinfo_agre_dt != null){
+							$("#sp_indvdlinfoAgreDt").html(obj.indvdlinfo_agre_dt);
+						} else {
+							$("#sp_indvdlinfoAgreDt").html('');
+						}
 						$("#vacntnRound").val(obj.vacntn_round);
 						$("#vacntnDvsn").val(obj.vacntn_dvsn);
 						$("#vacntnDt").val(obj.vacntn_dt);

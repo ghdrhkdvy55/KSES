@@ -59,6 +59,12 @@ public class NoshowInfoManageController {
     	
     	try {
     		List<Map<String, Object>> noshowInfoList = noshowInfoService.selectNoshowInfoList(centerCd);
+    		String centerNm =   (noshowInfoList.size() > 0) ? 
+    							 noshowInfoList.get(0).get("center_nm").toString():
+    							 centerInfoService.selectCenterInfoDetail(centerCd).get("center_nm").toString();
+    		
+    		
+    		model.addObject(Globals.JSON_RETURN_RESULT, centerNm);
     		model.addObject(Globals.STATUS_REGINFO, noshowInfoList);
     		
     		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
