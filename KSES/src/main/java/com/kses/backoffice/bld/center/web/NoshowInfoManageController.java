@@ -97,4 +97,25 @@ public class NoshowInfoManageController {
     	
     	return model;
     }
+    
+    @RequestMapping("noshowInfoCopy.do")
+    public ModelAndView copyPreOpenInfo(	@ModelAttribute("loginVO") LoginVO loginVO,
+    										@RequestBody Map<String, Object> params,
+											HttpServletRequest request) {
+    	ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+    	
+    	try {
+    		noshowInfoService.copyNoshowInfo(params);
+			
+    		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+    		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.update"));
+		} catch (Exception e) {
+    		LOGGER.info("copyPreOpenInfo ERROR : " + e.toString());
+    		model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+    		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
+		}
+    	
+    	return model;
+    }
+    
 }

@@ -699,7 +699,7 @@
 			fn_ConfirmPop("해당 지점의 사전예약정보를 복사 하시겠습니까?");
 		},
 		fn_preOpenInfoCopy : function() {
-		
+			$("#confirmPage").bPopup().close();
 			var url = "/backoffice/bld/preOpenInfoCopy.do";
 			var copyCenterCd = $("#preOpenCenterList option:selected").val();
 			var targetCenterCd = $("#searchCenterCd").val();
@@ -721,8 +721,7 @@
 						common_popup(result.meesage, "N","");
 						location.href="/backoffice/login.do";
 					} else if (result.status == "SUCCESS") {
-						$("#bld_early_set").bPopup().close();
-						common_modelClose("bld_early_set");
+						common_popup(result.message, "Y" ,"bld_early_set");
 					}else {
 						common_popup(result.meesage, "Y","bld_early_set");
 					}
@@ -836,6 +835,44 @@
 			);
 			
 		},
+		fn_noshowCopyModel : function(){
+			$("#id_ConfirmInfo").attr("href", "javascript:jqGridFunc.fn_noshowInfoCopy()");
+			fn_ConfirmPop("해당 지점의 사전예약정보를 복사 하시겠습니까?");
+		},
+		fn_noshowInfoCopy : function() {
+		
+			var url = "/backoffice/bld/noshowInfoCopy.do";
+			var copyCenterCd = $("#noshowCenterList option:selected").val();
+			var targetCenterCd = $("#searchCenterCd").val();
+			
+			var params = 
+			{
+				"copyCenterCd" : copyCenterCd,
+				"targetCenterCd" : targetCenterCd
+			};
+			
+			fn_Ajax
+			(
+				url, 
+				"POST",
+				params,
+				true,
+				function(result) {
+					if (result.status == "LOGIN FAIL") {
+						common_popup(result.message, "N","bld_noshow_set");
+						location.href="/backoffice/login.do";
+					} else if (result.status == "SUCCESS") {
+						common_popup(result.message, "Y" ,"bld_noshow_set");
+					}else {
+						common_popup(result.message, "N","bld_noshow_set");
+					}
+				},
+				function(request){ 
+					common_popup("Error:" + request.status,"");
+				}    		
+			);
+			
+		},
 		//지점 휴일정보시 관련 function
 		fn_centerHolyInfo : function(division, centerCd, callbackYn) {
 			centerCd = division == "list" ? centerCd : centerCd.value;
@@ -936,7 +973,7 @@
 			//확인 
 			/* $("#confirmPage").bPopup().close(); */
 			var url = "/backoffice/bld/centerHolyInfoUpdate.do";
-			var params = 
+			var params =
 			{ 	
 				'centerHolySeq' : $("#centerHolySeq").val(),
 				'centerCd' : $("#searchCenterCd").val(),
