@@ -47,8 +47,8 @@
 		        </select>
                 <select id="searchCondition" name="searchCondition">
                     <option value="ALL">전체</option>
-					<option value="CENTER_NM">지점명</option>
-					<option value="FLOOR_NM">사용층수</option>
+					<option value="TICKET_MCHN_SNO">장비Serial</option>
+					<option value="TICKET_MCHN_REMARK">위치</option>
                 </select>
                 <input type="text" name="searchKeyword" id="searchKeyword"   placeholder="검색어를 입력하새요.">
             </div>
@@ -376,6 +376,7 @@
 				$("textarea[name=ticketMchnRemark]").val("");
 				$("#sp_Unqi").show();
 			    $("#btnSave").text("등록");
+			    $("#idCheck").val('');
 	        }
 			$("#bas_kiosk_add").bPopup();
           	},
@@ -462,6 +463,7 @@
 					"searchKeyword" : $("#searchKeyword").val(),
 					"searchCenterCd" : $("#searchCenterCd").val(),
 					"searchMachDvsn" : $("#searchMachDvsn").val(),
+					"searchCondition" : $("#searchCondition").val(),
 					"pageUnit":$('.ui-pg-selbox option:selected').val()
 				}),
 				loadComplete : function(data) {

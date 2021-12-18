@@ -351,13 +351,14 @@
 		        	$("#sp_Unqi").show();
 		        	$("#btnUpdate").text("등록");
 		        	$("#mng_user_add > div >h2").text("사용자 정보 등록");
+		        	$("#idCheck").val('');
 		        }
 		        $("#mng_user_add").bPopup();
            },fn_CheckForm  : function (){
         	   alert("checkform");
         	   if (any_empt_line_span("mng_user_add", "empNo", "사번을 입력해 주세요.","sp_message", "savePage") == false) return;
         	   if ($("#mode").val() == "Ins" && $("#idCheck").val() != "Y"){
-				   if (any_empt_line_span("mng_user_add", "empNo", "중복체크가 안되었습니다.","sp_message", "savePage") == false) return;
+				   if (any_empt_line_span("mng_user_add", "idCheck", "중복체크가 안되었습니다.","sp_message", "savePage") == false) return;
 			   }
 			   if (any_empt_line_span("mng_user_add", "empNm", "이름을 입력해 주세요.","sp_message", "savePage") == false) return;
 			   if (any_empt_line_span("mng_user_add", "empEmail", "이메일을 입력해 주세요.","sp_message", "savePage") == false) return;

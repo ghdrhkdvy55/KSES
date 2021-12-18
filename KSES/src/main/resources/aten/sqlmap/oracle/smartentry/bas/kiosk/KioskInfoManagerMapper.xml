@@ -20,19 +20,19 @@
 				WHERE A.MACH_DVSN = B.CODE
 					<if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(params.searchKeyword)">
 						<choose>
-							<when test="params.searchCondition == 'CENTER_NM'">
-								AND B.CENTER_NM LIKE '%' || #{params.searchKeyword} || '%' 
+							<when test="params.searchCondition == 'TICKET_MCHN_SNO'">
+								AND A.TICKET_MCHN_SNO LIKE '%' || #{params.searchKeyword} || '%' 
 							</when>	
 							
-							<when test="params.searchCondition == 'FLOOR_NM'">
-								AND C.FLOOR_NM LIKE '%' || #{params.searchKeyword} || '%' 
+							<when test="params.searchCondition == 'TICKET_MCHN_REMARK'">
+								AND A.TICKET_MCHN_REMARK LIKE '%' || #{params.searchKeyword} || '%' 
 							</when>		
 											
 							<otherwise>
 								AND 
 								(
-									B.CENTER_NM LIKE '%' || #{params.searchKeyword} || '%' 
-									OR C.FLOOR_NM LIKE '%' || #{params.searchKeyword} || '%' 
+									A.TICKET_MCHN_SNO LIKE '%' || #{params.searchKeyword} || '%' 
+									OR A.TICKET_MCHN_REMARK LIKE '%' || #{params.searchKeyword} || '%' 
 								)
 							</otherwise>
 							

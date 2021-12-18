@@ -294,6 +294,10 @@ public class ResJosnController{
         		String userPhone =  attempInfos[11];
         		String centerNm =  attempInfos[12];
         		String seatNm =  attempInfos[13];
+        		
+        		for(String value : attempInfos) {
+        			LOGGER.debug("value : " + value);
+        		}
 
         		String formatedNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
         		
@@ -309,9 +313,9 @@ public class ResJosnController{
         		}
         		
         		//시간 비교 
-        		if(Integer.valueOf( SmartUtil.timeCheck(qrTime)) < -30  &&  gubun.equals("INTERVAL")) {
+        		if(Integer.valueOf( SmartUtil.timeCheck(qrTime)) < -600  &&  gubun.equals("INTERVAL")) {
         			ERROR_CD = "ERROR_01";
-        			ERROR_MSG = "30초 시간이 경과된 QR입니다.";
+        			ERROR_MSG = "600초 시간이 경과된 QR입니다.";
         			model.addObject("ERROR_CD", ERROR_CD);
                 	model.addObject("ERROR_MSG", ERROR_MSG);
                 	return model;
@@ -355,6 +359,8 @@ public class ResJosnController{
         		sendInfo = attendService.insertAttendInfo(sendInfo);
         		IOGUBUN_TXT = inotMsg;
 
+        		LOGGER.debug("rcvCd : " + sendInfo.getRcvCd());
+        		
         		if(sendInfo.getRcvCd().equals("OK")) {
         			ERROR_CD = "OK";
         			ERROR_MSG = "";

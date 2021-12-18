@@ -20,7 +20,6 @@
 <input type="hidden" id="floorInfo" name="floorInfo">
 <input type="hidden" id="centerHolySeq" name="centerHolySeq">
 <input type="hidden" id="targetCenterHolySeq" name="targetCenterHolySeq">
-<input type="hidden" id="authorCd" name="authorCd" value="${loginVO.authorCd}">
 <div class="breadcrumb">
 	<ol class="breadcrumb-item">
 		<li>시설 관리&nbsp;&gt;&nbsp;</li>
@@ -197,7 +196,7 @@
           </tbody>
         </table>
 		<div class="center_box">
-          	<a href="javascript:jqGridFunc.fn_preOpen();" class="blueBtn">저장</a> 
+          	<a href="javascript:jqGridFunc.fn_preOpen();" id="preopenChange" class="blueBtn">저장</a> 
           	<a href="javascript:common_modelClose('bld_early_set');" class="grayBtn">취소</a>
         </div>
 		</div>
@@ -207,7 +206,7 @@
 <div id="bld_noshow_set" class="popup">
 	<div class="pop_con">
 		<a class="button b-close">X</a>
-		<h2 class="pop_tit">자동 취소 설정  [장안지점]</h2>
+		<h2 class="pop_tit">자동 취소 설정 <span>[장안지점]</span></h2>
 		<div class="pop_wrap">
 		<fieldset class="whiteBox searchBox">
 			<div class="top" style="border-bottom: 0px; padding: 0px;">
@@ -237,7 +236,7 @@
           	</tbody>
 		</table>
         <div class="center_box">
-          	<a href="javascript:jqGridFunc.fn_noshow();" class="blueBtn">저장</a> 
+          	<a href="javascript:jqGridFunc.fn_noshow();" id="changeNoshow" class="blueBtn">저장</a> 
           	<a href="javascript:common_modelClose('bld_noshow_set');" class="grayBtn">취소</a>
         </div>
       </div>
@@ -247,17 +246,17 @@
 <div id="bld_holiday_add" data-popup="bld_holiday_add" class="popup">
 	<div class="pop_con">
 		<a class="button b-close">X</a>
-		<h2 class="pop_tit">지점 휴일 정보</h2>
+		<h2 class="pop_tit">지점 휴일 정보 <span></span></h2>
 		<div class="pop_wrap">
         	<fieldset class="whiteBox searchBox">
 	          	<div class="top" style="border-bottom: 0px; padding: 0px;">
 	            	<p>복사지점</p>
-	            	<select id="holyCenterList" onChange="jqGridFunc.fn_centerHolyInfo('change',this)">
+	            	<select id="centerHolyList" onChange="jqGridFunc.fn_centerHolyInfo('change',this)">
 						<c:forEach items="${centerInfoComboList}" var="centerInfoComboList">
 						<option value="${centerInfoComboList.center_cd}">${centerInfoComboList.center_nm}</option>
 						</c:forEach>
 	            	</select>
-					<a href=""class="grayBtn">복사</a>
+					<a href="javascript:jqGridFunc.fn_centerHolyCopyModel();"class="grayBtn">복사</a>
 	          	</div>
         	</fieldset>
         	<table class="whiteBox main_table">
@@ -294,7 +293,7 @@
 	var isMultiSelect = true;
 
 	$(document).ready(function() { 
-		if($("#authorCd").val() != "ROLE_ADMIN" && $("#authorCd").val() != "ROLE_SYSTEM") {
+		if($("#loginAuthorCd").val() != "ROLE_ADMIN" && $("#loginAuthorCd").val() != "ROLE_SYSTEM") {
 			isMultiSelect = false;
 			$(".right_box").eq(0).hide();
 		}
@@ -474,7 +473,7 @@
 			return '<a href="javascript:jqGridFunc.fn_centerFloorInfo(&#39;'+rowObject.center_cd+'&#39;);" class="orangeBtn">층 관리</a>';	
 		},
 		holyDaySettingButton : function (cellvalue, options, rowObject) {
-			return '<a href="javascript:jqGridFunc.fn_holyDayInfo(&#39;list&#39;,&#39;'+rowObject.center_cd+'&#39;);" class="blueBtn">휴일 추가</a>';	
+			return '<a href="javascript:jqGridFunc.fn_centerHolyInfo(&#39;list&#39;,&#39;'+rowObject.center_cd+'&#39;);" class="blueBtn">휴일 추가</a>';	
 		},
 		refreshGrid : function(){
 			$('#mainGrid').jqGrid().trigger("reloadGrid");
@@ -610,6 +609,11 @@
 						common_popup(result.meesage, "Y","");
 				    	location.href="/backoffice/login.do";
 				    } else if (result.status == "SUCCESS") {
+				    	if($("#loginAuthorCd").val() != "ROLE_ADMIN" && $("#loginAuthorCd").val() != "ROLE_SYSTEM") {
+							if($("#loginCenterCd").val() != centerCd){
+								$("#preopenChange").hide();
+							}
+				    	}
 						//지점 자동취소 정보 세팅
 						var setHtml = "";
 						if(result.regist != null) {
@@ -753,6 +757,11 @@
 						common_popup(result.meesage, "N","");
 						location.href="/backoffice/login.do";
 					} else if (result.status == "SUCCESS") {
+						if($("#loginAuthorCd").val() != "ROLE_ADMIN" && $("#loginAuthorCd").val() != "ROLE_SYSTEM") {
+							if($("#loginCenterCd").val() != centerCd){
+								$("#changeNoshow").hide();
+							}
+				    	}
 						//지점 자동취소 정보 세팅
 						var setHtml = "";
 						if(result.regist != null) {
@@ -828,7 +837,7 @@
 			
 		},
 		//지점 휴일정보시 관련 function
-		fn_holyDayInfo : function(division, centerCd, callbackYn) {
+		fn_centerHolyInfo : function(division, centerCd, callbackYn) {
 			centerCd = division == "list" ? centerCd : centerCd.value;
 			if(division == "list") {
 				$("#searchCenterCd").val(centerCd);
@@ -872,7 +881,7 @@
 						}
 						
 						$("#bld_holiday_add .inTxt").prepend(setHtml);
-						$("#holyCenterList").val(centerCd);
+						$("#centerHolyList").val(centerCd);
 					}
 				},
 				function(request){
@@ -946,7 +955,7 @@
 	   					   }else if (result.status == "SUCCESS"){
 	   						   //총 게시물 정리 하기'								
 								common_popup("저장에 성공했습니다.", "Y", "bld_holiday_add");
-		 				    	jqGridFunc.fn_holyDayInfo("list",$("#searchCenterCd").val(), true);
+		 				    	jqGridFunc.fn_centerHolyInfo("list",$("#searchCenterCd").val(), true);
 	   					   }else if (result.status == "OVERLAP FAIL"){
 	   							common_popup("휴일 일자가 중복 발생 하였습니다.", "Y", "bld_holiday_add");
 	   							jqGridFunc.fn_holySearch();
@@ -964,6 +973,44 @@
 			$("#holyNm").val("");
 			$("#useYn").val("");
 		},
+		fn_centerHolyCopyModel : function(){
+			$("#id_ConfirmInfo").attr("href", "javascript:jqGridFunc.fn_centerHolyInfoCopy()");
+			fn_ConfirmPop("해당 지점의 사전예약정보를 복사 하시겠습니까?");
+		},
+		fn_centerHolyInfoCopy : function() {
+			
+			var url = "/backoffice/bld/centerHolyInfoCopy.do";
+			var copyCenterCd = $("#centerHolyList option:selected").val();
+			var targetCenterCd = $("#searchCenterCd").val();
+			
+			var params = 
+			{
+				"copyCenterCd" : copyCenterCd,
+				"targetCenterCd" : targetCenterCd
+			};
+			
+			fn_Ajax
+			(
+				url, 
+				"POST",
+				params,
+				true,
+				function(result) {
+					if (result.status == "LOGIN FAIL") {
+						common_popup(result.meesage, "N","");
+						location.href="/backoffice/login.do";
+					} else if (result.status == "SUCCESS") {
+						$("#bld_early_set").bPopup().close();
+						common_modelClose("bld_holiday_add");
+					}else {
+						common_popup(result.meesage, "Y","bld_holiday_add");
+					}
+				},
+				function(request){ 
+					common_popup("Error:" + request.status,"");
+				}    		
+			);
+		},		
 		fn_HolyCheckForm : function () {
 			if (any_empt_line_span("bld_holiday_add", "holyDt",  "날짜를 선택해주세요.","sp_message", "savePage") == false) return;
 			if (any_empt_line_span("bld_holiday_add", "holyNm", "휴일명을 입력해주세요.","sp_message", "savePage") == false) return;
@@ -977,7 +1024,7 @@
 		fn_holyDel : function(centerHolySeq) {
 			var params = {'centerHolySeq': centerHolySeq};
 			fn_uniDelAction("/backoffice/bld/centerHolyInfoDelete.do", "GET", params, false, "jqGridFunc.fn_search");
-			jqGridFunc.fn_holyDayInfo("list",$("#searchCenterCd").val(), true);
+			jqGridFunc.fn_centerHolyInfo("list",$("#searchCenterCd").val(), true);
 		},
 		fn_centerFloorInfo : function(centerCd) {
 			$("#searchCenterCd").val(centerCd);
