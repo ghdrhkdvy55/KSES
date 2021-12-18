@@ -262,8 +262,8 @@ function chkPwd(str){
 }
 
 //숫자입력 유효성검사 
-function onlyNum() {
-    if (((event.keyCode < 48) || (event.keyCode > 57)) && (event.keyCode != 190)) event.returnValue = false;
+function onlyNum(el) {
+	$(el).val($(el).val().replace(/[^0-9]/g,""));
 }
 
 //빈값 체우기

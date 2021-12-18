@@ -21,6 +21,7 @@
 <input type="hidden" id="mode" name="mode">
 <input type="hidden" id="resvSeq" name="resvSeq">
 <input type="hidden" id="resvDate" name="resvDate">
+<input type="hidden" id="seasonCd" name="seasonCd">
 <input type="hidden" id="authorCd" name="authorCd" value="${loginVO.authorCd}">
 <div class="breadcrumb">
 	<ol class="breadcrumb-item">
@@ -792,7 +793,9 @@
 				$(".pop_seat").html("");
 			}
 			
+			
 			seatSearchInfo = {};
+			$("#seasonCd").val("");
 			$("#seat_change").bPopup();
 		},
 		fn_resvSeatSearch : function(division) {
@@ -844,6 +847,8 @@
 				false,
 				function(result) {
 			    	if (result.status == "SUCCESS") {
+			    		result.seasonCd != null ? $("#seasonCd").val(result.seasonCd) : $("#seasonCd").val("");
+			    		
 			    		if (result.seatMapInfo != null) {
 			    		    var img = result.seatMapInfo.part_map1;
 			    		    $('.pop_mapArea').css({
@@ -876,6 +881,7 @@
 			    		            "left": fn_NVL(obj[i].seat_left) + "px"
 			    		        });
 			    		        
+			    		        $("#" + fn_NVL(obj[i].seat_cd)).data("seat-paycost", obj[i].pay_cost);
 			    		        $("#" + fn_NVL(obj[i].seat_cd)).data("seat-name", obj[i].seat_nm);
 			    		    }
 			    		    
@@ -904,10 +910,12 @@
 			var params = {
 				"resvSeq" : $("#resvSeq").val(),
 				"inResvDate" : $("#resvDate").val(),
+				"seasonCd" : $("#seasonCd").val(),
 				"centerCd" : $("#resvCenterCd").val(),
 				"floorCd" : $("#resvFloorCd").val(),
 				"partCd" : $("#resvPartCd").val(),
 				"seatCd" : $(".pop_seat li.usable").attr("id"),
+				"resvPayCost" : $(".pop_seat li.usable").data("seat-paycost");
 				"checkDvsn" : division
 			}
 			
@@ -981,6 +989,7 @@
 			fn_comboListJson("resvPartCd", returnVal, "", "100px;", "");
 		},
 		fn_longSeatAdd : function() {
+			$("#seasonCd").val("");
 			$("#longResvCenterCd").val("");
 			$("#longResvFloorCd ").val("");
 			$("#longResvPartCd").val("");
@@ -1015,7 +1024,8 @@
 				$("#resvPartCd option:checked").text() + "구역 " +
 				$(".pop_seat li.usable").data("seat-name")
 			);
-					
+				
+			$("#longResvPayCost").val($(".pop_seat li.usable").data("seat-paycost"));  			    		       
 			$("#longResvDateFrom").val($("#resvDateFrom").val());
 			$("#longResvDateTo").val($("#resvDateTo").val());
 			$("#seat_change").bPopup().close();
@@ -1032,11 +1042,13 @@
 				"resvDateTo" : $("#longResvDateTo").val(),
 				"resvUserDvsn" : "USER_DVSN_1",
 				"resvEntryDvsn" : "ENTRY_DVSN_2",
+				"seasonCd" : $("#seasonCd").val(),
 				"centerCd" : $("#longResvCenterCd").val(),
 				"floorCd" : $("#longResvFloorCd").val(),
 				"partCd" : $("#longResvPartCd").val(),
 				"seatCd" : $("#longResvSeatCd").val(),
 				"userId" : $("#longResvUserId").val(),
+				"resvPayCost" : $("#longResvPayCost").val(),
 				"resvUserNm" : $("#longResvUserName").val(),
 				"resvUserClphn" : $("#longResvUserPhone").val(),
 				"resvUserAskYn" : "Y",

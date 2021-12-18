@@ -47,7 +47,7 @@
                     <h4>예약 정보 조회</h4>
                     <ul class="rsvInfo">
                         <li><input id="resvUserNm" name="resvUserNm" type="text" placeholder="이름"></li>
-                        <li><input id="resvUserClphn" name="resvUserClphn" type="text" onkeypress="onlyNum();" placeholder="휴대폰 번호('-'없이 숫자만 입력"></li>
+                        <li><input id="resvUserClphn" name="resvUserClphn" type="text" onkeyup="onlyNum(this);" placeholder="휴대폰 번호('-'없이 숫자만 입력"></li>
                     </ul>
 
                     <div class="inquiry_btn">

@@ -71,7 +71,7 @@
                                 <input type="radio" name="userRcptDvsn" id="RCPT_DVSN_2" value="RCPT_DVSN_2">
                                 <label for="RCPT_DVSN_2"><span></span>지출 증빙용</label>
                             </li>
-                            <li><input type="text" id="userRcptNumber" onkeypress="onlyNum();" placeholder="'-'없이 입력해 주세요."></li>
+                            <li><input type="text" id="userRcptNumber" onkeypress="onlyNum(this);" placeholder="'-'없이 입력해 주세요."></li>
                         </ul>                      
                     </div>
 

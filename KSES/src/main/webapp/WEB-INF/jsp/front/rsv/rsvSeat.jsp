@@ -117,7 +117,7 @@
                             <h4>예약 정보 입력</h4>
                             <ul id="standing_resv_area">
                                 <li><input type="text" id="ENTRY_DVSN_1_resvUserNm" class="nonMemberArea" placeholder="이름을 입력해주세요."></li>
-                                <li><input type="number" id="ENTRY_DVSN_1_resvUserClphn" class="nonMemberArea" onkeypress="onlyNum();" placeholder="전화번호를 '-'없이 입력해주세요."></li>
+                                <li><input type="text" id="ENTRY_DVSN_1_resvUserClphn" class="nonMemberArea" onkeypress="onlyNum(this);" placeholder="전화번호를 '-'없이 입력해주세요."></li>
                                 <li class="certify nonMemberArea" onclick="javascript:seatService.fn_certification();">
                                 	<a href="javascript:void(0);"><img src="/resources/img/front/certify.svg" alt="">인증 하기</a>
                                 </li>
@@ -174,7 +174,7 @@
                                     <input class="cash_radio" type="radio" name="ENTRY_DVSN_1_rcpt_dvsn" id="ENTRY_DVSN_1_rcpt_dvsn2" value="RCPT_DVSN_2">
                                     <label for="ENTRY_DVSN_1_rcpt_dvsn2"><span></span>지출 증빙용</label>
                                 </li>
-                                <li><input type="number" id="ENTRY_DVSN_1_cash_number" onkeypress="onlyNum();" placeholder="'-'없이 입력해 주세요."></li>
+                                <li><input type="number" id="ENTRY_DVSN_1_cash_number" onkeypress="onlyNum(this);" placeholder="'-'없이 입력해 주세요."></li>
                             </ul>
                             <ul class="rsv_btn">
                                 <li><a href="javascript:seatService.fn_checkForm();">예약하기</a></li>
@@ -249,7 +249,7 @@
                                     <h4>예약 정보 입력</h4>
                                     <ul id="ENTRY_DVSN_2_resv_area">
                                         <li class="nonMemberArea"><input type="text" id="ENTRY_DVSN_2_resvUserNm" placeholder="이름을 입력해주세요."></li>
-                                        <li class="nonMemberArea"><input type="number" id="ENTRY_DVSN_2_resvUserClphn" onkeypress="onlyNum();" placeholder="전화번호를 '-'없이 입력해주세요."></li>
+                                        <li class="nonMemberArea"><input type="number" id="ENTRY_DVSN_2_resvUserClphn" onkeypress="onlyNum(this);" placeholder="전화번호를 '-'없이 입력해주세요."></li>
                                         <li class="certify nonMemberArea" onclick="javascript:seatService.fn_certification();">
                                         	<a href="javascript:void(0);"><img src="/resources/img/front/certify.svg" alt="">인증 하기</a>
                                         </li>
@@ -305,7 +305,7 @@
                                             <input class="cash_radio" type="radio" name="ENTRY_DVSN_2_rcpt_dvsn" id="ENTRY_DVSN_2_rcpt_dvsn2" value="RCPT_DVSN_2">
                                             <label for="ENTRY_DVSN_2_rcpt_dvsn2"><span></span>지출 증빙용</label>
                                         </li>
-                                        <li><input type="number" id="ENTRY_DVSN_2_cash_number" onkeypress="onlyNum();" placeholder="'-'없이 입력해 주세요."></li>
+                                        <li><input type="number" id="ENTRY_DVSN_2_cash_number" onkeypress="onlyNum(this);" placeholder="'-'없이 입력해 주세요."></li>
                                     </ul>      -->   
                                     <ul class="rsv_btn">
                                         <li><a href="javascript:seatService.fn_checkForm();">예약하기</a></li>
@@ -547,11 +547,6 @@
 						alert("ERROR : " + request.status);	       						
 					}    		
 				);
-				
-				window.addEventListener('beforeunload', (event) => { 
-					// 명세에 따라 preventDefault는 호출해야하며, 기본 동작을 방지합니다. 
-					event.preventDefault();
-				});	
 			},
 			fn_reSeat : function() {
 				$("#" + $("#reEnterDvsn").val()).addClass("active");
