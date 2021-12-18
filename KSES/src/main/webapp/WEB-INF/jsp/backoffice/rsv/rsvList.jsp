@@ -915,7 +915,7 @@
 				"floorCd" : $("#resvFloorCd").val(),
 				"partCd" : $("#resvPartCd").val(),
 				"seatCd" : $(".pop_seat li.usable").attr("id"),
-				"resvPayCost" : $(".pop_seat li.usable").data("seat-paycost");
+				"resvPayCost" : $(".pop_seat li.usable").data("seat-paycost"),
 				"checkDvsn" : division
 			}
 			
