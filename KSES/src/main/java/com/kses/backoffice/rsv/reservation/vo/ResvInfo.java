@@ -10,121 +10,124 @@ import lombok.Setter;
 @Setter
 public class ResvInfo {
 	// 예약 시퀀스
-	private String resvSeq;
+	private String resvSeq = "";
 
 	// 지점 코드
-	private String centerCd;
+	private String centerCd = "";
 	
 	// 층 코드
-	private String floorCd;
+	private String floorCd = "";
 	
 	// 구역 코드
-	private String partCd;
+	private String partCd = "";
 	
 	// 좌석 코드
-	private String seatCd;
+	private String seatCd = "";
 
 	// 시즌 코드
-	private String seasonCd;
+	private String seasonCd = "";
 
 	// 예약 시작일
-	private String resvStartDt;
+	private String resvStartDt = "";
 
 	// 예약 종료일
-	private String resvEndDt;
+	private String resvEndDt = "";
 
 	// 예약 구분 (오전오후종일)
-	private String resvDvsn;
+	private String resvDvsn = "";
 
 	// 예약 시작 TIME
-	private String resvStartTm;
+	private String resvStartTm = "";
 
 	// 예약 종료 TIME
-	private String resvEndTm;
+	private String resvEndTm = "";
 
 	// 요청일
-	private String resvReqDate;
+	private String resvReqDate = "";
 
 	// 고객 아이디
-	private String userId;
+	private String userId = "";
 	
 	// 고객 이름
-	private String resvUserNm;
+	private String resvUserNm = "";
 	
 	// 고객 전화번호
-	private String resvUserClphn;
+	private String resvUserClphn = "";
 
 	// 고객 구분
-	private String resvUserDvsn;
+	private String resvUserDvsn = "";
 
+	// 예약 금액
+	private String resvPayCost = "";
+	
 	// 입석/좌석 구분
-	private String resvEntryDvsn;
+	private String resvEntryDvsn = "";
 	
 	// 문진표 작성 여부
-	private String resvUserAskYn;
+	private String resvUserAskYn = "";
 
 	// 개인정보 수집 이용 여부
-	private String resvIndvdlinfoAgreYn;
+	private String resvIndvdlinfoAgreYn = "";
 	
 	// 발권 구분
-	private String resvTicketYn;
+	private String resvTicketYn = "";
 
 	// 예약 상태
-	private String resvState;
+	private String resvState = "";
 
 	// 취소자 ID
-	private String resvCancelId;
+	private String resvCancelId = "";
 
 	// 취소 사유
-	private String resvCancelDc;
+	private String resvCancelDc = "";
 
 	// 고객 취소 시간
-	private String resvCancelDt;
+	private String resvCancelDt = "";
 
 	// 취소 코드
-	private String resvCancelCd;
+	private String resvCancelCd = "";
 
 	// 환불 비용
 	private int resvCancelCost;
 
 	// 현금 영수증 발급 여부
-	private String resvRcptYn;
+	private String resvRcptYn = "";
 	
 	// 현금 영수증 발급 구분
-	private String resvRcptDvsn;
+	private String resvRcptDvsn = "";
 	
 	// 현금 영수증 번호
-	private String resvRcptNumber;
+	private String resvRcptNumber = "";
 	
 	// 최초 등록 일자
-	private String frstRegisterPnttm;
+	private String frstRegisterPnttm = "";
 
 	// 최초 등록 ID
- 	private String frstRegisterId;
+ 	private String frstRegisterId = "";
 
  	// 최종 수정 일자
-	private String lastUpdusrPnttm;
+	private String lastUpdusrPnttm = "";
 
 	// 최종 수정 ID
-	private String lastUpdusrId;
+	private String lastUpdusrId = "";
 	
 	// 관리자 아이디
-	private String adminId;
+	private String adminId = "";
 	
 	// 예약일
-	private String resvDate;
+	private String resvDate = "";
 	
 	// 장기예약 시작일
-	private String resvDateFrom;
+	private String resvDateFrom = "";
 	
 	// 장기예약 종료일
-	private String resvDateTo;
+	private String resvDateTo = "";
 	
 	// 장기예약일 리스트
 	private List<String> resvDateList;
 	
 	// 입력 구분
-	private String mode;
+	private String mode = "";
 	
 	// 결제 구분
 	private String resvPayDvsn = "";
