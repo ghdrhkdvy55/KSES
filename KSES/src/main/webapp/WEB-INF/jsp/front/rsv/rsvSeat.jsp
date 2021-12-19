@@ -755,7 +755,7 @@
 				    		    for (var i in result.resultlist) {
 				    		        var addClass = (obj[i].status == "0") ? "seatUse" : "none";
 				    		        var onClick = "seatService.fn_seatChange(this);"; 
-				    		        shtml += '<li id="' + fn_NVL(obj[i].seat_cd) + '" class="' + addClass + '" seat-id="' + obj[i].seat_cd + '" name="' + obj[i].seat_nm + '" >' + obj[i].seat_order + '</li>';
+				    		        shtml += '<li id="' + fn_NVL(obj[i].seat_cd) + '" class="' + addClass + '" seat-id="' + obj[i].seat_cd + '" name="' + obj[i].seat_nm + '" >' + obj[i].seat_number + '</li>';
 				    		    }
 				    		    
 				    		    $('#area_Map').html(shtml);

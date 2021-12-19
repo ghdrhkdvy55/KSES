@@ -306,16 +306,16 @@ public class ResJosnController{
         		
         		if(!qrTime.substring(0,8).equals(formatedNow.substring(0,8)) ) {
         			ERROR_CD = "ERROR_05";
-        			ERROR_MSG = "사용일이 아닌 QR번호 입니다.";
+        			ERROR_MSG = "예약일자 오류.";
         			model.addObject("ERROR_CD", ERROR_CD);
                 	model.addObject("ERROR_MSG", ERROR_MSG);
                 	return model;
         		}
         		
         		//시간 비교 
-        		if(Integer.valueOf( SmartUtil.timeCheck(qrTime)) < -600  &&  gubun.equals("INTERVAL")) {
+        		if(Integer.valueOf( SmartUtil.timeCheck(qrTime)) < -30  &&  gubun.equals("INTERVAL")) {
         			ERROR_CD = "ERROR_01";
-        			ERROR_MSG = "600초 시간이 경과된 QR입니다.";
+        			ERROR_MSG = "생성 시간 초과.";
         			model.addObject("ERROR_CD", ERROR_CD);
                 	model.addObject("ERROR_MSG", ERROR_MSG);
                 	return model;
@@ -327,7 +327,7 @@ public class ResJosnController{
         			
         		} else {
         			ERROR_CD = "ERROR_04";
-        			ERROR_MSG = "결제가 되지 않은 고객 입니다.";
+        			ERROR_MSG = "이용료 결제 필요.";
         			model.addObject("ERROR_CD", ERROR_CD);
                 	model.addObject("ERROR_MSG", ERROR_MSG);
                 	return model;
@@ -335,14 +335,14 @@ public class ResJosnController{
         		}
         		if (!center_speed_cd.equals(qrCneterCd)) {
         			ERROR_CD = "ERROR_06";
-        			ERROR_MSG = "지점 정보가 불일치 합니다.";
+        			ERROR_MSG = "장소 오류.";
         			model.addObject("ERROR_CD", ERROR_CD);
                 	model.addObject("ERROR_MSG", ERROR_MSG);
                 	return model;
         		}
         		if (!qrInot.equals(inOt)) {
         			ERROR_CD = "ERROR_07";
-        			ERROR_MSG = "입출입 구분이 잘못 되었습니다.";
+        			ERROR_MSG = "퇴장 정보 없음.";
         			model.addObject("ERROR_CD", ERROR_CD);
                 	model.addObject("ERROR_MSG", ERROR_MSG);
                 	return model;
@@ -393,7 +393,7 @@ public class ResJosnController{
         		}
         	} else {
         		ERROR_CD = "ERROR_03";
-    			ERROR_MSG = "잘못된 파라미터 입니다.";
+    			ERROR_MSG = "시스템 에러.";
     			model.addObject("ERROR_CD", ERROR_CD);
             	model.addObject("ERROR_MSG", ERROR_MSG);
             	return model;
@@ -548,7 +548,7 @@ public class ResJosnController{
 			int lineNumber = ste[0].getLineNumber();
 			LOGGER.error("selectQrCheckInfo error:" + e.toString() + ":" + lineNumber);
 			returnCode = "ERROR_02";
-			returnMessage = "시스템 애러.";
+			returnMessage = "시스템 에러 입니다.";
 			info.setTrsmrcvSeCode(sendEnum.RPF.getCode() );
 		}
 		
@@ -610,7 +610,7 @@ public class ResJosnController{
 					   SmartUtil.NVL( resInfo.get("resv_pay_cost"), "").toString())
 					 ) {
 				returnCode = "ERROR_03";
-				returnMessage = "금액 정보가 일치 하지 않습니다.";
+				returnMessage = "결제 금액 확인 요망.";
 			} else {
 				resName = SmartUtil.NVL(resInfo.get("user_nm") , "").toString();
 				resPrice = SmartUtil.NVL(resInfo.get("resv_pay_cost") , "").toString();
@@ -640,7 +640,7 @@ public class ResJosnController{
 					
 				}else {
 					returnCode = "ERROR_02";
-					returnMessage = "시스템 애러.";
+					returnMessage = "시스템 에러 입니다.";
 				}
 						
 			}
@@ -659,7 +659,7 @@ public class ResJosnController{
 		} catch (Exception e) {
 			LOGGER.error("selectTickMachinPrice error:" + e.toString());
 			returnCode = "ERROR_02";
-			returnMessage = "시스템 애러.";
+			returnMessage = "시스템 에러 입니다.";
 		}
 		 
 		model.addObject("RES_NAME", resName);

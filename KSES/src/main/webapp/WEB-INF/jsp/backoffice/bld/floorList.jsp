@@ -1444,7 +1444,6 @@
 		},
 		//엑셀 업로드
 		fn_excelup : function (){
-			alert("2");
 			$("#dv_excelUpload").bPopup();
 			$("#aUploadId").attr("href", "javascript:fn_excelUpload('0',seatService.fn_excelUpload)");
 		},
@@ -1589,7 +1588,7 @@
 	 	                    var obj = result.resultlist;
 								
 	 	                        for (var i in result.resultlist) {
-	 	                            shtml += '<li id="s' + trim(fn_NVL(obj[i].seat_nm)) + '" class="seat" seat-id="' + obj[i].seat_cd + '" name="' + obj[i].seat_cd + '" >' + fn_NVL(obj[i].seat_order) + '</li>';
+	 	                            shtml += '<li id="s' + trim(fn_NVL(obj[i].seat_nm)) + '" class="seat" seat-id="' + obj[i].seat_cd + '" name="' + obj[i].seat_cd + '" >' + fn_NVL(obj[i].seat_number) + '</li>';
 	 	                        }
 	 	                        $('#seat_list').html(shtml);
 	 	                        for (var i in result.resultlist) {
@@ -1844,9 +1843,9 @@
  	                //테이블 정리 하기
  	                var obj = result.resultlist;
  					const array = Array(obj.length + 1).fill(null).map(() =>Array());
- 					array[0] = ["seatCd","seatNm", "seatTop", "seatLeft", "seatOrder"];
+ 					array[0] = ["seatCd","seatNm", "seatTop", "seatLeft", "seatOrder", "seatNumber"];
  					for (var i in obj){
- 						array[parseInt(i)+1] = [""+obj[i].seat_cd+"",""+obj[i].seat_nm+ "",""+obj[i].seat_top+ "",""+obj[i].seat_left+ "" , ""+obj[i].seat_order+""];
+ 						array[parseInt(i)+1] = [""+obj[i].seat_cd+"",""+obj[i].seat_nm+ "",""+obj[i].seat_top+ "",""+obj[i].seat_left+ "" , ""+obj[i].seat_order+"", ""+obj[i].seat_number+""];
  					}
  					//엑셀 다운 로드 
  					var wb = XLSX.utils.book_new();

@@ -46,6 +46,9 @@ public class SeatInfo {
 	 
 	 // 비용 처리 여부
 	 private String seatOrder;
+	 
+	 // 좌석 번호
+	 private String seatNumber;
 	
 	 // 지불 구분
 	 private String payDvsn;
