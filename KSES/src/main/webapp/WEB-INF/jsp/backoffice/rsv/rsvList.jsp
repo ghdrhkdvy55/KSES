@@ -522,7 +522,7 @@
 					{label: '문진', name:'resv_user_ask_yn', index:'resv_user_ask_yn', align:'center', width : "50px"},
 					{label: '결재상태', name:'resv_pay_dvsn_text', index:'resv_pay_dvsn_text', align:'center'},
 					{label: 'QR출력', name:'resv_qr_print', index:'resv_qr_print', align:'center', sortable : false, formatter:jqGridFunc.formSetting},
-					{label: '현금영수증출력', name:'resv_rcpt_print', index:'resv_rcpt_print', align:'center', sortable : false, formatter:jqGridFunc.formSetting},
+					/* {label: '현금영수증출력', name:'resv_rcpt_print', index:'resv_rcpt_print', align:'center', sortable : false, formatter:jqGridFunc.formSetting}, */
 				], 
 				rowNum : 10,  //레코드 수
 				rowList : [10,20,30,40,50,100],  // 페이징 수

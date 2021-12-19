@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.kses.backoffice.cus.usr.service.UserInfoManageService;
 import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
+import com.kses.backoffice.util.SmartUtil;
 import com.kses.front.login.service.UserLoginService;
 import com.kses.front.login.vo.UserLoginInfo;
 
@@ -148,12 +149,13 @@ public class LoginPageInfoManageController {
 		
 		ModelAndView model = new ModelAndView("/front/login/qrEnter");
 		try {		
-/*			HttpSession httpSession = request.getSession(true);
-			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
+			if(userLoginInfo == null) {
+				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
+				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));	
+				model.setViewName("/front/main/mainpage");
+				return model;
+			}
 			
-			if(userLoginInfo != null) {
-				model.setViewName("/front/mainpage");
-			}*/
 			
 			model.addObject("resvSeq", resvSeq);
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);

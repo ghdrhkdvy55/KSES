@@ -381,8 +381,10 @@ public class ResJosnController{
                 	model.addObject("USERPHONE", userPhone);
                 	model.addObject("CENTERNM", centerNm);
                 	model.addObject("INOTMSG", IOGUBUN_TXT);
+                	
+                	//예약 이용중 상태값 변경
+                	
                 	return model;
-        			
         		} else {
         			String errorMessage =  sendInfo.getRcvCd().equals("ERROR_02") ? "입/출입 잘못 시도" : "시스템 에러";
         			ERROR_CD = sendInfo.getRcvCd();
@@ -397,9 +399,7 @@ public class ResJosnController{
     			model.addObject("ERROR_CD", ERROR_CD);
             	model.addObject("ERROR_MSG", ERROR_MSG);
             	return model;
-    			
         	}
-
         } catch(Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();

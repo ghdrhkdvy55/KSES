@@ -28,8 +28,8 @@
     
     <!-- popup-->    
     <script src="/resources/js/front/bpopup.js"></script>
-    
-    <link rel="stylesheet" href="/resources/css/section.css">
+	<link rel="stylesheet" href="/resources/css/section.css">   
+ 
 	<script type="text/javascript" src="/resources/js/modernizr.custom.js"></script>
 	<script type="text/javascript" src="/resources/js/classie.js"></script>
 	<script type="text/javascript" src="/resources/js/dragmove.js"></script>
@@ -249,7 +249,7 @@
                                     <h4>예약 정보 입력</h4>
                                     <ul id="ENTRY_DVSN_2_resv_area">
                                         <li class="nonMemberArea"><input type="text" id="ENTRY_DVSN_2_resvUserNm" placeholder="이름을 입력해주세요."></li>
-                                        <li class="nonMemberArea"><input type="number" id="ENTRY_DVSN_2_resvUserClphn" onkeypress="onlyNum(this);" placeholder="전화번호를 '-'없이 입력해주세요."></li>
+                                        <li class="nonMemberArea"><input type="text" id="ENTRY_DVSN_2_resvUserClphn" onkeypress="onlyNum(this);" placeholder="전화번호를 '-'없이 입력해주세요."></li>
                                         <li class="certify nonMemberArea" onclick="javascript:seatService.fn_certification();">
                                         	<a href="javascript:void(0);"><img src="/resources/img/front/certify.svg" alt="">인증 하기</a>
                                         </li>
@@ -652,6 +652,21 @@
 								$("#selectPartCd").append("<option value=''>구역 선택</option>");
 								
 								var setHtml = "";
+								
+								//구역 금액알림 영역
+								$(".price tbody").empty();
+								$.each(result.resultlist, function(index, item) {
+									var tempIndex = index + 1;
+									
+									if(tempIndex%2 != 0) { setHtml += "<tr>";}
+									setHtml += "<td>"  + item.part_nm  + "<span>" + item.part_pay_cost + "원</span></td>";
+									if(tempIndex%2 == 0) { setHtml += "</tr>";}
+
+								});
+								$(".price tbody").append(setHtml);
+								
+								
+								//층 도면 구역 아이콘 영역
 								$.each(result.resultlist, function(index, item) {
 									$("#selectPartCd").append("<option value='" + item.part_cd + "'>" + item.part_nm + "</option>");
 									
@@ -932,8 +947,8 @@
 //					return;	
 //				}
 				
+              				
 				// 예약 유효성 검사 추가
-				
 				params = {
 					"mode" : "Ins",
 					"resvDate" : $("#resvDate").val(),
@@ -944,7 +959,7 @@
 					"floorCd" : $("#floorCd").val(),
 					"partCd" : $("#partCd").val(),
 					"seatCd" : $("#seatCd").val(),
-					"resvPayCost" : $("#seatCd").data("seat-paycost"),
+					"resvPayCost" : $("#" + $("#seatCd").val()).data("seat-paycost"),
 					"resvUserNm" : certificationName,
 					"resvUserClphn" : certificationNumber,
 					"resvUserAskYn" : $("input:checkbox[id='" + enterDvsn + "_qna_check']").val(),
@@ -1021,7 +1036,7 @@
 				
 				$("#seasonCd").val("");
 			}
-		}  
+		}
     </script>
  
  	<c:import url="/front/inc/popup_common.do" />

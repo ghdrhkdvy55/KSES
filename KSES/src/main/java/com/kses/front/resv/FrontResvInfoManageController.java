@@ -303,7 +303,7 @@ public class FrontResvInfoManageController {
 			HttpSession httpSession = request.getSession(true);
 			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
 			
-			if("USER_DVSN_1".equals(params.get("resvDvsn")) && userLoginInfo == null) {
+			if(userLoginInfo == null) {
 				userLoginInfo = new UserLoginInfo();
 				userLoginInfo.setUserDvsn("USER_DVSN_2");
 				httpSession.setAttribute("userLoginInfo", userLoginInfo);
@@ -311,12 +311,12 @@ public class FrontResvInfoManageController {
 				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
 				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
 				return model;
-			} else {
-				params.put("resvState", "RESV_STATE_3");
-				params.put("resvCancelCd", "RESV_CANCEL_CD_2");
-				params.put("resvCancelId", userLoginInfo.getUserId());
 			}
 			
+			
+			params.put("resvState", "RESV_STATE_3");
+			params.put("resvCancelCd", "RESV_CANCEL_CD_2");
+
 			int ret = resvService.resvInfoCancel(params);
 			
 			if(ret > 0) {
