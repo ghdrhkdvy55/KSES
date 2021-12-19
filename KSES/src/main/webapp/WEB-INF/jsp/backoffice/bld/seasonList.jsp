@@ -610,7 +610,7 @@ var jqGridFunc  = {
 	                        for (var i in result.resultlist) {
 	                        	var check = (obj[i].use_yn == "Y") ? "checked" : "";
 	                        	if (check == "checked"){
-	                        		shtml += '<li id="s' + trim(obj[i].season_seat_label) + '" class="seat" season_seat-cd="' + obj[i].season_seat_cd + '" name="' + obj[i].season_seat_cd + '" onClick="fn_layerClick(&#34;' + trim(obj[i].season_seat_label ) + '&#34;,&#34;' + trim(obj[i].season_seat_cd ) + '&#34;)">' + fn_NVL(obj[i].season_seat_order) + '</li>';
+	                        		shtml += '<li id="s' + trim(obj[i].season_seat_label) + '" class="seat" season_seat-cd="' + obj[i].season_seat_cd + '" name="' + obj[i].season_seat_cd + '" onClick="fn_layerClick(&#34;' + trim(obj[i].season_seat_label ) + '&#34;,&#34;' + trim(obj[i].season_seat_cd ) + '&#34;)">' + fn_NVL(obj[i].season_seat_number) + '</li>';
 	                        		$('#seat_list').html(shtml);
 	                        		//동적 클릭 하는 부분 처리 나중에 확인 하기 
 	                        		

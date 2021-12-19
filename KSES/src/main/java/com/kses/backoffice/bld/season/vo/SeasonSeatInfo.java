@@ -30,6 +30,7 @@ public class SeasonSeatInfo {
 	private String seasonSeatLeft = "";
 	private String seasonSeatOrder = "";
 	private String seasonSeatLabel = "";
+	private String seasonSeatNumber = "";
 	
 	private String mode = "";
 	private String userId = "";

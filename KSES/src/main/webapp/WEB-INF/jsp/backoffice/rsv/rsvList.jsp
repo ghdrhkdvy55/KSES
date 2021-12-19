@@ -22,7 +22,6 @@
 <input type="hidden" id="resvSeq" name="resvSeq">
 <input type="hidden" id="resvDate" name="resvDate">
 <input type="hidden" id="seasonCd" name="seasonCd">
-<input type="hidden" id="authorCd" name="authorCd" value="${loginVO.authorCd}">
 <div class="breadcrumb">
 	<ol class="breadcrumb-item">
 		<li>고객 관리&nbsp;&gt;&nbsp;</li>
@@ -448,10 +447,8 @@
 	var seatSearchInfo = {};
 
 	$(document).ready(function() { 
-		if($("#authorCd").val() != "ROLE_ADMIN" && $("#authorCd").val() != "ROLE_SYSTEM") {
+		if($("#LoginAuthorCd").val() != "ROLE_ADMIN" && $("#LoginAuthorCd").val() != "ROLE_SYSTEM") {
 			/* $(".hideAuthor").hide(); */
-			$(".top > div > p").eq(0).hide();
-			$(".top > div > select").eq(0).hide();
 		}
 		
 		jqGridFunc.setGrid("mainGrid");
@@ -772,13 +769,14 @@
 				$("#seat_change a:eq(1)").attr("href","javascript:jqGridFunc.fn_resvSeatSearch('CHANGE');");
 				$("#seat_change a:eq(2)").html("변경").attr("href","javascript:jqGridFunc.fn_resvSeatUpdate('CHANGE')");;
 				jqGridFunc.fn_resvSeatSearch("CHANGE");
-			} else if(division = "LONG") {
+			} else if(division = "LONG") {				
 				if($("#loginAuthorCd").val() != "ROLE_ADMIN" && $("#loginAuthorCd").val() != "ROLE_SYSTEM") {
 					$("#resvCenterCd").val($("#loginCenterCd").val()).trigger("change").closest("p").hide();
 				} else {
 					$("#resvCenterCd").val("");
+					$("#resvFloorCd").children("option:not(:first)").remove();
 				}
-				$("#resvFloorCd").children("option:not(:first)").remove();
+				
 				$("#resvPartCd").children("option:not(:first)").remove();
  				$("#resvSeq").val("");
 				$("#resvDate").val("");
@@ -870,7 +868,7 @@
 			    		    		default : addClass = "selected"; break;
 			    		    	}
 
-			    		        shtml += '<li id="' + fn_NVL(obj[i].seat_cd) + '" class="' + addClass + '" seat-id="' + obj[i].seat_cd + '" name="' + obj[i].seat_nm + '" >' + obj[i].seat_order + '</li>';
+			    		        shtml += '<li id="' + fn_NVL(obj[i].seat_cd) + '" class="' + addClass + '" seat-id="' + obj[i].seat_cd + '" name="' + obj[i].seat_nm + '" >' + obj[i].seat_number + '</li>';
 			    		    }
 
 			    		    $(".pop_seat").html(shtml);
