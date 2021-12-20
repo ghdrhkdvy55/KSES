@@ -224,9 +224,7 @@
 			<thead>
 				<tr>
 		            <th>요일</th>
-		            <th>자동취소 오전 시간</th>
-		            <th>자동취소 오후 시간</th>
-		            <th>자동취소 종일 시간</th>
+		            <th>자동취소 시간</th>
 		            <th>최종 수정 일자</th>
 		            <th>최종 수정자</th>
 	            </tr>
@@ -775,8 +773,9 @@
  								
  								setHtml += "<tr id='" + obj.noshow_cd + "'>";
 								setHtml += "<td style='color : " + color + ";'>" + obj.noshow_day_text + "</td>";
+								/* 오전 노쇼,오후 노쇼 기능 제거
 								setHtml += "<td><input type='text' id='" + obj.noshow_cd + "_noshow_am_tm" + "'value='" + obj.noshow_am_tm + "' onKeyup='inputTimeFormat(this);' placeholder='HH:MM' maxlength='5'/></td>";
-								setHtml += "<td><input type='text' id='" + obj.noshow_cd + "_noshow_pm_tm" +"'value='" + obj.noshow_pm_tm + "' onKeyup='inputTimeFormat(this);' placeholder='HH:MM' maxlength='5'/></td>";
+								setHtml += "<td><input type='text' id='" + obj.noshow_cd + "_noshow_pm_tm" +"'value='" + obj.noshow_pm_tm + "' onKeyup='inputTimeFormat(this);' placeholder='HH:MM' maxlength='5'/></td>"; */
 								setHtml += "<td><input type='text' id='" + obj.noshow_cd + "_noshow_all_tm" +"'value='" + obj.noshow_all_tm + "' onKeyup='inputTimeFormat(this);' placeholder='HH:MM' maxlength='5'/></td>";
 								setHtml += "<td>" + obj.last_updt_dtm + "</td>";
 								setHtml += "<td>" + obj.last_updusr_id + "</td>";
@@ -809,8 +808,9 @@
 				var noshowCd = $(item).attr('id');
 				var param = new Object();
 					param['noshowCd'] = noshowCd;
+				/* 오전 노쇼,오후 노쇼 기능 제거
 				param['noshowAmTm'] = $("#" + noshowCd + "_noshow_am_tm").val().replace(/\:/g, "");
-				param['noshowPmTm'] = $("#" + noshowCd + "_noshow_pm_tm").val().replace(/\:/g, "");
+				param['noshowPmTm'] = $("#" + noshowCd + "_noshow_pm_tm").val().replace(/\:/g, ""); */
 				param['noshowAllTm'] = $("#" + noshowCd + "_noshow_all_tm").val().replace(/\:/g, "");
 				params.push(param);
 			});
