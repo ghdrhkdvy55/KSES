@@ -190,7 +190,12 @@
 								$("#rsv_seat, #cancel_rsv_seat").html(guestResvInfo.seat_nm);
 								$("#rsv_date, #cancel_rsv_date").html(guestResvInfo.resv_req_date);
 								
-								$("#resvCancleBtn").attr("href","javascript:guestResvService.fn_resvCancel('" + guestResvInfo.resv_seq + "');");
+								if(guestResvInfo.resv_state == "RESV_STATE_1") {
+									$(".non_memBtn .cancelBtn").show();
+									$("#resvCancleBtn").attr("href","javascript:guestResvService.fn_resvCancel('" + guestResvInfo.resv_seq + "');");
+								} else {
+									$(".non_memBtn .cancelBtn").hide();
+								}
 								
 								$(".search").hide();
 								$(".result").show();
@@ -200,7 +205,7 @@
 						} 
 					},
 					function(request) {
-						alert("ERROR : " + request.status);	       						
+						fn_openPopup("처리중 에러가 발생하였습니다.", "red", "ERROR", "확인", "");	       						
 					}    		
 				);
 			},

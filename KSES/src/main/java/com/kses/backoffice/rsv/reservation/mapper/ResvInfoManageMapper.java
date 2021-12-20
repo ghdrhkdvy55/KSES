@@ -50,6 +50,8 @@ public interface ResvInfoManageMapper {
 	
 	public int updateUserLongResvInfo(ResvInfo vo);
 	
+	public int resvStateChange(ResvInfo vo);
+	
 	public int resbillChange(ResvInfo vo);
 	
 	public int resPriceChange(ResvInfo vo);

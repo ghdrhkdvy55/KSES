@@ -382,7 +382,11 @@ public class ResJosnController{
                 	model.addObject("CENTERNM", centerNm);
                 	model.addObject("INOTMSG", IOGUBUN_TXT);
                 	
-                	//예약 이용중 상태값 변경
+                	//예약정보 상태값 변경 (예약 -> 이용) 
+                	ResvInfo resvInfo = new ResvInfo();
+                	resvInfo.setResvSeq(resSeq);
+                	resvInfo.setResvState("RESV_STATE_2");
+                	resService.resvStateChange(resvInfo);
                 	
                 	return model;
         		} else {

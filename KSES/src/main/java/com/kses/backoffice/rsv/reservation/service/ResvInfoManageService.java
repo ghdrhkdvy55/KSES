@@ -153,17 +153,26 @@ public interface ResvInfoManageService {
 	 */
 	public int resvInfoCancel(Map<String, Object> params) throws Exception;
 	
+	/**
+	 * SPDM 예약 상태값 변경
+	 * 
+	 * @param vo
+	 * @return
+	 * @throws Exception
+	 */
+	public int resvStateChange(ResvInfo vo) throws Exception;
+	
 	/*
 	 *  입금 또는 환불
 	 * 
 	 */
-	public int resPriceChange(ResvInfo vo)throws Exception;
+	public int resPriceChange(ResvInfo vo) throws Exception;
 	
 	
-	public int resbillChange(ResvInfo vo)throws Exception;
+	public int resbillChange(ResvInfo vo) throws Exception;
 	
 	/**
-	 * SPDM 예약전 유효성 검사
+	 * SPDM 예약정보 유효성 검사
 	 * 
 	 * @param params
 	 * @return

@@ -62,7 +62,6 @@
                                 <ul id="user_info_bottom_area">
 
                                     <li class="rsv_cancel"><a data-popup-open="rsv_cancel_pop">예약취소</a></li>
-                                    <li class="closeBtn"><a data-popup-open="">닫기</a></li>
 
                                 </ul>
                             </div>
@@ -240,7 +239,7 @@
           	<div class="cancel_btn">
           		<ul>
           			<li><a href="" id="resvCancleBtn" class="grayBtn">예약취소</a></li>
-          			<li><a href="" id="resvCancleBtn" class="dislBtn">닫기</a></li>
+          			<li><a href="javascript:bPopupClose('cancel_rsv_info');" id="resvCancleBtn" class="dislBtn">닫기</a></li>
           		</ul>              	
           	</div>
           	<div class="clear"></div>
@@ -302,14 +301,14 @@
     <!-- 최근입장불가 팝업 // -->
     
 	<!-- // 결제인증 팝업 -->
-    <div data-popup="pay_number" class="popup">
+    <div id="pay_number" class="popup">
 		<div class="pop_con rsv_popup">
 			<a class="button b-close">X</a>
           	<div class="pop_wrap">
             	<h4>결제 비밀번호를 입력해주세요.</h4>
             	<ul class="pay_passWord">
                 	<li><input type="password" id="Card_Pw" placeholder="비밀번호를 입력하세요."></li>
-                	<li><a href="javascript:qrService.fn_payment();" class="mintBtn">확인</a></li>
+                	<li><a href="javascript:void(0);" class="mintBtn">확인</a></li>
             	</ul>
           	</div>
       	</div>
@@ -475,8 +474,7 @@
 				// 공지값 넣기 
 				mainService.fn_boardINfo("NOT");
 				
-			}
-    	    ,
+			},
     	    fn_boardINfo  : function (centerCd){
     	    	
     	    	var url = "/front/boardInfo.do";
@@ -560,8 +558,7 @@
     	    				
     	    			}
     	    	)
-    	    }
-    	    ,
+    	    },
 			fn_userResvInfo : function(division, resvSeq, popup) {				
 				var url = "/front/userResvInfo.do";
 				var params = {
@@ -608,7 +605,7 @@
 									$("#cancel_rsv_center").html(obj.center_nm);
 									$("#cancel_rsv_seat").html(obj.seat_nm);
 									$("#cancel_rsv_date").html(obj.resv_req_date);
-									$("#resvCancleBtn").attr("href","javascript:mainService.fn_resvCancel('" + obj.resv_seq + "');");
+									$("#resvCancleBtn").attr("href","javascript:mainService.fn_resvCancelCheck('" + obj.resv_seq + "');");
 								}
 				    		}
 				    		
@@ -623,11 +620,26 @@
 					}    		
 				);	
 			},
-			fn_resvCancel : function(resvSeq) {
+			fn_resvCancelCheck : function(resvSeq) {
+				var resvInfo = fn_getResvInfo(resvSeq);
+				
+				if(resvInfo.isSuccess) {
+					if(resvInfo.resv_pay_dvsn == "RESV_PAY_DVSN_1") {
+						mainService.fn_resvCancel(resvInfo);
+					} else {
+						$("#pay_number").bPopup();
+						$("#Card_Pw").val("");
+						$("#pay_number a:eq(1)").click(function(resvSeq) {
+							mainService.fn_payment(resvInfo);	
+						});
+					}
+				}
+			},
+			fn_resvCancel : function(resvInfo, payResult) {
 				var url = "/front/resvInfoCancel.do";
 				var params = {
-					"userDvsn" : $("#userDvsn").val(),
-					"resvSeq" : resvSeq
+					"resvCancelId" : resvInfo.user_id,
+					"resvSeq" : resvInfo.resv_seq
 				}
 				
 				fn_Ajax
@@ -637,9 +649,15 @@
 					params,
 					false,
 					function(result) {
-				    	console.log(result);
 						if (result.status == "SUCCESS") {
-							fn_openPopup("예약이 정상적으로 취소되었습니다.", "blue", "SUCCESS", "확인", "javascript:location.reload();");
+							payResult != null ?
+								fn_openPopup(
+									"예약이 정상적으로 취소되었습니다." + "<br>" +
+									"입금금액 : " + payResult.occurVal + "<br>" +
+									"잔액 : " + payResult.balan, 
+									"blue", "SUCCESS", "확인", "javascript:location.reload();"
+								) :
+								fn_openPopup("예약이 정상적으로 취소되었습니다.", "blue", "SUCCESS", "확인", "javascript:location.reload();");
 						} else if (result.status == "LOGIN FAIL"){
 							fn_openPopup(result.message, "blue", "SUCCESS", "확인", "javascript:location.reload();");
 						}
@@ -649,6 +667,39 @@
 					}
 				);	
 			},
+			fn_payment : function(resvInfo) {
+				var url = "/backoffice/rsv/speedCheck.do";
+				var params = {
+					"gubun" : "dep",
+					"sendInfo" : {
+						"resvSeq" : resvInfo.resv_seq,
+						"Card_Pw" : $("#Card_Pw").val(),
+						"System_Type" : "E"
+					}
+				}
+				
+				fn_Ajax
+				(
+				    url,
+				    "POST",
+					params,
+					false,
+					function(result) {
+				    	if(result.regist != null) {
+							if(result.regist.Error_Msg == "SUCCESS") {
+								mainService.fn_resvCancel(resvInfo, result.regist.result);
+							} else {
+								fn_openPopup(result.regist.Error_Msg, "red", "ERROR", "확인", "javascript:location.reload();");
+							}
+				    	} else {
+				    		fn_openPopup("로그인중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
+				    	}
+					},
+					function(request) {
+						alert("ERROR : " + request.status);	       						
+					}    		
+				);	
+			}, 
 			fn_reSeat : function(resvInfo) {
 				var params = {
 					"isReSeat" : "Y",
@@ -700,7 +751,7 @@
 				return validResult;
 			},
 			fn_moveQrPage : function(resvSeq) {
-				location.href = "/front/qrEnter.do?resvSeq=" + resvSeq;
+				location.href = "/front/qrEnter.do?resvSeq=" + resvSeq + "&accessType=WEB";
 			}
 		}
     </script>

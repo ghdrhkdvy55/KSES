@@ -982,7 +982,7 @@
  	                            shtml += '<div class="box-wrapper"><li id="s' + trim(fn_NVL(obj[i].part_cd)) + '" class="seat" seat-id="' + obj[i].part_cd + '" style="opacity: 0.7;text-align: center; display: inline-block;" name="' + obj[i].part_cd + '" >' 
  	                                  +  '<div class="section">'
  	                                  +  '   <div class="circle">'
- 	                                  +  '       <span class=' + fn_NVL(obj[i].part_css) + '>' + fn_NVL(obj[i].part_nm) + '</span>'
+ 	                                  +  '       <span class=' + fn_NVL(obj[i].part_css) + '>' + fn_NVL(obj[i].part_nm) + '(' + fn_NVL(obj[i].part_class_text) + ')' + '</span>'
  	                                  +  '   </div>'
  	                                  +  ' </div>'
  	                                  +  '</li></div>';

@@ -30,7 +30,8 @@
 	
 	<select id="selectCmmnDetailCombo" resultType="lmap">
 		SELECT 
-			A.CODE AS code, A.CODE_NM AS codeNm, A.CODE_DC AS codeDc, A.USE_AT AS useAt
+			A.CODE AS code, A.CODE_NM AS codeNm, A.CODE_DC AS codeDc, A.USE_AT AS useAt,
+			A.CODE_ETC1 AS codeEtc1, A.CODE_ETC2 AS codeEtc2
 		FROM COMTCCMMNDETAILCODE A		    
 		WHERE A.CODE_ID = #{code}
 		ORDER BY CAST( REPLACE(CODE, CONCAT(CODE_ID, '_'), '') AS INT) ASC

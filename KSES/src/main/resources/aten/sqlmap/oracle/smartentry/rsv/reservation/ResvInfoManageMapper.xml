@@ -217,7 +217,7 @@
     <select id="selectGuestMyResvInfo" resultType="lmap">
     <![CDATA[
     	SELECT
-    		A.RESV_SEQ, A.RESV_USER_NM, B.CENTER_NM,
+    		A.RESV_SEQ, A.RESV_USER_NM, A.RESV_STATE, B.CENTER_NM,
     		CASE
     			WHEN A.SEAT_CD IS NULL THEN '입석'
     			ELSE (SELECT SEAT_NM FROM TSEB_SEAT_INFO_D WHERE SEAT_CD = A.SEAT_CD)
@@ -374,6 +374,12 @@
     		RESV_CANCEL_CD = #{params.resvCancelCd},
     		RESV_CANCEL_DT = SYSDATE
     	WHERE RESV_SEQ = #{params.resvSeq}
+    </update>
+    
+	<update id="resvStateChange">
+		UPDATE TSER_RESV_INFO_I SET 
+			RESV_STATE = #{resvState}
+        WHERE RESV_SEQ = #{resvSeq}
     </update>
     
 	<update id="resPriceChange">

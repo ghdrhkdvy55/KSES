@@ -205,14 +205,19 @@
                                 <div id="price" class="price">
                                     <table>
                                         <tbody>
-                                        	<tr>
-                                            	<td><img src="/resources/img/front/basic.svg" alt="일반석">일반석 <span>무료</span></td>
-                                            	<td><img src="/resources/img/front/standard.svg" alt="스탠다드">스탠다드<span>5,000원</span></td>
-                                            </tr>
-                                            <tr>
-                                            	<td><img src="/resources/img/front/premir.svg" alt="프리미엄">프리미엄<span>10,000원</span></td>
-                                            	<td><img src="/resources/img/front/noble.svg" alt="노블레스">노블레스<span>15,000원</span></td>
-											</tr>
+											<c:forEach var="item" items="${seatClass}" begin="0" step="1" varStatus="status">
+												<c:if test="${(status.index + 1)%2 != 0}"><tr></c:if>
+													<td>
+														<img src="${item.codeetc2}">${item.codenm}
+													<c:if test="${item.codeetc ne '0'}">
+														<span>${item.codeetc1}원</span>
+													</c:if>
+													<c:if test="${item.codeetc eq '0'}">
+														<span>무료</span>
+													</c:if>
+													</td>
+											    <c:if test="${(status.index + 1)%2 == 0}"><tr></c:if>
+											</c:forEach>
                                         </tbody>                                          
                                     </table>
                                 </div>
@@ -584,11 +589,11 @@
 					$("input:checkbox[id='" + enterDvsn + "_qna_check']").prop("checked", false);
 					$("input:checkbox[id='" + enterDvsn + "_person_agree']").prop("checked", false);
 					
-					//$("#" + enterDvsn + "_cash_area").hide();
-					//$("input:radio[name='" + enterDvsn + "_rcpt_dvsn']").eq(0).prop("checked", true);
-					//$("input:checkbox[id='" + enterDvsn + "_bill_confirm']").prop("checked", false);
-					//$("#" + enterDvsn + "_cash_number").val("");
-					//$("input:radio[name='" + enterDvsn + "_rcpt_dvsn']").eq(0).prop("checked", true);					
+//					$("#" + enterDvsn + "_cash_area").hide();
+//					$("input:radio[name='" + enterDvsn + "_rcpt_dvsn']").eq(0).prop("checked", true);
+//					$("input:checkbox[id='" + enterDvsn + "_bill_confirm']").prop("checked", false);
+//					$("#" + enterDvsn + "_cash_number").val("");
+//					$("input:radio[name='" + enterDvsn + "_rcpt_dvsn']").eq(0).prop("checked", true);					
 					
 					if(isMember) {
 // 						if(userRcptYn == "Y") {
@@ -652,20 +657,7 @@
 								$("#selectPartCd").append("<option value=''>구역 선택</option>");
 								
 								var setHtml = "";
-								
-								//구역 금액알림 영역
-								$(".price tbody").empty();
-								$.each(result.resultlist, function(index, item) {
-									var tempIndex = index + 1;
-									
-									if(tempIndex%2 != 0) { setHtml += "<tr>";}
-									setHtml += "<td>"  + item.part_nm  + "<span>" + item.part_pay_cost + "원</span></td>";
-									if(tempIndex%2 == 0) { setHtml += "</tr>";}
 
-								});
-								$(".price tbody").append(setHtml);
-								
-								
 								//층 도면 구역 아이콘 영역
 								$.each(result.resultlist, function(index, item) {
 									$("#selectPartCd").append("<option value='" + item.part_cd + "'>" + item.part_nm + "</option>");
@@ -673,7 +665,7 @@
 									setHtml = '<div class="box-wrapper"><li id="s' + trim(fn_NVL(item.part_cd)) + '" class="seat" seat-id="' + item.part_cd + '" style="opacity: 0.7;text-align: center; display: inline-block;" name="' + item.part_cd + '" >' 
 	                                  +  '<div class="section">'
 	                                  +  '   <div class="circle">'
-	                                  +  '       <span class=' + fn_NVL(item.part_css) + '>' + fn_NVL(item.part_nm) + '</span>'
+	                                  +  '       <span class=' + fn_NVL(item.part_css) + '>' + fn_NVL(item.part_nm) + '(' + fn_NVL(item.part_class_text) + ')' + '</span>'
 	                                  +  '   </div>'
 	                                  +  ' </div>'
 	                                  +  '</li></div>';
@@ -708,6 +700,8 @@
 									var partCd = $(this).attr("id").substring(1);
 									$("#selectPartCd").val(partCd).trigger("change");
 								});
+								
+								fn_scrollMove($("#section_sel"));
 							} else {
 								fn_openPopup("해당층은 현재 선택 가능한 구역이 존재하지 않습니다.", "red", "ERROR", "확인", "");
 							}
@@ -810,7 +804,9 @@
 										$(".sel_seat_nm").html(seatNm);
 				    		    	}
 								});
-				    		}					
+				    		    
+				    		    fn_scrollMove($("#tab-a"));
+				    		}
 				    	}
 					},
 					function(request) {

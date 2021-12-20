@@ -29,6 +29,7 @@
 
 <body>
 	<input type="hidden" id="userDvsn" name="userDvsn" value="${sessionScope.userLoginInfo.userDvsn}">
+	<input type="hidden" id="accessType" name="accessType" value="${accessType}">
 	<input type="hidden" id="resvSeq" name="resvSeq" value="${resvSeq}">
     
     <div class="wrapper rsvBack">
@@ -120,7 +121,6 @@
 					params,
 					false,
 					function(result) {
-				    	console.log(result);
 				    	if (result.status == "SUCCESS") {
 				    		if(isFirst) {
 				    			isFirst = false;
@@ -198,7 +198,13 @@
 					function(result) {
 				    	if(result.regist != null) {
 							if(result.regist.Error_Msg == "SUCCESS") {
-								fn_openPopup("결제가 완료되었습니다.<br>잔액 : " + result.regist.Balance + "원", "blue", "SUCCESS", "확인", "javascript:location.reload();");
+								var payResult = result.regist.result;
+								fn_openPopup(
+									"결제가 완료되었습니다." + "<br>" +
+									"출금금액 : " + payResult.occurVal + "<br>" +
+									"잔액 : " + payResult.balan, 
+									"blue", "SUCCESS", "확인", "javascript:location.reload();"
+								);
 							} else {
 								fn_openPopup(result.regist.Error_Msg, "red", "ERROR", "확인", "javascript:location.reload();");
 							}

@@ -57,12 +57,7 @@
                         </ul>
                     </div>
                 </div>
-
-                <div class="selBtn branch_btn">
-                    <a href="javascript:centerService.fn_checkForm();">지점 선택</a>
-                </div>
             </div>
-
         </div>
         <!--contents //-->
 
@@ -115,7 +110,20 @@
 									+ "</em>석</li></ul></li>";
 									$(".branch_list").append(setHtml);
 								});
-								centerService.fn_centerButtonSetting();
+								
+								var sBtn = $(".branch_list > li"); //  ul > li 이를 sBtn으로 칭한다. (클릭이벤트는 li에 적용 된다.)
+								sBtn.find("ul").click(function() { // sBtn에 속해 있는  a 찾아 클릭 하면.
+									sBtn.removeClass("active"); // sBtn 속에 (active) 클래스를 삭제 한다.
+									$(this).parent().addClass("active"); // 클릭한 a에 (active)클래스를 넣는다.
+									$("#centerCd").val($(this).attr("id"));
+									
+									var params = {
+										"centerCd" : $("#centerCd").val(),
+										"seatCd" : "",
+										"checkDvsn" : "CENTER"
+									}
+									centerService.fn_resvVaildCheck(params);
+								});
 							}
 						} else {
 							
@@ -125,30 +133,6 @@
 						alert("ERROR : " + request.status);	       						
 					}    		
 				);	    						
-			},
-			fn_checkForm : function() {
-				if($("#centerCd").val() == "") {
-					fn_openPopup("지점을 선택해주세요.", "red", "ERROR", "확인", "");
-					return;
-				}
-				
-				var params = {
-					"centerCd" : $("#centerCd").val(),
-					"seatCd" : "",
-					"checkDvsn" : "CENTER"
-				}
-				
-				if(centerService.fn_resvVaildCheck(params)) {
-					fn_pageMove('regist','/front/rsvSeat.do');				
-				}
-			},
-			fn_centerButtonSetting : function() {
-				var sBtn = $(".branch_list > li"); //  ul > li 이를 sBtn으로 칭한다. (클릭이벤트는 li에 적용 된다.)
-				sBtn.find("ul").click(function() { // sBtn에 속해 있는  a 찾아 클릭 하면.
-					sBtn.removeClass("active"); // sBtn 속에 (active) 클래스를 삭제 한다.
-					$(this).parent().addClass("active"); // 클릭한 a에 (active)클래스를 넣는다.
-					$("#centerCd").val($(this).attr("id"));
-				})
 			},
 			fn_resvVaildCheck : function(params) {
 				var url = "/front/resvValidCheck.do";
@@ -162,12 +146,16 @@
 					false,
 					function(result) {
 						if (result.status == "SUCCESS") {
-							if(result.validResult.resultCode != "SUCCESS") {
-								fn_openPopup(result.validResult.resultMessage, "red", "ERROR", "확인", "");
+							if(result.validResult != null) {
+								if(result.validResult.resultCode != "SUCCESS") {
+									fn_openPopup(result.validResult.resultMessage, "red", "ERROR", "확인", "");
+								} else {
+									validResult = result.validResult;
+									$("#resvDate").val(result.validResult.resvDate);
+									fn_pageMove('regist','/front/rsvSeat.do');
+								}
 							} else {
-								validResult = result.validResult;
-								$("#resvDate").val(result.validResult.resvDate);
-								validResult = true;
+								fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "location.href='/front/login.do'");	
 							}
 						} else if (result.status == "LOGIN FAIL"){
 							fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "location.href='/front/login.do'");
@@ -177,8 +165,6 @@
 						alert("ERROR : " + request.status);	       						
 					}    		
 				);
-				
-				return validResult;
 			}
 		}
     </script>

@@ -144,12 +144,13 @@ public class LoginPageInfoManageController {
 	@RequestMapping (value="qrEnter.do")
 	public ModelAndView selectFrontQrEnterPage(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo, 
 												@RequestParam("resvSeq") String resvSeq,
+												@RequestParam("accessType") String accessType,
 												HttpServletRequest request,
 												BindingResult result) throws Exception {
 		
 		ModelAndView model = new ModelAndView("/front/login/qrEnter");
 		try {		
-			if(userLoginInfo == null) {
+			if(userLoginInfo == null && accessType.equals("WEB")) {
 				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
 				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));	
 				model.setViewName("/front/main/mainpage");
@@ -157,6 +158,7 @@ public class LoginPageInfoManageController {
 			}
 			
 			
+			model.addObject("accessType", accessType);
 			model.addObject("resvSeq", resvSeq);
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		} catch(Exception e) {

@@ -108,6 +108,12 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	}
 	
 	@Override
+	public int resvStateChange(ResvInfo vo) throws Exception {
+		// TODO Auto-generated method stub
+		return resvMapper.resvStateChange(vo);
+	}
+	
+	@Override
 	public int resPriceChange(ResvInfo vo) throws Exception {
 		// TODO Auto-generated method stub
 		return resvMapper.resPriceChange(vo);

@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hsqldb.lib.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.kses.backoffice.bas.code.service.EgovCcmCmmnDetailCodeManageService;
 import com.kses.backoffice.bld.center.service.CenterInfoManageService;
 import com.kses.backoffice.bld.floor.service.FloorInfoManageService;
 import com.kses.backoffice.bld.floor.service.FloorPartInfoManageService;
@@ -29,6 +31,7 @@ import com.kses.backoffice.cus.usr.service.UserInfoManageService;
 import com.kses.backoffice.cus.usr.vo.UserInfo;
 import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
 import com.kses.backoffice.rsv.reservation.vo.ResvInfo;
+import com.kses.backoffice.util.SmartUtil;
 import com.kses.front.login.vo.UserLoginInfo;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -46,6 +49,9 @@ public class FrontResvInfoManageController {
     
 	@Autowired
     protected EgovPropertyService propertiesService;
+	
+	@Autowired
+	private EgovCcmCmmnDetailCodeManageService codeDetailService;
 	
 	@Autowired
 	private CenterInfoManageService centerService;
@@ -137,14 +143,20 @@ public class FrontResvInfoManageController {
 			String centerCd = (String)params.get("centerCd");
 			String resvDate = (String)params.get("resvDate");
 			
+			
+					
+					
 			Map<String, Object> resvInfo = centerService.selectCenterInfoDetail(centerCd);
 			List<Map<String, Object>> floorList = floorService.selectFloorInfoComboList(centerCd);
+			List<Map<String, Object>>  seatClass = codeDetailService.selectCmmnDetailCombo("SEAT_CLASS");
+			
 			
 			resvInfo.put("centerCd", centerCd);
 			resvInfo.put("resvDate", resvDate);
 			
 			resvInfo.forEach((key, value) -> params.merge(key, value, (v1, v2) -> v2));
 			
+			model.addObject("seatClass", seatClass);
 			model.addObject("resvInfo", params);
 			model.addObject("floorList", floorList);
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
@@ -313,7 +325,9 @@ public class FrontResvInfoManageController {
 				return model;
 			}
 			
-			
+			if(StringUtils.isBlank(SmartUtil.NVL(params.get("resvCancelId").toString(),""))) {
+				params.put("resvCancelId", userLoginInfo.getUserId());
+			}
 			params.put("resvState", "RESV_STATE_3");
 			params.put("resvCancelCd", "RESV_CANCEL_CD_2");
 
@@ -370,9 +384,9 @@ public class FrontResvInfoManageController {
 	
 	@RequestMapping (value="resvValidCheck.do")
 	public ModelAndView resvValidCheck(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo, 
-												@RequestBody Map<String, Object> params,
-												HttpServletRequest request,
-												BindingResult result) throws Exception {
+										@RequestBody Map<String, Object> params,
+										HttpServletRequest request,
+										BindingResult result) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {

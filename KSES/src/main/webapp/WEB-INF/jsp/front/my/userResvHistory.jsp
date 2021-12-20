@@ -295,9 +295,13 @@
 					function(result) {
 						if (result.status == "SUCCESS") {
 							payResult != null ?
-									fn_openPopup("예약이 정상적으로 취소되었습니다.<br>잔액 : " + payResult.Balance, "blue", "SUCCESS", "확인", "javascript:location.reload();") :
-									fn_openPopup("예약이 정상적으로 취소되었습니다.", "blue", "SUCCESS", "확인", "javascript:location.reload();");									
-							/* userResvService.fn_userResvInfo(); */
+									fn_openPopup(
+										"예약이 정상적으로 취소되었습니다." + "<br>" +
+										"입금금액 : " + payResult.occurVal + "<br>" +
+										"잔액 : " + payResult.balan, 
+										"blue", "SUCCESS", "확인", "javascript:location.reload();"
+									) :
+									fn_openPopup("예약이 정상적으로 취소되었습니다.", "blue", "SUCCESS", "확인", "javascript:location.reload();");
 						} else if (result.status == "LOGIN FAIL"){
 							alert(result.message);
 							locataion.href = "/front/main.do";

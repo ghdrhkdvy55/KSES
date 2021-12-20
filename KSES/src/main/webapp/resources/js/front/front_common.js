@@ -1,10 +1,3 @@
-/* popup */
-$('[data-popup-open]').bind('click', function () {
-  var targeted_popup_class = jQuery(this).attr('data-popup-open');
-  $('[data-popup="' + targeted_popup_class + '"]').bPopup();
-  e.preventDefault();
-});
-
 /* rsv_blacklist tab (table) */
 $('.blacklist.tabs>.tab').on('click', function(){
   var tabIdx = $(this).index();
@@ -15,6 +8,13 @@ $('.blacklist.tabs>.tab').on('click', function(){
   $tbody.removeClass('active');
   $tbody.eq(tabIdx).addClass('active');
 })
+
+/* popup */
+$('[data-popup-open]').bind('click', function () {
+  var targeted_popup_class = jQuery(this).attr('data-popup-open');
+  $('[data-popup="' + targeted_popup_class + '"]').bPopup();
+  e.preventDefault();
+});
 
 //공통 팝업
 function common_popup(message, alertGubun, hidePopup){
@@ -385,6 +385,10 @@ function today_get() {
     return today;
 }
 
+//금일값 구하기
+function bPopupClose(el) {
+	$("#" + el).bPopup().close();
+}
 
 /* FRONT RESERVATION */
 //예약페이지 만료시간 체크
@@ -398,6 +402,18 @@ function resvUsingTimeCheck(time) {
 			location.href = "/front/main.do";*/
 		}
 	},5000);
+}
+
+/**
+ * 스크롤 이동
+ * 
+ * @param el -> 이동할 태그
+ * @returns
+ */
+function fn_scrollMove(el) {
+	var offset = $(el).offset(); //선택한 태그의 위치를 반환
+	console.log(offset.top);
+	$('html').animate({scrollTop : offset.top - 200}, 1000);
 }
 
 /**
@@ -458,7 +474,7 @@ function fn_getResvInfo (resvSeq) {
 		function(result) {
 	    	if(result.status == "SUCCESS") {
 		    	if(result.resvInfo != null) {
-		    		resvResult = result.regist;
+		    		resvResult = result.resvInfo;
 					isSuccess = true;
 		    	} else {
 		    		fn_openPopup("해당 예약정보가 존재하지 않습니다.", "red", "ERROR", "확인", "");
