@@ -302,30 +302,27 @@
 					</td>
 					<th>좌석 금액</th>
 					<td><input type="number" id="partPayCost"></td>
-				</tr>
-				<tr>
 					<th>구역 CSS</th>
                     <td><input id="partCss" type="text"></td>
-					<th>미니맵 CSS</th>
-                    <td><input type="text" id="partMiniCss"></td>
-                    <td colspan="2"></td>
 				</tr>
 				<tr>
-                    <th>미니맵 LEFT</th>
+					<th>미니맵 CSS</th>
+                    <td><input type="text" id="partMiniCss"></td>
+					<th>미니맵 LEFT</th>
                     <td><input type="number" id="partMiniLeft" onkeyup="this.value=this.value.replace(/[^0-9]/g,'');"></td>
+				</tr>
+				<tr>
 					<th>미니맵 TOP</th>
                     <td><input type="number" id="partMiniTop" onkeyup="this.value=this.value.replace(/[^0-9]/g,'');"></td>
-				</tr>  
-				<tr>
                     <th>미니맵 WIDTH</th>
                     <td><input type="number" id="partMiniWidth" onkeyup="this.value=this.value.replace(/[^0-9]/g,'');"></td>
+				</tr>  
+				<tr>
 					<th>미니맵 HEIGHT</th>
                     <td><input type="number" id="partMiniHeight" onkeyup="this.value=this.value.replace(/[^0-9]/g,'');"></td>
-				</tr> 
-				<tr>
-                    <th>미니맵 Rotate</th>
+					<th>미니맵 Rotate</th>
                     <td><input type="number" id="partMiniRotate" onkeyup="this.value=this.value.replace(/[^0-9]/g,'');"></td>
-				</tr>                
+				</tr>           
 			</tbody>
 		</table>
       </div>
@@ -665,6 +662,9 @@
 <!-- popup// -->
 <script type="text/javascript">
 	$(document).ready(function() { 
+
+		$("#bld_section_add").find("th:eq(5)").hide();
+		$("#bld_section_add").find("td:eq(5)").hide();
 		jqGridFunc.setGrid("mainGrid");
 	});
 		
