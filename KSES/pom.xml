@@ -108,10 +108,7 @@
 		    <scope>provided</scope>
 		    <version>2.5</version>
         </dependency>
-		
-		
-		
-		
+        
 		<!-- https://mvnrepository.com/artifact/com.oracle.ojdbc/orai18n -->
 		<dependency>
     		<groupId>com.oracle.ojdbc</groupId>
@@ -348,6 +345,23 @@
 		    <groupId>kr.co.linkhub</groupId>
 		    <artifactId>popbill-sdk</artifactId>
 		    <version>1.51.0</version>
+		</dependency>
+		
+		<!-- Log4j 보안취약점 대응 -->
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>2.17.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>2.17.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j-impl</artifactId>
+			<version>2.17.0</version>
 		</dependency>
 		
 

@@ -93,7 +93,8 @@
 		UPDATE TSEB_PART_INFO_D SET  
 			PART_CSS = #{partCss,jdbcType=VARCHAR}, 
 			PART_NM = #{partNm,jdbcType=VARCHAR}, 
-			PART_SEAT_RULE = #{partSeatRule,jdbcType=VARCHAR}, 
+			PART_SEAT_RULE = #{partSeatRule,jdbcType=VARCHAR},
+			PART_CLASS = #{partClass,jdbcType=VARCHAR},
 			PART_MINI_CSS = #{partMiniCss,jdbcType=VARCHAR},
 			PART_MINI_LEFT = #{partMiniLeft,jdbcType=VARCHAR}, 
 			PART_MINI_TOP = #{partMiniTop,jdbcType=VARCHAR}, 
