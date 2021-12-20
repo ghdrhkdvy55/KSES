@@ -127,6 +127,12 @@
                             <input type="text" id="codeEtc1" name="codeEtc1" />
                         </td>
                     </tr>
+					<tr>
+                        <th>기타2</th>
+                        <td>
+                            <input type="text" id="codeEtc2" name="codeEtc2" />
+                        </td>
+                    </tr>
                     <tr>
                         <th>사용 유무</th>
                         <td>
@@ -232,6 +238,7 @@ var jqGridFunc  = {
 		                	{ label: '분류명', name:'code_nm',       index:'code_nm',      align:'center', width:'10%'},
 		 	                { label: '상세설명', name:'code_dc',     index:'code_dc',      align:'center', width:'10%'},
 		 	                { label: '기타', name:'code_etc1',     index:'code_etc1',      align:'center', width:'10%'},
+		 	                { label: '기타2', name:'code_etc2',     index:'code_etc2',      align:'center', width:'10%'},
 		 	                { label: '사용유무', name:'use_at',       index:'use_at',      align:'center', width:'10%'},
 		 	                { label: '최종 수정자', name:'last_updusr_id', index:'last_updusr_id',     align:'center', width:'10%'},
 			                { label: '최종 수정 일자', name:'last_updt_pnttm', index:'last_updt_pnttm', align:'center', width:'12%', 
@@ -482,6 +489,7 @@ var detailFunc  = {
 			    $("#codeNm").val('');
 			    $("#codeDc").val('');
 			    $("#codeEtc1").val('');
+			    $("#codeEtc2").val('');
 	            $("#btnDetailUpdate").text("등록");
 	            $("#detailUseAtY").prop("checked", true);
 		    }else {
@@ -502,6 +510,7 @@ var detailFunc  = {
  	                                $("#codeId").val(obj.code_id);
      		  						$("#codeDc").val(obj.code_dc);
      		  						$("#codeEtc1").val(obj.code_etc1);
+     		  						$("#codeEtc2").val(obj.code_etc2);
      		  						$("input:radio[name='detailUseAt']:radio[value='"+obj.use_at+"']").prop('checked', true); 
      		  				   }else{
      		  					   common_modelCloseM(result.meesage,"bas_detailcode_add");
@@ -541,6 +550,7 @@ var detailFunc  = {
      		     		"codeNm" : $("#codeNm").val(),
      		     		"codeDc" : $("#codeDc").val(),
      		     		"codeEtc1" : $("#codeEtc1").val(),
+     		     		"codeEtc2" : $("#codeEtc2").val(),
      		     		"useAt" : fn_emptyReplace($('input[name="detailUseAt"]:checked').val(),"Y"),
      		     		"mode" : $("#mode").val()
  		                }
