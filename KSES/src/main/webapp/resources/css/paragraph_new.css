@@ -148,7 +148,7 @@ input[type="checkbox"]:checked { border:0; background-image:url("../resources/im
 .search_tab th{text-align: left;font-weight:400;padding:0 20px 0 20px}
 .search_tab th:first-child{padding:0 10px;}
 .total_tab {width: 100%; font-size: 14px;box-sizing: border-box;padding:0 10px;}
-.total_tab td, .total_tab th{text-align: center; position:relative; min-width:50px; }
+.total_tab td, .total_tab th{text-align: center; position:relative; min-width:80px; }
 .total_tab th{border-bottom: 1px solid #dce1e5; font-weight: 400;padding:14px 0;}
 .total_tab td{padding:12px 0;color: #636363;}
 /*.total_tab tr{cursor: pointer;}*/
@@ -261,8 +261,8 @@ table a{color: #5a5a5a;}
     right: 25px;
 }
 
-.gui_table th{ min-width:100px; left:0!important; font-weight:700!important;}
-.gui_table th:first-child{ min-width:80px;}
+.gui_table th{ min-width:125px; left:0!important; font-weight:700!important;}
+.gui_table th:first-child, .gui_table td:first-child{ min-width:80px;}
 
 table tr.select{border: 2px solid #acb1d2; background-color: #acb1d2;}
 
@@ -311,7 +311,7 @@ table tr.select{border: 2px solid #acb1d2; background-color: #acb1d2;}
     background-color: #fff;
     z-index: 999;
     border-bottom: 1px solid #e6e6e6;
-    max-width: 650px;
+    max-width: 850px;
     box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.04);
     display: -webkit-inline-box;
 }
@@ -404,7 +404,7 @@ table tr td input.selected{border:2px solid #eb6d2c;}
     width: 1645px !important;
 }
 .cbp-spmenu .gui_text td input {
-    width: 58px;
+    width: 125px;
     text-align: center;
 }
 .search_tab td select {
