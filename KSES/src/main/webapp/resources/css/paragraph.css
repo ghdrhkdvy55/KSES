@@ -1,7 +1,7 @@
 html,body{background: #f7f7f7;}
 .clear{clear: both;}
 a{color:inherit; cursor: pointer;}
-input, select{padding: 3px 0;min-width: 80px;display: inline-block;box-sizing: border-box;vertical-align: sub;}
+input, select{padding: 3px 0;min-width: 125px;display: inline-block;box-sizing: border-box;vertical-align: sub;}
 .srchTxt {vertical-align: baseline !important;}
 .branch_magt input, .branch_magt select {
     background: #6d8cb7;
@@ -849,7 +849,7 @@ padding-left: 5px;
 }
 #sp_MessageAlert, #sp_Message {text-align: center; display: flow-root;}
 #db_closePop {text-align: center; float: none;}
-#tr_C21110416_05_01 input, #tr_C21110416_05_01 select {min-width: 59px;}
+#tr_C21110416_05_01 input, #tr_C21110416_05_01 select {min-width: 125px;}
 
 /*1206*/
 .footerBtn {text-align: right; margin-right:15px;}
