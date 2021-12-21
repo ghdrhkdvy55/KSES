@@ -940,9 +940,16 @@
 				var resvDate = $("#resvDate").val().substring(0,4) + "-" + $("#resvDate").val().substring(4,6) + "-" + $("#resvDate").val().substring(6,8);
 				$("#rsv_date").html(resvDate);
 				$("#rsv_center").html($(".sel_center_nm").html());
-				$("#rsv_part").html($(".sel_part_nm").html());
-				$("#rsv_floor").html($(".sel_floor_nm").html());
-				$("#rsv_seat").html($(".sel_seat_nm").html());
+				
+				if(enterDvsn != "ENTRY_DVSN_1") {
+					$("#rsv_part").html($(".sel_part_nm").html()).show();
+					$("#rsv_floor").html($(".sel_floor_nm").html()).show();
+					$("#rsv_seat").html($(".sel_seat_nm").html()).show();
+				} else {
+					$("#rsv_part").hide();
+					$("#rsv_floor").hide();
+					$("#rsv_seat").html("입석").show();					
+				}
 				
 				$("#rsv_done").bPopup();
 			},
