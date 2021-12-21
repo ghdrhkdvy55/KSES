@@ -26,7 +26,8 @@
 
 <body>
 	<form:form name="regist" commandName="regist" method="post" action="/front/guestResvInfo.do">
-	<input type="hidden" id="userDvsn" name="userDvsn" value="${sessionScope.userLoginInfo.userDvsn}">
+	<input type="hidden" name="userDvsn" id="userDvsn" value="${sessionScope.userLoginInfo.userDvsn}">
+	<input type="hidden" name="userId" id="userId" value="${sessionScope.userLoginInfo.userId}">
 	
 	<div class="wrapper rsvBack">
 		<!--// header -->

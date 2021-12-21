@@ -28,7 +28,8 @@
 </head>
 
 <body>
-	<input type="hidden" id="userDvsn" name="userDvsn" value="${sessionScope.userLoginInfo.userDvsn}">
+	<input type="hidden" name="userDvsn" id="userDvsn" value="${sessionScope.userLoginInfo.userDvsn}">
+	<input type="hidden" name="userId" id="userId" value="${sessionScope.userLoginInfo.userId}">
 	<input type="hidden" id="accessType" name="accessType" value="${accessType}">
 	<input type="hidden" id="resvSeq" name="resvSeq" value="${resvSeq}">
     

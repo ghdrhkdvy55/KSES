@@ -41,9 +41,10 @@
 
 <body>
 	<form:form name="regist" commandName="regist" method="post" action="/front/rsvSeat.do">
-	<input type="hidden" name="isReSeat" id="isReSeat" value="${resvInfo.isReSeat}">
-	<input type="hidden" name="userId" id="userId" value="${sessionScope.userLoginInfo.userId}">
 	<input type="hidden" name="userDvsn" id="userDvsn" value="${sessionScope.userLoginInfo.userDvsn}">
+	<input type="hidden" name="userId" id="userId" value="${sessionScope.userLoginInfo.userId}">
+	
+	<input type="hidden" name="isReSeat" id="isReSeat" value="${resvInfo.isReSeat}">
 	<input type="hidden" name="resvUserNm" id="resvUserNm" value="">
 	<input type="hidden" name="resvSeq" id="resvSeq" value="">
 	<input type="hidden" name="resvDate" id="resvDate" value="${resvInfo.resvDate}">	

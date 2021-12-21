@@ -29,6 +29,9 @@
 </head>
 <body>
     <form:form name="regist" commandName="regist" method="post" action="/front/notice.do">
+	<input type="hidden" name="userDvsn" id="userDvsn" value="${sessionScope.userLoginInfo.userDvsn}">
+	<input type="hidden" name="userId" id="userId" value="${sessionScope.userLoginInfo.userId}">
+    
     <input type="hidden" id="pageIndex" name="pageIndex" value="1">
     <input type="hidden" id="pageSize" name="pageSize" value="10">
     <input type="hidden" id="totalPageCount" name="totalPageCount" value="10">
