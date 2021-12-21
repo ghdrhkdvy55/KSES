@@ -45,6 +45,22 @@ public class Scheduler {
 		return System.getProperty("spring.profiles.active");
 	}
 	
+//	@Scheduled(cron = "0 0/10 * * * * ")
+//	public void resvNoshowScheduler() throws Exception{
+//		
+//		try {
+//			int ret = timeMapper.inseretTimeCreate();
+//			LOGGER.info("resTime " + ret + "행 생성");
+//			scheduleService.insertScheduleManage("resStateCreateSchedulerService", "OK", "");
+//		}catch (RuntimeException re) {
+//			scheduleService.insertScheduleManage("resStateCreateSchedulerService", "FAIL", re.toString());
+//			LOGGER.error("resStateCreateSchedulerService run failed", re);
+//		}catch (Exception e) {
+//			scheduleService.insertScheduleManage("resStateCreateSchedulerService", "FAIL", e.toString());
+//			LOGGER.error("resStateCreateSchedulerService failed", e);
+//		}
+//	}
+	
 	/*@Scheduled(cron = "0 50 23 * * * ")*/
 	public void resTimeCreateStateSchede() throws Exception{
 		

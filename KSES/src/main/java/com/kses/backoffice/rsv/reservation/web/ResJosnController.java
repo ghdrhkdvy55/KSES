@@ -597,6 +597,10 @@ public class ResJosnController{
         info.setIntegId("MACHINQR");
         info.setRequstSysId(SmartUtil.NVL(jsonInfo.get("IF_NO").toString(), "").toString() );
         
+        //제품 시리얼 정보 추가 
+        info.setRequstSysId(SmartUtil.NVL(jsonInfo.get("MACHINE_SERIAL").toString(), "").toString() );
+        info.setRqesterId("admin");
+        
 		try {
 			Map<String, Object> searchVO = new HashMap<String, Object>();
 			searchVO.put("resvSeq", SmartUtil.NVL(jsonInfo.get("RES_NO"), "").toString());
@@ -649,20 +653,22 @@ public class ResJosnController{
 						
 			}
 			
-			// 인터페이스 연계
-			info.setRequstSysId(SmartUtil.NVL(jsonInfo.get("MACHINE_SERIAL").toString(), "").toString() );
+			// 인터페이스 연계`
+			
 			info.setRequstInsttId("MACHIN");
 	        info.setRspnsRecptnTm(SmartUtil.nowTime());
 	        info.setRequstTrnsmitTm(SmartUtil.NVL(jsonInfo.get("RES_SEND_DATE"), "").toString());
 	        info.setResultCode(returnCode);
 	        info.setResultMessage(model.toString());
 	        info.setSendMessage(jsonInfo.toString());
-	        info.setRqesterId("admin");
+	       
 	        // 결제 로직 타기 
 	        
 		} catch (Exception e) {
 			LOGGER.error("selectTickMachinPrice error:" + e.toString());
 			returnCode = "ERROR_02";
+			//애러시 코드 값 입력
+			info.setResultCode(returnCode);
 			returnMessage = "시스템 에러 입니다.";
 		}
 		 
@@ -673,6 +679,9 @@ public class ResJosnController{
 		model.addObject("SEAT_NAME", seatName  );
 		model.addObject("RES_QR_URL", resQrUrl  );
 		model.addObject("RES_PERSON_CNT", resPersonCnt  );
+		
+		
+		
 		model.addObject("RETURN_CODE", returnCode  );
 		model.addObject("RETURN_MESSAGE", returnMessage  );
 		

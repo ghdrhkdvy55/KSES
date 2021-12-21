@@ -25,6 +25,24 @@
 		WHERE A.CENTER_CD = #{centerCd}
 		AND A.CENTER_CD = B.CENTER_CD  
 	</select>
+	
+	<!-- 노쇼조건에 해당되는 예약번호 조회-->
+	<select id="selectNoshowResvSeq" resultType="lmap">
+	<![CDATA[
+		SELECT A.RESV_SEQ 
+		FROM TSER_RESV_INFO_I A, TSEB_CENTER_INFO_M B, TSEB_NOSHOW_INFO_M C
+		WHERE A.CENTER_CD = B.CENTER_CD
+		AND B.CENTER_CD = C.CENTER_CD 
+		AND A.RESV_STATE NOT IN ('RESV_STATE_4')
+		AND A.RESV_PAY_DVSN NOT IN ('RESV_PAY_DVSN_1')
+		AND C.NOSHOW_DAY = TO_CHAR(SYSDATE,'d')
+		AND C.NOSHOW_ALL_TM  <= TO_CHAR(SYSDATE,'YYYYMMDD')
+	]]>
+	</select>
+	
+	<insert id="insertNoshowHistory">
+	
+	</insert> 
      
 	<update id="updateNoshowInfo">
 		<foreach collection="noshowInfoList" item="item" separator=";" open="DECLARE BEGIN" close="; END;">	

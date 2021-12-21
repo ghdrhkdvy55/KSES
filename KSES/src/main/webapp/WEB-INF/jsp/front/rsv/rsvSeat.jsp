@@ -673,7 +673,7 @@
 									setHtml = '<div class="box-wrapper"><li id="s' + trim(fn_NVL(item.part_cd)) + '" class="seat" seat-id="' + item.part_cd + '" style="opacity: 0.7;text-align: center; display: inline-block;" name="' + item.part_cd + '" >' 
 	                                  +  '<div class="section">'
 	                                  +  '   <div class="circle">'
-	                                  +  '       <span class=' + fn_NVL(item.part_css) + '>' + fn_NVL(item.part_nm) + '(' + fn_NVL(item.part_class_text) + ')' + '</span>'
+	                                  +  '       <span class=' + fn_NVL(item.part_css) + '>' + fn_NVL(item.part_nm) + '<em>(' + fn_NVL(item.part_class_text) + ')</em>' + '</span>'
 	                                  +  '   </div>'
 	                                  +  ' </div>'
 	                                  +  '</li></div>';

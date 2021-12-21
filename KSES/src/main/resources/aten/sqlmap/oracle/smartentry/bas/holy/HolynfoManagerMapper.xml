@@ -52,23 +52,29 @@
              WHERE HOLY_DT = #{holyDt}
         </selectKey>
         <choose>
-           <when test="cnt > 0">
-               UPDATE TSEC_HOLY_INFO_M SET HOLY_NM = #{holyNm, jdbcType=VARCHAR}, 
-		                                   USE_YN = #{useYn, jdbcType=VARCHAR},
-		                                   LAST_UPDT_DTM = SYSDATE,
-		                                   LAST_UPDUSR_ID =  #{userId,jdbcType=VARCHAR}   
-       	       WHERE HOLY_DT = #{holyDt}
-           </when>
-           <otherwise>
-               INSERT INTO TSEC_HOLY_INFO_M	(HOLY_SEQ ,HOLY_DT, HOLY_NM, USE_YN, 
-                                             LAST_UPDT_DTM, LAST_UPDUSR_ID, FRST_REGIST_DTM, FRST_REGTER_ID)
-			   VALUES ( SEQ_ESC_HOLY_INFO.NEXTVAL, #{holyDt}, #{holyNm,jdbcType=VARCHAR}, #{useYn,jdbcType=VARCHAR}, 
-			            SYSDATE, #{userId, jdbcType=VARCHAR}, SYSDATE, #{userId, jdbcType=VARCHAR} )
+			<when test="cnt > 0">
+			UPDATE TSEC_HOLY_INFO_M SET 
+               	HOLY_NM = #{holyNm, jdbcType=VARCHAR}, 
+				USE_YN = #{useYn, jdbcType=VARCHAR},
+				LAST_UPDT_DTM = SYSDATE,
+				LAST_UPDUSR_ID =  #{userId,jdbcType=VARCHAR}   
+			WHERE HOLY_DT = #{holyDt}
+           	</when>
+           	<otherwise>
+				INSERT INTO TSEC_HOLY_INFO_M	
+				(
+					HOLY_SEQ, HOLY_DT, HOLY_NM, USE_YN, LAST_UPDT_DTM, LAST_UPDUSR_ID, 
+					FRST_REGIST_DTM, FRST_REGTER_ID
+				)
+			   	VALUES 
+			   	( 
+			   		SEQ_ESC_HOLY_INFO.NEXTVAL, #{holyDt}, #{holyNm,jdbcType=VARCHAR}, #{useYn,jdbcType=VARCHAR}, 
+					SYSDATE, #{userId, jdbcType=VARCHAR}, SYSDATE, #{userId, jdbcType=VARCHAR} 
+				)
            </otherwise>
         </choose>
-		
    	</insert>
-
+ 	
  	<update id="updateHolyInfo">
 		UPDATE TSEC_HOLY_INFO_M SET HOLY_DT = #{holyDt, jdbcType=VARCHAR}, 
 		                            HOLY_NM = #{holyNm, jdbcType=VARCHAR}, 
