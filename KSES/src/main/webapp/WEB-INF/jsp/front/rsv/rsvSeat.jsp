@@ -54,7 +54,7 @@
 	<input type="hidden" name="partCd" id="partCd" value="">
 	<input type="hidden" name="floorCd" id="floorCd" value="">
 	<input type="hidden" name="seatCd" id="seatCd" value="">
-	<input type="hidden" name="enterDvsn" id="enterDvsn" value="">
+	<input type="hidden" name="entryDvsn" id="entryDvsn" value="">
 	
 	<!-- 좌석 다시 앉기 sessionStorage검토 -->
 	<input type="hidden" name="reSeatCenterCd" id="reSeatCenterCd" value="${resvInfo.centerCd}">
@@ -359,14 +359,14 @@
                     </li>
 					<li>
                         <ol>
-                            <li>구역</li>
-                            <li><span id="rsv_part" class="rsv_part"></span></li>
+                            <li>층</li>
+                            <li><span id="rsv_floor" class="rsv_floor"></span></li>
                         </ol>
                     </li>
 					<li>
                         <ol>
-                            <li>층</li>
-                            <li><span id="rsv_floor" class="rsv_floor"></span></li>
+                            <li>구역</li>
+                            <li><span id="rsv_part" class="rsv_part"></span></li>
                         </ol>
                     </li>
                     <li>
@@ -569,44 +569,44 @@
 				
 				$("#mask").trigger("click");
 			},
-			fn_enterTypeChange : function(enterDvsn) {
-				if($("#enterDvsn").val() != enterDvsn) {
-					if(enterDvsn == "ENTRY_DVSN_1") {
-						$(".sel_floor_nm").html("");
-						$(".sel_part_nm").html("");
-						$(".sel_seat_nm").html("");
-						
+			fn_enterTypeChange : function(entryDvsn) {
+				if($("#entryDvsn").val() != entryDvsn) {
+					if(entryDvsn == "ENTRY_DVSN_1") {
 						$("#showHide").show();
 						$("#showHide_seat").hide();
+						
+						$(".rsv_list").children("li").eq(2).hide();
+						$(".rsv_list").children("li").eq(3).hide();
 					} else {
-						$("#showHide").hide();
-						$("#showHide_seat").show();
 						$("#section_sel").hide();
 						$("#selectFloorCd").val("");
-						seatService.fn_initializing("ALL");
+
+						$("#showHide").hide();
+						$("#showHide_seat").show();
+						$(".rsv_list").children("li").eq(2).show();
+						$(".rsv_list").children("li").eq(3).show();
 					}
 					
-					$("#enterDvsn").val(enterDvsn);
-					
+					seatService.fn_initializing("ALL");
+					$("#entryDvsn").val(entryDvsn);
+										
+					$("#" + entryDvsn + "_resvUserNm").val("");
+					$("#" + entryDvsn + "_resvUserClphn").val("");
 
+					$("input:checkbox[id='" + entryDvsn + "_qna_check']").prop("checked", false);
+					$("input:checkbox[id='" + entryDvsn + "_person_agree']").prop("checked", false);
 					
-					$("#" + enterDvsn + "_resvUserNm").val("");
-					$("#" + enterDvsn + "_resvUserClphn").val("");
-
-					$("input:checkbox[id='" + enterDvsn + "_qna_check']").prop("checked", false);
-					$("input:checkbox[id='" + enterDvsn + "_person_agree']").prop("checked", false);
-					
-//					$("#" + enterDvsn + "_cash_area").hide();
-//					$("input:radio[name='" + enterDvsn + "_rcpt_dvsn']").eq(0).prop("checked", true);
-//					$("input:checkbox[id='" + enterDvsn + "_bill_confirm']").prop("checked", false);
-//					$("#" + enterDvsn + "_cash_number").val("");
-//					$("input:radio[name='" + enterDvsn + "_rcpt_dvsn']").eq(0).prop("checked", true);					
+//					$("#" + entryDvsn + "_cash_area").hide();
+//					$("input:radio[name='" + entryDvsn + "_rcpt_dvsn']").eq(0).prop("checked", true);
+//					$("input:checkbox[id='" + entryDvsn + "_bill_confirm']").prop("checked", false);
+//					$("#" + entryDvsn + "_cash_number").val("");
+//					$("input:radio[name='" + entryDvsn + "_rcpt_dvsn']").eq(0).prop("checked", true);					
 					
 					if(isMember) {
 // 						if(userRcptYn == "Y") {
-//							$("input:checkbox[id='" + enterDvsn + "_bill_confirm']").trigger("click");
-//							$("input:radio[name='" + enterDvsn + "_rcpt_dvsn'][value='" + userRcptDvsn +"']").prop("checked", true);	  
-//							$("#" + enterDvsn + "_cash_number").val(userRcptNumber);							
+//							$("input:checkbox[id='" + entryDvsn + "_bill_confirm']").trigger("click");
+//							$("input:radio[name='" + entryDvsn + "_rcpt_dvsn'][value='" + userRcptDvsn +"']").prop("checked", true);	  
+//							$("#" + entryDvsn + "_cash_number").val(userRcptNumber);							
 //						}
 
 						$(".nonMemberArea").hide();
@@ -889,33 +889,33 @@
 				$("#" + searchSeatCd).attr("tabindex", -1).focus();
 			},
 			fn_certification : function() {
-				var enterDvsn = $("#enterDvsn").val();
+				var entryDvsn = $("#entryDvsn").val();
 				
 				if(certificationYn) {
 					fn_openPopup("이미 인증을 진행하였습니다.", "red", "ERROR", "확인", "");
 					return;
 				} else {
-					if($("#" + enterDvsn + "_resvUserNm").val() == "") {
+					if($("#" + entryDvsn + "_resvUserNm").val() == "") {
 						fn_openPopup("이름을 입력해주세요.", "red", "ERROR", "확인", "");
 						return;
-					} else if ($("#" + enterDvsn + "_resvUserClphn").val() == "") {
+					} else if ($("#" + entryDvsn + "_resvUserClphn").val() == "") {
 						fn_openPopup("인증번호를 입력해주세요.", "red", "ERROR", "확인", "");
 						return;
 					}
 
 			    	certificationYn = true;
-			    	certificationName = $("#" + enterDvsn + "_resvUserNm").val();
-			    	certificationNumber = $("#" + enterDvsn + "_resvUserClphn").val();
+			    	certificationName = $("#" + entryDvsn + "_resvUserNm").val();
+			    	certificationNumber = $("#" + entryDvsn + "_resvUserClphn").val();
 					
 					fn_openPopup("정상적으로 인증되었습니다.", "blue", "SUCCESS", "확인", "");
 				}
 			},
 			fn_checkForm : function() {
-				var enterDvsn = $("#enterDvsn").val();
+				var entryDvsn = $("#entryDvsn").val();
 				var url = "/front/updateUserResvInfo.do";
 				
 
-				if(enterDvsn != "ENTRY_DVSN_1") {
+				if(entryDvsn != "ENTRY_DVSN_1") {
 					if($("#seatCd").val() == "") {
 						fn_openPopup("좌석을 선택해주세요", "red", "ERROR", "확인", "");
 						return;
@@ -927,12 +927,12 @@
 					return;					
 				}
 				
-				if(!$("input:checkbox[id='" + enterDvsn + "_qna_check']").is(":checked")) {
+				if(!$("input:checkbox[id='" + entryDvsn + "_qna_check']").is(":checked")) {
 					fn_openPopup("전자문진표 작성여부에 동의해주세요", "red", "ERROR", "확인", "");
 					return;
 				}
 				
-				if(!$("input:checkbox[id='" + enterDvsn + "_person_agree']").is(":checked") && !isMember) {
+				if(!$("input:checkbox[id='" + entryDvsn + "_person_agree']").is(":checked") && !isMember) {
 					fn_openPopup("개인정보 수집 이용여부에 대하여 동의해주세요", "red", "ERROR", "확인", "");
 					return;
 				}
@@ -941,20 +941,18 @@
 				$("#rsv_date").html(resvDate);
 				$("#rsv_center").html($(".sel_center_nm").html());
 				
-				if(enterDvsn != "ENTRY_DVSN_1") {
-					$("#rsv_part").html($(".sel_part_nm").html()).show();
-					$("#rsv_floor").html($(".sel_floor_nm").html()).show();
-					$("#rsv_seat").html($(".sel_seat_nm").html()).show();
+				if(entryDvsn != "ENTRY_DVSN_1") {
+					$("#rsv_part").html($(".sel_part_nm").html());
+					$("#rsv_floor").html($(".sel_floor_nm").html());
+					$("#rsv_seat").html($(".sel_seat_nm").html());
 				} else {
-					$("#rsv_part").hide();
-					$("#rsv_floor").hide();
 					$("#rsv_seat").html("입석").show();					
 				}
 				
 				$("#rsv_done").bPopup();
 			},
 			fn_setResvInfo : function() {
-				var enterDvsn = $("#enterDvsn").val();
+				var entryDvsn = $("#entryDvsn").val();
 				var url = "/front/updateUserResvInfo.do";
 				var params = {};
 				
@@ -976,7 +974,7 @@
 					"mode" : "Ins",
 					"resvDate" : $("#resvDate").val(),
 					"resvUserDvsn" : $("#userDvsn").val(),
-					"resvEntryDvsn" : enterDvsn,
+					"resvEntryDvsn" : entryDvsn,
 					"seasonCd" : $("#seasonCd").val(),
 					"centerCd" : $("#centerCd").val(),
 					"floorCd" : $("#floorCd").val(),
@@ -984,15 +982,15 @@
 					"seatCd" : $("#seatCd").val(),
 					"resvUserNm" : certificationName,
 					"resvUserClphn" : certificationNumber,
-					"resvUserAskYn" : $("input:checkbox[id='" + enterDvsn + "_qna_check']").val(),
-					"resvIndvdlinfoAgreYn" : $("#" + enterDvsn + "_person_agree").val()
+					"resvUserAskYn" : $("input:checkbox[id='" + entryDvsn + "_qna_check']").val(),
+					"resvIndvdlinfoAgreYn" : $("#" + entryDvsn + "_person_agree").val()
 				}
 				
-				params.resvPayCost = enterDvsn == "ENTRY_DVSN_2" ? $("#" + $("#seatCd").val()).data("seat-paycost") : 0;
-/* 				if($("input:checkbox[id='" + enterDvsn + "_bill_confirm']").is(":checked")) {
+				params.resvPayCost = entryDvsn == "ENTRY_DVSN_2" ? $("#" + $("#seatCd").val()).data("seat-paycost") : 0;
+/* 				if($("input:checkbox[id='" + entryDvsn + "_bill_confirm']").is(":checked")) {
 					params.resvRcptYn == "Y"
-					params.resvRcptDvsn = $("input[name='" + enterDvsn + "_rcpt_dvsn']:checked").val(); 
-					params.resvRcptNumber = $("#" + enterDvsn + "_cash_number").val();
+					params.resvRcptDvsn = $("input[name='" + entryDvsn + "_rcpt_dvsn']:checked").val(); 
+					params.resvRcptNumber = $("#" + entryDvsn + "_cash_number").val();
 					
 					if(params.resvRcptNumber == "") {
 						fn_openPopup("현금 영수증 번호를 입력해주세요", "red", "ERROR", "확인", "");
@@ -1029,13 +1027,13 @@
 				);	
 			},
 			fn_billConfirmChange : function() {
-				var enterDvsn = $("#enterDvsn").val();
-				if($("input:checkbox[id='" + enterDvsn + "_bill_confirm']").is(":checked")) {
-					$("#" + enterDvsn  + "_cash_area").show();
-					$("input:radio[name='" + enterDvsn + "_rcpt_dvsn']").eq(0).prop("checked", true);
-					$("#" + enterDvsn + "_cash_number").val("");
+				var entryDvsn = $("#entryDvsn").val();
+				if($("input:checkbox[id='" + entryDvsn + "_bill_confirm']").is(":checked")) {
+					$("#" + entryDvsn  + "_cash_area").show();
+					$("input:radio[name='" + entryDvsn + "_rcpt_dvsn']").eq(0).prop("checked", true);
+					$("#" + entryDvsn + "_cash_number").val("");
 				} else {
-					$("#" + enterDvsn  + "_cash_area").hide();
+					$("#" + entryDvsn  + "_cash_area").hide();
 				}
 			},
 			fn_initializing : function(division) {
