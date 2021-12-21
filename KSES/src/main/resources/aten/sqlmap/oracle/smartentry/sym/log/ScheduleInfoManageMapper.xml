@@ -19,9 +19,9 @@
 	    ORDER BY TB.SCH_CODE DESC
 	    	
    </select>
+
    <insert id="insertScheduleManage">
        INSERT INTO TB_SCHEDULRINFO(SCH_CODE, SCH_NAME, SCH_REGDATE, SCH_RESULT, SCH_RESULT_MESSAGE)
        VALUES (dbo.FN_SCHCODE(), #{schName}, SYSDATE, #{schResult},  #{schResultMessage ,jdbcType=VARCHAR} )
    </insert>
-
 </mapper>
