@@ -325,11 +325,13 @@ public class FrontResvInfoManageController {
 				return model;
 			}
 			
-			if(StringUtils.isBlank(SmartUtil.NVL(params.get("resvCancelId").toString(),""))) {
-				params.put("resvCancelId", userLoginInfo.getUserId());
+			String resvCancelDvsn = SmartUtil.NVL(params.get("resvCancelDvsn"),"");
+			if(!StringUtils.isBlank(resvCancelDvsn) && resvCancelDvsn.equals("ADMIN")) {
+
+			} else {
+				params.put("resvState", "RESV_STATE_4");
+				params.put("resvCancelCd", "RESV_CANCEL_CD_2");
 			}
-			params.put("resvState", "RESV_STATE_3");
-			params.put("resvCancelCd", "RESV_CANCEL_CD_2");
 
 			int ret = resvService.resvInfoCancel(params);
 			

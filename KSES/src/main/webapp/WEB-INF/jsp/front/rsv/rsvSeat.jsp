@@ -175,11 +175,11 @@
                                     <label for="ENTRY_DVSN_1_rcpt_dvsn2"><span></span>지출 증빙용</label>
                                 </li>
                                 <li><input type="number" id="ENTRY_DVSN_1_cash_number" onkeypress="onlyNum(this);" placeholder="'-'없이 입력해 주세요."></li>
-                            </ul>
+                            </ul> -->
                             <ul class="rsv_btn">
                                 <li><a href="javascript:seatService.fn_checkForm();">예약하기</a></li>
                                 <li><a data-popup-open="rsv_cancel">취소</a></li>
-                            </ul> -->
+                            </ul> 
                         </section>
                     </div>
                     
@@ -209,10 +209,10 @@
 												<c:if test="${(status.index + 1)%2 != 0}"><tr></c:if>
 													<td>
 														<img src="${item.codeetc2}">${item.codenm}
-													<c:if test="${item.codeetc ne '0'}">
+													<c:if test="${item.codeetc1 ne 0}">
 														<span>${item.codeetc1}원</span>
 													</c:if>
-													<c:if test="${item.codeetc eq '0'}">
+													<c:if test="${item.codeetc1 eq 0}">
 														<span>무료</span>
 													</c:if>
 													</td>
@@ -343,18 +343,30 @@
       <div class="pop_con rsv_popup">
           <!-- <a class="button b-close">X</a> -->
           <div class="pop_wrap">
-              <h4><img src="/resources/img/front/done.svg" alt="예약완료">예약이 완료 되었습니다.</h4>
+              <h4><img src="/resources/img/front/done.svg" alt="예약확인">해당 정보로 예약하시겠습니까?</h4>
                <ul class="rsv_list">
-                   <li>
+					<li>
                         <ol>
-                            <li>예약번호</li>
-                            <li><span id="rsv_num" class="rsv_num"></span></li>
+                            <li>일시</li>
+                            <li><span id="rsv_date" class="rsv_date"></span></li>
                         </ol>
-                    </li>
+                    </li> 
                     <li>
                         <ol>
                             <li>지점</li>
-                            <li><span id="rsv_brch" class="rsv_brch"></span></li>
+                            <li><span id="rsv_center" class="rsv_center"></span></li>
+                        </ol>
+                    </li>
+					<li>
+                        <ol>
+                            <li>구역</li>
+                            <li><span id="rsv_part" class="rsv_part"></span></li>
+                        </ol>
+                    </li>
+					<li>
+                        <ol>
+                            <li>층</li>
+                            <li><span id="rsv_floor" class="rsv_floor"></span></li>
                         </ol>
                     </li>
                     <li>
@@ -363,16 +375,11 @@
                             <li><span id="rsv_seat" class="rsv_seat"></span></li>
                         </ol>
                     </li>
-                    <li>
-                        <ol>
-                            <li>일시</li>
-                            <li><span id="rsv_date" class="rsv_date"></span></li>
-                        </ol>
-                    </li> 
                </ul>
           </div>
           <div class="summit_btn">
-              <a href="/front/main.do" class="mintBtn">예약내역 확인</a>
+              <a href="javascript:seatService.fn_setResvInfo();" class="mintBtn">확인</a>
+              <a href="javascript:bPopupClose('rsv_done');">취소</a>
           </div>
           <div class="clear"></div>
       </div>
@@ -460,7 +467,7 @@
             </div>
           </div>
           <div class="cancel_btn">
-              <a href="javascript:$('#person_agree').bPopup().close();" class="grayBtn">닫기</a>
+              <a href="javascript:bPopupClose('person_agree');" class="grayBtn">닫기</a>
           </div>
           <div class="clear"></div>
       </div>
@@ -906,7 +913,7 @@
 			fn_checkForm : function() {
 				var enterDvsn = $("#enterDvsn").val();
 				var url = "/front/updateUserResvInfo.do";
-				var params = {};
+				
 
 				if(enterDvsn != "ENTRY_DVSN_1") {
 					if($("#seatCd").val() == "") {
@@ -930,6 +937,20 @@
 					return;
 				}
 				
+				var resvDate = $("#resvDate").val().substring(0,4) + "-" + $("#resvDate").val().substring(4,6) + "-" + $("#resvDate").val().substring(6,8);
+				$("#rsv_date").html(resvDate);
+				$("#rsv_center").html($(".sel_center_nm").html());
+				$("#rsv_part").html($(".sel_part_nm").html());
+				$("#rsv_floor").html($(".sel_floor_nm").html());
+				$("#rsv_seat").html($(".sel_seat_nm").html());
+				
+				$("#rsv_done").bPopup();
+			},
+			fn_setResvInfo : function() {
+				var enterDvsn = $("#enterDvsn").val();
+				var url = "/front/updateUserResvInfo.do";
+				var params = {};
+				
 				// 동일자 예약 중복 체크
 				params = {
 					"userDvsn" : $("#userDvsn").val(), 
@@ -938,12 +959,11 @@
 					"resvDate" : $("#resvDate").val()
 				};
 				
-//				if(fn_resvDuplicateCheck(params)) {
-//					fn_openPopup("현재 예약일자에 이미 예약정보가 존재합니다.", "red", "ERROR", "확인", "");
-//					return;	
-//				}
-				
-              				
+				if(fn_resvDuplicateCheck(params)) {
+					fn_openPopup("현재 예약일자에 이미 예약정보가 존재합니다.", "red", "ERROR", "확인", "");
+					return;	
+				}
+						
 				// 예약 유효성 검사 추가
 				params = {
 					"mode" : "Ins",
@@ -955,13 +975,13 @@
 					"floorCd" : $("#floorCd").val(),
 					"partCd" : $("#partCd").val(),
 					"seatCd" : $("#seatCd").val(),
-					"resvPayCost" : $("#" + $("#seatCd").val()).data("seat-paycost"),
 					"resvUserNm" : certificationName,
 					"resvUserClphn" : certificationNumber,
 					"resvUserAskYn" : $("input:checkbox[id='" + enterDvsn + "_qna_check']").val(),
 					"resvIndvdlinfoAgreYn" : $("#" + enterDvsn + "_person_agree").val()
 				}
 				
+				params.resvPayCost = enterDvsn == "ENTRY_DVSN_2" ? $("#" + $("#seatCd").val()).data("seat-paycost") : 0;
 /* 				if($("input:checkbox[id='" + enterDvsn + "_bill_confirm']").is(":checked")) {
 					params.resvRcptYn == "Y"
 					params.resvRcptDvsn = $("input[name='" + enterDvsn + "_rcpt_dvsn']:checked").val(); 
@@ -986,21 +1006,18 @@
 					function(result) {
 				    	if (result.status == "SUCCESS"){
 				    		if(result.resvInfo != null) {	
-				    			$("#rsv_num").html(result.resvInfo.resv_seq);   
-								$("#rsv_brch").html(result.resvInfo.center_nm)
-								$("#rsv_seat").html(result.resvInfo.seat_nm);
-								$("#rsv_date").html(result.resvInfo.resv_req_date);
-								
-				    			$("#rsv_done").bPopup();
+				    			fn_openPopup("예약정보가 정상적으로 등록되었습니다.", "blue", "SUCCESS", "확인", "/front/main.do");
+				    			bPopupClose('rsv_done');
+				    			setTimeout("location.href='/front/main.do'", 10000);
 				    		}
 				    	} else if(result.status == "LOGIN FAIL") {
 				    		fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
 				    	} else {
-				    		fn_openPopup("ERROR : " + result.status, "red", "ERROR", "확인", "/front/main.do");
+				    		fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "/front/main.do");
 				    	}
 					},
 					function(request) {
-						fn_openPopup("ERROR : " + result.status, "red", "ERROR", "확인", "/front/main.do");
+						fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "/front/main.do");
 					}
 				);	
 			},

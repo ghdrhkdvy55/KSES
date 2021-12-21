@@ -212,6 +212,12 @@
 					                    setHtml += "    </li>";
 					                    setHtml += "    <li>";
 					                    setHtml += "        <ol>";
+					                    setHtml += "            <li>경주일</li>";
+					                    setHtml += "            <li><span id='rsv_date' class='rsv_date'>" + fn_resvDateFormat(item.resv_end_dt) +"</span></li>";
+					                    setHtml += "        </ol>";
+					                    setHtml += "    </li>";
+					                    setHtml += "    <li>";
+					                    setHtml += "        <ol>";
 					                    setHtml += "            <li>지점</li>";
 					                    setHtml += "            <li><span id='rsv_brch' class='rsv_brch'>" + item.center_nm +"</span></li>";
 					                    setHtml += "        </ol>";
@@ -224,8 +230,8 @@
 					                    setHtml += "    </li>";
 					                    setHtml += "    <li>";
 					                    setHtml += "        <ol>";
-					                    setHtml += "            <li>일시</li>";
-					                    setHtml += "            <li><span id='rsv_date' class='rsv_date'>" + item.resv_req_date + "</span></li>";
+					                    setHtml += "            <li>예약일</li>";
+					                    setHtml += "            <li><span id='rsv_req_date' class='rsv_req_date'>" + item.resv_req_date + "</span></li>";
 					                    setHtml += "        </ol>";
 					                    setHtml += "    </li>";                                                                                    
 				                        setHtml += "</ul>";
@@ -265,7 +271,9 @@
 				switch(resvState) {
 					case "RESV_STATE_2" : className = "done"; 
 						break;
-					case "RESV_STATE_3" : className = "cancel"; 
+					case "RESV_STATE_3" : className = "done"; 
+						break;
+					case "RESV_STATE_4" : className = "cancel"; 
 						break;
 					default : className = "done" 
 						break;

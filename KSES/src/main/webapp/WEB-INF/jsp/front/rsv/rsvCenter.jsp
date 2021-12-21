@@ -105,10 +105,20 @@
 								$.each(result.resultlist, function(index, item) {
 									var setHtml = "";
 									setHtml += "<li><ul id='" + item.center_cd + "'><li><span>" 
-									+ item.center_nm + "</span></li><li></li><li>잔여석 <em>" 
-									+ (item.center_seat_max_count - item.center_seat_use_count) 
+									+ item.center_nm 
+									+ "</span></li><li>지정석 <em>" 
+									+ (item.center_seat_max_count - item.center_seat_use_count) + " / " + item.center_seat_max_count
+									+ "</em>석"
+									+ "<br>"
+									+ "입석 <em>"
+									+ (item.center_stand_max - item.center_standing_use_count) + " / " + item.center_stand_max
 									+ "</em>석</li></ul></li>";
+
 									$(".branch_list").append(setHtml);
+									
+//									+ "</span></li><li></li><li>입석 <em>" 
+//									+ (item.center_stand_max - item.center_standing_use_count) + " / " + item.center_stand_max
+//									+ "</em>석</li></ul></li>";
 								});
 								
 								var sBtn = $(".branch_list > li"); //  ul > li 이를 sBtn으로 칭한다. (클릭이벤트는 li에 적용 된다.)
@@ -155,14 +165,14 @@
 									fn_pageMove('regist','/front/rsvSeat.do');
 								}
 							} else {
-								fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "location.href='/front/login.do'");	
+								fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "/front/main.do");	
 							}
 						} else if (result.status == "LOGIN FAIL"){
-							fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "location.href='/front/login.do'");
+							fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/login.do");
 						}
 					},
 					function(request) {
-						alert("ERROR : " + request.status);	       						
+						fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "/front/main.do");	       						
 					}    		
 				);
 			}

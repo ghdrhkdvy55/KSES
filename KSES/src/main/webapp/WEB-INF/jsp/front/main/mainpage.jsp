@@ -637,9 +637,12 @@
 			},
 			fn_resvCancel : function(resvInfo, payResult) {
 				var url = "/front/resvInfoCancel.do";
+				
 				var params = {
+					"resvSeq" : resvInfo.resv_seq,
+					"userDvsn" : $("#userDvsn").val(),
 					"resvCancelId" : resvInfo.user_id,
-					"resvSeq" : resvInfo.resv_seq
+					"resvCancelCd" : "RESV_CANCEL_CD_2"
 				}
 				
 				fn_Ajax
@@ -740,7 +743,7 @@
 								validResult = result.validResult;
 							}
 						} else if (result.status == "LOGIN FAIL"){
-							fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "location.href='/front/login.do'");
+							fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/login.do'");
 						}
 					},
 					function(request) {

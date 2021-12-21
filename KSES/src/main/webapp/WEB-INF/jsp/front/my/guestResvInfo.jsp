@@ -205,34 +205,40 @@
 						} 
 					},
 					function(request) {
-						fn_openPopup("처리중 에러가 발생하였습니다.", "red", "ERROR", "확인", "");	       						
+						fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");	       						
 					}    		
 				);
 			},
 			fn_resvCancel : function(resvSeq) {
-				var url = "/front/resvInfoCancel.do";
-				var params = {
-					"userDvsn" : $("#userDvsn").val(),
-					"resvSeq" : resvSeq
-				}
+				var resvInfo = fn_getResvInfo(resvSeq);
 				
-				fn_Ajax
-				(
-				    url,
-				    "POST",
-					params,
-					false,
-					function(result) {
-						if (result.status == "SUCCESS") {
-							fn_openPopup("예약이 정상적으로 취소되었습니다.", "blue", "SUCCESS", "확인", "/front/main.do");
-						} else {
-							fn_openPopup("처리중 에러가 발생하였습니다.", "red", "ERROR", "확인", "");
-						}
-					},
-					function(request) {
-						alert("ERROR : " + request.status);	       						
-					}    		
-				);	
+				if(resvInfo.isSuccess) {
+					var url = "/front/resvInfoCancel.do";
+					var params = {
+						"resvSeq" : resvSeq,
+						"userDvsn" : $("#userDvsn").val(),
+						"resvCancelId" : resvInfo.user_id,
+						"resvCancelCd" : "RESV_CANCEL_CD_2"
+					}
+					
+					fn_Ajax
+					(
+					    url,
+					    "POST",
+						params,
+						false,
+						function(result) {
+							if (result.status == "SUCCESS") {
+								fn_openPopup("예약이 정상적으로 취소되었습니다.", "blue", "SUCCESS", "확인", "/front/main.do");
+							} else {
+								fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
+							}
+						},
+						function(request) {
+							alert("ERROR : " + request.status);	       						
+						}    		
+					);
+				}
 			}
 		}
     </script>

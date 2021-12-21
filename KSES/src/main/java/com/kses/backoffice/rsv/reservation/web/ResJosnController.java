@@ -229,7 +229,7 @@ public class ResJosnController{
 					 ResvInfo resInfo = new ResvInfo();
 					 resInfo.setResvSeq(SmartUtil.NVL(sendInfo.get("resvSeq"), "").toString());
 					 resInfo.setResvPayDvsn("RESV_PAY_DVSN_3");
-					 resInfo.setResvPayDvsn("RESV_STATE_3");
+					 resInfo.setResvPayDvsn("RESV_STATE_4");
 					 resInfo.setTradNo(node.get("Trade_No").asText());
 					 resService.resPriceChange(resInfo);
 					
@@ -430,7 +430,7 @@ public class ResJosnController{
 			if (resInfo == null || Integer.valueOf(resInfo.get("resv_end_dt").toString()) < Integer.valueOf(nowDate)) {
 				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 				model.addObject(Globals.STATUS_MESSAGE,"잘못된 예약 번호 이거나 지난 예약번호 입니다.");
-			} else if (SmartUtil.NVL( resInfo.get("resv_state"), "").toString().equals("RESV_STATE_3") ) {
+			} else if (SmartUtil.NVL( resInfo.get("resv_state"), "").toString().equals("RESV_STATE_4") ) {
 				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 				model.addObject(Globals.STATUS_MESSAGE,"예약 취소된 예약 번호 입니다.");
 			} else {

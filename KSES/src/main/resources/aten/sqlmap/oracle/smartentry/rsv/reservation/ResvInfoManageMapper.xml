@@ -139,7 +139,7 @@
 		WHERE A.USER_ID = #{userId}
 		AND A.SEAT_CD = B.SEAT_CD(+)
 		AND A.CENTER_CD = C.CENTER_CD
-		AND A.RESV_STATE NOT IN ('RESV_STATE_3')
+		AND A.RESV_STATE NOT IN ('RESV_STATE_4')
 		AND ROWNUM = 1
 		ORDER BY A.RESV_SEQ DESC
 	]]>	    
@@ -160,7 +160,7 @@
 				SELECT 
 					NVL(COUNT(*),0) FROM TSER_RESV_INFO_I
 				WHERE SEAT_CD = A.SEAT_CD
-				AND RESV_STATE NOT IN ('RESV_STATE_3') 
+				AND RESV_STATE NOT IN ('RESV_STATE_4') 
 				AND FN_RESVDATE(A.CENTER_CD) BETWEEN RESV_START_DT AND RESV_END_DT
 			) <= 0 THEN 'Y' 
 			ELSE 'N'
@@ -196,10 +196,10 @@
 		AND A.USER_ID = #{params.userId}
 		<choose>
 			<when test='params.searchStateCondition == "RESV"'>
-				AND A.RESV_STATE NOT IN ('RESV_STATE_3')
+				AND A.RESV_STATE NOT IN ('RESV_STATE_4')
 			</when>
 			<when test='params.searchStateCondition == "CANCEL"'>
-				AND A.RESV_STATE = 'RESV_STATE_3'
+				AND A.RESV_STATE = 'RESV_STATE_4'
 			</when>
 		</choose>		
 		<choose>
@@ -216,20 +216,24 @@
 	<!-- 비회원 예약정보 조회 -->    
     <select id="selectGuestMyResvInfo" resultType="lmap">
     <![CDATA[
-    	SELECT
-    		A.RESV_SEQ, A.RESV_USER_NM, A.RESV_STATE, B.CENTER_NM,
-    		CASE
-    			WHEN A.SEAT_CD IS NULL THEN '입석'
-    			ELSE (SELECT SEAT_NM FROM TSEB_SEAT_INFO_D WHERE SEAT_CD = A.SEAT_CD)
-    		END AS SEAT_NM,
-    		TO_CHAR(A.RESV_REQ_DATE,'YYYY-MM-DD HH24:MI') AS RESV_REQ_DATE
-		FROM TSER_RESV_INFO_I A, TSEB_CENTER_INFO_M B 
-		WHERE A.CENTER_CD = B.CENTER_CD
-		AND A.RESV_USER_NM = #{params.resvUserNm}
-		AND A.RESV_USER_CLPHN = #{params.resvUserClphn}
-		AND A.RESV_CANCEL_CD IS NULL
-		AND TO_NUMBER(CONCAT(A.RESV_END_DT,A.RESV_END_TM)) >= TO_NUMBER(TO_CHAR(SYSDATE,'YYYYMMDDHH24MI'))
-		AND ROWNUM = 1
+    	SELECT TB.* FROM (
+	    	SELECT
+	    		A.RESV_SEQ, A.RESV_USER_NM, A.USER_ID, A.RESV_STATE, B.CENTER_NM,
+	    		A.RESV_START_DT, A.RESV_END_DT, A.RESV_PAY_COST,
+	    		CASE
+	    			WHEN A.SEAT_CD IS NULL THEN '입석'
+	    			ELSE (SELECT SEAT_NM FROM TSEB_SEAT_INFO_D WHERE SEAT_CD = A.SEAT_CD)
+	    		END AS SEAT_NM,
+	    		TO_CHAR(A.RESV_REQ_DATE,'YYYY-MM-DD HH24:MI') AS RESV_REQ_DATE
+			FROM TSER_RESV_INFO_I A, TSEB_CENTER_INFO_M B 
+			WHERE A.CENTER_CD = B.CENTER_CD
+			AND A.RESV_USER_NM = #{params.resvUserNm}
+			AND A.RESV_USER_CLPHN = #{params.resvUserClphn}
+			AND A.RESV_STATE NOT IN ('RESV_STATE_4')
+			AND TO_CHAR(SYSDATE,'YYYYMMDD') BETWEEN A.RESV_START_DT AND A.RESV_END_DT
+			ORDER BY A.RESV_END_DT ASC
+		) TB
+		WHERE ROWNUM = 1
 	]]>
     </select>
     
@@ -262,7 +266,7 @@
 			</when>
 		</choose>
 		AND A.RESV_END_DT = #{params.resvDate}
-		AND A.RESV_STATE NOT IN ('RESV_STATE_3')
+		AND A.RESV_STATE NOT IN ('RESV_STATE_4')
     </select>  
     
 	<!-- 예약 고객 아이디 조회 -->

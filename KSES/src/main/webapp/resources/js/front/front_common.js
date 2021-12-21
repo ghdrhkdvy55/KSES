@@ -385,23 +385,28 @@ function today_get() {
     return today;
 }
 
-//금일값 구하기
+//팝업열기
+function bPopupOpen(el) {
+	$("#" + el).bPopup();
+}
+
+//팝업닫기
 function bPopupClose(el) {
 	$("#" + el).bPopup().close();
 }
 
 /* FRONT RESERVATION */
-//예약페이지 만료시간 체크
-function resvUsingTimeCheck(time) {
-	setInterval(function(){
-		var date = new Date();
-		var today = date.format("yyyyMMddHHmm");
-		
-		if(time < today){
-/*			alert("예약페이지 이용시간을 초과하였습니다.");
-			location.href = "/front/main.do";*/
-		}
-	},5000);
+/**
+ * 예약일 포팻
+ * 
+ * @param el
+ * @returns
+ */
+function fn_resvDateFormat(el) {
+	if(el.length == 8) {
+		el = el.substring(0,4) + "-" + el.substring(4,6) + "-" + el.substring(6,8);
+	}
+	return el;
 }
 
 /**
@@ -413,7 +418,20 @@ function resvUsingTimeCheck(time) {
 function fn_scrollMove(el) {
 	var offset = $(el).offset(); //선택한 태그의 위치를 반환
 	console.log(offset.top);
-	$('html').animate({scrollTop : offset.top - 200}, 1000);
+	$('html').animate({scrollTop : offset.top - 100}, 800);
+}
+
+//예약페이지 만료시간 체크
+function resvUsingTimeCheck(time) {
+	setInterval(function(){
+		var date = new Date();
+		var today = date.format("yyyyMMddHHmm");
+		
+		if(time < today){
+/*			alert("예약페이지 이용시간을 초과하였습니다.");
+			location.href = "/front/main.do";*/
+		}
+	},5000);
 }
 
 /**
@@ -549,11 +567,11 @@ function fn_resvVaildCheck(params) {
 					validResult = result.validResult;
 				}
 			} else if (result.status == "LOGIN FAIL"){
-				fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "location.href='/front/login.do'");
+				fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/login.do");
 			}
 		},
 		function(request) {
-			alert("ERROR : " + request.status);	       						
+			fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");	       						
 		}    		
 	);	
 	
