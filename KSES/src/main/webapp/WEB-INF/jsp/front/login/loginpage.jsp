@@ -130,7 +130,7 @@
 		</div>
     </div>		
     				
-    	<!-- // 개인정보 수집이용 약관 팝업 -->
+	<!-- // 개인정보 수집이용 약관 팝업 -->
     <div id="person_agree" data-popup="person_agree" class="popup">
     	<div class="pop_con rsv_popup">
           	<a class="button b-close">X</a>
@@ -204,20 +204,6 @@
       </div>
     </div>				
     				
-    <!--1214 개인정보동의 팝업 // -->
-
-	<!--<script type="text/javascript">
-	    $('form input[type="text"], form input[type="password"]').on('input propertychange', function() {
-	        var $this = $(this);
-	        var visible = Boolean($this.val());
-	        $this.siblings('.input_reset').toggleClass('hidden', !visible);
-	    }).trigger('propertychange');
-		
-	    $('.input_reset').click(function() {
-	        $(this).siblings('form input[type="text"], form input[type="password"]').val('')
-	            .trigger('propertychange').focus();
-	    }); 
-	</script> -->
 	<script type="text/javascript">
 		var loginService = 
 		{
