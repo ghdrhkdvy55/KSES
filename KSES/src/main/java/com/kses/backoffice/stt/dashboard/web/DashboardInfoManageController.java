@@ -20,9 +20,9 @@ import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
 
 @RestController
 @RequestMapping("/backoffice/stt")
-public class dashboardInfoManageController {
+public class DashboardInfoManageController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(dashboardInfoManageController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DashboardInfoManageController.class);
     
     @Autowired
     EgovMessageSource egovMessageSource;	
