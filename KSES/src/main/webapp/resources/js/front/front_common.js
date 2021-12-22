@@ -498,7 +498,7 @@ function fn_getResvInfo (resvSeq) {
 		    		fn_openPopup("해당 예약정보가 존재하지 않습니다.", "red", "ERROR", "확인", "");
 		    	}
 	    	} else if(result.status == "LOGIN FAIL") {
-	    		fn_openPopup("로그인중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
+	    		fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "");
 	    	}
 		},
 		function(request) {
@@ -511,15 +511,70 @@ function fn_getResvInfo (resvSeq) {
 }
 
 /**
+ * 예약 취소 공통
+ * 
+ * @param resvInfo
+ * @param payResult
+ * @returns
+ */
+function fn_resvCancel(resvInfo, payResult, callback) {
+	var url = "/front/resvInfoCancel.do";
+	var isSuccess = false;
+	
+	var params = {
+		"resvSeq" : resvInfo.resv_seq,
+		"resvUserDvsn" : resvInfo.resv_user_dvsn,
+		"resvCancelId" : resvInfo.user_id,
+		"resvCancelCd" : "RESV_CANCEL_CD_2"
+	}
+	
+	fn_Ajax
+	(
+	    url,
+	    "POST",
+		params,
+		false,
+		function(result) {
+			if (result.status == "SUCCESS") {
+				payResult != null ?
+					fn_openPopup(
+						"예약이 정상적으로 취소되었습니다." + "<br>" +
+						"입금금액 : " + payResult.occurVal + "<br>" +
+						"잔액 : " + payResult.balan, 
+						"blue", "SUCCESS", "확인", ""
+					) :
+					fn_openPopup("예약이 정상적으로 취소되었습니다.", "blue", "SUCCESS", "확인", "");
+				isSuccess = true;
+			} else if (result.status == "LOGIN FAIL"){
+				fn_openPopup("로그인 정보가 올바르지 않습니다.", "blue", "SUCCESS", "확인", "javascript:location.reload();");
+			}
+		},
+		function(request) {
+			fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");	       						
+		}
+	);	
+	
+	return isSuccess;
+}
+
+/**
  * 결제 취소 공통
  * 
  * @param params
  * @returns
  */
-function fn_payment (params) {
-	var isSuccess = false;
+function fn_payment(resvInfo) {
 	var url = "/backoffice/rsv/speedCheck.do";
-	var payMentResult = {};
+	var isSuccess = false;
+	
+	var params = {
+		"gubun" : "dep",
+		"sendInfo" : {
+			"resvSeq" : resvInfo.resv_seq,
+			"Card_Pw" : $("#Card_Pw").val(),
+			"System_Type" : "E"
+		}
+	}
 	
 	fn_Ajax
 	(
@@ -530,25 +585,30 @@ function fn_payment (params) {
 		function(result) {
 	    	if(result.regist != null) {
 				if(result.regist.Error_Msg == "SUCCESS") {
-					payMentResult = result.regist;
-					isSuccess = true;
+					isSuccess = fn_resvCancel(resvInfo, result.regist.result);
+					console.log(isSuccess);
 				} else {
 					fn_openPopup(result.regist.Error_Msg, "red", "ERROR", "확인", "javascript:location.reload();");
 				}
 	    	} else {
-	    		fn_openPopup("로그인중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
+	    		fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "");
 	    	}
 		},
 		function(request) {
-			fn_openPopup("ERROR : " + request.status, "red", "ERROR", "확인", "");
+			fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");	       						
 		}    		
-	);
+	);	
 	
-	payMentResult.isSuccess = isSuccess;  
-	return payMentResult;
+	return isSuccess;
 }
 
 
+/**
+ * 예약 유효성 검사
+ * 
+ * @param params
+ * @returns
+ */
 function fn_resvVaildCheck(params) {
 	var url = "/front/resvValidCheck.do";
 	var validResult;

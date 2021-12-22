@@ -610,6 +610,8 @@
 				    	if($("#loginAuthorCd").val() != "ROLE_ADMIN" && $("#loginAuthorCd").val() != "ROLE_SYSTEM") {
 							if($("#loginCenterCd").val() != centerCd){
 								$("#preopenChange").hide();
+							} else {
+								$("#preopenChange").show();
 							}
 				    	}
 						//지점 자동취소 정보 세팅
@@ -757,6 +759,8 @@
 						if($("#loginAuthorCd").val() != "ROLE_ADMIN" && $("#loginAuthorCd").val() != "ROLE_SYSTEM") {
 							if($("#loginCenterCd").val() != centerCd){
 								$("#changeNoshow").hide();
+							} else{
+								$("#changeNoshow").show();
 							}
 				    	}
 						//지점 자동취소 정보 세팅

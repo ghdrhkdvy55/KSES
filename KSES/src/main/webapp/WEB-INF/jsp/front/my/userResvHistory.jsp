@@ -60,7 +60,7 @@
                             <ul>
                                 <li>
                                     <select id="searchDayCondition" class="select_box_srch">
-                                        <option value="RESV_REQ_DATE">예약일</option>
+                                        <option value="RESV_REQ_DATE">신청일</option>
                                         <option value="RESV_START_DT">경주일</option>
                                     </select>
                                 </li>
@@ -120,14 +120,14 @@
     </div>
     
 	<!-- // 결제인증 팝업 -->
-    <div id="pay_number" data-popup="pay_number" class="popup">
+    <div id="pay_number" class="popup">
 		<div class="pop_con rsv_popup">
 			<a class="button b-close">X</a>
           	<div class="pop_wrap">
             	<h4>결제 비밀번호를 입력해주세요.</h4>
             	<ul class="pay_passWord">
                 	<li><input type="password" id="Card_Pw" placeholder="비밀번호를 입력하세요."></li>
-                	<li><a href="javascript:qrService.fn_payment();" class="mintBtn">확인</a></li>
+                	<li><a href="javascript:void(0);" class="mintBtn">확인</a></li>
             	</ul>
           	</div>
       	</div>
@@ -176,8 +176,6 @@
 				if(isSearch){
 					$("input[name='searchStateCondition']:checked").val()
 				}
-				
-				/* alert($("input[name='searchStateCondition']:checked").val()); */
 				
 				var url = "/front/userMyResvInfo.do";
 				var params = {
@@ -231,7 +229,7 @@
 					                    setHtml += "    </li>";
 					                    setHtml += "    <li>";
 					                    setHtml += "        <ol>";
-					                    setHtml += "            <li>예약일</li>";
+					                    setHtml += "            <li>신청일</li>";
 					                    setHtml += "            <li><span id='rsv_req_date' class='rsv_req_date'>" + item.resv_req_date + "</span></li>";
 					                    setHtml += "        </ol>";
 					                    setHtml += "    </li>";                                                                                    
@@ -239,7 +237,7 @@
 				                        
 				                        setHtml += "<ul class='rsv_stat_btn'>";
 				                        if(item.resv_state == "RESV_STATE_1") {
-			                            	setHtml += "<li><a href='javascript:userResvService.fn_resvCancelDvsn(&#39;" + item.resv_seq +"&#39;,&#39;" + item.resv_pay_dvsn +"&#39;)'>예약 취소</a></li>";
+			                            	setHtml += "<li><a href='javascript:userResvService.fn_resvCancelCheck(&#39;" + item.resv_seq +"&#39;)'>예약 취소</a></li>";
 				                        }
 			                            setHtml += "</ul>";
 				                        
@@ -255,7 +253,7 @@
 									}
 								});
 							} else {
-								alert("예약된 정보가 존재하지 않습니다.");
+								fn_openPopup("예약된 정보가 존재하지 않습니다.", "red", "ERROR", "확인", "");
 							}
 						} else if(result.status == "LOGIN FAIL") {
 							
@@ -282,78 +280,26 @@
 				
 				return className;
 			},
- 			fn_resvCancelDvsn : function(resvSeq, resvPayDvsn) {
- 				resvPayDvsn == 
-	    			"RESV_PAY_DVSN_1" ? 
-	    				userResvService.fn_resvCancel(resvSeq) : 
-						$("#pay_number").bPopup().find("a").attr("href", "javascript:userResvService.fn_payment('" + resvSeq + "')"); 
-			},
-			fn_resvCancel : function(resvSeq, payResult) {
-				var url = "/front/resvInfoCancel.do";
-				var params = {
-					"userDvsn" : $("#userDvsn").val(),
-					"resvSeq" : resvSeq
-				}
-					
-				fn_Ajax
-				(
-					url,
-					"POST",
-					params,
-					false,
-					function(result) {
-						if (result.status == "SUCCESS") {
-							payResult != null ?
-									fn_openPopup(
-										"예약이 정상적으로 취소되었습니다." + "<br>" +
-										"입금금액 : " + payResult.occurVal + "<br>" +
-										"잔액 : " + payResult.balan, 
-										"blue", "SUCCESS", "확인", "javascript:location.reload();"
-									) :
-									fn_openPopup("예약이 정상적으로 취소되었습니다.", "blue", "SUCCESS", "확인", "javascript:location.reload();");
-						} else if (result.status == "LOGIN FAIL"){
-							alert(result.message);
-							locataion.href = "/front/main.do";
+			fn_resvCancelCheck : function(resvSeq) {
+				var resvInfo = fn_getResvInfo(resvSeq);
+				
+				if(resvInfo.isSuccess) {
+					if(resvInfo.resv_pay_dvsn == "RESV_PAY_DVSN_1") {
+						if(fn_resvCancel(resvInfo)){
+							userResvService.fn_userResvInfo(true);
 						}
-					},
-					function(request) {
-						alert("ERROR : " + request.status);	       						
-					}    		
-				);
-			},
-			fn_payment : function(resvSeq, division) {
-				var url = "/backoffice/rsv/speedCheck.do";
-				var params = {
-					"gubun" : "dep",
-					"sendInfo" : {
-						"resvSeq" : resvSeq,
-						"Card_Pw" : $("#Card_Pw").val(),
-						"System_Type" : "E"
+					} else {
+						$("#pay_number").bPopup();
+						$("#Card_Pw").val("");
+						$("#pay_number a:eq(1)").click(function(resvSeq) {
+							if(fn_payment(resvInfo)){
+								userResvService.fn_userResvInfo(true);
+								bPopupClose("pay_number");
+							}
+						});
 					}
 				}
-				
-				fn_Ajax
-				(
-				    url,
-				    "POST",
-					params,
-					false,
-					function(result) {
-				    	if(result.regist != null) {
-							if(result.regist.Error_Msg == "SUCCESS") {
-								userResvService.fn_resvCancel(resvSeq, result.regist);
-							} else {
-								fn_openPopup(result.regist.Error_Msg, "red", "ERROR", "확인", "javascript:location.reload();");
-							}
-				    	} else {
-				    		fn_openPopup("로그인중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
-				    	}
-					},
-					function(request) {
-						alert("ERROR : " + request.status);	       						
-					}    		
-				);	
-			} 
+			}
 		}
     </script>
 </body>  

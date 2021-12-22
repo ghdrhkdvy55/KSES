@@ -306,7 +306,7 @@
 								fn_openPopup(result.regist.Error_Msg, "red", "ERROR", "확인", "");
 							}
 				    	} else {
-				    		fn_openPopup("로그인중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
+				    		fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "");
 				    	}
 					},
 					function(request) {

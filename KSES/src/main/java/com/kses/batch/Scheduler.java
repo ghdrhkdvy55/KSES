@@ -7,11 +7,14 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.kses.backoffice.bld.center.service.NoshowInfoManageService;
 import com.kses.backoffice.cus.kko.service.KkoMsgManageSevice;
 import com.kses.backoffice.rsv.reservation.mapper.ResInfoManageMapper;
 import com.kses.backoffice.rsv.reservation.mapper.ResTimeInfoManageMapper;
 import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
+import com.kses.backoffice.rsv.reservation.vo.NoShowHisInfo;
 import com.kses.backoffice.sym.log.service.ScheduleInfoManageService;
 
 
@@ -36,6 +39,9 @@ public class Scheduler {
 	@Autowired
 	private ResvInfoManageService resvService;
 	
+	@Autowired
+	private NoshowInfoManageService noshowService;
+	
 	/**
  	* 23:50 분 타임 스케줄러 생성
  	* 
@@ -45,21 +51,37 @@ public class Scheduler {
 		return System.getProperty("spring.profiles.active");
 	}
 	
-//	@Scheduled(cron = "0 0/10 * * * * ")
-//	public void resvNoshowScheduler() throws Exception{
-//		
-//		try {
-//			int ret = timeMapper.inseretTimeCreate();
-//			LOGGER.info("resTime " + ret + "행 생성");
-//			scheduleService.insertScheduleManage("resStateCreateSchedulerService", "OK", "");
-//		}catch (RuntimeException re) {
-//			scheduleService.insertScheduleManage("resStateCreateSchedulerService", "FAIL", re.toString());
-//			LOGGER.error("resStateCreateSchedulerService run failed", re);
-//		}catch (Exception e) {
-//			scheduleService.insertScheduleManage("resStateCreateSchedulerService", "FAIL", e.toString());
-//			LOGGER.error("resStateCreateSchedulerService failed", e);
-//		}
-//	}
+	/**
+	 * 노쇼 예약정보 자동취소 스케줄러
+	 * 
+	 * @throws Exception
+	 */
+	@Scheduled(cron = "0 0/10 * * * * ")
+	@Transactional(rollbackFor = Exception.class)
+	public void resvNoshowScheduler() throws Exception{
+		try {
+			int noShowCount = noshowService.insertNoshowResvInfo(); 
+			
+			if(noShowCount != 0) {
+				int resvCancelCount = noshowService.updateNoshowResvInfoCancel();
+				if(resvCancelCount == noShowCount) {
+					LOGGER.info("resvNoshowScheduler => 노쇼 예약정보 자동취소 " + resvCancelCount + "건");
+				} else {
+					throw new Exception();
+				}
+			} else {
+				LOGGER.info("resvNoshowScheduler => 노쇼 예약정보 없음");
+			}
+			
+			
+		}catch (RuntimeException re) {
+			//scheduleService.insertScheduleManage("resStateCreateSchedulerService", "FAIL", re.toString());
+			LOGGER.error("resvNoshowScheduler run failed", re);
+		}catch (Exception e) {
+			//scheduleService.insertScheduleManage("resStateCreateSchedulerService", "FAIL", e.toString());
+			LOGGER.error("resvNoshowScheduler failed", e);
+		}
+	}
 	
 	/*@Scheduled(cron = "0 50 23 * * * ")*/
 	public void resTimeCreateStateSchede() throws Exception{

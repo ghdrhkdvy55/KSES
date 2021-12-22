@@ -23,6 +23,18 @@ public class NoshowInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
 		// TODO Auto-generated method stub
 		return noshowMapper.selectNoshowInfoList(centerCd);
 	}
+	
+	@Override
+	public int insertNoshowResvInfo() throws Exception {
+		// TODO Auto-generated method stub
+		return noshowMapper.insertNoshowResvInfo();
+	}
+
+	@Override
+	public int updateNoshowResvInfoCancel() throws Exception {
+		// TODO Auto-generated method stub
+		return noshowMapper.updateNoshowResvInfoCancel();
+	}
 
 	@Override
 	public int updateNoshowInfo(List<NoshowInfo> noshowInfoList) throws Exception {

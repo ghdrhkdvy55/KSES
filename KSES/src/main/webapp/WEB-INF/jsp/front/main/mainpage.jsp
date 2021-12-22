@@ -121,49 +121,6 @@
     </div>
     </form:form>  
 
-    <!-- // 예약취소 팝업 -->
-    <div data-popup="rsv_cancel_pop" class="popup">
-      <div class="pop_con rsv_popup">
-          <a class="button b-close">X</a>
-          <div class="pop_wrap">
-              <h4>예약 취소 하시겠습니까?</h4>
-              <p>(재예약 시 동일한 좌석으로 예약이 불가할 수 있습니다.)</p>
-
-               <ul class="rsv_list">
-                   <li>
-                        <ol>
-                            <li>예약번호</li>
-                            <li><span class="rsv_num"></span></li>
-                        </ol>
-                    </li>
-                    <li>
-                        <ol>
-                            <li>지점</li>
-                            <li><span class="rsv_brch"></span></li>
-                        </ol>
-                    </li>
-                    <li>
-                        <ol>
-                            <li>좌석</li>
-                            <li><span class="rsv_seat"></span></li>
-                        </ol>
-                    </li>
-                    <li>
-                        <ol>
-                            <li>일시</li>
-                            <li><span class="rsv_date"></span></li>
-                        </ol>
-                    </li> 
-               </ul>
-          </div>
-		  <div class="cancel_btn">
-              <a href="" class="grayBtn">예약취소</a>
-          </div>
-          <div class="clear"></div>
-      </div>
-    </div>
-	<!-- 최근입장정보 팝업 // -->
-	
 	<!-- // 예약정보 팝업 -->
 	<div id="rsv_info" class="popup">
 		<div class="pop_con rsv_popup">
@@ -174,21 +131,45 @@
 
                	<ul class="rsv_list">
 					<li>
+                    	<ol>
+                        	<li>예약번호</li>
+                        	<li><span id="rsv_num" class="rsv_num"></span></li>
+                    	</ol>
+                	</li>
+					<li>
+                    	<ol>
+                        	<li>경주일</li>
+                        	<li><span id="rsv_date"></span></li>
+                    	</ol>
+                	</li>
+					<li>
 						<ol>
                             <li>지점</li>
-                            <li><span id="rsv_center" class="rsv_brch"></span></li>
+                            <li><span id="rsv_center"></span></li>
+                        </ol>
+                    </li>
+					<li>
+                        <ol>
+                            <li>층</li>
+                            <li><span id="rsv_floor"></span></li>
+                        </ol>
+                    </li>
+					<li>
+                        <ol>
+                            <li>구역</li>
+                            <li><span id="rsv_part"></span></li>
                         </ol>
                     </li>
                     <li>
                         <ol>
                             <li>좌석</li>
-                            <li><span id="rsv_seat" class="rsv_seat"></span></li>
+                            <li><span id="rsv_seat"></span></li>
                         </ol>
                     </li>
                     <li>
                         <ol>
                             <li>일시</li>
-                            <li><span id="rsv_date" class="rsv_date"></span></li>
+                            <li><span id="rsv_req_date"></span></li>
 						</ol>
 					</li> 
 				</ul>
@@ -215,22 +196,40 @@
                         	<li><span id="cancel_rsv_num" class="rsv_num"></span></li>
                     	</ol>
                 	</li>
-                	<li>
+					<li>
                     	<ol>
-                        	<li>지점</li>
-                        	<li><span id="cancel_rsv_center" class="rsv_brch"></span></li>
+                        	<li>경주일</li>
+                        	<li><span id="cancel_rsv_date"></span></li>
                     	</ol>
                 	</li>
                 	<li>
                     	<ol>
+                        	<li>지점</li>
+                        	<li><span id="cancel_rsv_center"></span></li>
+                    	</ol>
+                	</li>
+					<li>
+                        <ol>
+                            <li>층</li>
+                            <li><span id="cancel_rsv_floor"></span></li>
+                        </ol>
+                    </li>
+					<li>
+                        <ol>
+                            <li>구역</li>
+                            <li><span id="cancel_rsv_part"></span></li>
+                        </ol>
+                    </li>
+                	<li>
+                    	<ol>
                         	<li>좌석</li>
-                        	<li><span id="cancel_rsv_seat" class="rsv_seat"></span></li>
+                        	<li><span id="cancel_rsv_seat"></span></li>
                     	</ol>
                 	</li>
                 	<li>
                     	<ol>
                         	<li>일시</li>
-                        	<li><span id="cancel_rsv_date" class="rsv_date"></span></li>
+                        	<li><span id="cancel_rsv_req_date"></span></li>
                     	</ol>
                 	</li> 
                	</ul>
@@ -368,7 +367,7 @@
 										// 유저정보상단 HTML생성
 										var setHtml = "";
 										setHtml += "<li class='vacStat'><em class='user_name'>" + userLoginInfo.userNm + "</em>님 입장예약 현황. <span class=''></span></li>";
-										setHtml += "<li><span class='today_date'>" + today + "</span></li>";
+										setHtml += "<li><span class='today_date'>" + fn_resvDateFormat(obj.resv_end_dt) + "</span></li>";
 										
 										userInfoTopArea.append(setHtml);
 										
@@ -446,7 +445,7 @@
 							}
 						},
 						function(request) {
-							fn_openPopup("ERROR : " + request.status, "red", "ERROR", "확인", "");	       						
+							fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");	       						
 						}    		
 					);
 					
@@ -553,7 +552,7 @@
     	    						
     	    					}	
     	    				}else{
-    	    					fn_openPopup("ERROR : " + request.status, "red", "ERROR", "확인", "");	
+    	    					fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
     	    				} 
     	    				
     	    			}
@@ -580,9 +579,22 @@
 				    			
 								if(division == "NOW") {
 									$("#rsv_info .name").html(userLoginInfo.userNm);
+									$("#rsv_num").html(obj.resv_seq);
+									$("#rsv_date").html(fn_resvDateFormat(obj.resv_end_dt));
 									$("#rsv_center").html(obj.center_nm);
+									
+									if(obj.resv_entry == "ENTRY_DVSN_1") {
+										$("#rsv_info .rsv_list").children("li").eq(3).hide();
+										$("#rsv_info .rsv_list").children("li").eq(4).hide();
+									} else {
+										$("#rsv_info .rsv_list").children("li").eq(3).show();
+										$("#rsv_info .rsv_list").children("li").eq(4).show();
+										$("#rsv_floor").html(obj.floor_nm);
+										$("#rsv_part").html(obj.part_nm);										
+									}
+									
 									$("#rsv_seat").html(obj.seat_nm);
-									$("#rsv_date").html(obj.resv_req_date);
+									$("#rsv_req_date").html(obj.resv_req_date);
 								} else if(division == "PRE"){
 									$("#re_rsv_info .name").html(userLoginInfo.userNm);
 									$("#re_rsv_center").html(obj.center_nm);
@@ -602,9 +614,21 @@
 								} else {
 									$("#cancel_rsv_info .name").html(userLoginInfo.userNm);
 									$("#cancel_rsv_num").html(obj.resv_seq);
+									$("#cancel_rsv_date").html(fn_resvDateFormat(obj.resv_end_dt));
 									$("#cancel_rsv_center").html(obj.center_nm);
+									
+									if(obj.resv_entry == "ENTRY_DVSN_1") {
+										$("#cancel_rsv_info .rsv_list").children("li").eq(3).hide();
+										$("#cancel_rsv_info .rsv_list").children("li").eq(4).hide();
+									} else {
+										$("#cancel_rsv_info .rsv_list").children("li").eq(3).show();
+										$("#cancel_rsv_info .rsv_list").children("li").eq(4).show();
+										$("#cancel_rsv_floor").html(obj.floor_nm);
+										$("#cancel_rsv_part").html(obj.part_nm);										
+									}
+
 									$("#cancel_rsv_seat").html(obj.seat_nm);
-									$("#cancel_rsv_date").html(obj.resv_req_date);
+									$("#cancel_rsv_req_date").html(obj.resv_req_date);
 									$("#resvCancleBtn").attr("href","javascript:mainService.fn_resvCancelCheck('" + obj.resv_seq + "');");
 								}
 				    		}
@@ -616,7 +640,7 @@
 						}
 					},
 					function(request) {
-						fn_openPopup("ERROR : " + request.status, "red", "ERROR", "확인", "");	       						
+						fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");	       						
 					}    		
 				);	
 			},
@@ -640,7 +664,7 @@
 				
 				var params = {
 					"resvSeq" : resvInfo.resv_seq,
-					"userDvsn" : $("#userDvsn").val(),
+					"resvUserDvsn" : resvInfo.resv_user_dvsn,
 					"resvCancelId" : resvInfo.user_id,
 					"resvCancelCd" : "RESV_CANCEL_CD_2"
 				}
@@ -666,7 +690,7 @@
 						}
 					},
 					function(request) {
-						fn_openPopup("ERROR : " + request.status, "red", "ERROR", "확인", "");	       						
+						fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");	       						
 					}
 				);	
 			},
@@ -695,11 +719,11 @@
 								fn_openPopup(result.regist.Error_Msg, "red", "ERROR", "확인", "javascript:location.reload();");
 							}
 				    	} else {
-				    		fn_openPopup("로그인중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
+				    		fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "");
 				    	}
 					},
 					function(request) {
-						alert("ERROR : " + request.status);	       						
+						fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");	       						
 					}    		
 				);	
 			}, 
@@ -747,7 +771,7 @@
 						}
 					},
 					function(request) {
-						alert("ERROR : " + request.status);	       						
+						fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");	       						
 					}    		
 				);	
 				

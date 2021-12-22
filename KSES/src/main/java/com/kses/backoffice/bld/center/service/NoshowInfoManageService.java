@@ -18,6 +18,21 @@ public interface NoshowInfoManageService {
 	 */
 	public List<Map<String, Object>> selectNoshowInfoList(@Param("centerCd") String centerCd) throws Exception;
 	
+	/**
+	 * SPDM 예약정보 자동취소 정보 입력
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public int insertNoshowResvInfo() throws Exception;
+	
+	/**
+	 * SPDM 예약정보 자동취소 정보 갱신
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public int updateNoshowResvInfoCancel() throws Exception;
 	
 	/**
 	 * SPDM 지점 자동취소시간(노쇼) 정보 갱신

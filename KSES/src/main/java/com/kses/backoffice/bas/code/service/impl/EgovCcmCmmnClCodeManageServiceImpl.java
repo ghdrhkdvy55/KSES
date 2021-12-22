@@ -26,8 +26,6 @@ public class EgovCcmCmmnClCodeManageServiceImpl extends EgovAbstractServiceImpl 
 		return cmmnClCodeManageMapper.deleteCmmnClCode(cmmnClCode.getClCode());				
 	}
 
-	
-
 	/**
 	 * 공통분류코드 상세항목을 조회한다.
 	 */

@@ -15,16 +15,16 @@ public class NoShowHisInfo {
 	 private int noshowSeq;
 	
 	 // 노쇼 코드
-	 @JsonProperty("noshow_coe")
-	 private String noshowCoe;
-	
-	 // 좌석 코드
-	 @JsonProperty("seat_code")
-	 private String seatCode;
+	 @JsonProperty("noshow_cd")
+	 private String noshowCd;
 	
 	 // 예약 코드
-	 @JsonProperty("res_seq")
-	 private int resSeq;
+	 @JsonProperty("resv_seq")
+	 private int resvSeq;
+	 
+	 // 예약 코드
+	 @JsonProperty("user_id")
+	 private int userId;
 	
 	 // 노쇼 배치 실행 타임
 	 @JsonProperty("noshow_palytime")
