@@ -13,6 +13,10 @@ import egovframework.rte.psl.dataaccess.mapper.Mapper;
 public interface NoshowInfoManageMapper {
 	public List<Map<String, Object>> selectNoshowInfoList(@Param("centerCd") String centerCd) throws Exception;
 	
+	public int insertNoshowResvInfo() throws Exception;
+	
+	public int updateNoshowResvInfoCancel() throws Exception;
+	
 	public int updateNoshowInfo(@Param("noshowInfoList") List<NoshowInfo> noshowInfoList) throws Exception;
 	
 	public int copyNoshowInfo(@Param("params") Map<String, Object> params) throws Exception;

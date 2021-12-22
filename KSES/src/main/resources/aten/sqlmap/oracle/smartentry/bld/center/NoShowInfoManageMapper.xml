@@ -26,23 +26,51 @@
 		AND A.CENTER_CD = B.CENTER_CD  
 	</select>
 	
-	<!-- 노쇼조건에 해당되는 예약번호 조회-->
-	<select id="selectNoshowResvSeq" resultType="lmap">
+	<insert id="insertNoshowResvInfo">
 	<![CDATA[
-		SELECT A.RESV_SEQ 
+		INSERT INTO TSEB_NOSHOW_PLAY_H 
+		(
+			NOSHOW_SEQ, 
+			NOSHOW_CD, 
+			RESV_SEQ, 
+			NOSHOW_PLAYTM, 
+			NOSHOW_RELEASE_YN, 
+			NOSHOW_RESULT, 
+			NOSHOW_RESULT_CD
+		)
+		SELECT 
+			SEQ_SEB_NOSHOW_PLAY.NEXTVAL, C.NOSHOW_CD, A.RESV_SEQ, SYSDATE, 'N', 'OK', ''
 		FROM TSER_RESV_INFO_I A, TSEB_CENTER_INFO_M B, TSEB_NOSHOW_INFO_M C
 		WHERE A.CENTER_CD = B.CENTER_CD
 		AND B.CENTER_CD = C.CENTER_CD 
 		AND A.RESV_STATE NOT IN ('RESV_STATE_4')
-		AND A.RESV_PAY_DVSN NOT IN ('RESV_PAY_DVSN_1')
+		AND A.RESV_PAY_DVSN NOT IN ('RESV_PAY_DVSN_2')
 		AND C.NOSHOW_DAY = TO_CHAR(SYSDATE,'d')
 		AND C.NOSHOW_ALL_TM  <= TO_CHAR(SYSDATE,'YYYYMMDD')
 	]]>
-	</select>
+	</insert>
 	
-	<insert id="insertNoshowHistory">
-	
-	</insert> 
+	<update id="updateNoshowResvInfoCancel">
+	<![CDATA[
+		UPDATE TSER_RESV_INFO_I SET
+    		RESV_STATE = 'RESV_STATE_4',
+    		RESV_CANCEL_ID = 'BATCH',
+    		RESV_CANCEL_CD = 'RESV_CANCEL_CD_3',
+    		RESV_CANCEL_DT = SYSDATE
+    	WHERE RESV_SEQ IN 
+    	(
+			SELECT 
+				A.RESV_SEQ
+			FROM TSER_RESV_INFO_I A, TSEB_CENTER_INFO_M B, TSEB_NOSHOW_INFO_M C
+			WHERE A.CENTER_CD = B.CENTER_CD
+			AND B.CENTER_CD = C.CENTER_CD 
+			AND A.RESV_STATE NOT IN ('RESV_STATE_4')
+			AND A.RESV_PAY_DVSN NOT IN ('RESV_PAY_DVSN_1')
+			AND C.NOSHOW_DAY = TO_CHAR(SYSDATE,'d')
+			AND C.NOSHOW_ALL_TM  <= TO_CHAR(SYSDATE,'YYYYMMDD')
+    	)
+	]]>    	
+	</update>  
      
 	<update id="updateNoshowInfo">
 		<foreach collection="noshowInfoList" item="item" separator=";" open="DECLARE BEGIN" close="; END;">	

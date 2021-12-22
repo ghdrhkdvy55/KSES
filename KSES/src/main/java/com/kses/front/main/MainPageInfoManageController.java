@@ -59,52 +59,21 @@ public class MainPageInfoManageController {
 	private UserInfoManageService userService;
 	
 	@RequestMapping (value="main.do")
-	public ModelAndView selectFrontMainPage(	@ModelAttribute("loginVO") LoginVO loginVO, 
-												@RequestParam Map<String, String> param,
-												HttpServletRequest request,
-												BindingResult result) throws Exception {
+	public ModelAndView selectFrontMainPage(HttpServletRequest request) throws Exception {
 		
 		ModelAndView model = new ModelAndView("/front/main/mainpage");
 		try {
 			
-			Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-			if(!isAuthenticated) {
-				
-			} else {
-				HttpSession httpSession = request.getSession(true);
-				loginVO = (LoginVO)httpSession.getAttribute("LoginVO");
+			HttpSession httpSession = request.getSession(true);
+			UserLoginInfo userLoginInfo = new UserLoginInfo();
+			
+			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
+			if(userLoginInfo ==  null) {
+				userLoginInfo = new UserLoginInfo();
+				userLoginInfo.setUserDvsn("USER_DVSN_2");
+				httpSession.setAttribute("userLoginInfo", userLoginInfo);
+				return model;
 			}
-			
-			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-			
-			//게시판 요청 
-			/*
-			Map<String,Object>  searchVO = new HashMap<String,Object>();
-			   
-		    int pageUnit = searchVO.get("pageUnit") == null ?   propertiesService.getInt("pageUnit") : Integer.valueOf((String) searchVO.get("pageUnit"));
-			  
-		    searchVO.put("pageSize", propertiesService.getInt("pageSize"));
-		    LOGGER.info("pageUnit:" + pageUnit);
-		    
-	                
-	   	    PaginationInfo paginationInfo = new PaginationInfo();
-		    paginationInfo.setCurrentPageNo( Integer.parseInt( SmartUtil.NVL(searchVO.get("pageIndex"), "1") ) );
-		    paginationInfo.setRecordCountPerPage(pageUnit);
-		    paginationInfo.setPageSize(propertiesService.getInt("pageSize"));
-		    searchVO.put("firstIndex", paginationInfo.getFirstRecordIndex());
-		    searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
-		    searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
-		    searchVO.put("boardCd", "NOT");
-			
-			List<Map<String, Object>> list =  boardInfoService.selectBoardManageListByPagination(searchVO) ;
-			int totCnt = list.size() > 0 ?  Integer.valueOf( list.get(0).get("total_record_count").toString()) : 0;
-		      
-			model.addObject(Globals.JSON_RETURN_RESULTLISR, list);
-			model.addObject(Globals.PAGE_TOTALCNT, totCnt);
-			paginationInfo.setTotalRecordCount(totCnt);
-			model.addObject(Globals.JSON_PAGEINFO, paginationInfo);
-			*/
-			
 		} catch(Exception e) {
 			LOGGER.error("selectFrontMainPage : " + e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
@@ -120,12 +89,12 @@ public class MainPageInfoManageController {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
 			
-			if ( SmartUtil.NVL(searchVO.get("searchCenterCd") , "").toString().equals("NOT") ) {
+			if (SmartUtil.NVL(searchVO.get("searchCenterCd") , "").toString().equals("NOT") ) {
 				searchVO.remove("searchCenterCd");
 			}
 			   
-		    int pageUnit = searchVO.get("pageUnit") == null ?   propertiesService.getInt("pageUnit") : Integer.valueOf((String) searchVO.get("pageUnit"));
-			int pageSize = searchVO.get("pageSize") == null ?   propertiesService.getInt("pageSize") : Integer.valueOf((String) searchVO.get("pageSize"));
+		    int pageUnit = searchVO.get("pageUnit") == null ?  propertiesService.getInt("pageUnit") : Integer.valueOf((String) searchVO.get("pageUnit"));
+			int pageSize = searchVO.get("pageSize") == null ?  propertiesService.getInt("pageSize") : Integer.valueOf((String) searchVO.get("pageSize"));
 			
 	                
 	   	    PaginationInfo paginationInfo = new PaginationInfo();
@@ -185,7 +154,7 @@ public class MainPageInfoManageController {
 			UserLoginInfo userLoginInfo = new UserLoginInfo();
 			
 			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
-			if(userLoginInfo ==  null) {
+			if(userLoginInfo == null) {
 				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
 				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
 				return model;	

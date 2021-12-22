@@ -348,7 +348,7 @@
                <ul class="rsv_list">
 					<li>
                         <ol>
-                            <li>일시</li>
+                            <li>경주일</li>
                             <li><span id="rsv_date" class="rsv_date"></span></li>
                         </ol>
                     </li> 
@@ -511,9 +511,8 @@
             	$("#"+tab_id).addClass('current');
     		});
 			
-			var date = new Date();
-			var today = date.format("yyyy-MM-dd");
-			$(".date").html(today);
+
+			$(".date").html(fn_resvDateFormat($("#resvDate").val()));
 			resvUsingTimeCheck(sessionStorage.getItem("resvUsingTime"));
 			
 			if($("#isReSeat").val() == "Y") {
