@@ -231,6 +231,7 @@
 			AND A.RESV_USER_CLPHN = #{params.resvUserClphn}
 			AND A.RESV_STATE NOT IN ('RESV_STATE_4')
 			AND TO_CHAR(SYSDATE,'YYYYMMDD') BETWEEN A.RESV_START_DT AND A.RESV_END_DT
+			AND A.RESV_USER_DVSN = 'USER_DVSN_2'
 			ORDER BY A.RESV_END_DT ASC
 		) TB
 		WHERE ROWNUM = 1
@@ -262,7 +263,7 @@
 				WHERE (A.USER_ID = #{params.userId} OR A.RESV_USER_CLPHN = #{params.userPhone}) 
 			</when>
 			<when test="@org.apache.commons.lang3.StringUtils@equals(params.userDvsn,'USER_DVSN_2')">
-				WHERE A.USER_ID = #{params.userPhone}
+				WHERE A.RESV_USER_CLPHN = #{params.userPhone}
 			</when>
 		</choose>
 		AND A.RESV_END_DT = #{params.resvDate}
