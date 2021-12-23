@@ -25,17 +25,29 @@ public class NoshowInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
 	}
 	
 	@Override
-	public int insertNoshowResvInfo() throws Exception {
+	public int insertNoshowResvInfo_R1() throws Exception {
 		// TODO Auto-generated method stub
-		return noshowMapper.insertNoshowResvInfo();
+		return noshowMapper.insertNoshowResvInfo_R1();
 	}
 
 	@Override
-	public int updateNoshowResvInfoCancel() throws Exception {
+	public int updateNoshowResvInfoCancel_R1() throws Exception {
 		// TODO Auto-generated method stub
-		return noshowMapper.updateNoshowResvInfoCancel();
+		return noshowMapper.updateNoshowResvInfoCancel_R1();
 	}
 
+	@Override
+	public int insertNoshowResvInfo_R2() throws Exception {
+		// TODO Auto-generated method stub
+		return noshowMapper.insertNoshowResvInfo_R2();
+	}
+
+	@Override
+	public int updateNoshowResvInfoCancel_R2() throws Exception {
+		// TODO Auto-generated method stub
+		return noshowMapper.updateNoshowResvInfoCancel_R2();
+	}
+	
 	@Override
 	public int updateNoshowInfo(List<NoshowInfo> noshowInfoList) throws Exception {
 		// TODO Auto-generated method stub

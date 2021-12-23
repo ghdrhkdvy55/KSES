@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -190,6 +191,7 @@ public class ResvInfoManageController {
 	}
 	
 	@RequestMapping (value="longResvInfoUpdate.do")
+	@Transactional(rollbackFor = Exception.class)
 	public ModelAndView rsvLongSeatUpdate(	HttpServletRequest request, 
 											@RequestBody ResvInfo vo, 
 											BindingResult result) throws Exception {
@@ -208,14 +210,21 @@ public class ResvInfoManageController {
 			vo.setAdminId(loginVO.getAdminId());
 			
 			List<String> resvDateList = resvService.selectResvDateList(vo);
-			
 			vo.setResvDateList(resvDateList);
+			
 			int ret = resvService.updateUserLongResvInfo(vo);
 			
-			/*if(ret > 0) {*/
-				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("sucess.common.update"));
-			/*}*/
+			if(ret > 0) {
+				ret = resvService.updateLongResvInfo(vo); 
+				if(ret > 0) {
+					model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+					model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("sucess.common.update"));
+				} else {
+					throw new Exception();
+				}
+			} else {
+				throw new Exception();
+			}
 		} catch (Exception e){
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();

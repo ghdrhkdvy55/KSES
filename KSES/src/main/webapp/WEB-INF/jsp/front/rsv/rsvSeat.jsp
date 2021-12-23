@@ -670,12 +670,13 @@
 									$("#selectPartCd").append("<option value='" + item.part_cd + "'>" + item.part_nm + "</option>");
 									
 									setHtml = '<div class="box-wrapper"><li id="s' + trim(fn_NVL(item.part_cd)) + '" class="seat" seat-id="' + item.part_cd + '" style="opacity: 0.7;text-align: center; display: inline-block;" name="' + item.part_cd + '" >' 
-	                                  +  '<div class="section">'
-	                                  +  '   <div class="circle">'
-	                                  +  '       <span class=' + fn_NVL(item.part_css) + '>' + fn_NVL(item.part_nm) + '<em>(' + fn_NVL(item.part_class_text) + ')</em>' + '</span>'
-	                                  +  '   </div>'
-	                                  +  ' </div>'
-	                                  +  '</li></div>';
+	                                  		+  '<div class="section">'
+	                                  		+  '   <div class="circle">'
+	                                  		+  '       <span class=' + fn_NVL(item.part_css) + '>' + fn_NVL(item.part_nm);
+									
+								setHtml += item.part_class != "SEAT_CLASS_1" ? '<em class="circle_class">(' + fn_NVL(item.part_class_text) + ')</em>' : "";
+	                                  
+								setHtml +=  '</div></div></li></div>';
 	                             
 	                            	$('#floor_area_Map').append(setHtml);
 								});
@@ -710,12 +711,12 @@
 								
 								fn_scrollMove($("#section_sel"));
 							} else {
-								fn_openPopup("해당층은 현재 선택 가능한 구역이 존재하지 않습니다.", "red", "ERROR", "확인", "");
+								fn_openPopup("해당층은 현재 선택 가능한 구역이 존재하지 않습니다.");
 							}
 				    	}
 					},
 					function(request) {
-						alert("ERROR : " +request.status);	       						
+						fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");	       						
 					}    		
 				);
 			},
@@ -817,7 +818,7 @@
 				    	}
 					},
 					function(request) {
-						alert("ERROR : " +request.status);	       						
+						fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");       						
 					}    		
 				);	
 			},

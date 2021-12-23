@@ -160,6 +160,7 @@
 							if(result.validResult != null) {
 								if(result.validResult.resultCode != "SUCCESS") {
 									fn_openPopup(result.validResult.resultMessage, "red", "ERROR", "확인", "");
+									fn_pageMove('regist','/front/rsvSeat.do');
 								} else {
 									validResult = result.validResult;
 									$("#resvDate").val(result.validResult.resvDate);

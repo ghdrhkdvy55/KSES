@@ -111,44 +111,11 @@
                   	<tr>
                     	<th>좌석명</th>
                     	<td><input type="text" id="seatNm"></td>
-                    	<th>좌석 구분</th>
-                    	<td>
-	                     	<select id="seatDvsn">
-		                        <option value="">좌석 구분</option>
-		                         <c:forEach items="${seatDvsn}" var="seatDvsn">
-									<option value="${seatDvsn.code}">${seatDvsn.codenm}</option>
-		                         </c:forEach>
-	                    	</select>
-                    	</td>
-                  	</tr>
-                  	<tr>
-                    	<th>좌석 등급</th>
-                    	<td>
-	                     	<select id="seatClass">
-		                        <option value="">좌석 등급</option>
-		                         <c:forEach items="${seatClass}" var="seatClass">
-									<option value="${seatClass.code}">${seatClass.codenm}</option>
-		                         </c:forEach>
-	                    	</select>
-                    	</td>
                     	<th>사용유무</th>
                     	<td>
                     		<label for="useYn_Y"><input id="useYn_Y" type="radio" name="useYn" value="Y" checked>Y</label>
                     		<label for="useYn_N"><input id="useYn_N" type="radio" name="useYn" value="N">N</label>
                     	</td>
-                  	</tr>
-                  	<tr>
-                    	<th>지불 구분</th>
-                    	<td>
-                      		<select id="payDvsn">
-		                        <option value="">지불 구분</option>
-		                         <c:forEach items="${payDvsn}" var="payDvsn">
-									<option value="${payDvsn.code}">${payDvsn.codenm}</option>
-		                         </c:forEach>
-                      		</select>
-                    	</td>
-                    	<th>좌석 금액</th>
-                    	<td><input type="text" id="payCost"></td>
                   	</tr>
               	</tbody>
 			</table>
@@ -210,7 +177,6 @@
 					{label: '구역', name:'part_nm', index:'part_nm', align:'center'},
 					{label: '좌석명', name:'seat_nm', index:'seat_nm', align:'center'},
 					{label: '좌석등급', name:'seat_class_txt', index:'seat_class_txt', align:'center'},
-					{label: '좌석구분', name:'seat_dvsn_txt', index:'seat_dvsn_txt', align:'center'},
 					{label: '금액', name: 'pay_cost',  index:'pay_cost', align:'center'},
 					{label: '정렬순서', name: 'seat_order',  index:'seat_order', align:'center'},
 					{label: '사용유무', name: 'use_yn', index:'use_yn', align:'center'},
@@ -415,10 +381,6 @@
 				$('#floorCd').children('option:not(:first)').remove();
 				$("#partCd").val("");
 				$('#partCd').children('option:not(:first)').remove();
-				$("#seatDvsn").val("");
-				$("#seatClass").val("");
-				$("#payDvsn").val("");
-				$("#payCost").val("");
 				$("input:radio[name='useYn']:radio[value='Y']").prop('checked', true);
 			} else {
 				$("#seatCd").val(seatCd);
@@ -447,10 +409,6 @@
 							$("#floorCd").val(obj.floor_cd);
 							jqGridFunc.fn_floorChange("popup");
 							$("#partCd").val(obj.part_cd);
-							$("#seatDvsn").val(obj.seat_dvsn);
-							$("#seatClass").val(obj.seat_class);
-							$("#payDvsn").val(obj.pay_dvsn);
-							$("#payCost").val(obj.pay_cost);
 							$("input:radio[name='useYn']:radio[value='" + obj.use_yn + "']").prop('checked', true);
 						}
 					},
@@ -462,10 +420,6 @@
 		},
 		fn_CheckForm : function () {
 			if (any_empt_line_id("seatNm", "좌석명을 입력해주세요.") == false) return;		  
-			if (any_empt_line_id("seatDvsn", "좌석 구분값을 선택해주세요.") == false) return;
-			if (any_empt_line_id("seatClass", "좌석 등급을 선택해주세요.") == false) return;
-			if (any_empt_line_id("payDvsn", "지불 구분값을 입력해주세요.") == false) return;
-			if (any_empt_line_id("payCost", "금액을 입력해주세요.") == false) return;
 			if($("#floorCd option").length > 1){
 				if (any_empt_line_id("floorCd", "층을 선택해주세요.") == false) return;	
 			}
@@ -486,10 +440,6 @@
 			    'centerCd' : $("#centerCd").val(),
 			    'floorCd' : $("#floorCd").val(),
 			    'partCd' : $("#partCd").val(),
-			    'seatClass' : $("#seatClass").val(),
-			   	'seatDvsn' : $("#seatDvsn").val(),
-			   	'payDvsn' : $("#payDvsn").val(),
-			   	'payCost' : $("#payCost").val(),
 			   	'useYn': $('input[name=useYn]:checked').val(),
 			    'mode' : $("#mode").val()
 			};

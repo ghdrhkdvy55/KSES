@@ -68,31 +68,49 @@
                         <li>
                             <ol>
                                 <li>예약번호</li>
-                                <li><span id="rsv_num" class="rsv_num">123458960</span></li>
+                                <li><span id="rsv_num" class="rsv_num"></span></li>
                             </ol>
                         </li>
+						<li>
+                    		<ol>
+                        		<li>경주일</li>
+                        		<li><span id="rsv_date"></span></li>
+                    		</ol>
+                		</li>
                         <li>
                             <ol>
                                 <li>이름</li>
-                                <li><span id="rsv_name" class="rsv_name">홍길동</span></li>
+                                <li><span id="rsv_name"></span></li>
                             </ol>
                         </li>
                         <li>
                             <ol>
                                 <li>지점</li>
-                                <li><span id="rsv_brch" class="rsv_brch">대전지점</span></li>
+                                <li><span id="rsv_center"></span></li>
                               </ol>
                         </li>
-                        <li>
+						<li>
                             <ol>
-                                <li>좌석</li>
-                                <li><span id="rsv_seat" class="rsv_seat">A-3F-001</span></li>
+                                <li>층</li>
+                                <li><span id="rsv_floor"></span></li>
+                            </ol>
+                        </li>
+						<li>
+                            <ol>
+                                <li>구역</li>
+                                <li><span id="rsv_part"></span></li>
                             </ol>
                         </li>
                         <li>
                             <ol>
-                                <li>일시</li>
-                                <li><span id="rsv_date" class="rsv_date">2021-12-01 12:00</span></li>
+                                <li>좌석</li>
+                                <li><span id="rsv_seat"></span></li>
+                            </ol>
+                        </li>
+                        <li>
+                            <ol>
+                                <li>신청일</li>
+                                <li><span id="rsv_req_date"></span></li>
                             </ol>
                         </li>                                                                                    
                     </ul>
@@ -136,22 +154,28 @@
                         	<li><span id="cancel_rsv_num" class="rsv_num"></span></li>
                     	</ol>
                 	</li>
+					<li>
+                    	<ol>
+                        	<li>경주일</li>
+                        	<li><span id="cancel_rsv_date"></span></li>
+                    	</ol>
+                	</li>
                 	<li>
                     	<ol>
                         	<li>지점</li>
-                        	<li><span id="cancel_rsv_brch" class="rsv_brch"></span></li>
+                        	<li><span id="cancel_rsv_center"></span></li>
                     	</ol>
                 	</li>
                 	<li>
                     	<ol>
                         	<li>좌석</li>
-                        	<li><span id="cancel_rsv_seat" class="rsv_seat"></span></li>
+                        	<li><span id="cancel_rsv_seat"></span></li>
                     	</ol>
                 	</li>
                 	<li>
                     	<ol>
-                        	<li>일시</li>
-                        	<li><span id="cancel_rsv_date" class="rsv_date"></span></li>
+                        	<li>신청일</li>
+                        	<li><span id="cancel_rsv_date"></span></li>
                     	</ol>
                 	</li> 
                	</ul>
@@ -180,16 +204,31 @@
 					params,
 					false,
 					function(result) {
-				    	console.log(result);
 						if(result.status == "SUCCESS") {
 							if(result.guestResvInfo != null) {
 								var guestResvInfo = result.guestResvInfo;
 								
 								$("#rsv_num, #cancel_rsv_num").html(guestResvInfo.resv_seq);
+								$("#rsv_date, #cancel_rsv_date").html(fn_resvDateFormat(guestResvInfo.resv_end_dt));
 								$("#rsv_name").html(guestResvInfo.resv_user_nm);
-								$("#rsv_brch, #cancel_rsv_brch").html(guestResvInfo.center_nm);
+								$("#rsv_center, #cancel_rsv_brch").html(guestResvInfo.center_nm);
+								
+								if(guestResvInfo.resv_entry_dvsn == "ENTRY_DVSN_1") {
+									$("#rsv_info ul > li:eq(3)").hide();
+									$("#rsv_info ul > li:eq(4)").hide();
+									$("#cancel_rsv_info ul > li:eq(3)").hide();
+									$("#cancel_rsv_info ul > li:eq(4)").hide();
+								} else {
+									$("#rsv_info ul > li:eq(3)").show();
+									$("#rsv_info ul > li:eq(4)").show();
+									$("#cancel_rsv_info ul > li:eq(3)").show();
+									$("#cancel_rsv_info ul > li:eq(4)").show();
+									$("#rsv_floor, #cancel_rsv_floor").html(guestResvInfo.floor_nm);
+									$("#rsv_part, #cancel_rsv_part").html(guestResvInfo.part_nm);										
+								}
+								
 								$("#rsv_seat, #cancel_rsv_seat").html(guestResvInfo.seat_nm);
-								$("#rsv_date, #cancel_rsv_date").html(guestResvInfo.resv_req_date);
+								$("#rsv_req_date, #cancel_rsv_req_date").html(guestResvInfo.resv_req_date);
 								
 								if(guestResvInfo.resv_state == "RESV_STATE_1") {
 									$(".non_memBtn .cancelBtn").show();

@@ -417,7 +417,6 @@ function fn_resvDateFormat(el) {
  */
 function fn_scrollMove(el) {
 	var offset = $(el).offset(); //선택한 태그의 위치를 반환
-	console.log(offset.top);
 	$('html').animate({scrollTop : offset.top - 100}, 800);
 }
 

@@ -180,7 +180,6 @@
       	<div class="pop_wrap">
 			<table class="detail_table">
 				<tbody>
-
                   	<tr>
                     	<th>좌석 정보</th>
                       	<td colspan="3">
@@ -189,6 +188,7 @@
 							<input type="hidden" id="longResvFloorCd">
 							<input type="hidden" id="longResvPartCd">
 							<input type="hidden" id="longResvSeatCd">
+							<input type="hidden" id="longResvPayCost">
 							<a href="javascript:jqGridFunc.fn_resvSeatInfo('LONG')" class="blueBtn">좌석 조회</a>
                       	</td>
                   	</tr>
@@ -516,7 +516,7 @@
 					{label: '신청일자', name:'resv_req_date', index:'resv_req_date', align:'center'},
 					{label: '예약일자', name:'resv_end_dt', index:'resv_end_dt', align:'center', formatter:jqGridFunc.formSetting},
 					{label: '예약상태', name:'resv_state_text', index:'resv_state_text', align:'center'},
-					{label: '문진', name:'resv_user_ask_yn', index:'resv_user_ask_yn', align:'center', width : "50px"},
+					/* {label: '문진', name:'resv_user_ask_yn', index:'resv_user_ask_yn', align:'center', width : "50px"}, */
 					{label: '결재상태', name:'resv_pay_dvsn_text', index:'resv_pay_dvsn_text', align:'center'},
 					{label: 'QR출력', name:'resv_qr_print', index:'resv_qr_print', align:'center', sortable : false, formatter:jqGridFunc.formSetting},
 					/* {label: '현금영수증출력', name:'resv_rcpt_print', index:'resv_rcpt_print', align:'center', sortable : false, formatter:jqGridFunc.formSetting}, */
@@ -791,7 +791,6 @@
 				$(".pop_seat").html("");
 			}
 			
-			
 			seatSearchInfo = {};
 			$("#seasonCd").val("");
 			$("#seat_change").bPopup();
@@ -799,10 +798,11 @@
 		fn_resvSeatSearch : function(division) {
 			var url = "/front/rsvSeatListAjax.do";
 			var params = {};
-			if($("#resvPartCd").val() == "") {
-				common_popup("구역을 선택하세요.", "N", "");
-				return;
-			}
+			
+			if($("#resvCenterCd").val() == "") { common_popup("지점을 선택하세요.", "N", ""); return; }
+			if($("#resvFloorCd").val() == "") { common_popup("층을 선택하세요.", "N", ""); return; }
+			if($("#resvPartCd").val() == "") { common_popup("구역을 선택하세요.", "N", ""); return; }
+			
 			
 			if(division == "CHANGE") {
 				params = {
@@ -816,6 +816,9 @@
 				if(!$("#resvDateFrom").val() || !$("#resvDateTo").val()){
 					common_popup("예약일자를 입력하세요.", "N", "");
 					return;
+				} else if(!yesterDayConfirm($("#resvDateFrom").val())){
+					common_popup("예약시작일을 이전일자로 지정하실수 없습니다.", "N", "");
+					return;					
 				} else if(!dateIntervalCheckTemp($("#resvDateFrom").val(), $("#resvDateTo").val())){
 					common_popup("종료일자가 시작일자보다 빠를수 없습니다.", "N", "");
 					return;
@@ -894,8 +897,8 @@
 			    		}					
 			    	}
 				},
-				function(request) {
-					alert("ERROR : " +request.status);	       						
+				function(request) {	 
+					common_popup("ERROR : " +request.status, "N", "");
 				}    		
 			);	
 		},
@@ -914,6 +917,7 @@
 				"partCd" : $("#resvPartCd").val(),
 				"seatCd" : $(".pop_seat li.usable").attr("id"),
 				"resvPayCost" : $(".pop_seat li.usable").data("seat-paycost"),
+				"resvEntryDvsn" : "ENTRY_DVSN_2",
 				"checkDvsn" : division
 			}
 			
@@ -940,7 +944,7 @@
 				    	}
 					},
 					function(request) {
-						alert("ERROR : " + request.status);	       						
+						common_popup("ERROR : " +request.status, "N", "");	       						
 					}    		
 				);	
 			}		
@@ -958,17 +962,17 @@
 				function(result) {
 					if (result.status == "SUCCESS") {
 						if(result.validResult.resultCode != "SUCCESS") {
-							common_popup(result.validResult.resultMessage, "N", "");
+							common_popup(result.validResult.resultMessage, "N", "long_seat_add");
 							return;
 						} else {
 							validResult = result.validResult;
 						}
 					} else if (result.status == "LOGIN FAIL"){
-						common_popup("로그인 정보가 올바르지 않습니다.", "N", "");
+						location.href = "/backoffice/login.do";
 					}
 				},
 				function(request) {
-					common_popup("ERROR : " + request.status, "N", "");	       						
+					common_popup("ERROR : " + request.status, "N", "long_seat_add");	       						
 				}    		
 			);
 			
@@ -1022,8 +1026,8 @@
 				$("#resvPartCd option:checked").text() + "구역 " +
 				$(".pop_seat li.usable").data("seat-name")
 			);
-				
-			$("#longResvPayCost").val($(".pop_seat li.usable").data("seat-paycost"));  			    		       
+			
+			$("#longResvPayCost").val($(".pop_seat li.usable").data("seat-paycost")); 
 			$("#longResvDateFrom").val($("#resvDateFrom").val());
 			$("#longResvDateTo").val($("#resvDateTo").val());
 			$("#seat_change").bPopup().close();
@@ -1032,6 +1036,7 @@
 			if (any_empt_line_span("long_seat_add", "longResvSeatCd", "예약할 좌석을 선택하세요","sp_message", "savePage") == false) return;
 			if (any_empt_line_span("long_seat_add", "longResvUserId", "에약 회원을 선택하세요","sp_message", "savePage") == false) return;
 			if (any_empt_line_span("long_seat_add", "longResvEmpNo", "예약 담당자를 선택하세요","sp_message", "savePage") == false) return;
+			
 			
 			var params = {
 				"mode" : "Ins",
@@ -1048,6 +1053,7 @@
 				"userId" : $("#longResvUserId").val(),
 				"resvPayCost" : $("#longResvPayCost").val(),
 				"resvUserNm" : $("#longResvUserName").val(),
+				"longResvEmpNo" : $("#longResvEmpNo").val(),
 				"resvUserClphn" : $("#longResvUserPhone").val(),
 				"resvUserAskYn" : "Y",
 				"resvIndvdlinfoAgreYn" : "Y"
@@ -1357,7 +1363,7 @@
 					attendService.fn_attendInfo($("#resvSeq").val());
 				},
 				function(request) {
-					alert("ERROR : " + request.status);	       						
+					common_popup("ERROR : " +request.status, "N", "");	       						
 				}    		
 			);	
 		}
