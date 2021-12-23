@@ -52,18 +52,18 @@
 		SELECT 
 			USER_ID, USER_NM, USER_PHONE, USER_SEX_MF, USER_BIRTH_DY, LAST_UPDUSR_ID, LAST_UPDT_DTM,
 			USER_RCPT_YN, USER_RCPT_DVSN, USER_RCPT_NUMBER
-		FROM TEST_USER_INFO
+		FROM TEST_USER_INFO 
 		WHERE USER_ID = #{userId}
    	</select>
    	
 	<select id="selectUserVacntnInfo" resultType="lmap">
 	<![CDATA[
-   		SELECT
-   			FN_DETAILCODENM(A.VACNTN_ROUND) AS VACNTN_ROUND_TEXT,
-   			FN_DETAILCODENM(A.VACNTN_DVSN) AS VACNTN_DVSN_TEXT,
-   			TO_CHAR(TO_DATE(A.VACNTN_DT,'YYYY-MM-DD'),'YYYY-MM-DD') AS VACNTN_DT,
-			CASE
-				WHEN A.VACNTN_DT IS NULL THEN 'NO_INFO'
+   		SELECT 
+   			FN_DETAILCODENM(A.VACNTN_ROUND) AS VACNTN_ROUND_TEXT, 
+   			FN_DETAILCODENM(A.VACNTN_DVSN) AS VACNTN_DVSN_TEXT, 
+   			TO_CHAR(TO_DATE(A.VACNTN_DT,'YYYY-MM-DD'),'YYYY-MM-DD') AS VACNTN_DT,  
+			CASE 
+				WHEN A.VACNTN_DT IS NULL THEN 'NO_INFO'  
 				WHEN A.VACNTN_DT > TO_CHAR(ADD_MONTHS(SYSDATE,-6),'YYYYMMDD') THEN 'Y'
 			ELSE 'N' END AS PASS_YN
 		FROM TEST_USER_INFO A
@@ -79,21 +79,21 @@
 			A.USER_ID = #{userId}
 		)
 		WHEN MATCHED THEN
-		UPDATE SET
-			USER_NM = #{userNm, jdbcType=VARCHAR},
+		UPDATE SET 
+			USER_NM = #{userNm, jdbcType=VARCHAR}, 
 			USER_PHONE = #{userPhone, jdbcType=VARCHAR},
-			USER_DVSN = #{userDvsn, jdbcType=VARCHAR},
-			USER_SEX_MF = #{userSexMf, jdbcType=VARCHAR},
+			USER_DVSN = #{userDvsn, jdbcType=VARCHAR}, 
+			USER_SEX_MF = #{userSexMf, jdbcType=VARCHAR}, 
 			USER_BIRTH_DY = #{userBirthDy, jdbcType=VARCHAR},
 			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(indvdlinfoAgreYn)">
 				INDVDLINFO_AGRE_YN = #{indvdlinfoAgreYn, jdbcType=VARCHAR},
 				INDVDLINFO_AGRE_DT = SYSDATE,
 			</if>
-			USER_CARD_ID = #{userCardId, jdbcType=VARCHAR},
+			USER_CARD_ID = #{userCardId, jdbcType=VARCHAR}, 
             USER_CARD_NO = #{userCardNo, jdbcType=VARCHAR},
             USER_CARD_SEQ = #{userCardSeq, jdbcType=VARCHAR},
             LAST_UPDUSR_ID = #{userId},  
-			LAST_UPDT_DTM = SYSDATE,
+			LAST_UPDT_DTM = SYSDATE,  
 			LAST_LOGIN_DT = SYSDATE 
 		WHEN NOT MATCHED THEN
 		INSERT	
@@ -120,11 +120,11 @@
 	</insert>
 
 	<update id="updateUserInfo">
-		UPDATE TEST_USER_INFO SET
-			USER_NM = #{userNm, jdbcType=VARCHAR},
-			USER_PHONE = #{userPhone, jdbcType=VARCHAR},
-			USER_SEX_MF = #{userSexMf, jdbcType=VARCHAR},
-			USER_BIRTH_DY = #{userBirthDy, jdbcType=VARCHAR},
+		UPDATE TEST_USER_INFO SET 
+			USER_NM = #{userNm, jdbcType=VARCHAR}, 
+			USER_PHONE = #{userPhone, jdbcType=VARCHAR}, 
+			USER_SEX_MF = #{userSexMf, jdbcType=VARCHAR}, 
+			USER_BIRTH_DY = #{userBirthDy, jdbcType=VARCHAR}, 
 			LAST_UPDUSR_ID = #{userId}, 
 			LAST_UPDT_DTM = SYSDATE                     
 		WHERE USER_ID = #{userId}
@@ -135,14 +135,14 @@
 			USER_RCPT_YN = #{userRcptYn, jdbcType=VARCHAR}, 
 			USER_RCPT_DVSN = #{userRcptDvsn, jdbcType=VARCHAR}, 
 			USER_RCPT_NUMBER = #{userRcptNumber, jdbcType=VARCHAR},
-			LAST_UPDUSR_ID = #{userId},
-			LAST_UPDT_DTM = SYSDATE                  
+			LAST_UPDUSR_ID = #{userId}, 
+			LAST_UPDT_DTM = SYSDATE                      
 		WHERE USER_ID = #{userId}
    	</update>
 
    	<delete id="deleteUserInfo">
    	    <foreach collection="delCds" item="item" separator=";" open="DECLARE BEGIN" close="; END;">  
-   	         DELETE FROM TEST_USER_INFO WHERE USER_ID= #{item}
+   	         DELETE FROM TEST_USER_INFO  WHERE USER_ID= #{item}
 	    </foreach>		
    	</delete>
 </mapper>
