@@ -117,7 +117,7 @@
                   <tr>
                     <th>상세 내역</th>
                       <td colspan="3">
-                        <input type="text" id="blklstReason">
+                        <textarea style="width: 400px; height: 150px;" id="blklstReason"></textarea>
                       </td>
                   </tr>
               </tbody>

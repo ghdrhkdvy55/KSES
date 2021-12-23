@@ -56,30 +56,33 @@ public class Scheduler {
 	 * 
 	 * @throws Exception
 	 */
-	@Scheduled(cron = "0 0/10 * * * * ")
+	/*@Scheduled(cron = "0 0/1 * * * * ")*/
 	@Transactional(rollbackFor = Exception.class)
-	public void resvNoshowScheduler() throws Exception{
+	public void resvNoshowScheduler() throws Exception {
+		int errorCount = 0; 
 		try {
-			int noShowCount = noshowService.insertNoshowResvInfo(); 
-			
-			if(noShowCount != 0) {
-				int resvCancelCount = noshowService.updateNoshowResvInfoCancel();
-				if(resvCancelCount == noShowCount) {
-					LOGGER.info("resvNoshowScheduler => 노쇼 예약정보 자동취소 " + resvCancelCount + "건");
+			for(int i=1; i<2; i++) {
+				errorCount = i;
+				int noShowCount = i == 1 ? noshowService.insertNoshowResvInfo_R1() : noshowService.insertNoshowResvInfo_R2(); 
+				
+				if(noShowCount != 0) {
+					int resvCancelCount = i == 2 ? noshowService.updateNoshowResvInfoCancel_R1() : noshowService.updateNoshowResvInfoCancel_R2();
+
+					if(resvCancelCount == noShowCount) {
+						LOGGER.info("resvNoshowScheduler =>" + i + "차 노쇼 예약정보 자동취소 " + resvCancelCount + "건");
+					} else {
+						throw new Exception();
+					}
 				} else {
-					throw new Exception();
+					LOGGER.info("resvNoshowScheduler =>" + i + "차 노쇼 예약정보 없음");
 				}
-			} else {
-				LOGGER.info("resvNoshowScheduler => 노쇼 예약정보 없음");
 			}
-			
-			
-		}catch (RuntimeException re) {
+		} catch (RuntimeException re) {
 			//scheduleService.insertScheduleManage("resStateCreateSchedulerService", "FAIL", re.toString());
-			LOGGER.error("resvNoshowScheduler run failed", re);
-		}catch (Exception e) {
+			LOGGER.error("resvNoshowScheduler " + errorCount + "차  =>  Run Failed", re);
+		} catch (Exception e) {
 			//scheduleService.insertScheduleManage("resStateCreateSchedulerService", "FAIL", e.toString());
-			LOGGER.error("resvNoshowScheduler failed", e);
+			LOGGER.error("resvNoshowScheduler " + errorCount + "차 => Failed", e);
 		}
 	}
 	

@@ -710,12 +710,12 @@
 								
 								fn_scrollMove($("#section_sel"));
 							} else {
-								fn_openPopup("해당층은 현재 선택 가능한 구역이 존재하지 않습니다.", "red", "ERROR", "확인", "");
+								fn_openPopup("해당층은 현재 선택 가능한 구역이 존재하지 않습니다.");
 							}
 				    	}
 					},
 					function(request) {
-						alert("ERROR : " +request.status);	       						
+						fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");	       						
 					}    		
 				);
 			},
@@ -817,7 +817,7 @@
 				    	}
 					},
 					function(request) {
-						alert("ERROR : " +request.status);	       						
+						fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");       						
 					}    		
 				);	
 			},

@@ -168,7 +168,7 @@
                     </li>
                     <li>
                         <ol>
-                            <li>일시</li>
+                            <li>신청일</li>
                             <li><span id="rsv_req_date"></span></li>
 						</ol>
 					</li> 
@@ -228,7 +228,7 @@
                 	</li>
                 	<li>
                     	<ol>
-                        	<li>일시</li>
+                        	<li>신청일</li>
                         	<li><span id="cancel_rsv_req_date"></span></li>
                     	</ol>
                 	</li> 
@@ -256,21 +256,45 @@
 
                	<ul class="rsv_list">
 					<li>
+                    	<ol>
+                        	<li>예약번호</li>
+                        	<li><span id="re_rsv_num" class="rsv_num"></span></li>
+                    	</ol>
+                	</li>
+					<li>
+                    	<ol>
+                        	<li>경주일</li>
+                        	<li><span id="re_rsv_date"></span></li>
+                    	</ol>
+                	</li>
+					<li>
 						<ol>
                             <li>지점</li>
-                            <li><span id="re_rsv_center" class="rsv_brch"></span></li>
+                            <li><span id="re_rsv_center"></span></li>
+                        </ol>
+                    </li>
+					<li>
+                        <ol>
+                            <li>층</li>
+                            <li><span id="re_rsv_floor"></span></li>
+                        </ol>
+                    </li>
+					<li>
+                        <ol>
+                            <li>구역</li>
+                            <li><span id="re_rsv_part"></span></li>
                         </ol>
                     </li>
                     <li>
                         <ol>
                             <li>좌석</li>
-                            <li><span id="re_rsv_seat" class="rsv_seat"></span></li>
+                            <li><span id="re_rsv_seat"></span></li>
                         </ol>
                     </li>
                     <li>
                         <ol>
-                            <li>일시</li>
-                            <li><span id="re_rsv_date" class="rsv_date"></span></li>
+                            <li>신청일</li>
+                            <li><span id="re_rsv_req_date"></span></li>
 						</ol>
 					</li> 
 				</ul>
@@ -582,13 +606,13 @@
 									$("#rsv_num").html(obj.resv_seq);
 									$("#rsv_date").html(fn_resvDateFormat(obj.resv_end_dt));
 									$("#rsv_center").html(obj.center_nm);
-									
-									if(obj.resv_entry == "ENTRY_DVSN_1") {
-										$("#rsv_info .rsv_list").children("li").eq(3).hide();
-										$("#rsv_info .rsv_list").children("li").eq(4).hide();
+												
+									if(obj.resv_entry_dvsn == "ENTRY_DVSN_1") {
+										$("#rsv_info ul > li:eq(3)").hide();
+										$("#rsv_info ul > li:eq(4)").hide();
 									} else {
-										$("#rsv_info .rsv_list").children("li").eq(3).show();
-										$("#rsv_info .rsv_list").children("li").eq(4).show();
+										$("#rsv_info ul > li:eq(3)").show();
+										$("#rsv_info ul > li:eq(4)").show();
 										$("#rsv_floor").html(obj.floor_nm);
 										$("#rsv_part").html(obj.part_nm);										
 									}
@@ -598,6 +622,17 @@
 								} else if(division == "PRE"){
 									$("#re_rsv_info .name").html(userLoginInfo.userNm);
 									$("#re_rsv_center").html(obj.center_nm);
+									
+									if(obj.resv_entry_dvsn == "ENTRY_DVSN_1") {
+										$("#re_rsv_info ul > li:eq(3)").hide();
+										$("#re_rsv_info ul > li:eq(4)").hide();
+									} else {
+										$("#re_rsv_info ul > li:eq(3)").show();
+										$("#re_rsv_info ul > li:eq(4)").show();
+										$("#re_rsv_floor").html(obj.floor_nm);
+										$("#re_rsv_part").html(obj.part_nm);										
+									}
+									
 									$("#re_rsv_seat").html(obj.seat_nm);
 									$("#re_rsv_date").html(obj.resv_req_date);
 									
@@ -617,12 +652,12 @@
 									$("#cancel_rsv_date").html(fn_resvDateFormat(obj.resv_end_dt));
 									$("#cancel_rsv_center").html(obj.center_nm);
 									
-									if(obj.resv_entry == "ENTRY_DVSN_1") {
-										$("#cancel_rsv_info .rsv_list").children("li").eq(3).hide();
-										$("#cancel_rsv_info .rsv_list").children("li").eq(4).hide();
+									if(obj.resv_entry_dvsn == "ENTRY_DVSN_1") {
+										$("#cancel_rsv_info ul > li:eq(3)").hide();
+										$("#cancel_rsv_info ul > li:eq(4)").hide();
 									} else {
-										$("#cancel_rsv_info .rsv_list").children("li").eq(3).show();
-										$("#cancel_rsv_info .rsv_list").children("li").eq(4).show();
+										$("#cancel_rsv_info ul > li:eq(3)").show();
+										$("#cancel_rsv_info ul > li:eq(4)").show();
 										$("#cancel_rsv_floor").html(obj.floor_nm);
 										$("#cancel_rsv_part").html(obj.part_nm);										
 									}

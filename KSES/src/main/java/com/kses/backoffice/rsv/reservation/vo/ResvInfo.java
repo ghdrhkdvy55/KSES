@@ -11,6 +11,9 @@ import lombok.Setter;
 public class ResvInfo {
 	// 예약 시퀀스
 	private String resvSeq = "";
+	
+	// 장기예약 시퀀스
+	private String longResvSeq = "";
 
 	// 지점 코드
 	private String centerCd = "";
@@ -125,10 +128,7 @@ public class ResvInfo {
 	
 	// 장기예약일 리스트
 	private List<String> resvDateList;
-	
-	// 입력 구분
-	private String mode = "";
-	
+		
 	// 결제 구분
 	private String resvPayDvsn = "";
 	
@@ -140,5 +140,11 @@ public class ResvInfo {
 	private String refoundNo = "";
 	
 	private String refoundDate = "";
+	
+	// 입력 구분
+	private String mode = "";
+	
+	// 입력 구분
+	private String regId = "";
 	
 }

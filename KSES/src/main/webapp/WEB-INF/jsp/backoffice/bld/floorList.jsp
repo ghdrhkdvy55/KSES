@@ -977,15 +977,14 @@
  	                        $("#seat_resultList > tbody").empty();
  	                        $("#part_resultList > tbody").empty();
  	                        for (var i in result.resultlist) {
- 	                        	
- 	                        	
  	                            shtml += '<div class="box-wrapper"><li id="s' + trim(fn_NVL(obj[i].part_cd)) + '" class="seat" seat-id="' + obj[i].part_cd + '" style="opacity: 0.7;text-align: center; display: inline-block;" name="' + obj[i].part_cd + '" >' 
  	                                  +  '<div class="section">'
  	                                  +  '   <div class="circle">'
- 	                                  +  '       <span class=' + fn_NVL(obj[i].part_css) + '>' + fn_NVL(obj[i].part_nm) + '<em class="circle_class">(' + fn_NVL(obj[i].part_class_text) + ')</em>' + '</span>'
- 	                                  +  '   </div>'
- 	                                  +  ' </div>'
- 	                                  +  '</li></div>';
+ 	                                  +  '       <span class=' + fn_NVL(obj[i].part_css) + '>' + fn_NVL(obj[i].part_nm);
+								
+ 	                                  
+								shtml += obj[i].part_class != "SEAT_CLASS_1" ? '<em class="circle_class">(' + fn_NVL(obj[i].part_class_text) + ')</em>' : "";
+								shtml += '</span></div></div></li></div>';
  	                             
  	                            $('#seat_list').html(shtml);
  	                        

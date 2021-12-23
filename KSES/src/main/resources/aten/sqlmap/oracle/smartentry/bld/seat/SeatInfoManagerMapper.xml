@@ -61,8 +61,8 @@
     <!-- 사용자 예약 화면 표출 좌석 리스트 조회 -->
 	<select id="selectReservationSeatList" resultType="lmap">
 		SELECT 
-		A.PART_CD, A.PART_NM, B.SEAT_CD, B.SEAT_NM, B.PAY_COST, 
-		B.SEAT_ORDER, B.SEAT_NUMBER, B.SEAT_TOP, B.SEAT_LEFT,
+			A.PART_CD, A.PART_NM, A.PART_CLASS, B.SEAT_CD, B.SEAT_NM, FN_DETAILCODEETC(A.PART_CLASS) AS PAY_COST,
+			B.SEAT_ORDER, B.SEAT_NUMBER, B.SEAT_TOP, B.SEAT_LEFT, 
 			CASE WHEN 
 			(
 				SELECT NVL(COUNT(*),0) 

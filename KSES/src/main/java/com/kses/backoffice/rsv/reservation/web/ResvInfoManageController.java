@@ -208,14 +208,23 @@ public class ResvInfoManageController {
 			vo.setAdminId(loginVO.getAdminId());
 			
 			List<String> resvDateList = resvService.selectResvDateList(vo);
-			
 			vo.setResvDateList(resvDateList);
+			
+			LOGGER.info(vo.getLongResvSeq());
 			int ret = resvService.updateUserLongResvInfo(vo);
 			
-			/*if(ret > 0) {*/
-				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("sucess.common.update"));
-			/*}*/
+			LOGGER.info(vo.getLongResvSeq());
+			if(ret > 0) {
+				ret = resvService.updateLongResvInfo(vo); 
+				if(ret > 0) {
+					model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+					model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("sucess.common.update"));
+				} else {
+					throw new Exception();
+				}
+			} else {
+				throw new Exception();
+			}
 		} catch (Exception e){
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();

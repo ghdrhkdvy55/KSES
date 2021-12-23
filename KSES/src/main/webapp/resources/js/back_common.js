@@ -474,7 +474,6 @@ function yesterDayConfirm(res_day, alert_message){
     var today = yearNow + monthNow + dateNow;
     
     if (parseInt(res_day) < today){
-    	alert(alert_message);
     	return false;
     }else {
     	return true;
