@@ -30,6 +30,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -306,7 +307,7 @@ public class SmartUtil {
     }
     
     public static String NVL(Object _val, String _replace) {
-    	return _val == null ? _replace : _val.toString();
+    	return _val == null ? _replace : StringUtils.isBlank(_val.toString()) ? _replace : _val.toString();
     }
     
     public static int NVL(Object _val, int _replace) {

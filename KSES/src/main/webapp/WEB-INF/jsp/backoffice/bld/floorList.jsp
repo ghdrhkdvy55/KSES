@@ -230,26 +230,6 @@
 			             	</select>
                     	</td>
                   	</tr>
-                  	<tr>
-						<th>좌석 구분</th>
-                    	<td>
-							<select id="seatDvsn">
-								<option value="">좌석 구분 선택</option>
-								<c:forEach items="${seatDvsn}" var="seatDvsn">
-									<option value="${seatDvsn.code}">${seatDvsn.codenm}</option>
-								</c:forEach>
-							</select>
-                    	</td>
-						<th>지불 구분</th>
-                    	<td>
-							<select id="payDvsn">
-								<option value="">지불 구분 선택</option>
-								<c:forEach items="${payDvsn}" var="payDvsn">
-									<option value="${payDvsn.code}">${payDvsn.codenm}</option>
-								</c:forEach>
-							</select>
-                    	</td>
-                  	</tr>
                   	<tr style="display: none;">
 						<th>오전 좌석 금액</th>
 						<td><input type="hidden" id="payAmCost" value=0></td>
@@ -1471,7 +1451,6 @@
 		fn_checkForm : function() {
 		    if (any_empt_line_span("bld_seat_add", "seatStr", "좌석 시작 카운터을 선택해주세요.","sp_message", "savePage") == false) return;
 		    if (any_empt_line_span("bld_seat_add", "seatEnd", "좌석 종료 카운터를 선택해주세요.","sp_message", "savePage") == false) return;
-		    if (any_empt_line_span("bld_seat_add", "seatDvsn", "좌석 구분을 선택해주세요.","sp_message", "savePage") == false) return;
 		    if (fnIntervalCheck($("#seatStr").val(), $("#seatEnd").val(), "시작이 종료 보다 클수 없습니다.") == false) return;
 		    
 			var commentTxt = ($("#mode").val() == "Ins") ? "신규 구역 정보를 등록 하시겠습니까?" : "입력한 구역 정보를 저장 하시겠습니까?";
@@ -1488,13 +1467,8 @@
 		        "floorCd": $("#floorCd").val(),
 		        "partCd": $("#partCd").val(),
 		        "seatStr": $("#seatStr").val(),
-		        "seatEnd": $("#seatEnd").val(),
-		        "seatDvsn": $("#seatDvsn").val(),
-		        "payDvsn": $("#payDvsn").val(),
-		        "payAmCost": fn_emptyReplace($('#payAmCost').val(), "0"),
-		        "payPmCost": fn_emptyReplace($('#payPmCost').val(), "0"),
+		        "seatEnd": $("#seatEnd").val()
 		    };
-		    
 		    
 			fn_Ajax
 		    (
@@ -1529,8 +1503,6 @@
 	 	    } else {
 	 	        $("#seatStr").val("1");
 	 	        $("#seatEnd").val("1");
-	 	       	$("#seatDvsn").val("");
-	 	      	$("#payDvsn").val("");
 	 	       	$("#payAmCost").val("0");
 	 	      	$("#payPmCost").val("0");
 	 	        $("#bld_seat_add").bPopup();

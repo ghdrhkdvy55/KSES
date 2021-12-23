@@ -56,7 +56,8 @@ public class Scheduler {
 	 * 
 	 * @throws Exception
 	 */
-	/*@Scheduled(cron = "0 0/1 * * * * ")*/
+
+	/* @Scheduled(cron = "0 0/10 * * * * ") */
 	@Transactional(rollbackFor = Exception.class)
 	public void resvNoshowScheduler() throws Exception {
 		int errorCount = 0; 
