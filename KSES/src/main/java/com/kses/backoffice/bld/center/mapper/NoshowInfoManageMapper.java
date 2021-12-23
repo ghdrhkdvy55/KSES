@@ -6,6 +6,8 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 
 import com.kses.backoffice.bld.center.vo.NoshowInfo;
+import com.kses.backoffice.rsv.reservation.vo.NoShowHisInfo;
+import com.kses.backoffice.rsv.reservation.vo.ResvInfo;
 
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 
@@ -13,13 +15,13 @@ import egovframework.rte.psl.dataaccess.mapper.Mapper;
 public interface NoshowInfoManageMapper {
 	public List<Map<String, Object>> selectNoshowInfoList(@Param("centerCd") String centerCd) throws Exception;
 	
-	public int insertNoshowResvInfo_R1() throws Exception;
+	public List<Map<String, Object>> selectNoshowResvInfo_R1() throws Exception; 
 	
-	public int updateNoshowResvInfoCancel_R1() throws Exception;
+	public List<Map<String, Object>> selectNoshowResvInfo_R2() throws Exception; 
 	
-	public int insertNoshowResvInfo_R2() throws Exception;
+	public int insertNoshowResvInfo(NoShowHisInfo noshowHisInfo) throws Exception;
 	
-	public int updateNoshowResvInfoCancel_R2() throws Exception;
+	public int updateNoshowResvInfoCancel(ResvInfo resvInfo) throws Exception;
 	
 	public int updateNoshowInfo(@Param("noshowInfoList") List<NoshowInfo> noshowInfoList) throws Exception;
 	
