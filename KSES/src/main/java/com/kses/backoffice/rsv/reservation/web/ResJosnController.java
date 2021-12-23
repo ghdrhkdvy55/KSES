@@ -177,11 +177,6 @@ public class ResJosnController {
 					resInfo.setTradNo(node.get("Trade_No").asText());
 
 					resService.resPriceChange(resInfo);
-					
-					UserInfo userInfo = new UserInfo();
-					userInfo.setUserId(SmartUtil.NVL(resvInfo.get("user_id"),""));
-					userInfo.setUserCardPassword(SmartUtil.encryptPassword(jsonObject.get("Card_Pw").toString(), "SHA-256"));
-					userService.updateUserCardPwInfo(userInfo);
 				} else {
 					for (speedon direction : speedon.values()) {
 						if (direction.getCode().equals(node.get("Error_Cd").asText())) {

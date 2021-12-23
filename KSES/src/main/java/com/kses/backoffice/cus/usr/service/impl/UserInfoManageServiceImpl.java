@@ -54,12 +54,6 @@ public class UserInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 		// TODO Auto-generated method stub
 		return userMapper.updateUserRcptInfo(vo);
 	}
-	
-	@Override
-	public int updateUserCardPwInfo(UserInfo vo) throws Exception {
-		// TODO Auto-generated method stub
-		return userMapper.updateUserCardPwInfo(vo);
-	}
 
 	@Override
 	public boolean deleteUserInfo(String delCds) throws Exception {

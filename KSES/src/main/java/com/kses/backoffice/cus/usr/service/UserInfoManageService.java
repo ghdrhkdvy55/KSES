@@ -17,7 +17,5 @@ public interface UserInfoManageService {
     
     int updateUserRcptInfo(UserInfo vo) throws Exception;
     
-    int updateUserCardPwInfo(UserInfo vo) throws Exception;
-    
     boolean deleteUserInfo(String delCds) throws Exception;
 }
