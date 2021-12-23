@@ -355,7 +355,6 @@
 		        }
 		        $("#mng_user_add").bPopup();
            },fn_CheckForm  : function (){
-        	   alert("checkform");
         	   if (any_empt_line_span("mng_user_add", "empNo", "사번을 입력해 주세요.","sp_message", "savePage") == false) return;
         	   if ($("#mode").val() == "Ins" && $("#idCheck").val() != "Y"){
 				   if (any_empt_line_span("mng_user_add", "idCheck", "중복체크가 안되었습니다.","sp_message", "savePage") == false) return;
@@ -418,9 +417,7 @@
 			  var params = {'empNo':$("#hid_DelCode").val() };		  
 			  fn_uniDelAction("/backoffice/mng/empDelete.do", "GET",params, false, "jqGridFunc.fn_search");
 		  }, fn_idCheck : function (){
-	        	//공용으로 활용 할지 정리 필요 
-	        	
-	        	alert(any_empt_line_span("mng_user_add", "empNo", "사번을 입력해 주세요.","sp_message", "savePage"));
+	        	//공용으로 활용 할지 정리 필요 	        	
 	        	if (any_empt_line_span("mng_user_add", "empNo", "사번을 입력해 주세요.","sp_message", "savePage") == false) return;
 	        	var url = "/backoffice/mng/empNoCheck.do";
     	        var param =  {"empNo" : $("#empNo").val()};

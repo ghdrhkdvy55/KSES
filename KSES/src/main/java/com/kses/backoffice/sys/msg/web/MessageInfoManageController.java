@@ -378,7 +378,7 @@ public class MessageInfoManageController {
 						searchVO_U.put("firstIndex", 0);
 						searchVO_U.put("recordCountPerPage", 1000);
 						
-						searchVO_U.put("searchCenterCd", SmartUtil.NVL(map.get("searchCenter"), "").toString());
+						searchVO_U.put("searchCenterCd", SmartUtil.NVL(map.get("sendCnt"), "").toString());
 						searchVO_U.put("searchFrom",  SmartUtil.NVL(map.get("from"), "").toString());
 						searchVO_U.put("searchTo",  SmartUtil.NVL(map.get("to"), "").toString());
 						searchVO_U.put("searchDayCondition",  "resvDate");
