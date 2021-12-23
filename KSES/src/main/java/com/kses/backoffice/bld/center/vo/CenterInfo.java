@@ -97,4 +97,6 @@ public class CenterInfo {
 	 private String centerStandMax = "";
 	 
 	 private String centerEntryPayCost = "";
+	 
+	 private String centerRbmCd = "";
 }

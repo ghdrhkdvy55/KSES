@@ -292,7 +292,7 @@ public class ResJosnController {
 				String tradNo = attempInfos[6];
 				String resvEntryDvsn = attempInfos[7];
 				String resvPayCost = attempInfos[8];
-				String center_speed_cd = attempInfos[9];
+				String center_rbm_cd = attempInfos[9];
 				String inotMsg = attempInfos[10];
 
 				String userPhone = attempInfos[11];
@@ -327,7 +327,7 @@ public class ResJosnController {
 
 				// 현재 날짜/시간
 				if (centerPilotYn.equals("Y") && !tradNo.equals("") && Integer.valueOf(resvPayCost) > 0) {
-					// 결제 먼저 하기
+				// 결제 먼저 하기
 
 				} else {
 					ERROR_CD = "ERROR_04";
@@ -337,7 +337,7 @@ public class ResJosnController {
 					return model;
 
 				}
-				if (!center_speed_cd.equals(qrCneterCd)) {
+				if (!center_rbm_cd.equals(qrCneterCd)) {
 					ERROR_CD = "ERROR_06";
 					ERROR_MSG = "장소 오류.";
 					model.addObject("ERROR_CD", ERROR_CD);
@@ -462,7 +462,7 @@ public class ResJosnController {
 						+ SmartUtil.NVL(resInfo.get("trad_no"), "").toString() + ":"
 						+ SmartUtil.NVL(resInfo.get("resv_entry_dvsn"), "").toString() + ":"
 						+ SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString() + ":"
-						+ SmartUtil.NVL(resInfo.get("center_speed_cd"), "").toString() + ":" + inotMsg + ":"
+						+ SmartUtil.NVL(resInfo.get("center_rbm_cd"), "").toString() + ":" + inotMsg + ":"
 						+ SmartUtil.NVL(resInfo.get("user_phone"), "").toString() + ":"
 						+ SmartUtil.NVL(resInfo.get("center_nm"), "").toString() + ":"
 						+ SmartUtil.NVL(resInfo.get("seat_nm"), "").toString());

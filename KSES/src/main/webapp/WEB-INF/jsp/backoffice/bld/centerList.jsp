@@ -134,21 +134,23 @@
                     		<label for="centerPilotYn_Y"><input id="centerPilotYn_Y" type="radio" name="centerPilotYn" value="Y" checked>Y</label>
                     		<label for="centerPilotYn_N"><input id="centerPilotYn_N" type="radio" name="centerPilotYn" value="N">N</label>
                   		</td>
-                  		<th>SPEEDON CODE</th>
-	                  	<td><input type="text" id="centerSpeedCd"  name="centerSpeedCd"></td>
-					</tr>
-					<tr>
-						<th>입석 여부</th>
+                  		<th>입석 여부</th>
 	                  	<td>
                     		<label for="centerStandYn_Y"><input id="centerStandYn_Y" type="radio" name="centerStandYn" value="Y" checked>Y</label>
                     		<label for="centerStandYn_N"><input id="centerStandYn_N" type="radio" name="centerStandYn" value="N">N</label>
                   		</td>
-						<th>최대 입석수</th>
-	                  	<td><input type="text" id="centerStandMax" name="centerStandMax" onkeypress="onlyNum();"></td>
 					</tr>
 					<tr>
-						<th>지점 입장료</th>
+						<th>최대 입석수</th>
+	                  	<td><input type="text" id="centerStandMax" name="centerStandMax" onkeypress="onlyNum();"></td>
+	                  	<th>지점 입장료</th>
 	                  	<td><input type="text" id="centerEntryPayCost" name="centerEntryPayCost" onkeypress="onlyNum();"></td>
+					</tr>
+					<tr>
+	                  	<th>SPEEDON CODE</th>
+	                  	<td><input type="text" id="centerSpeedCd"  name="centerSpeedCd"></td>
+	                  	<th>RBM CODE</th>
+	                  	<td><input type="text" id="centerRbmCd" name="centerRbmCd" onkeypress="onlyNum();"></td>
 					</tr>
 				</tbody>
 			</table>
@@ -294,6 +296,7 @@
 		if($("#loginAuthorCd").val() != "ROLE_ADMIN" && $("#loginAuthorCd").val() != "ROLE_SYSTEM") {
 			isMultiSelect = false;
 			$(".right_box").eq(0).hide();
+			$(".detail_table > tbody > tr").eq(8).hide();
 		}
 		
 		jqGridFunc.setGrid("mainGrid");
@@ -540,6 +543,7 @@
 				$("input:radio[name='centerStandYn']:radio[value='Y']").prop('checked', true);
 				$("#centerStandMax").val("");
 				$("#centerEntryPayCost").val("");
+				$("#centerRbmCd").val("");
 				$("input:radio[name='useYn']:radio[value='Y']").prop('checked', true);
 				
 				
@@ -576,6 +580,7 @@
 							$("input:radio[name='centerStandYn']:radio[value='" + obj.center_stand_yn + "']").prop('checked', true);
 							$("#centerStandMax").val(obj.center_stand_max);
 							$("#centerEntryPayCost").val(obj.center_entry_pay_cost);
+							$("#centerRbmCd").val(obj.center_rbm_cd);
 							$("#ir3").val(obj.center_info);
 							fnCreatCheckbox("sp_floorInfo", $("#startFloor").val().replace("CENTER_FLOOR_", ""),  $("#endFloor").val().replace("CENTER_FLOOR_", ""), obj.floor_info, "floorInfos", "층") ;
 						}
@@ -1110,6 +1115,7 @@
      	   	formData.append('centerStandYn', $('input[name=centerStandYn]:checked').val());
      	    formData.append('centerStandMax' , $("#centerStandMax").val());
      	    formData.append('centerEntryPayCost' , $("#centerEntryPayCost").val());
+     	    formData.append('centerRbmCd' , $("#centerRbmCd").val());
      	   
      	    uniAjaxMutipart
      	    (
