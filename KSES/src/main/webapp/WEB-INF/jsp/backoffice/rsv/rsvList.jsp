@@ -917,6 +917,7 @@
 				"partCd" : $("#resvPartCd").val(),
 				"seatCd" : $(".pop_seat li.usable").attr("id"),
 				"resvPayCost" : $(".pop_seat li.usable").data("seat-paycost"),
+				"resvEntryDvsn" : "ENTRY_DVSN_2",
 				"checkDvsn" : division
 			}
 			
@@ -1052,6 +1053,7 @@
 				"userId" : $("#longResvUserId").val(),
 				"resvPayCost" : $("#longResvPayCost").val(),
 				"resvUserNm" : $("#longResvUserName").val(),
+				"longResvEmpNo" : $("#longResvEmpNo").val(),
 				"resvUserClphn" : $("#longResvUserPhone").val(),
 				"resvUserAskYn" : "Y",
 				"resvIndvdlinfoAgreYn" : "Y"

@@ -128,6 +128,9 @@ public class ResvInfo {
 	
 	// 장기예약일 리스트
 	private List<String> resvDateList;
+	
+	// 장기예약 담당자 사번
+	private String longResvEmpNo = "";
 		
 	// 결제 구분
 	private String resvPayDvsn = "";
@@ -143,8 +146,4 @@ public class ResvInfo {
 	
 	// 입력 구분
 	private String mode = "";
-	
-	// 입력 구분
-	private String regId = "";
-	
 }

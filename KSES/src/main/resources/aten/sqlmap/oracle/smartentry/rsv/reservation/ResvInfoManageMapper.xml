@@ -370,7 +370,7 @@
     
 	<!-- 회원 장기 예약정보 등록 -->
     <insert id="insertLongResvInfo">    
-		INSERT INTO TSER_RESV_INFO_I 
+		INSERT INTO TSER_LONG_RESV_INFO_I 
 		(
 			LONG_RESV_SEQ, SEASON_CD, CENTER_CD, FLOOR_CD, PART_CD, 
 			SEAT_CD, LONG_RESV_START_DT, LONG_RESV_END_DT, USER_ID, 
@@ -379,8 +379,8 @@
 		VALUES 
 		(
 			#{longResvSeq}, #{seasonCd, jdbcType=VARCHAR}, #{centerCd, jdbcType=VARCHAR}, #{floorCd, jdbcType=VARCHAR}, #{partCd, jdbcType=VARCHAR}, 
-			#{seatCd, jdbcType=VARCHAR}, #{resvDateFrom, jdbcType=VARCHAR}, #{resvDateTo, jdbcType=VARCHAR}, #{adminId, jdbcType=VARCHAR},
-			SYSDATE, #{regId, jdbcType=VARCHAR}, SYSDATE, #{regId, jdbcType=VARCHAR}, 
+			#{seatCd, jdbcType=VARCHAR}, #{resvDateFrom, jdbcType=VARCHAR}, #{resvDateTo, jdbcType=VARCHAR}, #{userId, jdbcType=VARCHAR},  
+			#{longResvEmpNo, jdbcType=VARCHAR}, SYSDATE, #{adminId, jdbcType=VARCHAR}, SYSDATE, #{adminId, jdbcType=VARCHAR}
 		)
     </insert>
     
@@ -390,7 +390,7 @@
     		FLOOR_CD = #{params.floorCd},
     		PART_CD = #{params.partCd},
     		SEAT_CD = #{params.seatCd},
-    		RESV_PAY_COST = #{params.resvPayCost},
+    		RESV_PAY_COST = FN_PAYCOST(#{params.centerCd}, #{params.resvPayCost}, #{params.resvEntryDvsn}),
     		LAST_UPDUSR_ID = #{params.userId},
     		LAST_UPDT_DTM = SYSDATE
     	WHERE RESV_SEQ = #{params.resvSeq}

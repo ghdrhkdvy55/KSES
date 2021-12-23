@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -190,6 +191,7 @@ public class ResvInfoManageController {
 	}
 	
 	@RequestMapping (value="longResvInfoUpdate.do")
+	@Transactional(rollbackFor = Exception.class)
 	public ModelAndView rsvLongSeatUpdate(	HttpServletRequest request, 
 											@RequestBody ResvInfo vo, 
 											BindingResult result) throws Exception {
@@ -210,10 +212,8 @@ public class ResvInfoManageController {
 			List<String> resvDateList = resvService.selectResvDateList(vo);
 			vo.setResvDateList(resvDateList);
 			
-			LOGGER.info(vo.getLongResvSeq());
 			int ret = resvService.updateUserLongResvInfo(vo);
 			
-			LOGGER.info(vo.getLongResvSeq());
 			if(ret > 0) {
 				ret = resvService.updateLongResvInfo(vo); 
 				if(ret > 0) {
