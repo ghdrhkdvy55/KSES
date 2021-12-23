@@ -12,7 +12,12 @@
 			FROM 	
 			(	
 				SELECT A.USER_ID, A.USER_NM,
-				A.USER_PHONE, A.USER_EMAIL, A.USER_SEX_MF, TO_CHAR(TO_DATE(A.USER_BIRTH_DY, 'yyyy-mm-dd'), 'yyyy-mm-dd') AS USER_BIRTH_DY
+				A.USER_PHONE, A.USER_EMAIL,
+				CASE A.USER_SEX_MF 
+					WHEN 'M' THEN '남성' 
+					ELSE '여성' 
+				END AS USER_SEX_MF,
+				TO_CHAR(TO_DATE(A.USER_BIRTH_DY, 'yyyy-mm-dd'), 'yyyy-mm-dd') AS USER_BIRTH_DY
 				FROM TSER_USER_INFO_I A
 				WHERE A.USER_DVSN = 'USER_DVSN_1'
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
