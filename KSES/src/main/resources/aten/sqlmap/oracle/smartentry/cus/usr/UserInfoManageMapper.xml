@@ -13,7 +13,7 @@
 			(	
 				SELECT USER_ID, USER_NM, USER_PHONE, USER_SEX_MF, USER_BIRTH_DY, 
 				       TO_CHAR( LAST_UPDT_DTM , 'yyyy-MM-dd') LAST_UPDT_DTM, LAST_UPDUSR_ID
-				FROM TEST_USER_INFO A
+				FROM TSER_USER_INFO_I A
 				WHERE 1=1
 				AND USER_DVSN = 'USER_DVSN_1'
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
@@ -52,7 +52,7 @@
 		SELECT 
 			USER_ID, USER_NM, USER_PHONE, USER_SEX_MF, USER_BIRTH_DY, LAST_UPDUSR_ID, LAST_UPDT_DTM,
 			USER_RCPT_YN, USER_RCPT_DVSN, USER_RCPT_NUMBER
-		FROM TEST_USER_INFO 
+		FROM TSER_USER_INFO_I 
 		WHERE USER_ID = #{userId}
    	</select>
    	
@@ -66,13 +66,13 @@
 				WHEN A.VACNTN_DT IS NULL THEN 'NO_INFO'  
 				WHEN A.VACNTN_DT > TO_CHAR(ADD_MONTHS(SYSDATE,-6),'YYYYMMDD') THEN 'Y'
 			ELSE 'N' END AS PASS_YN
-		FROM TEST_USER_INFO A
+		FROM TSER_USER_INFO_I A
 		WHERE USER_ID = #{userId, jdbcType=VARCHAR}
 	]]>	
    	</select>
 	
 	<insert id="insertUserInfo">
-	    MERGE INTO TEST_USER_INFO A
+	    MERGE INTO TSER_USER_INFO_I A
 	    USING DUAL B
 	    ON 
 		(	
@@ -115,12 +115,12 @@
         		USER_RCPT_YN AS userRcptYn,
         		USER_RCPT_DVSN AS userRcptDvsn,
         		USER_RCPT_NUMBER AS userRcptNumber 
-        	FROM TEST_USER_INFO WHERE USER_ID = #{userId, jdbcType=VARCHAR}   
+        	FROM TSER_USER_INFO_I WHERE USER_ID = #{userId, jdbcType=VARCHAR}   
     	</selectKey>    
 	</insert>
 
 	<update id="updateUserInfo">
-		UPDATE TEST_USER_INFO SET 
+		UPDATE TSER_USER_INFO_I SET 
 			USER_NM = #{userNm, jdbcType=VARCHAR}, 
 			USER_PHONE = #{userPhone, jdbcType=VARCHAR}, 
 			USER_SEX_MF = #{userSexMf, jdbcType=VARCHAR}, 
@@ -131,7 +131,7 @@
    	</update>
    	
 	<update id="updateUserRcptInfo">
-		UPDATE TEST_USER_INFO SET 
+		UPDATE TSER_USER_INFO_I SET 
 			USER_RCPT_YN = #{userRcptYn, jdbcType=VARCHAR}, 
 			USER_RCPT_DVSN = #{userRcptDvsn, jdbcType=VARCHAR}, 
 			USER_RCPT_NUMBER = #{userRcptNumber, jdbcType=VARCHAR},
@@ -142,7 +142,7 @@
 
    	<delete id="deleteUserInfo">
    	    <foreach collection="delCds" item="item" separator=";" open="DECLARE BEGIN" close="; END;">  
-   	         DELETE FROM TEST_USER_INFO  WHERE USER_ID= #{item}
+   	         DELETE FROM TSER_USER_INFO_I  WHERE USER_ID= #{item}
 	    </foreach>		
    	</delete>
 </mapper>

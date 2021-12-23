@@ -16,7 +16,7 @@
                        CASE INOUT_DVSN WHEN 'IN' THEN '입장'
                        ELSE '퇴장'
                        END AS INOUT_DVSN_TEXT
-				FROM TSER_QR_CHECK_H A, TSER_RESV_INFO_I B, TEST_USER_INFO C
+				FROM TSER_QR_CHECK_H A, TSER_RESV_INFO_I B, TSER_USER_INFO_I C
 				WHERE A.RESV_SEQ = B.RESV_SEQ
 				AND A.USER_ID = C.USER_ID
 				<if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(params.searchKeyword)">
@@ -42,7 +42,7 @@
    			SELECT A.QR_CHECK_SEQ, A.RESV_SEQ, B.USER_ID, A.QR_CHECK_TM,
 	               A.INOUT_DVSN, A.RCV_DT, A.RCV_CD,
 	               C.USER_NM, ROW_NUMBER() OVER (ORDER BY ROWNUM DESC) AS RNUM
-	        FROM  TSER_QR_CHECK_H A, TSER_RESV_INFO_I B, TEST_USER_INFO C
+	        FROM  TSER_QR_CHECK_H A, TSER_RESV_INFO_I B, TSER_USER_INFO_I C
 			WHERE A.RESV_SEQ = B.RESV_SEQ
 			AND A.USER_ID = C.USER_ID
 			<choose>
