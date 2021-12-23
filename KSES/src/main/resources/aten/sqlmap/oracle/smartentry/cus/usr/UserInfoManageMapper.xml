@@ -140,6 +140,12 @@
 		WHERE USER_ID = #{userId}
    	</update>
    	
+	<update id="updateUserRcptInfo">
+		UPDATE TEST_USER_INFO SET 
+			USER_CARD_PASSWORD = #{userCardPassword, jdbcType=VARCHAR}                      
+		WHERE USER_ID = #{userId}
+   	</update>
+   	
    	<delete id="deleteUserInfo">
    	    <foreach collection="delCds" item="item" separator=";" open="DECLARE BEGIN" close="; END;">  
    	         DELETE FROM TEST_USER_INFO  WHERE USER_ID= #{item}
