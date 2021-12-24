@@ -194,6 +194,8 @@
 					{label: '전화번호', name:'user_phone', index:'user_phone', align:'center'},
 					{label: '유형', name:'blklst_dvsn', index:'blklst_dvsn', align:'center'},
 					{label: '상세내용', name:'blklst_reason', index:'blklst_reason', align:'center'},
+					{label: '노쇼카운트', name:'user_noshow_cnt', index:'user_noshow_cnt', align:'center'},
+					{label: '변경일자', name:'user_noshow_last_dt', index:'user_noshow_last_dt', align:'center'},
 					{label: '해제', name:'blklst_cancel_yn', index:'blklst_cancel_yn', align:'center', sortable : false, formatter:jqGridFunc.buttonSetting},
 				], 
 				rowNum : 10,  //레코드 수
@@ -213,6 +215,10 @@
 				refresh : true,
 				loadComplete : function (data) {
 					$("#sp_totcnt").text(data.paginationInfo.totalRecordCount);
+					$("#"+gridOption).jqGrid('hideCol', ["user_noshow_cnt", "user_noshow_last_dt"]);
+					//resize
+					gridResize(gridOption);
+					
 				},
 				loadError:function(xhr, status, error) {
 					alert(error); 
@@ -283,6 +289,7 @@
 					cm = $myGrid.jqGrid('getGridParam', 'colModel'); 
 					return (cm[i].name === 'cb'); 
 				}
+				
 			});
 		}, 
     	useYn : function(cellvalue, options, rowObject) {
@@ -319,10 +326,33 @@
 				}),
 				loadComplete : function(data) {
 					$("#sp_totcnt").text(data.paginationInfo.totalRecordCount);
+					if ($("#searchBlklstDvsn").val() == "BLKLST_DVSN_3"){
+						$("#mainGrid").jqGrid('showCol', ["user_noshow_cnt", "user_noshow_last_dt"]);
+					}else {
+						$("#mainGrid").jqGrid('hideCol', ["user_noshow_cnt", "user_noshow_last_dt"]);
+					}
+					//resize
+					gridResize("mainGrid");
 				}
 			}).trigger("reloadGrid");
  		}
 	}
+	function gridResize(gridId) { 
+		maxGridWidth = $("#contents").width() - 2; 		
+		resizeJqGridWidth(gridId, "contents", maxGridWidth);
+
+	}
+	function resizeJqGridWidth(grid_id, div_id, width){ 
+		// window에 resize 이벤트를 바인딩 한다. 
+		$(window).bind('resize', function() { 
+			// 그리드의 width 초기화 
+			$('#' + grid_id).setGridWidth(width, false); 
+			// 그리드의 width를 div 에 맞춰서 적용
+			$('#' + grid_id).setGridWidth($('#' + div_id).width() , false); 
+			//Resized to new width as per window 
+		    }).trigger('resize'); 
+	}
+
 		
 	var blackUserService = {
 		fn_changeBlklstDvsn : function(el){
