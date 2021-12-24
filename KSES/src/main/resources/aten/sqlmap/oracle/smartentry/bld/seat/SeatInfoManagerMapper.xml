@@ -143,7 +143,6 @@
 	}
     </insert>
     
-    <!-- PAYCOST 확인 -->
     <insert id="insertFloorSeatInfo">
 	{CALL
 		DECLARE

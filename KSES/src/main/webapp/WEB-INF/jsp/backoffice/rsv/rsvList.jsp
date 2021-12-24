@@ -507,6 +507,7 @@
 					{label: 'NO', name:'rnum', index:'rnum', align:'center', width : "50px"},
 					{label: '지점', name:'center_nm', index:'center_nm', align:'center'},
 					{label: '좌석정보', name:'seat_nm', index:'seat_nm', align:'center'},
+					{label: '구역등급', name:'part_class', index:'part_class', align:'center'},					
 					{label: '예약번호', name:'resv_seq', index:'resv_seq', align:'center'},
 					{label: '아이디', name:'user_id', index:'user_id', align:'center'},
 					{label: '이름', name:'user_nm', index:'user_nm', align:'center'},

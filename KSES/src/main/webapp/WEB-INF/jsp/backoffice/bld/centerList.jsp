@@ -187,8 +187,8 @@
 				<tr>
 	            	<th>요일</th>
 	            	<th>회원 오픈 시간</th>
-	            	<th>비회원 오픈 시간</th>
 	            	<th>회원 예약 종료 시간</th>
+	            	<th>비회원 오픈 시간</th>
 	            	<th>비회원 예약 종료 시간</th>
 	            	<th>최종 수정 일자</th>
             	</tr>
@@ -226,7 +226,8 @@
 			<thead>
 				<tr>
 		            <th>요일</th>
-		            <th>자동취소 시간</th>
+		            <th>1차 자동취소 시간</th>
+		            <th>2차 자동취소 시간</th>
 		            <th>최종 수정 일자</th>
 		            <th>최종 수정자</th>
 	            </tr>
@@ -352,7 +353,8 @@
 					{label: '연락처', name:'center_tel', index:'center_tel', align:'center'},
 					{label: '주소', name:'center_addr', index:'center_addr', align:'center', formatter:jqGridFunc.address},
 					{label: '사용유무', name:'use_yn', index:'use_yn', align:'center', sortable : false, formatter:jqGridFunc.useYn},
-					{label: '사전입장시간', name:'preOpenSetting', index:'preOpenSetting', align:'center', sortable : false, formatter:jqGridFunc.preOpenSettingButton},
+					{label: '최대입석수', name:'center_stand_max', index:'center_stand_max', align:'center'},
+					{label: '사전예약시간', name:'preOpenSetting', index:'preOpenSetting', align:'center', sortable : false, formatter:jqGridFunc.preOpenSettingButton},
 					{label: '자동취소', name: 'noshowSetting',  index:'noshowSetting', align:'center', sortable : false, formatter:jqGridFunc.noshowSettingButton},
 					{label: '층 관리', name: 'floorInfoSetting',  index:'floorInfoSetting', align:'center', sortable : false, formatter:jqGridFunc.floorInfoButton},
 					{label: '휴일 관리', name: 'center_holy_use_yn', index:'center_holy_use_yn', align:'center', sortable : false, formatter:jqGridFunc.holyDaySettingButton},
@@ -634,8 +636,8 @@
  								setHtml += "<tr id='" + obj.optm_cd + "'>";
 								setHtml += "<td style='color : " + color + ";'>" + obj.open_day_text + "</td>";
 								setHtml += "<td><input type='text' id='" + obj.optm_cd + "_open_member_tm" + "'value='" + obj.open_member_tm + "' onKeyup='inputTimeFormat(this);' placeholder='HH:MM' maxlength='5'/></td>";
-								setHtml += "<td><input type='text' id='" + obj.optm_cd + "_open_guest_tm" +"'value='" + obj.open_guest_tm + "' onKeyup='inputTimeFormat(this);' placeholder='HH:MM' maxlength='5'/></td>";
 								setHtml += "<td><input type='text' id='" + obj.optm_cd + "_close_member_tm" + "'value='" + obj.close_member_tm + "' onKeyup='inputTimeFormat(this);' placeholder='HH:MM' maxlength='5'/></td>";
+								setHtml += "<td><input type='text' id='" + obj.optm_cd + "_open_guest_tm" +"'value='" + obj.open_guest_tm + "' onKeyup='inputTimeFormat(this);' placeholder='HH:MM' maxlength='5'/></td>";
 								setHtml += "<td><input type='text' id='" + obj.optm_cd + "_close_guest_tm" +"'value='" + obj.close_guest_tm + "' onKeyup='inputTimeFormat(this);' placeholder='HH:MM' maxlength='5'/></td>";
 								setHtml += "<td>" + obj.last_updt_dtm + "</td>";
 								setHtml += "</tr>";
@@ -783,8 +785,8 @@
  								setHtml += "<tr id='" + obj.noshow_cd + "'>";
 								setHtml += "<td style='color : " + color + ";'>" + obj.noshow_day_text + "</td>";
 								/* 오전 노쇼,오후 노쇼 기능 제거
-								setHtml += "<td><input type='text' id='" + obj.noshow_cd + "_noshow_am_tm" + "'value='" + obj.noshow_am_tm + "' onKeyup='inputTimeFormat(this);' placeholder='HH:MM' maxlength='5'/></td>";
-								setHtml += "<td><input type='text' id='" + obj.noshow_cd + "_noshow_pm_tm" +"'value='" + obj.noshow_pm_tm + "' onKeyup='inputTimeFormat(this);' placeholder='HH:MM' maxlength='5'/></td>"; */
+								setHtml += "<td><input type='text' id='" + obj.noshow_cd + "_noshow_am_tm" + "'value='" + obj.noshow_am_tm + "' onKeyup='inputTimeFormat(this);' placeholder='HH:MM' maxlength='5'/></td>";*/
+								setHtml += "<td><input type='text' id='" + obj.noshow_cd + "_noshow_pm_tm" +"'value='" + obj.noshow_pm_tm + "' onKeyup='inputTimeFormat(this);' placeholder='HH:MM' maxlength='5'/></td>"; 
 								setHtml += "<td><input type='text' id='" + obj.noshow_cd + "_noshow_all_tm" +"'value='" + obj.noshow_all_tm + "' onKeyup='inputTimeFormat(this);' placeholder='HH:MM' maxlength='5'/></td>";
 								setHtml += "<td>" + obj.last_updt_dtm + "</td>";
 								setHtml += "<td>" + obj.last_updusr_id + "</td>";
@@ -818,8 +820,8 @@
 				var param = new Object();
 					param['noshowCd'] = noshowCd;
 				/* 오전 노쇼,오후 노쇼 기능 제거
-				param['noshowAmTm'] = $("#" + noshowCd + "_noshow_am_tm").val().replace(/\:/g, "");
-				param['noshowPmTm'] = $("#" + noshowCd + "_noshow_pm_tm").val().replace(/\:/g, ""); */
+				param['noshowAmTm'] = $("#" + noshowCd + "_noshow_am_tm").val().replace(/\:/g, "");*/
+				param['noshowPmTm'] = $("#" + noshowCd + "_noshow_pm_tm").val().replace(/\:/g, ""); 
 				param['noshowAllTm'] = $("#" + noshowCd + "_noshow_all_tm").val().replace(/\:/g, "");
 				params.push(param);
 			});

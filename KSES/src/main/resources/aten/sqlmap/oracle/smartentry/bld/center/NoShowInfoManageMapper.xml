@@ -15,8 +15,8 @@
 			END NOSHOW_DAY_TEXT, 
 			<!-- 오전 노쇼,오후 노쇼 기능 제거
 			TO_CHAR(TO_DATE(NOSHOW_AM_TM,'HH24MI'),'HH24:MI') AS NOSHOW_AM_TM, 
+			-->
 			TO_CHAR(TO_DATE(NOSHOW_PM_TM,'HH24MI'),'HH24:MI') AS NOSHOW_PM_TM,
-			 -->
 			TO_CHAR(TO_DATE(NOSHOW_ALL_TM,'HH24MI'),'HH24:MI') AS NOSHOW_ALL_TM, 
 			TO_CHAR(A.LAST_UPDT_DTM, 'yyyy-mm-dd') AS LAST_UPDT_DTM,
 			A.LAST_UPDUSR_ID,  
@@ -83,8 +83,8 @@
 			UPDATE TSEB_NOSHOW_INFO_M SET 
 				<!-- 오전 노쇼,오후 노쇼 기능 제거
 				NOSHOW_AM_TM = #{item.noshowAmTm, jdbcType=VARCHAR}, 
+				-->
 				NOSHOW_PM_TM = #{item.noshowPmTm, jdbcType=VARCHAR},
-				 -->
 				NOSHOW_ALL_TM = #{item.noshowAllTm, jdbcType=VARCHAR},
 				LAST_UPDT_DTM = SYSDATE
 			WHERE NOSHOW_CD = #{item.noshowCd}
@@ -96,16 +96,18 @@
 		SET 
 			(	
 				<!-- 오전 노쇼,오후 노쇼 기능 제거
-				A.NOSHOW_AM_TM, A.NOSHOW_PM_TM, 
+				A.NOSHOW_AM_TM, 
 				--> 
+				A.NOSHOW_PM_TM, 
 				A.NOSHOW_ALL_TM, A.LAST_UPDT_DTM, A.LAST_UPDUSR_ID
 			) = 
 	   	(
 	   		SELECT 
 	   			<!-- 오전 노쇼,오후 노쇼 기능 제거 
-	   			B.NOSHOW_AM_TM, B.NOSHOW_PM_TM,
+	   			B.NOSHOW_AM_TM,
 	   			 --> 
-	   		B.NOSHOW_ALL_TM, SYSDATE, B.LAST_UPDUSR_ID
+	   			B.NOSHOW_PM_TM,
+	   			B.NOSHOW_ALL_TM, SYSDATE, B.LAST_UPDUSR_ID
 			FROM TSEB_NOSHOW_INFO_M B 
 			WHERE A.NOSHOW_DAY = B.NOSHOW_DAY 
 			AND B.CENTER_CD = #{params.copyCenterCd}
