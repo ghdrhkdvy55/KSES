@@ -64,6 +64,15 @@ public interface ResvInfoManageService {
 	public int updateUserResvInfo(ResvInfo vo) throws Exception;
 	
 	/**
+	 * SPDM 장기예약 정보 등록
+	 * 
+	 * @param vo
+	 * @return
+	 * @throws Exception
+	 */
+	public int updateLongResvInfo(ResvInfo vo) throws Exception;
+	
+	/**
 	 * SPDM 회원 장기예약 정보 등록 및 수정
 	 * 
 	 * @param vo

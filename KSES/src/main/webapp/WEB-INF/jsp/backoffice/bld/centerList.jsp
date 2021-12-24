@@ -134,21 +134,23 @@
                     		<label for="centerPilotYn_Y"><input id="centerPilotYn_Y" type="radio" name="centerPilotYn" value="Y" checked>Y</label>
                     		<label for="centerPilotYn_N"><input id="centerPilotYn_N" type="radio" name="centerPilotYn" value="N">N</label>
                   		</td>
-                  		<th>SPEEDON CODE</th>
-	                  	<td><input type="text" id="centerSpeedCd"  name="centerSpeedCd"></td>
-					</tr>
-					<tr>
-						<th>입석 여부</th>
+                  		<th>입석 여부</th>
 	                  	<td>
                     		<label for="centerStandYn_Y"><input id="centerStandYn_Y" type="radio" name="centerStandYn" value="Y" checked>Y</label>
                     		<label for="centerStandYn_N"><input id="centerStandYn_N" type="radio" name="centerStandYn" value="N">N</label>
                   		</td>
-						<th>최대 입석수</th>
-	                  	<td><input type="text" id="centerStandMax" name="centerStandMax" onkeypress="onlyNum();"></td>
 					</tr>
 					<tr>
-						<th>지점 입장료</th>
+						<th>최대 입석수</th>
+	                  	<td><input type="text" id="centerStandMax" name="centerStandMax" onkeypress="onlyNum();"></td>
+	                  	<th>지점 입장료</th>
 	                  	<td><input type="text" id="centerEntryPayCost" name="centerEntryPayCost" onkeypress="onlyNum();"></td>
+					</tr>
+					<tr>
+	                  	<th>SPEEDON CODE</th>
+	                  	<td><input type="text" id="centerSpeedCd"  name="centerSpeedCd"></td>
+	                  	<th>RBM CODE</th>
+	                  	<td><input type="text" id="centerRbmCd" name="centerRbmCd" onkeypress="onlyNum();"></td>
 					</tr>
 				</tbody>
 			</table>
@@ -185,8 +187,8 @@
 				<tr>
 	            	<th>요일</th>
 	            	<th>회원 오픈 시간</th>
-	            	<th>비회원 오픈 시간</th>
 	            	<th>회원 예약 종료 시간</th>
+	            	<th>비회원 오픈 시간</th>
 	            	<th>비회원 예약 종료 시간</th>
 	            	<th>최종 수정 일자</th>
             	</tr>
@@ -224,7 +226,8 @@
 			<thead>
 				<tr>
 		            <th>요일</th>
-		            <th>자동취소 시간</th>
+		            <th>1차 자동취소 시간</th>
+		            <th>2차 자동취소 시간</th>
 		            <th>최종 수정 일자</th>
 		            <th>최종 수정자</th>
 	            </tr>
@@ -294,6 +297,7 @@
 		if($("#loginAuthorCd").val() != "ROLE_ADMIN" && $("#loginAuthorCd").val() != "ROLE_SYSTEM") {
 			isMultiSelect = false;
 			$(".right_box").eq(0).hide();
+			$(".detail_table > tbody > tr").eq(8).hide();
 		}
 		
 		jqGridFunc.setGrid("mainGrid");
@@ -349,7 +353,8 @@
 					{label: '연락처', name:'center_tel', index:'center_tel', align:'center'},
 					{label: '주소', name:'center_addr', index:'center_addr', align:'center', formatter:jqGridFunc.address},
 					{label: '사용유무', name:'use_yn', index:'use_yn', align:'center', sortable : false, formatter:jqGridFunc.useYn},
-					{label: '사전입장시간', name:'preOpenSetting', index:'preOpenSetting', align:'center', sortable : false, formatter:jqGridFunc.preOpenSettingButton},
+					{label: '최대입석수', name:'center_stand_max', index:'center_stand_max', align:'center'},
+					{label: '사전예약시간', name:'preOpenSetting', index:'preOpenSetting', align:'center', sortable : false, formatter:jqGridFunc.preOpenSettingButton},
 					{label: '자동취소', name: 'noshowSetting',  index:'noshowSetting', align:'center', sortable : false, formatter:jqGridFunc.noshowSettingButton},
 					{label: '층 관리', name: 'floorInfoSetting',  index:'floorInfoSetting', align:'center', sortable : false, formatter:jqGridFunc.floorInfoButton},
 					{label: '휴일 관리', name: 'center_holy_use_yn', index:'center_holy_use_yn', align:'center', sortable : false, formatter:jqGridFunc.holyDaySettingButton},
@@ -540,6 +545,7 @@
 				$("input:radio[name='centerStandYn']:radio[value='Y']").prop('checked', true);
 				$("#centerStandMax").val("");
 				$("#centerEntryPayCost").val("");
+				$("#centerRbmCd").val("");
 				$("input:radio[name='useYn']:radio[value='Y']").prop('checked', true);
 				
 				
@@ -576,6 +582,7 @@
 							$("input:radio[name='centerStandYn']:radio[value='" + obj.center_stand_yn + "']").prop('checked', true);
 							$("#centerStandMax").val(obj.center_stand_max);
 							$("#centerEntryPayCost").val(obj.center_entry_pay_cost);
+							$("#centerRbmCd").val(obj.center_rbm_cd);
 							$("#ir3").val(obj.center_info);
 							fnCreatCheckbox("sp_floorInfo", $("#startFloor").val().replace("CENTER_FLOOR_", ""),  $("#endFloor").val().replace("CENTER_FLOOR_", ""), obj.floor_info, "floorInfos", "층") ;
 						}
@@ -629,8 +636,8 @@
  								setHtml += "<tr id='" + obj.optm_cd + "'>";
 								setHtml += "<td style='color : " + color + ";'>" + obj.open_day_text + "</td>";
 								setHtml += "<td><input type='text' id='" + obj.optm_cd + "_open_member_tm" + "'value='" + obj.open_member_tm + "' onKeyup='inputTimeFormat(this);' placeholder='HH:MM' maxlength='5'/></td>";
-								setHtml += "<td><input type='text' id='" + obj.optm_cd + "_open_guest_tm" +"'value='" + obj.open_guest_tm + "' onKeyup='inputTimeFormat(this);' placeholder='HH:MM' maxlength='5'/></td>";
 								setHtml += "<td><input type='text' id='" + obj.optm_cd + "_close_member_tm" + "'value='" + obj.close_member_tm + "' onKeyup='inputTimeFormat(this);' placeholder='HH:MM' maxlength='5'/></td>";
+								setHtml += "<td><input type='text' id='" + obj.optm_cd + "_open_guest_tm" +"'value='" + obj.open_guest_tm + "' onKeyup='inputTimeFormat(this);' placeholder='HH:MM' maxlength='5'/></td>";
 								setHtml += "<td><input type='text' id='" + obj.optm_cd + "_close_guest_tm" +"'value='" + obj.close_guest_tm + "' onKeyup='inputTimeFormat(this);' placeholder='HH:MM' maxlength='5'/></td>";
 								setHtml += "<td>" + obj.last_updt_dtm + "</td>";
 								setHtml += "</tr>";
@@ -778,8 +785,8 @@
  								setHtml += "<tr id='" + obj.noshow_cd + "'>";
 								setHtml += "<td style='color : " + color + ";'>" + obj.noshow_day_text + "</td>";
 								/* 오전 노쇼,오후 노쇼 기능 제거
-								setHtml += "<td><input type='text' id='" + obj.noshow_cd + "_noshow_am_tm" + "'value='" + obj.noshow_am_tm + "' onKeyup='inputTimeFormat(this);' placeholder='HH:MM' maxlength='5'/></td>";
-								setHtml += "<td><input type='text' id='" + obj.noshow_cd + "_noshow_pm_tm" +"'value='" + obj.noshow_pm_tm + "' onKeyup='inputTimeFormat(this);' placeholder='HH:MM' maxlength='5'/></td>"; */
+								setHtml += "<td><input type='text' id='" + obj.noshow_cd + "_noshow_am_tm" + "'value='" + obj.noshow_am_tm + "' onKeyup='inputTimeFormat(this);' placeholder='HH:MM' maxlength='5'/></td>";*/
+								setHtml += "<td><input type='text' id='" + obj.noshow_cd + "_noshow_pm_tm" +"'value='" + obj.noshow_pm_tm + "' onKeyup='inputTimeFormat(this);' placeholder='HH:MM' maxlength='5'/></td>"; 
 								setHtml += "<td><input type='text' id='" + obj.noshow_cd + "_noshow_all_tm" +"'value='" + obj.noshow_all_tm + "' onKeyup='inputTimeFormat(this);' placeholder='HH:MM' maxlength='5'/></td>";
 								setHtml += "<td>" + obj.last_updt_dtm + "</td>";
 								setHtml += "<td>" + obj.last_updusr_id + "</td>";
@@ -813,8 +820,8 @@
 				var param = new Object();
 					param['noshowCd'] = noshowCd;
 				/* 오전 노쇼,오후 노쇼 기능 제거
-				param['noshowAmTm'] = $("#" + noshowCd + "_noshow_am_tm").val().replace(/\:/g, "");
-				param['noshowPmTm'] = $("#" + noshowCd + "_noshow_pm_tm").val().replace(/\:/g, ""); */
+				param['noshowAmTm'] = $("#" + noshowCd + "_noshow_am_tm").val().replace(/\:/g, "");*/
+				param['noshowPmTm'] = $("#" + noshowCd + "_noshow_pm_tm").val().replace(/\:/g, ""); 
 				param['noshowAllTm'] = $("#" + noshowCd + "_noshow_all_tm").val().replace(/\:/g, "");
 				params.push(param);
 			});
@@ -1110,6 +1117,7 @@
      	   	formData.append('centerStandYn', $('input[name=centerStandYn]:checked').val());
      	    formData.append('centerStandMax' , $("#centerStandMax").val());
      	    formData.append('centerEntryPayCost' , $("#centerEntryPayCost").val());
+     	    formData.append('centerRbmCd' , $("#centerRbmCd").val());
      	   
      	    uniAjaxMutipart
      	    (

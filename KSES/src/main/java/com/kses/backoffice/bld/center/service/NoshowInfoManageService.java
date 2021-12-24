@@ -6,6 +6,8 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 
 import com.kses.backoffice.bld.center.vo.NoshowInfo;
+import com.kses.backoffice.rsv.reservation.vo.NoShowHisInfo;
+import com.kses.backoffice.rsv.reservation.vo.ResvInfo;
 
 public interface NoshowInfoManageService {
 
@@ -19,12 +21,28 @@ public interface NoshowInfoManageService {
 	public List<Map<String, Object>> selectNoshowInfoList(@Param("centerCd") String centerCd) throws Exception;
 	
 	/**
+	 * SPDM 1차 노쇼 예약정보 목록 조회
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public List<Map<String, Object>> selectNoshowResvInfo_R1() throws Exception;
+	
+	/**
+	 * SPDM 2차 노쇼 예약정보 목록 조회
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public List<Map<String, Object>> selectNoshowResvInfo_R2() throws Exception;
+	
+	/**
 	 * SPDM 예약정보 자동취소 정보 입력
 	 * 
 	 * @return
 	 * @throws Exception
 	 */
-	public int insertNoshowResvInfo() throws Exception;
+	public int insertNoshowResvInfo(NoShowHisInfo noshowHisInfo) throws Exception;
 	
 	/**
 	 * SPDM 예약정보 자동취소 정보 갱신
@@ -32,7 +50,7 @@ public interface NoshowInfoManageService {
 	 * @return
 	 * @throws Exception
 	 */
-	public int updateNoshowResvInfoCancel() throws Exception;
+	public int updateNoshowResvInfoCancel(ResvInfo resvInfo) throws Exception;
 	
 	/**
 	 * SPDM 지점 자동취소시간(노쇼) 정보 갱신

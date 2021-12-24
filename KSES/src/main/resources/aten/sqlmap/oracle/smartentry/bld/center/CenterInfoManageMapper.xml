@@ -22,6 +22,7 @@
 		<result property="center_stand_yn" column="CENTER_STAND_YN" jdbcType="VARCHAR" javaType="java.lang.String"/>
     	<result property="center_stand_max" column="CENTER_STAND_MAX" jdbcType="VARCHAR" javaType="java.lang.String"/>
     	<result property="center_entry_pay_cost" column="CENTER_ENTRY_PAY_COST" jdbcType="VARCHAR" javaType="java.lang.String"/>
+    	<result property="center_rbm_cd" column="CENTER_RBM_CD" jdbcType="VARCHAR" javaType="java.lang.String"/>
 	</resultMap>
 	
 	<select id="selectCenterInfoList" resultType="lmap">
@@ -29,14 +30,14 @@
 		(
 			SELECT 
 				SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT,
-				ROW_NUMBER() OVER (ORDER BY A.CENTER_CD DESC) AS RNUM, 
-				CENTER_CD, CENTER_NM, CENTER_TEL,
+				ROW_NUMBER() OVER (ORDER BY A.CENTER_ORDER ASC) AS RNUM, 
+				CENTER_CD, CENTER_NM, CENTER_TEL, CENTER_STAND_MAX, 
 				CASE WHEN LENGTH(CENTER_IMG) > 0 THEN 
 					CENTER_IMG
 				ELSE 
 					'no_image.png'
 				END CENTER_IMG, 
-				CENTER_ZIPCD, CENTER_ADDR1, CENTER_ADDR2, USE_YN, CENTER_HOLY_USE_YN, 
+				CENTER_ZIPCD, CENTER_ADDR1, CENTER_ADDR2, USE_YN, CENTER_HOLY_USE_YN, CENTER_ORDER,
 				TO_CHAR(A.LAST_UPDT_DTM, 'yyyy-mm-dd') AS LAST_UPDT_DTM, LAST_UPDUSR_ID	        
 			FROM TSEB_CENTER_INFO_M A
 			WHERE 1=1        
@@ -53,7 +54,7 @@
 			</if>	
 		) TB
 		WHERE RNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
-		ORDER BY TB.CENTER_CD DESC
+		ORDER BY TB.CENTER_ORDER ASC
 	</select>
         
 	<select id="selectCenterInfoDetail" resultMap="CenterInfoDetail">
@@ -61,7 +62,8 @@
 			CENTER_CD, CENTER_NM, CENTER_ZIPCD, CENTER_ADDR1, CENTER_ADDR2, 
 			CENTER_TEL, CENTER_FAX, CENTER_IMG, CENTER_MAP, CENTER_URL,
 			CENTER_INFO, USE_YN, START_FLOOR, END_FLOOR, FLOOR_INFO, 
-			CENTER_PILOT_YN, CENTER_SPEED_CD, CENTER_STAND_YN, CENTER_STAND_MAX, CENTER_ENTRY_PAY_COST
+			CENTER_PILOT_YN, CENTER_SPEED_CD, CENTER_STAND_YN, CENTER_STAND_MAX, CENTER_ENTRY_PAY_COST,
+			CENTER_RBM_CD
 		 FROM TSEB_CENTER_INFO_M
 		 WHERE CENTER_CD = #{centerCd}		  
     </select>
@@ -71,7 +73,7 @@
          	A.CENTER_CD, A.CENTER_NM 
          FROM TSEB_CENTER_INFO_M A
          WHERE A.USE_YN = 'Y'
-         ORDER BY A.CENTER_NM  ASC
+         ORDER BY A.CENTER_ORDER  ASC
     </select>
     
     <!-- Front -->

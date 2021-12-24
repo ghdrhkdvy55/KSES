@@ -12,8 +12,13 @@
 			FROM 	
 			(	
 				SELECT A.USER_ID, A.USER_NM,
-				A.USER_PHONE, A.USER_EMAIL, A.USER_SEX_MF, TO_CHAR(TO_DATE(A.USER_BIRTH_DY, 'yyyy-mm-dd'), 'yyyy-mm-dd') AS USER_BIRTH_DY
-				FROM TEST_USER_INFO A
+				A.USER_PHONE, A.USER_EMAIL,
+				CASE A.USER_SEX_MF 
+					WHEN 'M' THEN '남성' 
+					ELSE '여성' 
+				END AS USER_SEX_MF,
+				TO_CHAR(TO_DATE(A.USER_BIRTH_DY, 'yyyy-mm-dd'), 'yyyy-mm-dd') AS USER_BIRTH_DY
+				FROM TSER_USER_INFO_I A
 				WHERE A.USER_DVSN = 'USER_DVSN_1'
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
 					 <choose>
@@ -64,7 +69,7 @@
 				ELSE TO_CHAR(A.INDVDLINFO_AGRE_DT, 'yyyy-mm-dd')
 			END AS INDVDLINFO_AGRE_DT,
 			A.VACNTN_DVSN, A.VACNTN_DT, A.VACNTN_ROUND
-		FROM TEST_USER_INFO A
+		FROM TSER_USER_INFO_I A
 		WHERE A.USER_ID = #{userId}
    	</select>
    	
@@ -78,13 +83,13 @@
 				WHEN A.VACNTN_DT IS NULL THEN 'NO_INFO'  
 				WHEN A.VACNTN_DT < TO_CHAR(ADD_MONTHS(SYSDATE,-6),'YYYYMMDD') THEN 'Y'
 			ELSE 'N' END AS PASS_YN
-		FROM TEST_USER_INFO A
+		FROM TSER_USER_INFO_I A
 		WHERE USER_ID = #{userId, jdbcType=VARCHAR}
 	]]>	
    	</select>
    	
 	<update id="updateUser">
-		UPDATE TEST_USER_INFO SET 
+		UPDATE TSER_USER_INFO_I SET 
 			VACNTN_DVSN = #{vacntnDvsn, jdbcType=VARCHAR}, 
 			VACNTN_DT = #{vacntnDt, jdbcType=VARCHAR}, 
 			VACNTN_ROUND = #{vacntnRound, jdbcType=VARCHAR} 

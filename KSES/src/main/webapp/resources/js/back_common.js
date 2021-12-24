@@ -1,3 +1,11 @@
+/*jq그리드 resize*/
+//$(window).bind('resize', function() {
+//// 그리드의 width를 div 에 맞춰서 적용
+//$(_MainGridSelector).setGridWidth($(_MainGridSelector).closest('div.boardlist').width() , true);
+//}).trigger('resize');
+
+
+
 /*이미지 썸네일*/
 $(document).ready(function() {
 var xOffset = 10;
@@ -474,7 +482,6 @@ function yesterDayConfirm(res_day, alert_message){
     var today = yearNow + monthNow + dateNow;
     
     if (parseInt(res_day) < today){
-    	alert(alert_message);
     	return false;
     }else {
     	return true;

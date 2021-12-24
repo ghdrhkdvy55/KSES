@@ -15,8 +15,8 @@
 			END NOSHOW_DAY_TEXT, 
 			<!-- 오전 노쇼,오후 노쇼 기능 제거
 			TO_CHAR(TO_DATE(NOSHOW_AM_TM,'HH24MI'),'HH24:MI') AS NOSHOW_AM_TM, 
+			-->
 			TO_CHAR(TO_DATE(NOSHOW_PM_TM,'HH24MI'),'HH24:MI') AS NOSHOW_PM_TM,
-			 -->
 			TO_CHAR(TO_DATE(NOSHOW_ALL_TM,'HH24MI'),'HH24:MI') AS NOSHOW_ALL_TM, 
 			TO_CHAR(A.LAST_UPDT_DTM, 'yyyy-mm-dd') AS LAST_UPDT_DTM,
 			A.LAST_UPDUSR_ID,  
@@ -26,50 +26,56 @@
 		AND A.CENTER_CD = B.CENTER_CD  
 	</select>
 	
-	<insert id="insertNoshowResvInfo">
+	<select id="selectNoshowResvInfo_R1" resultType="lmap">
 	<![CDATA[
-		INSERT INTO TSEB_NOSHOW_PLAY_H 
-		(
-			NOSHOW_SEQ, 
-			NOSHOW_CD, 
-			RESV_SEQ, 
-			NOSHOW_PLAYTM, 
-			NOSHOW_RELEASE_YN, 
-			NOSHOW_RESULT, 
-			NOSHOW_RESULT_CD
-		)
 		SELECT 
-			SEQ_SEB_NOSHOW_PLAY.NEXTVAL, C.NOSHOW_CD, A.RESV_SEQ, SYSDATE, 'N', 'OK', ''
+			A.RESV_SEQ, B.CENTER_PILOT_YN, C.NOSHOW_CD, A.RESV_PAY_DVSN
 		FROM TSER_RESV_INFO_I A, TSEB_CENTER_INFO_M B, TSEB_NOSHOW_INFO_M C
 		WHERE A.CENTER_CD = B.CENTER_CD
 		AND B.CENTER_CD = C.CENTER_CD 
-		AND A.RESV_STATE NOT IN ('RESV_STATE_4')
-		AND A.RESV_PAY_DVSN NOT IN ('RESV_PAY_DVSN_2')
+		AND A.RESV_STATE = 'RESV_STATE_1'
+		AND A.RESV_PAY_DVSN = 'RESV_PAY_DVSN_1'
+		AND A.RESV_END_DT = TO_CHAR(SYSDATE,'YYYYMMDD')
 		AND C.NOSHOW_DAY = TO_CHAR(SYSDATE,'d')
-		AND C.NOSHOW_ALL_TM  <= TO_CHAR(SYSDATE,'YYYYMMDD')
+		AND C.NOSHOW_ALL_TM  <= TO_CHAR(SYSDATE,'HH24MI')
 	]]>
-	</insert>
+	</select>
 	
-	<update id="updateNoshowResvInfoCancel">
+	<select id="selectNoshowResvInfo_R2" resultType="lmap">
 	<![CDATA[
-		UPDATE TSER_RESV_INFO_I SET
+		SELECT 
+			A.RESV_SEQ, B.CENTER_PILOT_YN, C.NOSHOW_CD, A.RESV_PAY_DVSN
+		FROM TSER_RESV_INFO_I A, TSEB_CENTER_INFO_M B, TSEB_NOSHOW_INFO_M C
+		WHERE A.CENTER_CD = B.CENTER_CD
+		AND B.CENTER_CD = C.CENTER_CD 
+		AND A.RESV_STATE = 'RESV_STATE_1'
+		AND A.RESV_END_DT = TO_CHAR(SYSDATE,'YYYYMMDD')
+		AND C.NOSHOW_DAY = TO_CHAR(SYSDATE,'d')
+		AND C.NOSHOW_AM_TM  <= TO_CHAR(SYSDATE,'HH24MI')
+	]]>
+	</select>
+	
+	<insert id="insertNoshowResvInfo">
+		INSERT INTO TSEB_NOSHOW_PLAY_H 
+		(
+			NOSHOW_SEQ, NOSHOW_CD, RESV_SEQ, NOSHOW_PLAYTM, NOSHOW_RELEASE_YN, 
+			NOSHOW_RESULT, NOSHOW_RESULT_CD
+		) 
+		VALUES
+		(
+			SEQ_SEB_NOSHOW_PLAY.NEXTVAL, #{noshowCd}, #{resvSeq}, SYSDATE, 'N', 
+			'OK', ''
+		)
+	</insert>
+
+	<update id="updateNoshowResvInfoCancel">
+		UPDATE TSER_RESV_INFO SET
     		RESV_STATE = 'RESV_STATE_4',
+    		RESV_PAY_DVSN = 'RESV_PAY_DVSN_1',
     		RESV_CANCEL_ID = 'BATCH',
     		RESV_CANCEL_CD = 'RESV_CANCEL_CD_3',
     		RESV_CANCEL_DT = SYSDATE
-    	WHERE RESV_SEQ IN 
-    	(
-			SELECT 
-				A.RESV_SEQ
-			FROM TSER_RESV_INFO_I A, TSEB_CENTER_INFO_M B, TSEB_NOSHOW_INFO_M C
-			WHERE A.CENTER_CD = B.CENTER_CD
-			AND B.CENTER_CD = C.CENTER_CD 
-			AND A.RESV_STATE NOT IN ('RESV_STATE_4')
-			AND A.RESV_PAY_DVSN NOT IN ('RESV_PAY_DVSN_1')
-			AND C.NOSHOW_DAY = TO_CHAR(SYSDATE,'d')
-			AND C.NOSHOW_ALL_TM  <= TO_CHAR(SYSDATE,'YYYYMMDD')
-    	)
-	]]>    	
+    	WHERE RESV_SEQ = #{resvSeq}
 	</update>  
      
 	<update id="updateNoshowInfo">
@@ -77,8 +83,8 @@
 			UPDATE TSEB_NOSHOW_INFO_M SET 
 				<!-- 오전 노쇼,오후 노쇼 기능 제거
 				NOSHOW_AM_TM = #{item.noshowAmTm, jdbcType=VARCHAR}, 
+				-->
 				NOSHOW_PM_TM = #{item.noshowPmTm, jdbcType=VARCHAR},
-				 -->
 				NOSHOW_ALL_TM = #{item.noshowAllTm, jdbcType=VARCHAR},
 				LAST_UPDT_DTM = SYSDATE
 			WHERE NOSHOW_CD = #{item.noshowCd}
@@ -90,16 +96,18 @@
 		SET 
 			(	
 				<!-- 오전 노쇼,오후 노쇼 기능 제거
-				A.NOSHOW_AM_TM, A.NOSHOW_PM_TM, 
+				A.NOSHOW_AM_TM, 
 				--> 
+				A.NOSHOW_PM_TM, 
 				A.NOSHOW_ALL_TM, A.LAST_UPDT_DTM, A.LAST_UPDUSR_ID
 			) = 
 	   	(
 	   		SELECT 
 	   			<!-- 오전 노쇼,오후 노쇼 기능 제거 
-	   			B.NOSHOW_AM_TM, B.NOSHOW_PM_TM,
+	   			B.NOSHOW_AM_TM,
 	   			 --> 
-	   		B.NOSHOW_ALL_TM, SYSDATE, B.LAST_UPDUSR_ID
+	   			B.NOSHOW_PM_TM,
+	   			B.NOSHOW_ALL_TM, SYSDATE, B.LAST_UPDUSR_ID
 			FROM TSEB_NOSHOW_INFO_M B 
 			WHERE A.NOSHOW_DAY = B.NOSHOW_DAY 
 			AND B.CENTER_CD = #{params.copyCenterCd}

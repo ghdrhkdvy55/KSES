@@ -19,15 +19,17 @@
 					FN_DETAILCODENM(A.RESV_TICKET_DVSN) AS RESV_TICKET_DVSN_TEXT,
 					FN_DETAILCODENM(A.RESV_PAY_DVSN) AS RESV_PAY_DVSN_TEXT,
 					FN_DETAILCODENM(A.RESV_STATE) AS RESV_STATE_TEXT,
+					FN_DETAILCODENM(E.PART_CLASS) AS PART_CLASS,
 					CASE  
     					WHEN A.RESV_ENTRY_DVSN = 'ENTRY_DVSN_1'  THEN '입석' 
     					ELSE (SELECT SEAT_NM FROM TSEB_SEAT_INFO_D WHERE SEAT_CD = A.SEAT_CD)
     				END AS SEAT_NM, 
 					C.CENTER_NM, D.USER_NM, D.USER_PHONE
-				FROM TSER_RESV_INFO_I A, TSEB_SEAT_INFO_D B, TSEB_CENTER_INFO_M C, TEST_USER_INFO D
+				FROM TSER_RESV_INFO_I A, TSEB_SEAT_INFO_D B, TSEB_CENTER_INFO_M C, TSER_USER_INFO_I D, TSEB_PART_INFO_D E
 				WHERE A.SEAT_CD = B.SEAT_CD(+)
 				AND A.CENTER_CD = C.CENTER_CD
 				AND A.USER_ID = D.USER_ID
+				AND B.PART_CD = E.PART_CD
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchCenterCd)">
 					AND A.CENTER_CD = #{params.searchCenterCd}
 				</if>
@@ -97,7 +99,7 @@
 			END AS SEAT_NM, 
 			C.CENTER_CD, C.CENTER_NM, B.USER_NM, B.USER_PHONE, B.USER_EMAIL,
 			D.FLOOR_CD, E.PART_CD
-		FROM TSER_RESV_INFO_I A, TEST_USER_INFO B, TSEB_CENTER_INFO_M C, TSEB_FLOOR_INFO_M D, TSEB_PART_INFO_D E, TSEB_SEAT_INFO_D F
+		FROM TSER_RESV_INFO_I A, TSER_USER_INFO_I B, TSEB_CENTER_INFO_M C, TSEB_FLOOR_INFO_M D, TSEB_PART_INFO_D E, TSEB_SEAT_INFO_D F
 		WHERE A.RESV_SEQ = #{resvSeq}
 		AND A.USER_ID = B.USER_ID
 		AND A.CENTER_CD = C.CENTER_CD
@@ -164,10 +166,10 @@
 				AND FN_RESVDATE(A.CENTER_CD) BETWEEN RESV_START_DT AND RESV_END_DT
 			) <= 0 THEN 'Y' 
 			ELSE 'N'
-			END AS RE_RESV_YN, A.RESV_PAY_DVSN, A.RESV_PAY_COST, F.USER_NM, A.RESV_STATE, A.USER_ID, B.CENTER_SPEED_CD,
+			END AS RE_RESV_YN, A.RESV_PAY_DVSN, A.RESV_PAY_COST, F.USER_NM, A.RESV_STATE, A.USER_ID, B.CENTER_SPEED_CD, B.CENTER_RBM_CD,
 			B.CENTER_PILOT_YN, A.TRAD_NO, A.TRAD_DATE, A.RESV_ENTRY_DVSN, F.USER_CARD_ID, F.USER_CARD_SEQ, F.USER_CARD_PASSWORD,
-			F.USER_PHONE, B.CENTER_NM, C.FLOOR_NM, D.PART_NM
-		FROM TSER_RESV_INFO_I A, TSEB_CENTER_INFO_M B, TSEB_FLOOR_INFO_M C, TSEB_PART_INFO_D D, TSEB_SEAT_INFO_D E, TEST_USER_INFO F
+			F.USER_PHONE, B.CENTER_NM, C.FLOOR_NM, D.PART_NM, FN_DETAILCODENM(D.PART_CLASS) AS SEAT_CLASS
+		FROM TSER_RESV_INFO_I A, TSEB_CENTER_INFO_M B, TSEB_FLOOR_INFO_M C, TSEB_PART_INFO_D D, TSEB_SEAT_INFO_D E, TSER_USER_INFO_I F
 		WHERE A.RESV_SEQ = #{params.resvSeq}
 		AND A.CENTER_CD = B.CENTER_CD
 		AND A.FLOOR_CD = C.FLOOR_CD(+)
@@ -224,9 +226,13 @@
 	    			WHEN A.SEAT_CD IS NULL THEN '입석'
 	    			ELSE (SELECT SEAT_NM FROM TSEB_SEAT_INFO_D WHERE SEAT_CD = A.SEAT_CD)
 	    		END AS SEAT_NM,
-	    		TO_CHAR(A.RESV_REQ_DATE,'YYYY-MM-DD HH24:MI') AS RESV_REQ_DATE
-			FROM TSER_RESV_INFO_I A, TSEB_CENTER_INFO_M B 
+	    		TO_CHAR(A.RESV_REQ_DATE,'YYYY-MM-DD HH24:MI') AS RESV_REQ_DATE,
+	    		C.FLOOR_NM, D.PART_NM
+			FROM TSER_RESV_INFO_I A, TSEB_CENTER_INFO_M B, TSEB_FLOOR_INFO_M C, TSEB_PART_INFO_D D, TSEB_SEAT_INFO_D E, TSER_USER_INFO_I F 
 			WHERE A.CENTER_CD = B.CENTER_CD
+			AND A.FLOOR_CD = C.FLOOR_CD(+)
+			AND A.PART_CD = D.PART_CD(+)
+			AND A.SEAT_CD = E.SEAT_CD(+) 
 			AND A.RESV_USER_NM = #{params.resvUserNm}
 			AND A.RESV_USER_CLPHN = #{params.resvUserClphn}
 			AND A.RESV_STATE NOT IN ('RESV_STATE_4')
@@ -301,7 +307,7 @@
 	]]>
 	</select>
 	
-	<!-- 예약정보 등록 -->
+	<!-- 회원 예약정보 등록 -->
     <insert id="insertUserResvInfo">
 		<selectKey resultType="String" keyProperty="resvSeq" order="BEFORE">
 			SELECT SEQ_SER_RERV_INFO.NEXTVAL AS resvSeq FROM DUAL
@@ -309,7 +315,7 @@
     
     	INSERT INTO TSER_RESV_INFO_I 
     	(
-			RESV_SEQ, SEASON_CD, CENTER_CD, FLOOR_CD, PART_CD, SEAT_CD, 
+			RESV_SEQ, SEASON_CD, CENTER_CD, FLOOR_CD, PART_CD, SEAT_CD,
 			RESV_START_DT, RESV_END_DT, RESV_DVSN, RESV_START_TM, RESV_END_TM, 
 			RESV_REQ_DATE, RESV_USER_DVSN, USER_ID, RESV_USER_NM, RESV_USER_CLPHN, RESV_USER_ASK_YN, RESV_TICKET_DVSN, 
 			RESV_STATE, RESV_RCPT_YN, RESV_INDVDLINFO_AGRE_YN,
@@ -318,7 +324,7 @@
 		)
 		VALUES 
 		(
-			#{resvSeq}, #{seasonCd, jdbcType=VARCHAR}, #{centerCd, jdbcType=VARCHAR}, #{floorCd, jdbcType=VARCHAR}, #{partCd, jdbcType=VARCHAR}, #{seatCd, jdbcType=VARCHAR},
+			#{resvSeq}, #{seasonCd, jdbcType=VARCHAR}, #{centerCd, jdbcType=VARCHAR}, #{floorCd, jdbcType=VARCHAR}, #{partCd, jdbcType=VARCHAR}, #{seatCd, jdbcType=VARCHAR}, 
 			TO_CHAR(TO_DATE(#{resvDate, jdbcType=VARCHAR},'YYYYMMDD') - (INTERVAL '1' DAY),'YYYYMMDD'), #{resvDate, jdbcType=VARCHAR}, 'TEMP', '0000', '2359',
 			SYSDATE, #{resvUserDvsn, jdbcType=VARCHAR}, 
 			<choose>
@@ -336,12 +342,16 @@
 		)
     </insert>
     
-	<!-- 장기 예약정보 등록 -->
+	<!-- 회원 장기 예약정보 등록 -->
     <insert id="insertUserLongResvInfo">
+    	<selectKey keyProperty="longResvSeq" order="BEFORE" resultType="ResvInfo">
+    		SELECT SEQ_SER_LONGRESV_INFO.NEXTVAL AS longResvSeq FROM DUAL
+    	</selectKey>
+    
     	<foreach collection="resvDateList" item="resvDate" index="index" separator=";" open="DECLARE BEGIN" close="; END;">
 	    	INSERT INTO TSER_RESV_INFO_I 
 	    	(
-				RESV_SEQ, SEASON_CD, CENTER_CD, FLOOR_CD, PART_CD, SEAT_CD, 
+				RESV_SEQ, LONG_RESV_SEQ, SEASON_CD, CENTER_CD, FLOOR_CD, PART_CD, SEAT_CD, 
 				RESV_START_DT, RESV_END_DT, RESV_DVSN, RESV_START_TM, RESV_END_TM, 
 				RESV_REQ_DATE, RESV_USER_DVSN, USER_ID, RESV_USER_NM, RESV_USER_CLPHN, RESV_USER_ASK_YN, RESV_TICKET_DVSN, 
 				RESV_STATE, RESV_RCPT_YN, RESV_INDVDLINFO_AGRE_YN,
@@ -350,7 +360,7 @@
 			)
 			VALUES 
 			(
-				SEQ_SER_RERV_INFO.NEXTVAL, #{seasonCd, jdbcType=VARCHAR}, #{centerCd, jdbcType=VARCHAR}, #{floorCd, jdbcType=VARCHAR}, #{partCd, jdbcType=VARCHAR}, #{seatCd, jdbcType=VARCHAR},
+				SEQ_SER_RERV_INFO.NEXTVAL, #{longResvSeq}, #{seasonCd, jdbcType=VARCHAR}, #{centerCd, jdbcType=VARCHAR}, #{floorCd, jdbcType=VARCHAR}, #{partCd, jdbcType=VARCHAR}, #{seatCd, jdbcType=VARCHAR},
 				TO_CHAR(TO_DATE(#{resvDate, jdbcType=VARCHAR},'YYYYMMDD') - (INTERVAL '1' DAY),'YYYYMMDD'), #{resvDate, jdbcType=VARCHAR}, 'TEMP', '0000', '2359',
 				SYSDATE, #{resvUserDvsn, jdbcType=VARCHAR}, #{userId, jdbcType=VARCHAR}, #{resvUserNm}, #{resvUserClphn}, #{resvUserAskYn, jdbcType=VARCHAR}, 'RESV_TICKET_DVSN_1',
 				'RESV_STATE_1', 'N', #{resvIndvdlinfoAgreYn, jdbcType=VARCHAR},
@@ -360,13 +370,29 @@
 		</foreach>
     </insert>
     
+	<!-- 회원 장기 예약정보 등록 -->
+    <insert id="insertLongResvInfo">    
+		INSERT INTO TSER_LONG_RESV_INFO_I 
+		(
+			LONG_RESV_SEQ, SEASON_CD, CENTER_CD, FLOOR_CD, PART_CD, 
+			SEAT_CD, LONG_RESV_START_DT, LONG_RESV_END_DT, USER_ID, 
+			EMP_NO, FRST_REGIST_DTM, FRST_REGTER_ID, LAST_UPDT_DTM, LAST_UPDUSR_ID  
+		)
+		VALUES 
+		(
+			#{longResvSeq}, #{seasonCd, jdbcType=VARCHAR}, #{centerCd, jdbcType=VARCHAR}, #{floorCd, jdbcType=VARCHAR}, #{partCd, jdbcType=VARCHAR}, 
+			#{seatCd, jdbcType=VARCHAR}, #{resvDateFrom, jdbcType=VARCHAR}, #{resvDateTo, jdbcType=VARCHAR}, #{userId, jdbcType=VARCHAR},  
+			#{longResvEmpNo, jdbcType=VARCHAR}, SYSDATE, #{adminId, jdbcType=VARCHAR}, SYSDATE, #{adminId, jdbcType=VARCHAR}
+		)
+    </insert>
+    
 	<update id="resvSeatChange">
     	UPDATE TSER_RESV_INFO_I SET
     		CENTER_CD = #{params.centerCd},
     		FLOOR_CD = #{params.floorCd},
     		PART_CD = #{params.partCd},
     		SEAT_CD = #{params.seatCd},
-    		RESV_PAY_COST = #{params.resvPayCost},
+    		RESV_PAY_COST = FN_PAYCOST(#{params.centerCd}, #{params.resvPayCost}, #{params.resvEntryDvsn}),
     		LAST_UPDUSR_ID = #{params.userId},
     		LAST_UPDT_DTM = SYSDATE
     	WHERE RESV_SEQ = #{params.resvSeq}

@@ -141,7 +141,7 @@
         PinchZoom.prototype = {
 
             defaults: {
-                tapZoomFactor: 2,
+                tapZoomFactor: 3,
                 zoomOutFactor: 1.3,
                 animationDuration: 300,
                 maxZoom: 4,

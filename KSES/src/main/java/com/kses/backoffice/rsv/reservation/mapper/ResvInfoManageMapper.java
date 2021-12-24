@@ -44,9 +44,13 @@ public interface ResvInfoManageMapper {
 	
 	public int insertUserResvInfo(ResvInfo vo);
 	
+	public int insertLongResvInfo(ResvInfo vo);
+	
 	public int insertUserLongResvInfo(ResvInfo vo);
 	
 	public int updateUserResvInfo(ResvInfo vo);
+	
+	public int updateLongResvInfo(ResvInfo vo);
 	
 	public int updateUserLongResvInfo(ResvInfo vo);
 	

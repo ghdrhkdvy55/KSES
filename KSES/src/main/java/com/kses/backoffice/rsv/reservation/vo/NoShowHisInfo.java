@@ -20,11 +20,11 @@ public class NoShowHisInfo {
 	
 	 // 예약 코드
 	 @JsonProperty("resv_seq")
-	 private int resvSeq;
+	 private String resvSeq;
 	 
 	 // 예약 코드
 	 @JsonProperty("user_id")
-	 private int userId;
+	 private String userId;
 	
 	 // 노쇼 배치 실행 타임
 	 @JsonProperty("noshow_palytime")
