@@ -205,6 +205,7 @@ public class ResJosnController {
 				jsonObject.put("External_Key", resvInfo.get("resv_seq"));
 				jsonObject.put("Card_Id", resvInfo.get("user_card_id"));
 				jsonObject.put("Card_Pw", SmartUtil.encryptPassword(jsonObject.get("Card_Pw").toString(), "SHA-256"));
+				jsonObject.put("Pw_YN", "Y");
 				jsonObject.put("Card_Seq", resvInfo.get("user_card_seq"));
 				jsonObject.put("Div_Cd", resvInfo.get("center_speed_cd"));
 
@@ -510,6 +511,7 @@ public class ResJosnController {
 		String resPersonCnt = "";
 		String returnCode = "";
 		String returnMessage = "";
+		String seatClass = "";
 
 		InterfaceInfo info = new InterfaceInfo();
 		info.setTrsmrcvSeCode(sendEnum.RPQ.getCode());
@@ -534,11 +536,12 @@ public class ResJosnController {
 				resDay = SmartUtil.NVL(resInfo.get("resv_start_dt"), "").toString();
 				resTime = SmartUtil.NVL(resInfo.get("resv_start_tm"), "").toString();
 				seatName = SmartUtil.NVL(resInfo.get("seat_nm"), "").toString();
+				seatClass = SmartUtil.NVL(resInfo.get("seat_class"), "").toString();
 				resPersonCnt = "1";
 				returnCode = "OK";
 			} else {
 				returnCode = "ERROR_01";
-				returnMessage = "예약 정보가 없습니다.";
+				returnMessage = "예약 정보 없음.";
 			}
 
 			info.setTrsmrcvSeCode(sendEnum.RPS.getCode());
@@ -574,6 +577,7 @@ public class ResJosnController {
 		model.addObject("RES_PERSON_CNT", resPersonCnt);
 		model.addObject("RETURN_CODE", returnCode);
 		model.addObject("RETURN_MESSAGE", returnMessage);
+		model.addObject("SEAT_CLASS", seatClass);
 
 		// 인터페이스 연계
 		info.setResultMessage(ParamToJson.paramToJson(model));
@@ -602,6 +606,9 @@ public class ResJosnController {
 		String resPersonCnt = "";
 		String returnCode = "";
 		String returnMessage = "";
+		String seatClass = "";
+		String userPhone = "";
+		String userPhoneBack4 = "";
 
 		InterfaceInfo info = new InterfaceInfo();
 		info.setTrsmrcvSeCode(sendEnum.RPQ.getCode());
@@ -623,7 +630,7 @@ public class ResJosnController {
 					+ Integer.valueOf(SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString()));
 			if (resInfo == null) {
 				returnCode = "ERROR_01";
-				returnMessage = "예약 정보가 없습니다.";
+				returnMessage = "예약 정보 없음.";
 			} else if (resInfo != null && !SmartUtil.NVL(jsonInfo.get("RES_PRICE"), "").toString()
 					.equals(SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString())) {
 				returnCode = "ERROR_03";
@@ -633,7 +640,10 @@ public class ResJosnController {
 				resPrice = SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString();
 				resDay = SmartUtil.NVL(resInfo.get("resv_start_dt"), "").toString();
 				resTime = SmartUtil.NVL(resInfo.get("resv_start_tm"), "").toString();
-
+				seatClass = SmartUtil.NVL(resInfo.get("seat_class"), "").toString();
+				userPhone = SmartUtil.NVL(resInfo.get("user_phone"), "").toString();
+				userPhoneBack4 = userPhone.substring(userPhone.length()-4,userPhone.length());
+				
 				EgovFileScrty fileScrty = new EgovFileScrty();
 				String qrCode = fileScrty.encode(resInfo.get("resv_seq") + ":" + resInfo.get("resv_start_dt")
 						+ ":IN:PAPER:" + SmartUtil.NVL(resInfo.get("user_id"), "").toString());
@@ -687,9 +697,11 @@ public class ResJosnController {
 		model.addObject("SEAT_NAME", seatName);
 		model.addObject("RES_QR_URL", resQrUrl);
 		model.addObject("RES_PERSON_CNT", resPersonCnt);
-
 		model.addObject("RETURN_CODE", returnCode);
 		model.addObject("RETURN_MESSAGE", returnMessage);
+		model.addObject("SEAT_CLASS", seatClass);
+		model.addObject("USER_PHONE", userPhoneBack4);
+		
 
 		info.setResultMessage(ParamToJson.paramToJson(model));
 		interfaceService.InterfaceInsertLoginLog(info);
