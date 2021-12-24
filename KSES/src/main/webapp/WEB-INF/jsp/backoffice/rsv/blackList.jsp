@@ -190,11 +190,14 @@
 				colModel :  
 				[
 					{label: 'blklst_seq', key: true, name:'blklst_seq', index:'blklst_seq', align:'center', hidden:true},
+					{label: '이름', name:'user_nm', index:'user_nm', align:'center', hidden:true},
+					{label: '이름', name:'blklst_dvsn', index:'user_nm', align:'center', hidden:true},
 					{label: '아이디', name:'user_id', index:'user_id', align:'center'},
 					{label: '전화번호', name:'user_phone', index:'user_phone', align:'center'},
-					{label: '유형', name:'blklst_dvsn', index:'blklst_dvsn', align:'center'},
+					{label: '유형', name:'blklst_dvsn_txt', index:'blklst_dvsn_txt', align:'center'},
 					{label: '상세내용', name:'blklst_reason', index:'blklst_reason', align:'center'},
-					{label: '노쇼카운트', name:'user_noshow_cnt', index:'user_noshow_cnt', align:'center'},
+					{label: '노쇼카운트', name:'user_noshow_cnt', index:'user_noshow_cnt', align:'center',
+						    formatter:jqGridFunc.fn_NoShowInfo},
 					{label: '변경일자', name:'user_noshow_last_dt', index:'user_noshow_last_dt', align:'center'},
 					{label: '해제', name:'blklst_cancel_yn', index:'blklst_cancel_yn', align:'center', sortable : false, formatter:jqGridFunc.buttonSetting},
 				], 
@@ -291,7 +294,50 @@
 				}
 				
 			});
-		}, 
+		}, fn_NoShowInfo : function(cellvalue, options, rowObject) {
+			return (rowObject.blklst_dvsn_txt != "없음") ?  rowObject.user_noshow_cnt + "" : 
+				    rowObject.user_noshow_cnt + "<a href='#' onClick='jqGridFunc.fn_NoShowInsert(&#39;" + rowObject.user_id + "&#39;,&#39;" + rowObject.user_nm + "&#39;,&#39;" + rowObject.user_phone + "&#39;)' class='blueBtn'> 패널티 고객 등록</a>";
+		}, fn_NoShowInsert : function(userId, userNm, userPhone){
+			
+			
+			var url = "/backoffice/rsv/updateBlackUserInfo.do";
+			var params = {
+				"mode" : "Ins", 
+				"blklstCancelYn" : "N",
+				"blklstDvsn" : "BLKLST_DVSN_3",
+				"userId" : userId,
+				"userNm" :userNm,
+				"userClphn" :userPhone,
+				"blklstReason" : "페털티 고객이 등록되었습니다."
+			};
+			
+			var resultTxt = "페털티 고객이 등록되었습니다.";
+			
+			fn_Ajax
+			(
+				url, 
+				"POST",
+				params,
+				false,
+				function(result) {
+					if (result.status == "LOGIN FAIL") {
+						common_popup(result.meesage, "N","");
+						location.href="/backoffice/login.do";
+			    	} else if (result.status == "SUCCESS") {
+			    		common_popup(resultTxt, "Y","");
+			    		jqGridFunc.fn_search();
+					}
+				},
+				function(request){
+					common_popup("Error:" + request.status,"");
+				}    		
+			);
+			
+			
+			
+			
+			
+		},
     	useYn : function(cellvalue, options, rowObject) {
 			return (rowObject.use_yn ==  "Y") ? "사용" : "사용안함";
 		},
@@ -306,7 +352,7 @@
 				mode = "Y";				
 			}
 
-			return '<a href="javascript:blackUserService.fn_cancelBlklst(&#39;' + mode + '&#39;,&#39;' + rowObject.blklst_seq + '&#39;);" class="blueBtn">' + cancelYn + '</a>';	
+			return '<a href="javascript:blackUserService.fn_cancelBlklst(&#39;' + mode + '&#39;,&#39;' + rowObject.blklst_seq + '&#39;,&#39;' + rowObject.blklst_dvsn + '&#39,&#39;' + rowObject.user_id + '&#39;);" class="blueBtn">' + cancelYn + '</a>';	
 		},			
 		refreshGrid : function(){
 			$('#mainGrid').jqGrid().trigger("reloadGrid");
@@ -407,11 +453,11 @@
 				}    		
 			);
 		},
-		fn_cancelBlklst : function (blklstCancelYn, blklstSeq) {
+		fn_cancelBlklst : function (blklstCancelYn, blklstSeq, blklst_dvsn, userId) {
 			$("#mode").val("Edt");
 			
 			var url = "/backoffice/rsv/updateBlackUserInfo.do";
-			var params = {"mode" : $("#mode").val(), "blklstSeq" : blklstSeq,"blklstCancelYn" : blklstCancelYn};
+			var params = {"mode" : $("#mode").val(), "blklstSeq" : blklstSeq,"blklstCancelYn" : blklstCancelYn, "blklstDvsn" : blklst_dvsn, "userId" : userId};
 			var resultTxt = blklstCancelYn == "Y" ? "출입통제가 정상적으로 해제되었습니다." : "출입통제가 정상적으로 재등록 되었습니다.";
 			
 			fn_Ajax
