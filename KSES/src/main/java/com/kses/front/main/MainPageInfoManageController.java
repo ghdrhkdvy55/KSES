@@ -106,6 +106,7 @@ public class MainPageInfoManageController {
 		    searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
 		    searchVO.put("boardCd", "Not");
 		    searchVO.put("searchCondition", "ALL");
+			searchVO.put("adminYn", "user");
 			
 			List<Map<String, Object>> list =  boardInfoService.selectBoardManageListByPagination(searchVO) ;
 			int totCnt = list.size() > 0 ?  Integer.valueOf( list.get(0).get("total_record_count").toString()) : 0;

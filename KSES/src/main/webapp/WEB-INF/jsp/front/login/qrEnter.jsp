@@ -39,10 +39,11 @@
             <div>
                 <div class="contents qrEnter"> 
                     <!--qr코드-->
+                    <!-- 결제 완료 시 qr표출 -->
                     <div id="qr_enter_code" class="qr_enter_code">
 						<div id="mask_qr">
 							<div class="info_img">
-								<a href="javascript:qrService.fn_createQrCode();"><img src="/resources/img/front/refresh.svg" alt=""> <br>재발급</a>
+								<a href="javascript:qrService.fn_createQrCode();"><img src="/resources/img/front/refresh.svg" alt="재발급"> <br>재발급</a>
 							</div>        
 						</div>
                     </div>
@@ -63,7 +64,13 @@
                             </li>
                         </ul>
                     </div>
-
+					<!-- //결제 완료 시 qr표출 -->
+					<!-- 미 결제 시 표출 -->
+					<div class="pay_noti">
+						<p><img src="/resources/img/front/credit_score_black_24dp.svg" alt="결제하기"></p>
+						<p>스마트 입장을 위한 <br>결제를 해주세요.</p>
+					</div>
+                    <!--// 미 결제 시 표출 -->
                     <div class="pay_btn">
                         <ul>
                             <li class="mintBtn"><a data-popup-open="pay_number">결제</a></li>
