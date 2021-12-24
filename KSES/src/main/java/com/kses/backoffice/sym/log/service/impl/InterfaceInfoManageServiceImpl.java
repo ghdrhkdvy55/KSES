@@ -140,7 +140,7 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 	public int InterfaceInsertLoginLog(InterfaceInfo vo) throws Exception {
 		// TODO Auto-generated method stub
 		vo.setRequstId( egovTranLog.getNextStringId());
-		return  interfaceMapper.InterfaceInsertLoginLog(vo);
+		return interfaceMapper.InterfaceInsertLoginLog(vo);
 	}
 
 	@Override

@@ -291,6 +291,9 @@ public class ResJosnController {
 				String userPhone = attempInfos[11];
 				String centerNm = attempInfos[12];
 				String seatNm = attempInfos[13];
+				String seatClassNm = attempInfos[14];
+				String floorNm = attempInfos[15];
+				String partNm = attempInfos[16];
 
 				for (String value : attempInfos) {
 					LOGGER.debug("value : " + value);
@@ -370,14 +373,17 @@ public class ResJosnController {
 					model.addObject("USER_NM", USER_NM);
 					model.addObject("CENTER_NM", USER_NM);
 					model.addObject("SEATNM", seatNm);
+					model.addObject("SEATCLASS", seatClassNm);
 					// 자리수 수정
 					if (userPhone.length() > 4) {
 						userPhone = userPhone.substring(userPhone.length() - 4, userPhone.length());
 					}
 					model.addObject("USERPHONE", userPhone);
 					model.addObject("CENTERNM", centerNm);
+					model.addObject("FLOORNM", floorNm);
+					model.addObject("PARTNM", partNm);
 					model.addObject("INOTMSG", IOGUBUN_TXT);
-
+					
 					// 예약정보 상태값 변경 (예약 -> 이용)
 					ResvInfo resvInfo = new ResvInfo();
 					resvInfo.setResvSeq(resSeq);
@@ -458,7 +464,10 @@ public class ResJosnController {
 						+ SmartUtil.NVL(resInfo.get("center_rbm_cd"), "").toString() + ":" + inotMsg + ":"
 						+ SmartUtil.NVL(resInfo.get("user_phone"), "").toString() + ":"
 						+ SmartUtil.NVL(resInfo.get("center_nm"), "").toString() + ":"
-						+ SmartUtil.NVL(resInfo.get("seat_nm"), "").toString());
+						+ SmartUtil.NVL(resInfo.get("seat_nm"), "").toString() + ":"
+						+ SmartUtil.NVL(resInfo.get("seat_class"), "").toString() + ":"
+						+ SmartUtil.NVL(resInfo.get("floor_nm"), "").toString() + ":"
+						+ SmartUtil.NVL(resInfo.get("part_nm"), "").toString());
 				fileScrty = null;
 
 				model.addObject("vacntnInfo", userService.selectUserVacntnInfo(resInfo.get("user_id").toString()));

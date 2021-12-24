@@ -784,6 +784,7 @@
 				    		        });
 				    		        
 				    		        $("#" + fn_NVL(obj[i].seat_cd)).data("seat-paycost", obj[i].pay_cost);
+				    		        $("#" + fn_NVL(obj[i].seat_cd)).data("seat_class", obj[i].seat_class);
 				    		    }
 				    		    
 				    		    var seatList = $("#area_Map li");

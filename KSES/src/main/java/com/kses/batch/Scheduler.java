@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import com.kses.backoffice.bld.center.service.NoshowInfoManageService;
 import com.kses.backoffice.bld.center.vo.NoshowInfo;
@@ -68,7 +69,7 @@ public class Scheduler {
 	 * @throws Exception
 	 */
 
-	@Scheduled(cron = "0 0/1 * * * * ")
+	/*@Scheduled(cron = "0 0/1 * * * * ")*/
 	@Transactional(rollbackFor = Exception.class)
 	public void resvNoshowScheduler() throws Exception {
 		List<Map<String, Object>> noshowResvList;
@@ -77,61 +78,74 @@ public class Scheduler {
 		ResvInfo resvInfo = new ResvInfo();
 		
 		try {
-			for(int i=1; i<2; i++) {
+			for(int i=1; i<=2; i++) {
 				noshowResvList = i == 1 ? noshowService.selectNoshowResvInfo_R1() : noshowService.selectNoshowResvInfo_R2();  
 				
 				if(noshowResvList.size() != 0) {
 					int successCount = 0;
 					int resultCount = 0;
+					int pilotCount = 0;
 					
 					for(Map<String, Object> map : noshowResvList) {
 						String resvSeq = SmartUtil.NVL(map.get("resv_seq"),"");
 						String noshowCd = SmartUtil.NVL(map.get("noshow_cd"),"");
 						String centerPilotYn = SmartUtil.NVL(map.get("center_pilot_yn"),"");
+						String resvPayDvsn = SmartUtil.NVL(map.get("resv_pay_dvsn"),"");
 						
-						LOGGER.info("예약번호 : " + resvSeq + " " + i + "차 자동취소 시작" );
-						
-						if(i == 2) {
-							jsonObject.put("Pw_YN", "N");
-							jsonObject.put("resvSeq", resvSeq);
-							Map<String, Object> result = interfaceService.SpeedOnCancelPayMent(jsonObject);
+						/*if(centerPilotYn.equals("N")) {*/
+							LOGGER.info("예약번호 : " + resvSeq + " " + i + "차 자동취소 시작" );
 							
-							if(!SmartUtil.NVL(result.get(Globals.STATUS), "").equals("SUCCESS")) {
-								LOGGER.info("예약번호 : " + resvSeq + " 결제취소실패");
-								LOGGER.info("에러코드 : " + result.get(Globals.STATUS));
-								LOGGER.info("에러메세지 : " + result.get(Globals.STATUS_MESSAGE));
-								continue;
-							} 
-							
-							LOGGER.info("예약번호 : " + resvSeq + " 결제취소성공");
-						}
-						
-						
-						noshowHisInfo.setNoshowCd(resvSeq);
-						noshowHisInfo.setResvSeq(noshowCd);
-						resultCount = noshowService.insertNoshowResvInfo(noshowHisInfo);
-						
-						if(resultCount > 0) {
-							LOGGER.info("예약번호 : " + resvSeq + " 노쇼 정보 등록성공");
-							resvInfo.setResvSeq(resvSeq);
-							resultCount = noshowService.updateNoshowResvInfoCancel(resvInfo);
-							if(resultCount > 0) {
-								LOGGER.info("예약번호 : " + resvSeq + " 예약 정보 취소성공");
-							} else {
-								LOGGER.info("예약번호 : " + resvSeq + " 예약 정보 취소실패");
-								throw new Exception();
+							if(i == 2 && resvPayDvsn.equals("RESV_PAY_DVSN_2")) {
+								jsonObject.put("Pw_YN", "N");
+								jsonObject.put("resvSeq", resvSeq);
+								Map<String, Object> result = interfaceService.SpeedOnCancelPayMent(jsonObject);
+								
+								if(!SmartUtil.NVL(result.get(Globals.STATUS), "").equals("SUCCESS")) {
+									LOGGER.info("예약번호 : " + resvSeq + " 결제취소실패");
+									LOGGER.info("에러코드 : " + result.get(Globals.STATUS));
+									LOGGER.info("에러메세지 : " + result.get(Globals.STATUS_MESSAGE));
+									continue;
+								} 
+								
+								LOGGER.info("예약번호 : " + resvSeq + " 결제취소성공");
 							}
-						} else {
-							LOGGER.info("예약번호 : " + resvSeq + " 노쇼 정보 등록실패");
-							throw new Exception();
-						}
-						
-						successCount++;
+							
+							// 노쇼정보등록 & 예약정보취소
+							try {
+								noshowHisInfo.setNoshowCd(noshowCd);
+								noshowHisInfo.setResvSeq(resvSeq);
+								resultCount = noshowService.insertNoshowResvInfo(noshowHisInfo);
+								
+								if(resultCount > 0) {
+									LOGGER.info("예약번호 : " + resvSeq + " 노쇼 정보 등록성공");
+									resvInfo.setResvSeq(resvSeq);
+									resultCount = noshowService.updateNoshowResvInfoCancel(resvInfo);
+									if(resultCount > 0) {
+										LOGGER.info("예약번호 : " + resvSeq + " 예약 정보 취소성공");
+									} else {
+										LOGGER.info("예약번호 : " + resvSeq + " 예약 정보 취소실패");
+										throw new Exception();
+									}
+								} else {
+									LOGGER.info("예약번호 : " + resvSeq + " 노쇼 정보 등록실패");
+									throw new Exception();
+								}
+							} catch (Exception e) {
+								LOGGER.info("예약번호 : " + resvSeq + " 예외발생 트랜잭션 실행");
+								continue;
+							}
+							
+							successCount++;
+/*						} else {
+							LOGGER.info("예약번호 : " + resvSeq + " 시범지점 예외처리");
+							pilotCount++;
+						}*/
 					}
 					LOGGER.info("=====================================================================================");
 					LOGGER.info(i + "차 노쇼 예약정보(총) : " + noshowResvList.size());
-					LOGGER.info("성공 : " + successCount);
-					LOGGER.info("실패 : " + (noshowResvList.size() - successCount));
+					LOGGER.info("성공 : " + successCount + "건");
+					LOGGER.info("실패 : " + (noshowResvList.size() - successCount + pilotCount) + "건");
+					LOGGER.info("시범지점예외 : " + pilotCount + "건");
 					LOGGER.info("=====================================================================================");
 				} else {
 					LOGGER.info("resvNoshowScheduler =>" + i + "차 노쇼 예약정보 없음");
