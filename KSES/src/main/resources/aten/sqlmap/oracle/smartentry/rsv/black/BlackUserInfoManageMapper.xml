@@ -15,10 +15,23 @@
 					A.BLKLST_SEQ, A.USER_ID, A.USER_DVSN, A.USER_CLPHN,
 					A.BLKLST_USER_YN, TO_CHAR(A.FRST_REGIST_DTM, 'YYYY-MM-DD HH24:MI') AS FRST_REGIST_DTM,
 					A.BLKLST_CANCEL_YN,
-					FN_DETAILCODENM(A.BLKLST_DVSN) AS BLKLST_DVSN, B.USER_PHONE, B.USER_NM
+					FN_DETAILCODENM(A.BLKLST_DVSN) AS BLKLST_DVSN, B.USER_PHONE, B.USER_NM, 
+					B.USER_NOSHOW_CNT, TO_CHAR(B.USER_NOSHOW_LAST_DT, 'yyyy-MM-dd') USER_NOSHOW_LAST_DT
 				FROM TSER_BLKLST_INFO_I A, TEST_USER_INFO B
-				WHERE A.USER_ID = B.USER_ID
-				AND A.BLKLST_DVSN = #{params.searchBlklstDvsn, jdbcType=VARCHAR}
+				     
+				WHERE 1=1 
+				      <choose>
+				         <when test="params.searchBlklstDvsn eq 'BLKLST_DVSN_3'">
+				             AND A.USER_ID = B.USER_ID
+				             AND B.USER_NOSHOW_CNT > 0
+				         </when>
+				         <otherwise>
+				             AND A.USER_ID = B.USER_ID
+				             AND A.BLKLST_DVSN = #{params.searchBlklstDvsn, jdbcType=VARCHAR}
+				         </otherwise>
+				      </choose>
+				      
+				
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
 					<choose>
 						<when test="@org.apache.commons.lang3.StringUtils@equals(params.searchCondition,'USER_ID')">
@@ -40,7 +53,7 @@
 						</otherwise>
 					</choose>
 				</if>
-			    ORDER BY A.BLKLST_SEQ DESC	
+				ORDER BY A.BLKLST_SEQ DESC	
 			) TB 
 		) TA
 		WHERE ROWNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
