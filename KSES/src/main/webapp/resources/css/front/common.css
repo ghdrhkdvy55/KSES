@@ -2450,3 +2450,31 @@ ul.tabs li{
 }
 .vacState .vacDone {color: #2667f7;}
 .vacState .vacNon {color: #f72626; }
+
+
+/* 1224 footer */
+.f_logo_box {padding:2rem 0; border: 1px solid; background: #364150; color: #fff; margin-top: 30px;}
+.linkBox ul{overflow: hidden; border-bottom: 1px solid #666;}
+.linkBox li{float: left; height: 40px; position: relative;}
+.linkBox li:after{content: ''; display: block; width: 1px; height: 14px; background: #666; position: absolute; right: 0; top: calc(50% - 7px);}
+.linkBox li:last-child:after{display: none;}
+.linkBox li:nth-child(1){border-bottom: 2px solid #ff740c; box-sizing: border-box;}
+.linkBox li:nth-child(1) a{color: #ff740c;}
+.linkBox a{display: block; padding: 15px 20px; font-size: 1.4rem; line-height: 1rem; color: #fff;}
+.addressBox{position: relative; padding: 20px 0; font-size: 1.2rem; line-height: 2rem; text-align: left;}
+.addressBox address span{display: inline-block; padding-right: 15px; position: relative;}
+.addressBox address span:after{content: ''; display: block; width: 1px; height: 12px; background: #666; position: absolute; right: 4px; top: calc(50% - 6px);}
+.addressBox address span:last-child:after{display: none;}
+.addressBox p a{color: #fff;}
+.f_copy {font-size: 1.2rem; padding-top: 5px; color:#fff; opacity: 0.8; }
+.addressBox .banner{float: right; height: 25px; transform: translateY(-15px);}
+.addressBox .banner img{vertical-align: middle;}
+@media screen and (max-width: 660px){
+  .f_logo_box {padding: 1.5rem 0;}
+  .linkBox ul{border-bottom: none;}
+  .linkBox li{height: 30px;}
+  .linkBox a{padding: 10px 10px;}
+  .addressBox{padding-top: 10px; padding-bottom: 60px; font-size: 1.3rem;line-height: 2.4rem; }
+  .addressBox .banner{width: 100%; transform: translateY(10px);}
+  .addressBox .banner img{max-width: 150px; width: 32%;}
+}

@@ -68,7 +68,7 @@
 					<!-- 미 결제 시 표출 -->
 					<div class="pay_noti">
 						<p><img src="/resources/img/front/credit_score_black_24dp.svg" alt="결제하기"></p>
-						<p>스마트 입장을 위한 <br>결제를 해주세요.</p>
+						<p>스마트 입장을 위한 <br>결제를 진행 해주세요.</p>
 					</div>
                     <!--// 미 결제 시 표출 -->
                     <div class="pay_btn">
@@ -146,9 +146,9 @@
 				    		
 							
 				    		if(result.resvInfo.resv_pay_dvsn == "RESV_PAY_DVSN_2" || result.resvInfo.center_pilot_yn == "Y") {
-				    			$(".timer").hide();
-				    			$(".pay_btn ul li:eq(0)").hide();
-				    			$(".vacState").show();
+								$(".qr_enter_code").show();
+								$(".qr_info").show();
+								$(".pay_noti").hide();
 
 								var qrcode = new QRCode("qr_enter_code", {
 								    text: result.QRCODE,
@@ -162,9 +162,9 @@
 								$("#qr_enter_code > img").css("margin", "auto");
 								qrService.fn_qrTimer();
 				    		} else {
-				    			$(".vacState").hide();
-				    			$(".timer").hide();
-				    			$(".pay_btn ul li:eq(0)").show()	 
+								$(".qr_enter_code").hide();
+								$(".qr_info").hide();
+								$(".pay_noti").show();
 				    		}
 						} else {
 							fn_openPopup("QR코드 생성에 실패하였습니다.", "red", "ERROR", "확인", "/front/main.do");
