@@ -203,8 +203,15 @@ public class MainPageInfoManageController {
 	
 	@NoLogging
 	@RequestMapping(value="inc/popup_common.do")
-	public ModelAndView smartworkPopup() throws Exception{		
+	public ModelAndView frontCommonPopup() throws Exception{		
 		ModelAndView model = new ModelAndView("/front/inc/popup_common");
+		return model;
+	}
+	
+	@NoLogging
+	@RequestMapping(value="inc/footer.do")
+	public ModelAndView frontCommonFooter() throws Exception{		
+		ModelAndView model = new ModelAndView("/front/inc/footer");
 		return model;
 	}
 }

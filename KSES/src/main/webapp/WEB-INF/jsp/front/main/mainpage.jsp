@@ -99,14 +99,11 @@
                                                            
                 </div>
             </div>
-            <div class="f_logo_box">
-                <div class="contents">
-                    <p class="f_copy">Copyright</p>
-                    <div class="clear"></div>
-                </div>
-            </div>
+            <c:import url="/front/inc/footer.do" />
         </div>
         <!-- footer //-->
+        
+        
 
         <div id="foot_btn">
             <div class="contents">
