@@ -17,18 +17,10 @@
 					USE_YN, LAST_UPDUSR_ID, BOARD_GROUP, TO_CHAR(LAST_UPDT_DTM, 'yyyy-MM-dd') LAST_UPDT_DTM, BOARD_ALL_NOTICE
 				FROM  TSES_BOARD_INFO_I a
 				WHERE a.BOARD_CD = #{params.boardCd}
-				<if test="params.boardGubun== 'NOT'">
+				<if test="params.boardCd == 'Not'">
 					<choose>
 						<when test="params.adminYn == 'user'">
-						<![CDATA[
-							AND  a.BOARD_SEQ NOT IN	
-							(
-								SELECT BOARD_SEQ 
-								FROM TSES_BOARD_INFO_I d 
-								WHERE d.BOARD_CD='NOT' 
-								AND  TO_CHAR(sysdate, 'yyyyMMdd') BETWEEN NVL(d.BOARD_NOTICE_STARTDAY, '20211201') AND  NVL(d.BOARD_NOTICE_ENDDAY , '20991231')
-							)
-						]]> 
+							AND TO_CHAR(SYSDATE, 'yyyyMMdd') BETWEEN NVL(a.BOARD_NOTICE_START_DAY, '20211201') AND  NVL(a.BOARD_NOTICE_END_DAY , '20991231')
 						</when>
 						<otherwise>
 						
@@ -115,7 +107,7 @@
                  BOARD_POPUP, BOARD_TITLE, BOARD_TOP_SEQ, BOARD_VISIT_CNT, USE_YN, BOARD_CN, BOARD_GROUP,
                  FRST_REGTER_ID, FRST_REGIST_DTM, LAST_UPDUSR_ID, LAST_UPDT_DTM , BOARD_CENTER_ID, BOARD_ALL_NOTICE
 		  FROM 	TSES_BOARD_INFO_I a        	
-		  WHERE 	BOARD_SEQ = #{boardSeq}	
+		  WHERE 	BOARD_SEQ = #{boardSeq}
 			]]>	
      </select>     
      <update id="updateBoardTopSeq">

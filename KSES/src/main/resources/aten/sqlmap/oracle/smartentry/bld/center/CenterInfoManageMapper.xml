@@ -104,6 +104,7 @@
          	) AS CENTER_STANDING_USE_COUNT
          FROM TSEB_CENTER_INFO_M A
          WHERE A.USE_YN = 'Y'
+         ORDER BY A.CENTER_ORDER
     ]]>
     </select>
     
