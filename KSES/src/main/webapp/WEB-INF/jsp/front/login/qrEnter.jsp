@@ -130,11 +130,6 @@
 				    			$("#qr_enter_code canvas").remove();
 				    		}
 				    		
-				    		result.resvInfo.resv_pay_dvsn == 
-				    			"RESV_PAY_DVSN_1" ? 
-				    			$(".pay_btn ul li:eq(0)").show() : 
-								$(".pay_btn ul li:eq(0)").hide(); 
-				    			
 							$(".vacState span").removeClass()
 				    		switch (result.vacntnInfo.pass_yn) {
 								case "Y" : $(".vacState span").addClass("vacDone").html("접종 완료"); break;
@@ -142,23 +137,34 @@
 								default: $(".vacState span").addClass("vacNon").html("접종정보 없음"); break;
 							}				    			
 				    		
-							var qrcode = new QRCode("qr_enter_code", {
-							    text: result.QRCODE,
-							    width: 256,
-							    height: 256,
-							    colorDark : "#000000",
-							    colorLight : "#ffffff",
-							    correctLevel : QRCode.CorrectLevel.M
-							});
 							
-							$("#qr_enter_code > img").css("margin", "auto");
-							qrService.fn_qrTimer();
+				    		if(result.resvInfo.resv_pay_dvsn == "RESV_PAY_DVSN_2" || result.resvInfo.center_pilot_yn == "Y") {
+				    			$(".timer").hide();
+				    			$(".pay_btn ul li:eq(0)").hide();
+				    			$(".vacState").show();
+
+								var qrcode = new QRCode("qr_enter_code", {
+								    text: result.QRCODE,
+								    width: 256,
+								    height: 256,
+								    colorDark : "#000000",
+								    colorLight : "#ffffff",
+								    correctLevel : QRCode.CorrectLevel.M
+								});
+								
+								$("#qr_enter_code > img").css("margin", "auto");
+								qrService.fn_qrTimer();
+				    		} else {
+				    			$(".vacState").hide();
+				    			$(".timer").hide();
+				    			$(".pay_btn ul li:eq(0)").show()	 
+				    		}
 						} else {
 							fn_openPopup("QR코드 생성에 실패하였습니다.", "red", "ERROR", "확인", "/front/main.do");
 						}
 					},
 					function(request) {
-						alert("ERROR : " + request.status);	       						
+						fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");	       						
 					}    		
 				);	
 			},

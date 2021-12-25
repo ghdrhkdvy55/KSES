@@ -168,7 +168,7 @@
                     </li>
                     <li>
                         <ol>
-                            <li>신청일</li>
+                            <li>예약일</li>
                             <li><span id="rsv_req_date"></span></li>
 						</ol>
 					</li> 
@@ -228,7 +228,7 @@
                 	</li>
                 	<li>
                     	<ol>
-                        	<li>신청일</li>
+                        	<li>예약일</li>
                         	<li><span id="cancel_rsv_req_date"></span></li>
                     	</ol>
                 	</li> 
@@ -431,9 +431,6 @@
 										// 다시앉기 팝업창 정보 입력
 										// TODO 추후 제거
 										$("#re_rsv_info .name").html(userLoginInfo.userNm);
-										$("#re_rsv_center").html(obj.center_nm);
-										$("#re_rsv_seat").html(obj.seat_nm);
-										$("#re_rsv_date").html(obj.resv_req_date);
 										
 										// 처음부터 예약하기 영역 활성화
 										$("#rsv_reset_area").show();
@@ -621,6 +618,8 @@
 									$("#rsv_req_date").html(obj.resv_req_date);
 								} else if(division == "PRE"){
 									$("#re_rsv_info .name").html(userLoginInfo.userNm);
+									$("#re_rsv_num").html(obj.resv_seq);
+									$("#re_rsv_date").html(fn_resvDateFormat(obj.resv_end_dt));
 									$("#re_rsv_center").html(obj.center_nm);
 									
 									if(obj.resv_entry_dvsn == "ENTRY_DVSN_1") {
@@ -634,7 +633,7 @@
 									}
 									
 									$("#re_rsv_seat").html(obj.seat_nm);
-									$("#re_rsv_date").html(obj.resv_req_date);
+									$("#re_rsv_req_date").html(obj.resv_req_date);
 									
 									if(obj.re_resv_yn == "Y") {
 										$("#rebookBtn").css("background","#47D6BE");
@@ -671,7 +670,7 @@
 							$("#resvSeq").val(resvSeq);
 							$("#" + popup).bPopup();
 						} else {
-							alert("error")
+							fn_openPopup("error")
 						}
 					},
 					function(request) {

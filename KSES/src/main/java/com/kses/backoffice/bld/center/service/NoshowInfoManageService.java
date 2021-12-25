@@ -50,7 +50,7 @@ public interface NoshowInfoManageService {
 	 * @return
 	 * @throws Exception
 	 */
-	public int updateNoshowResvInfoCancel(ResvInfo resvInfo) throws Exception;
+	public int updateNoshowResvInfoTranCancel(ResvInfo resvInfo) throws Exception;
 	
 	/**
 	 * SPDM 지점 자동취소시간(노쇼) 정보 갱신
@@ -69,4 +69,14 @@ public interface NoshowInfoManageService {
 	 * @throws Exception
 	 */
 	public int copyNoshowInfo(Map<String, Object> params) throws Exception;
+	
+	/**
+	 * 트랜잭션 테스트진행중 
+	 * 
+	 * @param resvSeq
+	 * @param noshowCd
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean updateNoshowResvInfoTran(String resvSeq, String noshowCd) throws Exception;
 }

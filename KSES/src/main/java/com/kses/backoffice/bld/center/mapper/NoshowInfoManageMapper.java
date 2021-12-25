@@ -21,7 +21,7 @@ public interface NoshowInfoManageMapper {
 	
 	public int insertNoshowResvInfo(NoShowHisInfo noshowHisInfo) throws Exception;
 	
-	public int updateNoshowResvInfoCancel(ResvInfo resvInfo) throws Exception;
+	public int updateNoshowResvInfoTranCancel(ResvInfo resvInfo) throws Exception;
 	
 	public int updateNoshowInfo(@Param("noshowInfoList") List<NoshowInfo> noshowInfoList) throws Exception;
 	

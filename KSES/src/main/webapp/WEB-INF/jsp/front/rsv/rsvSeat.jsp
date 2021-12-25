@@ -1013,9 +1013,9 @@
 					function(result) {
 				    	if (result.status == "SUCCESS"){
 				    		if(result.resvInfo != null) {	
-				    			fn_openPopup("예약정보가 정상적으로 등록되었습니다.", "blue", "SUCCESS", "확인", "/front/main.do");
 				    			bPopupClose('rsv_done');
-				    			setTimeout("location.href='/front/main.do'", 10000);
+				    			fn_openPopup("예약정보가 정상적으로 등록되었습니다.", "blue", "SUCCESS", "확인", "/front/main.do");
+				    			setTimeout("location.href='/front/main.do'", 5000);
 				    		}
 				    	} else if(result.status == "LOGIN FAIL") {
 				    		fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
