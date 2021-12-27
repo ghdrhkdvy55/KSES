@@ -22,7 +22,7 @@ public class LoginLogServiceImpl extends EgovAbstractServiceImpl implements Logi
     private static final Logger LOGGER = LoggerFactory.getLogger(LoginLogServiceImpl.class);
 	
 	@Autowired
-	private LoginLogMapper loginMapper;
+	private LoginLogMapper loginLogMapper;
 	
     @Resource(name = "egovLoginLogIdGnrService")
     private EgovIdGnrService idgenService;
@@ -34,20 +34,20 @@ public class LoginLogServiceImpl extends EgovAbstractServiceImpl implements Logi
 		
 		LOGGER.debug("vo info:"  + vo.toString());
 		
-		return loginMapper.logInsertLoginLog(vo);
+		return loginLogMapper.logInsertLoginLog(vo);
 	}
 
     
 	@Override
 	public List<Map<String, Object>> selectLoginLogInfo( Map<String, Object> searchVO) throws Exception {
 		// TODO Auto-generated method stub
-	    return loginMapper.selectLoginLogInfo(searchVO);
+	    return loginLogMapper.selectLoginLogInfo(searchVO);
 	}
 
 
 	@Override
 	public Map<String, Object> selectLoginLogInfoDetail(String logId) throws Exception {
 		// TODO Auto-generated method stub
-		return loginMapper.selectLoginDetail(logId);
+		return loginLogMapper.selectLoginDetail(logId);
 	}
 }

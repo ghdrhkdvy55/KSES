@@ -1,17 +1,14 @@
 package egovframework.let.uat.uia.service.impl;
 
-import egovframework.com.cmm.LoginVO;
-import egovframework.let.uat.uia.mapper.LoginUsrManageMapper;
-import egovframework.let.uat.uia.service.EgovLoginService;
-import egovframework.let.utl.fcc.service.EgovNumberUtil;
-import egovframework.let.utl.fcc.service.EgovStringUtil;
-import egovframework.let.utl.sim.service.EgovFileScrty;
-
-import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 //import egovframework.let.ems.service.EgovSndngMailRegistService;
 //import egovframework.let.ems.service.SndngMailVO;
+
+import egovframework.com.cmm.LoginVO;
+import egovframework.let.uat.uia.mapper.LoginUsrManageMapper;
+import egovframework.let.uat.uia.service.EgovLoginService;
+import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 /**
  * 일반 로그인, 인증서 로그인을 처리하는 비즈니스 구현 클래스
@@ -35,7 +32,7 @@ public class EgovLoginServiceImpl extends EgovAbstractServiceImpl implements Ego
 
     
     @Autowired
-    private LoginUsrManageMapper loginMapper;
+    private LoginUsrManageMapper loginUsrManageMapper;
 
     ///** EgovSndngMailRegistService */
 	//@Resource(name = "sndngMailRegistService")
@@ -55,7 +52,7 @@ public class EgovLoginServiceImpl extends EgovAbstractServiceImpl implements Ego
     	//vo.setPassword(enpassword);
 
     	// 2. 아이디와 암호화된 비밀번호가 DB와 일치하는지 확인한다.
-    	LoginVO loginVO = loginMapper.actionLogin(vo);
+    	LoginVO loginVO = loginUsrManageMapper.actionLogin(vo);
     	// 3. 결과를 리턴한다.
     	if (loginVO != null && !loginVO.getAdminId().equals("") && !loginVO.getAdminPwd().equals("")) {
     		return loginVO;
