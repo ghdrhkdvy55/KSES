@@ -511,7 +511,6 @@ public class ResJosnController {
 		String resPersonCnt = "";
 		String returnCode = "";
 		String returnMessage = "";
-		String seatClass = "";
 
 		InterfaceInfo info = new InterfaceInfo();
 		info.setTrsmrcvSeCode(sendEnum.RPQ.getCode());
@@ -531,12 +530,12 @@ public class ResJosnController {
 
 			if (resInfo != null && SmartUtil.NVL(resInfo.get("resv_end_dt"), "").toString().equals(localTime)
 					&& recDate.substring(0, 8).equals(localTime)) {
+				LOGGER.info(localTime);
 				resName = SmartUtil.NVL(resInfo.get("user_nm"), "").toString();
 				resPrice = SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString();
 				resDay = SmartUtil.NVL(resInfo.get("resv_start_dt"), "").toString();
 				resTime = SmartUtil.NVL(resInfo.get("resv_start_tm"), "").toString();
 				seatName = SmartUtil.NVL(resInfo.get("seat_nm"), "").toString();
-				seatClass = SmartUtil.NVL(resInfo.get("seat_class"), "").toString();
 				resPersonCnt = "1";
 				returnCode = "OK";
 			} else {
@@ -577,7 +576,6 @@ public class ResJosnController {
 		model.addObject("RES_PERSON_CNT", resPersonCnt);
 		model.addObject("RETURN_CODE", returnCode);
 		model.addObject("RETURN_MESSAGE", returnMessage);
-		model.addObject("SEAT_CLASS", seatClass);
 
 		// 인터페이스 연계
 		info.setResultMessage(ParamToJson.paramToJson(model));
@@ -624,11 +622,12 @@ public class ResJosnController {
 			searchVO.put("resvSeq", SmartUtil.NVL(jsonInfo.get("RES_NO"), "").toString());
 			searchVO.put("resvDate", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
 			Map<String, Object> resInfo = resService.selectUserResvInfo(searchVO);
-			String recDate = SmartUtil.NVL(jsonInfo.get("RES_SEND_DATE"), "").toString();
+			String localTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+			String recDate = SmartUtil.NVL(jsonInfo.get("RES_SEND_DATE"), "19700101").toString();
 
 			LOGGER.debug(Integer.valueOf(SmartUtil.NVL(jsonInfo.get("RES_PRICE"), "").toString()) + ":"
 					+ Integer.valueOf(SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString()));
-			if (resInfo == null) {
+			if (resInfo == null || !recDate.substring(0, 8).equals(localTime)) {
 				returnCode = "ERROR_01";
 				returnMessage = "예약 정보 없음.";
 			} else if (resInfo != null && !SmartUtil.NVL(jsonInfo.get("RES_PRICE"), "").toString()
