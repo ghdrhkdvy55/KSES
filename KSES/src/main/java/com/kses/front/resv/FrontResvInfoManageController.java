@@ -26,6 +26,8 @@ import com.kses.backoffice.bld.floor.service.FloorPartInfoManageService;
 import com.kses.backoffice.bld.season.service.SeasonInfoManageService;
 import com.kses.backoffice.bld.season.service.SeasonSeatInfoManageService;
 import com.kses.backoffice.bld.seat.service.SeatInfoManageService;
+import com.kses.backoffice.cus.kko.service.SureManageSevice;
+import com.kses.backoffice.cus.kko.vo.SmsDataInfo;
 import com.kses.backoffice.cus.usr.service.UserInfoManageService;
 import com.kses.backoffice.cus.usr.vo.UserInfo;
 import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
@@ -72,6 +74,9 @@ public class FrontResvInfoManageController {
 	
 	@Autowired
 	private ResvInfoManageService resvService;
+	
+	@Autowired
+	private SureManageSevice sureService;
 	
 	@Autowired
 	private UserInfoManageService userService;
@@ -142,9 +147,7 @@ public class FrontResvInfoManageController {
 			String centerCd = (String)params.get("centerCd");
 			String resvDate = (String)params.get("resvDate");
 			
-			
-					
-					
+
 			Map<String, Object> resvInfo = centerService.selectCenterInfoDetail(centerCd);
 			List<Map<String, Object>> floorList = floorService.selectFloorInfoComboList(centerCd);
 			List<Map<String, Object>>  seatClass = codeDetailService.selectCmmnDetailCombo("SEAT_CLASS");
@@ -222,7 +225,55 @@ public class FrontResvInfoManageController {
 		return model;
 	}
 	
-	@RequestMapping (value="getResvInfo.do")
+	@RequestMapping(value="resvCertifiSms.do")
+	public ModelAndView insertResvCertifiSmsInfo(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo, 
+													@RequestBody Map<String, Object> params,
+													HttpServletRequest request,
+													BindingResult result) throws Exception {
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+		
+		try {
+			SmsDataInfo smsDataInfo = new SmsDataInfo();
+			
+			smsDataInfo.setSendid("kcycle");
+			smsDataInfo.setSendname("SYSTEM");
+			
+			LOGGER.debug(params.get("certifiNum").toString());
+			LOGGER.debug(SmartUtil.NVL(params.get("certifiNum"), ""));
+			String phNum[] = SmartUtil.getSplitPhNum(SmartUtil.NVL(params.get("certifiNum"), ""));
+			smsDataInfo.setRecvname(SmartUtil.NVL(params.get("certifiNm"), ""));
+			smsDataInfo.setRphone1(phNum[0]);
+			smsDataInfo.setRphone2(phNum[1]);
+			smsDataInfo.setRphone3(phNum[2]);
+			
+			smsDataInfo.setSphone1("02");
+			smsDataInfo.setSphone2("2067");
+			smsDataInfo.setSphone3("5000");
+			
+			String certifiCode = sureService.selectCertifiCode();
+			String msg = "입장신청 인증번호는 [" + certifiCode + "] 입니다.";
+			smsDataInfo.setMsg(msg);
+			smsDataInfo.setSysGbn("MOBILE_KCYCLE");
+			smsDataInfo.setUserid("14080");
+			
+			int ret = sureService.insetSmsData(smsDataInfo);
+			if(ret > 0) {
+				model.addObject("certifiCode", certifiCode);
+				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.request.msg"));
+			} else {
+				throw new Exception();
+			}
+		} catch(Exception e) {
+			LOGGER.error("insertResvCertifiSmsInfo : " + e.toString());
+			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
+		}
+		
+		return model;
+	}
+	
+	@RequestMapping(value="getResvInfo.do")
 	public ModelAndView getResvInfo(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo, 
 										@RequestParam("resvSeq") String resvSeq,
 										HttpServletRequest request,
@@ -394,7 +445,7 @@ public class FrontResvInfoManageController {
 			HttpSession httpSession = request.getSession(true);
 			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
 			
-			if("USER_DVSN_1".equals(params.get("resvDvsn")) && userLoginInfo == null) {
+			if(userLoginInfo == null) {
 				userLoginInfo = new UserLoginInfo();
 				userLoginInfo.setUserDvsn("USER_DVSN_2");
 				httpSession.setAttribute("userLoginInfo", userLoginInfo);

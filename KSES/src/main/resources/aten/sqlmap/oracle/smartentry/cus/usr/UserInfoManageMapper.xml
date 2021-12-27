@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kses.backoffice.cus.usr.mapper.UserInfoManageMapper">
-
     <select id="selectUserInfoListPage" resultType="lmap">     	      
 		SELECT * FROM 
 		( 
@@ -54,6 +53,15 @@
 			USER_RCPT_YN, USER_RCPT_DVSN, USER_RCPT_NUMBER
 		FROM TSER_USER_INFO_I 
 		WHERE USER_ID = #{userId}
+   	</select>
+   	
+	<select id="selectSSOUserInfo" resultType="com.kses.front.login.vo.UserLoginInfo">
+		SELECT 
+			USER_ID, USER_NM, USER_PHONE, USER_SEX_MF, USER_BIRTH_DY, LAST_UPDUSR_ID, LAST_UPDT_DTM,
+			USER_RCPT_YN, USER_RCPT_DVSN, USER_RCPT_NUMBER
+		FROM TSER_USER_INFO_I 
+		WHERE USER_CARD_ID = CRYPTO.DEC('normal',#{params.cardId, jdbcType=VARCHAR})
+		AND CARD_SEQ = #{params.cardSeq, jdbcType=VARCHAR}
    	</select>
    	
 	<select id="selectUserVacntnInfo" resultType="lmap">
