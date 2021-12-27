@@ -379,7 +379,7 @@ bottom:0;
 .main_noti_list li time {font-size:1.1rem ;width: 100px; color: #999; display: inline-block;vertical-align: middle;text-align: right;box-sizing: border-box;}
 .main_noti_list li:last-child {  }
 .f_logo_box {padding:3.3rem 0 ; text-align: center;}
-.f_copy {font-size: 1.2rem;color:#fff;opacity: 0.4; }
+.f_copy {font-size: 1.2rem;color:#adadad;opacity: 0.4; }
 /*dropdown*/
 .drop_timebox {
   width: 380px;
@@ -447,7 +447,7 @@ bottom:0;
 .pop_time_re{background-color: #ffffff;height: 100%;width: 100%;box-sizing: border-box;overflow-y: auto;overflow-x: hidden;font-weight: 700;padding-top: 50px !important;position: absolute;left: 0;}
 
 /* header */
-#header {background:#47D6BE;position:fixed;top:0;left:0;z-index:50;width:100%; height: 26vh;}
+#header {background:#47D6BE;position:absolute;top:0;left:0;z-index:50;width:100%; height: 26vh;}
 #header.on { background:#f4f4f4;}
 
 #sub_header {background: #056645;position:fixed;top:0;left:0;z-index:50;width:100%;}
@@ -2453,27 +2453,36 @@ ul.tabs li{
 
 
 /* 1224 footer */
-.f_logo_box {padding:2rem 0; border: 1px solid; background: #364150; color: #fff; margin-top: 30px;}
+.f_logo_box {padding:2rem 0; color: #adadad; margin:3rem 0; padding-bottom:10rem;}
+.linkBox {
+    padding-bottom: 1rem;
+    border-bottom: none;
+}
 .linkBox ul{overflow: hidden; border-bottom: 1px solid #666;}
 .linkBox li{float: left; height: 40px; position: relative;}
 .linkBox li:after{content: ''; display: block; width: 1px; height: 14px; background: #666; position: absolute; right: 0; top: calc(50% - 7px);}
 .linkBox li:last-child:after{display: none;}
-.linkBox li:nth-child(1){border-bottom: 2px solid #ff740c; box-sizing: border-box;}
-.linkBox li:nth-child(1) a{color: #ff740c;}
-.linkBox a{display: block; padding: 15px 20px; font-size: 1.4rem; line-height: 1rem; color: #fff;}
+.linkBox li:nth-child(1){border-bottom: 2px solid #222; box-sizing: border-box;}
+.linkBox li:nth-child(1) a{color: #222;}
+.linkBox a{display: block; padding: 15px 20px; font-size: 1.4rem; line-height: 1rem; color: #adadad;}
 .addressBox{position: relative; padding: 20px 0; font-size: 1.2rem; line-height: 2rem; text-align: left;}
 .addressBox address span{display: inline-block; padding-right: 15px; position: relative;}
 .addressBox address span:after{content: ''; display: block; width: 1px; height: 12px; background: #666; position: absolute; right: 4px; top: calc(50% - 6px);}
 .addressBox address span:last-child:after{display: none;}
-.addressBox p a{color: #fff;}
-.f_copy {font-size: 1.2rem; padding-top: 5px; color:#fff; opacity: 0.8; }
+.addressBox p a{color: #adadad;}
+.f_copy {font-size: 1.2rem; padding-top: 5px; color:#adadad; opacity: 0.8; }
 .addressBox .banner{float: right; height: 25px; transform: translateY(-15px);}
 .addressBox .banner img{vertical-align: middle;}
 @media screen and (max-width: 660px){
-  .f_logo_box {padding: 1.5rem 0;}
+	
+  .f_logo_box {padding: 1.5rem 0;  padding-bottom:10rem;}
+  .linkBox {
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #ddd;
+}
   .linkBox ul{border-bottom: none;}
   .linkBox li{height: 30px;}
-  .linkBox a{padding: 10px 10px;}
+  .linkBox a{padding: 10px 5px;}
   .addressBox{padding-top: 10px; padding-bottom: 60px; font-size: 1.3rem;line-height: 2.4rem; }
   .addressBox .banner{width: 100%; transform: translateY(10px);}
   .addressBox .banner img{max-width: 150px; width: 32%;}
