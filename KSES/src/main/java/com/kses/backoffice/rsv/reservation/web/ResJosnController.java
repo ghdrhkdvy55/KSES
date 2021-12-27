@@ -511,6 +511,7 @@ public class ResJosnController {
 		String resPersonCnt = "";
 		String returnCode = "";
 		String returnMessage = "";
+		String partInitial = "";
 
 		InterfaceInfo info = new InterfaceInfo();
 		info.setTrsmrcvSeCode(sendEnum.RPQ.getCode());
@@ -536,6 +537,7 @@ public class ResJosnController {
 				resDay = SmartUtil.NVL(resInfo.get("resv_start_dt"), "").toString();
 				resTime = SmartUtil.NVL(resInfo.get("resv_start_tm"), "").toString();
 				seatName = SmartUtil.NVL(resInfo.get("seat_nm"), "").toString();
+				partInitial = SmartUtil.NVL(resInfo.get("part_initial"), "").toString();
 				resPersonCnt = "1";
 				returnCode = "OK";
 			} else {
@@ -576,6 +578,7 @@ public class ResJosnController {
 		model.addObject("RES_PERSON_CNT", resPersonCnt);
 		model.addObject("RETURN_CODE", returnCode);
 		model.addObject("RETURN_MESSAGE", returnMessage);
+		model.addObject("PART_INITIAL", partInitial);
 
 		// 인터페이스 연계
 		info.setResultMessage(ParamToJson.paramToJson(model));
@@ -607,6 +610,7 @@ public class ResJosnController {
 		String seatClass = "";
 		String userPhone = "";
 		String userPhoneBack4 = "";
+		String resvPayDvsn = "";
 
 		InterfaceInfo info = new InterfaceInfo();
 		info.setTrsmrcvSeCode(sendEnum.RPQ.getCode());
@@ -634,6 +638,10 @@ public class ResJosnController {
 					.equals(SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString())) {
 				returnCode = "ERROR_03";
 				returnMessage = "결제 금액 확인 요망.";
+			} else if (resInfo != null && !SmartUtil.NVL(resInfo.get("resv_pay_dvsn"), "").toString().equals("RESV_PAY_DVSN_1")) {
+				LOGGER.info("RESV_PAY_DVSN" +  SmartUtil.NVL(resInfo.get("resv_pay_dvsn"), "").toString());
+				returnCode = "ERROR_04";
+				returnMessage = "이미 결제가 완료 되었습니다.";
 			} else {
 				resName = SmartUtil.NVL(resInfo.get("user_nm"), "").toString();
 				resPrice = SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString();
@@ -642,6 +650,7 @@ public class ResJosnController {
 				seatClass = SmartUtil.NVL(resInfo.get("seat_class"), "").toString();
 				userPhone = SmartUtil.NVL(resInfo.get("user_phone"), "").toString();
 				userPhoneBack4 = userPhone.substring(userPhone.length()-4,userPhone.length());
+				resvPayDvsn = SmartUtil.NVL(resInfo.get("resv_pay_dvsn"), "").toString();
 				
 				EgovFileScrty fileScrty = new EgovFileScrty();
 				String qrCode = fileScrty.encode(resInfo.get("resv_seq") + ":" + resInfo.get("resv_start_dt")
