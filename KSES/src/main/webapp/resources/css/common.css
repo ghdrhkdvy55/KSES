@@ -259,3 +259,19 @@ padding: 0 !important;
 .input_reset:focus {outline: none !important;  border: 0}
 .loginArea ul li label { font-size: 12px }
 
+/*1227*/
+.pop_wrap h4 {margin-bottom: 3rem; border-bottom: 1px solid #eee;}
+.costStat {font-weight: 500;}
+.costStat li {display: inline-block; margin-right: 1rem;}
+.costStat li span {color: #0f5ff1;}
+.costStat li img {vertical-align: bottom;}
+.cost_btn {margin-top: 2.5rem; text-align: center;}
+.cost_btn li a {
+    color: #fff;
+    padding: 2rem 5rem;
+    background: #4d4d4d;
+    border-radius: 8px;
+    display: block;
+}
+.cost_list li li:first-child {background: url("/resources/img/front/arrow_right_black_24dp.svg") no-repeat; padding-left: 2rem;}
+

@@ -2470,10 +2470,10 @@ ul.tabs li{
 .addressBox .banner{float: right; height: 25px; transform: translateY(-15px);}
 .addressBox .banner img{vertical-align: middle;}
 @media screen and (max-width: 660px){
-  .f_logo_box {padding: 1.5rem 0;}
+  .f_logo_box {padding: 1.5rem 0;  padding-bottom:10rem;}
   .linkBox ul{border-bottom: none;}
   .linkBox li{height: 30px;}
-  .linkBox a{padding: 10px 10px;}
+  .linkBox a{padding: 10px 5px;}
   .addressBox{padding-top: 10px; padding-bottom: 60px; font-size: 1.3rem;line-height: 2.4rem; }
   .addressBox .banner{width: 100%; transform: translateY(10px);}
   .addressBox .banner img{max-width: 150px; width: 32%;}
