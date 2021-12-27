@@ -632,7 +632,7 @@
 									$("#re_rsv_seat").html(obj.seat_nm);
 									$("#re_rsv_req_date").html(obj.resv_req_date);
 									
-									if(obj.re_resv_yn == "Y") {
+									if(obj.re_resv_yn == "Y" && obj.resv_entry_dvsn == "ENTRY_DVSN_2") {
 										$("#rebookBtn").css("background","#47D6BE");
 										$("#rebookBtn").html("최근 좌석으로 예약하기")
 										$("#rebookBtn").click(function (e) {
@@ -640,7 +640,7 @@
 										});										
 									} else {
 										$("#rebookBtn").css("background","#808080");
-										$("#rebookBtn").html("현재 예약할수 없는 좌석입니다.")
+										$("#rebookBtn").html("현재 예약할수 없는 좌석 또는 입석 예약으로 진행하셨습니다.")
 									}
 								} else {
 									$("#cancel_rsv_info .name").html(userLoginInfo.userNm);
@@ -767,13 +767,14 @@
 					"partCd" : resvInfo.part_cd,
 					"seatCd" : resvInfo.seat_cd,
 					"userId" : resvInfo.user_id,
-					"checkDvsn" : "ALL"
+					"checkDvsn" : "SEAT"
 				}
 				
 				var result = mainService.fn_resvVaildCheck(params);
 				
 				if(result != ""){
-					params.resvDate = result.resvDate;;
+					params.resvDate = result.resvDate;
+					sessionStorage.setItem("accessCheck","1");
 					$.each(result, function(index, item) {
 						$("form[name=regist]").append($('<input/>', {type: 'hidden', name: index, value:item }));
 						$("form[name=regist]").attr("action", "/front/rsvSeat.do").attr("method","get").submit();

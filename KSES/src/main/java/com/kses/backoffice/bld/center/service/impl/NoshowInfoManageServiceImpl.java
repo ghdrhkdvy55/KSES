@@ -65,6 +65,7 @@ public class NoshowInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
 		return noshowMapper.copyNoshowInfo(params);
 	}
 	
+	
 	@Override
 	@Transactional(propagation=Propagation.REQUIRES_NEW, rollbackFor=Exception.class)
 	public boolean updateNoshowResvInfoTran(String resvSeq, String noshowCd) throws Exception {
@@ -96,6 +97,6 @@ public class NoshowInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
 			LOGGER.info("예약번호 : " + resvSeq + " 예외발생 트랜잭션 실행");
 		}
 		
-		return resultCount > 0 ? true : false  ;
+		return resultCount > 1 ? true : false  ;
 	}
 }

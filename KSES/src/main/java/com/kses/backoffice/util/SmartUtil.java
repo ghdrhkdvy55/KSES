@@ -590,6 +590,28 @@ public class SmartUtil {
         return null;
     }
 	
+	public static String[] getSplitPhNum(String phNum) throws Exception {
+		String[] splitPhNumArray = new String[3];
+		
+		if(phNum.length() >= 9 && phNum.length() <= 12) {
+			if(phNum.length() == 11) {
+				splitPhNumArray[0] = phNum.substring(0, 3);
+				splitPhNumArray[1] = phNum.substring(3, 7);
+				splitPhNumArray[2] = phNum.substring(7, 11);
+			} else {
+				splitPhNumArray[0] = phNum.substring(0, 3);
+				splitPhNumArray[1] = phNum.substring(3, 6);
+				splitPhNumArray[2] = phNum.substring(6, 10);
+			}
+		} else {
+			LOGGER.info("올바르지 않은 휴대전화번호 기입");
+			throw new Exception();
+		}
+		
+		return splitPhNumArray;
+	}
+	
+	
 	/**
 	 * 비밀번호를 암호화하는 기능(복호화가 되면 안되므로 SHA-256 인코딩 방식 적용)
 	 * 

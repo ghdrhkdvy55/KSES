@@ -211,16 +211,20 @@
 								$("#rsv_num, #cancel_rsv_num").html(guestResvInfo.resv_seq);
 								$("#rsv_date, #cancel_rsv_date").html(fn_resvDateFormat(guestResvInfo.resv_end_dt));
 								$("#rsv_name").html(guestResvInfo.resv_user_nm);
-								$("#rsv_center, #cancel_rsv_brch").html(guestResvInfo.center_nm);
+								$("#rsv_center, #cancel_rsv_center").html(guestResvInfo.center_nm);
 								
-								if(guestResvInfo.resv_entry_dvsn == "ENTRY_DVSN_1") {
-									$("#rsv_info ul > li:eq(3)").hide();
-									$("#rsv_info ul > li:eq(4)").hide();
+								console.log(guestResvInfo.resv_entry_dvsn);
+								console.log($(".rsvInfo_result"));
+								console.log($(".rsvInfo_result > li:eq(4)"));
+								
+								if(guestResvInfo.resv_entry_dvsn == "ENTRY_DVSN_1") {									
+									$(".rsvInfo_result").children().eq(4).hide();
+									$(".rsvInfo_result").children().eq(5).hide();
 									$("#cancel_rsv_info ul > li:eq(3)").hide();
 									$("#cancel_rsv_info ul > li:eq(4)").hide();
 								} else {
-									$("#rsv_info ul > li:eq(3)").show();
-									$("#rsv_info ul > li:eq(4)").show();
+									$(".rsvInfo_result").children().eq(4).show();
+									$(".rsvInfo_result").children().eq(5).show();
 									$("#cancel_rsv_info ul > li:eq(3)").show();
 									$("#cancel_rsv_info ul > li:eq(4)").show();
 									$("#rsv_floor, #cancel_rsv_floor").html(guestResvInfo.floor_nm);

@@ -124,7 +124,7 @@ public class LoginPageInfoManageController {
 		
 		ModelAndView model = new ModelAndView("/front/login/loginpage");
 		try {		
-			HttpSession httpSession = request.getSession(true);
+			HttpSession httpSession = request.getSession();
 			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
 			
 			if(userLoginInfo != null) {
@@ -141,8 +141,33 @@ public class LoginPageInfoManageController {
 		return model;
 	}
 	
+	@RequestMapping (value="ssoLogin.do")
+	public ModelAndView frontSSOLogin(	@RequestParam Map<String, Object> params,
+										HttpServletRequest request) throws Exception {
+		
+		ModelAndView model = new ModelAndView("/front/login/mainpage");
+		try {
+			
+			UserLoginInfo userLoginInfo = new UserLoginInfo();
+			userLoginInfo = userService.selectSSOUserInfo(params);
+			
+			if(userLoginInfo != null) {
+				HttpSession httpSession = request.getSession();
+				httpSession.setAttribute("userLoginInfo",userLoginInfo);
+				httpSession.setMaxInactiveInterval(600);
+			}
+ 			
+			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+		} catch(Exception e) {
+			LOGGER.error("frontSSOLogin : " + e.toString());
+			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
+		}
+		return model;
+	}
+	
 	@RequestMapping (value="qrEnter.do")
-	public ModelAndView selectFrontQrEnterPage(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo, 
+	public ModelAndView selectFrontQrEnterPage(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo,
 												@RequestParam("resvSeq") String resvSeq,
 												@RequestParam("accessType") String accessType,
 												HttpServletRequest request,
@@ -150,13 +175,15 @@ public class LoginPageInfoManageController {
 		
 		ModelAndView model = new ModelAndView("/front/login/qrEnter");
 		try {		
+			HttpSession httpSession = request.getSession();
+			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
+			
 			if(userLoginInfo == null && accessType.equals("WEB")) {
 				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
 				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));	
 				model.setViewName("/front/main/mainpage");
 				return model;
 			}
-			
 			
 			model.addObject("accessType", accessType);
 			model.addObject("resvSeq", resvSeq);
@@ -177,13 +204,6 @@ public class LoginPageInfoManageController {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {		
-/*			HttpSession httpSession = request.getSession(true);
-			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
-			
-			if(userLoginInfo != null) {
-				model.setViewName("/front/mainpage");
-			}*/
-			
 			
 			Map<String, Object> resvQrInfo = resvService.selectResvQrInfo(resvSeq);
 			model.addObject("resvQrInfo", resvQrInfo);
