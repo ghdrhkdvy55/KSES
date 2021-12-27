@@ -57,13 +57,10 @@
 	</insert>
 
    	
+   	
    	<delete id="deleteMsgManage">
    	    <foreach collection="delCds" item="item" separator=";" open="DECLARE BEGIN" close="; END;">  
    	            DELETE FROM TSEB_MSG_T  WHERE GROUP_CODE= #{item}
 	    </foreach>		
    	</delete>
-    
-    
-    
-    
 </mapper>

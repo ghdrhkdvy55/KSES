@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kses.backoffice.cus.kko.mapper.SureManageMapper">
+	<select id="selectCertifiCode" resultType="String">
+		SELECT TRUNC(DBMS_RANDOM.VALUE(1000,9999)) FROM DUAL
+	</select>
+
+	<insert id="insetSmsData">
+    	INSERT INTO SMS.SMSDATA
+    	(
+    		SEQNO, INDATE, INTIME, MEMBER, SENDID, 
+    		SENDNAME, RPHONE1, RPHONE2, RPHONE3, RECVNAME,
+    		SPHONE1, SPHONE2, SPHONE3, MSG, RESULT, 
+    		KIND, SYS_GBN, USERID
+    	)
+    	VALUES
+    	(
+    		SMS.SQ_SMSDATA.NEXTVAL, TO_CHAR(SYSDATE,'YYYYMMDD'), TO_CHAR(SYSDATE,'HH24MISS'), 0, #{sendid, jdbcType=VARCHAR},
+			#{sendname, jdbcType=VARCHAR}, #{rphone1, jdbcType=VARCHAR}, #{rphone2, jdbcType=VARCHAR}, #{rphone3, jdbcType=VARCHAR}, #{recvname, jdbcType=VARCHAR},
+			#{sphone1, jdbcType=VARCHAR}, #{sphone2, jdbcType=VARCHAR}, #{sphone3, jdbcType=VARCHAR}, #{msg, jdbcType=VARCHAR}, '0',
+			'S', #{sysGbn, jdbcType=VARCHAR}, #{userid, jdbcType=VARCHAR} 
+    	)
+	</insert>
+</mapper>
