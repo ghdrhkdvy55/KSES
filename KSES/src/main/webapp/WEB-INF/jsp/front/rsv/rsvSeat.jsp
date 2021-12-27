@@ -119,9 +119,15 @@
                             <ul id="standing_resv_area">
                                 <li><input type="text" id="ENTRY_DVSN_1_resvUserNm" class="nonMemberArea" placeholder="이름을 입력해주세요."></li>
                                 <li><input type="text" id="ENTRY_DVSN_1_resvUserClphn" class="nonMemberArea" onkeypress="onlyNum(this);" placeholder="전화번호를 '-'없이 입력해주세요."></li>
-                                <li class="certify nonMemberArea" onclick="javascript:seatService.fn_certification();">
-                                	<a href="javascript:void(0);"><img src="/resources/img/front/certify.svg" alt="">인증 하기</a>
+                                <li class="certify nonMemberArea" onclick="javascript:seatService.fn_SmsCertifi();">
+                                	<a href="javascript:void(0);"><img src="/resources/img/front/certify.svg" alt="">인증번호 받기</a>
                                 </li>
+								
+								<li class="nonMemberArea"><input type="text" id="ENTRY_DVSN_1_resvCertifiCode" placeholder="인증번호를 입력하세요."></li>
+								<li class="certify nonMemberArea" onclick="javascript:seatService.fn_checkCertifiCode();">
+									<a href="javascript:void(0);"><img src="/resources/img/front/certify.svg" alt="">인증 하기</a>
+								</li>
+                                
                                 <!--전자문진표-->
                                 <li class="covid19_qna">
                                     <p>
@@ -256,9 +262,15 @@
                                     <ul id="ENTRY_DVSN_2_resv_area">
                                         <li class="nonMemberArea"><input type="text" id="ENTRY_DVSN_2_resvUserNm" placeholder="이름을 입력해주세요."></li>
                                         <li class="nonMemberArea"><input type="text" id="ENTRY_DVSN_2_resvUserClphn" onkeypress="onlyNum(this);" placeholder="전화번호를 '-'없이 입력해주세요."></li>
-                                        <li class="certify nonMemberArea" onclick="javascript:seatService.fn_certification();">
+										<li class="certify nonMemberArea" onclick="javascript:seatService.fn_SmsCertifi();">
+											<a href="javascript:void(0);"><img src="/resources/img/front/certify.svg" alt="">인증번호 받기</a>
+										</li>
+										
+                                		<li class="nonMemberArea"><input type="text" id="ENTRY_DVSN_2_resvCertifiCode" placeholder="인증번호를 입력하세요."></li>
+                                        <li class="certify nonMemberArea" onclick="javascript:seatService.fn_checkCertifiCode();">
                                         	<a href="javascript:void(0);"><img src="/resources/img/front/certify.svg" alt="">인증 하기</a>
                                         </li>
+                                        
                                         <!--전자문진표-->
                                         <li class="covid19_qna">
                                             <p>
@@ -321,7 +333,6 @@
                             </div>
                         </section>
                     </div>
-
                 </div>                
             </div>
         </div>
@@ -479,9 +490,10 @@
     <script>
     	var isMember = "${sessionScope.userLoginInfo.userDvsn}" == "USER_DVSN_1" ? true : false;
 
-    	var certificationYn = false;
-    	var certificationName = isMember ? "${sessionScope.userLoginInfo.userNm}" : "";
-    	var certificationNumber = isMember ? "${sessionScope.userLoginInfo.userPhone}" : "";
+    	var certifiYn = false;
+    	var certifiCode = "";
+    	var resvUserNm = isMember ? "${sessionScope.userLoginInfo.userNm}" : "";
+    	var resvUserClphn = isMember ? "${sessionScope.userLoginInfo.userPhone}" : "";
     	
 //    	var userRcptYn = isMember ? "${sessionScope.userLoginInfo.userRcptYn}" : "";
 //    	var userRcptDvsn = isMember ? "${sessionScope.userLoginInfo.userRcptDvsn}" : "";
@@ -492,6 +504,15 @@
     	var center ="";
     	
 		$(document).ready(function() {
+			if(sessionStorage.getItem("accessCheck") != "1") {
+				location.href = "/front/main.do";
+			}
+			
+		    $(window).on("beforeunload", function(){
+		    	sessionStorage.removeItem("accessCheck");
+		    });
+
+			
 			//입석 좌석 버튼 이벤트 정의
 			$(function(){
 				var sBtn = $(".section_menu ul > li, .enter_type ul > li");   //  ul > li 이를 sBtn으로 칭한다. (클릭이벤트는 li에 적용 된다.)
@@ -551,8 +572,6 @@
 								});
 								centerService.fn_centerButtonSetting();
 							}
-						} else {
-							
 						}
 					},
 					function(request) {
@@ -592,7 +611,8 @@
 										
 					$("#" + entryDvsn + "_resvUserNm").val("");
 					$("#" + entryDvsn + "_resvUserClphn").val("");
-
+					$("#" + entryDvsn + "_resvCertifiCode").val("");
+					
 					$("input:checkbox[id='" + entryDvsn + "_qna_check']").prop("checked", false);
 					$("input:checkbox[id='" + entryDvsn + "_person_agree']").prop("checked", false);
 					
@@ -611,9 +631,10 @@
 
 						$(".nonMemberArea").hide();
 					} else {
-						certificationYn = false;
-				    	certificationName = "";
-				    	certificationNumber = "";
+						certifiYn = false;
+						certifiCode = "";
+				    	resvUserNm = "";
+				    	resvUserClphn = "";
 						$(".nonMemberArea").show();
 					}
 				}
@@ -711,7 +732,7 @@
 								
 								fn_scrollMove($("#section_sel"));
 							} else {
-								fn_openPopup("해당층은 현재 선택 가능한 구역이 존재하지 않습니다.");
+								fn_openPopup("해당층은 현재 예약 가능한 구역이 존재하지 않습니다.");
 							}
 				    	}
 					},
@@ -890,54 +911,71 @@
 				var searchSeatCd = $("#searchSeatCd").val();
 				$("#" + searchSeatCd).attr("tabindex", -1).focus();
 			},
-			fn_certification : function() {
+			fn_SmsCertifi : function() {
 				var entryDvsn = $("#entryDvsn").val();
+				var certifiNm = $("#" + entryDvsn + "_resvUserNm").val();
+				var certifiNum = $("#" + entryDvsn + "_resvUserClphn").val();
 				
-				if(certificationYn) {
+				if(certifiYn) {
 					fn_openPopup("이미 인증을 진행하였습니다.", "red", "ERROR", "확인", "");
 					return;
 				} else {
-					if($("#" + entryDvsn + "_resvUserNm").val() == "") {
-						fn_openPopup("이름을 입력해주세요.", "red", "ERROR", "확인", "");
-						return;
-					} else if ($("#" + entryDvsn + "_resvUserClphn").val() == "") {
-						fn_openPopup("인증번호를 입력해주세요.", "red", "ERROR", "확인", "");
-						return;
+					if(certifiNm == "") {
+						fn_openPopup("이름을 입력해주세요.", "red", "ERROR", "확인", ""); return;
+					} else if (certifiNum == "") {
+						fn_openPopup("휴대폰번호를 입력해주세요.", "red", "ERROR", "확인", ""); return;
+					} else if (!validPhNum(certifiNum)) {
+						fn_openPopup("올바른 휴대폰번호를 입력해주세요.", "red", "ERROR", "확인", ""); return;
 					}
-
-			    	certificationYn = true;
-			    	certificationName = $("#" + entryDvsn + "_resvUserNm").val();
-			    	certificationNumber = $("#" + entryDvsn + "_resvUserClphn").val();
 					
-					fn_openPopup("정상적으로 인증되었습니다.", "blue", "SUCCESS", "확인", "");
+					var url = "/front/resvCertifiSms.do";
+					var params = {
+						"certifiNm" : certifiNm,
+						"certifiNum" : certifiNum
+					}
+					
+					fn_Ajax
+					(
+					    url,
+					    "POST",
+					    params,
+						false,
+						function(result) {
+					    	if(result.status == "SUCCESS") {
+					    		fn_openPopup("인증번호가 발송 되었습니다.(" +  result.certifiCode + ")", "blue", "SUCCESS", "확인", "");
+								certifiCode = result.certifiCode;
+						    	resvUserNm = certifiNm;
+						    	resvUserClphn = certifiNum;
+					    	} else if(result.status == "LOGIN FAIL") {
+					    		fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
+					    	} else {
+					    		fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
+					    	}
+						},
+						function(request) {
+							fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");	       						
+						}    		
+					);
 				}
+			},
+			fn_checkCertifiCode : function() {
+				var entryDvsn = $("#entryDvsn").val();
+				var inCertifiCode = $("#" + entryDvsn + "_resvCertifiCode").val();
+				
+				if(inCertifiCode == "") {fn_openPopup("인증번호를 입력해주세요", "red", "ERROR", "확인", ""); return;}
+				if(inCertifiCode != certifiCode) {fn_openPopup("인증번호가 일치하지 않습니다.", "red", "ERROR", "확인", ""); return;}
+				
+		    	fn_openPopup("정상적으로 인증되었습니다.", "blue", "SUCCESS", "확인", "");
+		    	certifiYn = true;
 			},
 			fn_checkForm : function() {
 				var entryDvsn = $("#entryDvsn").val();
 				var url = "/front/updateUserResvInfo.do";
 				
-
-				if(entryDvsn != "ENTRY_DVSN_1") {
-					if($("#seatCd").val() == "") {
-						fn_openPopup("좌석을 선택해주세요", "red", "ERROR", "확인", "");
-						return;
-					} 
-				}
-				
-				if(!isMember && !certificationYn){
-					fn_openPopup("본인인증을 진행해주세요", "red", "ERROR", "확인", "");
-					return;					
-				}
-				
-				if(!$("input:checkbox[id='" + entryDvsn + "_qna_check']").is(":checked")) {
-					fn_openPopup("전자문진표 작성여부에 동의해주세요", "red", "ERROR", "확인", "");
-					return;
-				}
-				
-				if(!$("input:checkbox[id='" + entryDvsn + "_person_agree']").is(":checked") && !isMember) {
-					fn_openPopup("개인정보 수집 이용여부에 대하여 동의해주세요", "red", "ERROR", "확인", "");
-					return;
-				}
+				if(entryDvsn != "ENTRY_DVSN_1" && $("#seatCd").val() == "") {fn_openPopup("좌석을 선택해주세요", "red", "ERROR", "확인", ""); return;}
+				if(!isMember && !certifiYn) {fn_openPopup("본인인증을 진행해주세요", "red", "ERROR", "확인", ""); return;}					
+				if(!$("input:checkbox[id='" + entryDvsn + "_qna_check']").is(":checked")) {fn_openPopup("전자문진표 작성여부에 동의해주세요", "red", "ERROR", "확인", ""); return;}
+				if(!$("input:checkbox[id='" + entryDvsn + "_person_agree']").is(":checked") && !isMember) {fn_openPopup("개인정보 수집 이용여부에 대하여 동의해주세요", "red", "ERROR", "확인", ""); return;}
 				
 				var resvDate = $("#resvDate").val().substring(0,4) + "-" + $("#resvDate").val().substring(4,6) + "-" + $("#resvDate").val().substring(6,8);
 				$("#rsv_date").html(resvDate);
@@ -962,16 +1000,27 @@
 				params = {
 					"userDvsn" : $("#userDvsn").val(), 
 					"userId" : $("#userId").val(), 
-					"userPhone" : certificationNumber,
+					"userPhone" : resvUserClphn,
 					"resvDate" : $("#resvDate").val()
 				};
 				
-				if(fn_resvDuplicateCheck(params)) {
-					fn_openPopup("현재 예약일자에 이미 예약정보가 존재합니다.", "red", "ERROR", "확인", "");
-					return;	
-				}
+				if(fn_resvDuplicateCheck(params)) {fn_openPopup("현재 예약일자에 이미 예약정보가 존재합니다.", "red", "ERROR", "확인", ""); return;}
 						
-				// 예약 유효성 검사 추가
+				// 예약 유효성 검사
+				var checkDvsn = entryDvsn == "ENTRY_DVSN_1" ? "STANDING" : "SEAT";
+				params = {
+					"checkDvsn" : checkDvsn,
+					"entryDvsn" : entryDvsn,
+					"centerCd" : $("#centerCd").val(),
+					"floorCd" : $("#floorCd").val(),
+					"partCd" : $("#partCd").val(),
+					"seatCd" : $("#seatCd").val(),
+					"userId" : $("#userId").val()
+				}
+					
+				var result = fn_resvVaildCheck(params);
+				if(result.resultCode != "SUCCESS") {return;}
+				
 				params = {
 					"mode" : "Ins",
 					"resvDate" : $("#resvDate").val(),
@@ -982,8 +1031,8 @@
 					"floorCd" : $("#floorCd").val(),
 					"partCd" : $("#partCd").val(),
 					"seatCd" : $("#seatCd").val(),
-					"resvUserNm" : certificationName,
-					"resvUserClphn" : certificationNumber,
+					"resvUserNm" : resvUserNm,
+					"resvUserClphn" : resvUserClphn,
 					"resvUserAskYn" : $("input:checkbox[id='" + entryDvsn + "_qna_check']").val(),
 					"resvIndvdlinfoAgreYn" : $("#" + entryDvsn + "_person_agree").val()
 				}
@@ -1014,8 +1063,8 @@
 				    	if (result.status == "SUCCESS"){
 				    		if(result.resvInfo != null) {	
 				    			bPopupClose('rsv_done');
-				    			fn_openPopup("예약정보가 정상적으로 등록되었습니다.", "blue", "SUCCESS", "확인", "/front/main.do");
-				    			setTimeout("location.href='/front/main.do'", 5000);
+				    			fn_openPopup("예약정보가 정상적으로 등록되었습니다.", "blue", "SUCCESS", "확인", "javascript:location.replace('/front/main.do');");
+				    			setTimeout("location.replace('/front/main.do')", 5000);
 				    		}
 				    	} else if(result.status == "LOGIN FAIL") {
 				    		fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");

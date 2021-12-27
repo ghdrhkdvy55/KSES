@@ -12,6 +12,7 @@ import com.kses.backoffice.cus.usr.mapper.UserInfoManageMapper;
 import com.kses.backoffice.cus.usr.service.UserInfoManageService;
 import com.kses.backoffice.cus.usr.vo.UserInfo;
 import com.kses.backoffice.util.SmartUtil;
+import com.kses.front.login.vo.UserLoginInfo;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
@@ -35,6 +36,12 @@ public class UserInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	public Map<String, Object> selectUserInfoDetail(String userId) throws Exception {
 		// TODO Auto-generated method stub
 		return userMapper.selectUserInfoDetail(userId);
+	}
+	
+	@Override
+	public UserLoginInfo selectSSOUserInfo(Map<String, Object> params) throws Exception {
+		// TODO Auto-generated method stub
+		return userMapper.selectSSOUserInfo(params);
 	}
 	
 	@Override

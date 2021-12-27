@@ -328,7 +328,16 @@ function verifyEmail(_field, mng_user_add){
 	} else { 
 		return true; 
 	}
+}
 
+//휴대폰 번호 유효성 검사
+function validPhNum(phNum) {
+	var reg = /^\d{3}\d{3,4}\d{4}$/;
+	if(!reg.test(phNum)) {
+		return false;
+	} else {
+		return true;
+	}
 }
 
 //공통값 return 

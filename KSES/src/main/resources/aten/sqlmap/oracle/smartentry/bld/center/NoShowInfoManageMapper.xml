@@ -70,7 +70,7 @@
 	</insert>
 
 	<update id="updateNoshowResvInfoTranCancel">
-		UPDATE TSER_RESV_INFO_I SET
+		UPDATE TSER_RESV_INFOI SET
     		RESV_STATE = 'RESV_STATE_4',
     		RESV_PAY_DVSN = 'RESV_PAY_DVSN_1',
     		RESV_CANCEL_ID = 'BATCH',

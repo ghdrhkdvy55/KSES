@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 import com.kses.backoffice.cus.usr.vo.UserInfo;
+import com.kses.front.login.vo.UserLoginInfo;
+
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 
 @Mapper
@@ -12,6 +14,8 @@ public interface UserInfoManageMapper {
     public List<Map<String, Object>> selectUserInfoListPage(@Param("params") Map<String, Object> params);
     
     public Map<String, Object> selectUserInfoDetail(String userId);
+    
+    public UserLoginInfo selectSSOUserInfo(@Param("params") Map<String, Object> params);
     
     public Map<String, Object> selectUserVacntnInfo(String userId);
     
