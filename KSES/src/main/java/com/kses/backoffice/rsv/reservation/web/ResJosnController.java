@@ -172,6 +172,7 @@ public class ResJosnController {
 					resInfo.setResvSeq(SmartUtil.NVL(resvInfo.get("resv_seq"), "").toString());
 					resInfo.setResvState("RESV_STATE_2");
 					resInfo.setResvPayDvsn("RESV_PAY_DVSN_2");
+					resInfo.setResvTicketDvsn("RESV_TICKET_DVSN_1");
 					resInfo.setTradNo(node.get("Trade_No").asText());
 
 					resService.resPriceChange(resInfo);
@@ -228,7 +229,8 @@ public class ResJosnController {
 					ResvInfo resInfo = new ResvInfo();
 					resInfo.setResvSeq(SmartUtil.NVL(sendInfo.get("resvSeq"), "").toString());
 					resInfo.setResvPayDvsn("RESV_PAY_DVSN_3");
-					resInfo.setResvPayDvsn("RESV_STATE_4");
+					resInfo.setResvState("RESV_STATE_4");
+					resInfo.setResvTicketDvsn("RESV_TICKET_DVSN_1");
 					resInfo.setTradNo(node.get("Trade_No").asText());
 					resService.resPriceChange(resInfo);
 
@@ -666,6 +668,7 @@ public class ResJosnController {
 
 				resInfoU.setTradNo(SmartUtil.NVL(jsonInfo.get("IF_NO"), "").toString());
 				resInfoU.setResvPayDvsn("RESV_PAY_DVSN_2");
+				resInfoU.setResvTicketDvsn("RESV_TICKET_DVSN_2");
 				resInfoU.setResvSeq(SmartUtil.NVL(jsonInfo.get("RES_NO"), "").toString());
 
 				int ret = resService.resPriceChange(resInfoU);

@@ -368,7 +368,7 @@
 			(
 				SEQ_SER_RERV_INFO.NEXTVAL, #{longResvSeq}, #{seasonCd, jdbcType=VARCHAR}, #{centerCd, jdbcType=VARCHAR}, #{floorCd, jdbcType=VARCHAR}, #{partCd, jdbcType=VARCHAR}, #{seatCd, jdbcType=VARCHAR},
 				TO_CHAR(TO_DATE(#{resvDate, jdbcType=VARCHAR},'YYYYMMDD') - (INTERVAL '1' DAY),'YYYYMMDD'), #{resvDate, jdbcType=VARCHAR}, 'TEMP', '0000', '2359',
-				SYSDATE, #{resvUserDvsn, jdbcType=VARCHAR}, #{userId, jdbcType=VARCHAR}, #{resvUserNm}, #{resvUserClphn}, #{resvUserAskYn, jdbcType=VARCHAR}, 'RESV_TICKET_DVSN_1',
+				SYSDATE, #{resvUserDvsn, jdbcType=VARCHAR}, #{userId, jdbcType=VARCHAR}, #{resvUserNm}, #{resvUserClphn}, #{resvUserAskYn, jdbcType=VARCHAR}, '',
 				'RESV_STATE_1', 'N', #{resvIndvdlinfoAgreYn, jdbcType=VARCHAR},
 				#{resvEntryDvsn, jdbcType=VARCHAR}, 'RESV_PAY_DVSN_1', FN_PAYCOST(#{centerCd, jdbcType=VARCHAR}, #{resvPayCost, jdbcType=VARCHAR}, #{resvEntryDvsn, jdbcType=VARCHAR}), 
 				SYSDATE, #{adminId, jdbcType=VARCHAR}, SYSDATE, #{adminId, jdbcType=VARCHAR}  	
@@ -421,17 +421,19 @@
     
 	<update id="resPriceChange">
 		UPDATE TSER_RESV_INFO_I SET 
-		<choose>
-			<when test="resvPayDvsn == 'RESV_PAY_DVSN_2'">
-				TRAD_NO = #{tradNo},
-				TRAD_DATE = SYSDATE,
-			</when>
-			<otherwise>
-				REFOUND_NO = #{tradNo},
-				REFOUND_DATE = SYSDATE,
-			</otherwise>
-		</choose>
-		RESV_PAY_DVSN = #{resvPayDvsn}
+			<choose>
+				<when test="resvPayDvsn == 'RESV_PAY_DVSN_2'">
+					TRAD_NO = #{tradNo},
+					TRAD_DATE = SYSDATE,
+				</when>
+				<otherwise>
+					REFOUND_NO = #{tradNo},
+					REFOUND_DATE = SYSDATE,
+				</otherwise>
+			</choose>
+			RESV_PAY_DVSN = #{resvPayDvsn},
+			RESV_STATE = #{resvState},
+			RESV_TICKET_DVSN = #{resvTicketDvsn}
         WHERE RESV_SEQ = #{resvSeq}
     </update>
     

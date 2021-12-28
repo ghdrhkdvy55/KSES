@@ -73,7 +73,7 @@ public class ResvInfo {
 	private String resvIndvdlinfoAgreYn = "";
 	
 	// 발권 구분
-	private String resvTicketYn = "";
+	private String resvTicketDvsn = "";
 
 	// 예약 상태
 	private String resvState = "";
