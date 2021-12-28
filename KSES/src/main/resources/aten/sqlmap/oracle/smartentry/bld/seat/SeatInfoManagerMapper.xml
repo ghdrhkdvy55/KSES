@@ -118,13 +118,14 @@
 		INSERT INTO TSEB_SEAT_INFO_D
 		(
 			CENTER_CD, FLOOR_CD, PART_CD, SEAT_CD, SEAT_NM, 
-			USE_YN,	SEAT_TOP, SEAT_LEFT, FRST_REGTER_ID, FRST_REGIST_DTM, LAST_UPDUSR_ID, LAST_UPDT_DTM,
-			SEAT_ORDER, SEAT_NUMBER
+			USE_YN,	SEAT_TOP, SEAT_LEFT, FRST_REGTER_ID, FRST_REGIST_DTM, 
+			LAST_UPDUSR_ID, LAST_UPDT_DTM, SEAT_ORDER, SEAT_NUMBER
 		)
 		VALUES
 		(            
 			#{centerCd}, #{floorCd}, #{partCd, jdbcType=VARCHAR}, #{seatCd}, #{seatNm}, 
-			#{useYn}, 0, 0 #{frstRegterId, jdbcType=VARCHAR}, SYSDATE, #{lastUpdusrId, jdbcType=VARCHAR}, SYSDATE,
+			#{useYn}, 0, 0, #{frstRegterId, jdbcType=VARCHAR}, SYSDATE, 
+			#{lastUpdusrId, jdbcType=VARCHAR}, SYSDATE,
 			(
 				SELECT MAX(SEAT_ORDER) +1 
 				FROM TSEB_SEAT_INFO_D 

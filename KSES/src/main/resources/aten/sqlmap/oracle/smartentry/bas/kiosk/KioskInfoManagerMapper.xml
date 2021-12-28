@@ -39,7 +39,7 @@
 						</choose>
 					</if>
 					<if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(params.searchCenterCd)">
-					    AND B.CENTER_CD = #{params.searchCenterCd}
+					    AND A.CENTER_CD = #{params.searchCenterCd}
 					</if>
 					<if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(params.searchMachDvsn)">
 					    AND A.MACH_DVSN = #{params.searchMachDvsn}
