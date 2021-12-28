@@ -19,6 +19,8 @@ public interface UserInfoManageMapper {
     
     public Map<String, Object> selectUserVacntnInfo(String userId);
     
+    public Map<String, Object> selectSpeedOnVacntnInfo(UserLoginInfo userLoginInfo);
+    
     public int insertUserInfo(UserInfo vo);
 	
     public int updateUserInfo(UserInfo vo);

@@ -55,8 +55,9 @@
 		<package name="com.kses.backoffice.uat.uia.vo"/>
 		
 		<package name="com.kses.backoffice.util.vo"/>
-		<package name="com.kses.backoffice.sts.iot.vo"/>	
+		<package name="com.kses.backoffice.sts.iot.vo"/>
+		
+		<!-- 사용자페이지 -->
+		<package name="com.kses.front.login.vo"/>
 	</typeAliases>
-	
-
 </configuration>

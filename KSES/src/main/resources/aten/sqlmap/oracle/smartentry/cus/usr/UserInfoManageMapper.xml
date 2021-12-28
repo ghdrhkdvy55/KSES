@@ -55,7 +55,7 @@
 		WHERE USER_ID = #{userId}
    	</select>
    	
-	<select id="selectSSOUserInfo" resultType="com.kses.front.login.vo.UserLoginInfo">
+	<select id="selectSSOUserInfo" resultType="UserLoginInfo">
 		SELECT 
 			USER_ID, USER_NM, USER_PHONE, USER_SEX_MF, USER_BIRTH_DY, LAST_UPDUSR_ID, LAST_UPDT_DTM,
 			USER_RCPT_YN, USER_RCPT_DVSN, USER_RCPT_NUMBER
@@ -78,6 +78,19 @@
 		WHERE USER_ID = #{userId, jdbcType=VARCHAR}
 	]]>	
    	</select>
+   	
+   	<select id="selectSpeedOnVacntnInfo" resultType="lmap">
+   		SELECT COVID_DY FROM
+   		<choose>
+   			<when test="@org.apache.commons.lang3.StringUtils@equals(envType,'DEV')">
+   				VW_KRACEWEB@SMARTDEVLINK
+   			</when>
+   			<otherwise>
+   				VW_KRACEWEB@SMARTDEVLINK
+   			</otherwise>
+   		</choose>
+   		WHERE USER_ID = #{userId}
+   	</select>
 	
 	<insert id="insertUserInfo">
 	    MERGE INTO TSER_USER_INFO_I A
@@ -95,14 +108,15 @@
 			USER_BIRTH_DY = #{userBirthDy, jdbcType=VARCHAR},
 			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(indvdlinfoAgreYn)">
 				INDVDLINFO_AGRE_YN = #{indvdlinfoAgreYn, jdbcType=VARCHAR},
-				INDVDLINFO_AGRE_DT = SYSDATE,
+				INDVDLINFO_AGRE_YN = #{indvdlinfoAgreYn, jdbcType=VARCHAR},
+				VACNTN_DT = #{vacntnDt, jdbcType=VARCHAR},
 			</if>
 			USER_CARD_ID = #{userCardId, jdbcType=VARCHAR}, 
             USER_CARD_NO = #{userCardNo, jdbcType=VARCHAR},
             USER_CARD_SEQ = #{userCardSeq, jdbcType=VARCHAR},
             LAST_UPDUSR_ID = #{userId},  
 			LAST_UPDT_DTM = SYSDATE,  
-			LAST_LOGIN_DT = SYSDATE 
+			LAST_LOGIN_DT = SYSDATE
 		WHEN NOT MATCHED THEN
 		INSERT	
 		(
@@ -117,7 +131,7 @@
 			SYSDATE
 		)		
 		
-		<selectKey resultType="com.kses.front.login.vo.UserLoginInfo" keyProperty="indvdlinfoAgreDt,userRcptYn,userRcptDvsn,userRcptNumber" order="AFTER">
+		<selectKey resultType="UserLoginInfo" keyProperty="indvdlinfoAgreDt,userRcptYn,userRcptDvsn,userRcptNumber" order="AFTER">
         	SELECT
         		INDVDLINFO_AGRE_DT AS indvdlinfoAgreDt,
         		USER_RCPT_YN AS userRcptYn,

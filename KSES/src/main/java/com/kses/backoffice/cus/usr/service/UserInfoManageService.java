@@ -16,6 +16,8 @@ public interface UserInfoManageService {
     
     Map<String, Object> selectUserVacntnInfo(String userId) throws Exception;
     
+    Map<String, Object> selectSpeedOnVacntnInfo(UserLoginInfo userLoginInfo) throws Exception;
+    
     int updateUserInfo(UserInfo vo) throws Exception;
     
     int updateUserRcptInfo(UserInfo vo) throws Exception;
