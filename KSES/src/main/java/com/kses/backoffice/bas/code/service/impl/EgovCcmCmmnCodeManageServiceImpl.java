@@ -20,33 +20,32 @@ public class EgovCcmCmmnCodeManageServiceImpl extends EgovAbstractServiceImpl im
 
 	@Override
 	public int deleteCmmnCode(String codeId) throws Exception {
-		// TODO Auto-generated method stub
 		return codeMapper.deleteCmmnCode(codeId);
 	}
 
 	@Override
 	public Map<String, Object> selectCmmnCodeDetail(String codeId) throws Exception {
-		// TODO Auto-generated method stub
 		return codeMapper.selectCmmnCodeDetail(codeId);
 	}
 
 	@Override
 	public List<?> selectCmmnCodeList() throws Exception {
-		// TODO Auto-generated method stub
 		return codeMapper.selectCmmnCodeList();
+	}
+	
+	@Override
+	public int insertCmmnCode(CmmnCode cmmnCode) throws Exception {
+		return codeMapper.insertCmmnCode(cmmnCode);
 	}
 
 	@Override
 	public int updateCmmnCode(CmmnCode cmmnCode) throws Exception {
-		// TODO Auto-generated method stub
-		return cmmnCode.getMode().equals("Ins") ?  codeMapper.insertCmmnCode(cmmnCode) : codeMapper.updateCmmnCode(cmmnCode);
+		return codeMapper.updateCmmnCode(cmmnCode);
 	}
 
 	
 	@Override
 	public List<Map<String, Object>> selectCmmnCodeListByPagination(Map<String, Object> vo) throws Exception {
-		// TODO Auto-generated method stub
-		System.out.println("vo:" + vo);
 		return codeMapper.selectCmmnCodeListByPagination(vo);
 	}
 }

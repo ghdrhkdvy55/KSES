@@ -44,7 +44,7 @@
 		)
 		VALUES
 		(
-			#{codeId}, #{codeIdNm}, #{codeIdDc, jdbcType=VARCHAR}, 'Y', 'SPDM', 
+			#{codeId}, #{codeIdNm}, #{codeIdDc, jdbcType=VARCHAR}, #{useAt, jdbcType=CHAR}, 'SPDM', 
 			SYSDATE, #{frstRegisterId, jdbcType=VARCHAR}, SYSDATE, #{lastUpdusrId, jdbcType=VARCHAR}
 		)
 	</insert>	

@@ -1,9 +1,7 @@
 package com.kses.backoffice.sym.log.service;
 
-
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +12,6 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
 import org.mybatis.spring.MyBatisSystemException;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
@@ -22,77 +19,29 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kses.backoffice.sym.log.vo.SysLog;
 
-import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.exception.CustomerExcetion;
-import egovframework.com.cmm.service.Globals;
+import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import egovframework.let.utl.sim.service.EgovClntInfo;
 
-
-
-
 @Aspect
 @Component
-@ControllerAdvice
 public class SysLogAspect    {
+	private static final Logger LOGGER = LoggerFactory.getLogger(SysLogAspect.class);
 	
 	@Autowired
 	private EgovSysLogService sysLogService;
- 
-    
-	private static final Logger LOGGER = LoggerFactory.getLogger(SysLogAspect.class);
+	
 	public static final String KEY_ECODE = "ecode";
 	
 	@Autowired
 	protected EgovMessageSource egovMessageSource;
-	
-	
-	public Object logSql(ProceedingJoinPoint joinPoint) throws Throwable {
-		LOGGER.debug("SqlSession----------------------------------------------------------------------------------------------------------");
-		Object[] methodArgs = joinPoint.getArgs(), sqlArgs = null;
-		Object retValue = joinPoint.proceed();
-		String statement = null;
-		String sqlid = methodArgs[0].toString();
-		
-		
-		LOGGER.debug("sqlid:" + sqlid);
-		LOGGER.debug("length:" + methodArgs.length);
-
-		for (int i =1, n = methodArgs.length; i < n; i++){
-			Object arg = methodArgs[i];
-			
-			LOGGER.debug("methodArgs:" + methodArgs[i].toString());
-			
-			if (arg instanceof HashMap){
-				@SuppressWarnings("unchecked")
-				Map<String, Object> map = (Map<String, Object>)arg;
-				
-				statement = ((SqlSessionTemplate)joinPoint.getTarget()).getConfiguration().getMappedStatement(sqlid).getBoundSql(map).getSql();
-				
-				sqlArgs = new Object[map.size()];
-				Iterator<String> itr = map.keySet().iterator();
-				
-				int j = 0;
-				while(itr.hasNext()){
-					sqlArgs[j++] = map.get(itr.next());
-				}
-				
-			}
-			break;
-		}
-		String completedStatemane = (sqlArgs == null ? statement:fillParameters(statement, sqlArgs));
-		LOGGER.debug("completedStatemane:" + completedStatemane);
-		return retValue;
-	}
 	
 	/**
 	 * 시스템 로그정보를 생성한다.
@@ -287,37 +236,7 @@ public class SysLogAspect    {
 		}
 	
 	}
-	/**
-	 * 시스템 로그정보를 생성한다.
-	 * sevice Class의 delete로 시작되는 Method
-	 *
-	 * @param ProceedingJoinPoint
-	 * @return Object
-	 * @throws Exception
-	 */
 	
-	
-	public void MapperSelect(ProceedingJoinPoint joinPoint) throws Throwable {
-		LOGGER.debug("mapper--------------------------------------------------------------------------------------------------------------");
- 		StopWatch stopWatch = new StopWatch();
- 		//Object sqlid  = null;
-		try {
-			stopWatch.start();
-			Object[] methodArgs = joinPoint.getArgs(); //, sqlArgs = null;
-			LOGGER.debug("length:" + methodArgs.length);
-			for (Object  methodArg : methodArgs){
-				LOGGER.debug("methodArg:" + methodArg.toString());
-			}
-			stopWatch.stop();
-			//return retValue;
-		} catch (Throwable e) {
-			throw e;
-		} finally {
-			
-		
-		}
-		
-	}
 	/**
 	 * 시스템 로그정보를 생성한다.
 	 * sevice Class의 select로 시작되는 Method
@@ -353,9 +272,9 @@ public class SysLogAspect    {
 				if (!mav.getModel().isEmpty()) {
 					LOGGER.info(" ( @AfterReturning 2 " + joinPoint.getSignature().getName() + ") Controller Return: " + mav.getModel());
 				}
-				if (mav.getModel().get(SysLogAspect.KEY_ECODE) == null) {
-					mav.addObject(SysLogAspect.KEY_ECODE, 0);
-				}
+//				if (mav.getModel().get(SysLogAspect.KEY_ECODE) == null) {
+//					mav.addObject(SysLogAspect.KEY_ECODE, 0);
+//				}
 			}
 			
 			String className = joinPoint.getTarget().getClass().getName();
@@ -407,31 +326,33 @@ public class SysLogAspect    {
 		   LOGGER.error(" (" + joinPoint.getSignature().getName() + ") Implement Throwable: " + error);
 		}
 	}
-	@ExceptionHandler(value = Exception.class)
-	public Object handlerError(HttpServletRequest request, Exception e) {
-		ModelAndView mav = null;
-		if (request.getHeader("AJAX") != null && e.toString().equals("egovframework.com.cmm.exception.CustomerExcetion")) {
-			mav = new ModelAndView(Globals.JSONVIEW);
-			mav.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			mav.addObject(Globals.STATUS_MESSAGE, "자동 공격이 의심 됩니다.");
-		    return mav;
-		} else if (request.getHeader("AJAX") != null && !e.toString().equals("egovframework.com.cmm.exception.CustomerExcetion")) {
-			LOGGER.error("============================================");
-			LOGGER.error("error:" + e.toString());
-			mav = new ModelAndView(Globals.JSONVIEW);
-			mav.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			mav.addObject(Globals.STATUS_MESSAGE,  egovMessageSource.getMessage("fail.request.msg") );
-		    return mav;
-		} else if (request.getHeader("AJAX") == null && e.toString().equals("egovframework.com.cmm.exception.CustomerExcetion")) {
-		    mav = new ModelAndView("/cmm/error/duplication");
-			return mav;
-		} else {
-			LOGGER.error("============================================");
-			LOGGER.error("error:" + e.toString());
-			mav = new ModelAndView("/cmm/error/egovError");
-			return mav;
-		}
-	}
+	
+//  사용하지 않음	
+//	@ExceptionHandler(value = Exception.class)
+//	public Object handlerError(HttpServletRequest request, Exception e) {
+//		ModelAndView mav = null;
+//		if (request.getHeader("AJAX") != null && e.toString().equals("egovframework.com.cmm.exception.CustomerExcetion")) {
+//			mav = new ModelAndView(Globals.JSONVIEW);
+//			mav.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+//			mav.addObject(Globals.STATUS_MESSAGE, "자동 공격이 의심 됩니다.");
+//		    return mav;
+//		} else if (request.getHeader("AJAX") != null && !e.toString().equals("egovframework.com.cmm.exception.CustomerExcetion")) {
+//			LOGGER.error("============================================");
+//			LOGGER.error("error:" + e.toString());
+//			mav = new ModelAndView(Globals.JSONVIEW);
+//			mav.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+//			mav.addObject(Globals.STATUS_MESSAGE,  egovMessageSource.getMessage("fail.request.msg") );
+//		    return mav;
+//		} else if (request.getHeader("AJAX") == null && e.toString().equals("egovframework.com.cmm.exception.CustomerExcetion")) {
+//		    mav = new ModelAndView("/cmm/error/duplication");
+//			return mav;
+//		} else {
+//			LOGGER.error("============================================");
+//			LOGGER.error("error:" + e.toString());
+//			mav = new ModelAndView("/cmm/error/egovError");
+//			return mav;
+//		}
+//	}
 	
 	private String fillParameters(String statement, Object[] sqlArgs){
 		StringBuilder completedSqlBuilder = new StringBuilder(Math.round(statement.length() * 1.2f));
@@ -453,6 +374,61 @@ public class SysLogAspect    {
 		
 		return completedSqlBuilder.toString();
 	}
+	
+	@SuppressWarnings("unused")
+	private void mapperSelect(ProceedingJoinPoint joinPoint) throws Throwable {
+		LOGGER.debug("mapper--------------------------------------------------------------------------------------------------------------");
+ 		StopWatch stopWatch = new StopWatch();
+ 		//Object sqlid  = null;
+		try {
+			stopWatch.start();
+			Object[] methodArgs = joinPoint.getArgs(); //, sqlArgs = null;
+			LOGGER.debug("length:" + methodArgs.length);
+			for (Object  methodArg : methodArgs){
+				LOGGER.debug("methodArg:" + methodArg.toString());
+			}
+			stopWatch.stop();
+			//return retValue;
+		} catch (Throwable e) {
+			throw e;
+		}
+	}
+	
+	@SuppressWarnings("unused")
+	private Object logSql(ProceedingJoinPoint joinPoint) throws Throwable {
+		LOGGER.debug("SqlSession----------------------------------------------------------------------------------------------------------");
+		Object[] methodArgs = joinPoint.getArgs(), sqlArgs = null;
+		Object retValue = joinPoint.proceed();
+		String statement = null;
+		String sqlid = methodArgs[0].toString();
+		
+		LOGGER.debug("sqlid:" + sqlid);
+		LOGGER.debug("length:" + methodArgs.length);
 
+		for (int i =1, n = methodArgs.length; i < n; i++){
+			Object arg = methodArgs[i];
+			
+			LOGGER.debug("methodArgs:" + methodArgs[i].toString());
+			
+			if (arg instanceof HashMap){
+				@SuppressWarnings("unchecked")
+				Map<String, Object> map = (Map<String, Object>)arg;
+				
+				statement = ((SqlSessionTemplate)joinPoint.getTarget()).getConfiguration().getMappedStatement(sqlid).getBoundSql(map).getSql();
+				
+				sqlArgs = new Object[map.size()];
+				Iterator<String> itr = map.keySet().iterator();
+				
+				int j = 0;
+				while(itr.hasNext()){
+					sqlArgs[j++] = map.get(itr.next());
+				}
+			}
+			break;
+		}
+		String completedStatemane = (sqlArgs == null ? statement:fillParameters(statement, sqlArgs));
+		LOGGER.debug("completedStatemane:" + completedStatemane);
+		return retValue;
+	}
 	
 }

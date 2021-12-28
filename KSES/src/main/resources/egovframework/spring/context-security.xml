@@ -6,64 +6,79 @@
         http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.2.xsd
 		http://maven.egovframe.go.kr/schema/egov-security http://maven.egovframe.go.kr/schema/egov-security/egov-security-3.10.0.xsd">
 
-    <security:http pattern="/resource/**" security="none"/>
-    <security:http pattern="/upload/**" security="none"/>
- 	<security:http pattern="\A/WEB-INF/jsp/.*\Z" request-matcher="regex" security="none"/>
-
+	<!-- Web Resources -->
+    <security:http pattern="/resources/**" security="none" />
+    <!-- File Upload Path -->
+    <security:http pattern="/upload/**" security="none" />
+    <!-- login -->
+    <security:http pattern="/backoffice/login.do" security="none" />
+    <!-- others -->
+    <security:http pattern="/backoffice/billPrint.do" security="none" />
+    <security:http pattern="/backoffice/rsv/qrReadCheck.do" security="none" />
+    <!-- check -->
+    <security:http pattern="/backoffice/rsv/tickMachinQr.do" security="none" />
+    <security:http pattern="/backoffice/rsv/tickMachinRes.do" security="none"/>
+    
+ 	<security:http pattern="\A/WEB-INF/jsp/.*\Z" request-matcher="regex" security="none" />
+ 	
+ 	
     <egov-security:config id="securityConfig"
-        loginUrl="/uat/uia/actionSecurityLogin.do"
-        logoutSuccessUrl="/backoffice/login.do"
-        loginFailureUrl="/backoffice/actionSecurityLogin.do?login_error=1"
-        accessDeniedUrl="/sec/ram/accessDenied.do"
-
-        dataSource="dataSource"
-          
-        jdbcUsersByUsernameQuery="SELECT ADMIN_ID, AUTHOR_CD, EMP_NO, ADMIN_PASS_UPDT_DT, ADMIN_LOCKYN, ADMIN_PWD, EMP_NM, DEPT_NM, GRAD_NM, PSIT_NM, USE_YN, EMP_CLPHN, EMP_TLPHN, EMP_EMAIL, EMP_STATE, EMP_PIC, CENTER_CD  FROM  VW_EMPINFO WHERE ADMIN_ID =?"
-        jdbcAuthoritiesByUsernameQuery="SELECT ADMIN_ID, AUTHOR_CD  FROM VW_EMPINFO WHERE ADMIN_ID = ?"
-        jdbcMapClass="egovframework.let.uat.uia.service.impl.EgovSessionMapping"
-
-        requestMatcherType="regex"
-
-        hash="plaintext"
-        hashBase64="false"
-
+    	loginUrl="/backoffice/login.do"
+    	logoutSuccessUrl="/backoffice/login.do"
+    	loginFailureUrl="/backoffice/login.do?login_error=1"
+    	accessDeniedUrl="/backoffice/login.do?login_error=2"
+    	
+    	dataSource="dataSource"
+    	jdbcUsersByUsernameQuery="SELECT ADMIN_ID, AUTHOR_CD, EMP_NO, ADMIN_PASS_UPDT_DT, ADMIN_LOCKYN, ADMIN_PWD, EMP_NM, DEPT_NM, GRAD_NM, PSIT_NM, USE_YN, EMP_CLPHN, EMP_TLPHN, EMP_EMAIL, EMP_STATE, EMP_PIC, CENTER_CD  FROM  VW_EMPINFO WHERE ADMIN_ID = ?"
+		jdbcAuthoritiesByUsernameQuery="SELECT ADMIN_ID, AUTHOR_CD  FROM VW_EMPINFO WHERE ADMIN_ID = ?"
+		jdbcMapClass="egovframework.let.uat.uia.service.impl.EgovSessionMapping"
+		
+		requestMatcherType="regex"
+		hash="plaintext"
+		hashBase64="false"
+		
 		concurrentMaxSessons="1"
 		concurrentExpiredUrl="/backoffice/actionMain.do"
-
-		defaultTargetUrl="/backoffice/actionMain.do"
-
-
+		
+    	defaultTargetUrl="/backoffice/actionMain.do"
     />
 
     <egov-security:secured-object-config id="securedObjectConfig"
        sqlHierarchicalRoles="
-       		SELECT a.CHLDRN_ROLE child, a.PARNTS_ROLE parent
-       		FROM COMTNROLES_HIERARCHY a LEFT JOIN COMTNROLES_HIERARCHY b on (a.CHLDRN_ROLE = b.PARNTS_ROLE)"
-
+       		SELECT a.CHLDRN_ROLE child, 
+       			a.PARNTS_ROLE parent
+       		FROM COMTNROLES_HIERARCHY a 
+       			LEFT JOIN COMTNROLES_HIERARCHY b on (a.CHLDRN_ROLE = b.PARNTS_ROLE)"
+       			
        sqlRolesAndUrl="
-       		SELECT a.ROLE_PTTRN url, b.AUTHOR_CODE authority
+       		SELECT a.ROLE_PTTRN url, 
+       			b.AUTHOR_CODE authority
        		FROM COMTNROLLINFO a, COMTNAUTHORROLERELATE b
-       		WHERE a.ROLE_CODE = b.ROLE_CODE AND a.ROLE_TY = 'url'
+       		WHERE a.ROLE_CODE = b.ROLE_CODE 
+       			AND a.ROLE_TY = 'url'
        		ORDER BY a.ROLE_SORT"
 
        sqlRolesAndMethod="
-       		SELECT a.ROLE_PTTRN method, b.AUTHOR_CODE authority
+       		SELECT a.ROLE_PTTRN method, 
+       			b.AUTHOR_CODE authority
        		FROM COMTNROLLINFO a, COMTNAUTHORROLERELATE b
-       		WHERE a.ROLE_CODE = b.ROLE_CODE AND a.ROLE_TY = 'method'
+       		WHERE a.ROLE_CODE = b.ROLE_CODE 
+       			AND a.ROLE_TY = 'method'
        		ORDER BY a.ROLE_SORT"
 
        sqlRolesAndPointcut="
        		SELECT a.ROLE_PTTRN pointcut, b.AUTHOR_CODE authority
        		FROM COMTNROLLINFO a, COMTNAUTHORROLERELATE b
-       		WHERE a.ROLE_CODE = b.ROLE_CODE AND a.ROLE_TY = 'pointcut'
+       		WHERE a.ROLE_CODE = b.ROLE_CODE 
+       			AND a.ROLE_TY = 'pointcut'
        		ORDER BY a.ROLE_SORT"
 
        sqlRegexMatchedRequestMapping="
        		SELECT a.resource_pattern uri, b.authority authority
        		FROM LETTNROLEINFO a, COMTNAUTHORROLERELATE b
-       		WHERE a.ROLE_CODE = b.ROLE_CODE AND a.ROLE_TY = 'regex'
+       		WHERE a.ROLE_CODE = b.ROLE_CODE 
+       			AND a.ROLE_TY = 'regex'
        		ORDER BY a.ROLE_SORT"
-
     />
 
 	<egov-security:initializer id="initializer" supportMethod="true" supportPointcut="false" />
@@ -73,5 +88,10 @@
 		<property name="allowSemicolon" value="true"/>
 	</bean>
 	<security:http-firewall ref="egovStrictHttpFirewall"/>
+	
+	<bean class="egovframework.com.cmm.util.EgovUserDetailsHelper">
+		<property name="egovUserDetailsService" ref="egovUserDetailsSecurityService" />
+	</bean>
+	<bean id="egovUserDetailsSecurityService" class="egovframework.com.cmm.service.impl.EgovUserDetailsSessionServiceImpl" />
 
 </beans>

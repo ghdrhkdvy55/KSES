@@ -32,6 +32,14 @@ public interface EgovCcmCmmnCodeManageService {
 	 * @throws Exception
 	 */
 	List<?> selectCmmnCodeList() throws Exception;
+	
+	/**
+	 * 공통코드를 등록한다.
+	 * @param cmmnCode
+	 * @return
+	 * @throws Exception
+	 */
+	int insertCmmnCode(CmmnCode cmmnCode) throws Exception;
 
 	/**
 	 * 공통코드를 수정한다.

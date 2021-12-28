@@ -14,10 +14,13 @@
     <!-- JQuery -->
     <script type="text/javascript" src="/resources/js/jquery-3.5.1.min.js"></script>
     <!-- JQuery UI -->
-    <link rel="stylesheet" type="text/css" href="/resources/css/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/css/jquery-ui.css">
     <script type="text/javascript" src="/resources/js/jquery-ui.js"></script>
     <!-- bPopup -->
     <script src="/resources/js/bpopup.js"></script>
+    <!-- toastr -->
+    <link rel="stylesheet" href="/resources/toastr/toastr.min.css">
+    <script type="text/javascript" src="/resources/toastr/toastr.min.js"></script>
 </head>
 <body>
 <input type="hidden" id="loginAuthorCd" name="loginAuthorCd" value="${LoginVO.authorCd}">
@@ -39,8 +42,20 @@
 	</div>
 	<div id="contents"></div>
 </div>
+<div data-popup="popupConfirm" class="popup m_pop">
+      <div class="pop_con">
+        <a id="a_closePop" class="button b-close">X</a>
+        <p class="pop_tit">메세지</p>
+        <p class="pop_wrap"><span></span></p>
+        <div class="right_box">
+		  <button class="blueBtn" style="cursor:pointer;">예</button>
+          <a href="javascript:$('[data-popup=popupConfirm]').bPopup().close();" class="grayBtn">아니요</a>
+      </div>
+      </div>
+</div>
 <script type="text/javascript" src="/resources/js/common.js"></script>
 <script type="text/javascript" src="/resources/js/back_common.js"></script>
+<script type="text/javascript" src="/resources/js/backoffice/index.js"></script>
 <script type="text/javascript">
 	jQuery.browser = {};
 	(function () {
@@ -51,8 +66,9 @@
 	        jQuery.browser.version = RegExp.$1;
 	    }
 	})();
+	
 	$(document).ready(function() {
-		var menu = uniAjaxReturn("/backoffice/inc/user_menu.do", "POST", false, null,  "lst");
+		var menu = JSON.parse('${MenuJson}');
 		for (let m of menu) {
 			switch (m.level) {
 				case 2:
@@ -77,7 +93,7 @@
 				default:
 			}
 		}
-		let menuId = fnGetUrlParameter('menuId');
+		let menuId = EgovIndexApi.getUrlParameter('menuId');
 		$('#mySidenav a').removeAttr('class');
 		if (menuId === undefined || menuId === null) {
 			$('#mySidenav a:first').addClass('active');
@@ -90,19 +106,20 @@
 		fnSetActiveContent();
 	});
 
-	function fnGetUrlParameter (sParam) {
-		var sPageURL = decodeURIComponent(window.location.search.substring(1)), sURLVariables = sPageURL.split('&'), sParameterName, i;
-		for (i = 0; i < sURLVariables.length; i++) {
-			sParameterName = sURLVariables[i].split('=');
-			if (sParameterName[0] === sParam) {
-				return sParameterName[1] === undefined ? true : sParameterName[1];
-			}
-		}
-	}
-
 	function fnSetActiveContent() {
 		let menu = $('#mySidenav a.active').data('menu');
 		$('#contents').load(menu.url);
+	}
+	
+	function bPopupConfirm(title, message, fnOk) {
+		let $popup = $('[data-popup=popupConfirm]');
+		$popup.find('.pop_tit').text(title);
+		$popup.find('.pop_wrap span').html(message);
+		$popup.find('.blueBtn').off('click').click(function() {
+			$('[data-popup=popupConfirm]').bPopup().close();
+			fnOk();
+		});
+		$popup.bPopup();
 	}
 </script>
 </body>

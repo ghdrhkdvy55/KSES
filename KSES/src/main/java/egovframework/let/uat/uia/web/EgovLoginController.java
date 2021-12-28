@@ -1,11 +1,13 @@
 package egovframework.let.uat.uia.web;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,16 +21,17 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import com.google.gson.Gson;
 import com.kses.backoffice.bas.menu.service.MenuInfoService;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
+import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import egovframework.let.uat.uap.service.EgovLoginPolicyService;
 import egovframework.let.uat.uia.service.EgovLoginService;
 import egovframework.let.utl.sim.service.EgovClntInfo;
 import egovframework.rte.fdl.cmmn.trace.LeaveaTrace;
 import egovframework.rte.fdl.property.EgovPropertyService;
-import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
 
 
 /**
@@ -103,7 +106,7 @@ public class EgovLoginController {
 	 * @exception Exception
 	 */
 	@RequestMapping(value = "/backoffice/actionSecurityLogin.do")
-	public String actionSecurityLogin(@ModelAttribute("loginVO") LoginVO loginVO, HttpServletResponse response, HttpServletRequest request, ModelMap model) throws Exception {
+	public String actionSecurityLogin(@ModelAttribute("loginVO") LoginVO loginVO, HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
 
 		// 접속IP
 		String userIp = EgovClntInfo.getClntIP(request);
@@ -115,9 +118,6 @@ public class EgovLoginController {
 		resultVO.setIp(userIp);
 		LOGGER.debug("==========================================================");
 		boolean loginPolicyYn = true;
-		
-		
-		
 		
 		
         /* 로그인 정책 할건지 확인 필요 
@@ -139,22 +139,21 @@ public class EgovLoginController {
 		*/
 		
 		if (resultVO != null && resultVO.getAdminId() != null && !resultVO.getAdminId().equals("") && loginPolicyYn) {
-
+			HttpSession session = request.getSession();
 			
 			// 2. spring security 연동
-			request.getSession().setAttribute("LoginVO", resultVO);
+			session.setAttribute("LoginVO", resultVO);
 			
 			//메뉴 가지고 오기 
-			request.getSession().setAttribute("Menu", menuService.selectMainMenuLeft(resultVO.getAdminId()));
+			List<Map<String, Object>> menuList = menuService.selectMainMenuLeft(resultVO.getAdminId());
+			session.setAttribute("Menu", menuList);
+			session.setAttribute("MenuJson", new Gson().toJson(menuList));
 
-			UsernamePasswordAuthenticationFilter springSecurity = null;
-
-			ApplicationContext act = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
-					
+			ApplicationContext act = WebApplicationContextUtils.getRequiredWebApplicationContext(session.getServletContext());
 			Map<String, UsernamePasswordAuthenticationFilter> beans = act.getBeansOfType(UsernamePasswordAuthenticationFilter.class);
 			
+			UsernamePasswordAuthenticationFilter springSecurity = null;
 			if (beans.size() > 0) {
-				
 				springSecurity = (UsernamePasswordAuthenticationFilter) beans.values().toArray()[0];
 				springSecurity.setUsernameParameter("egov_security_username");
 				springSecurity.setPasswordParameter("egov_security_password");
@@ -166,33 +165,10 @@ public class EgovLoginController {
 					
 			springSecurity.doFilter(new RequestWrapperForSecurity(request, resultVO.getAdminId() , resultVO.getAdminPwd()), response, null);
 						
-			return "forward:/backoffice/actionLoginCheck.do"; // 성공 시 페이지.. (redirect 불가)
-
+			return "forward:/backoffice/actionMain.do"; // 성공 시 페이지.. (redirect 불가)
 		} else {
-
-			model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
-			return "backoffice/login";
+			return "redirect:/backoffice/login.do?login_error=1";
 		}
-	}
-	@RequestMapping(value="/backoffice/actionLoginCheck.do")
-	public String actionLoginCheck( HttpServletRequest request, ModelMap model)  {
-        try{
-    		
-    		// 1. Spring Security 사용자권한 처리
-		    Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-	    	if(!isAuthenticated) {
-	    		LOGGER.debug("=== fail:" + isAuthenticated);
-	    		model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
-	    		return "/backoffice/login";
-	    	}
-	    	
-	    	return "forward:/backoffice/actionMain.do";
-    	} catch(Exception e){
-    		LOGGER.debug("login Error:" + e.toString());
-    		model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
-        	return "/backoffice/login";
-    	}
-		
 	}
 	
 	/**
@@ -204,22 +180,14 @@ public class EgovLoginController {
 	@RequestMapping(value="/backoffice/actionMain.do")
 	public String actionMain( HttpServletRequest request, ModelMap model)  {
     	try{
-    		
-    		// 1. Spring Security 사용자권한 처리
 		    Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
 	    	if(!isAuthenticated) {
 	    		LOGGER.debug("=== fail:" + isAuthenticated);
-	    		model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
-	    		return "/backoffice/login";
+	    		throw new Exception();
 	    	}
-	    	
-	    	//2메뉴 정리 하기 
-	    	
-	    	return "/backoffice/index";
+	    	return "forward:/backoffice/index.do";
     	} catch(Exception e){
-    		LOGGER.debug("login Error:" + e.toString());
-    		model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
-        	return "/backoffice/login";
+        	return "redirect:/backoffice/login.do?login_error=2";
     	}
 	}
 
@@ -233,6 +201,11 @@ public class EgovLoginController {
 		request.getSession().setAttribute("LoginVO", null);
 		
 		return "redirect:/egov_security_logout";
+	}
+	
+	@RequestMapping(value="/backoffice/index.do")
+	public String index(ModelMap model) {
+		return "/backoffice/index";
 	}
 }
 

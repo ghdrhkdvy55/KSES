@@ -25,31 +25,35 @@
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
     </context:component-scan>
     
+    <!-- MVC Exception 처리 -->
+<!--     <bean class="egovframework.com.cmm.exception.EgovExceptionResolver" /> -->
+    
     <!-- 서블릿컨네이너상의 exception에 대한 오류 페이지를 연결하는 mvc 설정 -->
-    <bean class="com.kses.backoffice.sts.error.web.CustomExceptionResolver">
-        <property name="order" value="2" />
-        <property name="defaultErrorView" value="/cmm/error/egovError"/>
-        <property name="defaultStatusCode" value="200" />
-        <property name="exceptionAttribute" value="exception" />
-        <property name="excludedExceptions" value="egovframework.com.cmm.exception.UncheckException" />
-        <property name="exceptionMappings">
-            <props>
-                <prop key="org.springframework.dao.DataAccessException">cmm/error/dataAccessFailure</prop>
-                <prop key="org.springframework.transaction.TransactionException">cmm/error/transactionFailure</prop>
-                <prop key="egovframework.rte.fdl.cmmn.exception.EgovBizException">cmm/error/egovError</prop>
-                <prop key="org.springframework.security.AccessDeniedException">cmm/error/accessDenied</prop>
-            </props>
-        </property>
-        <property name="statusCodes">
-            <props>
-                 <prop key="/cmm/error/egovError">500</prop>
-                 <prop key="/cmm/errro/error_security">403</prop>
-                 <prop key="/cmm/errro/error_business">500</prop>
-                 <prop key="/cmm/errro/error_ajax">500</prop>
-                 <prop key="/cmm/error/duplication">909</prop>
-            </props>
-        </property>
-    </bean>
+<!--     <bean class="com.kses.backoffice.sts.error.web.CustomExceptionResolver"> -->
+<!--         <property name="order" value="2" /> -->
+<!--         <property name="defaultErrorView" value="/cmm/error/egovError"/> -->
+<!--         <property name="defaultStatusCode" value="200" /> -->
+<!--         <property name="exceptionAttribute" value="exception" /> -->
+<!--         <property name="excludedExceptions" value="egovframework.com.cmm.exception.UncheckException" /> -->
+<!--         <property name="exceptionMappings"> -->
+<!--             <props> -->
+<!--                 <prop key="org.springframework.dao.DataAccessException">cmm/error/dataAccessFailure</prop> -->
+<!--                 <prop key="org.springframework.transaction.TransactionException">cmm/error/transactionFailure</prop> -->
+<!--                 <prop key="egovframework.rte.fdl.cmmn.exception.EgovBizException">cmm/error/egovError</prop> -->
+<!--                 <prop key="org.springframework.security.AccessDeniedException">cmm/error/accessDenied</prop> -->
+<!--             </props> -->
+<!--         </property> -->
+<!--         <property name="statusCodes"> -->
+<!--             <props> -->
+<!--                  <prop key="/cmm/error/egovError">500</prop> -->
+<!--                  <prop key="/cmm/errro/error_security">403</prop> -->
+<!--                  <prop key="/cmm/errro/error_business">500</prop> -->
+<!--                  <prop key="/cmm/errro/error_ajax">500</prop> -->
+<!--                  <prop key="/cmm/error/duplication">909</prop> -->
+<!--             </props> -->
+<!--         </property> -->
+<!--     </bean> -->
+	
     
     <!-- IP 정보 기록 -->
 	<bean id="IpObtainInterceptor" class="egovframework.com.cmm.interceptor.IpObtainInterceptor" />
@@ -82,25 +86,22 @@
     <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/backoffice/**/*.do" />
-    		<mvc:exclude-mapping path="/backoffice/login.do"/>
-    		<mvc:exclude-mapping path="/backoffice/SecurityLogin.do"/>
-    		<mvc:exclude-mapping path="/backoffice/billPrint.do"/>
-    		<mvc:exclude-mapping path="/backoffice/rsv/qrReadCheck.do"/> 
-    		<mvc:exclude-mapping path="/backoffice/rsv/qrSend.do"/> 
-    		<mvc:exclude-mapping path="/backoffice/rsv/tickMachinQr.do"/> 
-    		<mvc:exclude-mapping path="/backoffice/rsv/tickMachinRes.do"/> 
+<!--     		<mvc:exclude-mapping path="/backoffice/login.do"/> -->
+<!--     		<mvc:exclude-mapping path="/backoffice/SecurityLogin.do"/> -->
+<!--     		<mvc:exclude-mapping path="/backoffice/billPrint.do"/> -->
+<!--     		<mvc:exclude-mapping path="/backoffice/rsv/qrReadCheck.do"/>  -->
+<!--     		<mvc:exclude-mapping path="/backoffice/rsv/qrSend.do"/>  -->
     		
     		<bean class="egovframework.com.cmm.interceptor.AuthenticInterceptor" />
         </mvc:interceptor>
     </mvc:interceptors>
     
-	<mvc:resources mapping="/upload/**" location="/upload/" />  
-	<mvc:resources mapping="/resource/**" location="/SE/" />     
+<!-- 	<mvc:resources mapping="/upload/**" location="/upload/" />   -->
+<!-- 	<mvc:resources mapping="/resource/**" location="/SE/" />      -->
 
 	 <!-- Aspect -->
 	 <aop:aspectj-autoproxy/>
 
-	 <context:component-scan base-package="com.kses.batch" />  
      <task:scheduler id="jobScheduler" pool-size="10" /> 
      <task:annotation-driven scheduler="jobScheduler" />
 	 

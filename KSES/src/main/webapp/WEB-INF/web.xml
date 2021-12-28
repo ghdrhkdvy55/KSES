@@ -19,7 +19,7 @@
 	</filter>
 	<filter-mapping>
 		<filter-name>encodingFilter</filter-name>
-		<url-pattern>*.do</url-pattern>
+		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 	<filter>
 		<filter-name>HTMLTagFilter</filter-name>
@@ -30,9 +30,6 @@
 		<url-pattern>*.do</url-pattern>
 	</filter-mapping>
 
-
-
-	
     <!-- security start -->
     <filter>
         <filter-name>springSecurityFilterChain</filter-name>

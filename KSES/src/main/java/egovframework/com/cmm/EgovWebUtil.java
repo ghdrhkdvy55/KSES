@@ -2,6 +2,8 @@ package egovframework.com.cmm;
 
 import java.util.regex.Pattern;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 교차접속 스크립트 공격 취약성 방지(파라미터 문자열 교체)
  *
@@ -120,6 +122,14 @@ public class EgovWebUtil {
 
 	public static String removeOSCmdRisk(String parameter) {
 		return parameter.replaceAll("\\p{Space}", "").replaceAll("\\*", "").replaceAll("|", "").replaceAll(";", "");
+	}
+	
+	public static boolean isAjaxRequest(HttpServletRequest request) {
+		final String header = request.getHeader("AJAX");
+		if (header != null && header.equals("true")) {
+			return true;
+		}
+		return false;
 	}
 
 }
