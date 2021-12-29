@@ -3,7 +3,7 @@
 <!-- //contents -->
 <div class="breadcrumb">
 	<ol class="breadcrumb-item">
-		<li>통합 관리</li>
+		<li>통합 관리&nbsp;&gt;&nbsp;</li>
     	<li class="active">통합 이용 현황</li>
 	</ol>
 </div>

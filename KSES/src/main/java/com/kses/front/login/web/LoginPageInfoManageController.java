@@ -101,18 +101,19 @@ public class LoginPageInfoManageController {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
 			if(!StringUtils.isBlank(userLoginInfo.getIndvdlinfoAgreYn())) {
-				String envType = propertiesService.getString("Globals.filePath");
+				String envType = propertiesService.getString("Globals.envType");
 				Map<String, Object> vacntnInfo = null;
 				String vacntnDt = "";
 				if(envType.equals("DEV")) {
 					userLoginInfo.setEnvType("DEV");
+					userLoginInfo.setVacntnDt(SmartUtil.NVL(vacntnInfo.get("covid_dy"), ""));
 					vacntnInfo = userService.selectSpeedOnVacntnInfo(userLoginInfo);  
 				} else if(envType.equals("PROD")){
 					userLoginInfo.setEnvType("PROD");
+					userLoginInfo.setVacntnDt(SmartUtil.NVL(vacntnInfo.get("covid_dy"), ""));
 					vacntnInfo = userService.selectSpeedOnVacntnInfo(userLoginInfo);
 				}
 				
-				userLoginInfo.setVacntnDt(SmartUtil.NVL(vacntnInfo.get("covid_dy"), ""));
 				userService.updateUserInfo(userLoginInfo);
 			}
 			
