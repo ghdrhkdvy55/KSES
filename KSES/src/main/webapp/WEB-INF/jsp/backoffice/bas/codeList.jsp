@@ -195,7 +195,7 @@
             { label: '사용유무', name:'use_at', align:'center', width:'10%'},
             { label: '수정자', name:'last_updusr_id', align:'center', width:'10%'},
             { label: '수정일자', name:'last_updt_pnttm', align:'center', width:'12%', formatter: 'date' },
-            { label: '삭제', align: 'center', width: 50, fixed: true, sortable: false, formatter: () => '<a href="javascript:fnCmmnDetailCodeDelete();">삭제</a>' }
+            { label: '삭제', align: 'center', width: 50, fixed: true, sortable: false, formatter: (cell, option, row) => '<a href="javascript:fnCmmnDetailCodeDelete(\''+ row.code +'\');">삭제</a>' }
 		], '/backoffice/bas/CmmnDetailCodeList.do', {
 			codeId: codeId
 		});
@@ -398,7 +398,8 @@
 	function fnCmmnDetailCodeUpdate() {
 	}
 	
-	function fnCmmnDetailCodeDelete() {
+	function fnCmmnDetailCodeDelete(code) {
+		console.log('code: '+ code);
 	}
 </script>
 <c:import url="/backoffice/inc/popup_common.do" />
