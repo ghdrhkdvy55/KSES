@@ -116,7 +116,7 @@
             USER_CARD_SEQ = #{userCardSeq, jdbcType=VARCHAR},
             LAST_UPDUSR_ID = #{userId},  
 			LAST_UPDT_DTM = SYSDATE,  
-			LAST_LOGIN_DT = SYSDATE 
+			LAST_LOGIN_DT = SYSDATE
 		WHEN NOT MATCHED THEN
 		INSERT	
 		(

@@ -167,7 +167,7 @@
 			</div>
       	</div>
       	<div class="right_box">
-          	<a href="javascript:$('#rsv_detail').bPopup().close();" class="grayBtn">닫기</a>
+          	<a href="javascript:jqGridFunc.fn_detailClose()" class="grayBtn">닫기</a>
       	</div>
       	<div class="clear"></div>
   	</div>
@@ -642,6 +642,10 @@
 		},
 		clearGrid : function() {
 			$("#mainGrid").clearGridData();
+		},
+		fn_detailClose : function(){
+			$('#rsv_detail').bPopup().close();
+			jqGridFunc.fn_search();
 		},
 		fn_search: function(){
 			$("#mainGrid").setGridParam({

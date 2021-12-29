@@ -52,11 +52,6 @@
               		<option value="">선택</option>
             	</select>
             	<p>검색어</p>
-            	<select id="searchCondition">
-              		<option value="">선택</option>
-              		<option value="seatNm">좌석명</option>
-              		<option value="seatClass">좌석등급</option>
-            	</select>
             	<input type="text" id="searchKeyword" placeholder="검색어를 입력하세요.">
           	</div>
           	
@@ -323,7 +318,6 @@
 				postData : JSON.stringify({
 					"pageIndex": $("#pager .ui-pg-input").val(),
 					"searchKeyword" : $("#searchKeyword").val(),
-					"searchCondition" : $("#searchCondition").val(),
 					"searchCenterCd" : $("#searchCenterCd").val(),
 					"searchFloorCd" : $("#searchFloorCd").val(),
 					"searchPartCd" : $("#searchPartCd").val(),
