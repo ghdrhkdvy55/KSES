@@ -180,8 +180,8 @@
 	
 	function fnSubGrid(id, codeId) {
 		let subGridId = id + '_t';
-		$('#'+id).empty();
-		$('<table id="'+ subGridId + '" class="scroll"></table>').appendTo('#'+id);
+		$('#'+id).empty().append('<table id="'+ subGridId + '" class="scroll"></table>');
+// 		$('<table id="'+ subGridId + '" class="scroll"></table>').appendTo('#'+id);
 		EgovJqGridApi.subGrid(subGridId, [
 			{ label: '분류코드ID', name:'code_id', hidden: true },
 			{ label: '상세코드ID', name:'code', align:'center', width:'10%', key: true },
@@ -382,7 +382,7 @@
 					toastr.success(json.message);
 					$popup.bPopup().close();
 					let codeId = $popup.find(':hidden[name=codeId]').val();
-					fnSubGrid('mainGrid_'+codeId, codeId);
+					EgovJqGridApi.subGridReload(codeId, fnSubGrid);
 				},
 				function(json) {
 					toastr.error(json.message);

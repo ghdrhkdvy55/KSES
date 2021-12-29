@@ -157,4 +157,10 @@ $.EgovJqGridApi.prototype.subGridDetail = function(id, detailFunc) {
 	}, _JqGridDelay);
 };
 
+$.EgovJqGridApi.prototype.subGridReload = function(rowId, subFunc) {
+	setTimeout(function() {
+		subFunc(_MainGridId+'_'+rowId, rowId);	
+	}, _JqGridDelay);
+};
+
 const EgovJqGridApi = new $.EgovJqGridApi();
