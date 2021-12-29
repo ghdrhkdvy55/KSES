@@ -6,22 +6,19 @@
     <bean name="propertiesService" class="egovframework.rte.fdl.property.impl.EgovPropertyServiceImpl" destroy-method="destroy">
         <property name="properties">
             <map>
+            	<entry key="Globals.envType" value="CLOUD"/>
                 <entry key="pageUnit" value="10"/>
 	        	<entry key="pageSize" value="10"/>
 	        	<entry key="pageUnitImage" value="12"/>
                 <entry key="pageSize" value="10"/>
                 <entry key="pageSizeImage" value="12"/>
-                <entry key="posblAtchFileSize" value="5242880"/>
-                           
+                <entry key="posblAtchFileSize" value="5242880"/>                         
                 <entry key="Globals.filePath" value="C:\Users\eogks\git\KSES\KSES\KSES\src\main\webapp\upload"/>
              	<!-- <entry key="Globals.filePath" value="/home/ec2-user/kses/webapps/KSES-1.0.0/upload"/> -->
                 <entry key="Globals.addedOptions" value="false"/>
-                
                 <entry key="sppeedUrl_T" value="https://wdev.speedon.or.kr/externalApi/"/>
                 <entry key="sppeedUrl_R" value="https://www.speedon.or.kr/externalApi/"/>
-                
-                <entry key="Company.Number" value="2158200063"/>
-                
+                <entry key="Company.Number" value="2158200063"/> 
                 <entry key="Globals.qrPath" value="C:\dev\git\conference\videoConference\src\main\webapp\qrcode"/>
                 <entry key="qrCodePath" value="qrcode"/>
             </map>

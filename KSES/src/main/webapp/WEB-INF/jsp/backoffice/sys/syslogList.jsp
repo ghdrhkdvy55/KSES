@@ -37,7 +37,7 @@
                 <input type="text" name="searchKeyword" id="searchKeyword"  placeholder="검색어를 입력하새요.">
             </div>
             <div class="inlineBtn ">
-                <a href="javascript:jqGridFunc.fn_Search()" class="grayBtn">검색</a>
+                <a href="javascript:jqGridFunc.fn_search()" class="grayBtn">검색</a>
             </div>
         </div>
         <div class="left_box mng_countInfo">
@@ -226,6 +226,8 @@
 		    		          	  rowNum : $('.ui-pg-selbox option:selected').val(),
 		    		          	  postData : JSON.stringify(  {
 							    		          			"pageIndex": gridPage,
+							    							"searchFrom" : $("#searchFrom").val(),
+							    							"searchTo" : $("#searchTo").val(),
 							    		          			"searchKeyword" : $("#searchKeyword").val(),
 							    		          			"pageUnit":$('.ui-pg-selbox option:selected').val()
 							    		          		})
@@ -258,6 +260,24 @@
 	    		        break;
 	    		}
     			return resultTxt;
+    		},
+    		fn_search: function(){
+				//검색 
+				$("#mainGrid").setGridParam
+				({
+					datatype : "json",
+					postData : JSON.stringify
+					({
+						"pageIndex": $("#pager .ui-pg-input").val(),
+						"searchFrom" : $("#searchFrom").val(),
+						"searchTo" : $("#searchTo").val(),
+    	          		"searchKeyword" : $("#searchKeyword").val(),
+    	         		"pageUnit":$('.ui-pg-selbox option:selected').val()
+    	         	}),
+    	    	    loadComplete : function(data) {
+    	    	    	$("#sp_totcnt").text(data.paginationInfo.totalRecordCount);
+    	    	    }
+				}).trigger("reloadGrid");
     		}, fn_sysInfo : function (requstId){
     			var url = "/backoffice/sys/selectlogInfoDetail.do";
  		       
