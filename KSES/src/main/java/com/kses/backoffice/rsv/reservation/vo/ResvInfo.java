@@ -135,6 +135,9 @@ public class ResvInfo {
 	// 결제 구분
 	private String resvPayDvsn = "";
 	
+	// 시범/비시범 지점 구분
+	private String centerPilotYn = "";
+	
 	//신규 추가
 	private String tradNo = "";
 	
