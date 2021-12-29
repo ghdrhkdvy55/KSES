@@ -24,26 +24,22 @@ public class AuthInfoServiceImpl extends EgovAbstractServiceImpl implements Auth
 	
 	@Override
 	public List<Map<String, Object>> selectAuthInfoList(Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		return authMapper.selectAuthInfoList(params);
 	}
 
 	@Override
 	public Map<String, Object> selectAuthInfoDetail(String authorCode) throws Exception {
-		// TODO Auto-generated method stub
 		return authMapper.selectAuthInfoDetail(authorCode);
 	}
 	
 	@Override
-	public int updateAuthInfo(AuthInfo vo) throws Exception {
-		int ret = 0;
-		
-		if (vo.getMode().equals("Ins")){
-			ret = (uniMapper.selectIdDoubleCheck("AUTHOR_CODE", "COMTNAUTHORINFO", "AUTHOR_CODE = ["+ vo.getAuthorCode() + "[" ) > 0) ? -1 :  authMapper.insertAuthInfo(vo);
-		} else {
-			ret = authMapper.updateAuthInfo(vo);
-		}
-		return ret;
+	public int insertAuthInfo(AuthInfo authInfo) throws Exception {
+		return (uniMapper.selectIdDoubleCheck("AUTHOR_CODE", "COMTNAUTHORINFO", "AUTHOR_CODE = ["+ authInfo.getAuthorCode() + "[" ) > 0) ? -1 :  authMapper.insertAuthInfo(authInfo);
+	}
+	
+	@Override
+	public int updateAuthInfo(AuthInfo authInfo) throws Exception {
+		return authMapper.updateAuthInfo(authInfo);
 	}
 
 	@Override
@@ -53,7 +49,6 @@ public class AuthInfoServiceImpl extends EgovAbstractServiceImpl implements Auth
 
 	@Override
 	public List<Map<String, Object>> selectAuthInfoComboList() throws Exception {
-		// TODO Auto-generated method stub
 		return authMapper.selectAuthInfoComboList();
 	}
 }

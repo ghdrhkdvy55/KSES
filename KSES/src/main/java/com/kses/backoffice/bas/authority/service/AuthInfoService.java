@@ -7,13 +7,15 @@ import com.kses.backoffice.bas.authority.vo.AuthInfo;
 
 public interface AuthInfoService {
 	
-	public List<Map<String, Object>> selectAuthInfoList(Map<String, Object> params) throws Exception;
+	List<Map<String, Object>> selectAuthInfoList(Map<String, Object> params) throws Exception;
 	
-	public List<Map<String, Object>> selectAuthInfoComboList() throws Exception;
+	List<Map<String, Object>> selectAuthInfoComboList() throws Exception;
 	
-    public Map<String, Object> selectAuthInfoDetail(String authCode) throws Exception;
+    Map<String, Object> selectAuthInfoDetail(String authCode) throws Exception;
 	
-    public int updateAuthInfo(AuthInfo vo) throws Exception;
+    int insertAuthInfo(AuthInfo authInfo) throws Exception;
     
-    public int deleteAuthInfo(String authCode) throws Exception;
+    int updateAuthInfo(AuthInfo authInfo) throws Exception;
+    
+    int deleteAuthInfo(String authCode) throws Exception;
 }
