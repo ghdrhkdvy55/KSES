@@ -48,11 +48,7 @@
         </div>
         <div class="clear"></div>
         <div class="whiteBox">
-        	<table>
-        		<tr><td>
             <table id="mainGrid"></table>
-            	</td></tr>
-            </table>
             <div id="pager" class="scroll" style="text-align:center;"></div>  
         </div>
     </div>
