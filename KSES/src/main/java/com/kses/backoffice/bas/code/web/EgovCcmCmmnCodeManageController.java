@@ -166,7 +166,6 @@ public class EgovCcmCmmnCodeManageController {
 		String result = uniService.selectIdDoubleCheck("CODE_ID", "COMTCCMMNCODE", "CODE_ID = [" + codeId + "[") > 0
 				? "FAIL"
 				: "OK";
-		
 		if (StringUtils.equals(result, "OK")) {
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("common.codeOk.msg"));

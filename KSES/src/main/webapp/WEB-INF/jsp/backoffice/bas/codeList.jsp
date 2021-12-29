@@ -70,7 +70,7 @@
 	                        <input type="text" name="codeId">
 	                        <span id="sp_Unqi">
 	                        	<a href="javascript:fnCmmnCodeIdCheck();" class="blueBtn">중복확인</a>
-	                        	<input type="hidden" name="idCheck" value="N">
+	                        	<input type="hidden" id="idCheck" value="N">
 	                        </span>
 	                    </td>
 	                </tr>
@@ -181,7 +181,6 @@
 	function fnSubGrid(id, codeId) {
 		let subGridId = id + '_t';
 		$('#'+id).empty().append('<table id="'+ subGridId + '" class="scroll"></table>');
-// 		$('<table id="'+ subGridId + '" class="scroll"></table>').appendTo('#'+id);
 		EgovJqGridApi.subGrid(subGridId, [
 			{ label: '분류코드ID', name:'code_id', hidden: true },
 			{ label: '상세코드ID', name:'code', align:'center', width:'10%', key: true },
@@ -191,7 +190,7 @@
             { label: '사용유무', name:'use_at', align:'center', width:'10%'},
             { label: '수정자', name:'last_updusr_id', align:'center', width:'10%'},
             { label: '수정일자', name:'last_updt_pnttm', align:'center', width:'12%', formatter: 'date' },
-            { label: '삭제', align: 'center', width: 50, fixed: true, sortable: false, formatter: (cell, option, row) => '<a href="javascript:fnCmmnDetailCodeDelete(\''+ row.code +'\');">삭제</a>' }
+            { label: '삭제', align: 'center', width: 50, fixed: true, sortable: false, formatter: (cell, option, row) => '<a href="javascript:fnCmmnDetailCodeDelete(\''+ row.code +'\',\''+ row.code_id +'\');">삭제</a>' }
 		], '/backoffice/bas/CmmnDetailCodeList.do', {
 			codeId: codeId
 		});
@@ -208,7 +207,7 @@
 			$popup.find('button.blueBtn').off('click').click(fnCmmnCodeInsert);
 			$form.find(':hidden[name=mode]').val('Ins');
 			$form.find(':text').val('');
-			$form.find(':hidden[name=idCheck]').val('N');
+			$form.find(':hidden#idCheck').val('N');
 			$form.find(':text[name=codeId]').removeAttr('readonly');
 			$form.find(':radio[name=useAt]:first').prop('checked', true);
 		}
@@ -218,11 +217,10 @@
 			$popup.find('span#sp_Unqi').hide();
 			$popup.find('button.blueBtn').off('click').click(fnCmmnCodeUpdate);
 			$form.find(':hidden[name=mode]').val('Edt');
-			$form.find(':text[name=codeId]').val(rowData.code_id);
+			$form.find(':text[name=codeId]').prop('readonly', true).val(rowData.code_id);
 			$form.find(':text[name=codeIdNm]').val(rowData.code_id_nm);
 			$form.find(':text[name=codeIdDc]').val(rowData.code_id_dc);
 			$form.find(':radio[name=useAt][value='+ rowData.use_at +']').prop('checked', true);
-			$form.find(':text[name=codeId]').prop('readonly', true);
 		}
 		$popup.bPopup();
 	}
@@ -240,7 +238,7 @@
 			},
 			null,
 			function(json) {
-				$popup.find(':hidden[name=idCheck]').val('Y');
+				$popup.find(':hidden#idCheck').val('Y');
 				toastr.info(json.message);
 			},
 			function(json) {
@@ -255,7 +253,7 @@
 			toastr.warning('코드를 입력해 주세요.');
 			return;
 		}
-		if ($popup.find(':hidden[name=idCheck]').val() !== 'Y') {
+		if ($popup.find(':hidden#idCheck').val() !== 'Y') {
 			toastr.warning('중복체크가 안되었습니다.');
 			return;	
 		}
@@ -287,9 +285,8 @@
 			toastr.warning('코드명을 입력해 주세요.');
 			return;
 		}
-		let rowId = $('#mainGrid').jqGrid('getGridParam', 'selrow');
-		let rowData = $('#mainGrid').jqGrid('getRowData', rowId);
-		bPopupConfirm('분류코드 수정', '<b>'+ rowData.code_id_nm +'</b> 를(을) 수정 하시겠습니까?', function() {
+		
+		bPopupConfirm('분류코드 수정', '<b>'+ $popup.find(':text[name=codeId]').val() +'</b> 를(을) 수정 하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(
 				'POST',
 				'/backoffice/bas/codeUpdate.do', 
@@ -314,7 +311,7 @@
 			return false;
 		}
 		let rowData = $('#mainGrid').jqGrid('getRowData', rowId);
-		bPopupConfirm('분류코드 삭제', '<b>'+ rowData.code_id_nm +'</b> 를(을) 삭제 하시겠습니까?', function() {
+		bPopupConfirm('분류코드 삭제', '<b>'+ rowData.code_id +'</b> 를(을) 삭제 하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(
 				'POST',
 				'/backoffice/bas/codeDelete.do', {
@@ -392,10 +389,47 @@
 	}
 	
 	function fnCmmnDetailCodeUpdate() {
+		let $popup = $('[data-popup=bas_detailcode_add]');
+		if ($popup.find(':text[name=codeNm]').val() === '') {
+			toastr.warning('상세코드명을 입력해 주세요.');
+			return;
+		}
+		bPopupConfirm('상세코드 수정', '<b>'+ $popup.find(':hidden[name=code]').val() +'</b> 수정 하시겠습니까?', function() {
+			EgovIndexApi.apiExecuteJson( 
+				'POST',
+				'/backoffice/bas/CodeDetailUpdate.do', 
+				$popup.find('form').serializeObject(),
+				null,
+				function(json) {
+					toastr.success(json.message);
+					$popup.bPopup().close();
+					let codeId = $popup.find(':hidden[name=codeId]').val();
+					EgovJqGridApi.subGridReload(codeId, fnSubGrid);
+				},
+				function(json) {
+					toastr.error(json.message);
+				}
+			);
+		});
 	}
 	
-	function fnCmmnDetailCodeDelete(code) {
-		console.log('code: '+ code);
+	function fnCmmnDetailCodeDelete(code, codeId) {
+		bPopupConfirm('상세코드 삭제', '<b>'+ code +'</b> 를(을) 삭제 하시겠습니까?', function() {
+			EgovIndexApi.apiExecuteJson(
+				'POST',
+				'/backoffice/bas/codeDetailCodeDelete.do', {
+					code: code
+				},
+				null,
+				function(json) {
+					toastr.success(json.message);
+					EgovJqGridApi.subGridReload(codeId, fnSubGrid);
+				},
+				function(json) {
+					toastr.error(json.message);
+				}
+			);
+		});
 	}
 </script>
 <c:import url="/backoffice/inc/popup_common.do" />
