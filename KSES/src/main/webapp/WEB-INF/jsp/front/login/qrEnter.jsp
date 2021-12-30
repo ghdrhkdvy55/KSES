@@ -182,11 +182,13 @@
 								qrService.fn_qrTimer();
 				    		} else {
 				    			$(".classCost").html(resvInfo.resv_pay_cost);
-				    			$(".pay_btn li:eq(0)").hide();
+				    			$(".pay_btn li:eq(0)").show();
 								$(".qr_enter_code").hide();
 								$(".qr_info").hide();
 								$(".pay_noti").show();
 				    		}
+				    		
+				    		$("#accessType").val() != "WEB" ? $(".pay_btn li:eq(1)").hide() : $(".pay_btn li:eq(1)").show();  
 						} else {
 							fn_openPopup("QR코드 생성에 실패하였습니다.", "red", "ERROR", "확인", "/front/main.do");
 						}

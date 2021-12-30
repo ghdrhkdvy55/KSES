@@ -6,7 +6,7 @@ import com.kses.backoffice.util.SmartUtil;
 public class SureMsgInfo {
 	public SureDataInfo resvSureDataMsg(String msgDvsn, Map<String, Object> resvInfo) throws Exception {
 		SureDataInfo sureData = new SureDataInfo();
-		String domain = "https://kses.kcycle.or.kr/front/qrEnter.do?";
+		String domain = "http://kses.kcycle.or.kr/front/qrEnter.do?";
 		String msg = "";
 		String templateCode = "";
 		
