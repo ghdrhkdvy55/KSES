@@ -32,7 +32,7 @@
     	<div class="whiteBox searchBox">
             <div class="top">                    
                 <p>코드</p>
-                <input type="text" id="searchKeyword" placeholder="검색어를 입력하새요." autocomplete="off">
+                <input type="text" id="searchKeyword" placeholder="검색어를 입력하세요." autocomplete="off">
             </div>
             <div class="inlineBtn">
                 <a href="javascript:fnSearch(1);" class="grayBtn">검색</a>
@@ -367,4 +367,3 @@
 		});
 	}
 </script>
-<c:import url="/backoffice/inc/popup_common.do" />
