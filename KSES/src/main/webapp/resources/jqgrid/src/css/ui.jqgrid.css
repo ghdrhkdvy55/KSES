@@ -41,7 +41,7 @@ tr.ui-search-toolbar select {margin: 1px 0 0 0}
 .ui-jqgrid tr.jqgrow:hover {background: #fbf7f1;}
 .ui-jqgrid tr.jqgroup { outline-style: none; }
 .ui-jqgrid tr.jqgrow td {
-    text-align: center !important;
+    text-align: center;
     font-weight: normal;
     overflow: hidden;
     white-space: pre;
