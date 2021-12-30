@@ -2039,7 +2039,7 @@ ul.tabs li{
     border-radius: 8px;
     font-size: 1.1em;
     color: #fff;
-    margin-top: 5rem;
+    margin-top: 1rem;
 }
 .info_header .leftImg {
   background: url("/resources/img/front/left_img.svg")no-repeat left;
@@ -2157,6 +2157,8 @@ ul.tabs li{
 .my_menu ul:last-child li:nth-child(3) {background:url("/resources/img/front/logout_black_24dp.svg")left no-repeat; padding-left: 2.8rem;}
 
 
+#ENTRY_DVSN_2_resv_area li:nth-child(3), #standing_resv_area li:nth-child(3) {background:#dbdbdb !important;}
+#ENTRY_DVSN_2_resv_area .covid19_qna li:nth-child(3), #standing_resv_area .covid19_qna li:nth-child(3) {background:none !important;}
 
  /* TEMP */
 .mapArea {
@@ -2182,6 +2184,26 @@ ul.tabs li{
     color: white;
 }
 
+.ok_sumit {border-top:1px solid #eee; margin-top:2rem; text-align:center;}
+.ok_sumit ul {padding-top:1rem;}
+.ok_sumit li{display:inline-block}
+.ok_sumit li input[type=text] {
+    height: 3rem;
+    border: 1px solid #e0e0e0;
+    margin: 1rem 0;
+    font-size: 0.8em;
+    padding: 1rem;
+    width: -webkit-fill-available;
+}
+.ok_sumit li a {
+    display: block;
+    background: #858585;
+    padding: 1.5rem 2rem ;
+    text-align: center;
+    font-size: 1.1em;
+    color: #fff;
+}
+.ok_input {width:45%;}
 
 .seat li.none {
     background: #959595;
@@ -2475,7 +2497,19 @@ ul.tabs li{
 .addressBox .banner{float: right; height: 25px; transform: translateY(-15px);}
 .addressBox .banner img{vertical-align: middle;}
 @media screen and (max-width: 660px){
-	
+	.gui_seat {
+	    border: 1px solid #e0e0e0;
+	    height: 240px;
+	    padding: 0 2rem 0;
+	    margin-top: 10px;
+	}
+#mask {
+    height: 240px!important;
+}
+	.branch_list >li ul {
+	    text-align: center;
+	    padding: 2.5rem 0;
+	}
   .f_logo_box {padding: 1.5rem 0;  padding-bottom:10rem;}
   .linkBox {
     padding-bottom: 1rem;
