@@ -2114,11 +2114,13 @@ ul.tabs li{
 .summit_btn a {
     color: #fff;
     padding: 2rem 0;
-    background: #47D6BE;
+    
     border-radius: 8px;
-    display:block;
+    display:inline-block;
     width:100%;
 }
+.summit_btn a:first-child{background: #47D6BE;}
+.summit_btn a:last-child{}
 .pop_wrap h4 img {
     vertical-align: middle;
     width: 19px;
