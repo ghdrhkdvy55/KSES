@@ -11,10 +11,9 @@
 	        	<entry key="pageUnitImage" value="12"/>
                 <entry key="pageSize" value="10"/>
                 <entry key="pageSizeImage" value="12"/>
-                <entry key="posblAtchFileSize" value="5242880"/>
-                           
-                <entry key="Globals.filePath" value="C:\Users\eogks\git\KSES\KSES\KSES\src\main\webapp\upload"/>
-             	<!-- <entry key="Globals.filePath" value="/home/ec2-user/kses/webapps/KSES-1.0.0/upload"/> -->
+                <entry key="posblAtchFileSize" value="5242880"/>                
+                <entry key="Globals.filePath" value="C:\Users\82102\git\KSES\KSES\src\main\webapp\upload"/>
+                <!-- <entry key="Globals.filePath" value="/home/ec2-user/kses/webapps/ROOT/upload"/> -->
                 <entry key="Globals.addedOptions" value="false"/>
                 
                 <entry key="sppeedUrl_T" value="https://wdev.speedon.or.kr/externalApi/"/>
