@@ -181,7 +181,7 @@
 			pageUnit: $('.ui-pg-selbox option:selected').val(),
 			searchKeyword: $('#searchKeyword').val()
 		};
-		EgovJqGridApi.mainGridAjax('/backoffice/bas/authListAjax.do', params, fnSearch, null);
+		EgovJqGridApi.mainGridAjax('/backoffice/bas/authListAjax.do', params, fnSearch);
 		EgovJqGridApi.mainGridDetail(fnAuthInfo);
 	}
 	
