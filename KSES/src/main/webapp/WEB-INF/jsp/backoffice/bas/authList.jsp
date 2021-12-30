@@ -29,6 +29,15 @@
 <div class="clear"></div>
 <div class="dashboard">
     <div class="boardlist">
+    	<div class="whiteBox searchBox">
+            <div class="top">                    
+                <p>코드</p>
+                <input type="text" id="searchKeyword" placeholder="검색어를 입력하새요." autocomplete="off">
+            </div>
+            <div class="inlineBtn">
+                <a href="javascript:fnSearch(1);" class="grayBtn">검색</a>
+            </div>
+        </div>
 		<div class="left_box mng_countInfo">
             <p>총 : <span id="sp_totcnt"></span>건</p>
         </div>
@@ -169,7 +178,8 @@
 	function fnSearch(pageNo) {
 		let params = {
 			pageIndex: pageNo,
-			pageUnit: $('.ui-pg-selbox option:selected').val()
+			pageUnit: $('.ui-pg-selbox option:selected').val(),
+			searchKeyword: $('#searchKeyword').val()
 		};
 		EgovJqGridApi.mainGridAjax('/backoffice/bas/authListAjax.do', params, fnSearch, null);
 		EgovJqGridApi.mainGridDetail(fnAuthInfo);
