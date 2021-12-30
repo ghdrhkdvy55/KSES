@@ -258,18 +258,15 @@
 				
 				if(resvInfo.isSuccess) {
 					var url = "/front/resvInfoCancel.do";
-					var params = {
-						"resvSeq" : resvSeq,
-						"userDvsn" : $("#userDvsn").val(),
-						"resvCancelId" : resvInfo.user_id,
-						"resvCancelCd" : "RESV_CANCEL_CD_2"
-					}
+					
+					resvInfo.resv_cancel_id = resvInfo.user_id;
+					resvInfo.resv_cancel_cd = "RESV_CANCEL_CD_2";
 					
 					fn_Ajax
 					(
 					    url,
 					    "POST",
-						params,
+					    resvInfo,
 						false,
 						function(result) {
 							if (result.status == "SUCCESS") {
@@ -279,7 +276,7 @@
 							}
 						},
 						function(request) {
-							alert("ERROR : " + request.status);	       						
+							fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");	       						
 						}    		
 					);
 				}

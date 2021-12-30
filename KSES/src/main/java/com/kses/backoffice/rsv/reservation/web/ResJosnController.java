@@ -144,7 +144,22 @@ public class ResJosnController {
 				Url = propertiesService.getString("sppeedUrl_T") + "trade/fepWithdraw";
 
 				Map<String, Object> resvInfo = resService.selectUserResvInfo(jsonObject);
-
+				if(!SmartUtil.NVL(resvInfo.get("resv_state"),"").equals("RESV_STATE_1")) {
+					switch (SmartUtil.NVL(resvInfo.get("resv_state"),"")) {
+						case "RESV_STATE_2" : Message = "이미 이용중인 예약정보 입니다.";  break;
+						case "RESV_STATE_3" : Message = "이미 이용완료 처리된 예약정보 입니다.";  break;
+						case "RESV_STATE_4" : Message = "이미 취소된 예약정보입니다.";  break;
+						default: Message = "알수없는 예약정보 입니다."; break;
+					}
+					model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+					model.addObject(Globals.STATUS_MESSAGE, Message);
+					return model;
+				} else if(SmartUtil.NVL(resvInfo.get("resv_pay_dvsn"),"").equals("RESV_PAY_DVSN_2")) {
+					model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+					model.addObject(Globals.STATUS_MESSAGE, "이미 결제처리된 예약정보 입니다.");
+					return model;
+				}
+				
 				jsonObject.put("System_Type", "E");
 				jsonObject.put("External_Key", resvInfo.get("resv_seq"));
 				jsonObject.put("Card_Id", resvInfo.get("user_card_id"));
@@ -162,7 +177,7 @@ public class ResJosnController {
 					jsonObject.put("Trade_Cd", "20A63");
 					jsonObject.put("Trade_Detail", "입장시스템 입장/좌석 이용료 출금");
 				}
-
+				
 				jsonObject.put("Trade_Pay", resvInfo.get("resv_pay_cost").toString());
 
 				node = SmartUtil.requestHttpJson(Url, jsonObject.toJSONString(), "SPEEDWITHDRAW", "SPEEDON", "KSES");
@@ -170,8 +185,8 @@ public class ResJosnController {
 					// 예약 테이블 출금 정보 처리 하기
 					ResvInfo resInfo = new ResvInfo();
 					resInfo.setResvSeq(SmartUtil.NVL(resvInfo.get("resv_seq"), "").toString());
-					resInfo.setResvState("RESV_STATE_2");
 					resInfo.setResvPayDvsn("RESV_PAY_DVSN_2");
+					resInfo.setResvTicketDvsn("RESV_TICKET_DVSN_1");
 					resInfo.setTradNo(node.get("Trade_No").asText());
 
 					resService.resPriceChange(resInfo);
@@ -188,7 +203,6 @@ public class ResJosnController {
 						"KSES");
 				if (node.get("Error_Cd").asText().equals("SUCCESS")) {
 					// 예약 테이블 취소 정보 처리 하기
-
 				} else {
 					for (speedon direction : speedon.values()) {
 						if (direction.getCode().equals(node.get("Error_Cd").asText())) {
@@ -228,7 +242,8 @@ public class ResJosnController {
 					ResvInfo resInfo = new ResvInfo();
 					resInfo.setResvSeq(SmartUtil.NVL(sendInfo.get("resvSeq"), "").toString());
 					resInfo.setResvPayDvsn("RESV_PAY_DVSN_3");
-					resInfo.setResvPayDvsn("RESV_STATE_4");
+
+					resInfo.setResvTicketDvsn("RESV_TICKET_DVSN_1");
 					resInfo.setTradNo(node.get("Trade_No").asText());
 					resService.resPriceChange(resInfo);
 
@@ -511,7 +526,6 @@ public class ResJosnController {
 		String resPersonCnt = "";
 		String returnCode = "";
 		String returnMessage = "";
-		String partInitial = "";
 
 		InterfaceInfo info = new InterfaceInfo();
 		info.setTrsmrcvSeCode(sendEnum.RPQ.getCode());
@@ -528,21 +542,26 @@ public class ResJosnController {
 			Map<String, Object> resInfo = resService.selectUserResvInfo(searchVO);
 
 			String recDate = SmartUtil.NVL(jsonInfo.get("RES_SEND_DATE"), "19700101").toString();
-
-			if (resInfo != null && SmartUtil.NVL(resInfo.get("resv_end_dt"), "").toString().equals(localTime)
-					&& recDate.substring(0, 8).equals(localTime)) {
-				LOGGER.info(localTime);
-				resName = SmartUtil.NVL(resInfo.get("user_nm"), "").toString();
-				resPrice = SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString();
-				resDay = SmartUtil.NVL(resInfo.get("resv_start_dt"), "").toString();
-				resTime = SmartUtil.NVL(resInfo.get("resv_start_tm"), "").toString();
-				seatName = SmartUtil.NVL(resInfo.get("seat_nm"), "").toString();
-				partInitial = SmartUtil.NVL(resInfo.get("part_initial"), "").toString();
-				resPersonCnt = "1";
-				returnCode = "OK";
+			
+			if (resInfo != null && !SmartUtil.NVL(resInfo.get("resv_pay_dvsn"), "").toString().equals("RESV_PAY_DVSN_1")) {
+				LOGGER.info("RESV_PAY_DVSN123" +  SmartUtil.NVL(resInfo.get("resv_pay_dvsn"), "").toString());
+				returnCode = "ERROR_04";
+				returnMessage = "이미 결제가 완료 되었습니다.";
 			} else {
-				returnCode = "ERROR_01";
-				returnMessage = "예약 정보 없음.";
+				if (resInfo != null && SmartUtil.NVL(resInfo.get("resv_end_dt"), "").toString().equals(localTime)
+						&& recDate.substring(0, 8).equals(localTime)) {
+					LOGGER.info(localTime);
+					resName = SmartUtil.NVL(resInfo.get("user_nm"), "").toString();
+					resPrice = SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString();
+					resDay = SmartUtil.NVL(resInfo.get("resv_start_dt"), "").toString();
+					resTime = SmartUtil.NVL(resInfo.get("resv_start_tm"), "").toString();
+					seatName = SmartUtil.NVL(resInfo.get("seat_nm"), "").toString();
+					resPersonCnt = "1";
+					returnCode = "OK";
+				} else {
+					returnCode = "ERROR_01";
+					returnMessage = "예약 정보 없음.";
+				}
 			}
 
 			info.setTrsmrcvSeCode(sendEnum.RPS.getCode());
@@ -578,7 +597,7 @@ public class ResJosnController {
 		model.addObject("RES_PERSON_CNT", resPersonCnt);
 		model.addObject("RETURN_CODE", returnCode);
 		model.addObject("RETURN_MESSAGE", returnMessage);
-		model.addObject("PART_INITIAL", partInitial);
+
 
 		// 인터페이스 연계
 		info.setResultMessage(ParamToJson.paramToJson(model));
@@ -610,7 +629,7 @@ public class ResJosnController {
 		String seatClass = "";
 		String userPhone = "";
 		String userPhoneBack4 = "";
-		String resvPayDvsn = "";
+		String partInitial = "";
 
 		InterfaceInfo info = new InterfaceInfo();
 		info.setTrsmrcvSeCode(sendEnum.RPQ.getCode());
@@ -639,7 +658,7 @@ public class ResJosnController {
 				returnCode = "ERROR_03";
 				returnMessage = "결제 금액 확인 요망.";
 			} else if (resInfo != null && !SmartUtil.NVL(resInfo.get("resv_pay_dvsn"), "").toString().equals("RESV_PAY_DVSN_1")) {
-				LOGGER.info("RESV_PAY_DVSN" +  SmartUtil.NVL(resInfo.get("resv_pay_dvsn"), "").toString());
+				LOGGER.info("RESV_PAY_DVSN123" +  SmartUtil.NVL(resInfo.get("resv_pay_dvsn"), "").toString());
 				returnCode = "ERROR_04";
 				returnMessage = "이미 결제가 완료 되었습니다.";
 			} else {
@@ -650,7 +669,7 @@ public class ResJosnController {
 				seatClass = SmartUtil.NVL(resInfo.get("seat_class"), "").toString();
 				userPhone = SmartUtil.NVL(resInfo.get("user_phone"), "").toString();
 				userPhoneBack4 = userPhone.substring(userPhone.length()-4,userPhone.length());
-				resvPayDvsn = SmartUtil.NVL(resInfo.get("resv_pay_dvsn"), "").toString();
+				partInitial = SmartUtil.NVL(resInfo.get("part_initial"), "").toString();
 				
 				EgovFileScrty fileScrty = new EgovFileScrty();
 				String qrCode = fileScrty.encode(resInfo.get("resv_seq") + ":" + resInfo.get("resv_start_dt")
@@ -666,6 +685,7 @@ public class ResJosnController {
 
 				resInfoU.setTradNo(SmartUtil.NVL(jsonInfo.get("IF_NO"), "").toString());
 				resInfoU.setResvPayDvsn("RESV_PAY_DVSN_2");
+				resInfoU.setResvTicketDvsn("RESV_TICKET_DVSN_2");
 				resInfoU.setResvSeq(SmartUtil.NVL(jsonInfo.get("RES_NO"), "").toString());
 
 				int ret = resService.resPriceChange(resInfoU);
@@ -709,6 +729,7 @@ public class ResJosnController {
 		model.addObject("RETURN_MESSAGE", returnMessage);
 		model.addObject("SEAT_CLASS", seatClass);
 		model.addObject("USER_PHONE", userPhoneBack4);
+		model.addObject("PART_INITIAL", partInitial);
 		
 
 		info.setResultMessage(ParamToJson.paramToJson(model));

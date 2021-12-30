@@ -101,6 +101,19 @@ public class LoginPageInfoManageController {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
 			if(!StringUtils.isBlank(userLoginInfo.getIndvdlinfoAgreYn())) {
+				String envType = propertiesService.getString("Globals.envType");
+				Map<String, Object> vacntnInfo = null;
+				String vacntnDt = "";
+				if(envType.equals("DEV")) {
+					userLoginInfo.setEnvType("DEV");
+					vacntnInfo = userService.selectSpeedOnVacntnInfo(userLoginInfo);
+					userLoginInfo.setVacntnDt(SmartUtil.NVL(vacntnInfo.get("covid_dy"), ""));
+				} else if(envType.equals("PROD")){
+					userLoginInfo.setEnvType("PROD");
+					vacntnInfo = userService.selectSpeedOnVacntnInfo(userLoginInfo);
+					userLoginInfo.setVacntnDt(SmartUtil.NVL(vacntnInfo.get("covid_dy"), ""));
+				}
+				
 				userService.updateUserInfo(userLoginInfo);
 			}
 			
@@ -148,8 +161,7 @@ public class LoginPageInfoManageController {
 		ModelAndView model = new ModelAndView("/front/login/mainpage");
 		try {
 			
-			UserLoginInfo userLoginInfo = new UserLoginInfo();
-			userLoginInfo = userService.selectSSOUserInfo(params);
+			UserLoginInfo userLoginInfo = userService.selectSSOUserInfo(params);
 			
 			if(userLoginInfo != null) {
 				HttpSession httpSession = request.getSession();

@@ -60,6 +60,7 @@ import com.google.zxing.client.j2se.MatrixToImageConfig;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+import com.kses.backoffice.rsv.reservation.vo.ResvInfo;
 import com.kses.backoffice.sym.log.service.InterfaceInfoManageService;
 import com.kses.backoffice.sym.log.vo.InterfaceInfo;
 import com.kses.backoffice.sym.log.vo.sendEnum;
@@ -589,6 +590,13 @@ public class SmartUtil {
 
         return null;
     }
+	
+	public static String getSmsName(Map<String, Object> resvInfo) throws Exception {
+		String userNm = NVL(resvInfo.get("resv_user_nm"),"");
+		String userPhNum = NVL(resvInfo.get("resv_user_clphn"),"");
+		
+		return userNm.charAt(0) + "00" + userPhNum.substring(userPhNum.length()-4, userPhNum.length());
+	}
 	
 	public static String[] getSplitPhNum(String phNum) throws Exception {
 		String[] splitPhNumArray = new String[3];

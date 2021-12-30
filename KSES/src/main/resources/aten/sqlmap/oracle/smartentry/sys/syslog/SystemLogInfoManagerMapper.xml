@@ -78,10 +78,10 @@
 		                 a.RQESTER_ID = b.ADMIN_ID
 		            ]]>
 		        <if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
-		            <![CDATA[  AND c.CODE_NM LIKE '%' || #{params.searchKeyword} || '%' ]]>
+		            <![CDATA[  AND a.METHOD_NM LIKE '%' || #{params.searchKeyword} || '%' ]]>
 		        </if>
-		        <if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchBgnDe)">
-		            <![CDATA[  AND TRIM(a.OCCRRNC_DE) BETWEEN #{params.searchBgnDe} AND #{params.searchEndDe} ]]>
+		        <if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchFrom) and !@org.apache.commons.lang3.StringUtils@isEmpty(params.searchTo)">
+		        	AND TO_CHAR(OCCRRNC_DATE, 'yyyymmdd') BETWEEN #{params.searchFrom} AND #{params.searchTo}
 		        </if>
 		        <![CDATA[           
 		            ORDER BY a.OCCRRNC_DE DESC 

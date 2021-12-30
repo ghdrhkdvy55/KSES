@@ -130,11 +130,11 @@
 			false,
 			function(result) {
 				if (result.status == "LOGIN FAIL") {
-					common_popup(result.meesage, "N","");
+					common_popup(result.message, "N","");
 					
 					location.href="/backoffice/login.do";
 				} else if (result.status == "SUCCESS") {
-					common_popup(result.meesage, "N","");
+					common_popup(result.message, "Y","");
 				}
 			},
 			function(request) {

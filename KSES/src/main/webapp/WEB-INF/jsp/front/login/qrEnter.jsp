@@ -48,7 +48,7 @@
 						</div>
                     </div>
 
-                    <div class="qr_info">
+                    <div class="qr_info" style="display:none;">
                         <ul>
                             <li class="timer">남은시간<span id="timeStamp">00:00</span></li>
                             <!--//접종완료-->
@@ -66,7 +66,7 @@
                     </div>
 					<!-- //결제 완료 시 qr표출 -->
 					<!-- 미 결제 시 표출 -->
-					<div class="pay_noti">
+					<div class="pay_noti" style="display:none;">
 						<p><img src="/resources/img/front/credit_score_black_24dp.svg" alt="결제하기"></p>
 						<p>스마트 입장을 위한 <br>결제를 진행 해주세요.</p>
 					</div>
@@ -74,7 +74,7 @@
                     <div class="pay_btn">
                         <ul>
                             <li class="mintBtn"><a data-popup-open="pay_number">결제</a></li>
-                            <li class="grayBtn"><a href="/front/main.do">닫기</a></li>
+                            <li class="grayBtn"><a href="javascript:history.back();">닫기</a></li>
                         </ul>  
                     </div>
                 </div>
@@ -82,19 +82,33 @@
         </div>
         <!--contents //-->
     </div>  
-
+    
 	<!-- // 결제인증 팝업 -->
-    <div data-popup="pay_number" class="popup">
-		<div class="pop_con rsv_popup">
-			<a class="button b-close">X</a>
-          	<div class="pop_wrap">
-            	<h4>결제 비밀번호를 입력해주세요.</h4>
-            	<ul class="pay_passWord">
-                	<li><input type="password" id="Card_Pw" placeholder="비밀번호를 입력하세요."></li>
-                	<li><a href="javascript:qrService.fn_payment();" class="mintBtn">확인</a></li>
-            	</ul>
-          	</div>
-      	</div>
+    <div data-popup="pay_number" class="popup" style="display:none;">
+      <div class="pop_con rsv_popup">
+          <a class="button b-close">X</a>
+          <div class="pop_wrap">
+            <h4>결제 비밀번호를 입력해주세요.</h4>
+            <ul class="cost_list">
+                <li>
+                    <ul class="costStat">
+                        <li>결제 금액</li>
+                        <li><span class="classCost"></span>원</li>
+                    </ul>
+                </li>
+                <li>
+                    <ul class="pay_passWord">
+                        <li>결제</li>
+                        <li><input type="password" id="Card_Pw" placeholder="결제 비밀번호를 입력하세요."></li>
+                    </ul>
+                </li>
+            </ul>
+    
+            <ul class="cost_btn">
+                <li class="okBtn"><a href="javascript:qrService.fn_payment();">확인</a></li>
+            </ul>
+          </div>
+      </div>
     </div>
     <!-- 결제인증 팝업 // -->
 	
@@ -130,6 +144,10 @@
 					false,
 					function(result) {
 				    	if (result.status == "SUCCESS") {
+				    		var qrCode = result.QRCODE;
+				    		var resvInfo = result.resvInfo;
+				    		var vacntnInfo = result.vacntnInfo;
+				    		
 				    		if(isFirst) {
 				    			isFirst = false;
 				    		} else {
@@ -138,20 +156,21 @@
 				    		}
 				    		
 							$(".vacState span").removeClass()
-				    		switch (result.vacntnInfo.pass_yn) {
+				    		switch (vacntnInfo.pass_yn) {
 								case "Y" : $(".vacState span").addClass("vacDone").html("접종 완료"); break;
 								case "N" : $(".vacState span").addClass("vacNon").html("백신패스 만료"); break;  
 								default: $(".vacState span").addClass("vacNon").html("접종정보 없음"); break;
 							}				    			
 				    		
 							
-				    		if(result.resvInfo.resv_pay_dvsn == "RESV_PAY_DVSN_2" || result.resvInfo.center_pilot_yn == "Y") {
+				    		if(resvInfo.resv_pay_dvsn == "RESV_PAY_DVSN_2" || resvInfo.center_pilot_yn == "Y") {
+				    			$(".pay_btn li:eq(0)").hide();
 								$(".qr_enter_code").show();
 								$(".qr_info").show();
 								$(".pay_noti").hide();
 
 								var qrcode = new QRCode("qr_enter_code", {
-								    text: result.QRCODE,
+								    text: qrCode,
 								    width: 256,
 								    height: 256,
 								    colorDark : "#000000",
@@ -162,10 +181,14 @@
 								$("#qr_enter_code > img").css("margin", "auto");
 								qrService.fn_qrTimer();
 				    		} else {
+				    			$(".classCost").html(resvInfo.resv_pay_cost);
+				    			$(".pay_btn li:eq(0)").show();
 								$(".qr_enter_code").hide();
 								$(".qr_info").hide();
 								$(".pay_noti").show();
 				    		}
+				    		
+				    		$("#accessType").val() != "WEB" ? $(".pay_btn li:eq(1)").hide() : $(".pay_btn li:eq(1)").show();  
 						} else {
 							fn_openPopup("QR코드 생성에 실패하였습니다.", "red", "ERROR", "확인", "/front/main.do");
 						}
@@ -227,7 +250,7 @@
 				    	}
 					},
 					function(request) {
-						alert("ERROR : " + request.status);	       						
+						fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");	       						
 					}    		
 				);	
 			}

@@ -81,4 +81,7 @@ public class UserLoginInfo extends UserInfo{
 	
 	// 마지막 접속 일자
 	private String lastLoginDt = "";
+	
+	// 운영환경
+	private String envType = "";
 }

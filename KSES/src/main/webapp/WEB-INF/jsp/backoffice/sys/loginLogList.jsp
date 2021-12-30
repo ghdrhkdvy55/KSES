@@ -174,10 +174,10 @@
     	            },ondblClickRow : function(rowid, iRow, iCol, e){
     	            	grid.jqGrid('editRow', rowid, {keys: true});
     	            },onCellSelect : function (rowid, index, contents, action){
-    	            	var cm = $(this).jqGrid('getGridParam', 'colModel');
+/*     	            	var cm = $(this).jqGrid('getGridParam', 'colModel');
     	                if (cm[index].name != 'cb'){
     	                	jqGridFunc.fn_mmsInfo($(this).jqGrid('getCell', rowid, 'seqno'));
-            		    }
+            		    } */
     	            }
     		    });
     		},
