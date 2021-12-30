@@ -159,12 +159,12 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		EgovJqGridApi.mainGrid([
-			{ label: '분류코드ID',  name:'code_id', align: 'center', width:'10%', key: true },
-			{ label: '분류코드명', name:'code_id_nm', align:'center', width:'10%' },
-			{ label: '분류코드설명', name:'code_id_dc', align:'left', width:'10%', sortable: false },
-			{ label: '사용유무', name:'use_at', align:'center', width:'10%' },
-            { label: '수정자', name:'last_updusr_id', align:'center', width:'14%' },
-            { label: '수정일자', name:'last_updt_pnttm', align:'center', width:'12%', formatter: 'date' },
+			{ label: '분류코드ID',  name:'code_id', align: 'center', fixed: true, key: true },
+			{ label: '분류코드명', name:'code_id_nm', align:'center', fixed: true },
+			{ label: '분류코드설명', name:'code_id_dc', align:'left', sortable: false },
+			{ label: '사용유무', name:'use_at', align:'center', width:'100', fixed: true },
+            { label: '수정자', name:'last_updusr_id', align:'center', width:'120', fixed: true },
+            { label: '수정일자', name:'last_updt_pnttm', align:'center', width:'120', fixed: true, formatter: 'date' },
 		], false, true, fnSearch);
 	});
 	
@@ -183,14 +183,16 @@
 		$('#'+id).empty().append('<table id="'+ subGridId + '" class="scroll"></table>');
 		EgovJqGridApi.subGrid(subGridId, [
 			{ label: '분류코드ID', name:'code_id', hidden: true },
-			{ label: '상세코드ID', name:'code', align:'center', width:'10%', key: true },
-        	{ label: '상세코드명', name:'code_nm', align:'center', width:'10%' },
-            { label: '상세설명', name:'code_dc', align:'center', width:'10%', sortable: false },
-            { label: '기타', name:'code_etc1', align:'center', width:'10%', sortable: false },
-            { label: '사용유무', name:'use_at', align:'center', width:'10%'},
-            { label: '수정자', name:'last_updusr_id', align:'center', width:'10%'},
-            { label: '수정일자', name:'last_updt_pnttm', align:'center', width:'12%', formatter: 'date' },
-            { label: '삭제', align: 'center', width: 50, fixed: true, sortable: false, formatter: (cell, option, row) => '<a href="javascript:fnCmmnDetailCodeDelete(\''+ row.code +'\',\''+ row.code_id +'\');">삭제</a>' }
+			{ label: '상세코드ID', name:'code', align:'center', fixed: true, key: true },
+        	{ label: '상세코드명', name:'code_nm', align:'center', fixed: true },
+            { label: '상세설명', name:'code_dc', align:'center', sortable: false },
+            { label: '기타', name:'code_etc1', align:'center', sortable: false },
+            { label: '사용유무', name:'use_at', align:'center', width: '100', fixed: true },
+            { label: '수정자', name:'last_updusr_id', align:'center', width:'120', fixed: true },
+            { label: '수정일자', name:'last_updt_pnttm', align:'center', width:'120', fixed: true, formatter: 'date' },
+            { label: '삭제', align: 'center', width: 50, fixed: true, sortable: false, formatter: (c, o, row) => 
+            	'<a href="javascript:fnCmmnDetailCodeDelete(\''+ row.code +'\',\''+ row.code_id +'\');">삭제</a>'
+           	}
 		], '/backoffice/bas/CmmnDetailCodeList.do', {
 			codeId: codeId
 		});
