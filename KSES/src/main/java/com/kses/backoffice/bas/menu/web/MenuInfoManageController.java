@@ -19,6 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -77,31 +78,18 @@ public class MenuInfoManageController {
 		// 내역 조회
 		return mav ;
 	}
+	
 	/**
-	 * 메뉴목록 리스트조회한다.
-	 * @param searchVO ComDefaultVO
-	 * @return 출력페이지정보 "sym/mnu/mpm/EgovMenuManage"
-	 * @exception Exception
+	 * 메뉴 목록 조회
+	 * @param searchVO
+	 * @return
+	 * @throws Exception
 	 */
-	@RequestMapping(value = "menuListAjax.do")
-	public ModelAndView selectMenuManageListAjax(@RequestBody Map<String, Object> searchVO, 
-											     HttpServletRequest request, 
-											     BindingResult bindingResult) throws Exception {
-		
+	@RequestMapping(value = "menuListAjax.do", method = RequestMethod.POST)
+	public ModelAndView selectMenuManageListAjax(@RequestBody Map<String, Object> searchVO) throws Exception {
 		ModelAndView model = new ModelAndView (Globals.JSONVIEW);
-		// 0. Spring Security 사용자권한 처리
-		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-		if (isAuthenticated == null || !isAuthenticated) {
-			model.addObject("message", egovMessageSource.getMessage("fail.common.login"));
-			model.addObject(Globals.STATUS,  Globals.STATUS_LOGINFAIL);
-			return model;
-		}
 		
-		//int pageUnit = searchVO.get("pageUnit") == null ?  propertiesService.getInt("pageUnit") : Integer.valueOf((String) searchVO.get("pageUnit"));
-		int pageUnit = 1000;
-	    searchVO.put("pageSize", "1000");
-	  
-	    
+		int pageUnit = searchVO.get("pageUnit") == null ?  propertiesService.getInt("pageUnit") : Integer.valueOf((String) searchVO.get("pageUnit"));
 	  
    	    PaginationInfo paginationInfo = new PaginationInfo();
 	    paginationInfo.setCurrentPageNo( Integer.parseInt(SmartUtil.NVL(searchVO.get("pageIndex"),"1")));
@@ -122,7 +110,8 @@ public class MenuInfoManageController {
 	    model.addObject(Globals.PAGE_TOTALCNT, totCnt);
 	    paginationInfo.setTotalRecordCount(totCnt);
 	    model.addObject(Globals.JSON_PAGEINFO, paginationInfo);
-	    model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);	
+	    model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+	    
 		return model;
 	}
 	
@@ -461,50 +450,41 @@ public class MenuInfoManageController {
 		}
 		return model;
 	}
-	@RequestMapping(value="menuCreateUpdateAjax.do")
-	public ModelAndView updateMenuCreateAjax(	@RequestBody Map<String, Object> createInfo,
-									            @ModelAttribute("MenuCreatInfo") MenuCreatInfo info,
-									            BindingResult bindingResult)throws Exception {
-		
+	
+	/**
+	 * 권한 코드에 따른 매핑 메뉴 정보 저장
+	 * @param createInfo
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="menuCreateUpdateAjax.do", method = RequestMethod.POST)
+	public ModelAndView updateMenuCreateAjax(@RequestBody Map<String, Object> params) throws Exception {
 		ModelAndView model = new ModelAndView (Globals.JSONVIEW);
-		try {
-			Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-			if (isAuthenticated == null || !isAuthenticated) {
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-				model.addObject(Globals.STATUS,  Globals.STATUS_LOGINFAIL);
-				return model;
-			}
-			LOGGER.debug("mode:" + createInfo.get("mode"));
-			menuCreateService.insertMenuCreatList(createInfo.get("authorCode").toString(), createInfo.get("checkedMenuNo").toString());
-			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.update"));	
-			
-		}catch(Exception e) {
-			LOGGER.info(e.toString());
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));	
-		}
+		
+		String authorCode = String.valueOf(params.get("authorCode"));
+		String checkedMenuNo = String.valueOf(params.get("checkedMenuNo"));
+		
+		menuCreateService.insertMenuCreatList(authorCode, checkedMenuNo);
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.update"));
+		
 		return model;
 	}
-	@RequestMapping(value="menuCreateMenuListAjax.do")
+	
+	/**
+	 * 권한 코드에 매핑된 메뉴 목록 조회 
+	 * @param authorCode
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="menuCreateMenuListAjax.do", method = RequestMethod.GET)
 	public ModelAndView selectMenuCreateMenuListAjax(@RequestParam("authorCode") String authorCode)throws Exception {
-		
 		ModelAndView model = new ModelAndView (Globals.JSONVIEW);
-		try {
-			Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-			if (isAuthenticated == null || !isAuthenticated) {
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-				model.addObject(Globals.STATUS,  Globals.STATUS_LOGINFAIL);
-				return model;
-			}
-			List<Map<String, Object>> list = menuCreateService.selectMenuCreatList_Author(authorCode);
-			model.addObject(Globals.JSON_RETURN_RESULTLISR, list);
-			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-		}catch(Exception e) {
-			LOGGER.info(e.toString());
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));	
-		}
+		
+		List<Map<String, Object>> list = menuCreateService.selectMenuCreatList_Author(authorCode);
+		model.addObject(Globals.JSON_RETURN_RESULTLISR, list);
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+		
 		return model;
 	}
 	

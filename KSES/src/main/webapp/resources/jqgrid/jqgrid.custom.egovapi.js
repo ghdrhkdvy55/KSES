@@ -83,9 +83,8 @@ $.EgovJqGridApi.prototype.mainGridAjax = function(url, params, searchFunc, subFu
 			}
 			$('#sp_totcnt').html(data.paginationInfo.totalRecordCount);	
 		},
-		loadError: function(xhr, status, error) {
-			console.log('--------------');
-			toastr.error(error);
+		loadError: function(xhr, status) {
+			toastr.error(status);
 		},
 		onPaging: function(pgButton) {
 			let mainGridParams = $(_MainGridSelector).jqGrid('getGridParam');

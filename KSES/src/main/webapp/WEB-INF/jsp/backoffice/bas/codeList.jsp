@@ -204,7 +204,6 @@
 		let $form = $popup.find('form:first');
 		if (id === undefined || id === null) {
 			$popup.find('h2:first').text('분류코드 등록');
-			$popup.find('button.blueBtn').text('등록');
 			$popup.find('span#sp_Unqi').show();
 			$popup.find('button.blueBtn').off('click').click(fnCmmnCodeInsert);
 			$form.find(':hidden[name=mode]').val('Ins');
@@ -215,7 +214,6 @@
 		}
 		else {
 			$popup.find('h2:first').text('분류코드 수정');
-			$popup.find('button.blueBtn').text('수정');
 			$popup.find('span#sp_Unqi').hide();
 			$popup.find('button.blueBtn').off('click').click(fnCmmnCodeUpdate);
 			$form.find(':hidden[name=mode]').val('Edt');
@@ -341,7 +339,6 @@
 				return false;
 			}
 			$popup.find('h2:first').text('상세코드 등록');
-			$popup.find('.blueBtn').text('등록');
 			$popup.find('td:first').html(rowId);
 			$popup.find('button.blueBtn').off('click').click(fnCmmnDetailCodeInsert);
 			$form.find(':text').val('');
@@ -351,7 +348,6 @@
 		}
 		else {
 			$popup.find('h2:first').text('상세코드 수정');
-			$popup.find('.blueBtn').text('수정');
 			$popup.find('td:first').html(rowData.code_id);
 			$popup.find('button.blueBtn').off('click').click(fnCmmnDetailCodeUpdate);
 			$form.find(':hidden[name=codeId]').val(rowData.code_id);

@@ -82,25 +82,24 @@
             </form>
         </div>
         <div class="right_box">
-        	<button class="blueBtn">등록</button>
+        	<button class="blueBtn">저장</button>
             <button class="grayBtn b-close">취소</button>            
         </div>
         <div class="clear"></div>
     </div>
 </div>
 <!-- 프로그램 추가 팝업-->
-<div data-popup="bas_menu_create" class="popup m_pop">
+<div data-popup="bas_menu_setting" class="popup m_pop" style="overflow:hidden;">
     <div class="pop_con">
         <a class="button b-close">X</a>
-        <h2 class="pop_tit">메뉴 생성</h2>
+        <h2 class="pop_tit">메뉴설정</h2>
         <div class="pop_wrap">
-            <span id="sp_tree" style="display:none">
-            </span>
-            <div id="jstree" />
+        	<input type="hidden" name="authorCode"> 
+            <div id="jstree" style="overflow:auto; height:700px; border:1px #eee solid; margin-bottom:20px;" />
         </div>
         <div class="right_box">
-            <a href="javascript:void(0);" class="grayBtn">취소</a>
-            <a href="javascript:void(0);" class="blueBtn">저장</a>
+        	<button onclick="fnMenuSettingSave();" class="blueBtn">저장</button>
+            <button class="grayBtn b-close">취소</button>
         </div>
         <div class="clear"></div>
     </div>
@@ -110,13 +109,61 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		EgovJqGridApi.mainGrid([
-			{ label: '권한코드', name: 'author_code', align: 'center', width: '10%', key: true },
-			{ label: '권한명',  name: 'author_nm', align: 'left', width: '10%' },
-			{ label: '상세설명', name: 'author_dc', align: 'left', width: '10%' },
-			{ label: '생성일', name: 'author_creat_de',  align:'center', width:'12%', formatter: "date" },
-			{ label: '메뉴설정여부', name: 'menuCheck', align:'left', width:'10%' },
-			{ label: '매뉴설정', name:'menuBtn', align:'left', width:'10%' }
+			{ label: '권한코드', name: 'author_code', align: 'center', fixed: true, key: true },
+			{ label: '권한명',  name: 'author_nm', align: 'center', fixed: true },
+			{ label: '상세설명', name: 'author_dc', align: 'left' },
+			{ label: '생성일', name: 'author_creat_de',  align:'center', width:'120', fixed: true, formatter: 'date' },
+			{ label: '메뉴설정여부', align:'center', width:'100', fixed: true, sortable: false, formatter: (c, o, row) => 
+				row.chk_menu === 0 ? '미생성' : '생성' 
+			},
+			{ label: '메뉴설정', align:'center', width:'120', fixed: true, sortable: false, formatter: (c, o, row) =>
+				'<a href="javascript:fnMenuSetting(\''+ row.author_code +'\');" class="blueBtn">메뉴설정</a>'
+			}
 		], false, false, fnSearch);
+		EgovIndexApi.apiExecuteJson(
+			'POST',
+			'/backoffice/bas/menuListAjax.do',{
+				pageIndex: '1',
+				pageUnit: '100'	
+			},
+			null,
+			function(json) {
+				let arr = new Array();
+				for (var m of json.resultlist) {
+					let obj = {
+						id: m.menu_no,
+						parent: m.upper_menu_no == null ? '#' : m.upper_menu_no,
+						text: m.upper_menu_no == null ? '관리자' : $.trim(m.menu_nm),
+						state: {
+							opened: true
+						}
+					};
+					arr.push(obj);
+				}
+				$('#jstree').jstree({
+					core: {
+						data: arr,
+						themes: {
+							icons: true,
+							dots: true
+						}
+					},
+					types: {
+						valid_children: [ 'default' ],
+						'default': {
+							icon: 'jstree-folder'
+						}
+					},
+					checkbox: {
+						keep_selected_style: false
+					},
+					plugins : [ 'types', 'checkbox' ]
+				});
+			},
+			function(json) {
+				toastr.error(json.message);
+			}
+		);
 	});
 	
 	function fnSearch(pageNo) {
@@ -133,7 +180,6 @@
 		let $form = $popup.find('form:first');
 		if (id === undefined || id === null) {
 			$popup.find('h2:first').text('권한코드 등록');
-			$popup.find('button.blueBtn').text('등록');
 			$popup.find('span#sp_Unqi').show();
 			$popup.find('button.blueBtn').off('click').click(fnAuthInsert);
 			$form.find(':hidden[name=mode]').val('Ins');
@@ -143,7 +189,6 @@
 		}
 		else {
 			$popup.find('h2:first').text('권한코드 수정');
-			$popup.find('button.blueBtn').text('수정');
 			$popup.find('span#sp_Unqi').hide();
 			$popup.find('button.blueBtn').off('click').click(fnAuthUpdate);
 			$form.find(':hidden[name=mode]').val('Edt');
@@ -182,7 +227,6 @@
 			toastr.warning('코드를 입력해 주세요.');
 			return;
 		}
-		console.log('idCheck: '+$popup.find(':hidden#idCheck').length);
 		if ($popup.find(':hidden#idCheck').val() !== 'Y') {
 			toastr.warning('중복체크가 안되었습니다.');
 			return;	
@@ -239,17 +283,71 @@
 			toastr.warning('분류코드를 선택해 주세요.');
 			return false;
 		}
-		console.log('rowId: '+ rowId);
-		let rowData = $('#mainGrid').jqGrid('getRowData', rowId);
-		bPopupConfirm('권한코드 삭제', '<b>'+ rowData.author_code +'</b> 를(을) 삭제 하시겠습니까?', function() {
+		bPopupConfirm('권한코드 삭제', '<b>'+ rowId +'</b> 를(을) 삭제 하시겠습니까?', function() {
+			fnAuthDeleteConfirm(rowId);
+		});
+	}
+	
+	function fnAuthDeleteConfirm(code) {
+		bPopupConfirm('권한코드 삭제', '<b>'+ code +'</b> 를(을) 삭제하시면 시스템에 영향이 있을 수 있습니다.<br>정말로 삭제하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(
 				'POST',
 				'/backoffice/bas/authDelete.do', {
-					authorCode: rowId
+					authorCode: code
 				},
 				null,
 				function(json) {
 					toastr.success(json.message);
+					fnSearch(1);
+				},
+				function(json) {
+					toastr.error(json.message);
+				}
+			);
+		});
+	}
+	
+	function fnMenuSetting(code) {
+		let $popup = $('[data-popup=bas_menu_setting]');
+		$('#jstree').jstree('uncheck_all');
+		EgovIndexApi.apiExecuteJson(
+			'GET',
+			'/backoffice/bas/menuCreateMenuListAjax.do', {
+				authorCode: code
+			},
+			null,
+			function(json) {
+				for (var m of json.resultlist) {
+					$('#jstree').jstree('select_node', m.menu_no);
+				}
+				$popup.find(':hidden[name=authorCode]').val(code);
+				$popup.bPopup();
+			},
+			function(json) {
+				toastr.error(json.message);
+			}
+		);
+	}
+	
+	function fnMenuSettingSave() {
+		let $popup = $('[data-popup=bas_menu_setting]');
+		let authorCode = $popup.find(':hidden[name=authorCode]').val();
+		let checkedMenuNo = $('#jstree').jstree('get_selected', false);
+		if (checkedMenuNo.length === 0) {
+			toastr.warning('체크된 값이 없습니다.');
+			return;
+		}
+		bPopupConfirm('메뉴설정 저장', '<b>'+ authorCode +'</b> 메뉴설정 저장 하시겠습니까?', function() {
+			EgovIndexApi.apiExecuteJson(
+				'POST',
+				'/backoffice/bas/menuCreateUpdateAjax.do', {
+					authorCode: authorCode,
+					checkedMenuNo: checkedMenuNo.join(',')
+				},
+				null,
+				function(json) {
+					toastr.success(json.message);
+					$popup.bPopup().close();
 					fnSearch(1);
 				},
 				function(json) {

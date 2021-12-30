@@ -12,7 +12,6 @@ import com.kses.backoffice.bas.menu.service.MenuCreateManageService;
 import com.kses.backoffice.bas.menu.vo.MenuCreatInfo;
 import com.kses.backoffice.util.SmartUtil;
 
-import egovframework.com.cmm.ComDefaultVO;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service
@@ -24,47 +23,36 @@ public class MenuCreateManageServiceImpl extends EgovAbstractServiceImpl impleme
 	
 	@Override
 	public List<Map<String, Object>> selectMenuCreatList(String authorCode) throws Exception {
-		// TODO Auto-generated method stub
-		
 		return createMapper.selectMenuCreatList_D(authorCode);
 	}
 
 	@Override
 	public List<Map<String, Object>> selectMenuCreatList_Author(String authorCode) throws Exception {
-		// TODO Auto-generated method stub
 		return createMapper.selectMenuCreatList_Author(authorCode);
 	}
 	
-	
 	@Override
 	public int selectMenuCreatManagTotCnt(String searchKeyword) throws Exception {
-		// TODO Auto-generated method stub
 		return createMapper.selectMenuCreatCnt_S(searchKeyword);
 	}
 
 	@Override
 	public int selectUsrByPk(String empNo) throws Exception {
-		// TODO Auto-generated method stub
 		return createMapper.selectUsrByPk(empNo);
 	}
 
 	@Override
 	public MenuCreatInfo selectAuthorByUsr(String empNo) throws Exception {
-		// TODO Auto-generated method stub
 		return createMapper.selectAuthorByUsr(empNo);
 	}
 
 	@Override
 	public List<Map<String, Object>> selectMenuCreatManagList(Map<String, Object> searchVO) throws Exception {
-		// TODO Auto-generated method stub
 		return createMapper.selectMenuCreatManageList_D(searchVO);
 	}
 
 	@Override
 	public void insertMenuCreatList(String authorCode, String checkedMenuNoForInsert) throws Exception {
-		// TODO Auto-generated method stub
-		
-		
 		int AuthorCnt = 0;
 		
         List<String> insertMenuNo =  SmartUtil.dotToList(checkedMenuNoForInsert).stream().distinct().collect(Collectors.toList());
@@ -82,11 +70,12 @@ public class MenuCreateManageServiceImpl extends EgovAbstractServiceImpl impleme
 			menuCreatVO.setMenuNo(menu);
 			createMapper.insertMenuCreat_S(menuCreatVO);
 		}
-		
-		
 	}
-
-
 	
-	
+	@Override
+	public int deleteMenuCreat_S(String authorCode) throws Exception {
+		MenuCreatInfo menuCreatVO = new MenuCreatInfo();
+		menuCreatVO.setAuthorCode(authorCode);
+		return createMapper.deleteMenuCreat_S(menuCreatVO);
+	}
 }
