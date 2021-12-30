@@ -52,7 +52,15 @@
                     </ul>
 
                     <div class="inquiry_btn">
-                        <a href="javascript:guestResvService.fn_checkform();">조회하기</a>
+                        <a href="javascript:guestResvService.fn_checkform();">인증번호 요청</a>
+                    </div>
+                    
+                    <div class="ok_sumit">
+                    	<ul>
+                    		<li>인증번호</li>
+                    		<li class="ok_input"><input type="text" placeholder="인증번호를 입력하세요."></li>
+                    		<li><a href="">확인</a></li>
+                    	</ul>
                     </div>
                 </div>
             </div>
