@@ -27,9 +27,6 @@
 <div class="dashboard">
     <div class="boardlist">
         <div class="whiteBox searchBox">
-			<div class="sName">
-              <h3>옵션 선택</h3>
-            </div>
             <div class="top">                    
                 <p>검색어</p>
                 <input type="text" id="searchKeyword" placeholder="검색어를 입력하새요." autocomplete="off">
