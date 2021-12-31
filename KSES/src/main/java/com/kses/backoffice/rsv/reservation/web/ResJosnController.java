@@ -667,6 +667,7 @@ public class ResJosnController {
 				userPhone = SmartUtil.NVL(resInfo.get("user_phone"), "").toString();
 				userPhoneBack4 = userPhone.substring(userPhone.length()-4,userPhone.length());
 				partInitial = SmartUtil.NVL(resInfo.get("part_initial"), "").toString();
+				// TO-DO 층/구역명 추가 예정
 				
 				EgovFileScrty fileScrty = new EgovFileScrty();
 				String qrCode = fileScrty.encode(resInfo.get("resv_seq") + ":" + resInfo.get("resv_start_dt")

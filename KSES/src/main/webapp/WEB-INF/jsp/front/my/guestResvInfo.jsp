@@ -52,14 +52,14 @@
                     </ul>
 
                     <div class="inquiry_btn">
-                        <a href="javascript:guestResvService.fn_checkform();">인증번호 요청</a>
+                        <a href="javascript:guestResvService.fn_SmsCertifi();">인증번호 요청</a>
                     </div>
                     
                     <div class="ok_sumit">
                     	<ul>
                     		<li>인증번호</li>
-                    		<li class="ok_input"><input type="text" placeholder="인증번호를 입력하세요."></li>
-                    		<li><a href="">확인</a></li>
+                    		<li class="ok_input"><input type="text" id="resvCertifiCode" placeholder="인증번호를 입력하세요."></li>
+                    		<li><a href="javascript:guestResvService.fn_checkform();">확인</a></li>
                     	</ul>
                     </div>
                 </div>
@@ -199,13 +199,13 @@
     <script>
 		var certifiYn = false;
 		var certifiCode = "";
-		var resvUserNm = "";
-		var resvUserClphn = "";
+		var certifiNm = "";
+		var certifiNum = "";
     
 		var guestResvService = {
 			fn_SmsCertifi : function() {
-				var certifiNm = $("#resvUserNm").val(),
-				var certifiNum = $("#resvUserClphn").val()
+				certifiNm = $("#resvUserNm").val();
+				certifiNum = $("#resvUserClphn").val();
 					
 
 				if(certifiNm == "") {
@@ -244,8 +244,12 @@
 				);
 			},
 			fn_checkform : function() {
-				if($("#inputCheckNum").val() != certifiCode) {
+				if (certifiCode == "") {
+					fn_openPopup("인증번호를 요청해주세요", "red", "ERROR", "확인", "");
+					return;
+				} else if($("#resvCertifiCode").val() != ㄴ내) {
 					fn_openPopup("인증번호가 일치하지 않습니다.", "red", "ERROR", "확인", "");
+					return;
 				}
 				
 				var url = "/front/guestMyResvInfo.do";
