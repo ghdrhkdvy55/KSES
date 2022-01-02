@@ -28,26 +28,22 @@ public class ProgrmInfoServiceImpl extends EgovAbstractServiceImpl implements Pr
 	
 	@Override
 	public List<Map<String, Object>> selectProgrmInfoList(Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		return progrmMapper.selectProgrmInfoList(params);
 	}
 
 	@Override
 	public Map<String, Object> selectProgrmInfoDetail(String progrmFileNm) throws Exception {
-		// TODO Auto-generated method stub
 		return progrmMapper.selectProgrmInfoDetail(progrmFileNm);
 	}
 	
 	@Override
-	public int updateProgrmInfo(ProgrmInfo vo) throws Exception {
-		int ret = 0;
-		
-		if (vo.getMode().equals("Ins")){
-			ret = (uniMapper.selectIdDoubleCheck("PROGRM_FILE_NM", "COMTNPROGRMLIST", "PROGRM_FILE_NM = ["+ vo.getProgrmFileNm() + "[" ) > 0) ? -1 :  progrmMapper.insertProgrmInfo(vo);
-		} else {
-			ret = progrmMapper.updateProgrmInfo(vo);
-		}
-		return ret;
+	public int insertProgrmInfo(ProgrmInfo progrmInfo) throws Exception {
+		return (uniMapper.selectIdDoubleCheck("PROGRM_FILE_NM", "COMTNPROGRMLIST", "PROGRM_FILE_NM = ["+ progrmInfo.getProgrmFileNm() + "[" ) > 0) ? -1 :  progrmMapper.insertProgrmInfo(progrmInfo);
+	}
+	
+	@Override
+	public int updateProgrmInfo(ProgrmInfo progrmInfo) throws Exception {
+		return progrmMapper.updateProgrmInfo(progrmInfo);
 	}
 
 	@Override
@@ -57,7 +53,6 @@ public class ProgrmInfoServiceImpl extends EgovAbstractServiceImpl implements Pr
 
 	@Override
 	public int deleteProgrmManageList(String checkedProgrmFileNmForDel) throws Exception {
-		// TODO Auto-generated method stub
 		List<String> programFiles = util.dotToList(checkedProgrmFileNmForDel);
 		return progrmMapper.deleteProgrmManageList(programFiles);
 	}

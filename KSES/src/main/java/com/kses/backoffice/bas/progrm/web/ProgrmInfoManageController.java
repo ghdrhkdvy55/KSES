@@ -3,13 +3,10 @@ package com.kses.backoffice.bas.progrm.web;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,10 +22,9 @@ import com.kses.backoffice.util.SmartUtil;
 import com.kses.backoffice.util.service.UniSelectInfoManageService;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.Globals;
+import egovframework.rte.fdl.cmmn.exception.EgovBizException;
 import egovframework.rte.fdl.property.EgovPropertyService;
-import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 
 @RestController
@@ -95,82 +91,89 @@ public class ProgrmInfoManageController {
 		return model;
 	}
 	
-	@RequestMapping (value="programeUpdate.do")
-	public ModelAndView programeUpdate(	@ModelAttribute("loginVO") LoginVO loginVO, 
-										@RequestBody ProgrmInfo vo, 
-										HttpServletRequest request, 
-										BindingResult result) throws Exception{
-		
+	/**
+	 * 프로그램 저장
+	 * @param progrmInfo
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping (value="programeUpdate.do", method = RequestMethod.POST)
+	public ModelAndView programeUpdate(@RequestBody ProgrmInfo progrmInfo) throws Exception{
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-		String meesage = null;
 		
-		try {
-			 Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-			 if(!isAuthenticated) {
-				 model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-				 model.addObject(Globals.STATUS,  Globals.STATUS_LOGINFAIL);
-				 return model;	
-		     }
-			 
-			int ret = progrmService.updateProgrmInfo(vo);
-			meesage = (vo.getMode().equals("Ins")) ? "sucess.common.insert" : "sucess.common.update";
-			if (ret > 0){
-				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
-			} else if (ret == -1){
-				meesage = "fail.common.overlap";
-				model.addObject(Globals.STATUS, Globals.STATUS_OVERLAPFAIL);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
-			} else {
-				throw new Exception();
-			}
-		} catch (Exception e) {
-			meesage = (vo.getMode().equals("Ins")) ? "fail.common.insert" : "fail.common.update";
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));			
+		int ret = 0;
+		switch (progrmInfo.getMode()) {
+			case "Ins":
+				ret = progrmService.insertProgrmInfo(progrmInfo);
+				break;
+			case "Edt":
+				ret = progrmService.updateProgrmInfo(progrmInfo);
+				break;
+			default:
+				throw new EgovBizException("잘못된 호출입니다.");
 		}
-		return model;
-	}
-	
-	@RequestMapping (value="programeDelete.do")
-	public ModelAndView deleteProgrameInfoManage(@ModelAttribute("loginVO") LoginVO loginVO, 
-												 @RequestParam("progrmFileNm") String progrmFileNm, 
-												 HttpServletRequest request) throws Exception {
 		
-		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
-	    Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-	    if(!isAuthenticated) {
-	    	model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-	    	model.setViewName("/backoffice/login");
-	    	return model;	
-	    }	
-		
-	    try {
-	    	progrmService.deleteProgrmInfo(progrmFileNm);
+		String messageKey = "";
+		if (ret > 0) {
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.delete") );		    	 
-		} catch (Exception e) {
-			LOGGER.info(e.toString());
+			messageKey = StringUtils.equals(progrmInfo.getMode(), "Ins") ? "sucess.common.insert" : "sucess.common.update";
+		}
+		else {
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.delete"));			
-		}		
+			messageKey = StringUtils.equals(progrmInfo.getMode(), "Ins") ? "fail.common.insert" : "fail.common.update";
+		}
+		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(messageKey));
+		
 		return model;
 	}
 	
+	/**
+	 * 프로그램 삭제
+	 * @param progrmInfo
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping (value="programeDelete.do", method = RequestMethod.POST)
+	public ModelAndView deleteProgrameInfoManage(@RequestBody ProgrmInfo progrmInfo) throws Exception {
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+		
+		int ret = progrmService.deleteProgrmInfo(progrmInfo.getProgrmFileNm());
+		
+		if (ret > 0) {
+			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.delete"));
+		}
+		else {
+			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.delete"));
+		}
+		
+		return model;
+	}
+	
+	/**
+	 * 프로그램 중복 체크
+	 * @param progrmFileNm
+	 * @return
+	 * @throws Exception
+	 */
 	@NoLogging
-    @RequestMapping (value="programIDCheck.do")
-    public ModelAndView selectIdCheck(	HttpServletRequest request, 
-    									@RequestParam("progrmFileNm") String progrmFileNm )throws Exception{
-    	
+    @RequestMapping (value="programIDCheck.do", method = RequestMethod.GET)
+    public ModelAndView selectIdCheck(@RequestParam("progrmFileNm") String progrmFileNm) throws Exception {
     	ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-    	try {
-    		String result = uniService.selectIdDoubleCheck("PROGRM_FILE_NM", "COMTNPROGRMLIST", "PROGRM_FILE_NM = ["+ progrmFileNm + "[") > 0 ? "FAIL" : "OK";
-    		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-    		model.addObject(Globals.JSON_RETURN_RESULT, result);
-    	} catch(Exception e) {
-    		model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
-    	}
+    	
+    	String result = uniService.selectIdDoubleCheck("PROGRM_FILE_NM", "COMTNPROGRMLIST", "PROGRM_FILE_NM = ["+ progrmFileNm + "[") > 0 ? 
+    			"FAIL" 
+    			: "OK";
+    	if (StringUtils.equals(result, "OK")) {
+			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("common.codeOk.msg"));
+		}
+		else {
+			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("common.codeFail.msg"));
+		}
+		
     	return model;
     }
 	

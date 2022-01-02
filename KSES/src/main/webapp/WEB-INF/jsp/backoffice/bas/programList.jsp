@@ -47,7 +47,7 @@
         <div class="right_box">
 			<a href="javascript:void(0);" class="blueBtn">엑셀 다운로드</a> 
         	<a href="javascript:fnProgramInfo();" class="blueBtn">프로그램 등록</a>
-        	<a href="javascript:void(0);" class="grayBtn">프로그램 삭제</a>            	
+        	<a href="javascript:fnProgramDelete();" class="grayBtn">프로그램 삭제</a>            	
         </div>
          
         <div class="clear"></div>
@@ -70,7 +70,7 @@
             <table class="detail_table">
 				<tbody>
 					<tr>
-						<th>프로그램 파일명</th>
+						<th>파일명</th>
 						<td>
 						    <input type="text" name="progrmFileNm">
 						    <span id="sp_Unqi">
@@ -80,7 +80,7 @@
 						</td>
 					</tr>
 					<tr>
-						<th>지정 경로</th>
+						<th>저정경로</th>
 						<td>
 						    <input type="text" name="progrmStrePath">
 						</td>
@@ -108,8 +108,8 @@
             </form>
         </div>
         <div class="right_box">
-        	<buuton class="blueBtn">등록</buuton>
-            <buuton class="grayBtn b-close">취소</buuton>
+        	<button class="blueBtn">저장</button>
+            <button class="grayBtn b-close">취소</button>
         </div>
         <div class="clear"></div>
     </div>
@@ -119,9 +119,10 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		EgovJqGridApi.mainGrid([
-			{ label: '프로그램 파일명', name: 'progrm_file_nm', align: 'left', fixed: true },
+			{ label: '프로그램 파일명', name: 'progrm_file_nm', align: 'left', fixed: true, key: true },
 			{ label: '프로그램명',  name: 'progrm_koreannm', align: 'left', fixed: true },
-			{ label: 'URL', name:'url', align: 'left' },
+			{ label: '저장경로', name: 'progrm_stre_path', hidden: true },
+			{ label: 'URL', name: 'url', align: 'left' },
 			{ label: '프로그램설명', name: 'progrm_dc', align: 'left', sortable: false }
 		], false, false, fnSearch);
 	});
@@ -145,26 +146,136 @@
 			$popup.find('button.blueBtn').off('click').click(fnProgramInsert);
 			$form.find(':hidden[name=mode]').val('Ins');
 			$form.find(':text').val('');
-			$form.find('textarea').val('');
+			$form.find('textarea[name=progrmDc]').val('');
+			$form.find(':text[name=progrmFileNm]').removeAttr('readonly');
 		}
 		else {
 			$popup.find('h2:first').text('프로그램 수정');
 			$popup.find('span#sp_Unqi').hide();
 			$popup.find('button.blueBtn').off('click').click(fnProgramUpdate);
 			$form.find(':hidden[name=mode]').val('Edt');
+			$form.find(':text[name=progrmFileNm]').prop('readonly', true).val(rowData.progrm_file_nm);
+			$form.find(':text[name=progrmStrePath]').val(rowData.progrm_stre_path);
+			$form.find(':text[name=progrmKoreannm]').val(rowData.progrm_koreannm);
+			$form.find(':text[name=url]').val(rowData.url);
+			$form.find('textarea[name=progrmDc]').val(rowData.progrm_dc);
 		}
 		$popup.bPopup();
 	}
 	
+	function fnIdCheck() {
+		let $popup = $('[data-popup=bas_program_add]');
+		if ($popup.find(':text[name=progrmFileNm]').val() === '') {
+			toastr.warning('프로그램 파일명을 입력해주세요.');
+			return;
+		}
+		EgovIndexApi.apiExecuteJson(
+			'GET',
+			'/backoffice/bas/programIDCheck.do', {
+				progrmFileNm: $popup.find(':text[name=progrmFileNm]').val()
+			},
+			null,
+			function(json) {
+				$popup.find(':hidden#idCheck').val('Y');
+				toastr.info(json.message);
+			},
+			function(json) {
+				toastr.warning(json.message);
+			}
+		);
+	}
+	
 	function fnProgramInsert() {
 		let $popup = $('[data-popup=bas_program_add]');
+		if ($popup.find(':text[name=progrmFileNm]').val() === '') {
+			toastr.warning('파일명을 입력해 주세요.');
+			return;
+		}
+		if ($popup.find(':hidden#idCheck').val() !== 'Y') {
+			toastr.warning('중복체크가 안되었습니다.');
+			return;	
+		}
+		if ($popup.find(':text[name=progrmKoreannm]').val() === '') {
+			toastr.warning('한글명을 입력해 주세요.');
+			return;
+		}
+		if ($popup.find(':text[name=url]').val() === '') {
+			toastr.warning('URL를 입력해 주세요.');
+			return;
+		}
+		bPopupConfirm('프로그램 등록', '등록 하시겠습니까?', function() {
+			EgovIndexApi.apiExecuteJson(
+				'POST',
+				'/backoffice/bas/programeUpdate.do', 
+				$popup.find('form').serializeObject(),
+				null,
+				function(json) {
+					toastr.success(json.message);
+					$popup.bPopup().close();
+					fnSearch(1);
+				},
+				function(json) {
+					toastr.error(json.message);
+				}
+			);
+		});
 	}
 	
 	function fnProgramUpdate() {
 		let $popup = $('[data-popup=bas_program_add]');
+		if ($popup.find(':text[name=progrmKoreannm]').val() === '') {
+			toastr.warning('한글명을 입력해 주세요.');
+			return;
+		}
+		if ($popup.find(':text[name=url]').val() === '') {
+			toastr.warning('URL를 입력해 주세요.');
+			return;
+		}
+		bPopupConfirm('프로그램 수정', '<b>'+ $popup.find(':text[name=progrmFileNm]').val() +'</b> 수정 하시겠습니까?', function() {
+			EgovIndexApi.apiExecuteJson(
+				'POST',
+				'/backoffice/bas/programeUpdate.do', 
+				$popup.find('form').serializeObject(),
+				null,
+				function(json) {
+					toastr.success(json.message);
+					$popup.bPopup().close();
+					fnSearch(1);
+				},
+				function(json) {
+					toastr.error(json.message);
+				}
+			);
+		});
 	}
 	
 	function fnProgramDelete() {
 		let rowId = $('#mainGrid').jqGrid('getGridParam', 'selrow');
+		if (rowId === null) {
+			toastr.warning('프로그램을 선택해 주세요.');
+			return false;
+		}
+		bPopupConfirm('프로그램 삭제', '<b>'+ rowId +'</b> 를(을) 삭제 하시겠습니까?', function() {
+			fnProgramDeleteConfirm(rowId);
+		});
+	}
+	
+	function fnProgramDeleteConfirm(code) {
+		bPopupConfirm('프로그램 삭제', '<b>'+ code +'</b> 를(을) 삭제하시면 시스템에 영향이 있을 수 있습니다.<br>정말로 삭제하시겠습니까?', function() {
+			EgovIndexApi.apiExecuteJson(
+				'POST',
+				'/backoffice/bas/programeDelete.do', {
+					progrmFileNm: code
+				},
+				null,
+				function(json) {
+					toastr.success(json.message);
+					fnSearch(1);
+				},
+				function(json) {
+					toastr.error(json.message);
+				}
+			);
+		});
 	}
 </script>
