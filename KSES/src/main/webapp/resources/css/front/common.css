@@ -247,7 +247,7 @@ bottom:0;
 .contents { max-width: 1024px;margin:0 auto; position: relative;box-sizing: border-box;padding:0 2rem; z-index: 9999;}
 .mo_user_info {margin-top: -4rem;box-sizing: border-box; display: flex; flex-direction: column;}
 .mo_user_info_txt {width: calc(100% - 10px);box-sizing: border-box;float: left; font-size: 1.6rem;line-height:2rem}
-.mo_user_info_txt ul li { padding:8px 0 } }
+.mo_user_info_txt ul li { padding:5px 0 } }
 .mo_user_info_txt ul li:first-child .thvac {
     display: inline-block;
     width: 59px;
@@ -257,6 +257,11 @@ bottom:0;
     margin-left: 10px;
 }
 .mo_user_info_txt ul li:nth-child(2) {float: left;}
+.today_date {
+	font-size: 1.4em;
+    color: #505050;
+    font-weight: 800;
+}
 .main_quick {margin-top: 2rem;text-align: center;border-radius: 4px;background: #056645;}
 .main_quick span {background: url("/resources/img/front/ic_appbar_search_meeting.svg")left center no-repeat;color: #fff;font-size: 1.4rem;padding: 1.5rem 0 1.5rem 3.5rem;display: inline-block;}
 
@@ -295,7 +300,7 @@ bottom:0;
 .reser_refresh {color: #808080;font-size: 1.6rem;padding: 10px 32px 7px 0;background: url("/resources/img/front/ic_seat_refresh.svg")right center no-repeat;}
 
 .main_user_rsv li {font-size:1.4rem;padding: 0 2px; margin: 0.3rem 0; display: block;}
-.main_user_rsv li em {color: #8d8d8d; display: inline-block; margin-top: 0.5rem}
+.main_user_rsv li em {color: #8d8d8d; display: inline-block; }
 .main_user_rsv ul li:nth-child(2) img {vertical-align: sub;}
 .main_user_rsv li span a{font-size: 2.8rem;font-weight: 800;vertical-align: text-bottom;line-height: 2.8rem; color: #47D6BE;}
 .main_user_rsv li span img {margin-left: 10px;}
