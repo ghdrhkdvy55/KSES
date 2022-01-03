@@ -247,7 +247,7 @@
 				if (certifiCode == "") {
 					fn_openPopup("인증번호를 요청해주세요", "red", "ERROR", "확인", "");
 					return;
-				} else if($("#resvCertifiCode").val() != ㄴ내) {
+				} else if($("#resvCertifiCode").val() != certifiCode) {
 					fn_openPopup("인증번호가 일치하지 않습니다.", "red", "ERROR", "확인", "");
 					return;
 				}
