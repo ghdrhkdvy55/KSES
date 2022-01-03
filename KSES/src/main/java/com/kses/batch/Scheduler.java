@@ -15,6 +15,8 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import com.kses.backoffice.bld.center.service.NoshowInfoManageService;
 import com.kses.backoffice.bld.center.vo.NoshowInfo;
 import com.kses.backoffice.cus.kko.service.KkoMsgManageSevice;
+import com.kses.backoffice.cus.usr.service.UserInfoManageService;
+import com.kses.backoffice.mng.employee.service.EmpInfoManageService;
 import com.kses.backoffice.rsv.reservation.mapper.ResInfoManageMapper;
 import com.kses.backoffice.rsv.reservation.mapper.ResTimeInfoManageMapper;
 import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
@@ -41,10 +43,10 @@ public class Scheduler {
 	private ResInfoManageMapper resMapper;
 	
 	@Autowired
-	private ScheduleInfoManageService  scheduleService;
+	private ScheduleInfoManageService scheduleService;
 	
 	@Autowired
-	private KkoMsgManageSevice kkoSerice;
+	private EmpInfoManageService empService;
 	
 	@Autowired
 	private ResvInfoManageService resvService;
@@ -124,11 +126,25 @@ public class Scheduler {
 				}
 			}
 		} catch (RuntimeException re) {
-			//scheduleService.insertScheduleManage("resStateCreateSchedulerService", "FAIL", re.toString());
 			LOGGER.error("resvNoshowScheduler =>  Run Failed", re);
 		} catch (Exception e) {
-			//scheduleService.insertScheduleManage("resStateCreateSchedulerService", "FAIL", e.toString());
 			LOGGER.error("resvNoshowScheduler => Failed", e);
+		}
+	}
+	
+	@Scheduled(cron="0 0 08 * * ?")
+	public void ksesEmpInfoUpdateScheduler() throws Exception {		
+		try {
+			int ret = empService.mergeEmpInfo();
+			if(ret >= 0) {
+				LOGGER.info("ksesEmpInfoUpdateScheduler =>" + "인사정보 " + ret + "건 갱신");
+			} else {
+				throw new Exception();
+			}
+		} catch (RuntimeException re) {
+			LOGGER.error("ksesEmpInfoUpdateScheduler =>  Run Failed", re);
+		} catch (Exception e) {
+			LOGGER.error("ksesEmpInfoUpdateScheduler => Failed", e);
 		}
 	}
 

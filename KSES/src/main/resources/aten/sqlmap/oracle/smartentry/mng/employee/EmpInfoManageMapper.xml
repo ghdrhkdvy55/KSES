@@ -180,85 +180,39 @@
                                     , LAST_UPDUSR_ID = #{userId ,jdbcType=VARCHAR}
           WHERE EMP_NO = #{empNo}
     </update>
-    <update id="mergeEmpInfo" parameterType="java.util.List">
-	    MERGE INTO TSEH_EMP_INFO_M A
-	    USING (
-	        <foreach collection="list" item="item" open="" close="" index="index" separator="UNION">
-	            SELECT
-	                #{item.empId} AS EMP_ID,
-	                #{item.empNo} AS EMP_NO,
-	                #{item.empName} AS EMP_NM,
-	                #{item.deptCode} AS DEPT_CD,
-	                #{item.deptName} AS DEPT_NM,
-	                #{item.gradCode} AS GRAD_CD,
-	                #{item.gradName} AS GRAD_NM,
-	                #{item.jikwCode} AS PSIT_CD,
-	                #{item.jikwName} AS PSIT_NM,
-	                #{item.empUseyn} AS USE_YN,
-	                #{item.empCelphone} AS EMP_CLPHN,
-	                #{item.empTelphone} AS EMP_TLPHN,
-	                #{item.empEmail} AS EMP_EMAIL,
-	                #{item.empState} AS EMP_STATE,
-	                #{item.empPic} AS EMP_PIC,
-	            FROM DUAL
-	        </foreach>
-	    ) B
-	    ON (A.EMP_NO = B.EMP_NO)
-	    WHEN MATCHED THEN
-	    UPDATE
-	        SET
-	            A.EMP_NM = B.EMP_NM,
-	            A.DEPT_CD = B.DEPT_CD,
-	            A.DEPT_NM = B.DEPT_NM,
-	            A.GRAD_CD = B.GRAD_CD,
-	            A.GRAD_NM = B.GRAD_NM,
-	            A.PSIT_CD = B.PSIT_CD,
-	            A.PSIT_NM = B.PSIT_NM,
-	            A.USE_YN = B.USE_YN,
-	            A.EMP_CLPHN = B.EMP_CLPHN,
-	            A.EMP_TLPHN = B.EMP_TLPHN,
-	            A.EMP_EMAIL = B.EMP_EMAIL,
-	            A.EMP_STATE = B.EMP_STATE,
-	            A.EMP_PIC = B.EMP_PIC,
-	            A.LAST_UPDUSR_PNTTM = SYSDATE,
-	            A.LAST_UPDUSR_ID = 'BATCH',
-	    WHEN NOT MATCHED THEN
-	    INSERT 
-	    (
-			A.EMP_NM = B.EMP_NM,
-			A.DEPT_CD = B.DEPT_CD,
-			A.DEPT_NM = B.DEPT_NM,
-	        A.GRAD_CD = B.GRAD_CD,
-	        A.GRAD_NM = B.GRAD_NM,
-	        A.PSIT_CD = B.PSIT_CD,
-	        A.PSIT_NM = B.PSIT_NM,
-	        A.USE_YN = B.USE_YN,
-	        A.EMP_CLPHN = B.EMP_CLPHN,
-	        A.EMP_TLPHN = B.EMP_TLPHN,
-	        A.EMP_EMAIL = B.EMP_EMAIL,
-	        A.EMP_STATE = B.EMP_STATE,
-	        A.EMP_PIC = B.EMP_PIC,
-			A.LAST_UPDUSR_PNTTM = SYSDATE,
-			A.LAST_UPDUSR_ID = 'BATCH',
-	    )
-	    VALUES 
-	    (
-			B.EMP_NM,
-			B.DEPT_CD,
-			B.DEPT_NM,
-	        B.GRAD_CD,
-	        B.GRAD_NM,
-	        B.PSIT_CD,
-	        B.PSIT_NM,
-	        B.USE_YN,
-	        B.EMP_CLPHN,
-	        B.EMP_TLPHN,
-	        B.EMP_EMAIL,
-	        B.EMP_STATE,
-	        B.EMP_PIC,
-			SYSDATE,
-			'BATCH',
-	    )
+    
+    <update id="mergeEmpInfo">
+		MERGE INTO TSEH_EMP_INFO_M A
+	    USING USRBM.INTRA_USER B
+	    ON 
+		(	
+			A.EMP_NO = B.USER_SPEC_ID
+		)
+		WHEN MATCHED THEN
+		UPDATE SET
+			EMP_ID = B.USER_SPEC_ID, 
+			EMP_NO = B.USER_SPEC_ID,
+			EMP_NM = B.USER_NAME, 
+			DEPT_NM = B.USER_GROUP_NAME,
+			GRAD_NM = B.USER_TITLE_NAME,
+			EMP_CLPHN = B.USER_TEL,
+			EMP_TLPHN  = B.USER_CELL_TELL,
+			EMP_EMAIL = B.USER_EMAIL_ID,
+            LAST_UPDUSR_ID = 'BATCH',  
+			LAST_UPDT_DTM = SYSDATE
+		WHEN NOT MATCHED THEN
+		INSERT	
+		(
+			EMP_ID, EMP_NO, EMP_NM, DEPT_NM, GRAD_NM,
+			EMP_CLPHN, EMP_TLPHN, EMP_EMAIL, ADMIN_DVSN, LAST_UPDUSR_ID, 
+			LAST_UPDT_DTM
+		)
+		VALUES 
+		(
+			B.USER_SPEC_ID, B.USER_SPEC_ID, B.USER_NAME, B.USER_GROUP_NAME, B.USER_TITLE_NAME,
+			B.USER_TEL, B.USER_CELL_TELL, B.USER_EMAIL_ID, 'N', 'BATCH', 
+			SYSDATE
+		)
 	</update>
 	
 	<delete id="deleteEmpInfo">

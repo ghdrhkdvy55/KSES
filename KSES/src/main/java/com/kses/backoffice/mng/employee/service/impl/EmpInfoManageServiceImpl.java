@@ -16,8 +16,6 @@ import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service
 public class EmpInfoManageServiceImpl extends EgovAbstractServiceImpl implements EmpInfoManageService {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(EmpInfoManageServiceImpl.class);
 	 
 	@Autowired
 	private EmpInfoManageMapper empMapper;
@@ -35,8 +33,6 @@ public class EmpInfoManageServiceImpl extends EgovAbstractServiceImpl implements
 		return empMapper.selectEmpInfoDetail(empId);
 	}
 
-
-
 	@Override
 	public int updateEmpInfo(EmpInfo params) {
 		// TODO Auto-generated method stub
@@ -50,8 +46,8 @@ public class EmpInfoManageServiceImpl extends EgovAbstractServiceImpl implements
 	}
 
 	@Override
-	public int mergeEmpInfo(List<EmpInfo> empInfoList) {
+	public int mergeEmpInfo() {
 		// TODO Auto-generated method stub
-		return empMapper.mergeEmpInfo(empInfoList);
+		return empMapper.mergeEmpInfo();
 	}
 }
