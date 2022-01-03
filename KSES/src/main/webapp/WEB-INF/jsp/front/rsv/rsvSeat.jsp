@@ -122,7 +122,7 @@
                             <ul id="standing_resv_area">
                                 <li><input type="text" id="ENTRY_DVSN_1_resvUserNm" class="nonMemberArea" placeholder="이름을 입력해주세요."></li>
                                 <li><input type="text" id="ENTRY_DVSN_1_resvUserClphn" class="nonMemberArea" onkeypress="onlyNum(this);" placeholder="전화번호를 '-'없이 입력해주세요."></li>
-                                <li class="certify nonMemberArea" onclick="javascript:seatService.fn_SmsCertifi();">
+                                <li class="certify nonMemberArea sub_number" onclick="javascript:seatService.fn_SmsCertifi();">
                                 	<a href="javascript:void(0);"><img src="/resources/img/front/certify.svg" alt="">인증번호 받기</a>
                                 </li>
 								
@@ -153,18 +153,52 @@
 								<!--개인정보동의-->
 								<li class="person_check nonMemberArea">
 									<p>
-										<span>&lt;개인정보 수집 이용 동의 안내&gt;</span>
-										<ol>
-											<li>코로나 19 확산 방지를 위하여 다음과 같이 개인정보 수집 이용 및 제 3자 제공에 대한 동의를 얻고자 합니다.</li>
-											<li class="prsn_agree"><a data-popup-open="person_agree">자세히 ></a></li>
-											<br>
-											<li class="check_impnt">
-												<input class="magic-checkbox qna_check" type="checkbox" name="layout" id="ENTRY_DVSN_1_person_agree" value="Y">
-											<label for="ENTRY_DVSN_1_person_agree">동의합니다.</label>     
+										<span>&lt;개인정보 수집 이용 동의 안내 &gt;(필수)</span>																															
+						                <h5 class="notiCon">스피드온 회원정보를 활용하여 스마트 입장시스템을 통해 경륜경정 본장 및 지점의 입장신청, 출입관리를 목적으로 개인정보를 처리(수집·이용)합니다.</h5>
+										<p class="prsn_agree"><a data-popup-open="person_agree">자세히 &gt;</a></p>
+									
+										<ul>									
+						                   	<li class="agreeBtn">개인정보 수집 및 이용에 동의하시겠습니까?</li>
+						                   	<li class="check_impnt">
+												<input class="cash_radio" type="radio" checked name="ENTRY_DVSN_1_person_agree" id="ENTRY_DVSN_1_person_agree" value="person_agreeN_1">
+                                    			<label for="ENTRY_DVSN_1_person_agree"><span></span>동의함</label>
+                                    				
+                                    			<input class="cash_radio" type="radio" name="ENTRY_DVSN_2_person_agree" id="ENTRY_DVSN_2_person_agree" value="person_agreeN_2">
+                                    			<label for="ENTRY_DVSN_2_person_agree"><span></span>동의안함</label>                                    
 											</li>
-										</ol>
+										</ul>									
 									</p>
-								</li>     
+								</li>
+								
+								
+								<!--홍보마케팅동의-->
+								<li class="person_check nonMemberArea">
+									<p>									
+										<span>&lt;홍보 및 마케팅 활용 동의 &gt;(선택)</span>																															
+
+						                
+										<p class="prsn_agree"><a data-popup-open="mktg_agree">자세히 &gt;</a></p>
+										<ul>									
+						                   	<li class="agreeBtn">스마트 입장 시스템에서 보내는 본장 및 지점별 마케팅 문자 수신에 동의 하시겠습니까?</li>
+						                   	<li class="check_impnt">
+												<input class="cash_radio" type="radio" checked name="ENTRY_DVSN_1_person_agree" id="ENTRY_DVSN_1_person_agree" value="person_agreeN_1">
+                                    			<label for="ENTRY_DVSN_1_person_agree"><span></span>동의함</label>
+                                    				
+                                    			<input class="cash_radio" type="radio" name="ENTRY_DVSN_2_person_agree" id="ENTRY_DVSN_2_person_agree" value="person_agreeN_2">
+                                    			<label for="ENTRY_DVSN_2_person_agree"><span></span>동의안함</label>                                    
+											</li>											
+										</ul>																			
+									</p>
+								</li>  
+								
+								<!--기타고지사항-->
+								<li class="person_check nonMemberArea">
+									<p>	
+										<span>&lt;기타 고지 사항 &gt;</span>																															
+						                <h5 class="notiCon">개인정보 보호법 제15조 제1항 제2호에 따라 정보주체의 동의 없이 개인정보를 수집·이용합니다.</h5>																																						
+										<p class="prsn_agree"><a data-popup-open="ect_agree">자세히 &gt;</a></p>									
+									</p>
+								</li>    
                             </ul>
 
                             <!--현금 영수증 발급-->
@@ -265,7 +299,7 @@
                                     <ul id="ENTRY_DVSN_2_resv_area">
                                         <li class="nonMemberArea"><input type="text" id="ENTRY_DVSN_2_resvUserNm" placeholder="이름을 입력해주세요."></li>
                                         <li class="nonMemberArea"><input type="text" id="ENTRY_DVSN_2_resvUserClphn" onkeypress="onlyNum(this);" placeholder="전화번호를 '-'없이 입력해주세요."></li>
-										<li class="certify nonMemberArea" onclick="javascript:seatService.fn_SmsCertifi();">
+										<li class="certify nonMemberArea sub_number" onclick="javascript:seatService.fn_SmsCertifi();">
 											<a href="javascript:void(0);"><img src="/resources/img/front/certify.svg" alt="">인증번호 받기</a>
 										</li>
 										
@@ -295,18 +329,52 @@
 										<!--개인정보동의-->
 										<li class="person_check nonMemberArea">
 											<p>
-												<span>&lt;개인정보 수집 이용 동의 안내&gt;</span>
-												<ol>
-													<li>코로나 19 확산 방지를 위하여 다음과 같이 개인정보 수집 이용 및 제 3자 제공에 대한 동의를 얻고자 합니다.</li>
-													<li class="prsn_agree"><a data-popup-open="person_agree">자세히 ></a></li>
-													<br>
-													<li class="check_impnt">
-														<input class="magic-checkbox qna_check" type="checkbox" name="layout" id="ENTRY_DVSN_2_person_agree" value="Y">
-													<label for="ENTRY_DVSN_2_person_agree">동의합니다.</label>     
+												<span>&lt;개인정보 수집 이용 동의 안내 &gt;(필수)</span>																															
+								                <h5 class="notiCon">스피드온 회원정보를 활용하여 스마트 입장시스템을 통해 경륜경정 본장 및 지점의 입장신청, 출입관리를 목적으로 개인정보를 처리(수집·이용)합니다.</h5>
+												<p class="prsn_agree"><a data-popup-open="person_agree">자세히 &gt;</a></p>
+											
+												<ul>									
+								                   	<li class="agreeBtn">개인정보 수집 및 이용에 동의하시겠습니까?</li>
+								                   	<li class="check_impnt">
+														<input class="cash_radio" type="radio" checked name="ENTRY_DVSN_1_person_agree" id="ENTRY_DVSN_1_person_agree" value="person_agreeN_1">
+		                                    			<label for="ENTRY_DVSN_1_person_agree"><span></span>동의함</label>
+		                                    				
+		                                    			<input class="cash_radio" type="radio" name="ENTRY_DVSN_2_person_agree" id="ENTRY_DVSN_2_person_agree" value="person_agreeN_2">
+		                                    			<label for="ENTRY_DVSN_2_person_agree"><span></span>동의안함</label>                                    
 													</li>
-												</ol>
+												</ul>									
 											</p>
-										</li>                                           
+										</li>
+										
+										
+										<!--홍보마케팅동의-->
+										<li class="person_check nonMemberArea">
+											<p>									
+												<span>&lt;홍보 및 마케팅 활용 동의 &gt;(선택)</span>																															
+		
+								                
+												<p class="prsn_agree"><a data-popup-open="mktg_agree">자세히 &gt;</a></p>
+												<ul>									
+								                   	<li class="agreeBtn">스마트 입장 시스템에서 보내는 본장 및 지점별 마케팅 문자 수신에 동의 하시겠습니까?</li>
+								                   	<li class="check_impnt">
+														<input class="cash_radio" type="radio" checked name="ENTRY_DVSN_1_person_agree" id="ENTRY_DVSN_1_person_agree" value="person_agreeN_1">
+		                                    			<label for="ENTRY_DVSN_1_person_agree"><span></span>동의함</label>
+		                                    				
+		                                    			<input class="cash_radio" type="radio" name="ENTRY_DVSN_2_person_agree" id="ENTRY_DVSN_2_person_agree" value="person_agreeN_2">
+		                                    			<label for="ENTRY_DVSN_2_person_agree"><span></span>동의안함</label>                                    
+													</li>											
+												</ul>																			
+											</p>
+										</li>  
+										
+										<!--기타고지사항-->
+										<li class="person_check nonMemberArea">
+											<p>	
+												<span>&lt;기타 고지 사항 &gt;</span>																															
+								                <h5 class="notiCon">개인정보 보호법 제15조 제1항 제2호에 따라 정보주체의 동의 없이 개인정보를 수집·이용합니다.</h5>																																						
+												<p class="prsn_agree"><a data-popup-open="ect_agree">자세히 &gt;</a></p>									
+											</p>
+										</li>                                               
                                     </ul>
 
 		                            <!--현금 영수증 발급-->
@@ -415,7 +483,7 @@
     </div>
     <!-- 예약취소 팝업 // -->
     
-	<!-- // 개인정보 수집이용 약관 팝업 -->
+	<!-- // 개인정보 수집이용 약관 팝업-->
     <div id="person_agree" data-popup="person_agree" class="popup">
     	<div class="pop_con rsv_popup">
           	<div class="pop_wrap">
@@ -423,60 +491,27 @@
                 	<p class="font14 mg_l20">개인정보 수집·이용 및  제 3자 제공 동의서</p><br>                
                 	<p class="font13 mg_l20">코로나19 확산방지를 위하여 경주사업총괄본부에서는 다음과 같이 개인정보 수집·이용 및 제 3자 제공에 대한 동의를 얻고자 합니다.</p>
                 
-                	<div class="tablet_wrap">
-                         <div class="pd_l10 pd_r10">
-                        	<p class="font13 mg_l10">▶ 개인정보수집·이용 동의</p>
-                        	<table class="tb3" summary="개인정보수집·이용 동의">
-                            	<caption>개인정보수집·이용 동의</caption>
-                            	<colgroup>
-                                	<col width="34%">
-                                	<col width="33%">
-                                	<col width="33%">
-                            	</colgroup>
-                            	<thead>
-                                	<tr>
-                                    	<th scope="col">항목</th>
-                                    	<th scope="col">수집목적</th>
-                                    	<th scope="col">보유기간</th>
-                                	</tr>
-                            	</thead>
-                            	<tbody>             
-	                                <tr>
-	                                    <td>성명,전화번호,<br>출입시설,출입시간</td>
-	                                    <td>코로나19 확진자<br>발생시 역학조사 및 <br>안내문자 발송</td>
-	                                    <td class="text_center" style="color:red; font-size:12px; font-weight:bold;">4주</td>
-	                                </tr>                                              
-                            	</tbody>
-                        	</table><br>
-                        
-                        	<p class="font13 mg_l10">▶ 개인정보 제3자 제공 동의</p>
-                        	<table class="tb3" summary="개인정보 제3자 제공 동의">
-                            	<caption>개인정보 제3자 제공 동의</caption>
-                            	<colgroup>
-	                                <col width="27%">
-	                                <col width="29%">
-	                                <col width="26%">
-	                                <col width="18%">
-                            	</colgroup>
-								<thead>
-                                <tr>
-                                    <th scope="col">제공받는 기관</th>
-                                    <th scope="col">제공목적</th>
-                                    <th scope="col">제공항목</th>
-                                    <th scope="col">보유기간</th>
-                                </tr>
-                            </thead>
-                            <tbody>             
-                                <tr>
-                                    <td class="text_center" style="color:red; font-size:12px; font-weight:bold;">보건복지부,<br>질병관리청,<br>지자체</td>
-                                    <td class="text_center" style="color:red; font-size:11px; font-weight:bold;">코로나19<br>확진자 발생 시<br>역학조사</td>
-                                    <td>성명,전화번호,<br>출입시설,출입시간</td>
-                                    <td class="text_center" style="color:red; font-size:12px; font-weight:bold;">4주</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div><br>
-                    
+                	<div class="tablet_wrap">                		
+						<ol class="person_cont">
+							<li>1. 수집 이용하려는 개인정보의 항목
+						        <ul>
+						           <li>스피드온 회원정보의 ID, 카드ID, 이름, 휴대전화번호, 성별, 나이, 백신접종정보, 방문지점</li>
+						        </ul>
+						    </li>
+						    <li>2. 개인정보 이용기간
+						        <ul>
+						            <li>개인정보 동의일로부터 3년</li>
+						        </ul>
+						    </li>
+						    <li>3. 개인정보 수집이용 거부 및 불이익
+						        <ul>
+						           <li>이용자는 해당 개인정보 수집 및 이용 동의에 대한 거부할 권리가 있습니다. 그러나 동의하지 않을경우 스피드온 회원정보를 통한 스마트입장시스템 서비스 이용이 불가능합니다.</li>
+						        </ul>
+						    </li>						                   			
+						</ol>
+                   	</div>
+
+                   		                    
                     <p class="font13 mg_l20">※위의 개인정보 수집·이용 및 3자 제공에 대한 동의를 거부할 권리가 있습니다. 그러나 동의를 거부할 경우 출입이 제한될 수 있습니다. </p><br>
                 </div>                
             </div>
@@ -488,6 +523,80 @@
       </div>
     </div>
     <!-- 개인정보 수집이용 약관 팝업 // -->
+    
+	<!-- // 홍보 및 마케팅 활용 동의 팝업-->
+    <div id="person_agree" data-popup="mktg_agree" class="popup">
+    	<div class="pop_con rsv_popup">
+          	<div class="pop_wrap">
+            	<div class="text privacy_text">
+                	<p class="font14 mg_l20">개인정보 수집·이용 및  제 3자 제공 동의서</p><br>                
+                	<p class="font13 mg_l20">코로나19 확산방지를 위하여 경주사업총괄본부에서는 다음과 같이 개인정보 수집·이용 및 제 3자 제공에 대한 동의를 얻고자 합니다.</p>
+                
+                	<div class="tablet_wrap">
+						<ol class="person_cont">
+							<li>1. 활용 목적 : 본장 및 지점별 마케팅 문자 발송</li>
+						    <li>2. 활용 항목 : 휴대전화번호</li>
+						    <li>3. 활용 및 보관기간 : 개인정보 동의일로부터 3년</li>
+						    <li>4. 동의를 거부할 권리 및 거부 시 불이익 : 이용자는 해당 개인정보의 마케팅 활용 동의를 거부할 권리가 있으며, 거부 시 불이익은 없습니다.</li>						                   			
+						</ol>
+                   	</div>
+
+                   		                    
+                    <p class="font13 mg_l20">※ 코로나 방역, 천재지변 등으로 인한 긴급알림 문자는 동의가 없어도 해당 영업장 입장신청자들을 대상으로 발송됩니다. </p><br>
+                </div>                
+            </div>
+          </div>
+          <div class="cancel_btn">
+              <a href="javascript:bPopupClose('person_agree');" class="grayBtn">닫기</a>
+          </div>
+          <div class="clear"></div>
+      </div>
+    </div>
+    <!-- 홍보 및 마케팅 활용 동의 팝업 // -->    
+    
+	<!-- // 기타고지사항 팝업-->
+    <div id="person_agree" data-popup="ect_agree" class="popup">
+    	<div class="pop_con rsv_popup">
+          	<div class="pop_wrap">
+            	<div class="text privacy_text">
+                	<p class="font14 mg_l20">기타고지사항</p><br>                                
+						<table class="tb3" summary="">                            	
+			            	<colgroup>
+				            	<col width="27%">
+				                <col width="29%">
+				                <col width="26%">
+				                <col width="18%">
+			                </colgroup>
+							<thead>
+				                <tr>
+				                   <th scope="col">개인정보 처리사유</th>
+				                   <th scope="col">개인정보 항목</th>
+				                   <th scope="col">보유기간</th>
+				                   <th scope="col">수집근거</th>
+				                </tr>
+				             </thead>
+				             <tbody>             
+				                <tr>
+				                   <td class="text_center" style="color:red; font-size:12px; font-weight:bold;">레저세<br>납부</td>
+				                   <td class="text_center" style="color:red; font-size:11px; font-weight:bold;">휴대전화번호, <br>방문지점, <br>입장시간</td>
+				                   <td class="text_center" style="color:red; font-size:12px; font-weight:bold;">5년</td>
+				                   <td class="text_center" style="color:red; font-size:12px; font-weight:bold;">지방세법』제43조 <br>동법 시행령 제58조</td>
+				                 </tr>
+				             </tbody>
+				         </table>                    		                    
+                    <p class="font13 mg_l20">※ 코로나 방역, 천재지변 등으로 인한 긴급알림 문자는 동의가 없어도 해당 영업장 입장신청자들을 대상으로 발송됩니다. </p><br>
+                </div>                
+            </div>
+          </div>
+          <div class="cancel_btn">
+              <a href="javascript:bPopupClose('person_agree');" class="grayBtn">닫기</a>
+          </div>
+          <div class="clear"></div>
+      </div>
+    </div>
+    <!-- 기타고지사항 팝업 // -->    
+    
+   						                
 
     <!--층 선택 시 show/hide-->
     <script>

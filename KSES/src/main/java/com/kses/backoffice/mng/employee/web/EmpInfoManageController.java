@@ -544,7 +544,7 @@ public class EmpInfoManageController {
 		try {
 			
 			
-			int IDCheck = uniService.selectIdDoubleCheck("EMP_NO", "TSEH_EMP_INFO_M", " = ["+ empNo + "[" );
+			int IDCheck = uniService.selectIdDoubleCheck("EMP_NO", "TSEH_EMP_INFO_M", "EMP_NO = ["+ empNo + "[" );
 			String result =  (IDCheck> 0) ? Globals.STATUS_FAIL : Globals.STATUS_OK;
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			model.addObject(Globals.JSON_RETURN_RESULT, result);
