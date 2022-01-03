@@ -147,6 +147,12 @@ public class ResvInfo {
 	
 	private String refoundDate = "";
 	
+	// 좌석 금액
+	private String resvSeatPayCost = "";
+	
+	// 입장 금액
+	private String resvEntryPayCost = "";
+	
 	// 입력 구분
 	private String mode = "";
 }

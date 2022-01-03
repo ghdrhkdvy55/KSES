@@ -150,9 +150,16 @@
 						<td id="rsvPopResvUserAskYn">Y</td>
                   	</tr>
                   	<tr>
+                  		<th>입장료</th>
+                  		<td id="rsvPopResvEntryPayCost"></td>
+                  		<th>좌석료</th>
+                  		<td id="rsvPopResvSeatPayCost"></td>
+                  	</tr>
+                  	<tr>
 						<th>발권 구분</th>
                     	<td id="rsvPopResvTicketDvsn"></td>
                   	</tr>
+                  	
               	</tbody>
           	</table>
 			<br>
@@ -696,6 +703,9 @@
 						$("#rsvPopResvPayDvsn").html(obj.resv_pay_dvsn_text);
 						obj.resv_user_ask_yn = obj.resv_user_ask_yn == "Y" ? "동의" : "미동의"; 
 						$("#rsvPopResvUserAskYn").html(obj.resv_user_ask_yn);
+						$("#rsvPopResvSeatPayCost").html(obj.resv_seat_pay_cost);
+						$("#rsvPopResvEntryPayCost").html(obj.resv_entry_pay_cost);
+						$("#rsvPopResvTicketDvsn").html(obj.resv_ticket_dvsn_text);
 						
 						if(obj.seat_nm != "입석" && obj.resv_state == "RESV_STATE_1") { 
 							$("#rsvPopSeatChange a").show().click(function (e) {
