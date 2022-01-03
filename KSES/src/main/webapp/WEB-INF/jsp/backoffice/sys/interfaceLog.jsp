@@ -118,21 +118,9 @@
 			{ label: '발생일자', name: 'frst_regist_pnttm', align: 'center', width: '8%', 
 			sortable: 'date',formatter: "date", formatoptions: { newformat: "Y-m-d H:i:s"}}	
 		], false, false, fnSearch);	
-	
- 		var clareCalendar = {
-			monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
-			dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
-			weekHeader: 'Wk',
-			dateFormat: 'yymmdd', //형식(20120303)
-			autoSize: false, //오토리사이즈(body등 상위태그의 설정에 따른다)
-			changeMonth: true, //월변경가능
-			changeYear: true, //년변경가능
-			showMonthAfterYear: true, //년 뒤에 월 표시
-			buttonImageOnly: false, //이미지표시
-			yearRange: '2021:2999' //1990년부터 2020년까지
-		};	       
-		$("#searchFrom").datepicker(clareCalendar);
-		$("#searchTo").datepicker(clareCalendar);
+		
+		$("#searchFrom").datepicker(EgovCalendar);
+		$("#searchTo").datepicker(EgovCalendar);
 	});
 	
 	function fnSearch(pageNo) {
