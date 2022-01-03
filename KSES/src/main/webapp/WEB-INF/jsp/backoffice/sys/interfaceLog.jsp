@@ -53,7 +53,7 @@
 </div>
 <!-- contents//-->
 <!-- //popup -->
-<div data-popup="sys_interfaceinfo" class="popup">
+<div data-popup="sys_interfaceinfo" id=bas_interfaceinfo class="popup">
     <div class="pop_con">
         <a class="button b-close">X</a>
         <h2 class="pop_tit">전문 상세 내역</h2>
@@ -94,7 +94,7 @@
 			</form>
         </div>
         <div class="right_box">
-            <a href="" class="grayBtn b-close">취소</a>
+            <button class="grayBtn b-close">취소</button>
         </div>
         <div class="clear"></div>
     </div>
@@ -105,7 +105,7 @@
 	$(document).ready(function() {
 		EgovJqGridApi.mainGrid([
 			{ label: '인터페이스 아이디', key: true, name: 'requst_id', align: 'left', hidden:true},
-            { label: '일자', name: 'occrrnc_de', index: 'occrrnc_de', align: 'left', width: '10%'},
+			{ label: '일자', name: 'occrrnc_de', align: 'left', width: '10%'},
 			{ label: '송수신구분', name: 'trsmrcv_se_code', align: 'left', width: '10%'},
 			{ label: '연계ID', name: 'integ_id', align: 'center', width: '12%'},
 			{ label: '제공기관', name: 'provd_instt_id', align: 'center', width: '12%'},
@@ -133,17 +133,15 @@
 		};	       
 		$("#searchFrom").datepicker(clareCalendar);
 		$("#searchTo").datepicker(clareCalendar);
-		$("img.ui-datepicker-trigger").attr("style", "margin-left:3px; vertical-align:middle; cursor:pointer;"); //이미지버튼 style적용
-		$("#ui-datepicker-div").hide(); //자동으로 생성되는 div객체 숨김 
 	});
 	
 	function fnSearch(pageNo) {
 		let params = {
 				pageIndex : pageNo,
-				searchFrom : $("#searchFrom").val(),
-				searchTo : $("#searchTo").val(),
+				pageUnit : $('.ui-pg-selbox option:selected').val(),
 				searchKeyword : $("#searchKeyword").val(),
-				pageUnit : $('.ui-pg-selbox option:selected').val()
+				searchFrom : $("#searchFrom").val(),
+				searchTo : $("#searchTo").val()
 		};
 		EgovJqGridApi.mainGridAjax('/backoffice/sys/selectInterfaceListAjax.do', params, fnSearch);
 		EgovJqGridApi.mainGridDetail(fnInterfaceInfo);
@@ -152,20 +150,15 @@
 	function fnInterfaceInfo(id, rowData) {
 		let $popup = $('[data-popup=sys_interfaceinfo]');
 		let $form = $popup.find('form:first');
-		if (id === undefined || id === null){
-
-		}
-		else {
-			$form.find('span#spReqId').html(rowData.requst_id);
-			$form.find('span#spTrsmrcv').html(rowData.trsmrcv_se_code);
-			$form.find('span#spReqInsttId').html(rowData.requst_instt_id);
-			$form.find('span#spProInsttId').html(rowData.provd_instt_id);
-			$form.find('span#spReqTrnTm').html(rowData.requst_trnsmit_tm);
-			$form.find('span#spRspTrnTm').html(rowData.rspns_trnsmit_tm);
-			$form.find('span#spResultCode').html(rowData.result_code);
-			$form.find('span#spResultMessage').html(rowData.result_message);
-			$form.find('span#spSendtMessage').html(rowData.send_message);
-		}
+		$form.find('span#spReqId').html(rowData.requst_id);
+		$form.find('span#spTrsmrcv').html(rowData.trsmrcv_se_code);
+		$form.find('span#spReqInsttId').html(rowData.requst_instt_id);
+		$form.find('span#spProInsttId').html(rowData.provd_instt_id);
+		$form.find('span#spReqTrnTm').html(rowData.requst_trnsmit_tm);
+		$form.find('span#spRspTrnTm').html(rowData.rspns_trnsmit_tm);
+		$form.find('span#spResultCode').html(rowData.result_code);
+		$form.find('span#spResultMessage').html(rowData.result_message);
+		$form.find('span#spSendtMessage').html(rowData.send_message);
 		$popup.bPopup();
 	}
 	
@@ -188,4 +181,3 @@
 			return resultTxt;
 		}, */
 </script>
-<c:import url="/backoffice/inc/popup_common.do" />
