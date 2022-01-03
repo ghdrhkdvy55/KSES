@@ -47,7 +47,10 @@
 	<input type="hidden" name="isReSeat" id="isReSeat" value="${resvInfo.isReSeat}">
 	<input type="hidden" name="resvUserNm" id="resvUserNm" value="">
 	<input type="hidden" name="resvSeq" id="resvSeq" value="">
-	<input type="hidden" name="resvDate" id="resvDate" value="${resvInfo.resvDate}">	
+	<input type="hidden" name="resvDate" id="resvDate" value="${resvInfo.resvDate}">
+	
+	<input type="hidden" name="centerEntryPayCost" id="centerEntryPayCost" value="${resvInfo.center_entry_pay_cost}">
+	<input type="hidden" name="centerStandYn" id="centerStandYn" value="${resvInfo.center_stand_yn}">	
 	
 	<!-- 예약정보 sessionStorage검토 -->
 	<input type="hidden" name="seasonCd" id="seasonCd">
@@ -83,7 +86,7 @@
         <!--// contents-->
         <div id="container">
             <div>
-                <div class="contents">                  
+                <div class="contents">      
                     <h3>
 						선택한 지점 
                         <span class="change_br">
@@ -538,10 +541,10 @@
 			
 			if($("#isReSeat").val() == "Y") {
 				seatService.fn_reSeat();
-			}
-			
-			if($("#centerCd").val() == null) {
-				fn_openPopup("지점정보가 존재하지 않습니다.\n처음부터 예약을 진행해주세요", "red", "ERROR", "확인", "/front/main.do");
+			} else if($("#centerStandYn").val() == "N") {
+				$("#ENTRY_DVSN_2").trigger("click");
+				$(".enter_type").hide();
+				$(".contents > h4:eq(0)").hide();
 			}
 		});
 		
@@ -1011,6 +1014,7 @@
 				params = {
 					"checkDvsn" : checkDvsn,
 					"entryDvsn" : entryDvsn,
+					"userDvsn" : $("#userDvsn").val(),
 					"centerCd" : $("#centerCd").val(),
 					"floorCd" : $("#floorCd").val(),
 					"partCd" : $("#partCd").val(),
