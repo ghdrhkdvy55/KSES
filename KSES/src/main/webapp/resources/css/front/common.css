@@ -158,7 +158,7 @@ bottom:0;
     width: 82%;
 }
 .self_pop { width: 85%; }
-.pop_con{padding:40px 25px 40px; font-size: 1.7em;}
+.pop_con{padding:40px 25px 0; font-size: 1.7em;}
 .pop_tit{font-size: 2rem;color: #fff; }
 .login_pop_tit 
 .pop_noti { font-size: 1.6rem; color: #808080;letter-spacing: -0.6px; word-break: keep-all; padding-top: 30px}
@@ -2095,8 +2095,10 @@ ul.tabs li{
 .rsv_list ol li {display: inline-block;}
 .rsv_list ol li:first-child {width: 30%; color: #999;}
 .cancel_btn {
-    margin-top:4rem;
+    padding-bottom:2rem;
     text-align: center;
+    width:90%;
+    margin:auto;
 }
 .cancel_btn li {width:48%; display:inline-block}
 .cancel_btn a {
@@ -2104,7 +2106,8 @@ ul.tabs li{
     padding: 2rem 0;
     background: #393939;
     border-radius: 8px;
-    display:block;
+    display: block;
+    font-size: 1.6em;
 }
 .cancel_btn li .dislBtn  {background: #c0c0c0;}
 .summit_btn {
@@ -2157,8 +2160,7 @@ ul.tabs li{
 .my_menu ul:last-child li:nth-child(3) {background:url("/resources/img/front/logout_black_24dp.svg")left no-repeat; padding-left: 2.8rem;}
 
 
-#ENTRY_DVSN_2_resv_area li:nth-child(3), #standing_resv_area li:nth-child(3) {background:#dbdbdb !important;}
-#ENTRY_DVSN_2_resv_area .covid19_qna li:nth-child(3), #standing_resv_area .covid19_qna li:nth-child(3) {background:none !important;}
+
 
  /* TEMP */
 .mapArea {
@@ -2287,10 +2289,10 @@ ul.tabs li{
     margin-bottom: 1rem;
     text-align: center;
 }
-.person_check ol {margin-top: 2rem;}
-.person_check ol li {list-style: circle; margin-left: 2rem; line-height:1.6em ;}
-.person_check ol li:last-child {list-style: none; text-align: center;}
-.person_check .check_impnt {color: #3197ff;}
+.person_check ol {margin-top: 2rem; font-size:.9em;}
+.person_check ol li {line-height:1.6em ;}
+.person_check ol li:last-child {list-style: none; }
+.person_check .check_impnt {color: #3197ff; text-align:center}
 
 /*.cal_icon {background: #fff url(../../img/cal_icon.png) no-repeat center right 3px;}*/
 
@@ -2334,13 +2336,17 @@ ul.tabs li{
     border-radius: 4px;
     border: 1px solid #c7c7c7;
     margin-top: 4px;
+    font-size:.9em; color:#525252!important;
+    cursor:pointer;
 }
+
 .font14 {color: #000!important; font-weight: 600;}
 .font13 {
     text-align: left!important;
     border-bottom: 1px solid #e0e0e0;
 }
-.tb3 {width: 100%; border-bottom: 1px solid #e0e0e0; font-size: .68em;}
+.tb3 {width: 100%; border-bottom: 1px solid #e0e0e0; font-size: .68em; border:1px solid #eee; border-collapse:collapse}
+.tb3 td ,.tb3 th{border:1px solid #eee;}
 .tb3 caption {background: #eee; margin-bottom: 5px; line-height: 1.5em;}
 
 /* common_pop */
@@ -2464,15 +2470,24 @@ ul.tabs li{
 .nonVac {color: #f72626; }
 
 /*1214 qr코드 백신정보*/
-.vacState {margin-top:8px;}
+.vacState {
+    background: #eee;
+    border-radius: 25px;
+    width: 50%;
+    margin: auto;
+    margin-top: 1rem;
+}
 .vacState span{
     font-weight: 600;
-    background: #eee;
-    padding: 4px 10px;
+    padding: 4px 18px;
     border-radius: 25px;
+    font-size:1.3em;
 }
 .vacState .vacDone {color: #2667f7;}
-.vacState .vacNon {color: #f72626; }
+.vacState .vacNon {
+    color: #f72626;
+    background: url("/resources/img/front/warning_amber_black_24dp.svg") no-repeat;
+}
 
 
 /* 1224 footer */
@@ -2524,9 +2539,9 @@ ul.tabs li{
 }
 
 /*1227*/
-.pop_wrap h4 {margin-bottom: 3rem; border-bottom: 1px solid #eee;}
+/*.pop_wrap h4 {margin-bottom: 3rem; border-bottom: 1px solid #eee;}*/
 .costStat {font-weight: 500;}
-.costStat li {display: inline-block; margin-right: 1rem;}
+.costStat li {display: inline-block; }
 .costStat li span {color: #0f5ff1;}
 .costStat li img {vertical-align: bottom;}
 .cost_btn {margin-top: 2.5rem; text-align: center;}
@@ -2537,4 +2552,21 @@ ul.tabs li{
     border-radius: 8px;
     display: block;
 }
-.cost_list li li:first-child {background: url("/resources/img/front/arrow_right_black_24dp.svg") no-repeat; padding-left: 2rem;}
+.cost_list li li:first-child {background: url("/resources/img/front/arrow_right_black_24dp.svg") no-repeat; padding-left: 2rem; width:74px}
+
+
+/*1230*/
+.agreeBtn {
+    margin-top: 1.5rem;
+    color: #585555;
+    text-align: center;
+    padding-bottom: 1rem;
+}
+.notiCon {font-size:1em; text-align:left; font-weight:500}
+.summery {font-size:.9em;}
+.sub_number { background :#dbdbdb}
+.person_cont {
+    font-size: .8em;
+    padding: 2rem 1rem;
+    line-height: 1.6em;
+}
