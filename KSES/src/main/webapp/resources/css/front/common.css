@@ -2507,7 +2507,7 @@ ul.tabs li{
 .linkBox li:last-child:after{display: none;}
 .linkBox li:nth-child(1){border-bottom: 2px solid #222; box-sizing: border-box;}
 .linkBox li:nth-child(1) a{color: #222;}
-.linkBox a{display: block; padding: 15px 20px; font-size: 1.4rem; line-height: 1rem; color: #adadad;}
+.linkBox a{display: block; padding: 15px 20px; font-size: 1.2rem; line-height: 1rem; color: #787878;}
 .addressBox{position: relative; padding: 20px 0; font-size: 1.2rem; line-height: 2rem; text-align: left;}
 .addressBox address span{display: inline-block; padding-right: 15px; position: relative;}
 .addressBox address span:after{content: ''; display: block; width: 1px; height: 12px; background: #666; position: absolute; right: 4px; top: calc(50% - 6px);}
@@ -2537,7 +2537,7 @@ ul.tabs li{
 }
   .linkBox ul{border-bottom: none;}
   .linkBox li{height: 30px;}
-  .linkBox a{padding: 10px 5px;}
+  .linkBox a{padding: 10px 4px;}
   .addressBox{padding-top: 10px; padding-bottom: 60px; font-size: 1.3rem;line-height: 2.4rem; }
   .addressBox .banner{width: 100%; transform: translateY(10px);}
   .addressBox .banner img{max-width: 150px; width: 32%;}
