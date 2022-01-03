@@ -510,7 +510,7 @@ function fn_getResvInfo (resvSeq) {
 	    	}
 		},
 		function(request) {
-			fn_openPopup("ERROR : " + request.status, "red", "ERROR", "확인", "");	       						
+			fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");	       						
 		}    		
 	);
 	
@@ -519,7 +519,7 @@ function fn_getResvInfo (resvSeq) {
 }
 
 /**
- * 예약 취소 공통
+ * 사용자 예약 취소 공통
  * 
  * @param resvInfo
  * @param payResult
@@ -529,18 +529,14 @@ function fn_resvCancel(resvInfo, payResult, callback) {
 	var url = "/front/resvInfoCancel.do";
 	var isSuccess = false;
 	
-	var params = {
-		"resvSeq" : resvInfo.resv_seq,
-		"resvUserDvsn" : resvInfo.resv_user_dvsn,
-		"resvCancelId" : resvInfo.user_id,
-		"resvCancelCd" : "RESV_CANCEL_CD_2"
-	}
+	resvInfo.resv_cancel_id = resvInfo.user_id;
+	resvInfo.resv_cancel_cd = "RESV_CANCEL_CD_2";
 	
 	fn_Ajax
 	(
 	    url,
 	    "POST",
-		params,
+	    resvInfo,
 		false,
 		function(result) {
 			if (result.status == "SUCCESS") {

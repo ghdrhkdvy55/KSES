@@ -52,7 +52,15 @@
                     </ul>
 
                     <div class="inquiry_btn">
-                        <a href="javascript:guestResvService.fn_checkform();">조회하기</a>
+                        <a href="javascript:guestResvService.fn_SmsCertifi();">인증번호 요청</a>
+                    </div>
+                    
+                    <div class="ok_sumit">
+                    	<ul>
+                    		<li>인증번호</li>
+                    		<li class="ok_input"><input type="text" id="resvCertifiCode" placeholder="인증번호를 입력하세요."></li>
+                    		<li><a href="javascript:guestResvService.fn_checkform();">확인</a></li>
+                    	</ul>
                     </div>
                 </div>
             </div>
@@ -189,12 +197,65 @@
 
     <!--메뉴버튼 속성-->
     <script>
+		var certifiYn = false;
+		var certifiCode = "";
+		var certifiNm = "";
+		var certifiNum = "";
+    
 		var guestResvService = {
+			fn_SmsCertifi : function() {
+				certifiNm = $("#resvUserNm").val();
+				certifiNum = $("#resvUserClphn").val();
+					
+
+				if(certifiNm == "") {
+					fn_openPopup("이름을 입력해주세요.", "red", "ERROR", "확인", ""); return;
+				} else if (certifiNum == "") {
+					fn_openPopup("휴대폰번호를 입력해주세요.", "red", "ERROR", "확인", ""); return;
+				} else if (!validPhNum(certifiNum)) {
+					fn_openPopup("올바른 휴대폰번호를 입력해주세요.", "red", "ERROR", "확인", ""); return;
+				}
+						
+				var url = "/front/resvCertifiSms.do";
+				var params = {
+					"certifiNm" : certifiNm,
+					"certifiNum" : certifiNum
+				}
+					
+				fn_Ajax
+				(
+					url,
+					"POST",
+					params,
+					false,
+					function(result) {
+				    	if(result.status == "SUCCESS") {
+				    		fn_openPopup("인증번호가 발송 되었습니다.(" +  result.certifiCode + ")", "blue", "SUCCESS", "확인", "");
+							certifiCode = result.certifiCode;
+				    	} else if(result.status == "LOGIN FAIL") {
+				    		fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
+				    	} else {
+				    		fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
+				    	}
+					},
+					function(request) {
+						fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");	       						
+					}    		
+				);
+			},
 			fn_checkform : function() {
+				if (certifiCode == "") {
+					fn_openPopup("인증번호를 요청해주세요", "red", "ERROR", "확인", "");
+					return;
+				} else if($("#resvCertifiCode").val() != certifiCode) {
+					fn_openPopup("인증번호가 일치하지 않습니다.", "red", "ERROR", "확인", "");
+					return;
+				}
+				
 				var url = "/front/guestMyResvInfo.do";
 				var params = {
-					"resvUserNm" : $("#resvUserNm").val(),
-					"resvUserClphn" : $("#resvUserClphn").val()
+					"resvUserNm" : certifiNm,
+					"resvUserClphn" : certifiNum
 				}
 
 				fn_Ajax
@@ -212,10 +273,6 @@
 								$("#rsv_date, #cancel_rsv_date").html(fn_resvDateFormat(guestResvInfo.resv_end_dt));
 								$("#rsv_name").html(guestResvInfo.resv_user_nm);
 								$("#rsv_center, #cancel_rsv_center").html(guestResvInfo.center_nm);
-								
-								console.log(guestResvInfo.resv_entry_dvsn);
-								console.log($(".rsvInfo_result"));
-								console.log($(".rsvInfo_result > li:eq(4)"));
 								
 								if(guestResvInfo.resv_entry_dvsn == "ENTRY_DVSN_1") {									
 									$(".rsvInfo_result").children().eq(4).hide();
@@ -258,18 +315,15 @@
 				
 				if(resvInfo.isSuccess) {
 					var url = "/front/resvInfoCancel.do";
-					var params = {
-						"resvSeq" : resvSeq,
-						"userDvsn" : $("#userDvsn").val(),
-						"resvCancelId" : resvInfo.user_id,
-						"resvCancelCd" : "RESV_CANCEL_CD_2"
-					}
+					
+					resvInfo.resv_cancel_id = resvInfo.user_id;
+					resvInfo.resv_cancel_cd = "RESV_CANCEL_CD_2";
 					
 					fn_Ajax
 					(
 					    url,
 					    "POST",
-						params,
+					    resvInfo,
 						false,
 						function(result) {
 							if (result.status == "SUCCESS") {
@@ -279,7 +333,7 @@
 							}
 						},
 						function(request) {
-							alert("ERROR : " + request.status);	       						
+							fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");	       						
 						}    		
 					);
 				}

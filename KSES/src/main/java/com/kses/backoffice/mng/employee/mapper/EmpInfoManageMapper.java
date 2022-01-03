@@ -21,5 +21,5 @@ public interface EmpInfoManageMapper {
 	
 	public int deleteEmpInfo(@Param("empList") List<String> empList);
 	
-	public int mergeEmpInfo(List<EmpInfo> empInfoList);	
+	public int mergeEmpInfo();	
 }

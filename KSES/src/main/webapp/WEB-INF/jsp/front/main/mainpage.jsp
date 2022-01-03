@@ -102,8 +102,6 @@
             <c:import url="/front/inc/footer.do" />
         </div>
         <!-- footer //-->
-        
-        
 
         <div id="foot_btn">
             <div class="contents">
@@ -693,18 +691,14 @@
 			fn_resvCancel : function(resvInfo, payResult) {
 				var url = "/front/resvInfoCancel.do";
 				
-				var params = {
-					"resvSeq" : resvInfo.resv_seq,
-					"resvUserDvsn" : resvInfo.resv_user_dvsn,
-					"resvCancelId" : resvInfo.user_id,
-					"resvCancelCd" : "RESV_CANCEL_CD_2"
-				}
+				resvInfo.resv_cancel_id = resvInfo.user_id;
+				resvInfo.resv_cancel_cd = "RESV_CANCEL_CD_2";
 				
 				fn_Ajax
 				(
 				    url,
 				    "POST",
-					params,
+				    resvInfo,
 					false,
 					function(result) {
 						if (result.status == "SUCCESS") {

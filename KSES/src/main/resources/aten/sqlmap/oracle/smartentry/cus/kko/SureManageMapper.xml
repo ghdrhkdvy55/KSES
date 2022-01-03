@@ -5,7 +5,7 @@
 		SELECT TRUNC(DBMS_RANDOM.VALUE(1000,9999)) FROM DUAL
 	</select>
 
-	<insert id="insetSmsData">
+	<insert id="insertSmsData">
     	INSERT INTO SMS.SMSDATA
     	(
     		SEQNO, INDATE, INTIME, MEMBER, SENDID, 
@@ -20,5 +20,22 @@
 			#{sphone1, jdbcType=VARCHAR}, #{sphone2, jdbcType=VARCHAR}, #{sphone3, jdbcType=VARCHAR}, #{msg, jdbcType=VARCHAR}, '0',
 			'S', #{sysGbn, jdbcType=VARCHAR}, #{userid, jdbcType=VARCHAR} 
     	)
+	</insert>
+	
+	<insert id="insertSureData">
+		INSERT INTO SMS.SUREDATA
+		(
+			SEQNO, INTIME, USERCODE, BIZTYPE, YELLOWID_KEY,
+			REQNAME, REQPHONE, CALLNAME, CALLPHONE, MSG,
+			REQTIME, RESULT, KIND, RESEND, TEMPLATECODE,
+			BTN_TYPE_01, BTN_NM_01, BTN_01_URL_01
+		)
+		VALUES
+		(
+			SMS.SQ_SUREDATA.NEXTVAL, TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS'), #{usercode}, #{biztype}, #{yellowidKey},
+			#{reqname}, #{reqphone}, #{callname}, #{callphone}, #{msg},
+			#{reqtime}, #{result}, #{kind}, #{resend}, #{templatecode},
+			#{btnType01}, #{btnNm01}, #{btn01Url01}
+		)
 	</insert>
 </mapper>

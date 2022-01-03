@@ -103,15 +103,14 @@ public class LoginPageInfoManageController {
 			if(!StringUtils.isBlank(userLoginInfo.getIndvdlinfoAgreYn())) {
 				String envType = propertiesService.getString("Globals.envType");
 				Map<String, Object> vacntnInfo = null;
-				String vacntnDt = "";
 				if(envType.equals("DEV")) {
 					userLoginInfo.setEnvType("DEV");
+					vacntnInfo = userService.selectSpeedOnVacntnInfo(userLoginInfo);
 					userLoginInfo.setVacntnDt(SmartUtil.NVL(vacntnInfo.get("covid_dy"), ""));
-					vacntnInfo = userService.selectSpeedOnVacntnInfo(userLoginInfo);  
 				} else if(envType.equals("PROD")){
 					userLoginInfo.setEnvType("PROD");
-					userLoginInfo.setVacntnDt(SmartUtil.NVL(vacntnInfo.get("covid_dy"), ""));
 					vacntnInfo = userService.selectSpeedOnVacntnInfo(userLoginInfo);
+					userLoginInfo.setVacntnDt(SmartUtil.NVL(vacntnInfo.get("covid_dy"), ""));
 				}
 				
 				userService.updateUserInfo(userLoginInfo);

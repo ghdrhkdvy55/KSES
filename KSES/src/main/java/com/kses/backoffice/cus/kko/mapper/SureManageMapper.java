@@ -11,9 +11,9 @@ import egovframework.rte.psl.dataaccess.mapper.Mapper;
 public interface SureManageMapper {
 	public String selectCertifiCode() throws Exception;
 	
-	public int insetSmsData(SmsDataInfo smsDataInfo) throws Exception;
+	public int insertSmsData(SmsDataInfo smsDataInfo) throws Exception;
 	
-	public int insetMmsData(MmsDataInfo mmsDataInfo) throws Exception;
+	public int insertMmsData(MmsDataInfo mmsDataInfo) throws Exception;
 	
-	public int insetSureData(SureDataInfo sureDataInfo) throws Exception;
+	public int insertSureData(SureDataInfo sureDataInfo) throws Exception;
 }

@@ -256,7 +256,7 @@ public class FrontResvInfoManageController {
 			smsDataInfo.setSysGbn("MOBILE_KCYCLE");
 			smsDataInfo.setUserid("14080");
 			
-			int ret = sureService.insetSmsData(smsDataInfo);
+			int ret = sureService.insertSmsData(smsDataInfo);
 			if(ret > 0) {
 				model.addObject("certifiCode", certifiCode);
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
@@ -340,6 +340,12 @@ public class FrontResvInfoManageController {
 					userService.updateUserInfo(user);
 				}
 				
+				if(sureService.insertResvSureData("RESERVATION", resvInfo)) {
+					LOGGER.info("예약번호 : " + resvInfo.get("resv_seq").toString() + "번 알림톡 발송성공");
+				} else {
+					LOGGER.info("예약번호 : " + resvInfo.get("resv_seq").toString() + "번 알림톡 발송실패");
+				}
+				
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 			} else {
@@ -375,19 +381,17 @@ public class FrontResvInfoManageController {
 				return model;
 			}
 			
-			String resvCancelDvsn = SmartUtil.NVL(params.get("resvCancelDvsn"),"");
-			if(!StringUtils.isBlank(resvCancelDvsn) && resvCancelDvsn.equals("ADMIN")) {
-
-			} else {
-				params.put("resvState", "RESV_STATE_4");
-				params.put("resvCancelCd", "RESV_CANCEL_CD_2");
-			}
-
 			int ret = resvService.resvInfoCancel(params);
 			
 			if(ret > 0) {
+				if(sureService.insertResvSureData("CANCEL", params)) {
+					LOGGER.info("예약번호 : " + params.get("resv_seq").toString() + "번 예약취소 알림톡 발송성공");
+				} else {
+					LOGGER.info("예약번호 : " + params.get("resv_seq").toString() + "번 예약취소 알림톡 발송실패");
+				}
+				
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
+				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("sucess.common.reservation"));
 			} else {
 				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.reservation"));

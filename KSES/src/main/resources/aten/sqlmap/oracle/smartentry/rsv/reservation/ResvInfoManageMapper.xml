@@ -87,7 +87,8 @@
 			A.RESV_SEQ, A.SEAT_CD, A.SEASON_CD, A.RESV_START_DT, A.RESV_END_DT, A.RESV_DVSN,
 			A.RESV_START_TM, A.RESV_END_TM, TO_CHAR(A.RESV_REQ_DATE,'YYYY-MM-DD HH24:MI') AS RESV_REQ_DATE, A.USER_ID,
 			A.RESV_STATE, A.RESV_USER_ASK_YN, A.RESV_RCPT_YN, A.RESV_RCPT_NUMBER, A.RESV_PAY_COST,
-			A.RESV_RCPT_DVSN, A.RESV_PAY_DVSN, A.RESV_USER_DVSN,
+			A.RESV_RCPT_DVSN, A.RESV_PAY_DVSN, A.RESV_USER_DVSN, A.RESV_USER_NM, A.RESV_USER_CLPHN,
+			A.RESV_ENTRY_PAY_COST, A.RESV_SEAT_PAY_COST,
 			FN_DETAILCODENM(A.RESV_USER_DVSN) AS RESV_USER_DVSN_TEXT,
 			FN_DETAILCODENM(A.RESV_TICKET_DVSN) AS RESV_TICKET_DVSN_TEXT,
 			FN_DETAILCODENM(A.RESV_PAY_DVSN) AS RESV_PAY_DVSN_TEXT,
@@ -97,7 +98,7 @@
 				WHEN A.RESV_ENTRY_DVSN = 'ENTRY_DVSN_1'  THEN '입석' 
 				ELSE D.FLOOR_NM || ' ' || E.PART_NM || '구역 ' || F.SEAT_NM
 			END AS SEAT_NM, 
-			C.CENTER_CD, C.CENTER_NM, B.USER_NM, B.USER_PHONE, B.USER_EMAIL,
+			C.CENTER_CD, C.CENTER_NM, C.CENTER_PILOT_YN, B.USER_NM, B.USER_PHONE, B.USER_EMAIL,
 			D.FLOOR_CD, E.PART_CD
 		FROM TSER_RESV_INFO_I A, TSER_USER_INFO_I B, TSEB_CENTER_INFO_M C, TSEB_FLOOR_INFO_M D, TSEB_PART_INFO_D E, TSEB_SEAT_INFO_D F
 		WHERE A.RESV_SEQ = #{resvSeq}
@@ -126,7 +127,8 @@
 	<select id="selectUserLastResvInfo" resultType="lmap">
 	<![CDATA[
 		SELECT  
-			A.RESV_SEQ, A.SEAT_CD, A.SEASON_CD, A.RESV_START_DT, A.RESV_END_DT, A.RESV_DVSN,
+			REGEXP_REPLACE(A.RESV_SEQ, '(.{4})(.+)(.{4})', '\1-\2-\3') AS RESV_SEQ,
+			A.SEAT_CD, A.SEASON_CD, A.RESV_START_DT, A.RESV_END_DT, A.RESV_DVSN,
 			A.RESV_START_TM, A.RESV_END_TM, TO_CHAR(A.RESV_REQ_DATE, 'YYYY-MM-DD HH24:MI') AS RESV_REQ_DATE, A.USER_ID, A.RESV_USER_DVSN,
 			A.RESV_USER_ASK_YN, A.RESV_STATE, A.RESV_RCPT_YN, A.RESV_RCPT_NUMBER,
 			CASE  
@@ -151,8 +153,10 @@
 	<select id="selectUserResvInfo" resultType="lmap">
 	<![CDATA[
 		SELECT  
-			A.RESV_SEQ, A.CENTER_CD, A.PART_CD, A.FLOOR_CD, A.SEAT_CD, A.SEASON_CD, A.RESV_START_DT, A.RESV_END_DT, A.RESV_DVSN,
+			REGEXP_REPLACE(A.RESV_SEQ, '(.{4})(.+)(.{4})', '\1-\2-\3') AS RESV_SEQ,
+			A.CENTER_CD, A.PART_CD, A.FLOOR_CD, A.SEAT_CD, A.SEASON_CD, A.RESV_START_DT, A.RESV_END_DT, A.RESV_DVSN,
 			A.RESV_START_TM, A.RESV_END_TM, TO_CHAR(A.RESV_REQ_DATE,'YYYY-MM-DD HH24:MI') AS RESV_REQ_DATE, B.CENTER_NM, A.RESV_ENTRY_DVSN,
+			A.RESV_PAY_COST, A.RESV_USER_NM, A.RESV_USER_CLPHN,
 			CASE  
     			WHEN A.RESV_ENTRY_DVSN = 'ENTRY_DVSN_1' THEN '입석' 
     			ELSE (SELECT SEAT_NM FROM TSEB_SEAT_INFO_D WHERE SEAT_CD = A.SEAT_CD)
@@ -188,7 +192,8 @@
     <!-- 회원 마이페이지 예약정보 조회 -->
 	<select id="selectUserMyResvInfo" resultType="lmap">
     	SELECT
-    		A.RESV_SEQ, A.RESV_USER_NM, B.CENTER_NM,
+    		REGEXP_REPLACE(A.RESV_SEQ, '(.{4})(.+)(.{4})', '\1-\2-\3') AS RESV_SEQ,
+    		A.RESV_USER_NM, B.CENTER_NM,
     		CASE  
     			WHEN A.RESV_ENTRY_DVSN = 'ENTRY_DVSN_1'  THEN '입석' 
     			ELSE (SELECT SEAT_NM FROM TSEB_SEAT_INFO_D WHERE SEAT_CD = A.SEAT_CD)
@@ -226,7 +231,8 @@
     <![CDATA[
     	SELECT TB.* FROM (
 	    	SELECT
-	    		A.RESV_SEQ, A.RESV_USER_NM, A.USER_ID, A.RESV_STATE, B.CENTER_NM,
+	    		REGEXP_REPLACE(A.RESV_SEQ, '(.{4})(.+)(.{4})', '\1-\2-\3') AS RESV_SEQ,
+	    		A.RESV_USER_NM, A.USER_ID, A.RESV_STATE, B.CENTER_NM,
 	    		A.RESV_START_DT, A.RESV_END_DT, A.RESV_PAY_COST, A.RESV_ENTRY_DVSN,
 	    		CASE
 	    			WHEN A.SEAT_CD IS NULL THEN '입석'
@@ -253,7 +259,10 @@
     <!-- 현재 예약 완료한 정보 조회 -->
 	<select id="selectInUserResvInfo" resultType="lmap">
 		SELECT 
-			A.RESV_SEQ, TO_CHAR(A.RESV_REQ_DATE,'YYYY-MM-DD HH24:MI') AS RESV_REQ_DATE, A.RESV_ENTRY_DVSN, A.USER_ID, B.CENTER_NM, C.FLOOR_NM, D.PART_NM,
+			REGEXP_REPLACE(A.RESV_SEQ, '(.{4})(.+)(.{4})', '\1-\2-\3') AS RESV_SEQ, 
+			TO_CHAR(A.RESV_REQ_DATE,'YYYY-MM-DD HH24:MI') AS RESV_REQ_DATE, A.RESV_END_DT, A.RESV_ENTRY_DVSN, A.USER_ID,  
+			A.RESV_USER_NM, A.RESV_USER_CLPHN, A.RESV_USER_DVSN, A.RESV_END_DT, 
+			B.CENTER_NM, B.CENTER_PILOT_YN, C.FLOOR_NM, D.PART_NM, A.RESV_USER_NM, 
 			CASE  
     			WHEN A.RESV_ENTRY_DVSN = 'ENTRY_DVSN_1'  THEN '입석' 
     			ELSE (SELECT SEAT_NM FROM TSEB_SEAT_INFO_D WHERE SEAT_CD = A.SEAT_CD)
@@ -316,7 +325,7 @@
 	<!-- 회원 예약정보 등록 -->
     <insert id="insertUserResvInfo">
 		<selectKey resultType="String" keyProperty="resvSeq" order="BEFORE">
-			SELECT SEQ_SER_RERV_INFO.NEXTVAL AS resvSeq FROM DUAL
+			SELECT LPAD(SEQ_SER_RERV_INFO.NEXTVAL,12,0) AS resvSeq FROM DUAL
 		</selectKey>
     
     	INSERT INTO TSER_RESV_INFO_I 
@@ -366,7 +375,7 @@
 			)
 			VALUES 
 			(
-				SEQ_SER_RERV_INFO.NEXTVAL, #{longResvSeq}, #{seasonCd, jdbcType=VARCHAR}, #{centerCd, jdbcType=VARCHAR}, #{floorCd, jdbcType=VARCHAR}, #{partCd, jdbcType=VARCHAR}, #{seatCd, jdbcType=VARCHAR},
+				LPAD(SEQ_SER_RERV_INFO.NEXTVAL,12,0), #{longResvSeq}, #{seasonCd, jdbcType=VARCHAR}, #{centerCd, jdbcType=VARCHAR}, #{floorCd, jdbcType=VARCHAR}, #{partCd, jdbcType=VARCHAR}, #{seatCd, jdbcType=VARCHAR},
 				TO_CHAR(TO_DATE(#{resvDate, jdbcType=VARCHAR},'YYYYMMDD') - (INTERVAL '1' DAY),'YYYYMMDD'), #{resvDate, jdbcType=VARCHAR}, 'TEMP', '0000', '2359',
 				SYSDATE, #{resvUserDvsn, jdbcType=VARCHAR}, #{userId, jdbcType=VARCHAR}, #{resvUserNm}, #{resvUserClphn}, #{resvUserAskYn, jdbcType=VARCHAR}, '',
 				'RESV_STATE_1', 'N', #{resvIndvdlinfoAgreYn, jdbcType=VARCHAR},
@@ -377,7 +386,7 @@
     </insert>
     
 	<!-- 회원 장기 예약정보 등록 -->
-    <insert id="insertLongResvInfo">    
+    <insert id="insertLongResvInfo">
 		INSERT INTO TSER_LONG_RESV_INFO_I 
 		(
 			LONG_RESV_SEQ, SEASON_CD, CENTER_CD, FLOOR_CD, PART_CD, 
@@ -406,11 +415,11 @@
     
     <update id="resvInfoCancel">
     	UPDATE TSER_RESV_INFO_I SET
-    		RESV_STATE = #{params.resvState},
-    		RESV_CANCEL_ID = #{params.resvCancelId},
-    		RESV_CANCEL_CD = #{params.resvCancelCd},
+    		RESV_STATE = 'RESV_STATE_4',
+    		RESV_CANCEL_ID = #{params.resv_cancel_id},
+    		RESV_CANCEL_CD = #{params.resv_cancel_cd},
     		RESV_CANCEL_DT = SYSDATE
-    	WHERE RESV_SEQ = #{params.resvSeq}
+    	WHERE RESV_SEQ = #{params.resv_seq}
     </update>
     
 	<update id="resvStateChange">
@@ -432,7 +441,6 @@
 				</otherwise>
 			</choose>
 			RESV_PAY_DVSN = #{resvPayDvsn},
-			RESV_STATE = #{resvState},
 			RESV_TICKET_DVSN = #{resvTicketDvsn}
         WHERE RESV_SEQ = #{resvSeq}
     </update>

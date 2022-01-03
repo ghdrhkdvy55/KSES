@@ -144,7 +144,22 @@ public class ResJosnController {
 				Url = propertiesService.getString("sppeedUrl_T") + "trade/fepWithdraw";
 
 				Map<String, Object> resvInfo = resService.selectUserResvInfo(jsonObject);
-
+				if(!SmartUtil.NVL(resvInfo.get("resv_state"),"").equals("RESV_STATE_1")) {
+					switch (SmartUtil.NVL(resvInfo.get("resv_state"),"")) {
+						case "RESV_STATE_2" : Message = "이미 이용중인 예약정보 입니다.";  break;
+						case "RESV_STATE_3" : Message = "이미 이용완료 처리된 예약정보 입니다.";  break;
+						case "RESV_STATE_4" : Message = "이미 취소된 예약정보입니다.";  break;
+						default: Message = "알수없는 예약정보 입니다."; break;
+					}
+					model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+					model.addObject(Globals.STATUS_MESSAGE, Message);
+					return model;
+				} else if(SmartUtil.NVL(resvInfo.get("resv_pay_dvsn"),"").equals("RESV_PAY_DVSN_2")) {
+					model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+					model.addObject(Globals.STATUS_MESSAGE, "이미 결제처리된 예약정보 입니다.");
+					return model;
+				}
+				
 				jsonObject.put("System_Type", "E");
 				jsonObject.put("External_Key", resvInfo.get("resv_seq"));
 				jsonObject.put("Card_Id", resvInfo.get("user_card_id"));
@@ -162,7 +177,7 @@ public class ResJosnController {
 					jsonObject.put("Trade_Cd", "20A63");
 					jsonObject.put("Trade_Detail", "입장시스템 입장/좌석 이용료 출금");
 				}
-
+				
 				jsonObject.put("Trade_Pay", resvInfo.get("resv_pay_cost").toString());
 
 				node = SmartUtil.requestHttpJson(Url, jsonObject.toJSONString(), "SPEEDWITHDRAW", "SPEEDON", "KSES");
@@ -170,7 +185,6 @@ public class ResJosnController {
 					// 예약 테이블 출금 정보 처리 하기
 					ResvInfo resInfo = new ResvInfo();
 					resInfo.setResvSeq(SmartUtil.NVL(resvInfo.get("resv_seq"), "").toString());
-					resInfo.setResvState("RESV_STATE_2");
 					resInfo.setResvPayDvsn("RESV_PAY_DVSN_2");
 					resInfo.setResvTicketDvsn("RESV_TICKET_DVSN_1");
 					resInfo.setTradNo(node.get("Trade_No").asText());
@@ -228,7 +242,7 @@ public class ResJosnController {
 					ResvInfo resInfo = new ResvInfo();
 					resInfo.setResvSeq(SmartUtil.NVL(sendInfo.get("resvSeq"), "").toString());
 					resInfo.setResvPayDvsn("RESV_PAY_DVSN_3");
-					resInfo.setResvState("RESV_STATE_4");
+
 					resInfo.setResvTicketDvsn("RESV_TICKET_DVSN_1");
 					resInfo.setTradNo(node.get("Trade_No").asText());
 					resService.resPriceChange(resInfo);
@@ -325,16 +339,13 @@ public class ResJosnController {
 
 				// 현재 날짜/시간
 				if (centerPilotYn.equals("Y") && !tradNo.equals("") && Integer.valueOf(resvPayCost) > 0) {
-				// 결제 먼저 하기
-
-				} else {
 					ERROR_CD = "ERROR_04";
 					ERROR_MSG = "이용료 결제 필요.";
 					model.addObject("ERROR_CD", ERROR_CD);
 					model.addObject("ERROR_MSG", ERROR_MSG);
 					return model;
-
 				}
+				
 				if (!center_rbm_cd.equals(qrCneterCd)) {
 					ERROR_CD = "ERROR_06";
 					ERROR_MSG = "장소 오류.";
@@ -656,6 +667,7 @@ public class ResJosnController {
 				userPhone = SmartUtil.NVL(resInfo.get("user_phone"), "").toString();
 				userPhoneBack4 = userPhone.substring(userPhone.length()-4,userPhone.length());
 				partInitial = SmartUtil.NVL(resInfo.get("part_initial"), "").toString();
+				// TO-DO 층/구역명 추가 예정
 				
 				EgovFileScrty fileScrty = new EgovFileScrty();
 				String qrCode = fileScrty.encode(resInfo.get("resv_seq") + ":" + resInfo.get("resv_start_dt")

@@ -108,7 +108,7 @@
 			USER_BIRTH_DY = #{userBirthDy, jdbcType=VARCHAR},
 			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(indvdlinfoAgreYn)">
 				INDVDLINFO_AGRE_YN = #{indvdlinfoAgreYn, jdbcType=VARCHAR},
- 				INDVDLINFO_AGRE_DT = SYSDATE,
+				INDVDLINFO_AGRE_DT = SYSDATE,
 				VACNTN_DT = #{vacntnDt, jdbcType=VARCHAR},
 			</if>
 			USER_CARD_ID = #{userCardId, jdbcType=VARCHAR}, 

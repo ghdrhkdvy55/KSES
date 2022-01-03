@@ -135,6 +135,9 @@ public class ResvInfo {
 	// 결제 구분
 	private String resvPayDvsn = "";
 	
+	// 시범/비시범 지점 구분
+	private String centerPilotYn = "";
+	
 	//신규 추가
 	private String tradNo = "";
 	
@@ -143,6 +146,12 @@ public class ResvInfo {
 	private String refoundNo = "";
 	
 	private String refoundDate = "";
+	
+	// 좌석 금액
+	private String resvSeatPayCost = "";
+	
+	// 입장 금액
+	private String resvEntryPayCost = "";
 	
 	// 입력 구분
 	private String mode = "";
