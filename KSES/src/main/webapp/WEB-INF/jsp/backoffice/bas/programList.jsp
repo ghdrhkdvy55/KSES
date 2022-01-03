@@ -15,10 +15,9 @@
 }
 </style>
 <!-- Xlsx -->
-<script type="text/javascript" src="/resources/js/xlsx.js"></script>
 <script type="text/javascript" src="/resources/js/xlsx.full.min.js"></script>
-<!-- jszip -->
-<script type="text/javascript" src="/resources/js/jszip.min.js"></script>
+<!-- FileSaver -->
+<script src="/resources/js/FileSaver.min.js"></script>
 <!-- //contents -->
 <input type="hidden" id="mode" name="mode" />
 <div class="breadcrumb">
@@ -42,10 +41,9 @@
         </div>
         <div class="left_box mng_countInfo">
             <p>총 : <span id="sp_totcnt"></span>건</p>
-            
         </div>
         <div class="right_box">
-			<a href="javascript:void(0);" class="blueBtn">엑셀 다운로드</a> 
+			<a href="javascript:fnExcelDownload();" class="blueBtn">엑셀 다운로드</a> 
         	<a href="javascript:fnProgramInfo();" class="blueBtn">프로그램 등록</a>
         	<a href="javascript:fnProgramDelete();" class="grayBtn">프로그램 삭제</a>            	
         </div>
@@ -119,11 +117,11 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		EgovJqGridApi.mainGrid([
-			{ label: '프로그램 파일명', name: 'progrm_file_nm', align: 'left', fixed: true, key: true },
-			{ label: '프로그램명',  name: 'progrm_koreannm', align: 'left', fixed: true },
+			{ label: '파일명', name: 'progrm_file_nm', align: 'left', fixed: true, key: true },
+			{ label: '한글명',  name: 'progrm_koreannm', align: 'left', fixed: true },
 			{ label: '저장경로', name: 'progrm_stre_path', hidden: true },
 			{ label: 'URL', name: 'url', align: 'left' },
-			{ label: '프로그램설명', name: 'progrm_dc', align: 'left', sortable: false }
+			{ label: '설명', name: 'progrm_dc', align: 'left', sortable: false }
 		], false, false, fnSearch);
 	});
 	
@@ -278,4 +276,47 @@
 			);
 		});
 	}
+	
+	function fnExcelDownload() {
+		if ($("#mainGrid").getGridParam("reccount") === 0) {
+			toastr.warning('다운받으실 데이터가 없습니다.');
+			return;
+		}
+		let params = {
+			pageIndex: '1',
+			pageUnit: '1000',
+			searchKeyword: $('#searchKeyword').val()
+		};
+		EgovIndexApi.apiExecuteJson(
+			'POST',
+			'/backoffice/bas/progrmListAjax.do', 
+			params,
+			null,
+			function(json) {
+				let ret = json.resultlist;
+				if (ret.length <= 0) {
+					return;
+				}
+				let excelData = new Array();
+				excelData.push(['NO', '파일명', '한글명', 'URL', '설명']);
+				for (let idx in ret) {
+					let arr = new Array();
+					arr.push(idx);
+					arr.push(ret[idx].progrm_file_nm);
+					arr.push(ret[idx].progrm_koreannm);
+					arr.push(ret[idx].url);
+					arr.push(ret[idx].progrm_dc);
+					excelData.push(arr);
+				}
+				let wb = XLSX.utils.book_new();
+				XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(excelData), 'sheet1');
+				var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+				saveAs(new Blob([EgovIndexApi.s2ab(wbout)],{ type: 'application/octet-stream' }), '프로그램관리.xlsx');
+			},
+			function(json) {
+				toastr.error(json.message);
+			}
+		);
+	}
+
 </script>

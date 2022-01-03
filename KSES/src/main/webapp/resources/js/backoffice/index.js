@@ -88,4 +88,11 @@ $.EgovIndexApi.prototype.apiExecuteForm = function(url, params, beforeFunc, done
 	this._apiExecute('application/x-www-form-urlencoded; charset=UTF-8', 'POST', url, params, beforeFunc, doneFunc, failFunc);
 };
 
+$.EgovIndexApi.prototype.s2ab = function(s) {
+	var buf = new ArrayBuffer(s.length);
+    var view = new Uint8Array(buf);
+    for (var i=0; i<s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
+    return buf;
+};
+
 const EgovIndexApi = new $.EgovIndexApi();
