@@ -26,6 +26,7 @@ import com.kses.backoffice.bas.progrm.mapper.ProgrameChangeManageMapper;
 import com.kses.backoffice.bas.progrm.mapper.ProgrmInfoManageMapper;
 import com.kses.backoffice.bas.progrm.vo.ProgrmInfo;
 import com.kses.backoffice.util.SmartUtil;
+
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.fdl.excel.EgovExcelService;
 
@@ -45,43 +46,35 @@ public class MenuInfoServiceImpl extends EgovAbstractServiceImpl implements Menu
 	
 	@Resource(name = "excelZipService")
     private EgovExcelService excelZipService;
-	
-	@Autowired
-	private SmartUtil util;
 	 
 	@Override
-	public List<Map<String, Object>> selectMenuManage(String searchKeyword) throws Exception {
+	public Map<String, Object> selectMenuManage(String menuNo) throws Exception {
 		// 메뉴목록을 조회
-		return menuMapper.selectMenuManage_D(searchKeyword);
+		return menuMapper.selectMenuManage_D(menuNo);
 	}
 
 	@Override
 	public List<Map<String, Object>> selectMenuManageList(Map<String, Object> vo) throws Exception {
-		// TODO Auto-generated method stub
 		return menuMapper.selectMenuManageList_D(vo);
 	}
 
 	@Override
 	public int selectMenuNoByPk(MenuInfo vo) throws Exception {
-		// TODO Auto-generated method stub
 		return menuMapper.selectMenuNoByPk(vo.getMenuNo());
 	}
 
 	@Override
 	public int selectUpperMenuNoByPk(String menuNo) throws Exception {
-		// TODO Auto-generated method stub
 		return menuMapper.selectUpperMenuNoByPk(menuNo);
 	}
 
 	@Override
 	public int updateMenuManage(MenuInfo vo) throws Exception {
-		// TODO Auto-generated method stub
 		return (vo.getMode().equals("Ins")) ? menuMapper.insertMenuManage_S(vo) : menuMapper.updateMenuManage_S(vo);
 	}
 
 	@Override
 	public int deleteMenuManage(String menuNo) throws Exception {
-		// TODO Auto-generated method stub
 		return menuMapper.deleteMenuManage_S(menuNo);
 	}
 
@@ -95,7 +88,6 @@ public class MenuInfoServiceImpl extends EgovAbstractServiceImpl implements Menu
 	@Override
 	@Transactional
 	public int deleteMenuManageList(String checkedMenuNoForDel) throws Exception {
-		// TODO Auto-generated method stub
 		int ret = 0;
 		try {
 			List<String> menuNoList = SmartUtil.dotToList(checkedMenuNoForDel);
@@ -131,19 +123,16 @@ public class MenuInfoServiceImpl extends EgovAbstractServiceImpl implements Menu
 
 	@Override
 	public List<Map<String, Object>> selectMenuList() throws Exception {
-		// TODO Auto-generated method stub
 		return menuMapper.selectMenuListT_D();
 	}
 
 	@Override
 	public List<Map<String, Object>> selectMainMenuHead(String empNo) throws Exception {
-		// TODO Auto-generated method stub
 		return menuMapper.selectMainMenuHead(empNo);
 	}
 
 	@Override
 	public List<Map<String, Object>> selectMainMenuLeft(String empNo) throws Exception {
-		// TODO Auto-generated method stub
 		return menuMapper.selectMainMenuLeft(empNo);
 	}
 
@@ -210,7 +199,6 @@ public class MenuInfoServiceImpl extends EgovAbstractServiceImpl implements Menu
 	 */
 	@Override
 	public boolean menuBndeAllDelete() throws Exception {
-		// TODO Auto-generated method stub
 		if (deleteAllMenuList() < 1) {
 			return false;
 		} // 메뉴정보 테이블
@@ -246,7 +234,6 @@ public class MenuInfoServiceImpl extends EgovAbstractServiceImpl implements Menu
 	 */
 	@Override
 	public String menuBndeRegist(MenuInfo vo, InputStream inputStream) throws Exception {
-		// TODO Auto-generated method stub
 		String message = bndeRegist(inputStream);
 		String sMessage = null;
 

@@ -11,8 +11,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -25,28 +23,25 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
-import org.springmodules.validation.commons.DefaultBeanValidator;
+
 import com.kses.backoffice.bas.menu.service.MenuCreateManageService;
 import com.kses.backoffice.bas.menu.service.MenuInfoService;
-import com.kses.backoffice.bas.menu.vo.MenuCreatInfo;
 import com.kses.backoffice.bas.menu.vo.MenuInfo;
-import com.kses.backoffice.bas.progrm.service.ProgrmInfoService;
 import com.kses.backoffice.util.SmartUtil;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/backoffice/bas")
 public class MenuInfoManageController {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(MenuInfoManageController.class);
 	
-	@Autowired
-	private DefaultBeanValidator beanValidator;
 	/** EgovPropertyService */
 	@Resource(name = "propertiesService")
 	protected EgovPropertyService propertiesService;
@@ -57,26 +52,12 @@ public class MenuInfoManageController {
 	@Autowired
 	private MenuCreateManageService menuCreateService;
 
-	@Autowired
-	private ProgrmInfoService progrmService;
-
-	/** EgovMessageSource */
 	@Resource(name = "egovMessageSource")
 	EgovMessageSource egovMessageSource;
 	
-	@RequestMapping(value = "menuList.do")
-	public ModelAndView selectMenuManageList( ModelMap model) throws Exception {
-		// 0. Spring Security 사용자권한 처리
-		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-		ModelAndView mav = new  ModelAndView("/backoffice/bas/menuList");
-		if (isAuthenticated == null || !isAuthenticated) {
-			mav.addObject("message", egovMessageSource.getMessage("fail.common.login"));
-			mav.addObject(Globals.STATUS,  Globals.STATUS_LOGINFAIL);
-			mav.setViewName("/backoffice/login");
-			return mav;
-		}
-		// 내역 조회
-		return mav ;
+	@RequestMapping(value = "menuList.do", method = RequestMethod.GET)
+	public ModelAndView selectMenuManageList(ModelMap model) throws Exception {
+		return new ModelAndView("/backoffice/bas/menuList");
 	}
 	
 	/**
@@ -100,7 +81,7 @@ public class MenuInfoManageController {
 	    searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
 	    searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
 	    
-	    LOGGER.info("searchVO:" + searchVO);
+	    log.info("searchVO:" + searchVO);
 	    
 	    List<Map<String, Object>> menuList = menuService.selectMenuManageList(searchVO);
 	    
@@ -116,30 +97,18 @@ public class MenuInfoManageController {
 	}
 	
 	/**
-	 * 메뉴정보목록을 상세화면 호출 및 상세조회한다.
-	 * @param req_menuNo  String
-	 * @return 출력페이지정보 "sym/mnu/mpm/EgovMenuDetailSelectUpdt"
-	 * @exception Exception
+	 * 메뉴 상세 조회
+	 * @param menuNo
+	 * @return
+	 * @throws Exception
 	 */
-	@RequestMapping(value = "menuDetailInfo.do")
+	@RequestMapping(value = "menuDetailInfo.do", method = RequestMethod.GET)
 	public ModelAndView selectMenuManage(@RequestParam("menuNo") String menuNo) throws Exception {
 		ModelAndView model = new ModelAndView (Globals.JSONVIEW);
-		// 0. Spring Security 사용자권한 처리
-		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-		if (isAuthenticated == null || !isAuthenticated) {
-			model.addObject("message", egovMessageSource.getMessage("fail.common.login"));
-			model.addObject(Globals.STATUS,  Globals.STATUS_LOGINFAIL);
-			return model;
-		}
 		
-		try {
-		    	model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-				model.addObject(Globals.STATUS_REGINFO, menuService.selectMenuManage(menuNo));
-		} catch(Exception e) {
-				LOGGER.info(e.toString());
-				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
-		}
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+		model.addObject(Globals.JSON_RETURN_RESULT, menuService.selectMenuManage(menuNo));
+		
 		return model;
 	}
 
@@ -183,7 +152,7 @@ public class MenuInfoManageController {
 				model.addObject(Globals.STATUS,  Globals.STATUS_SUCCESS);
 			 }
 		}catch(Exception e) {
-			LOGGER.info(e.toString());
+			log.info(e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.delete"));	
 		}
@@ -326,8 +295,8 @@ public class MenuInfoManageController {
 		
 		ModelAndView model = new ModelAndView (Globals.JSONVIEW);
 		
-		String sLocationUrl = null;
-		String resultMsg = "";
+//		String sLocationUrl = null;
+//		String resultMsg = "";
 		String sMessage = "";
 		String status = "";
 		
@@ -355,7 +324,7 @@ public class MenuInfoManageController {
 					if (file.getOriginalFilename().toLowerCase().endsWith(".xls") || file.getOriginalFilename().toLowerCase().endsWith(".xlsx")) {
 						if (menuService.menuBndeAllDelete()) {
 							sMessage = menuService.menuBndeRegist(menuInfo, fis);
-							resultMsg = sMessage;
+//							resultMsg = sMessage;
 						} else {
 							
 							sMessage = "EgovMenuBndeRegist Error!!";
@@ -380,7 +349,7 @@ public class MenuInfoManageController {
 						fis.close();
 					}
 				} catch (IOException ee) {
-					LOGGER.debug("{}", ee);
+					log.debug("{}", ee);
 				}
 			}
 
@@ -423,7 +392,7 @@ public class MenuInfoManageController {
 			  
 		    searchVO.put("pageSize", propertiesService.getInt("pageSize"));
 		  
-		    LOGGER.info("pageUnit:" + pageUnit);
+		    log.info("pageUnit:" + pageUnit);
 		  
 	   	    PaginationInfo paginationInfo = new PaginationInfo();
 		    paginationInfo.setCurrentPageNo( Integer.parseInt(SmartUtil.NVL(searchVO.get("pageIndex"),"1")));
@@ -444,7 +413,7 @@ public class MenuInfoManageController {
 		    model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);	    
 		  
 		}catch(Exception e) {
-			LOGGER.info(e.toString());
+			log.info(e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));	
 		}

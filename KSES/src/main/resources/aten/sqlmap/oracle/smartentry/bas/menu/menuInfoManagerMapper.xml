@@ -28,19 +28,15 @@
                ORDER BY MENU_ORDR ASC
 	</select> 
 
-
-
 	<select id="selectMenuManage_D" resultType="lmap">
-		<![CDATA[
-			SELECT  MENU_NO           
-					, MENU_ORDR         
-					, MENU_NM           
-					, UPPER_MENU_NO     
-					, MENU_DC             
-					, PROGRM_FILE_NM    
-			FROM COMTNMENUINFO
-			WHERE MENU_NO = #{searchKeyword}
-		]]>
+		SELECT  MENU_NO           
+				, MENU_ORDR         
+				, MENU_NM           
+				, UPPER_MENU_NO     
+				, MENU_DC             
+				, PROGRM_FILE_NM    
+		FROM COMTNMENUINFO
+		WHERE MENU_NO = #{value}
 	</select>
 	
 	<insert id="insertMenuManage_S">
