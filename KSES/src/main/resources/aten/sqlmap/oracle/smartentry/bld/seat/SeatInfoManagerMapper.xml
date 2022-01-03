@@ -98,6 +98,7 @@
 		FROM TSEB_PART_INFO_D A, TSEB_SEAT_INFO_D B
 		WHERE A.PART_CD = #{params.partCd}
 		AND A.PART_CD = B.PART_CD
+		AND B.USE_YN = 'Y'
     </select>
     
     <insert id="insertSeatInfo" >

@@ -102,8 +102,6 @@
             <c:import url="/front/inc/footer.do" />
         </div>
         <!-- footer //-->
-        
-        
 
         <div id="foot_btn">
             <div class="contents">

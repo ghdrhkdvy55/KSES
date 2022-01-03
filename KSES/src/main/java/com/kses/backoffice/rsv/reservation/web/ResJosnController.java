@@ -339,16 +339,13 @@ public class ResJosnController {
 
 				// 현재 날짜/시간
 				if (centerPilotYn.equals("Y") && !tradNo.equals("") && Integer.valueOf(resvPayCost) > 0) {
-				// 결제 먼저 하기
-
-				} else {
 					ERROR_CD = "ERROR_04";
 					ERROR_MSG = "이용료 결제 필요.";
 					model.addObject("ERROR_CD", ERROR_CD);
 					model.addObject("ERROR_MSG", ERROR_MSG);
 					return model;
-
 				}
+				
 				if (!center_rbm_cd.equals(qrCneterCd)) {
 					ERROR_CD = "ERROR_06";
 					ERROR_MSG = "장소 오류.";
@@ -670,6 +667,7 @@ public class ResJosnController {
 				userPhone = SmartUtil.NVL(resInfo.get("user_phone"), "").toString();
 				userPhoneBack4 = userPhone.substring(userPhone.length()-4,userPhone.length());
 				partInitial = SmartUtil.NVL(resInfo.get("part_initial"), "").toString();
+				// TO-DO 층/구역명 추가 예정
 				
 				EgovFileScrty fileScrty = new EgovFileScrty();
 				String qrCode = fileScrty.encode(resInfo.get("resv_seq") + ":" + resInfo.get("resv_start_dt")

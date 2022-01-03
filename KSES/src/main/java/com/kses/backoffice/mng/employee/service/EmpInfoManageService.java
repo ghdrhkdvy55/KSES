@@ -31,7 +31,6 @@ public interface EmpInfoManageService {
 	 */
 	public Map<String, Object> selectEmpInfoDetail(String empId);
 	
-
 	/**
 	 * SPDM 직원(사용자) 정보 수정
 	 * 
@@ -51,9 +50,7 @@ public interface EmpInfoManageService {
 	/**
 	 * SPDM 직원(사용자) 목록 갱신
 	 * 
-	 * @param empId
 	 * @return
 	 */
-	public int mergeEmpInfo(List<EmpInfo> empInfoList);	
+	public int mergeEmpInfo();	
 }
-

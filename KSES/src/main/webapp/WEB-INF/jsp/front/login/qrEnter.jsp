@@ -163,7 +163,7 @@
 							}				    			
 				    		
 							
-				    		if(resvInfo.resv_pay_dvsn == "RESV_PAY_DVSN_2" || resvInfo.center_pilot_yn == "Y") {
+				    		if(resvInfo.resv_pay_dvsn == "RESV_PAY_DVSN_2" || resvInfo.center_pilot_yn == "N") {
 				    			$(".pay_btn li:eq(0)").hide();
 								$(".qr_enter_code").show();
 								$(".qr_info").show();

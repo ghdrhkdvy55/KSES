@@ -27,13 +27,11 @@ public enum speedon {
 	TRADE_ERROR_009("TRADE_ERROR_009", "카드(구매) 비밀번호 설정되지 않음"), 
 	TRADE_ERROR_010("TRADE_ERROR_010", "비밀번호 불일치"), 
 	TRADE_ERROR_011("TRADE_ERROR_011", "입출금 업무서비스 비활성화"), 
-	TRADE_ERROR_012("TRADE_ERROR_012", "잔액 부족"), 
+	TRADE_ERROR_012("TRADE_ERROR_012", "잔액이 부족합니다.<br>스피드온 앱에서 계좌충전 바랍니다."), 
 	TRADE_ERROR_013("TRADE_ERROR_013", "시스템타입 없음"), 
 	TRADE_ERROR_014("TRADE_ERROR_014", "알수없는 Trade_No"),
 	TRADE_ERROR_015("TRADE_ERROR_015", "External key 없음"), 
 	TRADE_ERROR_016("TRADE_ERROR_016", "거래내역 정보 없음"); 
-	
-	
 	
 	private String code; 
 	private String name; 
@@ -47,6 +45,4 @@ public enum speedon {
 	public String getName() { 
 		return this.name; 
 	}
-
-	
 }
