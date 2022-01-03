@@ -129,50 +129,26 @@
 				'<a href="javascript:fnMenuSetting(\''+ row.author_code +'\');" class="blueBtn">메뉴설정</a>'
 			}
 		], false, false, fnSearch);
-		EgovIndexApi.apiExecuteJson(
-			'POST',
-			'/backoffice/bas/menuListAjax.do',{
-				pageIndex: '1',
-				pageUnit: '100'	
-			},
-			null,
-			function(json) {
-				let arr = new Array();
-				for (var m of json.resultlist) {
-					let obj = {
-						id: m.menu_no,
-						parent: m.upper_menu_no == null ? '#' : m.upper_menu_no,
-						text: m.upper_menu_no == null ? '관리자' : $.trim(m.menu_nm),
-						state: {
-							opened: true
-						}
-					};
-					arr.push(obj);
+		
+		$('#jstree').jstree({
+			core: {
+				themes: {
+					icons: true,
+					dots: true
 				}
-				$('#jstree').jstree({
-					core: {
-						data: arr,
-						themes: {
-							icons: true,
-							dots: true
-						}
-					},
-					types: {
-						valid_children: [ 'default' ],
-						'default': {
-							icon: 'jstree-folder'
-						}
-					},
-					checkbox: {
-						keep_selected_style: false
-					},
-					plugins : [ 'types', 'checkbox' ]
-				});
 			},
-			function(json) {
-				toastr.error(json.message);
-			}
-		);
+			types: {
+				valid_children: [ 'default' ],
+				'default': {
+					icon: 'jstree-folder'
+				}
+			},
+			checkbox: {
+				keep_selected_style: false
+			},
+			plugins : [ 'types', 'checkbox' ]
+		});
+		fnJstreeRefresh();
 	});
 	
 	function fnSearch(pageNo) {
@@ -319,13 +295,14 @@
 	
 	function fnMenuSetting(code) {
 		let $popup = $('[data-popup=bas_menu_setting]');
-		$('#jstree').jstree('uncheck_all');
 		EgovIndexApi.apiExecuteJson(
 			'GET',
 			'/backoffice/bas/menuCreateMenuListAjax.do', {
 				authorCode: code
 			},
-			null,
+			function(xhr) {
+				fnJstreeRefresh();
+			},
 			function(json) {
 				for (var m of json.resultlist) {
 					$('#jstree').jstree('select_node', m.menu_no);
@@ -365,5 +342,35 @@
 				}
 			);
 		});
+	}
+	
+	function fnJstreeRefresh() {
+		EgovIndexApi.apiExecuteJson(
+			'POST',
+			'/backoffice/bas/menuListAjax.do',{
+				pageIndex: '1',
+				pageUnit: '1000'	
+			},
+			null,
+			function(json) {
+				let arr = new Array();
+				for (var m of json.resultlist) {
+					let obj = {
+						id: m.menu_no,
+						parent: m.upper_menu_no == null ? '#' : m.upper_menu_no,
+						text: m.upper_menu_no == null ? '관리자' : $.trim(m.menu_nm),
+						state: {
+							opened: true
+						}
+					};
+					arr.push(obj);
+				}
+				$('#jstree').jstree(true).settings.core.data = arr;
+				$('#jstree').jstree(true).refresh();
+			},
+			function(json) {
+				toastr.error(json.message);
+			}
+		);
 	}
 </script>
