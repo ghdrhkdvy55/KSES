@@ -34,12 +34,20 @@ public interface MenuInfoService {
 
 
 	int selectUpperMenuNoByPk(String menuNo) throws Exception;
-
 	
 	/**
-	 * 메뉴 정보를 수정
-	 * @param vo MenuManageVO
-	 * @exception Exception
+	 * 메뉴 정보 등록
+	 * @param menuInfo
+	 * @return
+	 * @throws Exception
+	 */
+	int insertMenuManage(MenuInfo menuInfo) throws Exception;
+	
+	/**
+	 * 메뉴 정보 수정
+	 * @param vo
+	 * @return
+	 * @throws Exception
 	 */
 	int updateMenuManage(MenuInfo vo) throws Exception;
 

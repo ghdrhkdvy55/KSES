@@ -51,6 +51,35 @@ $.EgovJqGridApi.prototype._formatter = function(colModel) {
 		}
 	}
 };
+/** JqGrid 페이징 정의
+ */
+$.EgovJqGridApi.prototype.getPage = function(id, pgButton, page, lastpage) {
+	let ret;
+	switch (pgButton) {
+		case 'next':
+			ret = page < lastpage ? page+1 : page;
+			break;
+		case 'prev':
+			ret = page > 1 ? page-1 : page;
+			break;
+		case 'first':
+			ret = 1;
+			break;
+		case 'last':
+			ret = lastpage;
+			break;
+		case 'user':
+			let now = Number($('#'+ id +' .ui-pg-input').val());
+			ret = lastpage >= now && now > 0 ? now : page;
+			$('#'+ id +' .ui-pg-input').val(page);
+			break;
+		case 'records':
+			ret = 1;
+			break;
+		default:
+	}
+	return ret;
+};
 /** JqGrid 메인 그리드 출력 
 	- 출력 후 자동 검색 함수 호출
  */
@@ -90,30 +119,7 @@ $.EgovJqGridApi.prototype.mainGridAjax = function(url, params, searchFunc, subFu
 			let mainGridParams = $(_MainGridSelector).jqGrid('getGridParam');
 			let page = mainGridParams['page'];
 			let lastpage = mainGridParams['lastpage'];
-			switch (pgButton) {
-				case 'next':
-					page = page < lastpage ? page+1 : page;
-					break;
-				case 'prev':
-					page = page > 1 ? page-1 : page;
-					break;
-				case 'first':
-					page = 1;
-					break;
-				case 'last':
-					page = lastpage;
-					break;
-				case 'user':
-					let now = Number($(_MainPagerSelector+' .ui-pg-input').val());
-					page = lastpage >= now && now > 0 ? now : page;
-					$(_MainPagerSelector+' .ui-pg-input').val(page);
-					break;
-				case 'records':
-					page = 1;
-					break;
-				default:
-			}
-			searchFunc(page);
+			searchFunc(EgovJqGridApi.getPage(_MainGridId, pgButton, page, lastpage));
 		},
 	};
 	if (subFunc) {
@@ -160,6 +166,37 @@ $.EgovJqGridApi.prototype.subGridReload = function(rowId, subFunc) {
 	setTimeout(function() {
 		subFunc(_MainGridId+'_'+rowId, rowId);	
 	}, _JqGridDelay);
+};
+
+$.EgovJqGridApi.prototype.popGrid = function(id, colModel, pagerId) {
+	this._formatter(colModel);
+	this._init('POST', colModel, false, false, false);
+	this._jqGridParams['pager'] = $('#'+ pagerId);
+	this._jqGridParams['rowList'] = [];
+	return $('#'+id).jqGrid(this._jqGridParams);
+};
+
+$.EgovJqGridApi.prototype.popGridAjax = function(id, url, params, searchFunc) {
+	let jqGridParams = {
+		url: url,
+		postData: JSON.stringify(params),
+		loadComplete: function(data) {
+			if (data.status === 'FAIL') {
+				toastr.error(data.message);
+				return false;				
+			}
+		},
+		loadError: function(xhr, status) {
+			toastr.error(status);
+		},
+		onPaging: function(pgButton) {
+			let gridParams = $('#'+id).jqGrid('getGridParam');
+			let page = gridParams['page'];
+			let lastpage = gridParams['lastpage'];
+			searchFunc(EgovJqGridApi.getPage(id, pgButton, page, lastpage));
+		},
+	};
+	$('#'+id).jqGrid('setGridParam', jqGridParams).trigger('reloadGrid');
 };
 
 const EgovJqGridApi = new $.EgovJqGridApi();

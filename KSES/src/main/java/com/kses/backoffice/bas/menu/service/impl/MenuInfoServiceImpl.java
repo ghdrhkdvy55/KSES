@@ -67,10 +67,15 @@ public class MenuInfoServiceImpl extends EgovAbstractServiceImpl implements Menu
 	public int selectUpperMenuNoByPk(String menuNo) throws Exception {
 		return menuMapper.selectUpperMenuNoByPk(menuNo);
 	}
+	
+	@Override
+	public int insertMenuManage(MenuInfo menuInfo) throws Exception {
+		return menuMapper.insertMenuManage_S(menuInfo);
+	}
 
 	@Override
-	public int updateMenuManage(MenuInfo vo) throws Exception {
-		return (vo.getMode().equals("Ins")) ? menuMapper.insertMenuManage_S(vo) : menuMapper.updateMenuManage_S(vo);
+	public int updateMenuManage(MenuInfo menuInfo) throws Exception {
+		return menuMapper.updateMenuManage_S(menuInfo);
 	}
 
 	@Override
