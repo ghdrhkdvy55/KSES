@@ -106,8 +106,8 @@
             </form>
         </div>
         <div class="right_box">
-        	<button class="blueBtn">저장</button>
-            <button class="grayBtn b-close">취소</button>
+        	<button type="button" class="blueBtn">저장</button>
+        	<button type="button" class="grayBtn b-close">취소</button>
         </div>
         <div class="clear"></div>
     </div>
