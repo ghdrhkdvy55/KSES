@@ -298,6 +298,11 @@
 									$(".non_memBtn .cancelBtn").hide();
 								}
 								
+								if(guestResvInfo.center_pilot_yn == "N") {
+									$(".rsvInfo_result").append('<li class="qrEnter_code"><p><a href=""><img src="/resources/img/front/qr_code.svg" alt="qr코드"></a></p><p>입장 QR코드</p></li>');
+									$(".qrEnter_code a").attr("href","javascript:fn_moveQrPage('" + guestResvInfo.resv_seq +"');");
+								}
+								
 								$(".search").hide();
 								$(".result").show();
 							} else {
