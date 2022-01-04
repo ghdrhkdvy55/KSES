@@ -112,6 +112,7 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 				resInfo.setResvSeq(SmartUtil.NVL(jsonObject.get("resvSeq"), "").toString());
 				resInfo.setResvPayDvsn("RESV_PAY_DVSN_3");
 				resInfo.setResvState("RESV_STATE_4");
+				resInfo.setResvTicketDvsn("RESV_TICKET_DVSN_1");
 				resInfo.setTradNo(node.get("Trade_No").asText());
 				resvService.resPriceChange(resInfo);
 				result.put(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.request.msg"));

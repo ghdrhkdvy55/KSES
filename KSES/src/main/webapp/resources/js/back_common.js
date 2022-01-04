@@ -702,6 +702,20 @@ function findUniqElem(arr1, arr2) {
     	 .filter(item => !arr1.includes(item) || !arr2.includes(item));
 }
 
+/* FRONT RESERVATION */
+/**
+ * 예약일 포팻
+ * 
+ * @param el
+ * @returns
+ */
+function fn_resvDateFormat(el) {
+	if(el.length == 8) {
+		el = el.substring(0,4) + "-" + el.substring(4,6) + "-" + el.substring(6,8);
+	}
+	return el;
+}
+
 /* timepicker */
 function timepicker() {
 	$('.timepicker').timepicker({

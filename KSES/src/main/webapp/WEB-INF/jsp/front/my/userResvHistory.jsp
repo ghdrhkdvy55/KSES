@@ -241,7 +241,7 @@
 				                        setHtml += "</ul>";
 				                        
 				                        setHtml += "<ul class='rsv_stat_btn'>";
-				                        if(item.resv_state == "RESV_STATE_1") {
+				                        if(item.resv_state == "RESV_STATE_1" && item.resv_ticket_dvsn != "RESV_TICKET_DVSN_2") {
 			                            	setHtml += "<li><a href='javascript:userResvService.fn_resvCancelCheck(&#39;" + item.resv_seq +"&#39;)'>예약 취소</a></li>";
 				                        }
 			                            setHtml += "</ul>";

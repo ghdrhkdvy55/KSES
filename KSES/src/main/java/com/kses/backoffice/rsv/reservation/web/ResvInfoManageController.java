@@ -1,5 +1,6 @@
 package com.kses.backoffice.rsv.reservation.web;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -236,10 +237,8 @@ public class ResvInfoManageController {
 	}
 	
 	@RequestMapping (value="rsvInfoDetail.do")
-	public ModelAndView selectCenterInfoDetail(	@ModelAttribute("loginVO") LoginVO loginVO, 
-												@RequestParam("resvSeq") String resvSeq , 
-												HttpServletRequest request, 
-												BindingResult bindingResult) throws Exception {	
+	public ModelAndView selectCenterInfoDetail(	@RequestParam("resvSeq") String resvSeq, 
+												HttpServletRequest request) throws Exception {	
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
 	    Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
@@ -251,6 +250,93 @@ public class ResvInfoManageController {
 		
 		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		model.addObject(Globals.STATUS_REGINFO, resvService.selectResInfoDetail(resvSeq));	     	
+		return model;
+	}
+	
+	@RequestMapping (value="resvInfoCancel.do")
+	public ModelAndView resvInfoCancel(	@RequestParam("resvSeq") String resvSeq, 
+										HttpServletRequest request) throws Exception {	
+		
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+
+		try {
+		    Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+			if(!isAuthenticated) {
+				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
+				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
+				return model;	
+		    }
+			
+			Map<String, String> resultMap = resvService.resvInfoCancelN(resvSeq);
+			
+			model.addObject(Globals.STATUS, resultMap.get(Globals.STATUS));
+			model.addObject(Globals.STATUS_MESSAGE, resultMap.get(Globals.STATUS_MESSAGE));
+		} catch(Exception e) {
+			LOGGER.debug("---------------------------------------");
+			StackTraceElement[] ste = e.getStackTrace();
+			LOGGER.error(e.toString() + ":" + ste[0].getLineNumber());
+			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));	
+		}
+	     	
+		return model;
+	}
+	
+	@RequestMapping (value="resvInfoCancelAll.do")
+	public ModelAndView resvInfoCancelAll(	@RequestBody Map<String,Object> params, 
+											HttpServletRequest request) throws Exception {	
+		
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+		List<Map<String, String>> resvCancelList = new LinkedList<Map<String, String>>();
+		int failCount = 0;
+		
+		try {
+		    Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+			if(!isAuthenticated) {
+				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
+				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
+				return model;	
+		    }
+			
+			params.put("firstIndex", 0);
+			params.put("recordCountPerPage", 5000);
+			params.put("searchCenterCd",params.get("centerCd").toString());
+			params.put("searchFrom",params.get("resvDate").toString());
+			params.put("searchTo",params.get("resvDate").toString());
+			params.put("searchDayCondition","resvDate");
+			params.put("searchResvState","RESV_STATE_4");
+			params.put("searchStateCondition","cancel");
+			
+			List<Map<String, Object>> resvList = resvService.selectResInfoManageListByPagination(params);
+
+			for(Map<String,Object> resvInfo : resvList) {
+				String resvSeq = resvInfo.get("resv_seq").toString();
+				Map<String, String> resultMap = resvService.resvInfoCancelN(resvSeq);
+				
+				if(!resultMap.get(Globals.STATUS).equals("SUCCESS")) {
+					failCount ++;
+				}
+				
+				resultMap.put("resvSeq", resvSeq);
+				resvCancelList.add(resultMap);
+			}
+			
+			model.addObject("allCount", resvList.size());
+			model.addObject("successCount", resvList.size() - failCount);
+			model.addObject("failCount", failCount);
+			model.addObject("resvCancelList", resvCancelList);
+			
+			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("request.success.msg"));
+
+		} catch(Exception e) {
+			LOGGER.debug("---------------------------------------");
+			StackTraceElement[] ste = e.getStackTrace();
+			LOGGER.error(e.toString() + ":" + ste[0].getLineNumber());
+			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));	
+		}
+	     	
 		return model;
 	}
 	
