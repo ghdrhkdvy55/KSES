@@ -301,7 +301,7 @@
 								$("#rsv_seat, #cancel_rsv_seat").html(guestResvInfo.seat_nm);
 								$("#rsv_req_date, #cancel_rsv_req_date").html(guestResvInfo.resv_req_date);
 								
-								if(guestResvInfo.resv_state == "RESV_STATE_1") {
+								if(guestResvInfo.resv_state == "RESV_STATE_1" && guestResvInfo.resv_ticket_dvsn != "RESV_TICKET_DVSN_2") {
 									$(".non_memBtn .cancelBtn").show();
 									$("#resvCancleBtn").attr("href","javascript:guestResvService.fn_resvCancel('" + guestResvInfo.resv_seq + "');");
 								} else {
