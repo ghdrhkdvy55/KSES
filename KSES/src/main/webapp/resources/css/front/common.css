@@ -1543,7 +1543,7 @@ h2.guide_tit {
 .branch_list >li span {font-weight: 700;}
 .branch_list >li:nth-child(even) {float:right;}
 .branch_list >li ul {text-align: center; padding: 2.5rem 1rem; }
-.branch_list >li ul li:last-child {color: #8E8E8E; font-size: 0.9em;}
+.branch_list >li ul li:last-child {color: #8E8E8E; font-size: 0.9em; letter-spacing:-0.1em;}
 
 .branch_list >li:hover ,
 .branch_list >li:active ,
@@ -2580,7 +2580,7 @@ ul.tabs li{
     padding: 2rem 1rem;
     line-height: 1.6em;
 }
-.null_cont, null_list, null_center {text-align:center; }
+.null_cont, .null_list, .null_center {text-align:center; }
 .null_cont p, null list p {
 	font-size: 1.3em;
     color: #a7a7a7;
