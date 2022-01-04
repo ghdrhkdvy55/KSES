@@ -158,7 +158,7 @@ bottom:0;
     width: 82%;
 }
 .self_pop { width: 85%; }
-.pop_con{padding:40px 25px 0; font-size: 1.7em;}
+.pop_con{padding:40px 25px 15px; font-size: 1.7em;}
 .pop_tit{font-size: 2rem;color: #fff; }
 .login_pop_tit 
 .pop_noti { font-size: 1.6rem; color: #808080;letter-spacing: -0.6px; word-break: keep-all; padding-top: 30px}
@@ -2587,3 +2587,4 @@ ul.tabs li{
     border-bottom: 1px solid #dbdbdb;
     padding: 4rem 0;
 }
+.main_pop2 div {font-size:.7em;}
