@@ -127,7 +127,7 @@
 			FRST_REGIST_DTM, FRST_REGTER_ID, LAST_UPDT_DTM, LAST_UPDUSR_ID, RESV_ENTRY_DVSN, 
 			CENTER_CD, FLOOR_CD, PART_CD, CERT_NO
 		FROM TSER_RESV_INFO_I
-		WHERE RESV_SEQ = #{resvSeq}
+		WHERE RESV_SEQ = TO_NUMBER(REPLACE(#{resvSeq},'-',''))
 	</select>
 	
 	<!-- 회원 마지막 에약정보 조회 -->
@@ -187,7 +187,7 @@
 			B.CENTER_PILOT_YN, A.TRAD_NO, A.TRAD_DATE, A.RESV_ENTRY_DVSN, F.USER_CARD_ID, F.USER_CARD_SEQ, F.USER_CARD_PASSWORD,
 			F.USER_PHONE, B.CENTER_NM, B.CENTER_PILOT_YN, C.FLOOR_NM, D.PART_NM, FN_DETAILCODENM(D.PART_CLASS) AS SEAT_CLASS
 		FROM TSER_RESV_INFO_I A, TSEB_CENTER_INFO_M B, TSEB_FLOOR_INFO_M C, TSEB_PART_INFO_D D, TSEB_SEAT_INFO_D E, TSER_USER_INFO_I F
-		WHERE A.RESV_SEQ = #{params.resvSeq}
+		WHERE A.RESV_SEQ = TO_NUMBER(REPLACE(#{params.resvSeq},'-',''))
 		AND A.CENTER_CD = B.CENTER_CD
 		AND A.FLOOR_CD = C.FLOOR_CD(+)
 		AND A.PART_CD = D.PART_CD(+)
@@ -275,7 +275,7 @@
     			ELSE (SELECT SEAT_NM FROM TSEB_SEAT_INFO_D WHERE SEAT_CD = A.SEAT_CD)
     		END AS SEAT_NM
 		FROM TSER_RESV_INFO_I A, TSEB_CENTER_INFO_M B, TSEB_FLOOR_INFO_M C, TSEB_PART_INFO_D D, TSEB_SEAT_INFO_D F
-		WHERE A.RESV_SEQ = #{resvSeq}
+		WHERE A.RESV_SEQ = TO_NUMBER(REPLACE(#{resvSeq},'-',''))
 		AND A.CENTER_CD = B.CENTER_CD
 		AND A.FLOOR_CD = C.FLOOR_CD(+)
 		AND A.PART_CD = D.PART_CD(+)
@@ -300,12 +300,12 @@
     
 	<!-- 예약 고객 아이디 조회 -->
     <select id="selectResvUserId" resultType="String">
-    	SELECT USER_ID FROM TSER_RESV_INFO_I WHERE RESV_SEQ = #{resvSeq}
+    	SELECT USER_ID FROM TSER_RESV_INFO_I WHERE RESV_SEQ = TO_NUMBER(REPLACE(#{resvSeq},'-',''))
     </select>
     
 	<!-- 입석 좌석 구분값 조회 -->
     <select id="selectResvEntryDvsn" resultType="String">
-    	SELECT RESV_ENTRY_DVSN AS resvEntryDvsn FROM TSER_RESV_INFO_I WHERE RESV_SEQ = #{resvSeq}
+    	SELECT RESV_ENTRY_DVSN AS resvEntryDvsn FROM TSER_RESV_INFO_I WHERE RESV_SEQ = TO_NUMBER(REPLACE(#{resvSeq},'-',''))
     </select>
 	
 	<select id="selectFindPassword" resultType="String">
@@ -421,7 +421,7 @@
     		RESV_SEAT_PAY_COST = #{params.resvSeatPayCost},
     		LAST_UPDUSR_ID = #{params.userId},
     		LAST_UPDT_DTM = SYSDATE
-    	WHERE RESV_SEQ = #{params.resvSeq}
+    	WHERE RESV_SEQ = TO_NUMBER(REPLACE(#{params.resvSeq},'-',''))
     </update>
     
     <update id="resvInfoCancel">
@@ -436,7 +436,7 @@
 	<update id="resvStateChange">
 		UPDATE TSER_RESV_INFO_I SET 
 			RESV_STATE = #{resvState}
-        WHERE RESV_SEQ = #{resvSeq}
+        WHERE RESV_SEQ = TO_NUMBER(REPLACE(#{resvSeq},'-',''))
     </update>
     
 	<update id="resPriceChange">
@@ -453,13 +453,13 @@
 				</otherwise>
 			</choose>
 			RESV_PAY_DVSN = #{resvPayDvsn}
-        WHERE RESV_SEQ = #{resvSeq}
+        WHERE RESV_SEQ = TO_NUMBER(REPLACE(#{resvSeq},'-',''))
     </update>
     
     <!--  현금 영수증 출력  -->
     <update id="resbillChange">
 		UPDATE TSER_RESV_INFO_I SET RESV_RCPT_NUMBER = #{resvRcptNumber}
-        WHERE RESV_SEQ = #{resvSeq}
+        WHERE RESV_SEQ = TO_NUMBER(REPLACE(#{resvSeq},'-',''))
     </update>
     
 	<!-- 입력은 대소문자구분 (to의 필드값)-->
