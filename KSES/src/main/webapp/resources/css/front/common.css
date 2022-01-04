@@ -2580,11 +2580,16 @@ ul.tabs li{
     padding: 2rem 1rem;
     line-height: 1.6em;
 }
-.null_cont {text-align:center; }
-.null_cont p {
+.null_cont, null_list, null_center {text-align:center; }
+.null_cont p, null list p {
 	font-size: 1.3em;
     color: #a7a7a7;
-    border-bottom: 1px solid #dbdbdb;
+    padding: 4rem 0;
+}
+.null_cont p {border-bottom: 1px solid #dbdbdb;}
+.null_center p {
+	font-size: .9em;
+    color: #a7a7a7;
     padding: 4rem 0;
 }
 .main_pop2 div {font-size:.7em;}

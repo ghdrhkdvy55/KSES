@@ -98,6 +98,11 @@
                         </ul>
                     </div>
                 </div>
+                
+                <!-- 내용 없을때 표출 -->
+                <div class="null_list"><p>예약내역이 없습니다.</p></div>
+                <!-- 내용 없을때 표출--//> 
+                
                 <div id="my_rsv_stat_list">
                     <div class="notice_con list_con">
 
