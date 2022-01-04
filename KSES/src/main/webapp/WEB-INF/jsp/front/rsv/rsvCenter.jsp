@@ -51,19 +51,23 @@
             <div>
                 <div class="contents"> 
                     <!--지점선택-->                 
-                    <h3>지점을 선택하세요.</h3>
-                    
-                    <!-- 예약가능 지점 없을때 표출 -->
-                	<div class="null_center"><p>현재 예약가능한 지점이 없습니다.</p></div>
-                	<!-- 예약가능 지 없을때 표출--//>
+                    <h3>지점을 선택하세요.</h3>                    
                 	
                     <div class="branchSel">
+
+                		                		
                         <ul class="branch_list">
 
                         </ul>
+                        
                     </div>
+                                        	
                 </div>
+               
             </div>
+             <!-- 예약가능 지점 없을때 표출 -->
+                		<div class="null_center"><p>현재 예약가능한 지점이 없습니다.</p></div>
+                		<!-- 예약가능 지 없을때 표출--//>
         </div>
         <!--contents //-->
 

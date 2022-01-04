@@ -2593,6 +2593,7 @@ ul.tabs li{
 .null_center p {
 	font-size: .9em;
     color: #a7a7a7;
-    padding: 4rem 0;
+    position: relative;
+    top: -15rem;
 }
 .main_pop2 div {font-size:.7em;}
