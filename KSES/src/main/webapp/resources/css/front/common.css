@@ -2597,3 +2597,11 @@ ul.tabs li{
     top: -15rem;
 }
 .main_pop2 div {font-size:.7em;}
+
+.qrEnter_code {text-align:center;}
+.qrEnter_code p {
+    color: #343232;
+    font-size: .9em;
+    font-weight: 600;
+
+}
