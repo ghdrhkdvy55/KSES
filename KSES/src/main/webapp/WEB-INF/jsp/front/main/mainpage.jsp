@@ -462,7 +462,7 @@
 										
 										// 유저정보하단 HTML생성
 										setHtml = "";
-										setHtml += "<li><span><a href='javascript:mainService.fn_userResvInfo(&#39;PRE&#39;, &#39;" + obj.resv_seq + "&#39;,&#39;re_rsv_info&#39;);' >최근 좌석으로 다시 앉기<img src='/resources/img/front/arrow.png' alt='예약하기'></a></span></li>";
+										setHtml += "<li><span><a href='javascript:mainService.fn_userResvInfo(&#39;PRE&#39;, &#39;" + obj.resv_seq + "&#39;,&#39;re_rsv_info&#39;);' >최근 좌석 다시 앉기<img src='/resources/img/front/arrow.png' alt='예약하기'></a></span></li>";
 										setHtml += "<li><em><img src='/resources/img/front/alert_icon.svg' alt='알림'>과거 예약한 정보로 다시 앉으실 수 있습니다.</em></li>";
 										userInfoBottomArea.append(setHtml);
 										
