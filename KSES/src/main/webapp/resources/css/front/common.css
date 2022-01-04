@@ -2084,7 +2084,7 @@ ul.tabs li{
     font-size: .8em;
     text-decoration: none;
     color: #808080;
-    padding-bottom: 10px;
+    padding-bottom: 12px;
     text-align: center;
 }
 
@@ -2133,6 +2133,7 @@ ul.tabs li{
     width: 19px;
     margin-right: 5px;
 }
+.main_pop2 h4{border-bottom:1px solid #dbdbdb; margin-bottom:1rem;}
 .qrEnter {text-align: center; font-size: .9em;} 
 .pay_btn li {
     margin: 2rem 0; 
@@ -2541,12 +2542,14 @@ ul.tabs li{
   .addressBox .banner img{max-width: 150px; width: 32%;}
 }
 @media screen and (max-width: 360px){
-	.linkBox a{padding: 10px 3px; letter-spacing: -0.15em;}	
 	.branch_list >li {width:49%;}
 	.branch_list >li ul li:last-child {font-size:0.8em;}
 
 }
 
+@media screen and (max-width: 320px){
+	.linkBox a{padding: 10px 3px; letter-spacing: -0.15em;}	
+}
 
 /*1227*/
 /*.pop_wrap h4 {margin-bottom: 3rem; border-bottom: 1px solid #eee;}*/
