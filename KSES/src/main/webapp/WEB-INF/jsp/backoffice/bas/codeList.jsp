@@ -155,6 +155,7 @@
 <script type="text/javascript" src="/resources/jqgrid/jqgrid.custom.egovapi.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
+		// 메인 목록 정의
 		EgovJqGridApi.mainGrid([
 			{ label: '분류코드ID',  name:'code_id', align: 'center', fixed: true, key: true },
 			{ label: '분류코드명', name:'code_id_nm', align:'center', fixed: true },
@@ -164,7 +165,7 @@
             { label: '수정일자', name:'last_updt_pnttm', align:'center', width:'120', fixed: true, formatter: 'date' },
 		], false, true, fnSearch);
 	});
-	
+	// 메인 목록 검색
 	function fnSearch(pageNo) {
 		let params = {
 			pageIndex: pageNo,
@@ -174,7 +175,7 @@
 		EgovJqGridApi.mainGridAjax('/backoffice/bas/codeListAjax.do', params, fnSearch, fnSubGrid);
 		EgovJqGridApi.mainGridDetail(fnCmmnCodeInfo);
 	}
-	
+	// 서브 목록 정의
 	function fnSubGrid(id, codeId) {
 		let subGridId = id + '_t';
 		$('#'+id).empty().append('<table id="'+ subGridId + '" class="scroll"></table>');
@@ -195,7 +196,7 @@
 		});
 		EgovJqGridApi.subGridDetail(subGridId, fnCmmnDetailCodeInfo);
 	}
-	
+	// 분류 코드 상세 팝업 정의
 	function fnCmmnCodeInfo(id, rowData) {
 		let $popup = $('[data-popup=bas_code_add]');
 		let $form = $popup.find('form:first');
@@ -221,7 +222,7 @@
 		}
 		$popup.bPopup();
 	}
-	
+	// 분류코드 중복 체크
 	function fnCmmnCodeIdCheck() {
 		let $popup = $('[data-popup=bas_code_add]');
 		if ($popup.find(':text[name=codeId]').val() === '') {
@@ -243,7 +244,7 @@
 			}
 		);
 	}
-	
+	// 분류 코드 등록
 	function fnCmmnCodeInsert() {
 		let $popup = $('[data-popup=bas_code_add]');
 		if ($popup.find(':text[name=codeId]').val() === '') {
@@ -275,7 +276,7 @@
 			);
 		});
 	}
-	
+	// 분류 코드 수정
 	function fnCmmnCodeUpdate() {
 		let $popup = $('[data-popup=bas_code_add]');
 		if ($popup.find(':text[name=codeIdNm]').val() === '') {
@@ -300,7 +301,7 @@
 			);
 		});
 	}
-	
+	// 분류 코드 삭제
 	function fnCmmnCodeDelete() {
 		let rowId = $('#mainGrid').jqGrid('getGridParam', 'selrow');
 		if (rowId === null) {
@@ -325,7 +326,7 @@
 			);
 		});
 	}
-	
+	// 상세 코드 팝업 정의
 	function fnCmmnDetailCodeInfo(id, rowData, gridId) {
 		let $popup = $('[data-popup=bas_detailcode_add]');
 		let $form = $popup.find('form:first');
@@ -357,7 +358,7 @@
 		}
 		$popup.bPopup();
 	}
-	
+	// 상세 코드 등록
 	function fnCmmnDetailCodeInsert() {
 		let $popup = $('[data-popup=bas_detailcode_add]');
 		if ($popup.find(':text[name=codeNm]').val() === '') {
@@ -382,7 +383,7 @@
 			);
 		});
 	}
-	
+	// 상세 코드 수정
 	function fnCmmnDetailCodeUpdate() {
 		let $popup = $('[data-popup=bas_detailcode_add]');
 		if ($popup.find(':text[name=codeNm]').val() === '') {
@@ -407,7 +408,7 @@
 			);
 		});
 	}
-	
+	// 상세 코드 삭제
 	function fnCmmnDetailCodeDelete(code, codeId) {
 		bPopupConfirm('상세코드 삭제', '<b>'+ code +'</b> 를(을) 삭제 하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(

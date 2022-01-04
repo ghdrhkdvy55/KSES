@@ -117,6 +117,7 @@
 <script type="text/javascript" src="/resources/jqgrid/jqgrid.custom.egovapi.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
+		// 메인 JqGrid 정의
 		EgovJqGridApi.mainGrid([
 			{ label: '권한코드', name: 'author_code', align: 'center', fixed: true, key: true },
 			{ label: '권한명',  name: 'author_nm', align: 'center', fixed: true },
@@ -129,6 +130,7 @@
 				'<a href="javascript:fnMenuSetting(\''+ row.author_code +'\');" class="blueBtn">메뉴설정</a>'
 			}
 		], false, false, fnSearch);
+		// 전체 메뉴 정보 얻기 -> 메뉴 설정 팝업 트리 적용
 		EgovIndexApi.apiExecuteJson(
 			'POST',
 			'/backoffice/bas/menuListAjax.do',{
@@ -174,7 +176,7 @@
 			}
 		);
 	});
-	
+	// 메인 목록 검색
 	function fnSearch(pageNo) {
 		let params = {
 			pageIndex: pageNo,
@@ -184,7 +186,7 @@
 		EgovJqGridApi.mainGridAjax('/backoffice/bas/authListAjax.do', params, fnSearch);
 		EgovJqGridApi.mainGridDetail(fnAuthInfo);
 	}
-	
+	// 메인 상세 팝업 정의
 	function fnAuthInfo(id, rowData) {
 		let $popup = $('[data-popup=bas_auth_add]');
 		let $form = $popup.find('form:first');
@@ -208,7 +210,7 @@
 		}
 		$popup.bPopup();
 	}
-	
+	// 중복 권한 코드 체크
 	function fnIdCheck() {
 		let $popup = $('[data-popup=bas_auth_add]');
 		if ($popup.find(':text[name=authorCode]').val() === '') {
@@ -230,7 +232,7 @@
 			}
 		);
 	}
-	
+	// 권한 등록
 	function fnAuthInsert() {
 		let $popup = $('[data-popup=bas_auth_add]');
 		if ($popup.find(':text[name=authorCode]').val() === '') {
@@ -262,7 +264,7 @@
 			);
 		});
 	}
-	
+	// 권한 수정
 	function fnAuthUpdate() {
 		let $popup = $('[data-popup=bas_auth_add]');
 		if ($popup.find(':text[name=authorCode]').val() === '') {
@@ -286,7 +288,7 @@
 			);
 		});
 	}
-	
+	// 권한 삭제 호출
 	function fnAuthDelete() {
 		let rowId = $('#mainGrid').jqGrid('getGridParam', 'selrow');
 		if (rowId === null) {
@@ -297,7 +299,7 @@
 			fnAuthDeleteConfirm(rowId);
 		});
 	}
-	
+	// 권한 삭제 확인
 	function fnAuthDeleteConfirm(code) {
 		bPopupConfirm('권한코드 삭제', '<b>'+ code +'</b> 를(을) 삭제하시면 시스템에 영향이 있을 수 있습니다.<br>정말로 삭제하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(
@@ -316,7 +318,7 @@
 			);
 		});
 	}
-	
+	// 권한 메뉴 세팅 정보 얻기 -> 메뉴 트리에 정보 적용
 	function fnMenuSetting(code) {
 		let $popup = $('[data-popup=bas_menu_setting]');
 		$('#jstree').jstree('uncheck_all');
@@ -338,7 +340,7 @@
 			}
 		);
 	}
-	
+	// 권한 메뉴 세팅 정보 저장
 	function fnMenuSettingSave() {
 		let $popup = $('[data-popup=bas_menu_setting]');
 		let authorCode = $popup.find(':hidden[name=authorCode]').val();
