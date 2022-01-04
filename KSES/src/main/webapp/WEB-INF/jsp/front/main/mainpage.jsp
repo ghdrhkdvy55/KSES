@@ -95,9 +95,15 @@
                         <a href="/front/notice.do" class="main_noti_link">더보기</a>
                         <div class="clear"></div>
                     </div>
+                    
+                    <!-- 내용 없을때 표출 -->
+                    <div class="null_cont"><p>공지내용이 없습니다.</p></div>
+                    <!-- 내용 없을때 표출--//>
+                    
                     <!-- 공지사항 데이터 -->
-                                                           
+                                                            
                 </div>
+                
             </div>
             <c:import url="/front/inc/footer.do" />
         </div>
