@@ -125,7 +125,7 @@
                         <!-- 비회원 입장 QR코드 -->
                         <li class="qrEnter_code">
                             <p>
-    							<a href=" javascript:mainservice.fn_moveqrpage('100000000692');"=""><img src="/resources/img/front/qr_code.svg" alt="qr코드">
+    							<a href="javascript:mainservice.fn_moveqrpage('100000000692');"><img src="/resources/img/front/qr_code.svg" alt="qr코드"></a>
     						</p>
     						<P>입장 QR코드</p>
                         </li>
