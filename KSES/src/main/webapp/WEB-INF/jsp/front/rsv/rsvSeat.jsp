@@ -47,7 +47,10 @@
 	<input type="hidden" name="isReSeat" id="isReSeat" value="${resvInfo.isReSeat}">
 	<input type="hidden" name="resvUserNm" id="resvUserNm" value="">
 	<input type="hidden" name="resvSeq" id="resvSeq" value="">
-	<input type="hidden" name="resvDate" id="resvDate" value="${resvInfo.resvDate}">	
+	<input type="hidden" name="resvDate" id="resvDate" value="${resvInfo.resvDate}">
+	
+	<input type="hidden" name="centerEntryPayCost" id="centerEntryPayCost" value="${resvInfo.center_entry_pay_cost}">
+	<input type="hidden" name="centerStandYn" id="centerStandYn" value="${resvInfo.center_stand_yn}">	
 	
 	<!-- 예약정보 sessionStorage검토 -->
 	<input type="hidden" name="seasonCd" id="seasonCd">
@@ -83,7 +86,7 @@
         <!--// contents-->
         <div id="container">
             <div>
-                <div class="contents">                  
+                <div class="contents">      
                     <h3>
 						선택한 지점 
                         <span class="change_br">
@@ -150,26 +153,21 @@
 								<!--개인정보동의-->
 								<li class="person_check nonMemberArea">
 									<p>
-										<span>&lt;개인정보 수집 이용 동의 안내 &gt;(필수)</span>																															
-						                <h5 class="notiCon">스피드온 회원정보를 활용하여 스마트 입장시스템을 통해 경륜경정 본장 및 지점의 입장신청, 출입관리를 목적으로 개인정보를 처리(수집·이용)합니다.</h5>
-										<p class="prsn_agree"><a data-popup-open="person_agree">자세히 &gt;</a></p>
-									
-										<ul>									
-						                   	<li class="agreeBtn">개인정보 수집 및 이용에 동의하시겠습니까?</li>
-						                   	<li class="check_impnt">
-												<input class="cash_radio" type="radio" checked name="ENTRY_DVSN_1_person_agree" id="ENTRY_DVSN_1_person_agree" value="person_agreeN_1">
-                                    			<label for="ENTRY_DVSN_1_person_agree"><span></span>동의함</label>
-                                    				
-                                    			<input class="cash_radio" type="radio" name="ENTRY_DVSN_2_person_agree" id="ENTRY_DVSN_2_person_agree" value="person_agreeN_2">
-                                    			<label for="ENTRY_DVSN_2_person_agree"><span></span>동의안함</label>                                    
+										<span>&lt;개인정보 수집 이용 동의 안내&gt;</span>
+										<ol>
+											<li>코로나 19 확산 방지를 위하여 다음과 같이 개인정보 수집 이용 및 제 3자 제공에 대한 동의를 얻고자 합니다.</li>
+											<li class="prsn_agree"><a data-popup-open="person_agree">자세히 ></a></li>
+											<br>
+											<li class="check_impnt">
+												<input class="magic-checkbox qna_check" type="checkbox" name="layout" id="ENTRY_DVSN_1_person_agree" value="Y">
+											<label for="ENTRY_DVSN_1_person_agree">동의합니다.</label>     
 											</li>
-										</ul>									
+										</ol>
 									</p>
-								</li>
-								
+								</li> 
 								
 								<!--홍보마케팅동의-->
-								<li class="person_check nonMemberArea">
+<!-- 								<li class="person_check nonMemberArea">
 									<p>									
 										<span>&lt;홍보 및 마케팅 활용 동의 &gt;(선택)</span>																															
 
@@ -186,7 +184,7 @@
 											</li>											
 										</ul>																			
 									</p>
-								</li>  
+								</li>   -->
 								
 								<!--기타고지사항-->
 								<li class="person_check nonMemberArea">
@@ -326,26 +324,21 @@
 										<!--개인정보동의-->
 										<li class="person_check nonMemberArea">
 											<p>
-												<span>&lt;개인정보 수집 이용 동의 안내 &gt;(필수)</span>																															
-								                <h5 class="notiCon">스피드온 회원정보를 활용하여 스마트 입장시스템을 통해 경륜경정 본장 및 지점의 입장신청, 출입관리를 목적으로 개인정보를 처리(수집·이용)합니다.</h5>
-												<p class="prsn_agree"><a data-popup-open="person_agree">자세히 &gt;</a></p>
-											
-												<ul>									
-								                   	<li class="agreeBtn">개인정보 수집 및 이용에 동의하시겠습니까?</li>
-								                   	<li class="check_impnt">
-														<input class="cash_radio" type="radio" checked name="ENTRY_DVSN_1_person_agree" id="ENTRY_DVSN_1_person_agree" value="person_agreeN_1">
-		                                    			<label for="ENTRY_DVSN_1_person_agree"><span></span>동의함</label>
-		                                    				
-		                                    			<input class="cash_radio" type="radio" name="ENTRY_DVSN_2_person_agree" id="ENTRY_DVSN_2_person_agree" value="person_agreeN_2">
-		                                    			<label for="ENTRY_DVSN_2_person_agree"><span></span>동의안함</label>                                    
+												<span>&lt;개인정보 수집 이용 동의 안내&gt;</span>
+												<ol>
+													<li>코로나 19 확산 방지를 위하여 다음과 같이 개인정보 수집 이용 및 제 3자 제공에 대한 동의를 얻고자 합니다.</li>
+													<li class="prsn_agree"><a data-popup-open="person_agree">자세히 ></a></li>
+													<br>
+													<li class="check_impnt">
+														<input class="magic-checkbox qna_check" type="checkbox" name="layout" id="ENTRY_DVSN_2_person_agree" value="Y">
+													<label for="ENTRY_DVSN_2_person_agree">동의합니다.</label>     
 													</li>
-												</ul>									
+												</ol>
 											</p>
 										</li>
 										
-										
 										<!--홍보마케팅동의-->
-										<li class="person_check nonMemberArea">
+<!-- 										<li class="person_check nonMemberArea">
 											<p>									
 												<span>&lt;홍보 및 마케팅 활용 동의 &gt;(선택)</span>																															
 		
@@ -362,7 +355,7 @@
 													</li>											
 												</ul>																			
 											</p>
-										</li>  
+										</li>   -->
 										
 										<!--기타고지사항-->
 										<li class="person_check nonMemberArea">
@@ -522,7 +515,7 @@
     <!-- 개인정보 수집이용 약관 팝업 // -->
     
 	<!-- // 홍보 및 마케팅 활용 동의 팝업-->
-    <div id="person_agree" data-popup="mktg_agree" class="popup">
+    <div id="mktg_agree" data-popup="mktg_agree" class="popup">
     	<div class="pop_con rsv_popup">
           	<div class="pop_wrap">
             	<div class="text privacy_text">
@@ -544,7 +537,7 @@
             </div>
           </div>
           <div class="cancel_btn">
-              <a href="javascript:bPopupClose('person_agree');" class="grayBtn">닫기</a>
+              <a href="javascript:bPopupClose('mktg_agree');" class="grayBtn">닫기</a>
           </div>
           <div class="clear"></div>
       </div>
@@ -647,10 +640,10 @@
 			
 			if($("#isReSeat").val() == "Y") {
 				seatService.fn_reSeat();
-			}
-			
-			if($("#centerCd").val() == null) {
-				fn_openPopup("지점정보가 존재하지 않습니다.\n처음부터 예약을 진행해주세요", "red", "ERROR", "확인", "/front/main.do");
+			} else if($("#centerStandYn").val() == "N") {
+				$("#ENTRY_DVSN_2").trigger("click");
+				$(".enter_type").hide();
+				$(".contents > h4:eq(0)").hide();
 			}
 		});
 		
@@ -804,9 +797,8 @@
 	                                  		+  '   <div class="circle">'
 	                                  		+  '       <span class=' + fn_NVL(item.part_css) + '>' + fn_NVL(item.part_nm);
 									
-								setHtml += item.part_class != "SEAT_CLASS_1" ? '<em class="circle_class">(' + fn_NVL(item.part_class_text) + ')</em>' : "";
-	                                  
-								setHtml +=  '</div></div></li></div>';
+									setHtml += item.part_class != "SEAT_CLASS_1" ? '<em class="circle_class">(' + fn_NVL(item.part_class_text) + ')</em>' : "";
+	                                setHtml +=  '</div></div></li></div>';
 	                             
 	                            	$('#floor_area_Map').append(setHtml);
 								});
@@ -833,7 +825,8 @@
 	 				 	                $('#'+left_id).val(item.part_mini_left);
  		 	                    	}
  		 	                    });
-								$('.seat').draggable("option", "disabled", true );
+								
+ 		 	                    $('.seat').draggable("option", "disabled", true);
 								$(".box-wrapper li").click(function () {
 									var partCd = $(this).attr("id").substring(1);
 									$("#selectPartCd").val(partCd).trigger("change");
@@ -913,7 +906,7 @@
 				    		            "left": fn_NVL(obj[i].seat_left) + "px"
 				    		        });
 				    		        
-				    		        $("#" + fn_NVL(obj[i].seat_cd)).data("seat-paycost", obj[i].pay_cost);
+				    		        $("#" + fn_NVL(obj[i].seat_cd)).data("seat_paycost", obj[i].pay_cost);
 				    		        $("#" + fn_NVL(obj[i].seat_cd)).data("seat_class", obj[i].seat_class);
 				    		    }
 				    		    
@@ -941,6 +934,8 @@
 										
  										var seatNm = $(this).attr("name");
 										$(".sel_seat_nm").html(seatNm);
+										
+										fn_scrollMove($("#ENTRY_DVSN_2_resv_area"));
 				    		    	}
 								});
 				    		    
@@ -1105,7 +1100,7 @@
 				var url = "/front/updateUserResvInfo.do";
 				var params = {};
 				
-				// 동일자 예약 중복 체크
+/* 				// 동일자 예약 중복 체크
 				params = {
 					"userDvsn" : $("#userDvsn").val(), 
 					"userId" : $("#userId").val(), 
@@ -1113,13 +1108,15 @@
 					"resvDate" : $("#resvDate").val()
 				};
 				
-				if(fn_resvDuplicateCheck(params)) {fn_openPopup("현재 예약일자에 이미 예약정보가 존재합니다.", "red", "ERROR", "확인", ""); return;}
+				if(fn_resvDuplicateCheck(params)) {fn_openPopup("현재 예약일자에 이미 예약정보가 존재합니다.", "red", "ERROR", "확인", ""); return;} */
 						
 				// 예약 유효성 검사
 				var checkDvsn = entryDvsn == "ENTRY_DVSN_1" ? "STANDING" : "SEAT";
 				params = {
 					"checkDvsn" : checkDvsn,
-					"entryDvsn" : entryDvsn,
+					"userDvsn" : $("#userDvsn").val(),
+					"userId" : $("#userId").val(),
+					"userPhnum" : resvUserClphn,
 					"centerCd" : $("#centerCd").val(),
 					"floorCd" : $("#floorCd").val(),
 					"partCd" : $("#partCd").val(),
@@ -1146,7 +1143,9 @@
 					"resvIndvdlinfoAgreYn" : $("#" + entryDvsn + "_person_agree").val()
 				}
 				
-				params.resvPayCost = entryDvsn == "ENTRY_DVSN_2" ? $("#" + $("#seatCd").val()).data("seat-paycost") : 0;
+				// 예약 요금 
+				params.resvSeatPayCost = entryDvsn == "ENTRY_DVSN_2" ? $("#" + $("#seatCd").val()).data("seat_paycost") : 0; 
+
 /* 				if($("input:checkbox[id='" + entryDvsn + "_bill_confirm']").is(":checked")) {
 					params.resvRcptYn == "Y"
 					params.resvRcptDvsn = $("input[name='" + entryDvsn + "_rcpt_dvsn']:checked").val(); 

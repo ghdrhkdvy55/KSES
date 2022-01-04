@@ -7,7 +7,7 @@
             <div class="linkBox">
                 <ul>
                     <li><a href="https://www.kspo.or.kr/kspo/main/contents.do?menuNo=200216">개인정보처리방침</a></li>
-                    <li><a data-popup-open="none_copy">자료무단복제금지</a></li>
+                    <li><a href="javascript:void(0);" data-popup-open="none_copy">자료무단복제금지</a></li>
                     <li><a href="https://www.kcycle.or.kr/contents/join/useReportPage.do">이용약관</a></li>
                     <li><a href="https://singo.ngcc.go.kr/singo/portal/main.do">불법사행행위신고</a></li>
                     <li><a href="https://www.kcycle.or.kr/contents/guide/purchasewinbet.do">경륜·경정 승자투표약관</a></li>

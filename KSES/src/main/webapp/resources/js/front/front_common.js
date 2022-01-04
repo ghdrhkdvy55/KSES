@@ -465,12 +465,14 @@ function fn_resvDuplicateCheck(params) {
 	    		} else {
 	    			isResvDuplicate = false;
 	    		}
+	    	} else if(result.status == "LOGIN FAIL") {
+	    		fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
 	    	} else {
-	    		alert("ERROR : " + result.status);	
+	    		fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
 	    	}
 	    },
 	    function(request) {
-	    	alert("ERROR : " +request.status);	       						
+	    	fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");	       						
 	    }    		
 	);
 	return isResvDuplicate;
@@ -506,7 +508,9 @@ function fn_getResvInfo (resvSeq) {
 		    		fn_openPopup("해당 예약정보가 존재하지 않습니다.", "red", "ERROR", "확인", "");
 		    	}
 	    	} else if(result.status == "LOGIN FAIL") {
-	    		fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "");
+	    		fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
+	    	} else {
+	    		fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
 	    	}
 		},
 		function(request) {
@@ -549,8 +553,10 @@ function fn_resvCancel(resvInfo, payResult, callback) {
 					) :
 					fn_openPopup("예약이 정상적으로 취소되었습니다.", "blue", "SUCCESS", "확인", "");
 				isSuccess = true;
-			} else if (result.status == "LOGIN FAIL"){
-				fn_openPopup("로그인 정보가 올바르지 않습니다.", "blue", "SUCCESS", "확인", "javascript:location.reload();");
+			} else if (result.status == "LOGIN FAIL") {
+				fn_openPopup("로그인 정보가 올바르지 않습니다.", "blue", "SUCCESS", "확인", "/front/main.do");
+			} else {
+				fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
 			}
 		},
 		function(request) {
@@ -594,8 +600,10 @@ function fn_payment(resvInfo) {
 				} else {
 					fn_openPopup(result.regist.Error_Msg, "red", "ERROR", "확인", "javascript:location.reload();");
 				}
+	    	} else if (result.status == "LOGIN FAIL") {
+	    		fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
 	    	} else {
-	    		fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "");
+	    		fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
 	    	}
 		},
 		function(request) {

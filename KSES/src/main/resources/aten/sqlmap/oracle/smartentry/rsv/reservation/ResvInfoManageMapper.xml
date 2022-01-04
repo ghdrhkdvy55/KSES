@@ -334,7 +334,7 @@
 			RESV_START_DT, RESV_END_DT, RESV_DVSN, RESV_START_TM, RESV_END_TM, 
 			RESV_REQ_DATE, RESV_USER_DVSN, USER_ID, RESV_USER_NM, RESV_USER_CLPHN, RESV_USER_ASK_YN, RESV_TICKET_DVSN, 
 			RESV_STATE, RESV_RCPT_YN, RESV_INDVDLINFO_AGRE_YN,
-			RESV_ENTRY_DVSN, RESV_PAY_DVSN, RESV_PAY_COST, FRST_REGIST_DTM, FRST_REGTER_ID, 
+			RESV_ENTRY_DVSN, RESV_PAY_DVSN, RESV_ENTRY_PAY_COST, RESV_SEAT_PAY_COST, RESV_PAY_COST, FRST_REGIST_DTM, FRST_REGTER_ID, 
 			LAST_UPDT_DTM, LAST_UPDUSR_ID  
 		)
 		VALUES 
@@ -352,7 +352,8 @@
 			</choose>
 			#{resvUserNm}, #{resvUserClphn}, #{resvUserAskYn, jdbcType=VARCHAR}, 'RESV_TICKET_DVSN_1',
 			'RESV_STATE_1', 'N', #{resvIndvdlinfoAgreYn, jdbcType=VARCHAR},
-			#{resvEntryDvsn, jdbcType=VARCHAR}, 'RESV_PAY_DVSN_1', FN_PAYCOST(#{centerCd, jdbcType=VARCHAR}, #{resvPayCost, jdbcType=VARCHAR}, #{resvEntryDvsn, jdbcType=VARCHAR}), SYSDATE, 'admin', 
+			#{resvEntryDvsn, jdbcType=VARCHAR}, 'RESV_PAY_DVSN_1', FN_PAYCOST(#{centerCd, jdbcType=VARCHAR}), #{resvSeatPayCost, jdbcType=VARCHAR}, 
+			FN_PAYCOST(#{centerCd, jdbcType=VARCHAR}) + #{resvSeatPayCost, jdbcType=VARCHAR}, SYSDATE, 'admin', 
 			SYSDATE, 'admin'  	
 		)
     </insert>
@@ -367,11 +368,11 @@
 	    	INSERT INTO TSER_RESV_INFO_I 
 	    	(
 				RESV_SEQ, LONG_RESV_SEQ, SEASON_CD, CENTER_CD, FLOOR_CD, PART_CD, SEAT_CD, 
-				RESV_START_DT, RESV_END_DT, RESV_DVSN, RESV_START_TM, RESV_END_TM, 
+				RESV_START_DT, RESV_END_DT, RESV_DVSN, RESV_START_TM, RESV_END_TM,
 				RESV_REQ_DATE, RESV_USER_DVSN, USER_ID, RESV_USER_NM, RESV_USER_CLPHN, RESV_USER_ASK_YN, RESV_TICKET_DVSN, 
 				RESV_STATE, RESV_RCPT_YN, RESV_INDVDLINFO_AGRE_YN,
-				RESV_ENTRY_DVSN, RESV_PAY_DVSN, RESV_PAY_COST, 
-				FRST_REGIST_DTM, FRST_REGTER_ID, LAST_UPDT_DTM, LAST_UPDUSR_ID  
+				RESV_ENTRY_DVSN, RESV_PAY_DVSN, RESV_ENTRY_PAY_COST, RESV_SEAT_PAY_COST, RESV_PAY_COST,  
+				FRST_REGIST_DTM, FRST_REGTER_ID, LAST_UPDT_DTM, LAST_UPDUSR_ID
 			)
 			VALUES 
 			(
@@ -379,7 +380,8 @@
 				TO_CHAR(TO_DATE(#{resvDate, jdbcType=VARCHAR},'YYYYMMDD') - (INTERVAL '1' DAY),'YYYYMMDD'), #{resvDate, jdbcType=VARCHAR}, 'TEMP', '0000', '2359',
 				SYSDATE, #{resvUserDvsn, jdbcType=VARCHAR}, #{userId, jdbcType=VARCHAR}, #{resvUserNm}, #{resvUserClphn}, #{resvUserAskYn, jdbcType=VARCHAR}, '',
 				'RESV_STATE_1', 'N', #{resvIndvdlinfoAgreYn, jdbcType=VARCHAR},
-				#{resvEntryDvsn, jdbcType=VARCHAR}, 'RESV_PAY_DVSN_1', FN_PAYCOST(#{centerCd, jdbcType=VARCHAR}, #{resvPayCost, jdbcType=VARCHAR}, #{resvEntryDvsn, jdbcType=VARCHAR}), 
+				#{resvEntryDvsn, jdbcType=VARCHAR}, 'RESV_PAY_DVSN_1', FN_PAYCOST(#{centerCd, jdbcType=VARCHAR}), #{resvSeatPayCost, jdbcType=VARCHAR}, 
+				FN_PAYCOST(#{centerCd, jdbcType=VARCHAR}) + #{resvSeatPayCost, jdbcType=VARCHAR}, 
 				SYSDATE, #{adminId, jdbcType=VARCHAR}, SYSDATE, #{adminId, jdbcType=VARCHAR}  	
 			)
 		</foreach>
@@ -459,6 +461,7 @@
 			#{params.checkDvsn, mode=IN, jdbcType=VARCHAR, javaType=string},
 			#{params.userDvsn, mode=IN, jdbcType=VARCHAR, javaType=string},
 			#{params.userId, mode=IN, jdbcType=VARCHAR, javaType=string},
+			#{params.userPhnum, mode=IN, jdbcType=VARCHAR, javaType=string},
 			#{params.centerCd, mode=IN, jdbcType=VARCHAR, javaType=string},
 			#{params.seatCd, mode=IN, jdbcType=VARCHAR, javaType=string},
 			#{params.inResvDate, mode=IN, jdbcType=VARCHAR, javaType=string},
