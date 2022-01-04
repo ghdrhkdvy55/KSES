@@ -124,6 +124,18 @@ public class Scheduler {
 		}
 	}
 	
+	@Scheduled(cron="0 0 23 * * ?")
+	public void ksesResvCompleteUse() throws Exception {		
+		try {
+			resvService.resvCompleteUse();
+		} catch (RuntimeException re) {
+			LOGGER.error("ksesResvCompleteUse =>  Run Failed", re);
+		} catch (Exception e) {
+			LOGGER.error("ksesResvCompleteUse => Failed", e);
+		}
+	}
+
+	
 	@Scheduled(cron="0 0 08 * * ?")
 	public void ksesEmpInfoUpdateScheduler() throws Exception {		
 		try {

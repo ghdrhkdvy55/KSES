@@ -121,16 +121,6 @@
                                 <li><span id="rsv_req_date"></span></li>
                             </ol>
                         </li>
-                        
-                        <!-- 비회원 입장 QR코드 -->
-                        <li class="qrEnter_code">
-                            <p>
-    							<a href="javascript:mainservice.fn_moveqrpage('100000000692');"><img src="/resources/img/front/qr_code.svg" alt="qr코드"></a>
-    						</p>
-    						<P>입장 QR코드</p>
-                        </li>
-                        <!-- 비회원 입장 QR코드// -->
-                        
                     </ul>
                     <ul class="non_memBtn">
                         <li class="cancelBtn"><a href="javascript:$('#cancel_rsv_info').bPopup();">예약취소</a></li>

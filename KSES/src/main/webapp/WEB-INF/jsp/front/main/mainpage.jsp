@@ -97,7 +97,7 @@
                     </div>
                     
                     <!-- 내용 없을때 표출 -->
-                    <div class="null_cont"><p>공지내용이 없습니다.</p></div>
+                    <div class="null_cont"><p>등록된 공지사항이 없습니다.</p></div>
                     <!-- 내용 없을때 표출--//>
                     
                     <!-- 공지사항 데이터 -->
@@ -556,6 +556,7 @@
     	    			function(result){
     	    				if (result.status == "SUCCESS") {
     	    					if (result.resultlist.length>0){
+    	    						$(".null_cont").hide();
     	    						var sHTML = "";
     	    						
     	    						for (var i in result.resultlist){

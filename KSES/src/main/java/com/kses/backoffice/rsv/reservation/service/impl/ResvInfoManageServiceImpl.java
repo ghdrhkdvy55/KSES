@@ -169,6 +169,12 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	}
 	
 	@Override
+	public int resvCompleteUse() throws Exception {
+		// TODO Auto-generated method stub
+		return resvMapper.resvCompleteUse();
+	}
+	
+	@Override
 	public int resvInfoCancel(Map<String, Object> params) throws Exception {
 		// TODO Auto-generated method stub
 		return resvMapper.resvInfoCancel(params);
