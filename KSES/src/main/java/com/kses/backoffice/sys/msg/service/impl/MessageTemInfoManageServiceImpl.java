@@ -26,25 +26,21 @@ public class MessageTemInfoManageServiceImpl extends EgovAbstractServiceImpl imp
 
 	@Override
 	public List<Map<String, Object>> selectMessageTemplateInfoList(Map<String, Object> params) {
-		// TODO Auto-generated method stub
 		return msgMapper.selectMessageTemplateInfoList(params);
 	}
 
 	@Override
 	public Map<String, Object> selectMessageTemplateDetail(String tempSeq) {
-		// TODO Auto-generated method stub
 		return msgMapper.selectMessageTemplateDetail(tempSeq);
 	}
 
 	@Override
 	public int updateMessageTemplateInfo(MessageTemInfo vo) {
-		// TODO Auto-generated method stub
 		return vo.getMode().equals("Ins") ? msgMapper.insertMessageTemplateInfo(vo) :  msgMapper.updateMessageTemplateInfo(vo);
 	}
 
 	@Override
 	public boolean deleteMessageTemplateInfo(String delCds) {
-		// TODO Auto-generated method stub
 		try {
     		msgMapper.deleteMessageTemplateInfo(SmartUtil.dotToList(delCds));
     		return true;

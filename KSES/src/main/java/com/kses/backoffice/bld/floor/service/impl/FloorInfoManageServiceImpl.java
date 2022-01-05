@@ -24,31 +24,26 @@ public class FloorInfoManageServiceImpl extends EgovAbstractServiceImpl implemen
 	
 	@Override
 	public List<Map<String, Object>> selectFloorInfoList(Map<String, Object> params) {
-		// TODO Auto-generated method stub
 		return floorMapper.selectFloorInfoList(params);
 	}
 	
 	@Override
 	public Map<String, Object> selectFloorInfoDetail(String floorCd) {
-		// TODO Auto-generated method stub
 		return floorMapper.selectFloorInfoDetail(floorCd);
 	}
 	
 	@Override
 	public List<Map<String, Object>> selectFloorInfoComboList(String centerCd) {
-		// TODO Auto-generated method stub
 		return floorMapper.selectFloorInfoComboList(centerCd);
 	}
 
 	@Override
 	public int updateFloorInfo(FloorInfo vo) {
-		// TODO Auto-generated method stub
 		return floorMapper.updateFloorInfo(vo);
 	}
 
 	@Override
 	public int insertFloorSeatUpdate(Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		return seatMapper.insertFloorSeatInfo(params);
 	}
 }

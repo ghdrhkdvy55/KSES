@@ -20,7 +20,6 @@ public class FileDownloadView extends AbstractView{
     @Override
     protected void renderMergedOutputModel(Map<String, Object> model,
             HttpServletRequest req, HttpServletResponse res) throws Exception {
-        // TODO Auto-generated method stub
     	
     	Map<String, Object> allData = (Map) model.get("allData");
     	File file = (File) allData.get("downloadFile");

@@ -25,25 +25,21 @@ public class MessageGroupUserInfoManageServiceImpl extends EgovAbstractServiceIm
 
 	@Override
 	public List<Map<String, Object>> selectMessageGroupUserInfoList(Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		return msgGroupUserMapper.selectMessageGroupUserInfoList(params);
 	}
 
 	@Override
 	public Map<String, Object> selectMessageGroupUserDetail(String groupUserseq) throws Exception {
-		// TODO Auto-generated method stub
 		return msgGroupUserMapper.selectMessageGroupUserDetail(groupUserseq);
 	}
 
 	@Override
 	public int insertMessageGroupUserInfo(List<MessageGroupUserInfo> vo) throws Exception {
-		// TODO Auto-generated method stub
 		return msgGroupUserMapper.insertMessageGroupUserInfo(vo);
 	}
 
 	@Override
 	public boolean deleteMessageGroupUserInfo(String delCds) throws Exception {
-		// TODO Auto-generated method stub
         try {
         	msgGroupUserMapper.deleteMessageGroupUserInfo(SmartUtil.dotToList(delCds));
 			return true;
@@ -56,7 +52,6 @@ public class MessageGroupUserInfoManageServiceImpl extends EgovAbstractServiceIm
 
 	@Override
 	public boolean insertMessageGroupUser(MessageGroupUserInfo userInfo) throws Exception {
-		// TODO Auto-generated method stub
 		 try {
 	        	msgGroupUserMapper.insertMessageGroupUser(userInfo);
 				return true;

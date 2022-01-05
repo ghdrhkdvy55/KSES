@@ -135,7 +135,7 @@ public class ResInfoManageServiceImpl  implements ResInfoManageService{
 //	@Transactional
 //	@Override
 //	public int updateResManageChange(ReservationInfo vo) throws Exception {
-//		// TODO Auto-generated method stub
+//		
 //		ResTimeInfo info = new ResTimeInfo();
 //		info.setResSeq(vo.getResSeq());
 //		
@@ -285,37 +285,37 @@ public class ResInfoManageServiceImpl  implements ResInfoManageService{
 //	
 //	@Override
 //	public int resStateChagenCheck(ReservationInfo resInfo) throws Exception {
-//		// TODO Auto-generated method stub
+//		
 //		return resMapper.resStateChagenCheck(resInfo);
 //	}
 //	
 //	@Override
 //	public List<Map<String, Object>> selectKioskCalendarList(String meetingId) {
-//		// TODO Auto-generated method stub
+//		
 //		return resMapper.selectKioskCalendarList(meetingId);
 //	}
 //
 //	@Override
 //	public String selectTennInfo(ReservationInfo vo) throws Exception {
-//		// TODO Auto-generated method stub
+//		
 //		return resMapper.selectTennInfo(vo);
 //	}
 //
 //	@Override
 //	public List<ReservationInfo> selectCalenderMeetingState(ReservationInfo searchVO) throws Exception {
-//		// TODO Auto-generated method stub
+//		
 //		return resMapper.selectCalenderMeetingState(searchVO);
 //	}
 //    //전자 명패
 //	@Override
 //	public List<Map<String, Object>> selectNameplate() throws Exception {
-//		// TODO Auto-generated method stub
+//		
 //		return resMapper.selectNameplate();
 //	}
 //
 //	@Override
 //	public Map<String, Object> selectTodayResSeatInfo(String empNo) throws Exception {
-//		// TODO Auto-generated method stub
+//		
 //		return resMapper.selectTodayResSeatInfo(empNo);
 //	}
 }

@@ -60,10 +60,8 @@ public class fileServiceImpl extends EgovAbstractServiceImpl implements fileServ
 		try {
 			metadata = ImageMetadataReader.readMetadata(_fileNm);
 		} catch (ImageProcessingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}  	  
 	    for (Directory directory : metadata.getDirectories()) {
@@ -113,11 +111,9 @@ public class fileServiceImpl extends EgovAbstractServiceImpl implements fileServ
 	            }
       	}
 		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			LOGGER.debug("uploadFileNm IllegalStateException :" + e.toString());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			LOGGER.debug("uploadFileNm IOException :" + e.toString());
 		} catch (Exception ex){			

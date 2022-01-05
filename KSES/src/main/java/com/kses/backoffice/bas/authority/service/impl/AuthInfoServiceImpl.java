@@ -24,13 +24,11 @@ public class AuthInfoServiceImpl extends EgovAbstractServiceImpl implements Auth
 	
 	@Override
 	public List<Map<String, Object>> selectAuthInfoList(Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		return authMapper.selectAuthInfoList(params);
 	}
 
 	@Override
 	public Map<String, Object> selectAuthInfoDetail(String authorCode) throws Exception {
-		// TODO Auto-generated method stub
 		return authMapper.selectAuthInfoDetail(authorCode);
 	}
 	
@@ -53,7 +51,6 @@ public class AuthInfoServiceImpl extends EgovAbstractServiceImpl implements Auth
 
 	@Override
 	public List<Map<String, Object>> selectAuthInfoComboList() throws Exception {
-		// TODO Auto-generated method stub
 		return authMapper.selectAuthInfoComboList();
 	}
 }

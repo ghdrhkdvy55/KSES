@@ -42,7 +42,6 @@ public class LoggingPlugin implements Interceptor {
       
     @Override  
     public Object intercept(Invocation invocation) throws Throwable {  
-    // TODO Auto-generated method stub  
         StatementHandler handler = (StatementHandler)invocation.getTarget();  
         for (int i =0; i < invocation.getArgs().length; i ++){
 		   if (invocation.getArgs()[i] != null)
@@ -127,14 +126,11 @@ public class LoggingPlugin implements Interceptor {
   
     @Override  
     public Object plugin(Object target) {  
-    // TODO Auto-generated method stub  
     return Plugin.wrap(target, this);  
     }  
   
     @Override  
     public void setProperties(Properties properties) {  
-    // TODO Auto-generated method stub  
-  
     }  
   
 }  

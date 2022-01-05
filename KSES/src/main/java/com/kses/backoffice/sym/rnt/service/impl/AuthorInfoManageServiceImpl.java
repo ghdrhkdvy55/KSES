@@ -21,7 +21,6 @@ public class AuthorInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
 	
 	@Override
 	public List<AuthorInfo> selectAuthorIInfoManageCombo() {
-		// TODO Auto-generated method stub
 		return authMapper.selectAuthorIInfoManageCombo();
 	}
 	

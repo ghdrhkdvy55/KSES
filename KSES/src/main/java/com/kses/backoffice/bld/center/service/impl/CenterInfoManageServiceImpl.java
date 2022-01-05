@@ -26,33 +26,28 @@ public class CenterInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
 
 	@Override
 	public List<Map<String, Object>> selectCenterInfoList(Map<String, Object> SearchVO) throws Exception {
-		// TODO Auto-generated method stub
 		return centerMapper.selectCenterInfoList(SearchVO);
 	}
 
 	@Override
 	public List<Map<String, Object>> selectCenterInfoComboList()throws Exception {
-		// TODO Auto-generated method stub
 		return centerMapper.selectCenterInfoComboList();
 	}
 
 	@Override
 	public Map<String, Object> selectCenterInfoDetail(String centerCd)
 			throws Exception {
-		// TODO Auto-generated method stub
 		return centerMapper.selectCenterInfoDetail(centerCd);
 	}
 	
 	@Override
 	public List<Map<String, Object>> selectResvCenterList(String resvDate)throws Exception {
-		// TODO Auto-generated method stub
 		return centerMapper.selectResvCenterList(resvDate);
 	}
 	
 	@Override
 	@Transactional
 	public int updateCenterInfoManage(CenterInfo vo) throws Exception {
-		// TODO Auto-generated method stub
 		int ret = 0;
 		if (vo.getMode().equals("Ins")){
 			List<?> floorList =  vo.getFloorInfo().equals("") ? null : SmartUtil.dotToList(vo.getFloorInfo());
@@ -66,7 +61,6 @@ public class CenterInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
 
 	@Override
 	public int updateCenterFloorInfoManage(String floorInfo, String centerCode) throws Exception {
-		// TODO Auto-generated method stub
 		return centerMapper.updateCenterFloorInfoManage(floorInfo, centerCode);
 	}
 }

@@ -28,13 +28,11 @@ public class HolyInfoServiceImpl extends EgovAbstractServiceImpl implements Holy
 
 	@Override
 	public List<Map<String, Object>> selectHolyInfoList(Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		return holyMapper.selectHolyInfoList(params);
 	}
 
 	@Override
 	public Map<String, Object> selectHolyInfoDetail(String holySeq) throws Exception {
-		// TODO Auto-generated method stub
 		return holyMapper.selectHolyInfoDetail(holySeq);
 	}
 	
@@ -45,19 +43,16 @@ public class HolyInfoServiceImpl extends EgovAbstractServiceImpl implements Holy
 	
 	@Override
 	public int deleteHolyInfo(List<String> holyList) throws Exception {
-		// TODO Auto-generated method stub
 		return holyMapper.deleteHolyInfo(holyList);
 	}
 	
 	@Override
 	public int holyInfoCenterApply(List<HolyInfo> holyInfoList) throws Exception {
-		// TODO Auto-generated method stub
 		return holyMapper.holyInfoCenterApply(holyInfoList);
 	}
 
 	@Override
 	public boolean insertExcelHoly(List<HolyInfo> holyInfoList) throws Exception {
-		// TODO Auto-generated method stub
 		boolean result = false;
 		try {
 			holyMapper.insertExcelHoly(holyInfoList);

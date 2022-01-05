@@ -55,13 +55,11 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 	
 	@Override
 	public List<Map<String, Object>> selectInterfaceLogInfo(Map<String, Object> searchVO) throws Exception {
-		// TODO Auto-generated method stub
 		return interfaceMapper.selectInterfaceLogInfo(searchVO);
 	}
 
 	@Override
 	public Map<String, Object> selectInterfaceDetail(String requstId) throws Exception {
-		// TODO Auto-generated method stub
 		return interfaceMapper.selectInterfaceDetail(requstId);
 	}
 	
@@ -139,14 +137,12 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 
 	@Override
 	public int InterfaceInsertLoginLog(InterfaceInfo vo) throws Exception {
-		// TODO Auto-generated method stub
 		vo.setRequstId( egovTranLog.getNextStringId());
 		return interfaceMapper.InterfaceInsertLoginLog(vo);
 	}
 
 	@Override
 	public int InterfaceUpdateLoginLog(InterfaceInfo vo) throws Exception {
-		// TODO Auto-generated method stub
 		return interfaceMapper.InterfaceUpdateLoginLog(vo);
 	}
 

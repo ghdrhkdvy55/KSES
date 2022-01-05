@@ -19,13 +19,11 @@ public class ScheduleInfoManageServiceImpl extends EgovAbstractServiceImpl imple
 
 	@Override
 	public List<Map<String, Object>> selectScheduleListInfo(Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		return scheduleMapper.selectScheduleListInfo(params);
 	}
 
 	@Override
 	public int insertScheduleManage(String schName, String schResult, String schMessage) throws Exception {
-		// TODO Auto-generated method stub
 		
 		ScheduleInfo info = new ScheduleInfo();
 		
