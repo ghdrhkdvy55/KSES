@@ -267,15 +267,9 @@ public class HolyInfoManageController {
 	public ModelAndView holyInfoCenterApply(@RequestBody List<HolyInfo> holyInfoList) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
 		
-		int ret = holyService.holyInfoCenterApply(holyInfoList);
-		if (ret > 0) {
-			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.update") );
-		} 
-		else {
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.update"));
-		}
+		holyService.holyInfoCenterApply(holyInfoList);
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.update") );
 		
 		return model;
 	}

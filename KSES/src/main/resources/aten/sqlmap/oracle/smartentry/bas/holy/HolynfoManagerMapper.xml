@@ -13,26 +13,9 @@
 			(	
 				SELECT  A.HOLY_SEQ, A.HOLY_DT, A.HOLY_NM, USE_YN, TO_CHAR(A.LAST_UPDT_DTM, 'yyyy-mm-dd') AS LAST_UPDT_DTM, A.LAST_UPDUSR_ID
 				FROM TSEC_HOLY_INFO_M A
-				WHERE 1=1
+				WHERE A.HOLY_DT BETWEEN #{params.searchFrom} AND #{params.searchTo}	
 				<if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(params.searchKeyword)">
-					<choose>
-						<when test="params.searchCondition == 'HOLY_DT'">
-							AND A.HOLY_DT LIKE '%' || #{params.searchKeyword} || '%' 
-						</when>	
-						
-						<when test="params.searchCondition == 'HOLY_NM'">
-							AND A.HOLY_NM LIKE '%' || #{params.searchKeyword} || '%' 
-						</when>		
-										
-						<otherwise>
-							AND 
-							(
-								A.HOLY_DT LIKE '%' || #{params.searchKeyword} || '%' 
-								OR A.HOLY_NM LIKE '%' || #{params.searchKeyword} || '%' 
-							)
-						</otherwise>
-						
-					</choose>
+					AND A.HOLY_NM LIKE '%' || #{params.searchKeyword} || '%'
 				</if>
 			) TB 
 		) TA

@@ -31,12 +31,10 @@
 	<div class="boardlist">
       	<div class="whiteBox searchBox">
             <div class="top">
+            	<p>기간</p>
+	            <input type="text" id="searchFrom" class="cal_icon" numberonly> ~
+	            <input type="text" id="searchTo" class="cal_icon" numberonly>
                 <p>검색어</p>
-                <select id="searchCondition">
-                    <option value="ALL">전체</option>
-					<option value="HOLY_DT">휴일 일자</option>
-					<option value="HOLY_NM">휴일명</option>
-                </select>
                 <input type="text" id="searchKeyword" placeholder="검색어를 입력하새요.">
             </div>
             <div class="inlineBtn ">
@@ -47,10 +45,10 @@
           <p>총 : <span id="sp_totcnt"></span>건</p>
         </div>
         <div class="right_box">
-        	<a href="javascript:void(0);" class="blueBtn">전체지점 등록</a>
+        	<a href="javascript:fnHolyInfoCenterApply();" class="blueBtn">전체지점 휴일 등록</a>
         	<a href="javascript:void(0);" class="blueBtn">엑셀 업로드</a>
+        	<a href="javascript:fnExcelDownload();" class="blueBtn">엑셀 다운로드</a>
         	<a href="javascript:fnHolyInfo();" class="blueBtn">휴일 등록</a>
-        	<a href="javascript:void(0);" class="blueBtn">엑셀 다운로드</a>
         	<a href="javascript:fnHolyDelete();" class="grayBtn">삭제</a>
         </div>
         <div class="clear"></div>
@@ -118,7 +116,7 @@
 <!-- popup// -->
 <script type="text/javascript" src="/resources/jqgrid/jqgrid.custom.egovapi.js"></script>
 <script type="text/javascript">
-	$(document).ready(function() { 
+	$(document).ready(function() {
 		// 메인 JqGrid 정의
 		EgovJqGridApi.mainGrid([
 			{ label: '휴일코드', name:'holy_seq', align:'center', hidden: true, key: true },
@@ -134,17 +132,29 @@
 			{ label: '지점코드', name: 'center_cd', key: true, hidden: true },
 			{ label: '적용지점', name: 'center_nm', align: 'center', sortable: false },
 			{ label: '적용휴일명', name: 'holy_nm', align: 'center', sortable: false }
-		], 'popPager')
-		
-		$(".cal_icon").datepicker(EgovCalendar);
+		], 'popPager');
+		// 달력 입력 검색 창 정의				
+		let startDate = new Date(new Date().getFullYear(), 0, 1);
+		let endDate = new Date(new Date().getFullYear(), 11, 31);
+		$('#searchFrom').val($.datepicker.formatDate('yymmdd', startDate))
+		$('#searchTo').val($.datepicker.formatDate('yymmdd', endDate));
 	});
 	// 메인 목록 검색
 	function fnSearch(pageNo) {
+		if ($('#searchFrom').val() === '') {
+			toastr.warning('기간 시작일자를 입력하세요.');
+			return;
+		}
+		if ($('#searchTo').val() === '') {
+			toastr.warning('기간 종료일자를 입력하세요.');
+			return;
+		}
 		let params = {
 			pageIndex: pageNo,
 			pageUnit: $('.ui-pg-selbox option:selected').val(),
 			searchKeyword: $('#searchKeyword').val(),
-			searchCondition: $('#searchCondition').val()
+			searchFrom: $('#searchFrom').val(),
+			searchTo: $('#searchTo').val()
 		};
 		EgovJqGridApi.mainGridAjax('/backoffice/bas/holyListAjax.do', params, fnSearch);
 		EgovJqGridApi.mainGridDetail(fnHolyInfo);
@@ -209,6 +219,10 @@
 		if ($popup.find(':text[name=holyDt]').val() === '') {
 			toastr.warning('휴일일자를 입력해 주세요.');
 			return;
+		}
+		if ($popup.find(':hidden#idCheck').val() !== 'Y') {
+			toastr.warning('중복체크가 안되었습니다.');
+			return;	
 		}
 		if ($popup.find(':text[name=holyNm]').val() === '') {
 			toastr.warning('휴일명을 입력해 주세요.');
@@ -291,5 +305,85 @@
 		};
 		console.log(params);
 		EgovJqGridApi.popGridAjax('popGrid', '/backoffice/bas/holyCenterListAjax.do', params, fnCenterHolyInfoSearch);
+	}
+	// 엑셀 다운로드
+	function fnExcelDownload() {
+		if ($("#mainGrid").getGridParam("reccount") === 0) {
+			toastr.warning('다운받으실 데이터가 없습니다.');
+			return;
+		}
+		let params = {
+			pageIndex: '1',
+			pageUnit: '1000',
+			searchKeyword: $('#searchKeyword').val(),
+			searchFrom: $('#searchFrom').val(),
+			searchTo: $('#searchTo').val()
+		};
+		EgovIndexApi.apiExecuteJson(
+			'POST',
+			'/backoffice/bas/holyListAjax.do', 
+			params,
+			null,
+			function(json) {
+				let ret = json.resultlist;
+				if (ret.length <= 0) {
+					return;
+				}
+				if (ret.length >= 1000) {
+					toastr.info('해당 조회 건수가 1000건이 넘습니다. 엑셀 다운로드 시 1000건에 대한 데이터만 저장됩니다.');
+				}
+				let excelData = new Array();
+				excelData.push(['NO', '휴일일자', '휴일명', '사용유무', '지점적용', '수정자', '수정일자']);
+				for (let idx in ret) {
+					let arr = new Array();
+					arr.push(Number(idx)+1);
+					arr.push(ret[idx].holy_dt);
+					arr.push(ret[idx].holy_nm);
+					arr.push(ret[idx].use_yn);
+					arr.push(ret[idx].holy_center_spread);
+					arr.push(ret[idx].last_updusr_id);
+					arr.push(ret[idx].last_updt_dtm);
+					excelData.push(arr);
+				}
+				let wb = XLSX.utils.book_new();
+				XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(excelData), 'sheet1');
+				var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+				saveAs(new Blob([EgovIndexApi.s2ab(wbout)],{ type: 'application/octet-stream' }), '휴일관리.xlsx');
+			},
+			function(json) {
+				toastr.error(json.message);
+			}
+		);
+	}
+	// 전체지점 휴일 등록
+	function fnHolyInfoCenterApply() {
+		let rowIds = $('#mainGrid').jqGrid('getGridParam', 'selarrrow');
+		if (rowIds.length === 0) {
+			toastr.warning('목록을 선택해 주세요.');
+			return false;
+		}
+		let params = new Array();
+		for (var rowId of rowIds) {
+			let rowData = $('#mainGrid').jqGrid('getRowData', rowId);
+			params.push({
+				holyDt: rowData.holy_dt,
+				holyNm: rowData.holy_nm
+			});
+		}
+		bPopupConfirm('전체지점 휴일 등록', '선택한 휴일을 전체지점에 등록하시겠습니까?', function() {
+			EgovIndexApi.apiExecuteJson(
+				'POST',
+				'/backoffice/bas/holyInfoCenterApply.do', 
+				params,
+				null,
+				function(json) {
+					toastr.success(json.message);
+					fnSearch(1);
+				},
+				function(json) {
+					toastr.error(json.message);
+				}
+			);
+		});
 	}
 </script>
