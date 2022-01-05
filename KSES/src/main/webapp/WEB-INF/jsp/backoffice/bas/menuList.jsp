@@ -69,7 +69,7 @@
 						<tr>
 							<th>메뉴순서</th>
 							<td>
-								<input type="text" name="menuOrdr">
+								<input type="text" name="menuOrdr" numberonly>
 							</td>
 						</tr>
 						<tr>
