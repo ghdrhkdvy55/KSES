@@ -23,51 +23,43 @@ public abstract class ContentFileInfoManageServiceImpl extends EgovAbstractServi
 
 	@Override
 	public List<ContentFileInfoVO> selectFilePageListByPagination(ContentFileInfoVO searchVO) throws Exception {
-		// TODO Auto-generated method stub
 		return conFileManager.selectFilePageListByPagination(searchVO);
 	}
 
 	@Override
 	public int selectFilePageListByPaginationTotCnt_S(ContentFileInfoVO searchVO)
 			throws Exception {
-		// TODO Auto-generated method stub
 		return conFileManager.selectFilePageListByPaginationTotCnt_S(searchVO);
 	}
 
 	@Override
 	public int selectFileListTotCnt_S(String conSeq) throws Exception {
-		// TODO Auto-generated method stub
 		return conFileManager.selectFileListTotCnt_S(conSeq);
 	}
 
 	@Override
 	public ContentFileInfoVO selectFileDetail(String atchFileId)
 			throws Exception {
-		// TODO Auto-generated method stub
 		return conFileManager.selectFileDetail(atchFileId);
 	}
 
 	@Override
 	public int insertFileManage(ContentFileInfo vo) throws Exception {
-		// TODO Auto-generated method stub
 		return conFileManager.insertFileManage(vo);
 	}
 
 	@Override
 	public int updateFileManage(ContentFileInfo vo) throws Exception {
-		// TODO Auto-generated method stub
 		return conFileManager.updateFileManage(vo);
 	}
 
 	@Override
 	public int updateFileManageUseYn(ContentFileInfo vo) throws Exception {
-		// TODO Auto-generated method stub
 		return conFileManager.updateFileManageUseYn(vo);
 	}
 
 	@Override
 	public int deleteFileManage(String atchFileId) throws Exception {
-		// TODO Auto-generated method stub
 		return conFileManager.deleteFileManage(atchFileId);
 	}
 

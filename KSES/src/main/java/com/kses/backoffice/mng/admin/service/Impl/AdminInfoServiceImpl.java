@@ -22,31 +22,26 @@ public class AdminInfoServiceImpl extends EgovAbstractServiceImpl implements Adm
 	
 	@Override
 	public List<Map<String, Object>> selectAdminUserManageListByPagination(Map<String, Object> params) {
-		// TODO Auto-generated method stub
 		return adminMapper.selectAdminUserManageListByPagination(params);
 	}
 
 	@Override
 	public Map<String, Object> selectAdminUserManageDetail(String empNo) {
-		// TODO Auto-generated method stub
 		return adminMapper.selectAdminUserManageDetail(empNo);
 	}
 
 	@Override
 	public int updateAdminUserManage(AdminInfo vo) {
-		// TODO Auto-generated method stub
 		return vo.getMode().equals("Ins") ?  adminMapper.insertAdminUserManage(vo) :  adminMapper.updateAdminUserManage(vo);
 	}
 
 	@Override
 	public int updateAdminUserLockManage(String adminId) {
-		// TODO Auto-generated method stub
 		return adminMapper.updateAdminUserLockManage(adminId);
 	}
 
 	@Override
 	public int deleteAdminUserManage(String adminId) {
-		// TODO Auto-generated method stub
 		return adminMapper.deleteAdminUserManage(adminId);
 	}
 

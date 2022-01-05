@@ -52,7 +52,6 @@ public class UniSelectInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 						try {
 							fileservice.deleteFile(fileInfo.get(target).toString(), propertiesService.getString("Globals.filePath"));
 						} catch (Exception e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 							}
 					
