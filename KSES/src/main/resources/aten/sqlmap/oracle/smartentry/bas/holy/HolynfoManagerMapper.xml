@@ -7,10 +7,11 @@
 			SELECT 	
 				SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT, 
 				ROW_NUMBER() OVER (ORDER BY ROWNUM DESC) AS RNUM, 
+				(SELECT COUNT(*) FROM TSEB_CENTERHOLY_INFO_I WHERE HOLY_DT = TB.HOLY_DT AND USE_YN = 'Y') AS HOLY_CENTER_SPREAD,
 				TB.* 
 			FROM 	
 			(	
-				SELECT  A.HOLY_SEQ, A.HOLY_DT, A.HOLY_NM, CASE A.USE_YN WHEN 'Y' THEN '사용' ELSE '사용 안함' END AS USE_YN, TO_CHAR(A.LAST_UPDT_DTM, 'yyyy-mm-dd') AS LAST_UPDT_DTM, A.LAST_UPDUSR_ID
+				SELECT  A.HOLY_SEQ, A.HOLY_DT, A.HOLY_NM, USE_YN, TO_CHAR(A.LAST_UPDT_DTM, 'yyyy-mm-dd') AS LAST_UPDT_DTM, A.LAST_UPDUSR_ID
 				FROM TSEC_HOLY_INFO_M A
 				WHERE 1=1
 				<if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(params.searchKeyword)">
@@ -44,6 +45,23 @@
 		FROM TSEC_HOLY_INFO_M
 		WHERE HOLY_SEQ = #{holySeq}
    	</select>
+   	
+   	<select id="selectHolyCenterList" resultType="lmap">
+   		/* HolyInfoManageMapper.selectCenterHolyList */
+   		SELECT *
+   		FROM (
+   			SELECT
+   				SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT, 
+   				ROW_NUMBER() OVER (ORDER BY CENTER_NM) AS RNUM, 
+   				B.CENTER_CD, C.CENTER_NM, B.HOLY_NM, TO_CHAR(B.LAST_UPDT_DTM, 'yyyy-mm-dd') AS LAST_UPDT_DTM
+			FROM TSEC_HOLY_INFO_M A
+				INNER JOIN TSEB_CENTERHOLY_INFO_I B ON A.HOLY_DT = B.HOLY_DT 
+				INNER JOIN TSEB_CENTER_INFO_M C ON B.CENTER_CD = C.CENTER_CD
+			WHERE A.HOLY_DT = #{params.holyDt} AND B.USE_YN = 'Y'
+   		) TB
+   		WHERE RNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
+		ORDER BY RNUM ASC
+   	</select>
 	
 	<insert id="insertHolyInfo">
 	    <selectKey keyProperty="cnt" resultType="Integer" order="BEFORE">
@@ -69,7 +87,7 @@
 			   	VALUES 
 			   	( 
 			   		SEQ_ESC_HOLY_INFO.NEXTVAL, #{holyDt}, #{holyNm,jdbcType=VARCHAR}, #{useYn,jdbcType=VARCHAR}, 
-					SYSDATE, #{userId, jdbcType=VARCHAR}, SYSDATE, #{userId, jdbcType=VARCHAR} 
+					SYSDATE, #{lastUpdusrId, jdbcType=VARCHAR}, SYSDATE, #{frstRegisterId, jdbcType=VARCHAR} 
 				)
            </otherwise>
         </choose>
@@ -80,7 +98,7 @@
 		                            HOLY_NM = #{holyNm, jdbcType=VARCHAR}, 
 		                            USE_YN = #{useYn, jdbcType=VARCHAR},
 		                            LAST_UPDT_DTM = SYSDATE,
-		                            LAST_UPDUSR_ID =  #{userId,jdbcType=VARCHAR}       
+		                            LAST_UPDUSR_ID =  #{lastUpdusrId,jdbcType=VARCHAR}       
        	WHERE HOLY_SEQ = #{holySeq, jdbcType=VARCHAR}
    	</update>
    	
@@ -90,6 +108,7 @@
    				#{item}
    			</foreach>
    	</delete>
+   	
    	<insert id="insertExcelHoly">
    	    <foreach collection="holyInfoList" item="item" separator=";" open="DECLARE BEGIN" close="; END;">   
    	        MERGE INTO TSEC_HOLY_INFO_M A
@@ -102,7 +121,7 @@
 			UPDATE SET A.HOLY_NM = #{item.holyNm},
 			           A.USE_YN = #{item.useYn},
                        A.LAST_UPDT_DTM = sysdate,
-                       A.LAST_UPDUSR_ID = #{item.userId}
+                       A.LAST_UPDUSR_ID = #{item.lastUpdusrId}
 			WHEN NOT MATCHED THEN
 			INSERT
 			(
@@ -111,10 +130,11 @@
 			VALUES 
 			( 
 			   SEQ_ESC_HOLY_INFO.NEXTVAL, #{item.holyDt}, #{item.holyNm,jdbcType=VARCHAR}, #{item.useYn,jdbcType=VARCHAR}, 
-			   SYSDATE, #{item.userId, jdbcType=VARCHAR}, SYSDATE, #{item.userId, jdbcType=VARCHAR} 
+			   SYSDATE, #{item.lastUpdusrId, jdbcType=VARCHAR}, SYSDATE, #{item.frstRegisterId, jdbcType=VARCHAR} 
 			)
    	    </foreach>
    	</insert>
+   	
 	<update id="holyInfoCenterApply">	
 		<foreach collection="holyInfoList" item="item" separator=";" open="DECLARE BEGIN" close="; END;">   	
 			MERGE INTO TSEB_CENTERHOLY_INFO_I T
@@ -144,4 +164,6 @@
 			)
 		</foreach>
    	</update>
+   	
+   	
 </mapper>
