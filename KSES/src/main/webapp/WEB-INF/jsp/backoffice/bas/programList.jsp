@@ -19,7 +19,6 @@
 <!-- FileSaver -->
 <script src="/resources/js/FileSaver.min.js"></script>
 <!-- //contents -->
-<input type="hidden" id="mode" name="mode" />
 <div class="breadcrumb">
 	<ol class="breadcrumb-item">
 		<li>기초 관리&nbsp;&gt;&nbsp;</li>
