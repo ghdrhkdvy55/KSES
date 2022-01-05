@@ -16,7 +16,10 @@ $.EgovJqGridApi.prototype._init = function(mtype, colModel, multiselect, subGrid
 		colModel: colModel,
 		datatype: 'json',
 		ajaxGridOptions: { 
-			contentType: 'application/json; charset=UTF-8' 
+			contentType: 'application/json; charset=UTF-8'
+		},
+		loadBeforeSend: function(xhr, settings){
+			xhr.setRequestHeader('AJAX', 'true');
 		},
 		rowNum: 10,
 		rowList: [10,20,30,40,50,100],
@@ -173,6 +176,7 @@ $.EgovJqGridApi.prototype.popGrid = function(id, colModel, pagerId) {
 	this._init('POST', colModel, false, false, false);
 	this._jqGridParams['pager'] = $('#'+ pagerId);
 	this._jqGridParams['rowList'] = [];
+	this._jqGridParams['rownumbers'] = false;
 	return $('#'+id).jqGrid(this._jqGridParams);
 };
 
@@ -187,6 +191,7 @@ $.EgovJqGridApi.prototype.popGridAjax = function(id, url, params, searchFunc) {
 			}
 		},
 		loadError: function(xhr, status) {
+			console.log('-----------------')
 			toastr.error(status);
 		},
 		onPaging: function(pgButton) {
