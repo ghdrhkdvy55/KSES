@@ -301,7 +301,7 @@
 				excelData.push(['NO', '파일명', '한글명', 'URL', '설명']);
 				for (let idx in ret) {
 					let arr = new Array();
-					arr.push(idx);
+					arr.push(Number(idx)+1);
 					arr.push(ret[idx].progrm_file_nm);
 					arr.push(ret[idx].progrm_koreannm);
 					arr.push(ret[idx].url);
