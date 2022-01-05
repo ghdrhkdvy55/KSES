@@ -25,13 +25,11 @@ public class MessageInfoManageServiceImpl extends EgovAbstractServiceImpl implem
 
 	@Override
 	public List<Map<String, Object>> selectMsgManageListByPagination(Map<String, Object> searchVO) throws Exception {
-		// TODO Auto-generated method stub
 		return msgMapper.selectMsgManageListByPagination(searchVO);
 	}
 
 	@Override
 	public Map<String, Object> selectMsgManageDetail(String MsgSeq) throws Exception {
-		// TODO Auto-generated method stub
 		return msgMapper.selectMsgManageDetail(MsgSeq);
 	}
 	@Override
@@ -41,7 +39,6 @@ public class MessageInfoManageServiceImpl extends EgovAbstractServiceImpl implem
 
 	@Override
 	public int deleteMsgManage(String msgSeq) throws Exception {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 	

@@ -40,14 +40,12 @@ public class LoginLogServiceImpl extends EgovAbstractServiceImpl implements Logi
     
 	@Override
 	public List<Map<String, Object>> selectLoginLogInfo( Map<String, Object> searchVO) throws Exception {
-		// TODO Auto-generated method stub
 	    return loginLogMapper.selectLoginLogInfo(searchVO);
 	}
 
 
 	@Override
 	public Map<String, Object> selectLoginLogInfoDetail(String logId) throws Exception {
-		// TODO Auto-generated method stub
 		return loginLogMapper.selectLoginDetail(logId);
 	}
 }

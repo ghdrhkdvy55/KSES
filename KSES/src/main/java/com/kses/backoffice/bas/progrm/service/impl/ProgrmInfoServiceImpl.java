@@ -28,13 +28,11 @@ public class ProgrmInfoServiceImpl extends EgovAbstractServiceImpl implements Pr
 	
 	@Override
 	public List<Map<String, Object>> selectProgrmInfoList(Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		return progrmMapper.selectProgrmInfoList(params);
 	}
 
 	@Override
 	public Map<String, Object> selectProgrmInfoDetail(String progrmFileNm) throws Exception {
-		// TODO Auto-generated method stub
 		return progrmMapper.selectProgrmInfoDetail(progrmFileNm);
 	}
 	
@@ -57,7 +55,6 @@ public class ProgrmInfoServiceImpl extends EgovAbstractServiceImpl implements Pr
 
 	@Override
 	public int deleteProgrmManageList(String checkedProgrmFileNmForDel) throws Exception {
-		// TODO Auto-generated method stub
 		List<String> programFiles = util.dotToList(checkedProgrmFileNmForDel);
 		return progrmMapper.deleteProgrmManageList(programFiles);
 	}

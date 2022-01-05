@@ -25,26 +25,21 @@ public class MessageGroupInfoManageServiceImpl extends EgovAbstractServiceImpl i
 
 	@Override
 	public List<Map<String, Object>> selectMessageGroupInfoList(Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		return messageGroupMapper.selectMessageGroupInfoList(params);
 	}
 
 	@Override
 	public Map<String, Object> selectMessageGroupDetail(String groupCd) throws Exception {
-		// TODO Auto-generated method stub
 		return messageGroupMapper.selectMessageGroupDetail(groupCd);
 	}
 
 	@Override
 	public int updateMessageGroupInfo(MessageGroupInfo vo) throws Exception {
-		// TODO Auto-generated method stub
-		
 		return vo.getMode().equals("Ins") ? messageGroupMapper.insertMessageGroupInfo(vo) : messageGroupMapper.updateMessageGroupInfo(vo);
 	}
 
 	@Override
 	public boolean deleteMessageGroupInfo(String delCds) throws Exception {
-		// TODO Auto-generated method stub
 		try {
 			
 			messageGroupMapper.deleteMessageGroupInfo(SmartUtil.dotToList(delCds));

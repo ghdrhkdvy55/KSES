@@ -18,13 +18,11 @@ public class UserLoginServiceImpl extends EgovAbstractServiceImpl implements Use
 	
 	@Override
 	public Map<String, Object> getUserLoginInfo(Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		return userLoginMapper.getUserLoginInfo(params);
 	}
 	
 	@Override
 	public String getUserLoginCheck(Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		return userLoginMapper.getUserLoginCheck(params);
 	}
 }

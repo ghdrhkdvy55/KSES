@@ -23,31 +23,26 @@ public class EmpInfoManageServiceImpl extends EgovAbstractServiceImpl implements
 	
 	@Override
 	public List<Map<String, Object>> selectEmpInfoList(Map<String, Object> params) {
-		// TODO Auto-generated method stub
 		return empMapper.selectEmpInfoList(params);
 	}
 
 	@Override
 	public Map<String, Object> selectEmpInfoDetail(String empId) {
-		// TODO Auto-generated method stub
 		return empMapper.selectEmpInfoDetail(empId);
 	}
 
 	@Override
 	public int updateEmpInfo(EmpInfo params) {
-		// TODO Auto-generated method stub
 		return  params.getMode().equals("Ins") ? empMapper.insertEmpInfo(params) : empMapper.updateEmpInfo(params);
 	}
 
 	@Override
 	public int deleteEmpInfo(List<String> empList) throws Exception {
-		// TODO Auto-generated method stub
 		return empMapper.deleteEmpInfo(empList);
 	}
 
 	@Override
 	public int mergeEmpInfo() {
-		// TODO Auto-generated method stub
 		return empMapper.mergeEmpInfo();
 	}
 }

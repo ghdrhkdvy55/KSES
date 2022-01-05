@@ -17,13 +17,11 @@ public class SystemInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
 
 	@Override
 	public SystemInfo selectSystemInfo(SystemInfo searchVO) throws Exception {
-		// TODO Auto-generated method stub
 		return systemMapper.selectSystemInfo(searchVO);
 	}
 
 	@Override
 	public int updateSystemInfo(SystemInfo vo) throws Exception {
-		// TODO Auto-generated method stub
 		return systemMapper.updateSystemInfo(vo);
 	}
 }

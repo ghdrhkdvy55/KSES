@@ -20,19 +20,16 @@ public class PreOpenInfoManageServiceImpl extends EgovAbstractServiceImpl implem
 	
 	@Override
 	public List<Map<String, Object>> selectPreOpenInfoList(String centerCd) throws Exception {
-		// TODO Auto-generated method stub
 		return preOpenMapper.selectPreOpenInfoList(centerCd);
 	}
 
 	@Override
 	public int updatePreOpenInfo(List<PreOpenInfo> preOpenInfoList) throws Exception {
-		// TODO Auto-generated method stub
 		return preOpenMapper.updatePreOpenInfo(preOpenInfoList);
 	}
 
 	@Override
 	public int copyPreOpenInfo(Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		return preOpenMapper.copyPreOpenInfo(params);
 	}
 }

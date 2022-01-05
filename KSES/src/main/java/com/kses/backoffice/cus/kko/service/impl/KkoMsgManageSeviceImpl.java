@@ -28,19 +28,17 @@ public class KkoMsgManageSeviceImpl extends EgovAbstractServiceImpl implements K
 
 	@Override
 	public List<Map<String, Object>> selectKkoMsgInfoList(Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		return kkoMapper.selectKkoMsgInfoList(params);
 	}
 
 	@Override
 	public Map<String, Object> selectKkoMsgInfoDetail(String msgkey) throws Exception {
-		// TODO Auto-generated method stub
 		return kkoMapper.selectKkoMsgInfoDetail(msgkey);
 	}
 
 	@Override
 	public int kkoMsgInsertSevice(String _sendGubun, Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
+		
 		KkoMsgInfo vo = new KkoMsgInfo();
 		kkoMessageInfo message = new kkoMessageInfo();
 		Map<String, String> returnMsg = new HashMap<String, String>();

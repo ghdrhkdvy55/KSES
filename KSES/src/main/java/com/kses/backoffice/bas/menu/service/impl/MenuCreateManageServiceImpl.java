@@ -24,45 +24,37 @@ public class MenuCreateManageServiceImpl extends EgovAbstractServiceImpl impleme
 	
 	@Override
 	public List<Map<String, Object>> selectMenuCreatList(String authorCode) throws Exception {
-		// TODO Auto-generated method stub
-		
 		return createMapper.selectMenuCreatList_D(authorCode);
 	}
 
 	@Override
 	public List<Map<String, Object>> selectMenuCreatList_Author(String authorCode) throws Exception {
-		// TODO Auto-generated method stub
 		return createMapper.selectMenuCreatList_Author(authorCode);
 	}
 	
 	
 	@Override
 	public int selectMenuCreatManagTotCnt(String searchKeyword) throws Exception {
-		// TODO Auto-generated method stub
 		return createMapper.selectMenuCreatCnt_S(searchKeyword);
 	}
 
 	@Override
 	public int selectUsrByPk(String empNo) throws Exception {
-		// TODO Auto-generated method stub
 		return createMapper.selectUsrByPk(empNo);
 	}
 
 	@Override
 	public MenuCreatInfo selectAuthorByUsr(String empNo) throws Exception {
-		// TODO Auto-generated method stub
 		return createMapper.selectAuthorByUsr(empNo);
 	}
 
 	@Override
 	public List<Map<String, Object>> selectMenuCreatManagList(Map<String, Object> searchVO) throws Exception {
-		// TODO Auto-generated method stub
 		return createMapper.selectMenuCreatManageList_D(searchVO);
 	}
 
 	@Override
 	public void insertMenuCreatList(String authorCode, String checkedMenuNoForInsert) throws Exception {
-		// TODO Auto-generated method stub
 		
 		
 		int AuthorCnt = 0;

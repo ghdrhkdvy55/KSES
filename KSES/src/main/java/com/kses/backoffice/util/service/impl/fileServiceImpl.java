@@ -114,7 +114,6 @@ public class fileServiceImpl extends EgovAbstractServiceImpl implements fileServ
 			e.printStackTrace();
 			LOGGER.debug("uploadFileNm IllegalStateException :" + e.toString());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			LOGGER.debug("uploadFileNm IOException :" + e.toString());
 		} catch (Exception ex){			

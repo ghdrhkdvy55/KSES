@@ -21,25 +21,21 @@ public class PositionInfoManageServiceImpl extends EgovAbstractServiceImpl imple
 
 	@Override
 	public List<Map<String, Object>> selectPositionInfoList(@Param("params") Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		return positionMapper.selectPositionInfoList(params);
 	}
 
 	@Override
 	public List<PositionInfo> selectPositionInfoComboList() throws Exception {
-		// TODO Auto-generated method stub
 		return positionMapper.selectPositionInfoComboList();
 	}
 	
 	@Override
 	public Map<String, Object> selectPositionDetailInfo(String psitCd) throws Exception {
-		// TODO Auto-generated method stub
 		return positionMapper.selectPositionDetailInfo(psitCd);
 	}
 
 	@Override
 	public int updateJikwInfo(PositionInfo positionInfo) throws Exception {
-		// TODO Auto-generated method stub
 		return positionInfo.getMode().equals("Ins") ?  positionMapper.insertPositionInfo(positionInfo) : positionMapper.updatePositionInfo(positionInfo) ;
 	}
 }
