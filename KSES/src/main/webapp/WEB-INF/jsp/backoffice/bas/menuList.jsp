@@ -175,6 +175,7 @@
 							let node = $tree.get_selected(true)[0];
 							if (node.data === null) {
 								$tree.delete_node(node.id);
+								$('.input_form .top10 .grayBtn').trigger('click');
 								return;
 							}
 							if (node.children.length > 0) {
