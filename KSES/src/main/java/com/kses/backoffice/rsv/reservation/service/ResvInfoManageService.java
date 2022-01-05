@@ -154,7 +154,7 @@ public interface ResvInfoManageService {
 	public int resvSeatChange(Map<String, Object> params) throws Exception;
 	
 	/**
-	 * SPDM 예약 정보 취소
+	 * SPDM 예약 정보 취소(제거예정)
 	 * 
 	 * @param params
 	 * @return
@@ -163,13 +163,30 @@ public interface ResvInfoManageService {
 	public int resvInfoCancel(Map<String, Object> params) throws Exception;
 	
 	/**
-	 * SPDM 예약 상태값 변경
+	 * SPDM 예약 정보 취소
+	 * 
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 */
+	public Map<String, String> resvInfoCancelN(String resvSeq) throws Exception;
+	
+	/**
+	 * SPDM 최초 출입시 예약 상태값 변경 
 	 * 
 	 * @param vo
 	 * @return
 	 * @throws Exception
 	 */
 	public int resvStateChange(ResvInfo vo) throws Exception;
+	
+	/**
+	 * SPDM 예약상태 이용완료 처리 
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public int resvCompleteUse() throws Exception;
 	
 	/*
 	 *  입금 또는 환불

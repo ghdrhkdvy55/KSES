@@ -97,7 +97,7 @@
                     </div>
                     
                     <!-- 내용 없을때 표출 -->
-                    <div class="null_cont"><p>공지내용이 없습니다.</p></div>
+                    <div class="null_cont"><p>등록된 공지사항이 없습니다.</p></div>
                     <!-- 내용 없을때 표출--//>
                     
                     <!-- 공지사항 데이터 -->
@@ -436,7 +436,11 @@
 										// 유저정보하단 HTML생성
 										setHtml = "";
 										setHtml += "<li><span><a href='javascript:mainService.fn_userResvInfo(&#39;NOW&#39;, &#39;" + obj.resv_seq + "&#39;, &#39;rsv_info&#39;);' >" + obj.center_nm + " " + obj.seat_nm + "</a></span></li>";
-										setHtml += "<li class='rsv_cancel'><a href='javascript:mainService.fn_userResvInfo(&#39;CANCEL&#39;, &#39;" + obj.resv_seq + "&#39;, &#39;cancel_rsv_info&#39;);'>예약취소</a></li>";
+										
+										setHtml += obj.resv_ticket_dvsn == "RESV_TICKET_DVSN_1" ? 
+												"<li class='rsv_cancel'><a href='javascript:mainService.fn_userResvInfo(&#39;CANCEL&#39;, &#39;" + obj.resv_seq + "&#39;, &#39;cancel_rsv_info&#39;);'>예약취소</a></li>" 
+												: "";
+										
 										setHtml += "<li><em><img src='/resources/img/front/alert_icon.svg' alt='알림'>15시 까지 미 입장시 입장예약이 취소됩니다.</em></li>";
 										userInfoBottomArea.append(setHtml);
 										
@@ -552,6 +556,7 @@
     	    			function(result){
     	    				if (result.status == "SUCCESS") {
     	    					if (result.resultlist.length>0){
+    	    						$(".null_cont").hide();
     	    						var sHTML = "";
     	    						
     	    						for (var i in result.resultlist){

@@ -216,7 +216,9 @@
 		    		          	  postData : JSON.stringify(  {
 							    		          			"pageIndex": gridPage,
 							    		          			"searchKeyword" : $("#searchKeyword").val(),
-							    		          			"pageUnit":$('.ui-pg-selbox option:selected').val()
+							    		          			"pageUnit":$('.ui-pg-selbox option:selected').val(),
+							    		          			"searchFrom" : $("#searchFrom").val(),
+							    	    					"searchTo" : $("#searchTo").val()
 							    		          		})
     		          	}).trigger("reloadGrid");
     		        },onSelectRow: function(rowId){

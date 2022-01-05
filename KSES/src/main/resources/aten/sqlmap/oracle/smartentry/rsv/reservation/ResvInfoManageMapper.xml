@@ -24,7 +24,7 @@
     					WHEN A.RESV_ENTRY_DVSN = 'ENTRY_DVSN_1'  THEN '입석' 
     					ELSE (SELECT SEAT_NM FROM TSEB_SEAT_INFO_D WHERE SEAT_CD = A.SEAT_CD)
     				END AS SEAT_NM, 
-					C.CENTER_NM, D.USER_NM, D.USER_PHONE
+					C.CENTER_NM, D.USER_NM, REGEXP_REPLACE(D.USER_PHONE, '(02|.{3})(.+)(.{4})', '\1-\2-\3') AS USER_PHONE
 				FROM TSER_RESV_INFO_I A, TSEB_SEAT_INFO_D B, TSEB_CENTER_INFO_M C, TSER_USER_INFO_I D, TSEB_PART_INFO_D E
 				WHERE A.SEAT_CD = B.SEAT_CD(+)
 				AND A.CENTER_CD = C.CENTER_CD
@@ -70,7 +70,14 @@
 					</if>
 				</if>
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchResvState)">
-					AND A.RESV_STATE = #{params.searchResvState}
+					<choose>
+						<when test="@org.apache.commons.lang3.StringUtils@equals(params.searchStateCondition,'cancel')">
+							AND A.RESV_STATE != #{params.searchResvState}
+						</when>
+						<otherwise>
+							AND A.RESV_STATE = #{params.searchResvState}
+						</otherwise>
+					</choose>	
 				</if>
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchResvPayDvsn)">
 					AND A.RESV_PAY_DVSN = #{params.searchResvPayDvsn}
@@ -83,12 +90,12 @@
     </select>
     
 	<select id="selectResInfoDetail" resultType="lmap">
-		SELECT  
+		SELECT
 			A.RESV_SEQ, A.SEAT_CD, A.SEASON_CD, A.RESV_START_DT, A.RESV_END_DT, A.RESV_DVSN,
 			A.RESV_START_TM, A.RESV_END_TM, TO_CHAR(A.RESV_REQ_DATE,'YYYY-MM-DD HH24:MI') AS RESV_REQ_DATE, A.USER_ID,
-			A.RESV_STATE, A.RESV_USER_ASK_YN, A.RESV_RCPT_YN, A.RESV_RCPT_NUMBER, A.RESV_PAY_COST,
-			A.RESV_RCPT_DVSN, A.RESV_PAY_DVSN, A.RESV_USER_DVSN, A.RESV_USER_NM, A.RESV_USER_CLPHN,
-			A.RESV_ENTRY_PAY_COST, A.RESV_SEAT_PAY_COST,
+			A.RESV_STATE, A.RESV_USER_ASK_YN, A.RESV_RCPT_YN, A.RESV_RCPT_NUMBER, A.RESV_PAY_COST, 
+			A.RESV_RCPT_DVSN, A.RESV_PAY_DVSN, A.RESV_USER_DVSN, A.RESV_USER_NM, REGEXP_REPLACE(A.RESV_USER_CLPHN, '(02|.{3})(.+)(.{4})', '\1-\2-\3') AS RESV_USER_CLPHN, 
+			A.RESV_ENTRY_PAY_COST, A.RESV_SEAT_PAY_COST, A.RESV_TICKET_DVSN,
 			FN_DETAILCODENM(A.RESV_USER_DVSN) AS RESV_USER_DVSN_TEXT,
 			FN_DETAILCODENM(A.RESV_TICKET_DVSN) AS RESV_TICKET_DVSN_TEXT,
 			FN_DETAILCODENM(A.RESV_PAY_DVSN) AS RESV_PAY_DVSN_TEXT,
@@ -97,16 +104,16 @@
 			CASE  
 				WHEN A.RESV_ENTRY_DVSN = 'ENTRY_DVSN_1'  THEN '입석' 
 				ELSE D.FLOOR_NM || ' ' || E.PART_NM || '구역 ' || F.SEAT_NM
-			END AS SEAT_NM, 
-			C.CENTER_CD, C.CENTER_NM, C.CENTER_PILOT_YN, B.USER_NM, B.USER_PHONE, B.USER_EMAIL,
+			END AS SEAT_NM,
+			C.CENTER_CD, C.CENTER_NM, C.CENTER_PILOT_YN, B.USER_NM, REGEXP_REPLACE(B.USER_PHONE, '(02|.{3})(.+)(.{4})', '\1-\2-\3') AS USER_PHONE, B.USER_EMAIL,
 			D.FLOOR_CD, E.PART_CD
 		FROM TSER_RESV_INFO_I A, TSER_USER_INFO_I B, TSEB_CENTER_INFO_M C, TSEB_FLOOR_INFO_M D, TSEB_PART_INFO_D E, TSEB_SEAT_INFO_D F
-		WHERE A.RESV_SEQ = #{resvSeq}
+		WHERE A.RESV_SEQ = TO_NUMBER(REPLACE(#{resvSeq},'-',''))
 		AND A.USER_ID = B.USER_ID
 		AND A.CENTER_CD = C.CENTER_CD
 		AND A.FLOOR_CD = D.FLOOR_CD(+)
 		AND A.PART_CD = E.PART_CD(+)
-		AND A.SEAT_CD = F.SEAT_CD(+)  	
+		AND A.SEAT_CD = F.SEAT_CD(+)
 	</select>
 	
 	<!-- Front -->
@@ -120,7 +127,7 @@
 			FRST_REGIST_DTM, FRST_REGTER_ID, LAST_UPDT_DTM, LAST_UPDUSR_ID, RESV_ENTRY_DVSN, 
 			CENTER_CD, FLOOR_CD, PART_CD, CERT_NO
 		FROM TSER_RESV_INFO_I
-		WHERE RESV_SEQ = #{resvSeq}
+		WHERE RESV_SEQ = TO_NUMBER(REPLACE(#{resvSeq},'-',''))
 	</select>
 	
 	<!-- 회원 마지막 에약정보 조회 -->
@@ -180,7 +187,7 @@
 			B.CENTER_PILOT_YN, A.TRAD_NO, A.TRAD_DATE, A.RESV_ENTRY_DVSN, F.USER_CARD_ID, F.USER_CARD_SEQ, F.USER_CARD_PASSWORD,
 			F.USER_PHONE, B.CENTER_NM, B.CENTER_PILOT_YN, C.FLOOR_NM, D.PART_NM, FN_DETAILCODENM(D.PART_CLASS) AS SEAT_CLASS
 		FROM TSER_RESV_INFO_I A, TSEB_CENTER_INFO_M B, TSEB_FLOOR_INFO_M C, TSEB_PART_INFO_D D, TSEB_SEAT_INFO_D E, TSER_USER_INFO_I F
-		WHERE A.RESV_SEQ = #{params.resvSeq}
+		WHERE A.RESV_SEQ = TO_NUMBER(REPLACE(#{params.resvSeq},'-',''))
 		AND A.CENTER_CD = B.CENTER_CD
 		AND A.FLOOR_CD = C.FLOOR_CD(+)
 		AND A.PART_CD = D.PART_CD(+)
@@ -193,7 +200,7 @@
 	<select id="selectUserMyResvInfo" resultType="lmap">
     	SELECT
     		REGEXP_REPLACE(A.RESV_SEQ, '(.{4})(.+)(.{4})', '\1-\2-\3') AS RESV_SEQ,
-    		A.RESV_USER_NM, B.CENTER_NM,
+    		A.RESV_USER_NM, B.CENTER_NM, A.RESV_TICKET_DVSN,
     		CASE  
     			WHEN A.RESV_ENTRY_DVSN = 'ENTRY_DVSN_1'  THEN '입석' 
     			ELSE (SELECT SEAT_NM FROM TSEB_SEAT_INFO_D WHERE SEAT_CD = A.SEAT_CD)
@@ -232,8 +239,8 @@
     	SELECT TB.* FROM (
 	    	SELECT
 	    		REGEXP_REPLACE(A.RESV_SEQ, '(.{4})(.+)(.{4})', '\1-\2-\3') AS RESV_SEQ,
-	    		A.RESV_USER_NM, A.USER_ID, A.RESV_STATE, B.CENTER_NM,
-	    		A.RESV_START_DT, A.RESV_END_DT, A.RESV_PAY_COST, A.RESV_ENTRY_DVSN,
+	    		A.RESV_USER_NM, A.USER_ID, A.RESV_STATE, B.CENTER_NM, B.CENTER_PILOT_YN,
+	    		A.RESV_START_DT, A.RESV_END_DT, A.RESV_PAY_COST, A.RESV_ENTRY_DVSN, A.RESV_TICKET_DVSN,
 	    		CASE
 	    			WHEN A.SEAT_CD IS NULL THEN '입석'
 	    			ELSE (SELECT SEAT_NM FROM TSEB_SEAT_INFO_D WHERE SEAT_CD = A.SEAT_CD)
@@ -268,7 +275,7 @@
     			ELSE (SELECT SEAT_NM FROM TSEB_SEAT_INFO_D WHERE SEAT_CD = A.SEAT_CD)
     		END AS SEAT_NM
 		FROM TSER_RESV_INFO_I A, TSEB_CENTER_INFO_M B, TSEB_FLOOR_INFO_M C, TSEB_PART_INFO_D D, TSEB_SEAT_INFO_D F
-		WHERE A.RESV_SEQ = #{resvSeq}
+		WHERE A.RESV_SEQ = TO_NUMBER(REPLACE(#{resvSeq},'-',''))
 		AND A.CENTER_CD = B.CENTER_CD
 		AND A.FLOOR_CD = C.FLOOR_CD(+)
 		AND A.PART_CD = D.PART_CD(+)
@@ -293,12 +300,12 @@
     
 	<!-- 예약 고객 아이디 조회 -->
     <select id="selectResvUserId" resultType="String">
-    	SELECT USER_ID FROM TSER_RESV_INFO_I WHERE RESV_SEQ = #{resvSeq}
+    	SELECT USER_ID FROM TSER_RESV_INFO_I WHERE RESV_SEQ = TO_NUMBER(REPLACE(#{resvSeq},'-',''))
     </select>
     
 	<!-- 입석 좌석 구분값 조회 -->
     <select id="selectResvEntryDvsn" resultType="String">
-    	SELECT RESV_ENTRY_DVSN AS resvEntryDvsn FROM TSER_RESV_INFO_I WHERE RESV_SEQ = #{resvSeq}
+    	SELECT RESV_ENTRY_DVSN AS resvEntryDvsn FROM TSER_RESV_INFO_I WHERE RESV_SEQ = TO_NUMBER(REPLACE(#{resvSeq},'-',''))
     </select>
 	
 	<select id="selectFindPassword" resultType="String">
@@ -350,7 +357,7 @@
 					FN_NON_MEMBERID(#{centerCd}),
 				</otherwise>
 			</choose>
-			#{resvUserNm}, #{resvUserClphn}, #{resvUserAskYn, jdbcType=VARCHAR}, 'RESV_TICKET_DVSN_1',
+			#{resvUserNm}, #{resvUserClphn}, #{resvUserAskYn, jdbcType=VARCHAR}, '',
 			'RESV_STATE_1', 'N', #{resvIndvdlinfoAgreYn, jdbcType=VARCHAR},
 			#{resvEntryDvsn, jdbcType=VARCHAR}, 'RESV_PAY_DVSN_1', FN_PAYCOST(#{centerCd, jdbcType=VARCHAR}), #{resvSeatPayCost, jdbcType=VARCHAR}, 
 			FN_PAYCOST(#{centerCd, jdbcType=VARCHAR}) + #{resvSeatPayCost, jdbcType=VARCHAR}, SYSDATE, 'admin', 
@@ -409,10 +416,12 @@
     		FLOOR_CD = #{params.floorCd},
     		PART_CD = #{params.partCd},
     		SEAT_CD = #{params.seatCd},
-    		RESV_PAY_COST = FN_PAYCOST(#{params.centerCd}, #{params.resvPayCost}, #{params.resvEntryDvsn}),
+    		RESV_ENTRY_PAY_COST = FN_PAYCOST(#{params.centerCd}),
+    		RESV_PAY_COST = FN_PAYCOST(#{params.centerCd}) + #{params.resvSeatPayCost},
+    		RESV_SEAT_PAY_COST = #{params.resvSeatPayCost},
     		LAST_UPDUSR_ID = #{params.userId},
     		LAST_UPDT_DTM = SYSDATE
-    	WHERE RESV_SEQ = #{params.resvSeq}
+    	WHERE RESV_SEQ = TO_NUMBER(REPLACE(#{params.resvSeq},'-',''))
     </update>
     
     <update id="resvInfoCancel">
@@ -427,8 +436,15 @@
 	<update id="resvStateChange">
 		UPDATE TSER_RESV_INFO_I SET 
 			RESV_STATE = #{resvState}
-        WHERE RESV_SEQ = #{resvSeq}
+        WHERE RESV_SEQ = TO_NUMBER(REPLACE(#{resvSeq},'-',''))
     </update>
+
+	<update id="resvCompleteUse">
+		UPDATE TSER_RESV_INFO_I SET 
+			RESV_STATE = 'RESV_STATE_3'
+        WHERE RESV_END_DT = TO_CHAR(SYSDATE,'YYYYMMDD')
+        AND RESV_STATE = 'RESV_STATE_2'
+    </update>    
     
 	<update id="resPriceChange">
 		UPDATE TSER_RESV_INFO_I SET 
@@ -436,21 +452,21 @@
 				<when test="resvPayDvsn == 'RESV_PAY_DVSN_2'">
 					TRAD_NO = #{tradNo},
 					TRAD_DATE = SYSDATE,
+					RESV_TICKET_DVSN = #{resvTicketDvsn},
 				</when>
 				<otherwise>
 					REFOUND_NO = #{tradNo},
 					REFOUND_DATE = SYSDATE,
 				</otherwise>
 			</choose>
-			RESV_PAY_DVSN = #{resvPayDvsn},
-			RESV_TICKET_DVSN = #{resvTicketDvsn}
-        WHERE RESV_SEQ = #{resvSeq}
+			RESV_PAY_DVSN = #{resvPayDvsn}
+        WHERE RESV_SEQ = TO_NUMBER(REPLACE(#{resvSeq},'-',''))
     </update>
     
     <!--  현금 영수증 출력  -->
     <update id="resbillChange">
 		UPDATE TSER_RESV_INFO_I SET RESV_RCPT_NUMBER = #{resvRcptNumber}
-        WHERE RESV_SEQ = #{resvSeq}
+        WHERE RESV_SEQ = TO_NUMBER(REPLACE(#{resvSeq},'-',''))
     </update>
     
 	<!-- 입력은 대소문자구분 (to의 필드값)-->
