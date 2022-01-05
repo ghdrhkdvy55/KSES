@@ -103,7 +103,7 @@
 	<div class="pop_con">
 		<a class="button b-close">X</a>
 		<h2 class="pop_tit">프로그램 선택</h2>
-		<div class="pop_wrap" style="width:620px;">
+		<div class="pop_wrap">
 			<div class="whiteBox searchBox">
 	            <div class="top">                    
 	                <p>검색어</p>
@@ -113,9 +113,9 @@
 	                <a href="javascript:fnProgramSearch(1);" class="grayBtn">검색</a>
 	            </div>
 	        </div>
-			<div style="width:580px;">
+			<div style="width:570px;">
 				<table id="popGrid"></table>
-				<div id="popPager" style="text-align:center;"></div>
+				<div id="popPager"></div>
 			</div> 
 		</div>
 		<div class="right_box">
@@ -228,7 +228,7 @@
 		});
 		// 팝업 JqGrid 정의
 		EgovJqGridApi.popGrid('popGrid', [
-			{ label: '파일명', name: 'progrm_file_nm', align: 'left', sortable: false, key: true },
+			{ label: '파일명', name: 'progrm_file_nm', align: 'center', sortable: false, key: true },
 			{ label: '한글명',  name: 'progrm_koreannm', align: 'left', sortable: false },
 			{ label: '저장경로', name: 'progrm_stre_path', align: 'left', sortable: false }
 		], 'popPager').jqGrid('setGridParam', {
