@@ -42,6 +42,7 @@
             <p>총 : <span id="sp_totcnt"></span>건</p>
         </div>
         <div class="right_box">
+        	<a href="javascript:fnMenuSetting();" class="blueBtn">메뉴 설정</a>
 	        <a href="javascript:fnAuthInfo();" class="blueBtn">권한분류 등록</a>
 	        <a href="javascript:fnAuthDelete();" class="grayBtn">권한분류 삭제</a>
         </div>
@@ -125,9 +126,6 @@
 			{ label: '생성일', name: 'author_creat_de',  align:'center', width:'120', fixed: true, formatter: 'date' },
 			{ label: '메뉴설정여부', align:'center', width:'100', fixed: true, sortable: false, formatter: (c, o, row) => 
 				row.chk_menu === 0 ? '미생성' : '생성' 
-			},
-			{ label: '메뉴설정', align:'center', width:'120', fixed: true, sortable: false, formatter: (c, o, row) =>
-				'<a href="javascript:fnMenuSetting(\''+ row.author_code +'\');" class="blueBtn">메뉴설정</a>'
 			}
 		], false, false, fnSearch);
 		// 전체 메뉴 정보 얻기 -> 메뉴 설정 팝업 트리 적용
@@ -319,20 +317,21 @@
 		});
 	}
 	// 권한 메뉴 세팅 정보 얻기 -> 메뉴 트리에 정보 적용
-	function fnMenuSetting(code) {
+	function fnMenuSetting() {
 		let $popup = $('[data-popup=bas_menu_setting]');
+		let rowId = $('#mainGrid').jqGrid('getGridParam', 'selrow');
+		$popup.find(':hidden[name=authorCode]').val(rowId);
 		$('#jstree').jstree('uncheck_all');
 		EgovIndexApi.apiExecuteJson(
 			'GET',
 			'/backoffice/bas/menuCreateMenuListAjax.do', {
-				authorCode: code
+				authorCode: rowId
 			},
 			null,
 			function(json) {
 				for (var m of json.resultlist) {
 					$('#jstree').jstree('select_node', m.menu_no);
 				}
-				$popup.find(':hidden[name=authorCode]').val(code);
 				$popup.bPopup();
 			},
 			function(json) {
