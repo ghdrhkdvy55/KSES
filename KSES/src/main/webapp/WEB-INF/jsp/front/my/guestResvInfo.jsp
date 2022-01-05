@@ -120,7 +120,7 @@
                                 <li>신청일</li>
                                 <li><span id="rsv_req_date"></span></li>
                             </ol>
-                        </li>                                                                                    
+                        </li>
                     </ul>
                     <ul class="non_memBtn">
                         <li class="cancelBtn"><a href="javascript:$('#cancel_rsv_info').bPopup();">예약취소</a></li>
@@ -291,11 +291,16 @@
 								$("#rsv_seat, #cancel_rsv_seat").html(guestResvInfo.seat_nm);
 								$("#rsv_req_date, #cancel_rsv_req_date").html(guestResvInfo.resv_req_date);
 								
-								if(guestResvInfo.resv_state == "RESV_STATE_1") {
+								if(guestResvInfo.resv_state == "RESV_STATE_1" && guestResvInfo.resv_ticket_dvsn != "RESV_TICKET_DVSN_2") {
 									$(".non_memBtn .cancelBtn").show();
 									$("#resvCancleBtn").attr("href","javascript:guestResvService.fn_resvCancel('" + guestResvInfo.resv_seq + "');");
 								} else {
 									$(".non_memBtn .cancelBtn").hide();
+								}
+								
+								if(guestResvInfo.center_pilot_yn == "N") {
+									$(".rsvInfo_result").append('<li class="qrEnter_code"><p><a href=""><img src="/resources/img/front/qr_code.svg" alt="qr코드"></a></p><p>입장 QR코드</p></li>');
+									$(".qrEnter_code a").attr("href","javascript:fn_moveQrPage('" + guestResvInfo.resv_seq +"');");
 								}
 								
 								$(".search").hide();

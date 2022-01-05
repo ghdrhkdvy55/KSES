@@ -95,9 +95,15 @@
                         <a href="/front/notice.do" class="main_noti_link">더보기</a>
                         <div class="clear"></div>
                     </div>
+                    
+                    <!-- 내용 없을때 표출 -->
+                    <div class="null_cont"><p>등록된 공지사항이 없습니다.</p></div>
+                    <!-- 내용 없을때 표출--//>
+                    
                     <!-- 공지사항 데이터 -->
-                                                           
+                                                            
                 </div>
+                
             </div>
             <c:import url="/front/inc/footer.do" />
         </div>
@@ -333,6 +339,43 @@
     </div>
     <!-- 결제인증 팝업 // -->
     
+	<!-- // 자료무단복제금지 팝업 -->
+	<div data-popup="none_copy" class="popup">
+		<div class="pop_con">
+			<a class="button b-close">X</a>
+          	<div class="pop_wrap main_pop2">
+              	<h4>경륜자료 무단 불법복제 금지 안내</h4>
+                <p>
+                경주사업총괄본부의 승인없이 본 사이트에 게재된 내용 및 자료(사진포함)를 상업적 목적으로 무단 복제, 전송, 출판, 배포, 방송을 금하며 위반시 관계법령에 의거 처벌받게 됩니다.</p>
+                <h5>관련법규</h5>
+                <div>제10조 (저작권) <br />
+                ① 저작자는 제11조 내지 제13조의 규정에 의한 권리(이하 "저작인격권"이라 한다)와 제16조 내지 제21조의 규정에 의한 권리(이하 "저작재산권"이라 한다)를 가진다. <br />
+                ② 저작권은 저작한 때부터 발생하며 어떠한 절차나 형식의 이행을 필요로 하지 아니한다. 사업본부에서 운영하고 있는 웹사이트는 다음과 같으며, 이 방침은 별도의 설명이 없는 한 사업본부에서 운용하는 웹사이트에 적용됨을 알려드립니다. <br />
+                <br /></div>
+               <div> 제97조의5 (권리의 침해죄) <br />
+                저작재산권 그밖의 이 법에 의하여 보호되는 재산적 권리를 복제·공연·방송·전시·전송·배포·2차적 저작물 작성의 방법으로 침해한 자는 5년 이하의 징역 또는 5천만원 이하의 벌금에 처하거나 이를 병과할 수 있다. [본조신설 2000·1·12] [[시행일 2000·7·1]] <br /></div>
+                <br />
+               <div> 제98조 (권리의 침해죄) <br />
+                다음 각호의 1에 해당하는 자는 3년이하의 징역 또는 3천만원이하의 벌금에 처하거나 이를 병과할 수 있다. [개정 94·1·7] <br />
+                1. 저작재산권 그밖의 이 법에 의하여 보호되는 재산적 권리를 복제·공연·방송·전시 등의 방법으로 침해한 자 <br />
+                2. 삭제 [2000·1·12] [[시행일 2000·7·1]] <br />
+                3. 저작인격권을 침해하여 저작자의 명예를 훼손한 자 <br />
+                4. 제51조 및 제52조(제60조 제3항 또는 제73조의 규정에 의하여 준용되는 경우를 포함한다.)의 규정에 의한 등록을 허위로 한 자 <br /> <br /></div>
+                
+                <div>제99조 (부정발행등의 죄) <br />
+                다음 각호의 1에 해당하는 자는 1년이하의 징역 또는 1천만원이하의 벌금에 처한다. [개정 94·1·7, 2000·1·12] <br />
+                1. 저작자 아닌 자를 저작자로 하여 실명·이명을 표시하여 저작물을 공표한 자 <br />
+                2. 제14조제2항의 규정에 위반한 자 <br />
+                3. 제78조제1항 본문의 규정에 의한 허가를 받지 아니하고 저작권위탁관리업(대리 또는 중개만을 하는 저작권위탁관리업을 제외한다.)을 한 자 <br />
+                4. 제78조제1항의 규정에 의한 허가를 받지 아니하고 저작권신탁관리업을 한 자 [시행일 2000·7·1] <br />
+                5. 제92조의 규정에 의하여 침해행위로 보는 행위를 한 자 <br /><div>
+                
+          	</div>
+          	<div class="clear"></div>
+      	</div>
+    </div>
+    <!-- 자료무단복제금지 팝업 // -->
+    
     
     <!-- mainpage.jsp script -->
     <script>
@@ -393,7 +436,11 @@
 										// 유저정보하단 HTML생성
 										setHtml = "";
 										setHtml += "<li><span><a href='javascript:mainService.fn_userResvInfo(&#39;NOW&#39;, &#39;" + obj.resv_seq + "&#39;, &#39;rsv_info&#39;);' >" + obj.center_nm + " " + obj.seat_nm + "</a></span></li>";
-										setHtml += "<li class='rsv_cancel'><a href='javascript:mainService.fn_userResvInfo(&#39;CANCEL&#39;, &#39;" + obj.resv_seq + "&#39;, &#39;cancel_rsv_info&#39;);'>예약취소</a></li>";
+										
+										setHtml += obj.resv_ticket_dvsn == "RESV_TICKET_DVSN_1" ? 
+												"<li class='rsv_cancel'><a href='javascript:mainService.fn_userResvInfo(&#39;CANCEL&#39;, &#39;" + obj.resv_seq + "&#39;, &#39;cancel_rsv_info&#39;);'>예약취소</a></li>" 
+												: "";
+										
 										setHtml += "<li><em><img src='/resources/img/front/alert_icon.svg' alt='알림'>15시 까지 미 입장시 입장예약이 취소됩니다.</em></li>";
 										userInfoBottomArea.append(setHtml);
 										
@@ -419,7 +466,7 @@
 										
 										// 유저정보하단 HTML생성
 										setHtml = "";
-										setHtml += "<li><span><a href='javascript:mainService.fn_userResvInfo(&#39;PRE&#39;, &#39;" + obj.resv_seq + "&#39;,&#39;re_rsv_info&#39;);' >최근 좌석으로 다시 앉기<img src='/resources/img/front/arrow.png' alt='예약하기'></a></span></li>";
+										setHtml += "<li><span><a href='javascript:mainService.fn_userResvInfo(&#39;PRE&#39;, &#39;" + obj.resv_seq + "&#39;,&#39;re_rsv_info&#39;);' >최근 좌석 다시 앉기<img src='/resources/img/front/arrow.png' alt='예약하기'></a></span></li>";
 										setHtml += "<li><em><img src='/resources/img/front/alert_icon.svg' alt='알림'>과거 예약한 정보로 다시 앉으실 수 있습니다.</em></li>";
 										userInfoBottomArea.append(setHtml);
 										
@@ -457,7 +504,7 @@
 									}	
 								}
 							} else if(result.status == "LOGINFAIL"){
-								
+								fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
 							}
 						},
 						function(request) {
@@ -509,6 +556,7 @@
     	    			function(result){
     	    				if (result.status == "SUCCESS") {
     	    					if (result.resultlist.length>0){
+    	    						$(".null_cont").hide();
     	    						var sHTML = "";
     	    						
     	    						for (var i in result.resultlist){
@@ -557,18 +605,14 @@
    	    								            }
    	    								         },
    	    								         function(request) {
-   	    								        	 fn_openPopup("ERROR : " + request.status, "red", "ERROR", "확인", "");	
+   	    								        	 fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");	
    	    								         }
    	    								     );
-    	    					        	
-    	    					             
     	    					         }
     	    					     });
-    	    						
-    	    						
     	    					}	
-    	    				}else{
-    	    					fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
+    	    				} else {
+								fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
     	    				} 
     	    				
     	    			}
@@ -753,15 +797,17 @@
 				);	
 			}, 
 			fn_reSeat : function(resvInfo) {
+				
+				var checkDvsn = resvInfo.resv_entry_dvsn == "ENTRY_DVSN_1" ? "STANDING" : "SEAT";
 				var params = {
+					"checkDvsn" : "SEAT",
 					"isReSeat" : "Y",
-					"entryDvsn" : resvInfo.resv_entry_dvsn,
+					"userDvsn" : resvInfo.resv_user_dvsn,
 					"centerCd" : resvInfo.center_cd,
 					"floorCd" : resvInfo.floor_cd,
 					"partCd" : resvInfo.part_cd,
 					"seatCd" : resvInfo.seat_cd,
-					"userId" : resvInfo.user_id,
-					"checkDvsn" : "SEAT"
+					"userId" : resvInfo.user_id
 				}
 				
 				var result = mainService.fn_resvVaildCheck(params);

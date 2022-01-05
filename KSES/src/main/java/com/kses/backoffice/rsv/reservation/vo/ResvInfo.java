@@ -60,7 +60,10 @@ public class ResvInfo {
 	// 고객 구분
 	private String resvUserDvsn = "";
 
-	// 예약 금액
+	// 예약 좌석 금액
+	private String resvSeatPayCost = "";
+	
+	// 예약 총 금액 
 	private String resvPayCost = "";
 	
 	// 입석/좌석 구분
@@ -146,12 +149,6 @@ public class ResvInfo {
 	private String refoundNo = "";
 	
 	private String refoundDate = "";
-	
-	// 좌석 금액
-	private String resvSeatPayCost = "";
-	
-	// 입장 금액
-	private String resvEntryPayCost = "";
 	
 	// 입력 구분
 	private String mode = "";

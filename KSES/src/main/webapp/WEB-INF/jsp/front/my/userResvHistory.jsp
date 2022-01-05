@@ -98,6 +98,11 @@
                         </ul>
                     </div>
                 </div>
+                
+                <!-- 내용 없을때 표출 -->
+                <div class="null_list"><p>예약내역이 없습니다.</p></div>
+                <!-- 내용 없을때 표출--//> 
+                
                 <div id="my_rsv_stat_list">
                     <div class="notice_con list_con">
 
@@ -236,7 +241,7 @@
 				                        setHtml += "</ul>";
 				                        
 				                        setHtml += "<ul class='rsv_stat_btn'>";
-				                        if(item.resv_state == "RESV_STATE_1") {
+				                        if(item.resv_state == "RESV_STATE_1" && item.resv_ticket_dvsn != "RESV_TICKET_DVSN_2") {
 			                            	setHtml += "<li><a href='javascript:userResvService.fn_resvCancelCheck(&#39;" + item.resv_seq +"&#39;)'>예약 취소</a></li>";
 				                        }
 			                            setHtml += "</ul>";

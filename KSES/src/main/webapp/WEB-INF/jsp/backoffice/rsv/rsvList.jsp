@@ -86,6 +86,7 @@
 		</div>
 	
 		<div class="right_box">
+			<a href="javascript:$('#all_cancel_pop').bPopup();" class="blueBtn">전체 취소</a>
 			<a href="javascript:jqGridFunc.fn_longSeatAdd();" class="blueBtn">장기 예매</a>
 			<a href=""  class="blueBtn">엑셀 다운로드</a>
 		</div>
@@ -146,8 +147,8 @@
                     	<td>
 							<label id="rsvPopResvPayDvsn"></label>
                     	</td>
-                    	<th>문진표</th>
-						<td id="rsvPopResvUserAskYn">Y</td>
+						<th>결제 방식</th>
+                    	<td id="rsvPopResvTicketDvsn"></td>
                   	</tr>
                   	<tr>
                   		<th>입장료</th>
@@ -156,8 +157,10 @@
                   		<td id="rsvPopResvSeatPayCost"></td>
                   	</tr>
                   	<tr>
-						<th>발권 구분</th>
-                    	<td id="rsvPopResvTicketDvsn"></td>
+						<th>예약상태</th>
+						<td id="rsvPopResvState"></td>
+						<th>예약취소</th>
+                    	<td><a id="resvCancelBtn" class="blueBtn">예약취소</a></td>
                   	</tr>
                   	
               	</tbody>
@@ -400,6 +403,44 @@
   	</div>
 </div>
 
+<!-- //popup -->
+<!-- 전체 취소 팝업 -->
+<div id='all_cancel_pop' class="popup m_pop">
+	<div class="pop_con">
+		<a class="button b-close">X</a>
+    	<h2 class="pop_tit">전체 예약 취소</h2>
+    	<div class="pop_wrap">
+    		<table class="detail_table">
+           		<tbody>
+					<tr>
+						<th>지점</th>
+	                    <td>
+            				<select id="cancelResvCenterCd">
+            					<option value="">선택</option>
+								<c:forEach items="${centerInfo}" var="centerInfo">
+									<option value="${centerInfo.center_cd}">${centerInfo.center_nm}</option>
+								</c:forEach>
+            				</select>
+	                    </td>
+					</tr>
+               		<tr>
+						<th>취소일</th>
+	                    <td>
+	                    	<input type="text" name="cancelResvDate" id="cancelResvDate" class="cal_icon">
+	                    </td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	    <div class="right_box">
+	    	<a href="javascript:jqGridFunc.fn_resvInfoCancelAll();" id="btnUpdate" class="blueBtn">예약취소</a>
+        	<a href="#" onClick="common_modelClose('all_cancel_pop')" id="btnUpdate" class="grayBtn b-close">취소</a>
+		</div>
+		<div class="clear"></div>
+	</div>
+</div>
+<!-- 전체 취소 팝업 -->
+
 <!--1214 QR출력 팝업-->
 <div id="qr_print" class="popup">
 	<div class="pop_con">
@@ -473,7 +514,7 @@
 			currentText: "Today"
 		};	       
 		
-		var datePickerObject = ["#searchResvDateFrom","#searchResvDateTo","#resvDateFrom","#resvDateTo"];
+		var datePickerObject = ["#searchResvDateFrom","#searchResvDateTo","#resvDateFrom","#resvDateTo","#cancelResvDate"];
 		$.each(datePickerObject, function (index, item) {
 			$(item).datepicker(clareCalendar);
 		});
@@ -520,7 +561,7 @@
 					{label: '이름', name:'user_nm', index:'user_nm', align:'center'},
 					{label: '전화번호', name:'user_phone', index:'user_phone', align:'center'},
 					/* {label: '발권구분', name: 'resv_ticket_dvsn_text',  index:'resv_ticket_dvsn_text', align:'center'}, */
-					{label: '금액', name: 'resv_pay_cost', index:'resv_pay_cost', align:'center'},
+					{label: '금액', name: 'resv_pay_cost', index:'resv_pay_cost', align:'center', formatter:jqGridFunc.formSetting},
 					{label: '신청일자', name:'resv_req_date', index:'resv_req_date', align:'center'},
 					{label: '예약일자', name:'resv_end_dt', index:'resv_end_dt', align:'center', formatter:jqGridFunc.formSetting},
 					{label: '예약상태', name:'resv_state_text', index:'resv_state_text', align:'center'},
@@ -636,10 +677,13 @@
 			var item = rowObject;
 			var form = "";
 			
-			if(index == 'resv_qr_print' && item.resv_pay_dvsn == 'RESV_PAY_DVSN_2') {
+			/* if(index == 'resv_qr_print' && item.resv_pay_dvsn == 'RESV_PAY_DVSN_2' && (item.resv_state == 'RESV_PAY_DVSN_1' || item.resv_state == 'RESV_PAY_DVSN_2')) {} */
+			if(index == 'resv_qr_print' && (item.resv_state == 'RESV_PAY_DVSN_1' || item.resv_state == 'RESV_PAY_DVSN_2')) {
 				form = '<a href="javascript:jqGridFunc.fn_qrInfo(&#39;' + item.resv_seq + '&#39;);" class="detailBtn">QR출력</a>';	
 			} else if(index == 'resv_end_dt') {
-				form = item.resv_end_dt.substring(0,4) + "-" + item.resv_end_dt.substring(4,6) + "-" + item.resv_end_dt.substring(6,8); 	
+				form = fn_resvDateFormat(item.resv_end_dt); 	
+			} else if(index == 'resv_pay_cost') {
+				form = item.resv_pay_cost + "원";
 			}
 			
 			return form;
@@ -695,17 +739,19 @@
 						$("#rsvPopCenterNm").html(obj.center_nm);
 						$("#rsvPopAreaInfo").html(obj.seat_nm);
 						$("#rsvPopResvSeq").html(obj.resv_seq);
-						$("#rsvPopResvDate").html(obj.resv_end_dt);
+						$("#rsvPopResvDate").html(fn_resvDateFormat(obj.resv_end_dt));
 						$("#rsvPopResvUserDvsn").html(obj.resv_user_dvsn_text);
 						$("#rsvPopUserId").html(obj.user_id);
 						$("#rsvPopResvUserNm").html(obj.user_nm);
 						$("#rsvPopResvUserPhone").html(obj.user_phone);
 						$("#rsvPopResvPayDvsn").html(obj.resv_pay_dvsn_text);
-						obj.resv_user_ask_yn = obj.resv_user_ask_yn == "Y" ? "동의" : "미동의"; 
-						$("#rsvPopResvUserAskYn").html(obj.resv_user_ask_yn);
-						$("#rsvPopResvSeatPayCost").html(obj.resv_seat_pay_cost);
-						$("#rsvPopResvEntryPayCost").html(obj.resv_entry_pay_cost);
+/* 						obj.resv_user_ask_yn = obj.resv_user_ask_yn == "Y" ? "동의" : "미동의"; 
+						$("#rsvPopResvUserAskYn").html(obj.resv_user_ask_yn); */
+						$("#rsvPopResvSeatPayCost").html(obj.resv_seat_pay_cost + "원");
+						$("#rsvPopResvEntryPayCost").html(obj.resv_entry_pay_cost + "원");
 						$("#rsvPopResvTicketDvsn").html(obj.resv_ticket_dvsn_text);
+						$("#rsvPopResvState").html(obj.resv_state_text);
+						
 						
 						if(obj.seat_nm != "입석" && obj.resv_state == "RESV_STATE_1") { 
 							$("#rsvPopSeatChange a").show().click(function (e) {
@@ -713,6 +759,18 @@
 							});		
 						} else {
 							$("#rsvPopSeatChange a").hide();
+						}
+						
+						if(obj.resv_state == "RESV_STATE_1" || obj.resv_state == "RESV_STATE_2") {
+							$("#resvCancelBtn").show();
+							$("#resvCancelBtn").click(function () {
+				        		$("#id_ConfirmInfo").attr("href", "javascript:void(0);").click(function () {
+				        			jqGridFunc.fn_resvInfoCancel(obj.resv_seq);
+								});
+				        		fn_ConfirmPop("해당 예약정보를 취소 하시겠습니까?");
+							});
+						} else {
+							$("#resvCancelBtn").hide();
 						}
 						
 						//입퇴장 이력
@@ -723,6 +781,76 @@
 					common_popup("Error:" + request.status,"");
 				}    		
 			);
+		},
+		fn_resvInfoCancel : function(resvSeq) {
+			$("#confirmPage").bPopup().close();
+			var url = "/backoffice/rsv/resvInfoCancel.do";
+			var params = {"resvSeq" : resvSeq};
+			
+			fn_Ajax
+			(
+			    url,
+			    "GET",
+				params,
+				false,
+				function(result) {
+					if (result.status == "SUCCESS") {
+						common_popup(result.message, "Y", "");
+						jqGridFunc.fn_resvInfo("Edt", resvSeq);
+						jqGridFunc.fn_search();
+			    	} else if (result.status == "LOGIN FAIL") {
+			    		common_popup("로그인 정보가 올바르지않습니다 다시 로그인해주세요", "Y", "");
+			    	} else {
+			    		common_popup(result.message, "Y", "");
+			    	}
+				},
+				function(request) {
+					common_popup("ERROR : " + request.status, "Y", "");	       						
+				}    		
+			);
+		},
+		fn_resvInfoCancelAll : function() {
+			if(!$("#cancelResvCenterCd").val()) {
+				common_popup("지점을 선택하세요.", "N", "");
+				return;
+			} else if(!$("#cancelResvDate").val()) {
+				common_popup("예약 취소일을 선택하세요.", "N", "");
+				return;
+			} else if(!yesterDayConfirm($("#cancelResvDate").val())){
+				common_popup("예약 취소일을 이전일자로 지정하실수 없습니다.", "N", "");
+				return;					
+			}
+
+			var url = "/backoffice/rsv/resvInfoCancelAll.do";
+			var params = {
+				"centerCd" : $("#cancelResvCenterCd").val(),
+				"resvDate" : $("#cancelResvDate").val()
+			};
+			
+			
+			fn_Ajax
+			(
+			    url,
+			    "POST",
+				params,
+				false,
+				function(result) {
+			    	console.log(result);
+					if (result.status == "SUCCESS") {
+						common_popup(result.message, "Y", "");
+						jqGridFunc.fn_search();
+			    	} else if (result.status == "LOGIN FAIL") {
+			    		common_popup("로그인 정보가 올바르지않습니다 다시 로그인해주세요", "N", "");
+			    	} else {
+			    		common_popup(result.message, "N", "");
+			    	}
+				},
+				function(request) {
+					common_popup("ERROR : " + request.status, "N", "");	       						
+				}    		
+			);
+			
+			$('#all_cancel_pop').bPopup().close();
 		},
 		fn_qrInfo : function(resvSeq) {
 			var url = "/backoffice/rsv/qrSend.do";
@@ -758,7 +886,6 @@
 						$("#qrSeat").html(result.resvInfo.seat_nm);
 						$("#qrName").html(result.resvInfo.user_nm);
 						$("#qrPhone").html(result.resvInfo.user_phone);
-						
 					} else {
 						
 					}
@@ -897,8 +1024,8 @@
 			    		            "left": fn_NVL(obj[i].seat_left) + "px"
 			    		        });
 			    		        
-			    		        $("#" + fn_NVL(obj[i].seat_cd)).data("seat-paycost", obj[i].pay_cost);
-			    		        $("#" + fn_NVL(obj[i].seat_cd)).data("seat-name", obj[i].seat_nm);
+			    		        $("#" + fn_NVL(obj[i].seat_cd)).data("seat_paycost", obj[i].pay_cost);
+			    		        $("#" + fn_NVL(obj[i].seat_cd)).data("seat_name", obj[i].seat_nm);
 			    		    }
 			    		    
  			    		    var seatList = $(".pop_seat li");
@@ -931,7 +1058,7 @@
 				"floorCd" : $("#resvFloorCd").val(),
 				"partCd" : $("#resvPartCd").val(),
 				"seatCd" : $(".pop_seat li.usable").attr("id"),
-				"resvPayCost" : $(".pop_seat li.usable").data("seat-paycost"),
+				"resvSeatPayCost" : $(".pop_seat li.usable").data("seat_paycost"),
 				"resvEntryDvsn" : "ENTRY_DVSN_2",
 				"checkDvsn" : division
 			}
@@ -1039,10 +1166,10 @@
 				$("#resvCenterCd option:checked").text() + " " +
 				$("#resvFloorCd option:checked").text() + " " +
 				$("#resvPartCd option:checked").text() + "구역 " +
-				$(".pop_seat li.usable").data("seat-name")
+				$(".pop_seat li.usable").data("seat_name")
 			);
 			
-			$("#longResvPayCost").val($(".pop_seat li.usable").data("seat-paycost")); 
+			$("#longResvPayCost").val($(".pop_seat li.usable").data("seat_paycost")); 
 			$("#longResvDateFrom").val($("#resvDateFrom").val());
 			$("#longResvDateTo").val($("#resvDateTo").val());
 			$("#seat_change").bPopup().close();
@@ -1066,7 +1193,7 @@
 				"partCd" : $("#longResvPartCd").val(),
 				"seatCd" : $("#longResvSeatCd").val(),
 				"userId" : $("#longResvUserId").val(),
-				"resvPayCost" : $("#longResvPayCost").val(),
+				"resvSeatPayCost" : $("#longResvPayCost").val(),
 				"resvUserNm" : $("#longResvUserName").val(),
 				"longResvEmpNo" : $("#longResvEmpNo").val(),
 				"resvUserClphn" : $("#longResvUserPhone").val(),

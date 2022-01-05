@@ -8,20 +8,12 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import com.kses.backoffice.bld.center.service.NoshowInfoManageService;
-import com.kses.backoffice.bld.center.vo.NoshowInfo;
-import com.kses.backoffice.cus.kko.service.KkoMsgManageSevice;
-import com.kses.backoffice.cus.usr.service.UserInfoManageService;
 import com.kses.backoffice.mng.employee.service.EmpInfoManageService;
 import com.kses.backoffice.rsv.reservation.mapper.ResInfoManageMapper;
 import com.kses.backoffice.rsv.reservation.mapper.ResTimeInfoManageMapper;
 import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
-import com.kses.backoffice.rsv.reservation.vo.NoShowHisInfo;
-import com.kses.backoffice.rsv.reservation.vo.ResvInfo;
 import com.kses.backoffice.sym.log.service.InterfaceInfoManageService;
 import com.kses.backoffice.sym.log.service.ScheduleInfoManageService;
 import com.kses.backoffice.util.SmartUtil;
@@ -70,7 +62,6 @@ public class Scheduler {
 		List<Map<String, Object>> noshowResvList;
 		JSONObject jsonObject = new JSONObject();
 
-		
 		try {
 			for(int i=1; i<=2; i++) {
 				noshowResvList = i == 1 ? noshowService.selectNoshowResvInfo_R1() : noshowService.selectNoshowResvInfo_R2();  
@@ -84,11 +75,12 @@ public class Scheduler {
 						String noshowCd = SmartUtil.NVL(map.get("noshow_cd"),"");
 						String centerPilotYn = SmartUtil.NVL(map.get("center_pilot_yn"),"");
 						String resvPayDvsn = SmartUtil.NVL(map.get("resv_pay_dvsn"),"");
+						String resvTicketDvsn = SmartUtil.NVL(map.get("resv_ticket_dvsn"),"");
 						
 						if(centerPilotYn.equals("N")) {
 							LOGGER.info("예약번호 : " + resvSeq + " " + i + "차 자동취소 시작" );
 							
-							if(i == 2 && resvPayDvsn.equals("RESV_PAY_DVSN_2")) {
+							if(i == 2 && resvPayDvsn.equals("RESV_PAY_DVSN_2") && resvTicketDvsn.equals("RESV_TICKET_DVSN_1")) {
 								jsonObject.put("Pw_YN", "N");
 								jsonObject.put("resvSeq", resvSeq);
 								Map<String, Object> result = interfaceService.SpeedOnCancelPayMent(jsonObject);
@@ -131,6 +123,18 @@ public class Scheduler {
 			LOGGER.error("resvNoshowScheduler => Failed", e);
 		}
 	}
+	
+	@Scheduled(cron="0 0 23 * * ?")
+	public void ksesResvCompleteUse() throws Exception {		
+		try {
+			resvService.resvCompleteUse();
+		} catch (RuntimeException re) {
+			LOGGER.error("ksesResvCompleteUse =>  Run Failed", re);
+		} catch (Exception e) {
+			LOGGER.error("ksesResvCompleteUse => Failed", e);
+		}
+	}
+
 	
 	@Scheduled(cron="0 0 08 * * ?")
 	public void ksesEmpInfoUpdateScheduler() throws Exception {		
