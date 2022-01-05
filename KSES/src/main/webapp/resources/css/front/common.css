@@ -1594,8 +1594,8 @@ h2.guide_tit {
     font-size: 1.4em;
 }
 .rsv_info .rsv_state {
-    position: relative;
-    top: -5.9rem;
+    position: fixed;
+    top: 5px;
     font-size: .8em;
 }
 .rsv_info .rsv_state .date {font-weight: 800;}
