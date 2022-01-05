@@ -2607,3 +2607,10 @@ ul.tabs li{
     font-weight: 600;
 
 }
+.notice_cat {
+    font-size: 1.1em;
+    background: #eee;
+    display: inline-block;
+    padding: 3px 4px;
+    border-radius: 3px;
+}
