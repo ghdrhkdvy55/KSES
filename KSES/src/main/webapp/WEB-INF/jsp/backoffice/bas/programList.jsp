@@ -51,7 +51,7 @@
         <div class="clear"></div>
         <div class="whiteBox">
             <table id="mainGrid"></table>
-            <div id="pager" class="scroll" style="text-align:center;"></div>  
+            <div id="pager"></div>  
         </div>
     </div>
 </div>
