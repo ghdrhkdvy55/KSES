@@ -95,6 +95,23 @@ $.EgovIndexApi.prototype.s2ab = function(s) {
     return buf;
 };
 
+$.EgovIndexApi.prototype.numberOnly = function() {
+	$('input:text[numberOnly]').on('focus', function () {
+		let x = $(this).val();
+		$(this).val(x);
+	}).on('focusout', function() {
+		let x = $(this).val();
+		if (x && x.length > 0) {
+			if ($.isNumeric(x)) {
+				x = x.replace(/[^0-9]/g, "");
+			}
+			$(this).val(x);
+		}
+	}).on('keyup', function() {
+		$(this).val($(this).val().replace(/[^0-9]/g, ""));
+	});
+};
+
 const EgovIndexApi = new $.EgovIndexApi();
 
 const EgovCalendar = {

@@ -108,7 +108,12 @@
 
 	function fnSetActiveContent() {
 		let menu = $('#mySidenav a.active').data('menu');
-		$('#contents').load(menu.url);
+		$('#contents').load(menu.url, function() {
+			// 달력 클래스 정의된 input Datepicker 적용
+			$('.cal_icon').prop('maxlength', '8').datepicker(EgovCalendar);
+			// 숫자형 Input 정의
+			EgovIndexApi.numberOnly();
+		});
 	}
 	
 	function bPopupConfirm(title, message, fnOk) {
