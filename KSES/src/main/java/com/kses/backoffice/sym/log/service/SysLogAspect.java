@@ -101,7 +101,7 @@ public class SysLogAspect {
 			if (result instanceof ModelAndView  && result != null) {
 				ModelAndView mav = ((ModelAndView) result);
 				if (!mav.getModel().isEmpty()) {
-					log.info(" (" + joinPoint.getSignature().getName() + ") Controller Return: ["+ clazz.getSimpleName() +"]\n" + mav.getModel());
+					log.info(" ["+ clazz.getSimpleName() +"] ---------------------------------------------------------------------------------//\n(" + joinPoint.getSignature().getName() + ") Controller Return: " + mav.getModel());
 				}
 			}
 			
@@ -168,7 +168,7 @@ public class SysLogAspect {
 			if (result instanceof ModelAndView  && result != null) {
 				ModelAndView mav = ((ModelAndView) result);
 				if (!mav.getModel().isEmpty()) {
-					log.info(" (" + joinPoint.getSignature().getName() + ") Controller Return: ["+ clazz.getSimpleName() +"]\n" + mav.getModel());
+					log.info(" ["+ clazz.getSimpleName() +"] ---------------------------------------------------------------------------------//\n(" + joinPoint.getSignature().getName() + ") Controller Return: " + mav.getModel());
 				}
 			}
 			
@@ -220,7 +220,7 @@ public class SysLogAspect {
 			if (result instanceof ModelAndView  && result != null) {
 				ModelAndView mav = ((ModelAndView) result);
 				if (!mav.getModel().isEmpty()) {
-					log.info(" (" + joinPoint.getSignature().getName() + ") Controller Return: ["+ clazz.getSimpleName() +"]\n" + mav.getModel());
+					log.info(" ["+ clazz.getSimpleName() +"] ---------------------------------------------------------------------------------//\n(" + joinPoint.getSignature().getName() + ") Controller Return: " + mav.getModel());
 				}
 			}
 			
@@ -253,9 +253,9 @@ public class SysLogAspect {
 	public void logUpdateThrow(JoinPoint joinPoint, Exception error) throws Exception  {
 		Class<?> clazz = joinPoint.getTarget().getClass();
 		if (error.getClass().equals(MyBatisSystemException.class) || error.getClass().getName().contains("org.springframework.jdbc")) {
-			log.error(" (" + joinPoint.getSignature().getName() + ") Implement Throwable: ["+ clazz.getSimpleName() +"]\n" + error.getMessage());
+			log.error(" ["+ clazz.getSimpleName() +"] ---------------------------------------------------------------------------------//\n(" + joinPoint.getSignature().getName() + ") Implement Throwable: " + error.getMessage());
 		} else {
-			log.error(" (" + joinPoint.getSignature().getName() + ") Implement Throwable: ["+ clazz.getSimpleName() +"]\n" + error);
+			log.error(" ["+ clazz.getSimpleName() +"] ---------------------------------------------------------------------------------//\n(" + joinPoint.getSignature().getName() + ") Implement Throwable: " + error);
 		}
 	}
 	
