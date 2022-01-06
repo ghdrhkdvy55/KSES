@@ -68,8 +68,15 @@
 	})();
 	
 	$(document).ready(function() {
-		var menu = JSON.parse('${MenuJson}');
-		for (let m of menu) {
+		try {
+			var MenuJson = JSON.parse('${MenuJson}');
+		} catch (e) {
+			toastr.error('세션이 종료되어 로그인 페이지로 이동합니다.');
+			setTimeout(function() {
+				document.location.href = '/backoffice/login.do';
+			}, 1000);
+		}
+		for (let m of MenuJson) {
 			switch (m.level) {
 				case 2:
 					let $li = $('<li></li>').appendTo('#mySidenav ul');
@@ -88,7 +95,7 @@
 					$li.append('<div class="panel" style="display:none;"></div>');
 					break;
 				case 3:
-					$('<a href="/backoffice/actionMain.do?menuId='+ m.menu_no +'" id="'+ m.menu_no +'">'+ m.menu_nm + '</a>').data('menu', m).appendTo('#mySidenav div.panel:last');
+					$('<a href="/backoffice/index.do?menuId='+ m.menu_no +'" id="'+ m.menu_no +'">'+ m.menu_nm + '</a>').data('menu', m).appendTo('#mySidenav div.panel:last');
 					break;
 				default:
 			}
