@@ -3,6 +3,7 @@ package egovframework.com.cmm.interceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -34,8 +35,9 @@ public class AuthenticInterceptor extends HandlerInterceptorAdapter {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 		if (EgovWebUtil.isAjaxRequest(request)) {
+			String requestUrl = StringUtils.isEmpty(request.getQueryString()) ? request.getRequestURI() : request.getRequestURI() +"?"+ request.getQueryString();
 			Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-			log.info(" AuthenticInterceptor: "+ isAuthenticated);
+			log.info(" ("+ requestUrl+ ") ===============>> isAuthenticated: "+ isAuthenticated);
 			if (!isAuthenticated) {
 				response.sendError(HttpStatus.SC_FORBIDDEN);
 			}
