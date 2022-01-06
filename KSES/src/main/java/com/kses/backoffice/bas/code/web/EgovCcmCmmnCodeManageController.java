@@ -19,7 +19,6 @@ import com.kses.backoffice.util.SmartUtil;
 import com.kses.backoffice.util.service.UniSelectInfoManageService;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.Globals;
 import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import egovframework.rte.fdl.cmmn.exception.EgovBizException;
@@ -105,9 +104,9 @@ public class EgovCcmCmmnCodeManageController {
 	public ModelAndView updateCmmCode(@RequestBody CmmnCode cmmnCode) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		
-		LoginVO loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
-		cmmnCode.setFrstRegisterId(loginVO.getAdminId());
-		cmmnCode.setLastUpdusrId(loginVO.getAdminId());
+		String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
+		cmmnCode.setFrstRegisterId(userId);
+		cmmnCode.setLastUpdusrId(userId);
 		
 		int ret = 0;
 		switch (cmmnCode.getMode()) {

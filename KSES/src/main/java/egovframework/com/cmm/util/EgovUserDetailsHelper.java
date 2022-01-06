@@ -2,6 +2,7 @@ package egovframework.com.cmm.util;
 
 import java.util.List;
 
+import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.EgovUserDetailsService;
 
 /**
@@ -55,4 +56,17 @@ public class EgovUserDetailsHelper {
 		return egovUserDetailsService.isAuthenticated();
 	}
 	
+	/**
+	 * 로그인 사용자 아이디를 가져온다.
+	 * @return
+	 */
+	public static String getAuthenticatedUserId() {
+		if (egovUserDetailsService.isAuthenticated()) {
+			LoginVO loginVO = (LoginVO) egovUserDetailsService.getAuthenticatedUser();
+			return loginVO.getAdminId();
+		}
+		else {
+			return null;
+		}
+	}
 }

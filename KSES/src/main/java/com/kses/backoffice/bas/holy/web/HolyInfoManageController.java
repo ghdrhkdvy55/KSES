@@ -29,7 +29,6 @@ import com.kses.backoffice.util.SmartUtil;
 import com.kses.backoffice.util.service.UniSelectInfoManageService;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.Globals;
 import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import egovframework.rte.fdl.cmmn.exception.EgovBizException;
@@ -176,9 +175,9 @@ public class HolyInfoManageController {
 	public ModelAndView updateHolyInfo(@RequestBody HolyInfo holyInfo) throws Exception{
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		
-		LoginVO loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
-		holyInfo.setFrstRegisterId(loginVO.getAdminId());
-		holyInfo.setLastUpdusrId(loginVO.getAdminId());
+		String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
+		holyInfo.setFrstRegisterId(userId);
+		holyInfo.setLastUpdusrId(userId);
 		
 		int ret = 0;
 		switch (holyInfo.getMode()) {
@@ -240,14 +239,12 @@ public class HolyInfoManageController {
 	public ModelAndView selectHolyInfoExcelUpload(@RequestBody Map<String, Object> params) throws Exception{	
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
 	    
-		LoginVO loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
-		final String loginId = loginVO.getAdminId();
-		
+		String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
 		Gson gson = new GsonBuilder().create();
 		List<HolyInfo> holyInfos = gson.fromJson(params.get("data").toString(), new TypeToken<List<HolyInfo>>(){}.getType());
 		holyInfos.forEach(holyInfo -> {
-			holyInfo.setFrstRegisterId(loginId);
-			holyInfo.setLastUpdusrId(loginId);
+			holyInfo.setFrstRegisterId(userId);
+			holyInfo.setLastUpdusrId(userId);
 		});
 		
 		boolean holyInsert = holyService.insertExcelHoly(holyInfos);
