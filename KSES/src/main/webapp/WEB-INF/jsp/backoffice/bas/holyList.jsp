@@ -118,7 +118,7 @@
 		<a class="button b-close">X</a>
         <p class="pop_tit">엑셀 업로드</p>
         <p class="pop_wrap">
-        	<input type="file" id="" accept="xlsx/*">
+        	<input type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
         </p>
         <div style="float:left;margin-top:5px;">
         	<a href="/backoffice/bas/holyInfoUploadSampleDownload.do" class="orangeBtn">샘플</a>
@@ -155,6 +155,52 @@
 		let endDate = new Date(new Date().getFullYear(), 11, 31);
 		$('#searchFrom').val($.datepicker.formatDate('yymmdd', startDate))
 		$('#searchTo').val($.datepicker.formatDate('yymmdd', endDate));
+		// 엑셀업로드
+		$('[data-popup=bas_excel_upload] .blueBtn').click(function(e) {
+			bPopupConfirm('휴일일자 등록', '엑셀 업로드를 통한 휴일일자 등록을 진행하시겠습니까?', function() {
+				let $popup = $('[data-popup=bas_excel_upload]');
+				let $input = $popup.find(':file')[0];
+				let reader = new FileReader();
+				reader.onload = function() {
+					let wb = XLSX.read(reader.result, {type: 'binary'});
+					let sheet = wb.Sheets[wb.SheetNames[0]];
+					let json = XLSX.utils.sheet_to_json(sheet);
+					for (let row of json) {
+						Object.keys(row).forEach(k => {
+							switch (k) {
+								case '휴일일자':
+									row['holyDt'] = row[k];
+									break;
+								case '휴일명':
+									row['holyNm'] = row[k]
+									break;
+								case '사용여부':
+									row['useYn'] = row[k];
+									break;
+								default:
+							}
+							delete row[k];
+						});
+					}
+					EgovIndexApi.apiExecuteJson(
+						'POST',
+						'/backoffice/bas/holyInfoExcelUpload.do', {
+							data: JSON.stringify(json)	
+						},
+						null,
+						function(json) {
+							toastr.success(json.message);
+							$popup.bPopup().close();
+							fnSearch(1);
+						},
+						function(json) {
+							toastr.error(json.message);
+						}
+					);
+				};
+				reader.readAsBinaryString($input.files[0]);
+			});
+		});
 	});
 	// 메인 목록 검색
 	function fnSearch(pageNo) {

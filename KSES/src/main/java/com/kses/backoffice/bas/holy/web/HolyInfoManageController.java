@@ -215,8 +215,6 @@ public class HolyInfoManageController {
 	@RequestMapping (value="holyDelete.do", method = RequestMethod.POST)
 	public ModelAndView deleteholyInfoManage(@RequestBody HolyInfo holyInfo) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
-		
-		
 	    
 		int ret =  holyService.deleteHolyInfo(SmartUtil.dotToList(holyInfo.getHolySeq()));
 		
@@ -240,7 +238,6 @@ public class HolyInfoManageController {
 	 */
 	@RequestMapping (value="holyInfoExcelUpload.do", method = RequestMethod.POST)
 	public ModelAndView selectHolyInfoExcelUpload(@RequestBody Map<String, Object> params) throws Exception{	
-		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
 	    
 		LoginVO loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
