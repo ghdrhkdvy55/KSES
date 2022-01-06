@@ -19,13 +19,11 @@ public class BlackUserInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 	
 	@Override
 	public List<Map<String, Object>> selectBlackUserInfoManageListByPagination(Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		return blackUserMapper.selectBlackUserInfoManageListByPagination(params);
 	}
 	
 	@Override
 	public int updateBlackUserInfoManage(BlackUserInfo vo) throws Exception {
-		// TODO Auto-generated method stub
 		return vo.getMode().equals("Ins") ? blackUserMapper.insertBlackUserInfo(vo) : blackUserMapper.updateBlackUserInfo(vo);
 	}
 }
