@@ -366,7 +366,6 @@
 			pageUnit: '5',
 			holyDt: $popup.find(':text[name=holyDt]').val()
 		};
-		console.log(params);
 		EgovJqGridApi.popGridAjax('popGrid', '/backoffice/bas/holyCenterListAjax.do', params, fnCenterHolyInfoSearch);
 	}
 	// 엑셀 다운로드
