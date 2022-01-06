@@ -1,13 +1,10 @@
 package egovframework.com.cmm.annotation;
 
-
-
 import java.util.Locale;
 
+import org.apache.commons.lang.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.DataAccessException;
 import org.springframework.util.AntPathMatcher;
@@ -17,10 +14,10 @@ import egovframework.rte.fdl.cmmn.aspect.ExceptionTransfer;
 import egovframework.rte.fdl.cmmn.exception.EgovBizException;
 import egovframework.rte.fdl.cmmn.exception.FdlException;
 import egovframework.rte.fdl.cmmn.exception.manager.ExceptionHandlerService;
+import lombok.extern.slf4j.Slf4j;
 
-public class CustomerExceptionTransfer  extends ExceptionTransfer{
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(ExceptionTransfer.class);
+@Slf4j
+public class CustomerExceptionTransfer  extends ExceptionTransfer {
 	
 	private ExceptionHandlerService[] exceptionHandlerServices;
 	
@@ -31,18 +28,16 @@ public class CustomerExceptionTransfer  extends ExceptionTransfer{
 	
 	@Override
 	public void transfer(JoinPoint thisJoinPoint, Exception exception) throws Exception {
-		LOGGER.debug("execute ExceptionTransfer.transfer  확인 ");
+		log.debug("execute ExceptionTransfer.transfer 확인");
 		
 		Class<?> clazz = thisJoinPoint.getTarget().getClass();
 		Signature signature = thisJoinPoint.getSignature();
 
 		Locale locale = LocaleContextHolder.getLocale();
-		
-		
 	
 		//EgovBizException 이 발생시
 		if (exception instanceof EgovBizException) {
-			LOGGER.debug("Exception case :: EgovBizException ");
+			log.debug("Exception case :: EgovBizException ");
 
 			EgovBizException be = (EgovBizException) exception;
 			//wrapp 된 Exception 있는 경우 error 원인으로 출력해준다.
@@ -60,16 +55,20 @@ public class CustomerExceptionTransfer  extends ExceptionTransfer{
 
 			//RuntimeException 이 발생시 내부에서 DataAccessException 인 경우 는 별도록 throw 하고 있다.
 		} else if (exception instanceof RuntimeException) {
-			LOGGER.debug("RuntimeException case :: RuntimeException ");
-
+			log.debug("RuntimeException case :: RuntimeException ");
+			
 			RuntimeException be = (RuntimeException) exception;
-			getLog(clazz).error(be.getMessage(), be.getCause());
-
+			if (StringUtils.contains(be.getCause().getClass().getPackage().getName(), "java.sql")) {
+				getLog(clazz).error(be.getMessage());
+			} else {
+				getLog(clazz).error(be.getMessage(), be.getCause());
+			}
+			
 			// Exception Handler 에 발생된 Package 와 Exception 설정.
 			processHandling(clazz, signature.getName(), exception, pm, exceptionHandlerServices);
 
 			if (be instanceof DataAccessException) {
-				LOGGER.debug("RuntimeException case :: DataAccessException ");
+				log.debug("RuntimeException case :: DataAccessException ");
 				DataAccessException sqlEx = (DataAccessException) be;
 				throw sqlEx;
 			}
@@ -78,21 +77,19 @@ public class CustomerExceptionTransfer  extends ExceptionTransfer{
 
 			//실행환경 확장모듈에서 발생한 Exception (요청: 공통모듈) :: 후처리로직 실행하지 않음.
 		} else if (exception instanceof FdlException) {
-			LOGGER.debug("FdlException case :: FdlException ");
-
+			log.debug("FdlException case :: FdlException ");
 			FdlException fe = (FdlException) exception;
 			getLog(clazz).error(fe.getMessage(), fe.getCause());
-
 			throw fe;
-
 		} else {
 			//그외에 발생한 Exception 을  BaseException (메세지: fail.common.msg) 로  만들어 변경 던진다.
 			//:: 후처리로직 실행하지 않음.
-			LOGGER.debug("case :: Exception ");
+			log.debug("case :: Exception ");
 			getLog(clazz).error(exception.getMessage(), exception.getCause());
 			throw processException(clazz, "fail.common.msg", new String[] {}, exception, locale);
 		}
 	}
+	
 	/**
 	 * 발생한 Exception 에 따라 후처리 로직이 실행할 수 있도록 연결하는 역할을 수행한다.
 	 * 
@@ -103,24 +100,18 @@ public class CustomerExceptionTransfer  extends ExceptionTransfer{
 	 * @param exceptionHandlerServices[] 등록되어 있는 ExceptionHandlerService 리스트
 	 */
 	@Override
-	protected void processHandling(Class<?> clazz, 
-			                                     String methodName, 
-			                                     Exception exception, 
-			                                     PathMatcher pm, 
-			                                     ExceptionHandlerService[] exceptionHandlerServices) {
-		LOGGER.error("processHandling");
-		
-		
+	protected void processHandling(Class<?> clazz, String methodName, Exception exception, PathMatcher pm, ExceptionHandlerService[] exceptionHandlerServices) {
+		log.error("processHandling");
 		for (ExceptionHandlerService ehm : exceptionHandlerServices) {
 			try {
 				if (!ehm.hasReqExpMatcher()) {
 					ehm.setReqExpMatcher(pm);
 				}
-				LOGGER.error("processHandling"+clazz.getCanonicalName() + "." + methodName + ":" +exception);
+				log.error("processHandling"+clazz.getCanonicalName() + "." + methodName + ":" +exception);
 				ehm.setPackageName(clazz.getCanonicalName() + "." + methodName);
 				ehm.run(exception);
 			} catch (Exception e) {
-				LOGGER.error("ExceptionHandlerService Error", e);
+				log.error("ExceptionHandlerService Error", e);
 			}
 		}
 	}
