@@ -384,9 +384,8 @@
  		}
 	}
 	function gridResize(gridId) { 
-		maxGridWidth = $("#contents").width() - 2; 		
-		resizeJqGridWidth(gridId, "contents", maxGridWidth);
-
+		let _MainGridSelector = "#mainGrid";
+		$(_MainGridSelector).setGridWidth($(_MainGridSelector).closest('div.boardlist').width() , true);
 	}
 	function resizeJqGridWidth(grid_id, div_id, width){ 
 		// window에 resize 이벤트를 바인딩 한다. 

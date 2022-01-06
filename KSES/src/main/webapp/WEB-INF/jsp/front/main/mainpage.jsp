@@ -421,6 +421,7 @@
 								// 마지막 예약정보가 존재할 경우
 								if(result.reservationInfo != null) {
 									var obj = result.reservationInfo;
+									
 									$("#user_rsv_area").addClass("main_user_rsv");
 									
 									if(obj.resv_info_type == "NOW") {
@@ -639,7 +640,7 @@
 				    			
 								if(division == "NOW") {
 									$("#rsv_info .name").html(userLoginInfo.userNm);
-									$("#rsv_num").html(obj.resv_seq);
+									$("#rsv_num").html(fn_resvSeqFormat(obj.resv_seq));
 									$("#rsv_date").html(fn_resvDateFormat(obj.resv_end_dt));
 									$("#rsv_center").html(obj.center_nm);
 												
@@ -657,7 +658,7 @@
 									$("#rsv_req_date").html(obj.resv_req_date);
 								} else if(division == "PRE"){
 									$("#re_rsv_info .name").html(userLoginInfo.userNm);
-									$("#re_rsv_num").html(obj.resv_seq);
+									$("#re_rsv_num").html(fn_resvSeqFormat(obj.resv_seq));
 									$("#re_rsv_date").html(fn_resvDateFormat(obj.resv_end_dt));
 									$("#re_rsv_center").html(obj.center_nm);
 									
@@ -686,7 +687,7 @@
 									}
 								} else {
 									$("#cancel_rsv_info .name").html(userLoginInfo.userNm);
-									$("#cancel_rsv_num").html(obj.resv_seq);
+									$("#cancel_rsv_num").html(fn_resvSeqFormat(obj.resv_seq));
 									$("#cancel_rsv_date").html(fn_resvDateFormat(obj.resv_end_dt));
 									$("#cancel_rsv_center").html(obj.center_nm);
 									
@@ -797,11 +798,11 @@
 				);	
 			}, 
 			fn_reSeat : function(resvInfo) {
-				
 				var checkDvsn = resvInfo.resv_entry_dvsn == "ENTRY_DVSN_1" ? "STANDING" : "SEAT";
 				var params = {
 					"checkDvsn" : "SEAT",
 					"isReSeat" : "Y",
+					"entryDvsn" : resvInfo.resv_entry_dvsn,
 					"userDvsn" : resvInfo.resv_user_dvsn,
 					"centerCd" : resvInfo.center_cd,
 					"floorCd" : resvInfo.floor_cd,
