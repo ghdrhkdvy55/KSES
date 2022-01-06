@@ -1,10 +1,17 @@
 package com.kses.backoffice.bas.holy.web;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -46,6 +53,9 @@ public class HolyInfoManageController {
 	
 	@Autowired
 	private UniSelectInfoManageService uniService;
+	
+	@Autowired
+    ServletContext servletContext;
 	
 	/**
 	 * 휴일관리 화면
@@ -272,6 +282,22 @@ public class HolyInfoManageController {
 		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.update") );
 		
 		return model;
+	}
+	
+	/**
+	 * 샘플 엑셀 파일 다운로드
+	 * @param response
+	 * @throws Exception
+	 */
+	@RequestMapping (value="holyInfoUploadSampleDownload.do", method = RequestMethod.GET)
+	public void holyInfoUploadSampleDownload(HttpServletResponse response) throws Exception {
+		String fileName = "holyinfo_upload.xlsx";
+		String sampleFolder = servletContext.getRealPath("/WEB-INF/sample/");
+		Path file = Paths.get(sampleFolder, fileName);
+		response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+		response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+ fileName);
+		Files.copy(file, response.getOutputStream());
+		response.getOutputStream().flush();
 	}
 	
 	/** 사용하지 않음

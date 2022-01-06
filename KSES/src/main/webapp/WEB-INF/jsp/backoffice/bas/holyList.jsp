@@ -46,7 +46,7 @@
         </div>
         <div class="right_box">
         	<a href="javascript:fnHolyInfoCenterApply();" class="blueBtn">전체지점 휴일 등록</a>
-        	<a href="javascript:void(0);" class="blueBtn">엑셀 업로드</a>
+        	<a href="javascript:$('[data-popup=bas_excel_upload]').bPopup();" class="blueBtn">엑셀 업로드</a>
         	<a href="javascript:fnExcelDownload();" class="blueBtn">엑셀 다운로드</a>
         	<a href="javascript:fnHolyInfo();" class="blueBtn">휴일 등록</a>
         	<a href="javascript:fnHolyDelete();" class="grayBtn">삭제</a>
@@ -111,6 +111,23 @@
 	    	<button type="button" class="grayBtn b-close">취소</button>
 		</div>
 		<div class="clear"></div>
+	</div>
+</div>
+<div data-popup="bas_excel_upload" class="popup m_pop">
+	<div class="pop_con">
+		<a class="button b-close">X</a>
+        <p class="pop_tit">엑셀 업로드</p>
+        <p class="pop_wrap">
+        	<input type="file" id="" accept="xlsx/*">
+        </p>
+        <div style="float:left;margin-top:5px;">
+        	<a href="/backoffice/bas/holyInfoUploadSampleDownload.do" class="orangeBtn">샘플</a>
+        </div>
+        <div class="right_box">
+        	<button type="button" class="blueBtn">업로드</a>
+            <button type="button" class="grayBtn b-close">취소</a>
+        </div>
+        <div class="clear"></div>
 	</div>
 </div>
 <!-- popup// -->
