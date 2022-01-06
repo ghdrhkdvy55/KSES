@@ -11,7 +11,6 @@ import javax.servlet.http.HttpSession;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -65,9 +64,10 @@ public class SysLogAspect {
 	@Around("execution(public * egovframework.let..web.*Controller.update*(..)) || execution(public * com.kses..web.*Controller.update*(..))"
 			+ " &&  !@target(com.kses.backoffice.sym.log.annotation.NoLogging)"
             + " &&  !@annotation(com.kses.backoffice.sym.log.annotation.NoLogging))")	
-	public Object logUpdate(ProceedingJoinPoint  joinPoint) throws Throwable {
+	public Object logUpdate(ProceedingJoinPoint joinPoint) throws Throwable {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 		Class<?> clazz = joinPoint.getTarget().getClass();
+		Object result = null; 
 		Object sqlId  = null;
 		
 		StopWatch stopWatch = new StopWatch();
@@ -92,11 +92,18 @@ public class SysLogAspect {
 			if (methodArgs.length > 0){
 				sqlId = methodArgs[0];
 			}
-			return joinPoint.proceed();
+			result = joinPoint.proceed();
+			return result;
 		} catch (Throwable e) {
 			throw e;
 		} finally {
 			stopWatch.stop();
+			if (result instanceof ModelAndView  && result != null) {
+				ModelAndView mav = ((ModelAndView) result);
+				if (!mav.getModel().isEmpty()) {
+					log.info(" ["+ clazz.getSimpleName() +"]\n(" + joinPoint.getSignature().getName() + ") Controller Return: " + mav.getModel());
+				}
+			}
 			
 			// TODO: 시스템 로그 기록시 검토 후 완성 필요
 			final String processSeCode = ParamToJson.JsonKeyToString(sqlId,"mode").equals("Ins") ? "I" : "U";
@@ -124,9 +131,10 @@ public class SysLogAspect {
 	@Around("execution(public * egovframework.let..web.*Controller.select*(..)) || execution(public * com.kses..web.*Controller.select*(..))"
 			+ " && !@target(com.kses.backoffice.sym.log.annotation.NoLogging)"
             + " && !@annotation(com.kses.backoffice.sym.log.annotation.NoLogging))")	
-	public Object logSelect(ProceedingJoinPoint  joinPoint) throws Throwable {
+	public Object logSelect(ProceedingJoinPoint joinPoint) throws Throwable {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 		Class<?> clazz = joinPoint.getTarget().getClass();
+		Object result = null;
 		Object sqlId  = null;
 		
 		StopWatch stopWatch = new StopWatch();
@@ -151,11 +159,18 @@ public class SysLogAspect {
 			if (methodArgs.length > 0) {
 				sqlId = methodArgs[0];
 			}
-			return joinPoint.proceed();
+			result = joinPoint.proceed();
+			return result;
 		} catch (Throwable e) {
 		    throw e;
 		} finally {
 			stopWatch.stop();
+			if (result instanceof ModelAndView  && result != null) {
+				ModelAndView mav = ((ModelAndView) result);
+				if (!mav.getModel().isEmpty()) {
+					log.info(" ["+ clazz.getSimpleName() +"]\n(" + joinPoint.getSignature().getName() + ") Controller Return: " + mav.getModel());
+				}
+			}
 			
 			final String processSeCode = "S";
 			final String ipAddr = EgovClntInfo.getClntIP(request);
@@ -180,12 +195,13 @@ public class SysLogAspect {
 	 * @param result
 	 * @throws Throwable
 	 */
-	@AfterReturning(pointcut = "execution(public * egovframework.let..web.*Controller.delete*(..)) || execution(public * com.kses..web.*Controller.delete*(..))"
+	@Around("execution(public * egovframework.let..web.*Controller.delete*(..)) || execution(public * com.kses..web.*Controller.delete*(..))"
 			 + " && !@target(com.kses.backoffice.sym.log.annotation.NoLogging)"
-	         + " && !@annotation(com.kses.backoffice.sym.log.annotation.NoLogging) )", returning = "result")
-	public void logSelect(JoinPoint joinPoint, Object result) throws Throwable {
+	         + " && !@annotation(com.kses.backoffice.sym.log.annotation.NoLogging))")
+	public Object logDelete(ProceedingJoinPoint joinPoint) throws Throwable {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
 		Class<?> clazz = joinPoint.getTarget().getClass();
+		Object result = null;
 		Object sqlId  = null;
 		
 		StopWatch stopWatch = new StopWatch();
@@ -195,24 +211,23 @@ public class SysLogAspect {
 			if (methodArgs.length > 0){
 				sqlId = methodArgs[0];
 			}
-			stopWatch.stop();
+			result = joinPoint.proceed();
+			return result;
 		} catch (Throwable e) {
 			throw e;
 		} finally {
+			stopWatch.stop();
+			if (result instanceof ModelAndView  && result != null) {
+				ModelAndView mav = ((ModelAndView) result);
+				if (!mav.getModel().isEmpty()) {
+					log.info(" ["+ clazz.getSimpleName() +"]\n(" + joinPoint.getSignature().getName() + ") Controller Return: " + mav.getModel());
+				}
+			}
+			
 			final String processSeCode = "D";
 			final String ipAddr = EgovClntInfo.getClntIP(request);
 			final String processTime = Long.toString(stopWatch.getTotalTimeMillis());
 			final String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
-			
-			if (result instanceof ModelAndView  && result != null) {
-				ModelAndView mav = ((ModelAndView) result);
-				if (!mav.getModel().isEmpty()) {
-					log.info(" ( ["+ clazz.getSimpleName() +"] (" + joinPoint.getSignature().getName() + ") Controller Return: " + mav.getModel());
-				}
-//				if (mav.getModel().get(SysLogAspect.KEY_ECODE) == null) {
-//					mav.addObject(SysLogAspect.KEY_ECODE, 0);
-//				}
-			}
 			
 			// TODO: 시스템 로그 기록시 검토 후 완성 필요
 			SysLog sysLog = new SysLog();
@@ -233,8 +248,8 @@ public class SysLogAspect {
 	 * @throws Exception
 	 */
 	@AfterThrowing(pointcut = "execution( public * egovframework.let..impl.*Impl.update*(..)) or execution(* com.kses.*Controller.*(..))"
-						     + " and !@target(com.kses.backoffice.sym.log.annotation.NoLogging)"
-						     + " and !@annotation(com.kses.backoffice.sym.log.annotation.NoLogging))", throwing = "error")
+		     + " and !@target(com.kses.backoffice.sym.log.annotation.NoLogging)"
+		     + " and !@annotation(com.kses.backoffice.sym.log.annotation.NoLogging))", throwing = "error")
 	public void logUpdateThrow(JoinPoint joinPoint, Exception error) throws Exception  {
 		if (error.getClass().equals(MyBatisSystemException.class) || error.getClass().getName().contains("org.springframework.jdbc")) {
 			log.error(" (" + joinPoint.getSignature().getName() + ") Implement Throwable: " + error.getMessage());
