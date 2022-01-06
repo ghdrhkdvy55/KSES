@@ -904,9 +904,9 @@ body .ui-tooltip {
 	background: #fff;
 	color: #333333;
 }
-.ui-widget-content a {
+/*0105 테이블 삭제 아이콘 배경 삭제*/
+.blueBtn {
     color: #ffffff;
-    /* color: #333333; */
     padding: 5px 12px;
     border-radius: 5px;
     font-size: 13px;

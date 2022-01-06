@@ -24,13 +24,11 @@ public class KioskInfoServiceImpl extends EgovAbstractServiceImpl implements Kio
 
 	@Override
 	public List<Map<String, Object>> selectKioskInfoList(Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		return kioskMapper.selectKioskInfoList(params);
 	}
 
 	@Override
 	public Map<String, Object> selectKioskInfoDetail(String ticketMchnSno) throws Exception {
-		// TODO Auto-generated method stub
 		return kioskMapper.selectKioskInfoDetail(ticketMchnSno);
 	}
 	
@@ -56,7 +54,6 @@ public class KioskInfoServiceImpl extends EgovAbstractServiceImpl implements Kio
 
 	@Override
 	public int deleteKioskInfo(List<String> kioskList) throws Exception {
-		// TODO Auto-generated method stub
 		return kioskMapper.deleteKioskInfo(kioskList);
 	}
 

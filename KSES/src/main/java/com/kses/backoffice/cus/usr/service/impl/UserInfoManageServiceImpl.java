@@ -28,49 +28,41 @@ public class UserInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 
 	@Override
 	public List<Map<String, Object>> selectUserInfoListPage(Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		return userMapper.selectUserInfoListPage(params);
 	}
 
 	@Override
 	public Map<String, Object> selectUserInfoDetail(String userId) throws Exception {
-		// TODO Auto-generated method stub
 		return userMapper.selectUserInfoDetail(userId);
 	}
 	
 	@Override
 	public UserLoginInfo selectSSOUserInfo(Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		return userMapper.selectSSOUserInfo(params);
 	}
 	
 	@Override
 	public Map<String, Object> selectUserVacntnInfo(String userId) throws Exception {
-		// TODO Auto-generated method stub
 		return userMapper.selectUserVacntnInfo(userId);
 	}
 	
 	@Override
 	public Map<String, Object> selectSpeedOnVacntnInfo(UserLoginInfo userLoginInfo) throws Exception {
-		// TODO Auto-generated method stub
 		return userMapper.selectSpeedOnVacntnInfo(userLoginInfo);
 	}
 
 	@Override
 	public int updateUserInfo(UserInfo vo) throws Exception {
-		// TODO Auto-generated method stub
 		return vo.getMode().equals("Ins") ?  userMapper.insertUserInfo(vo) : userMapper.updateUserInfo(vo);
 	}
 	
 	@Override
 	public int updateUserRcptInfo(UserInfo vo) throws Exception {
-		// TODO Auto-generated method stub
 		return userMapper.updateUserRcptInfo(vo);
 	}
 
 	@Override
 	public boolean deleteUserInfo(String delCds) throws Exception {
-		// TODO Auto-generated method stub
         try {
         	userMapper.deleteUserInfo(SmartUtil.dotToList(delCds));
 			return true;

@@ -24,7 +24,6 @@ public class CenterHolyInfoManageServiceImpl extends EgovAbstractServiceImpl imp
 	
 	@Override
 	public List<Map<String, Object>> selectCenterHolyInfoList(String centerCd) throws Exception {
-		// TODO Auto-generated method stub
 		return centerHolyMapper.selectCenterHolyInfoList(centerCd);
 	}
 
@@ -42,19 +41,16 @@ public class CenterHolyInfoManageServiceImpl extends EgovAbstractServiceImpl imp
 
 	@Override
 	public int copyCenterHolyInfo(Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		return centerHolyMapper.copyCenterHolyInfo(params);
 	}
 	
 	@Override
 	public Map<String, Object> centerUpdateSelect(String centerHolySeq) throws Exception {
-		// TODO Auto-generated method stub
 		return centerHolyMapper.centerUpdateSelect(centerHolySeq);
 	}
 	
 	@Override
 	public int deleteCenterHolyInfo(int centerHolySeq) throws Exception {
-		// TODO Auto-generated method stub
 		return centerHolyMapper.deleteCenterHolyInfo(centerHolySeq);
 	}
 

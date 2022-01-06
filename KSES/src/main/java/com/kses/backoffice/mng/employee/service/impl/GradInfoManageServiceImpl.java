@@ -21,26 +21,22 @@ public class GradInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 
 	@Override
 	public List<Map<String, Object>> selectGradInfoList(@Param("params") Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		return gradMapper.selectGradInfoList(params);
 	}
 	
 	@Override
 	public List<GradInfo> selectGradInfoComboList() throws Exception {
-		// TODO Auto-generated method stub
 		return gradMapper.selectGradInfoComboList();
 	}
 	
 	@Override
 	public Map<String, Object> selectGradDetailInfo(String gradCode) throws Exception {
-		// TODO Auto-generated method stub
 		return gradMapper.selectGradDetailInfo(gradCode);
 	}
 
 
 	@Override
 	public int updateGradInfo(GradInfo gradInfo) throws Exception {
-		// TODO Auto-generated method stub
 		return gradInfo.getMode().equals("Ins") ?  gradMapper.insertGradInfo(gradInfo) :  gradMapper.updateGradInfo(gradInfo);
 	}
 

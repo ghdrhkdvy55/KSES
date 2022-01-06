@@ -27,7 +27,6 @@ public class NoshowInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
 	
 	@Override
 	public List<Map<String, Object>> selectNoshowInfoList(String centerCd) throws Exception {
-		// TODO Auto-generated method stub
 		return noshowMapper.selectNoshowInfoList(centerCd);
 	}
 	
@@ -43,25 +42,21 @@ public class NoshowInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
 	
 	@Override
 	public int insertNoshowResvInfo(NoShowHisInfo noshowHisInfo) throws Exception {
-		// TODO Auto-generated method stub
 		return noshowMapper.insertNoshowResvInfo(noshowHisInfo);
 	}
 
 	@Override
 	public int updateNoshowResvInfoTranCancel(ResvInfo resvInfo) throws Exception {
-		// TODO Auto-generated method stub
 		return noshowMapper.updateNoshowResvInfoTranCancel(resvInfo);
 	}
 	
 	@Override
 	public int updateNoshowInfo(List<NoshowInfo> noshowInfoList) throws Exception {
-		// TODO Auto-generated method stub
 		return noshowMapper.updateNoshowInfo(noshowInfoList);
 	}
 
 	@Override
 	public int copyNoshowInfo(Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		return noshowMapper.copyNoshowInfo(params);
 	}
 	

@@ -25,19 +25,16 @@ public class AttendInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
 
 	@Override
 	public List<Map<String, Object>> selectAttendInfoListPage(Map<String, Object> params) {
-		// TODO Auto-generated method stub
 		return attendMapper.selectAttendInfoListPage(params);
 	}
 
 	@Override
 	public Map<String, Object> selectAttendInfoDetail(AttendInfo vo) {
-		// TODO Auto-generated method stub
 		return attendMapper.selectAttendInfoDetail(vo);
 	}
 
 	@Override
 	public AttendInfo insertAttendInfo(AttendInfo vo) {
-		// TODO Auto-generated method stub
 		int ret = 0;
 		
 		if(!vo.getMode().equals("Manual")) {
@@ -78,7 +75,6 @@ public class AttendInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
 
 	@Override
 	public boolean deleteAttendInfo(String delCds) {
-		// TODO Auto-generated method stub
 		try {
 			attendMapper.deleteAttendInfo(SmartUtil.dotToList(delCds));
 			return true;

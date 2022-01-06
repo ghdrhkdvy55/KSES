@@ -20,26 +20,22 @@ public class CommentInfoManageServiceImpl  extends EgovAbstractServiceImpl imple
 	
 	@Override
 	public List<Map<String, Object>> selectCommentManageListByPagination(Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		return commtMapper.selectCommentManageListByPagination(params);
 	}
 
 	@Override
 	public Map<String, Object> selectCommentManageDetail(String cmntNo) throws Exception {
-		// TODO Auto-generated method stub
 		return commtMapper.selectCommentManageDetail(cmntNo);
 	}
 
 
 	@Override
 	public int updateCommentManage(BoardCommInfo vo) throws Exception {
-		// TODO Auto-generated method stub
 		return !vo.getMode().equals("Ins")? commtMapper.updateCommentManage(vo) : commtMapper.insertCommentManage(vo);
 	}
 
 	@Override
 	public int deleteCommentManage(String cmntNo) throws Exception {
-		// TODO Auto-generated method stub
 		return commtMapper.deleteCommentManage(cmntNo);
 	}
 	

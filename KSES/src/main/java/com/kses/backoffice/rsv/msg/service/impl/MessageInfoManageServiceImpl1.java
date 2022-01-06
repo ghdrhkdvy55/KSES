@@ -26,13 +26,11 @@ public class MessageInfoManageServiceImpl1 extends EgovAbstractServiceImpl imple
 
 	@Override
 	public List<Map<String, Object>> selectMsgManageListByPagination(MessageInfoVO1 searchVO) throws Exception {
-		// TODO Auto-generated method stub
 		return msgMapper.selectMsgManageListByPagination(searchVO);
 	}
 
 	@Override
 	public Map<String, Object> selectMsgManageDetail(String MsgSeq) throws Exception {
-		// TODO Auto-generated method stub
 		return msgMapper.selectMsgManageDetail(MsgSeq);
 	}
 	@Override
@@ -51,14 +49,12 @@ public class MessageInfoManageServiceImpl1 extends EgovAbstractServiceImpl imple
 
 	@Override
 	public int deleteMsgManage(String msgSeq) throws Exception {
-		// TODO Auto-generated method stub
 		return msgMapper.deleteMsgManage(msgSeq);
 	}
 
 	@Override
 	public List<MessageInfo1> selectMsgCombo(String msgGubun)
 			throws Exception {
-		// TODO Auto-generated method stub
 		return msgMapper.selectMsgCombo(msgGubun);
 	}
 	

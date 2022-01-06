@@ -20,19 +20,16 @@ public class QrcpdeInfoManageServieImpl extends EgovAbstractServiceImpl implemen
 
 	@Override
 	public List<Map<String, Object>> selectQrCodeList(Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		return qrmapper.selectQrCodeList(params);
 	}
 
 	@Override
 	public Map<String, Object> selectQrCodeDetail(Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		return qrmapper.selectQrCodeDetail(params);
 	}
 
 	@Override
 	public int updateQrcodeManage(QrcodeInfo vo) throws Exception {
-		// TODO Auto-generated method stub
 		return vo.getMode().equals("Ins") ? qrmapper.insertQrcodeManage(vo) : qrmapper.updateQrcodeManage(vo);
 	}
 }

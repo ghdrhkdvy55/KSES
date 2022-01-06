@@ -25,19 +25,16 @@ public class BoardSetInfoManageServiceImpl extends EgovAbstractServiceImpl imple
 
 	@Override
 	public List<Map<String, Object>> selectBoardSettingInfoList(Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		return boardSetMapper.selectBoardSettingInfoList(params);
 	}
 
 	@Override
 	public Map<String, Object> selectBoardSettingInfoDetail(String boardCd) throws Exception {
-		// TODO Auto-generated method stub
 		return boardSetMapper.selectBoardSettingInfoDetail(boardCd);
 	}
 
 	@Override
 	public int updateBoardSetInfo(BoardSetInfo vo) throws Exception {
-		// TODO Auto-generated method stub
 		int ret = 0;
 		try {
 			if (vo.getMode().equals("Ins")) {
@@ -55,7 +52,6 @@ public class BoardSetInfoManageServiceImpl extends EgovAbstractServiceImpl imple
 
 	@Override
 	public boolean deleteBoardSetInfo(String delCd) throws Exception {
-		// TODO Auto-generated method stub
 		try {
 			boardSetMapper.deleteBoardSettingInfo(SmartUtil.dotToList(delCd));
 			return true;

@@ -20,37 +20,31 @@ public class SeatInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 
 	@Override
 	public List<Map<String, Object>> selectSeatInfoList(Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		return seatMapper.selectSeatInfoList(params);
 	}
 
 	@Override
 	public Map<String, Object> selectSeatInfoDetail(String seatCd) throws Exception {
-		// TODO Auto-generated method stub
 		return seatMapper.selectSeatInfoDetail(seatCd);
 	}
 
 	@Override
 	public List<Map<String, Object>> selectReservationSeatList(Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		return seatMapper.selectReservationSeatList(params);
 	}
 	
 	@Override
 	public int updateSeatInfo(SeatInfo vo) throws Exception {
-		// TODO Auto-generated method stub
 		return vo.getMode().equals("Ins") ?  seatMapper.insertSeatInfo(vo) :  seatMapper.updateSeatInfo(vo);
 	}
 
 	@Override
 	public int updateSeatPositionInfo(List<SeatInfo> list) throws Exception {
-		// TODO Auto-generated method stub
 		return seatMapper.updateSeatPositionInfo(list);
 	}
 
 	@Override
 	public int deleteSeatInfo(List<String> seatList) throws Exception {
-		// TODO Auto-generated method stub
 		return seatMapper.deleteSeatInfo(seatList);
 	}
 }

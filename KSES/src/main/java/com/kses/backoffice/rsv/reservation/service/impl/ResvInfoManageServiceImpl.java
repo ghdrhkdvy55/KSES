@@ -46,7 +46,6 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	
 	@Override
 	public List<Map<String, Object>> selectResInfoManageListByPagination(Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		params.forEach((key, value)
 			    -> System.out.println("key: " + key + ", value: " + value));
 		
@@ -56,31 +55,26 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	
 	@Override
 	public Map<String, Object> selectResInfoDetail(String resvSeq) throws Exception {
-		// TODO Auto-generated method stub
 		return resvMapper.selectResInfoDetail(resvSeq);
 	}
 	
 	@Override
 	public Map<String, Object> selectUserLastResvInfo(String userId) throws Exception {
-		// TODO Auto-generated method stub
 		return resvMapper.selectUserLastResvInfo(userId);
 	}
 	
 	@Override
 	public Map<String, Object> selectUserResvInfo(Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		return resvMapper.selectUserResvInfo(params);
 	}
 	
 	@Override
 	public List<String> selectResvDateList(ResvInfo vo) throws Exception {
-		// TODO Auto-generated method stub
 		return resvMapper.selectResvDateList(vo);
 	}
 
 	@Override
 	public int updateUserResvInfo(ResvInfo vo) throws Exception {
-		// TODO Auto-generated method stub
 		return vo.getMode().equals("Ins") ? resvMapper.insertUserResvInfo(vo) : resvMapper.updateUserResvInfo(vo);
 	}
 	
@@ -110,73 +104,61 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	
 	@Override
 	public Map<String, Object> selectInUserResvInfo(ResvInfo vo) throws Exception {
-		// TODO Auto-generated method stub
 		return resvMapper.selectInUserResvInfo(vo);
 	}
 	
 	@Override
 	public Map<String, Object> selectResvQrInfo(String resvSeq) throws Exception {
-		// TODO Auto-generated method stub
 		return resvMapper.selectResvQrInfo(resvSeq);
 	}
 	
 	@Override
 	public int resvInfoDuplicateCheck(Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		return resvMapper.resvInfoDuplicateCheck(params);
 	}
 	
 	@Override
 	public String selectResvUserId(String resvSeq) throws Exception {
-		// TODO Auto-generated method stub
 		return resvMapper.selectResvUserId(resvSeq);
 	}
 	
 	@Override
 	public String selectResvEntryDvsn(String resvSeq) throws Exception {
-		// TODO Auto-generated method stub
 		return resvMapper.selectResvEntryDvsn(resvSeq);
 	}
 	
 	@Override
 	public List<Map<String, Object>> selectUserMyResvInfo(Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		return resvMapper.selectUserMyResvInfo(params);
 	}
 	
 	@Override
 	public Map<String, Object> selectGuestMyResvInfo(Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		return resvMapper.selectGuestMyResvInfo(params);
 	}
 	
 	@Override
 	public int resvStateChange(ResvInfo vo) throws Exception {
-		// TODO Auto-generated method stub
 		return resvMapper.resvStateChange(vo);
 	}
 	
 	@Override
 	public int resPriceChange(ResvInfo vo) throws Exception {
-		// TODO Auto-generated method stub
 		return resvMapper.resPriceChange(vo);
 	}
 	
 	@Override
 	public int resvSeatChange(Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		return resvMapper.resvSeatChange(params);
 	}
 	
 	@Override
 	public int resvCompleteUse() throws Exception {
-		// TODO Auto-generated method stub
 		return resvMapper.resvCompleteUse();
 	}
 	
 	@Override
 	public int resvInfoCancel(Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		return resvMapper.resvInfoCancel(params);
 	}
 		
@@ -253,7 +235,6 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	
 	@Override
 	public String resvValidCheck(Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		params.put("resultCode", "");
 		params.put("resvDate", "");
 		
@@ -272,13 +253,11 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	
 	@Override
 	public String selectFindPassword(Map<String, Object> paramMap) throws Exception {
-		// TODO Auto-generated method stub
 		return resvMapper.selectFindPassword(paramMap);
 	}
 
 	@Override
 	public int resbillChange(ResvInfo vo) throws Exception {
-		// TODO Auto-generated method stub
 		return resvMapper.resbillChange(vo);
 	}
 }

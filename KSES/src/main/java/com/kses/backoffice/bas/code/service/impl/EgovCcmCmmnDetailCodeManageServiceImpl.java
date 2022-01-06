@@ -39,7 +39,6 @@ public class EgovCcmCmmnDetailCodeManageServiceImpl extends EgovAbstractServiceI
 	
 	@Override
 	public List<Map<String, Object>> selectCmmnDetailCombo(String code) throws Exception {
-		// TODO Auto-generated method stub
 		return CmmnDetailCodeManageMapper.selectCmmnDetailCombo(code);
 	}
 	
@@ -56,32 +55,27 @@ public class EgovCcmCmmnDetailCodeManageServiceImpl extends EgovAbstractServiceI
 	
 	@Override
 	public Map<String, Object> selectCmmnDetail(String code) throws Exception {
-		// TODO Auto-generated method stub
 		return CmmnDetailCodeManageMapper.selectCmmnDetail(code);
 	}
 
 	@Override
 	public List<Map<String, Object>> selectComboSwcCon() throws Exception {
-		// TODO Auto-generated method stub
 		return CmmnDetailCodeManageMapper.selectComboSwcCon();
 	}
 
 	@Override
 	public List<Map<String, Object>> selectCmmnDetailResTypeCombo(Map<String, Object> vo) throws Exception {
-		// TODO Auto-generated method stub
 		return CmmnDetailCodeManageMapper.selectCmmnDetailResTypeCombo(vo);
 	}
 	 
 	@Override
 	public List<CmmnDetailCode> selectCmmnDetailComboEtc(Map<String, Object> params)
 			throws Exception {
-		// TODO Auto-generated method stub
 		return CmmnDetailCodeManageMapper.selectCmmnDetailComboEtc(params);
 	}
 
 	@Override
 	public List<Map<String, Object>> selectCmmnDetailAjaxCombo(String code) throws Exception {
-		// TODO Auto-generated method stub
 		return CmmnDetailCodeManageMapper.selectCmmnDetailComboLamp(code);
 	}
 

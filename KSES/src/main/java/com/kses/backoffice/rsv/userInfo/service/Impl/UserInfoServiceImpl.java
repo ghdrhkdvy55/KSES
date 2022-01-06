@@ -29,7 +29,6 @@ public class UserInfoServiceImpl extends EgovAbstractServiceImpl implements User
 	
 	@Override
 	public List<Map<String, Object>> selectCmmnDetailCombo(String code) throws Exception {
-		// TODO Auto-generated method stub
 		return userMapper.selectCmmnDetailCombo(code);
 	}
 	

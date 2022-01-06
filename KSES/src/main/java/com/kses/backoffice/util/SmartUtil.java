@@ -640,7 +640,6 @@ public class SmartUtil {
 			hashValue = md.digest(data.getBytes());
 
 		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

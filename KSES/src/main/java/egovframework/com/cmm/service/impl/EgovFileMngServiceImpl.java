@@ -25,25 +25,21 @@ public class EgovFileMngServiceImpl extends EgovAbstractServiceImpl implements E
 	
 	@Override
 	public List<Map<String, Object>> selectFileInfs(Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		return fileMapper.selectFileInfs(params);
 	}
 
 	@Override
 	public String insertFileInf(FileVO fvo) throws Exception {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String insertFileInfs(List<FileVO> fvoList) throws Exception {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public boolean deleteFileDetail(String streFileNm) throws Exception {
-		// TODO Auto-generated method stub
 		//중간 삭제 구문 넣기 
 		try {
 			fileMapper.deleteFileDetail(SmartUtil.dotToList(streFileNm));

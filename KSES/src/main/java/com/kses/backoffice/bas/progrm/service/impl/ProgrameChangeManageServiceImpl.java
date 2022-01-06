@@ -18,44 +18,37 @@ public class ProgrameChangeManageServiceImpl extends EgovAbstractServiceImpl imp
 	
 	@Override
 	public Map<String, Object> selectProgrmChangeRequst(Map<String, Object> vo) throws Exception {
-		// TODO Auto-generated method stub
 		return programChnageMapper.selectProgrmChangeRequst(vo);
 	}
 
 	@Override
 	public List<Map<String, Object>> selectProgrmChangeRequstList(Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		return programChnageMapper.selectProgrmChangeRequstList(params);
 	}
 
 	@Override
 	public int updateProgrmChangeRequst(ProgrameChangeInfo vo) throws Exception {
-		// TODO Auto-generated method stub
 		return (vo.getMode().equals("Ins")) ? programChnageMapper.insertProgrmChangeRequst(vo) : programChnageMapper.updateProgrmChangeRequst(vo);
 		
 	}
 
 	@Override
 	public void deleteProgrmChangeRequst(ProgrameChangeInfo vo) throws Exception {
-		// TODO Auto-generated method stub
 		programChnageMapper.deleteProgrmChangeRequst(vo);
 	}
 
 	@Override
 	public String selectProgrmChangeRequstNo() throws Exception {
-		// TODO Auto-generated method stub
 		return programChnageMapper.selectProgrmChangeRequstNo();
 	}
 
 	@Override
 	public List<Map<String, Object>> selectChangeRequstProcessList(Map<String, Object> params) throws Exception {
-		// TODO Auto-generated method stub
 		return programChnageMapper.selectChangeRequstProcessList(params);
 	}
 
 	@Override
 	public int updateProgrmChangeRequstProcess(ProgrameChangeInfo vo) throws Exception {
-		// TODO Auto-generated method stub
 		return programChnageMapper.updateProgrmChangeRequstProcess(vo);
 	}
 

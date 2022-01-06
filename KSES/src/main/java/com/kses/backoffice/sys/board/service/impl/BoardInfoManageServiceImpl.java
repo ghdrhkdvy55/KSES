@@ -32,27 +32,23 @@ public class BoardInfoManageServiceImpl extends EgovAbstractServiceImpl implemen
     
 	@Override
 	public List<Map<String, Object>> selectBoardManageListByPagination(Map<String, Object> SearchVO) throws Exception {
-		// TODO Auto-generated method stub
 		return boardMapper.selectBoardManageListByPagination(SearchVO);
 	}
 	
 	@Override
 	public List<Map<String, Object>> selectBoardMainManageListByPagination()
 			throws Exception {
-		// TODO Auto-generated method stub
 		return boardMapper.selectBoardMainManageListByPagination();
 	}
 
 	
 	@Override
 	public Map<String, Object> selectBoardManageDetail(String boardSeq) throws Exception {
-		// TODO Auto-generated method stub
 		return boardMapper.selectBoardManageDetail(boardSeq);
 	}
 	
 	@Override
 	public int updateBoardManage(BoardInfo vo, List<FileVO> result) throws Exception {
-		// TODO Auto-generated method stub
 		int ret  =0;
 		switch (vo.getMode()) {
 		   case "Ins" :
@@ -93,13 +89,11 @@ public class BoardInfoManageServiceImpl extends EgovAbstractServiceImpl implemen
 
 	@Override
 	public int updateBoardVisitedManage(String boardSeq) throws Exception {
-		// TODO Auto-generated method stub
 		return boardMapper.updateBoardVisitedManage(boardSeq);
 	}
 
 	@Override
 	public int updateBoardTopSeq() throws Exception {
-		// TODO Auto-generated method stub
 		return boardMapper.updateBoardTopSeq();
 	}
 

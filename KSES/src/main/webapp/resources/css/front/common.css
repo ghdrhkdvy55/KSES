@@ -1594,13 +1594,14 @@ h2.guide_tit {
     font-size: 1.4em;
 }
 .rsv_info .rsv_state {
-    position: relative;
-    top: -5.9rem;
+    position: fixed;
+    top: 5px;
     font-size: .8em;
 }
 .rsv_info .rsv_state .date {font-weight: 800;}
 .contents h3 {border-bottom: 1px solid #F2F2F2; padding-bottom: 1rem;}
-.null {display: block; height: 3rem;}
+/*0105 null {height:3rem;} 값 삭제함*/
+.null {display: block;}
 .change_br a {
     color: #949494;
     font-size: 0.8em;
@@ -1675,7 +1676,7 @@ h2.guide_tit {
 }
 
 #showHide_seat { width:100%;  display: none; }
-#showHide_seat h4 {margin-top: 3rem; font-size:18px;}
+#showHide_seat h4 {margin-top: 2.5rem; font-size:18px;}
 #showHide_seat section {text-align: left; padding-bottom: 25rem;}
 #showHide_seat section input[type=text] {
   height: 3rem; 
@@ -1729,7 +1730,7 @@ h2.guide_tit {
     width: -webkit-fill-available;
     padding: 1.5rem;
     font-size: 1em;
-    margin-top: 2rem;
+    margin-top: 1rem;
     border: 1px solid #e0e0e0;
 }
 #section_sel {display: none;}
@@ -2549,6 +2550,7 @@ ul.tabs li{
 
 @media screen and (max-width: 320px){
 	.linkBox a{padding: 10px 3px; letter-spacing: -0.15em;}	
+	.price table td {padding :1rem 0.5rem;}
 }
 
 /*1227*/
@@ -2604,4 +2606,11 @@ ul.tabs li{
     font-size: .9em;
     font-weight: 600;
 
+}
+.notice_cat {
+    font-size: 1.1em;
+    background: #eee;
+    display: inline-block;
+    padding: 3px 4px;
+    border-radius: 3px;
 }

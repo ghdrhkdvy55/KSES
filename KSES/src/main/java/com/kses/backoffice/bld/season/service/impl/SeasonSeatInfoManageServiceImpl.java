@@ -20,37 +20,31 @@ public class SeasonSeatInfoManageServiceImpl extends EgovAbstractServiceImpl imp
 	
 	@Override
 	public List<Map<String, Object>> selectSeasonSeatInfoList(Map<String, Object> params) {
-		// TODO Auto-generated method stub
 		return seasonSeatMapper.selectSeasonSeatInfoList(params);
 	}
 
 	@Override
 	public Map<String, Object> selectSeasonSeatInfoDetail(String seasonSeatCd) {
-		// TODO Auto-generated method stub
 		return seasonSeatMapper.selectSeasonSeatInfoDetail(seasonSeatCd);
 	}
 	
 	@Override
 	public List<Map<String, Object>> selectReservationSeasonSeatList(Map<String, Object> params) {
-		// TODO Auto-generated method stub
 		return seasonSeatMapper.selectReservationSeasonSeatList(params);
 	}
 
 	@Override
 	public int updateSeasonSeatInfo(SeasonSeatInfo vo) {
-		// TODO Auto-generated method stub
 		return seasonSeatMapper.updateSeasonSeatInfo(vo);
 	}
 
 	@Override
 	public int updateSeasonSeatPositionInfo(List<SeasonSeatInfo> seasonSeatList) {
-		// TODO Auto-generated method stub
 		return seasonSeatMapper.updateSeasonSeatPositionInfo(seasonSeatList);
 	}
 
 	@Override
 	public int deleteSeasonSeatInfo(List<String> seasonSeatList) {
-		// TODO Auto-generated method stub
 		return seasonSeatMapper.deleteSeasonSeatInfo(seasonSeatList);
 	}
 

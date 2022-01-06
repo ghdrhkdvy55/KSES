@@ -33,14 +33,12 @@ public class UniSelectInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 	
 	@Override
 	public String selectMaxValue(String is_Column, String is_Table) throws Exception {
-		// TODO Auto-generated method stub
 		return uniMapper.selectMaxValue(is_Column, is_Table);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public int deleteUniStatement(String is_Column, String is_Table, String is_condition) throws Exception {
-		// TODO Auto-generated method stub
 		//파일 체크 해서 파일 삭제 하기
 		try {
 			if (!is_Column.equals("")) {
@@ -52,7 +50,6 @@ public class UniSelectInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 						try {
 							fileservice.deleteFile(fileInfo.get(target).toString(), propertiesService.getString("Globals.filePath"));
 						} catch (Exception e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 							}
 					
@@ -70,19 +67,16 @@ public class UniSelectInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 	
 	@Override
 	public int selectIdDoubleCheck(String is_Column, String is_Table, String is_condition) throws Exception {
-		// TODO Auto-generated method stub
 		return uniMapper.selectIdDoubleCheck(is_Column, is_Table, is_condition);
 	}
 
 	@Override
 	public Map<String, Object> selectFieldStatement(String is_Column, String is_Table, String is_condition) throws Exception {
-		// TODO Auto-generated method stub
 		return uniMapper.selectFieldStatement(is_Column, is_Table, is_condition);
 	}
 
 	@Override
 	public int updateUniStatement(String isColumn, String isTable, String isCondition) {
-		// TODO Auto-generated method stub
 		return uniMapper.updateUniStatement(isColumn, isTable, isCondition);
 	}
 

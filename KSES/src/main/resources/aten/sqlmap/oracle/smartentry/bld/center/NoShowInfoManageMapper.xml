@@ -76,7 +76,7 @@
     		RESV_CANCEL_ID = 'BATCH',
     		RESV_CANCEL_CD = 'RESV_CANCEL_CD_3',
     		RESV_CANCEL_DT = SYSDATE
-    	WHERE RESV_SEQ = #{resvSeq}
+    	WHERE RESV_SEQ = TO_NUMBER(REPLACE(#{resvSeq},'-',''))
 	</update>  
      
 	<update id="updateNoshowInfo">
