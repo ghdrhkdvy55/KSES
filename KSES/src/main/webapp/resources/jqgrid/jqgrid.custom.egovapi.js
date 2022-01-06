@@ -38,7 +38,10 @@ $.EgovJqGridApi.prototype._init = function(mtype, colModel, multiselect, subGrid
 		},
 		multiselect: multiselect,
 		subGrid: subGrid,
-		loadonce: loadonce
+		loadonce: loadonce,
+		loadError: function(xhr, status) {
+			EgovIndexApi._apiResponseException(xhr);
+		}
 	};
 };
 /** JqGrid Param 재 정의 
@@ -115,9 +118,6 @@ $.EgovJqGridApi.prototype.mainGridAjax = function(url, params, searchFunc, subFu
 			}
 			$('#sp_totcnt').html(data.paginationInfo.totalRecordCount);	
 		},
-		loadError: function(xhr, status) {
-			toastr.error(status);
-		},
 		onPaging: function(pgButton) {
 			let mainGridParams = $(_MainGridSelector).jqGrid('getGridParam');
 			let page = mainGridParams['page'];
@@ -174,6 +174,7 @@ $.EgovJqGridApi.prototype.subGridReload = function(rowId, subFunc) {
 $.EgovJqGridApi.prototype.popGrid = function(id, colModel, pagerId) {
 	this._formatter(colModel);
 	this._init('POST', colModel, false, false, false);
+	this._jqGridParams['url'] = null;
 	this._jqGridParams['pager'] = $('#'+ pagerId);
 	this._jqGridParams['rowList'] = [];
 	this._jqGridParams['rownumbers'] = false;
@@ -189,10 +190,6 @@ $.EgovJqGridApi.prototype.popGridAjax = function(id, url, params, searchFunc) {
 				toastr.error(data.message);
 				return false;				
 			}
-		},
-		loadError: function(xhr, status) {
-			console.log('-----------------')
-			toastr.error(status);
 		},
 		onPaging: function(pgButton) {
 			let gridParams = $('#'+id).jqGrid('getGridParam');

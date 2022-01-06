@@ -53,6 +53,8 @@ $.EgovIndexApi.prototype._apiExecute = function(contentType, method, url, params
 $.EgovIndexApi.prototype._apiResponseException = function(xhr) {
 	console.log('exception status code: '+ xhr.status)
 	switch (xhr.status) {
+		case 200:
+			break;
 		case 400:
 			toastr.error(xhr.statusText);
 			break;
