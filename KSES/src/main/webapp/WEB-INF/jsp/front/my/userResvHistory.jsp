@@ -211,7 +211,7 @@
 					                    setHtml += "    <li>";
 					                    setHtml += "        <ol>";
 					                    setHtml += "            <li>예약번호</li>";
-					                    setHtml += "            <li><span id='rsv_num' class='rsv_num'>" + item.resv_seq +"</span></li>";
+					                    setHtml += "            <li><span id='rsv_num' class='rsv_num'>" + fn_resvSeqFormat(item.resv_seq) +"</span></li>";
 					                    setHtml += "        </ol>";
 					                    setHtml += "    </li>";
 					                    setHtml += "    <li>";
