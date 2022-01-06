@@ -797,11 +797,11 @@
 				);	
 			}, 
 			fn_reSeat : function(resvInfo) {
-				
 				var checkDvsn = resvInfo.resv_entry_dvsn == "ENTRY_DVSN_1" ? "STANDING" : "SEAT";
 				var params = {
 					"checkDvsn" : "SEAT",
 					"isReSeat" : "Y",
+					"entryDvsn" : resvInfo.resv_entry_dvsn,
 					"userDvsn" : resvInfo.resv_user_dvsn,
 					"centerCd" : resvInfo.center_cd,
 					"floorCd" : resvInfo.floor_cd,

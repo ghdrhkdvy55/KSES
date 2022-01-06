@@ -280,8 +280,11 @@ public class ResJosnController {
 			String qrInfo = fileScrty.decode(sendInfo.getQrCode());
 			String qrCneterCd = sendInfo.getQrCneterCd(); // qr 지점 정보
 			String qrInot = sendInfo.getQrInot(); // qrIO 구분
-			LOGGER.debug("qrInfo:" + qrInfo);
-
+			
+			LOGGER.info("QR READ_1 : " + fileScrty.decode(qrInfo));
+			LOGGER.info("QR READ_2 : " + qrInfo);
+			
+			
 			String result = "";
 			String ERROR_CD = "";
 			String ERROR_MSG = "";
@@ -310,7 +313,7 @@ public class ResJosnController {
 				String seatClassNm = attempInfos[14];
 				String floorNm = attempInfos[15];
 				String partNm = attempInfos[16];
-
+				
 				for (String value : attempInfos) {
 					LOGGER.debug("value : " + value);
 				}
@@ -481,6 +484,9 @@ public class ResJosnController {
 						+ SmartUtil.NVL(resInfo.get("seat_class"), "").toString() + ":"
 						+ SmartUtil.NVL(resInfo.get("floor_nm"), "").toString() + ":"
 						+ SmartUtil.NVL(resInfo.get("part_nm"), "").toString());
+				
+				LOGGER.info("QR SEND_1 : " + fileScrty.decode(qrCode));
+				LOGGER.info("QR SEND_2" + qrCode);
 				fileScrty = null;
 
 				model.addObject("vacntnInfo", userService.selectUserVacntnInfo(resInfo.get("user_id").toString()));
@@ -694,7 +700,6 @@ public class ResJosnController {
 					returnCode = "ERROR_02";
 					returnMessage = "시스템 에러 입니다.";
 				}
-
 			}
 
 			// 인터페이스 연계`
