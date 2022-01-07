@@ -2594,7 +2594,7 @@ ul.tabs li{
     padding: 2rem 1rem;
     line-height: 1.6em;
 }
-.null_cont, .null_list, .null_center {text-align:center; }
+.null_cont, .null_list, .null_center {text-align:center; display: none;}
 .null_cont p, .null_list p, .null_center p {
 	font-size: 1.3em;
     color: #a7a7a7;

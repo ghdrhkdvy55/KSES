@@ -18,7 +18,7 @@
                 <address>
                     <span>유료- 02.2067.5000</span>
                     <span>무료- 080.008.5000</span>
-                    <span>경륜ARS 유료- 1577.1900 (상담시간 : [그랑프리기간]금~일(경륜) 10시 40분 ~ 19시, 이외 시간 ARS 자동 연결)</span>
+                    <span>경륜ARS 유료- 1577.1900 경륜ARS 유료- 1577.1900 (상담시간 : 수~일 10~18시, 이외 시간 ARS 자동 연결)</span>
                 </address>
                 <p>(14299) 경기도 광명시 광명로 721 (광명동) | <a href="http://www.krace.or.kr/contents/company/mapSpeedomPage.do?seqId=14">찾아오시는 길</a></p>
                 <p class="f_copy">© 2020 KCYCLE. ALL RIGHT RESERVED.</p>

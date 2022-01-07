@@ -110,7 +110,7 @@
 					false,
 					function(result) {
 						if (result.status == "SUCCESS") {
-							if(result.resultlist != null) {
+							if(result.resultlist.length > 0) {
 								$(".branch_list").empty();
 								$.each(result.resultlist, function(index, item) {
 									var setHtml = "";
@@ -144,6 +144,8 @@
 									}
 									centerService.fn_resvVaildCheck(params);
 								});
+							} else {
+								$(".null_center").show();
 							}
 						} else {
 							

@@ -101,7 +101,7 @@
                 
                 <!-- 내용 없을때 표출 -->
                 <div class="null_list"><p>예약내역이 없습니다.</p></div>
-                <!-- 내용 없을때 표출--//> 
+                 
                 
                 <div id="my_rsv_stat_list">
                     <div class="notice_con list_con">
@@ -121,7 +121,7 @@
                 <div class="clear"></div>
             </div>
         </div>
-        <!--contents //-->
+        <!--contents //
     </div>
     
 	<!-- // 결제인증 팝업 -->
@@ -199,7 +199,9 @@
 					false,
 					function(result) {
 						if(result.status == "SUCCESS") {
-							if(result.userResvInfo != null) {
+							if(result.userResvInfo.length > 0) {
+								$(".null_list").hide();
+								
 								var userResvInfo = result.userResvInfo;
 								$("#my_rsv_stat").empty();
 								$("#my_rsv_stat_list").empty();
@@ -258,14 +260,15 @@
 									}
 								});
 							} else {
-								fn_openPopup("예약된 정보가 존재하지 않습니다.", "red", "ERROR", "확인", "");
+								$(".null_list").show();
+								/* fn_openPopup("예약된 정보가 존재하지 않습니다.", "red", "ERROR", "확인", ""); */
 							}
-						} else if(result.status == "LOGIN FAIL") {
-							
+						} else if(result.status == "LOGINFAIL"){
+							fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
 						}
 					},
 					function(request) {
-						alert("ERROR : " + request.status);	       						
+						fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");	       						
 					}    		
 				);
 			},
