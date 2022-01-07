@@ -51,7 +51,7 @@
 				<input type="text" id="searchKeyword" placeholder="검색어를 입력하세요.">
 			</div>
 			<div class="inlineBtn">
-				<a href="javascirpt:void(0);" class="grayBtn">검색</a>
+				<a href="javascript:fnSearch(1);" class="grayBtn">검색</a>
 			</div>
 		</div>
 		<div class="left_box mng_countInfo">
@@ -155,7 +155,7 @@
 						<option value="emp_nm">이름</option>
 						<option value="emp_no">사번</option>
 					</select>
-					<input type="text" id="searchKeyword" placeholder="검색어를 입력하세요.">
+					<input type="text" id="pSearchKeyword" placeholder="검색어를 입력하세요.">
 					<a href="javascript:fnEmpInfoSearch(1);" class="grayBtn">검색</a>
 				</div>
 			</fieldset>
@@ -216,7 +216,9 @@
 		let params = {
 			pageIndex: pageNo,
 			pageUnit: $('.ui-pg-selbox option:selected').val(),
-			searchKeyword: $('#searchKeyword').val()
+			searchKeyword: $('#searchKeyword').val(),
+			searchAuthorCd: $('#searchAuthorCd').val(),
+			searchDeptCd: $('#searchDeptCd').val()
 		};
 		EgovJqGridApi.mainGridAjax('/backoffice/mng/adminListAjax.do', params, fnSearch);
 		EgovJqGridApi.mainGridDetail(fnAdminInfo);
@@ -273,7 +275,7 @@
 	}
 	// 직원 검색 팝업 호출
 	function fnEmpInfoPopup() {
-		$('[data-popup=mng_emp_search] #searchKeyword').val(
+		$('#pSearchKeyword').val(
 			$('[data-popup=mng_admin_add] :text[name=empNo]').val()
 		);
 		fnEmpInfoSearch(1);
@@ -286,7 +288,7 @@
 		let params = {
 			pageIndex: pageNo,
 			pageUnit: '5',
-			searchKeyword: $('[data-popup=mng_emp_search] #searchKeyword').val()
+			searchKeyword: $('#pSearchKeyword').val()
 		};
 		EgovJqGridApi.popGridAjax('popGrid', '/backoffice/mng/empListAjax.do', params, fnEmpInfoSearch);
 	}
