@@ -230,6 +230,7 @@
 					false,
 					function(result) {
 				    	if(result.status == "SUCCESS") {
+				    		fn_scrollMove($(".ok_sumit"));
 				    		fn_openPopup("인증번호가 발송 되었습니다.(" +  result.certifiCode + ")", "blue", "SUCCESS", "확인", "");
 							certifiCode = result.certifiCode;
 				    	} else if(result.status == "LOGIN FAIL") {
@@ -269,7 +270,7 @@
 							if(result.guestResvInfo != null) {
 								var guestResvInfo = result.guestResvInfo;
 								
-								$("#rsv_num, #cancel_rsv_num").html(guestResvInfo.resv_seq);
+								$("#rsv_num, #cancel_rsv_num").html(fn_resvSeqFormat(guestResvInfo.resv_seq));
 								$("#rsv_date, #cancel_rsv_date").html(fn_resvDateFormat(guestResvInfo.resv_end_dt));
 								$("#rsv_name").html(guestResvInfo.resv_user_nm);
 								$("#rsv_center, #cancel_rsv_center").html(guestResvInfo.center_nm);

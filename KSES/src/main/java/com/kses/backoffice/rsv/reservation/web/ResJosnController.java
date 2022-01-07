@@ -341,7 +341,7 @@ public class ResJosnController {
 				}
 
 				// 현재 날짜/시간
-				if (centerPilotYn.equals("Y") && !tradNo.equals("") && Integer.valueOf(resvPayCost) > 0) {
+				if (centerPilotYn.equals("Y") && tradNo.equals("") && Integer.valueOf(resvPayCost) > 0) {
 					ERROR_CD = "ERROR_04";
 					ERROR_MSG = "이용료 결제 필요.";
 					model.addObject("ERROR_CD", ERROR_CD);

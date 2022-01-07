@@ -418,6 +418,17 @@ function fn_resvDateFormat(el) {
 	return el;
 }
 
+/* FRONT RESERVATION */
+/**
+ * 예약번호 포팻
+ * 
+ * @param el
+ * @returns
+ */
+function fn_resvSeqFormat(el) {
+    return el.toString().replace(/\B(?=(\d{4})+(?!\d))/g, "-");
+}
+
 /**
  * 스크롤 이동
  * 
