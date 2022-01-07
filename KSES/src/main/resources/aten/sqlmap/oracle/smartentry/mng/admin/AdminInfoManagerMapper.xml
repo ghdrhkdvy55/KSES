@@ -11,7 +11,7 @@
 	                        b.EMP_EMAIL,  FN_ORGNM(b.DEPT_CD, 'DEPT') DEPT_NM,
 							a.ADMIN_PWD, a.ADMIN_LOCKYN, a.USE_YN,	
 							TO_CHAR(a.LAST_UPDT_DTM, 'YYYY-MM-DD') LAST_UPDT_DTM,
-				            c.AUTHOR_NM	,
+				            a.AUTHOR_CD, c.AUTHOR_NM, a.CENTER_CD,
 				            CASE  WHEN ( AUTHOR_CD != 'ROLE_ADMIN' OR  AUTHOR_CD != 'ROLE_SYSTEM') THEN
 				                     (SELECT CENTER_NM FROM TSEB_CENTER_INFO_M WHERE CENTER_CD = A.CENTER_CD)
 				                  ELSE ''
@@ -76,7 +76,7 @@
           <choose>
                 <when test="cnt > 0">
                        UPDATE TSEH_ADMIN_INFO_M SET USE_YN = #{useYn}
-	                               ,  LAST_UPDUSR_ID = #{userId, jdbcType=VARCHAR }
+	                               ,  LAST_UPDUSR_ID = #{lastUpdusrId, jdbcType=VARCHAR }
 	                               ,  LAST_UPDT_DTM = SYSDATE
 	                               ,  AUTHOR_CD = #{authorCd , jdbcType=VARCHAR }
 	                               ,  CENTER_CD = #{centerCd , jdbcType=VARCHAR }
@@ -95,7 +95,7 @@
 				       INSERT INTO TSEH_ADMIN_INFO_M(ADMIN_ID, ADMIN_PWD, EMP_NO, AUTHOR_CD, ADMIN_LOCKYN, USE_YN, ADMIN_PASS_UPDT_DT,
 				                                     CENTER_CD, FRST_REGIST_DTM, FRST_REGTER_ID, LAST_UPDT_DTM, LAST_UPDUSR_ID)
 				       VALUES (	#{adminId}	, #{adminPwd} , #{empNo}, #{authorCd}, 'N', 'Y', SYSDATE,
-				                #{centerCd ,jdbcType=VARCHAR}, SYSDATE, #{userId ,jdbcType=VARCHAR}, SYSDATE, #{userId ,jdbcType=VARCHAR} );
+				                #{centerCd ,jdbcType=VARCHAR}, SYSDATE, #{frstRegterId ,jdbcType=VARCHAR}, SYSDATE, #{lastUpdusrId ,jdbcType=VARCHAR} );
 				       
 				       UPDATE TSEH_EMP_INFO_M SET ADMIN_DVSN = 'Y' WHERE EMP_NO = #{empNo};
                 </otherwise>
@@ -106,7 +106,7 @@
    </insert>
    <update id="updateAdminUserManage">
 	   UPDATE TSEH_ADMIN_INFO_M SET USE_YN = #{useYn}
-	                               ,  LAST_UPDUSR_ID = #{userId, jdbcType=VARCHAR }
+	                               ,  LAST_UPDUSR_ID = #{lastUpdusrId, jdbcType=VARCHAR }
 	                               ,  LAST_UPDT_DTM = SYSDATE
 	                               ,  AUTHOR_CD = #{authorCd , jdbcType=VARCHAR }
 	                               ,  CENTER_CD = #{centerCd , jdbcType=VARCHAR }

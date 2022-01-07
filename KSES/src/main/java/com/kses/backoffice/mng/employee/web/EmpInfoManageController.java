@@ -2,7 +2,6 @@ package com.kses.backoffice.mng.employee.web;
 
 
 
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +9,7 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.kses.backoffice.bas.code.service.EgovCcmCmmnDetailCodeManageService;
 import com.kses.backoffice.mng.employee.service.DeptInfoManageService;
 import com.kses.backoffice.mng.employee.service.EmpInfoManageService;
 import com.kses.backoffice.mng.employee.service.GradInfoManageService;
@@ -31,14 +32,13 @@ import com.kses.backoffice.mng.employee.vo.DeptInfo;
 import com.kses.backoffice.mng.employee.vo.EmpInfo;
 import com.kses.backoffice.mng.employee.vo.GradInfo;
 import com.kses.backoffice.mng.employee.vo.PositionInfo;
-import com.kses.backoffice.sym.log.annotation.NoLogging;
 import com.kses.backoffice.util.SmartUtil;
 import com.kses.backoffice.util.service.UniSelectInfoManageService;
 import com.kses.backoffice.util.service.fileService;
-import egovframework.com.cmm.LoginVO;
+
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.Globals;
-import com.kses.backoffice.bas.code.service.EgovCcmCmmnDetailCodeManageService;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
@@ -453,61 +453,43 @@ public class EmpInfoManageController {
 		
 		return model;
 	}
+	
 	/**
-	 * 직원 정보 목록 
-	 * 
-	 * @param loginVO
+	 * 직원 목록 조회
 	 * @param searchVO
-	 * @param request
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value="empListAjax.do")
-	public ModelAndView selectEmpinfoListAjax(@RequestBody Map<String,Object> searchVO,
-											  HttpServletRequest request) throws Exception {
-	
+	@RequestMapping(value="empListAjax.do", method = RequestMethod.POST)
+	public ModelAndView selectEmpinfoListAjax(@RequestBody Map<String,Object> searchVO) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		
-		try {
-			Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-			if(!isAuthenticated) {
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
-				return model;
-			} 
-			LOGGER.debug("========================================================");
-			
-			//페이징 처리 할 부분 정리 하기 
-			int pageUnit = searchVO.get("pageUnit") == null ? propertiesService.getInt("pageUnit") : Integer.valueOf((String) searchVO.get("pageUnit"));
-			
-			PaginationInfo paginationInfo = new PaginationInfo();
-			paginationInfo.setCurrentPageNo( Integer.parseInt( SmartUtil.NVL(searchVO.get("pageIndex"), "1")));
-			paginationInfo.setRecordCountPerPage(pageUnit);
-			paginationInfo.setPageSize(propertiesService.getInt("pageSize"));
-			
-			searchVO.put("pageSize", propertiesService.getInt("pageSize"));
-			searchVO.put("firstIndex", paginationInfo.getFirstRecordIndex());
-			searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
-			searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
+		//페이징 처리 할 부분 정리 하기 
+		int pageUnit = searchVO.get("pageUnit") == null ? propertiesService.getInt("pageUnit") : Integer.valueOf((String) searchVO.get("pageUnit"));
 		
-			if (SmartUtil.NVL(searchVO.get("mode"), "").equals("")) 
-				searchVO.put("mode", "list");
-			
-			List<Map<String, Object>> list = empService.selectEmpInfoList(searchVO) ;
-			int totCnt = list.size() > 0 ? Integer.valueOf( list.get(0).get("total_record_count").toString()) : 0;
+		PaginationInfo paginationInfo = new PaginationInfo();
+		paginationInfo.setCurrentPageNo( Integer.parseInt( SmartUtil.NVL(searchVO.get("pageIndex"), "1")));
+		paginationInfo.setRecordCountPerPage(pageUnit);
+		paginationInfo.setPageSize(propertiesService.getInt("pageSize"));
 		
-			model.addObject(Globals.JSON_RETURN_RESULTLISR, list);
-			model.addObject(Globals.PAGE_TOTALCNT, totCnt);
-			paginationInfo.setTotalRecordCount(totCnt);
-			model.addObject(Globals.JSON_PAGEINFO, paginationInfo);
-			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-		} catch(Exception e) {
-			StackTraceElement[] ste = e.getStackTrace();
-			int lineNumber = ste[0].getLineNumber();
-			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
+		searchVO.put("pageSize", propertiesService.getInt("pageSize"));
+		searchVO.put("firstIndex", paginationInfo.getFirstRecordIndex());
+		searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
+		searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
+	
+		if (SmartUtil.NVL(searchVO.get("mode"), "").equals("")) {
+			searchVO.put("mode", "list");
 		}
+		
+		List<Map<String, Object>> list = empService.selectEmpInfoList(searchVO) ;
+		int totCnt = list.size() > 0 ? Integer.valueOf( list.get(0).get("total_record_count").toString()) : 0;
+	
+		model.addObject(Globals.JSON_RETURN_RESULTLISR, list);
+		model.addObject(Globals.PAGE_TOTALCNT, totCnt);
+		paginationInfo.setTotalRecordCount(totCnt);
+		model.addObject(Globals.JSON_PAGEINFO, paginationInfo);
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+		
 		return model;
 	}
 	

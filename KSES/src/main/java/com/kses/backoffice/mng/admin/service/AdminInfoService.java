@@ -3,8 +3,6 @@ package com.kses.backoffice.mng.admin.service;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Param;
-
 import com.kses.backoffice.mng.admin.vo.AdminInfo;
 
 public interface AdminInfoService {
@@ -13,7 +11,9 @@ public interface AdminInfoService {
 	
 	Map<String, Object> selectAdminUserManageDetail(String empNo);
 	
-	int updateAdminUserManage(AdminInfo vo);
+	int insertAdminUserManage(AdminInfo adminInfo);
+	
+	int updateAdminUserManage(AdminInfo adminInfo);
 	
 	int updateAdminUserLockManage(String adminId);
 	
