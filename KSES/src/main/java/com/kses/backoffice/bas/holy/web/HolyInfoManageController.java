@@ -150,17 +150,15 @@ public class HolyInfoManageController {
     public ModelAndView selectIdCheck(@RequestParam("holyDt") String holyDt) throws Exception {
     	ModelAndView model = new ModelAndView(Globals.JSONVIEW);
     	
-    	String result = uniService.selectIdDoubleCheck("HOLY_DT", "TSEC_HOLY_INFO_M", "HOLY_DT = ["+ holyDt + "[") > 0 
-    			? Globals.STATUS_FAIL 
-    			: Globals.STATUS_OK;
-    	if (StringUtils.equals(result, "OK")) {
-			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+    	int ret = uniService.selectIdDoubleCheck("HOLY_DT", "TSEC_HOLY_INFO_M", "HOLY_DT = ["+ holyDt + "[");
+    	if (ret > 0) {
+    		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("common.codeOk.msg"));
-		}
-		else {
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+    	}
+    	else {
+    		model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("common.codeFail.msg"));
-		}
+    	}
     	
     	return model;
     }
@@ -216,7 +214,6 @@ public class HolyInfoManageController {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
 	    
 		int ret =  holyService.deleteHolyInfo(SmartUtil.dotToList(holyInfo.getHolySeq()));
-		
 		if (ret > 0) {
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.delete"));

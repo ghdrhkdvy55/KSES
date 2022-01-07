@@ -162,10 +162,8 @@ public class EgovCcmCmmnCodeManageController {
 	public ModelAndView selectIdCheck(@RequestParam("codeId") String codeId) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		
-		String result = uniService.selectIdDoubleCheck("CODE_ID", "COMTCCMMNCODE", "CODE_ID = [" + codeId + "[") > 0
-				? Globals.STATUS_FAIL
-				: Globals.STATUS_OK;
-		if (StringUtils.equals(result, "OK")) {
+		int ret = uniService.selectIdDoubleCheck("CODE_ID", "COMTCCMMNCODE", "CODE_ID = [" + codeId + "[");
+		if (ret > 0) {
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("common.codeOk.msg"));
 		}

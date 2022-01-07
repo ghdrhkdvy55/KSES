@@ -144,17 +144,15 @@ public class AuthInfoManageController {
     public ModelAndView selectIdCheck(@RequestParam("authorCode") String authorCode) throws Exception {
     	ModelAndView model = new ModelAndView(Globals.JSONVIEW);
     	
-    	String result = uniService.selectIdDoubleCheck("AUTHOR_CODE", "COMTNAUTHORINFO", "AUTHOR_CODE = ["+ authorCode + "[") > 0 
-    			? Globals.STATUS_FAIL 
-    			: Globals.STATUS_OK;
-    	if (StringUtils.equals(result, "OK")) {
-			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+    	int ret = uniService.selectIdDoubleCheck("AUTHOR_CODE", "COMTNAUTHORINFO", "AUTHOR_CODE = ["+ authorCode + "[");
+    	if (ret > 0) {
+    		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("common.codeOk.msg"));
-		}
-		else {
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+    	}
+    	else {
+    		model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("common.codeFail.msg"));
-		}
+    	}
     	
     	return model;
     }

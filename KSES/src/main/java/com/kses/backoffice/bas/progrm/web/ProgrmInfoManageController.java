@@ -138,7 +138,6 @@ public class ProgrmInfoManageController {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		
 		int ret = progrmService.deleteProgrmInfo(progrmInfo.getProgrmFileNm());
-		
 		if (ret > 0) {
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.delete"));
@@ -162,17 +161,15 @@ public class ProgrmInfoManageController {
     public ModelAndView selectIdCheck(@RequestParam("progrmFileNm") String progrmFileNm) throws Exception {
     	ModelAndView model = new ModelAndView(Globals.JSONVIEW);
     	
-    	String result = uniService.selectIdDoubleCheck("PROGRM_FILE_NM", "COMTNPROGRMLIST", "PROGRM_FILE_NM = ["+ progrmFileNm + "[") > 0 
-    			? Globals.STATUS_FAIL
-    			: Globals.STATUS_OK;
-    	if (StringUtils.equals(result, "OK")) {
-			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+    	int ret = uniService.selectIdDoubleCheck("PROGRM_FILE_NM", "COMTNPROGRMLIST", "PROGRM_FILE_NM = ["+ progrmFileNm + "[");
+    	if (ret > 0) {
+    		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("common.codeOk.msg"));
-		}
-		else {
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+    	}
+    	else {
+    		model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("common.codeFail.msg"));
-		}
+    	}
 		
     	return model;
     }
