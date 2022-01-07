@@ -175,7 +175,7 @@
 }
   .rsv_btn li:first-child a {padding: 2rem 4rem;}
   .rsv_btn li a {padding: 2rem;}
-  .rsv_popup {padding: 40px 20px 75px;}
+  /*.rsv_popup {padding: 40px 20px 75px;}*/
   .cancel_btn {top: 2rem !important;}
   .srchBtn {padding: 4px 15px !important;}
   .login_num_info li {width: 13rem!important;}
@@ -196,7 +196,7 @@
   .rsv_list {width: 100%}
   /*.summit_btn a, .cancel_btn a {padding: 2rem 4rem}*/
   .slogan {font-size: 1.5em;}
-  .main_user_rsv li span a {font-size: 2.6rem;}
+
   .main_user_rsv li{ font-size: 1.2em; }
   .rsv_cancel { float: left; margin: 1.5rem 0 0.5rem;}
   .sub_con_view .food_img_box img { width: auto; max-height: 100%; height: 100%}

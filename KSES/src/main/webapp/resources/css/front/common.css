@@ -158,7 +158,7 @@ bottom:0;
     width: 82%;
 }
 .self_pop { width: 85%; }
-.pop_con{padding:40px 25px 15px; font-size: 1.7em;}
+.pop_con{padding:40px 10px; font-size: 1.7em; }
 .pop_tit{font-size: 2rem;color: #fff; }
 .login_pop_tit 
 .pop_noti { font-size: 1.6rem; color: #808080;letter-spacing: -0.6px; word-break: keep-all; padding-top: 30px}
@@ -2105,6 +2105,7 @@ ul.tabs li{
     text-align: center;
     width:90%;
     margin:auto;
+    margin-top:1rem;
 }
 .cancel_btn li {width:48%; display:inline-block}
 .cancel_btn a {
@@ -2296,7 +2297,7 @@ ul.tabs li{
     margin-bottom: 1rem;
     text-align: center;
 }
-.person_check ol {margin-top: 2rem; font-size:.9em;}
+.person_check ol {margin-top: 2rem; }
 .person_check ol li {line-height:1.6em ;}
 .person_check ol li:last-child {list-style: none; }
 .person_check .check_impnt {color: #3197ff; text-align:center}
@@ -2402,7 +2403,6 @@ ul.tabs li{
 
 .pay_passWord li:nth-child(2) a {
     padding: 1rem 1.5rem;
-    display: block;
     background: #ff5252;
     border-radius: 4px;
     color: #fff;
@@ -2480,7 +2480,7 @@ ul.tabs li{
 .vacState {
     background: #eee;
     border-radius: 25px;
-    width: 50%;
+    width: 80%;
     margin: auto;
     margin-top: 1rem;
 }
@@ -2489,11 +2489,13 @@ ul.tabs li{
     padding: 4px 18px;
     border-radius: 25px;
     font-size:1.3em;
+    line-height: 1.5em;
 }
 .vacState .vacDone {color: #2667f7;}
 .vacState .vacNon {
     color: #f72626;
-    background: url("/resources/img/front/warning_amber_black_24dp.svg") no-repeat;
+    background: url("/resources/img/front/warning_amber_black_24dp.svg") no-repeat left;
+    background-size: 19px;
 }
 
 
@@ -2531,7 +2533,7 @@ ul.tabs li{
 	    text-align: center;
 	    padding: 2.5rem 0;
 	}
-  .f_logo_box {padding: 1.5rem 0;  padding-bottom:10rem;}
+  .f_logo_box {padding: 1.5rem 0;  padding-bottom:10rem; margin-top:2rem;}
   .linkBox {
     border-bottom: 1px solid #959595;
 }
@@ -2551,6 +2553,7 @@ ul.tabs li{
 @media screen and (max-width: 320px){
 	.linkBox a{padding: 10px 3px; letter-spacing: -0.15em;}	
 	.price table td {padding :1rem 0.5rem;}
+	 .main_user_rsv li span a {font-size: 2em;}
 }
 
 /*1227*/
@@ -2567,7 +2570,13 @@ ul.tabs li{
     border-radius: 8px;
     display: block;
 }
-.cost_list li li:first-child {background: url("/resources/img/front/arrow_right_black_24dp.svg") no-repeat; padding-left: 2rem; width:74px}
+.cost_list li li:first-child {
+    /* background: url("/resources/img/front/arrow_right_black_24dp.svg") no-repeat; */
+    padding-left: 1rem;
+    /* width: 74px; */
+    font-size: .9em;
+    list-style: circle;
+}
 
 
 /*1230*/
@@ -2586,7 +2595,7 @@ ul.tabs li{
     line-height: 1.6em;
 }
 .null_cont, .null_list, .null_center {text-align:center; }
-.null_cont p, null list p {
+.null_cont p, null list p, .null_center p {
 	font-size: 1.3em;
     color: #a7a7a7;
     padding: 4rem 0;
