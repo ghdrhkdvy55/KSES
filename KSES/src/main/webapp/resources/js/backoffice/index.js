@@ -51,7 +51,6 @@ $.EgovIndexApi.prototype._apiExecute = function(contentType, method, url, params
 };
 
 $.EgovIndexApi.prototype._apiResponseException = function(xhr) {
-	console.log('exception status code: '+ xhr.status)
 	switch (xhr.status) {
 		case 200:
 			break;
@@ -68,6 +67,7 @@ $.EgovIndexApi.prototype._apiResponseException = function(xhr) {
 			toastr.error(xhr.responseJSON.message);
 			break;
 		default:
+			console.log('exception status code: '+ xhr.status);
 			if (xhr.responseText === '') {
 				toastr.error('시스템에 오류가 발생하였습니다. 관리자에게 문의하세요.');
 			} else {
