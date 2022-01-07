@@ -104,7 +104,7 @@ public class AuthInfoManageController {
 	 * @throws Exception
 	 */
 	@RequestMapping (value="authUpdate.do", method = RequestMethod.POST)
-	public ModelAndView updateAuthInfo(@RequestBody AuthInfo authInfo) throws Exception{
+	public ModelAndView updateAuthInfoManage(@RequestBody AuthInfo authInfo) throws Exception{
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		
 		int ret = 0;
@@ -144,9 +144,9 @@ public class AuthInfoManageController {
     public ModelAndView selectIdCheck(@RequestParam("authorCode") String authorCode) throws Exception {
     	ModelAndView model = new ModelAndView(Globals.JSONVIEW);
     	
-    	String result = uniService.selectIdDoubleCheck("AUTHOR_CODE", "COMTNAUTHORINFO", "AUTHOR_CODE = ["+ authorCode + "[") > 0 ? 
-    			"FAIL" 
-    			: "OK";
+    	String result = uniService.selectIdDoubleCheck("AUTHOR_CODE", "COMTNAUTHORINFO", "AUTHOR_CODE = ["+ authorCode + "[") > 0 
+    			? Globals.STATUS_FAIL 
+    			: Globals.STATUS_OK;
     	if (StringUtils.equals(result, "OK")) {
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("common.codeOk.msg"));
@@ -166,7 +166,7 @@ public class AuthInfoManageController {
      * @throws Exception
      */
 	@RequestMapping (value="authDelete.do", method = RequestMethod.POST)
-	public ModelAndView deleteholyInfoManage(@RequestBody AuthInfo authInfo) throws Exception {
+	public ModelAndView deleteAuthInfoManage(@RequestBody AuthInfo authInfo) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
 		
 		authService.deleteAuthInfo(authInfo.getAuthorCode());

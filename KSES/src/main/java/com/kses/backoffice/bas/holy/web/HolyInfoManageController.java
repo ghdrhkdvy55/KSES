@@ -150,9 +150,9 @@ public class HolyInfoManageController {
     public ModelAndView selectIdCheck(@RequestParam("holyDt") String holyDt) throws Exception {
     	ModelAndView model = new ModelAndView(Globals.JSONVIEW);
     	
-    	String result = uniService.selectIdDoubleCheck("HOLY_DT", "TSEC_HOLY_INFO_M", "HOLY_DT = ["+ holyDt + "[") > 0 ? 
-    			"FAIL" 
-    			: "OK";
+    	String result = uniService.selectIdDoubleCheck("HOLY_DT", "TSEC_HOLY_INFO_M", "HOLY_DT = ["+ holyDt + "[") > 0 
+    			? Globals.STATUS_FAIL 
+    			: Globals.STATUS_OK;
     	if (StringUtils.equals(result, "OK")) {
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("common.codeOk.msg"));
@@ -172,7 +172,7 @@ public class HolyInfoManageController {
 	 * @throws Exception
 	 */
 	@RequestMapping (value="holyUpdate.do", method = RequestMethod.POST)
-	public ModelAndView updateHolyInfo(@RequestBody HolyInfo holyInfo) throws Exception{
+	public ModelAndView updateHolyInfoManage(@RequestBody HolyInfo holyInfo) throws Exception{
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		
 		String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
@@ -212,7 +212,7 @@ public class HolyInfoManageController {
 	 * @throws Exception
 	 */
 	@RequestMapping (value="holyDelete.do", method = RequestMethod.POST)
-	public ModelAndView deleteholyInfoManage(@RequestBody HolyInfo holyInfo) throws Exception {
+	public ModelAndView deleteHolyInfoManage(@RequestBody HolyInfo holyInfo) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
 	    
 		int ret =  holyService.deleteHolyInfo(SmartUtil.dotToList(holyInfo.getHolySeq()));
@@ -268,7 +268,7 @@ public class HolyInfoManageController {
 	 * @throws Exception
 	 */
 	@RequestMapping (value="holyInfoCenterApply.do", method = RequestMethod.POST)
-	public ModelAndView holyInfoCenterApply(@RequestBody List<HolyInfo> holyInfoList) throws Exception {
+	public ModelAndView updateHolyInfoCenterApply(@RequestBody List<HolyInfo> holyInfoList) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
 		
 		holyService.holyInfoCenterApply(holyInfoList);

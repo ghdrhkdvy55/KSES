@@ -101,7 +101,7 @@ public class EgovCcmCmmnCodeManageController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "codeUpdate.do", method = RequestMethod.POST)
-	public ModelAndView updateCmmCode(@RequestBody CmmnCode cmmnCode) throws Exception {
+	public ModelAndView updateCmmCodeManage(@RequestBody CmmnCode cmmnCode) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		
 		String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
@@ -141,7 +141,7 @@ public class EgovCcmCmmnCodeManageController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "codeDelete.do", method = RequestMethod.POST)
-	public ModelAndView deleteCmmnCode(@RequestBody CmmnCode cmmnCode) throws Exception {
+	public ModelAndView deleteCmmnCodeManage(@RequestBody CmmnCode cmmnCode) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 
 		cmmnCodeManageService.deleteCmmnCode(cmmnCode.getCodeId());
@@ -163,8 +163,8 @@ public class EgovCcmCmmnCodeManageController {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		
 		String result = uniService.selectIdDoubleCheck("CODE_ID", "COMTCCMMNCODE", "CODE_ID = [" + codeId + "[") > 0
-				? "FAIL"
-				: "OK";
+				? Globals.STATUS_FAIL
+				: Globals.STATUS_OK;
 		if (StringUtils.equals(result, "OK")) {
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("common.codeOk.msg"));

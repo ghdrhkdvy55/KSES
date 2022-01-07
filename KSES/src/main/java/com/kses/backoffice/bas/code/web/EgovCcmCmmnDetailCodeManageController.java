@@ -65,7 +65,7 @@ public class EgovCcmCmmnDetailCodeManageController {
 	 * @throws Exception
 	 */
     @RequestMapping(value="CodeDetailUpdate.do", method = RequestMethod.POST)
-	public ModelAndView updateCmmnDetailCode (@RequestBody CmmnDetailCode cmmnDetailCode) throws Exception {
+	public ModelAndView updateCmmnDetailCodeManage(@RequestBody CmmnDetailCode cmmnDetailCode) throws Exception {
     	ModelAndView model = new 	ModelAndView(Globals.JSONVIEW);
     	
     	String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
@@ -106,7 +106,7 @@ public class EgovCcmCmmnDetailCodeManageController {
 	 * @throws Exception
 	 */
     @RequestMapping(value="codeDetailCodeDelete.do", method = RequestMethod.POST)
-	public ModelAndView deleteCmmnDetailCode(@RequestBody CmmnDetailCode cmmnDetailCode) throws Exception {
+	public ModelAndView deleteCmmnDetailCodeManage(@RequestBody CmmnDetailCode cmmnDetailCode) throws Exception {
     	ModelAndView model = new 	ModelAndView(Globals.JSONVIEW);
     	
     	int ret = cmmnDetailCodeManageService.deleteCmmnDetailCode(cmmnDetailCode.getCode());

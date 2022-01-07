@@ -98,7 +98,7 @@ public class ProgrmInfoManageController {
 	 * @throws Exception
 	 */
 	@RequestMapping (value="programeUpdate.do", method = RequestMethod.POST)
-	public ModelAndView programeUpdate(@RequestBody ProgrmInfo progrmInfo) throws Exception{
+	public ModelAndView updateProgrmInfoManage(@RequestBody ProgrmInfo progrmInfo) throws Exception{
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		
 		int ret = 0;
@@ -134,7 +134,7 @@ public class ProgrmInfoManageController {
 	 * @throws Exception
 	 */
 	@RequestMapping (value="programeDelete.do", method = RequestMethod.POST)
-	public ModelAndView deleteProgrameInfoManage(@RequestBody ProgrmInfo progrmInfo) throws Exception {
+	public ModelAndView deleteProgrmInfoManage(@RequestBody ProgrmInfo progrmInfo) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		
 		int ret = progrmService.deleteProgrmInfo(progrmInfo.getProgrmFileNm());
@@ -162,9 +162,9 @@ public class ProgrmInfoManageController {
     public ModelAndView selectIdCheck(@RequestParam("progrmFileNm") String progrmFileNm) throws Exception {
     	ModelAndView model = new ModelAndView(Globals.JSONVIEW);
     	
-    	String result = uniService.selectIdDoubleCheck("PROGRM_FILE_NM", "COMTNPROGRMLIST", "PROGRM_FILE_NM = ["+ progrmFileNm + "[") > 0 ? 
-    			"FAIL" 
-    			: "OK";
+    	String result = uniService.selectIdDoubleCheck("PROGRM_FILE_NM", "COMTNPROGRMLIST", "PROGRM_FILE_NM = ["+ progrmFileNm + "[") > 0 
+    			? Globals.STATUS_FAIL
+    			: Globals.STATUS_OK;
     	if (StringUtils.equals(result, "OK")) {
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("common.codeOk.msg"));

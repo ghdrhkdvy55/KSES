@@ -63,7 +63,7 @@ public class MenuInfoManageController {
 	EgovMessageSource egovMessageSource;
 	
 	@RequestMapping(value = "menuList.do", method = RequestMethod.GET)
-	public ModelAndView selectMenuManageList(ModelMap model) throws Exception {
+	public ModelAndView selectMenuInfoList(ModelMap model) throws Exception {
 		return new ModelAndView("/backoffice/bas/menuList");
 	}
 	
@@ -74,7 +74,7 @@ public class MenuInfoManageController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "menuListAjax.do", method = RequestMethod.POST)
-	public ModelAndView selectMenuManageListAjax(@RequestBody Map<String, Object> searchVO) throws Exception {
+	public ModelAndView selectMenuInfoListAjax(@RequestBody Map<String, Object> searchVO) throws Exception {
 		ModelAndView model = new ModelAndView (Globals.JSONVIEW);
 		
 		int pageUnit = searchVO.get("pageUnit") == null ?  propertiesService.getInt("pageUnit") : Integer.valueOf((String) searchVO.get("pageUnit"));
@@ -110,7 +110,7 @@ public class MenuInfoManageController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "menuDetailInfo.do", method = RequestMethod.GET)
-	public ModelAndView selectMenuManage(@RequestParam("menuNo") String menuNo) throws Exception {
+	public ModelAndView selectMenuDetailInfo(@RequestParam("menuNo") String menuNo) throws Exception {
 		ModelAndView model = new ModelAndView (Globals.JSONVIEW);
 		
 		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
@@ -126,7 +126,7 @@ public class MenuInfoManageController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "menuInfoUpdate.do", method = RequestMethod.POST)
-	public ModelAndView updateMenuManage(@RequestBody MenuInfo menuInfo) throws Exception {
+	public ModelAndView updateMenuInfoManage(@RequestBody MenuInfo menuInfo) throws Exception {
 		ModelAndView model = new ModelAndView (Globals.JSONVIEW);
 		
 		int ret = 0;
@@ -163,7 +163,7 @@ public class MenuInfoManageController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "menuManageDelete.do", method = RequestMethod.POST)
-	public ModelAndView deleteMenuManage(@RequestBody MenuInfo menuInfo) throws Exception {
+	public ModelAndView deleteMenInfoManage(@RequestBody MenuInfo menuInfo) throws Exception {
 		ModelAndView model = new ModelAndView (Globals.JSONVIEW);
 		
 		// 화면에서 자식메뉴 체크 하므로 불필요
@@ -196,8 +196,8 @@ public class MenuInfoManageController {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		
 		String result = uniService.selectIdDoubleCheck("MENU_NO", "COMTNMENUINFO", "MENU_NO = [" + menuNo + "[") > 0
-				? "FAIL"
-				: "OK";
+				? Globals.STATUS_FAIL
+				: Globals.STATUS_OK;
 		if (StringUtils.equals(result, "OK")) {
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("common.codeOk.msg"));
