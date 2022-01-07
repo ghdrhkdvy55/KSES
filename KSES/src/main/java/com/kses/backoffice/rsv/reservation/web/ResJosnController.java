@@ -650,6 +650,7 @@ public class ResJosnController {
 			Map<String, Object> resInfo = resService.selectUserResvInfo(searchVO);
 			String localTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 			String recDate = SmartUtil.NVL(jsonInfo.get("RES_SEND_DATE"), "19700101").toString();
+			String qrTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
 
 			LOGGER.debug(Integer.valueOf(SmartUtil.NVL(jsonInfo.get("RES_PRICE"), "").toString()) + ":"
 					+ Integer.valueOf(SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString()));
@@ -667,7 +668,7 @@ public class ResJosnController {
 			} else {
 				resName = SmartUtil.NVL(resInfo.get("user_nm"), "").toString();
 				resPrice = SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString();
-				resDay = SmartUtil.NVL(resInfo.get("resv_start_dt"), "").toString();
+				resDay = SmartUtil.NVL(resInfo.get("resv_end_dt"), "").toString();
 				resTime = SmartUtil.NVL(resInfo.get("resv_start_tm"), "").toString();
 				seatClass = SmartUtil.NVL(resInfo.get("seat_class"), "").toString();
 				userPhone = SmartUtil.NVL(resInfo.get("user_phone"), "").toString();
@@ -676,8 +677,21 @@ public class ResJosnController {
 				// TO-DO 층/구역명 추가 예정
 				
 				EgovFileScrty fileScrty = new EgovFileScrty();
-				String qrCode = fileScrty.encode(resInfo.get("resv_seq") + ":" + resInfo.get("resv_start_dt")
-						+ ":IN:PAPER:" + SmartUtil.NVL(resInfo.get("user_id"), "").toString());
+				String qrCode = fileScrty.encode(resInfo.get("resv_seq") + ":" + qrTime
+						+ ":IN:PAPER:" + SmartUtil.NVL(resInfo.get("user_id"), "").toString() + ":"
+						+ SmartUtil.NVL(resInfo.get("center_pilot_yn"), "").toString() + ":"
+						+ SmartUtil.NVL(jsonInfo.get("IF_NO"), "").toString() + ":"
+						+ SmartUtil.NVL(resInfo.get("resv_entry_dvsn"), "").toString() + ":"
+						+ SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString() + ":"
+						+ SmartUtil.NVL(resInfo.get("center_rbm_cd"), "").toString() + ":" 
+						+ "종이큐알입장:"
+						+ SmartUtil.NVL(resInfo.get("user_phone"), "").toString() + ":"
+						+ SmartUtil.NVL(resInfo.get("center_nm"), "").toString() + ":"
+						+ SmartUtil.NVL(resInfo.get("seat_nm"), "").toString() + ":"
+						+ SmartUtil.NVL(resInfo.get("seat_class"), "").toString() + ":"
+						+ SmartUtil.NVL(resInfo.get("floor_nm"), "").toString() + ":"
+						+ SmartUtil.NVL(resInfo.get("part_nm"), "").toString());
+				LOGGER.info("ma qrCode : " + qrCode);
 				fileScrty = null;
 
 				resQrUrl = qrCode;
