@@ -110,7 +110,7 @@
 					false,
 					function(result) {
 						if (result.status == "SUCCESS") {
-							if(result.resultlist != null) {
+							if(result.resultlist.length > 0) {
 								$(".branch_list").empty();
 								$.each(result.resultlist, function(index, item) {
 									var setHtml = "";
@@ -144,14 +144,16 @@
 									}
 									centerService.fn_resvVaildCheck(params);
 								});
+							} else {
+								$(".null_center").show();
 							}
-						} else {
-							
+						} else if(result.status == "LOGINFAIL"){
+							fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
 						}
 					},
 					function(request) {
-						alert("ERROR : " + request.status);	       						
-					}    		
+						fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");	       						
+					}  		
 				);	    						
 			},
 			fn_resvVaildCheck : function(params) {

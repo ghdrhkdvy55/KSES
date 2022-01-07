@@ -86,7 +86,7 @@
 		</div>
 	
 		<div class="right_box">
-			<a href="javascript:$('#all_cancel_pop').bPopup();" class="blueBtn">전체 취소</a>
+			<a href="javascript:$('#all_cancel_pop').bPopup();" class="blueBtn">전체 예약취소</a>
 			<a href="javascript:jqGridFunc.fn_longSeatAdd();" class="blueBtn">장기 예매</a>
 			<a href=""  class="blueBtn">엑셀 다운로드</a>
 		</div>
@@ -837,8 +837,17 @@
 				function(result) {
 			    	console.log(result);
 					if (result.status == "SUCCESS") {
-						common_popup(result.message, "Y", "");
-						jqGridFunc.fn_search();
+						if(result.allCount > 0) {
+							result.message = 
+								"정상적으로 전체 예약취소 되었습니다." + "<br><br>" +
+								"취소 예약정보 : "  + result.allCount + "건" + "<br>" +
+								"취소 성공 : "  + result.successCount + "건" + "<br>" + 
+								"취소 실패 : "  + result.failCount + "건" + "<br>"; 
+							common_popup(result.message, "Y", "");
+							jqGridFunc.fn_search();
+						} else {
+							common_popup("지정한 날짜에 취소할 예약정보가 존재하지 않습니다.", "Y", "");
+						}
 			    	} else if (result.status == "LOGIN FAIL") {
 			    		common_popup("로그인 정보가 올바르지않습니다 다시 로그인해주세요", "N", "");
 			    	} else {

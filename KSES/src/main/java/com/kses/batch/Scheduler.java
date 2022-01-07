@@ -102,7 +102,7 @@ public class Scheduler {
 
 							successCount++;
 						} else {
-							LOGGER.info("예약번호 : " + resvSeq + " 시범지점 예외처리");
+							LOGGER.info("예약번호 : " + resvSeq + " 비시범 지점 예외처리");
 							pilotCount++;
 						}
 					}
@@ -127,18 +127,21 @@ public class Scheduler {
 	@Scheduled(cron="0 0 23 * * ?")
 	public void ksesResvCompleteUse() throws Exception {		
 		try {
+			LOGGER.info("----------------------------KSES COMPLETE USE BATCH START----------------------------");
 			resvService.resvCompleteUse();
 		} catch (RuntimeException re) {
 			LOGGER.error("ksesResvCompleteUse =>  Run Failed", re);
 		} catch (Exception e) {
 			LOGGER.error("ksesResvCompleteUse => Failed", e);
 		}
+		LOGGER.info("----------------------------KSES COMPLETE USE BATCH END----------------------------");
 	}
 
 	
 	@Scheduled(cron="0 0 08 * * ?")
 	public void ksesEmpInfoUpdateScheduler() throws Exception {		
 		try {
+			LOGGER.info("----------------------------KSES EMP BATCH START----------------------------");
 			int ret = empService.mergeEmpInfo();
 			if(ret >= 0) {
 				LOGGER.info("ksesEmpInfoUpdateScheduler =>" + "인사정보 " + ret + "건 갱신");
@@ -150,6 +153,7 @@ public class Scheduler {
 		} catch (Exception e) {
 			LOGGER.error("ksesEmpInfoUpdateScheduler => Failed", e);
 		}
+		LOGGER.info("----------------------------KSES EMP BATCH END----------------------------");
 	}
 
 	
