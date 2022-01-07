@@ -177,40 +177,19 @@ public class AdminInfoManageController {
 	}
     
 	/**
-	 * 직원 정보 삭제
-	 * 
-	 * @param loginVO
-	 * @param empno
-	 * @param request
+	 * 관리자 정보 삭제
+	 * @param params
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value="adminDelete.do", method = {RequestMethod.POST})
-	public ModelAndView deleteAdminInfo(@RequestBody Map<String,Object> delId,  
-										 HttpServletRequest request) throws Exception {
-			
+	@RequestMapping(value="adminDelete.do", method = RequestMethod.POST)
+	public ModelAndView deleteAdminInfo(@RequestBody Map<String,Object> params) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-		try {
-			Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-			if(!isAuthenticated) {
-				 model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-				 model.addObject(Globals.STATUS,  Globals.STATUS_LOGINFAIL);
-				 return model;	
-		    }
-			LOGGER.debug("================================== adminNoDel:" + delId.get("adminNoDel"));
-			
-			try {
-				uniService.deleteUniStatement("", "TSEH_ADMIN_INFO_M", "ADMIN_ID IN (SELECT COLUMN_VALUE FROM TABLE (UF_SPLICT(["+  delId.get("adminNoDel")+"[, [,[)))");
-				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.delete") );
-			}catch(Exception e) {
-				throw new Exception();		
-			}
-		} catch (Exception e){
-			LOGGER.info(e.toString());
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.delete"));			
-		}	
+		
+		uniService.deleteUniStatement("", "TSEH_ADMIN_INFO_M", "ADMIN_ID IN (SELECT COLUMN_VALUE FROM TABLE (UF_SPLICT(["+  params.get("adminNoDel")+"[, [,[)))");
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.delete") );
+		
 		return model;
 	}
 	

@@ -114,6 +114,14 @@ $.EgovIndexApi.prototype.numberOnly = function() {
 	});
 };
 
+$.EgovIndexApi.prototype.vaildPassword = function() {
+	let reg_pwd = /^.*(?=.{10,20})(?=.*[0-9])(?=.*[a-zA-Z]).*$/;
+	if (!reg_pwd.test(str)) {
+		return false;
+	}
+	return true;
+};
+
 const EgovIndexApi = new $.EgovIndexApi();
 
 const EgovCalendar = {

@@ -7,7 +7,7 @@
 				   ROW_NUMBER() OVER (ORDER BY ROWNUM DESC) AS RNUM, 
 				   TB.*
 		 	FROM (
-				    SELECT  a.ADMIN_ID, b.EMP_NM, b.EMP_CLPHN, b.EMP_TLPHN,
+				    SELECT  a.ADMIN_ID, a.EMP_NO, b.EMP_NM, b.EMP_CLPHN, b.EMP_TLPHN,
 	                        b.EMP_EMAIL,  FN_ORGNM(b.DEPT_CD, 'DEPT') DEPT_NM,
 							a.ADMIN_PWD, a.ADMIN_LOCKYN, a.USE_YN,	
 							TO_CHAR(a.LAST_UPDT_DTM, 'YYYY-MM-DD') LAST_UPDT_DTM,

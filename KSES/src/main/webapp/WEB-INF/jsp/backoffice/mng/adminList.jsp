@@ -28,7 +28,7 @@
 	<div class="boardlist">
 		<div class="whiteBox searchBox">
 			<div class="top">
-				<p>사용자 권한</p>
+				<p>권한</p>
 				<select id="searchAuthorCd">
 					<option value="">권한 선택</option>
 					<c:forEach var="item" items="${authorCd}">
@@ -59,7 +59,7 @@
 		</div>
 		<div class="right_box">
 			<a href="javascript:fnAdminInfo();" class="blueBtn">관리자 등록</a>
-			<a href="javascript:void(0);" class="grayBtn">삭제</a>
+			<a href="javascript:fnAdminDelete();" class="grayBtn">관리자 삭제</a>
 		</div>
 		<div class="clear"></div>
 		<div class="whiteBox">
@@ -143,7 +143,7 @@
 	</div>
 </div>
 <!-- 관리자 등록 팝업 // -->
-<!-- // 사용자 검색 팝업 -->
+<!-- // 직원 검색 팝업 -->
 <div data-popup="mng_emp_search" class="popup">
 	<div class="pop_con">
 		<h2 class="pop_tit">직원 검색</h2>
@@ -177,6 +177,7 @@
 		// 메인 JqGrid 정의
 		EgovJqGridApi.mainGrid([
 			{ label: '아이디', name: 'admin_id', align:'center', key: true },
+			{ label: '사번', name: 'emp_no', hidden: true },
 			{ label: '이름', name: 'emp_nm', align:'center' },
 			{ label: '권한', name: 'author_nm', align: 'center' },
 			{ label: '권한코드', name: 'author_cd', hidden: true },
@@ -189,7 +190,7 @@
 			{ label: '지점', name:'admin_dvsn', align:'center' },
 			{ label: '최종수정일', name:'last_updt_dtm', align:'center', formatter: 'date' }
 		], true, false, fnSearch);
-		// 사용자 검색 JqGrid 정의
+		// 직원 검색 JqGrid 정의
 		EgovJqGridApi.popGrid('popGrid', [
 			{ label: '사번', name: 'emp_no', align: 'center', sortable: false, key: true },
 			{ label: '이름', name: 'emp_nm', align: 'center', sortable: false },
@@ -248,7 +249,7 @@
 			$popup.find('a.grayBtn').hide();
 			$form.find(':hidden[name=mode]').val('Edt');
 			$form.find(':hidden[name=adminId]').val(rowData.admin_id);
-			$form.find(':text[name=empNo]').prop('readonly', true).val(rowData.empNo);
+			$form.find(':text[name=empNo]').prop('readonly', true).val(rowData.emp_no);
 			$form.find(':password[name=adminPwd]').val('');
 			$form.find(':password[name=adminPwd2]').val('');
 			$form.find('select[name=authorCd]').val(rowData.author_cd).trigger('change');
@@ -267,11 +268,102 @@
 	function fnAdminInsert() {
 		let $popup = $('[data-popup=mng_admin_add]');
 		let $form = $popup.find('form:first');
+		if ($popup.find(':text[name=empNo]').val() === '') {
+			toastr.warning('사번을 입력해 주세요.');
+			return;
+		}
+		if ($popup.find(':hidden[name=adminId]').val() === '') {
+			toastr.warning('중복 체크가 안되었습니다. [검색]으로 직원 검색하세요.');
+			return;
+		}
+		let password = $popup.find(':password[name=adminPwd]').val();
+		if (password === '') {
+			toastr.warning('비밀번호를 입력해 주세요.');
+			return;
+		} else {
+			if (!EgovIndexApi.vaildPassword(password)) {
+				toastr.warning('비밀번호가 유효하지 않습니다.');
+				return;
+			}
+			let password2 = $popup.find(':password[name=adminPwd2]').val();
+			if (password2 === '') {
+				toastr.warning('비밀번호 확인을 입력해 주세요.');
+				return;
+			}
+			if ($.trim(password) !== $.trim(password2)) {
+				toastr.warning('비밀번호가 일치하지 않습니다. ');
+				return;
+			}
+		}
+		if ($popup.find('select[name=authorCd]').val() === '') {
+			toastr.warning('권한을 선택해 주세요.');
+			return;
+		}
+		bPopupConfirm('관리자 등록', '등록 하시겠습니까?', function() {
+			EgovIndexApi.apiExecuteJson(
+				'POST',
+				'/backoffice/mng/adminUpdate.do', 
+				$form.serializeObject(),
+				null,
+				function(json) {
+					toastr.success(json.message);
+					$popup.bPopup().close();
+					fnSearch(1);
+				},
+				function(json) {
+					toastr.error(json.message);
+				}
+			);
+		});
 	}
 	// 관리자 수정
 	function fnAdminUpdate() {
 		let $popup = $('[data-popup=mng_admin_add]');
 		let $form = $popup.find('form:first');
+		if ($popup.find('select[name=authorCd]').val() === '') {
+			toastr.warning('권한을 선택해 주세요.');
+			return;
+		}
+		bPopupConfirm('관리자 수정', '<b>'+ $popup.find('#spEmpNm').text() +'</b>수정 하시겠습니까?', function() {
+			EgovIndexApi.apiExecuteJson(
+				'POST',
+				'/backoffice/mng/adminUpdate.do', 
+				$form.serializeObject(),
+				null,
+				function(json) {
+					toastr.success(json.message);
+					$popup.bPopup().close();
+					fnSearch(1);
+				},
+				function(json) {
+					toastr.error(json.message);
+				}
+			);
+		});
+	}
+	// 관리자 삭제
+	function fnAdminDelete() {
+		let rowIds = $('#mainGrid').jqGrid('getGridParam', 'selarrrow');
+		if (rowIds.length === 0) {
+			toastr.warning('목록을 선택해 주세요.');
+			return false;
+		}
+		bPopupConfirm('관리자 삭제', '삭제 하시겠습니까?', function() {
+			EgovIndexApi.apiExecuteJson(
+				'POST',
+				'/backoffice/mng/adminDelete.do', {
+					adminNoDel: rowIds.join(',')
+				},
+				null,
+				function(json) {
+					toastr.success(json.message);
+					fnSearch(1);
+				},
+				function(json) {
+					toastr.error(json.message);
+				}
+			);
+		});
 	}
 	// 직원 검색 팝업 호출
 	function fnEmpInfoPopup() {
