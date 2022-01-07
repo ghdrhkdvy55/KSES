@@ -162,7 +162,7 @@ public class ProgrmInfoManageController {
     	ModelAndView model = new ModelAndView(Globals.JSONVIEW);
     	
     	int ret = uniService.selectIdDoubleCheck("PROGRM_FILE_NM", "COMTNPROGRMLIST", "PROGRM_FILE_NM = ["+ progrmFileNm + "[");
-    	if (ret > 0) {
+    	if (ret == 0) {
     		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("common.codeOk.msg"));
     	}

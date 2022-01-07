@@ -196,7 +196,7 @@ public class MenuInfoManageController {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		
 		int ret = uniService.selectIdDoubleCheck("MENU_NO", "COMTNMENUINFO", "MENU_NO = [" + menuNo + "[");
-		if (ret > 0) {
+		if (ret == 0) {
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("common.codeOk.msg"));
 		}

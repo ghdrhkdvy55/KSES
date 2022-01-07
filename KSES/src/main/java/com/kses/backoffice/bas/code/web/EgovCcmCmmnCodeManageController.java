@@ -163,7 +163,7 @@ public class EgovCcmCmmnCodeManageController {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		
 		int ret = uniService.selectIdDoubleCheck("CODE_ID", "COMTCCMMNCODE", "CODE_ID = [" + codeId + "[");
-		if (ret > 0) {
+		if (ret == 0) {
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("common.codeOk.msg"));
 		}
