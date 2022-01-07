@@ -248,6 +248,7 @@
 			$form.find(':text[name=holyDt]').prop('disabled', true).val(rowData.holy_dt);
 			$form.find(':text[name=holyNm]').val(rowData.holy_nm);
 			$form.find(':radio[name=useYn][value='+ rowData.use_yn +']').prop('checked', true);
+			// checkbox 있는 경우 필요
 			$('#mainGrid').jqGrid('setSelection', id);
 			fnCenterHolyInfoSearch(1);
 		}
