@@ -2480,7 +2480,7 @@ ul.tabs li{
 .vacState {
     background: #eee;
     border-radius: 25px;
-    width: 80%;
+    width:70%;
     margin: auto;
     margin-top: 1rem;
 }
@@ -2494,7 +2494,6 @@ ul.tabs li{
 .vacState .vacDone {color: #2667f7;}
 .vacState .vacNon {
     color: #f72626;
-    background: url("/resources/img/front/warning_amber_black_24dp.svg") no-repeat left;
     background-size: 19px;
 }
 
@@ -2553,7 +2552,8 @@ ul.tabs li{
 @media screen and (max-width: 320px){
 	.linkBox a{padding: 10px 3px; letter-spacing: -0.15em;}	
 	.price table td {padding :1rem 0.5rem;}
-	 .main_user_rsv li span a {font-size: 2em;}
+	.main_user_rsv li span a {font-size: 2em;}
+	.pay_passWord li input {font-size:12px;}
 }
 
 /*1227*/
@@ -2595,7 +2595,7 @@ ul.tabs li{
     line-height: 1.6em;
 }
 .null_cont, .null_list, .null_center {text-align:center; }
-.null_cont p, null list p, .null_center p {
+.null_cont p, .null_list p, .null_center p {
 	font-size: 1.3em;
     color: #a7a7a7;
     padding: 4rem 0;
