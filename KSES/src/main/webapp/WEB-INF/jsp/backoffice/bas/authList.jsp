@@ -233,15 +233,16 @@
 	// 권한 등록
 	function fnAuthInsert() {
 		let $popup = $('[data-popup=bas_auth_add]');
-		if ($popup.find(':text[name=authorCode]').val() === '') {
+		let $form = $popup.find('form:first');
+		if ($form.find(':text[name=authorCode]').val() === '') {
 			toastr.warning('코드를 입력해 주세요.');
 			return;
 		}
-		if ($popup.find(':hidden#idCheck').val() !== 'Y') {
+		if ($form.find(':hidden#idCheck').val() !== 'Y') {
 			toastr.warning('중복체크가 안되었습니다.');
 			return;	
 		}
-		if ($popup.find(':text[name=authorNm]').val() === '') {
+		if ($form.find(':text[name=authorNm]').val() === '') {
 			toastr.warning('권한명을 입력해 주세요.');
 			return;
 		}
@@ -249,7 +250,7 @@
 			EgovIndexApi.apiExecuteJson(
 				'POST',
 				'/backoffice/bas/authUpdate.do', 
-				$popup.find('form').serializeObject(),
+				$form.serializeObject(),
 				null,
 				function(json) {
 					toastr.success(json.message);
@@ -265,15 +266,16 @@
 	// 권한 수정
 	function fnAuthUpdate() {
 		let $popup = $('[data-popup=bas_auth_add]');
-		if ($popup.find(':text[name=authorCode]').val() === '') {
+		let $form = $popup.find('form:first');
+		if ($form.find(':text[name=authorCode]').val() === '') {
 			toastr.warning('코드를 입력해 주세요.');
 			return;
 		}
-		bPopupConfirm('권한코드 수정', '<b>'+ $popup.find(':text[name=authorCode]').val() +'</b> 수정 하시겠습니까?', function() {
+		bPopupConfirm('권한코드 수정', '<b>'+ $form.find(':text[name=authorCode]').val() +'</b> 수정 하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(
 				'POST',
 				'/backoffice/bas/authUpdate.do', 
-				$popup.find('form').serializeObject(),
+				$form.serializeObject(),
 				null,
 				function(json) {
 					toastr.success(json.message);

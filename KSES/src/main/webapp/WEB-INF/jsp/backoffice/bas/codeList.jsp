@@ -247,15 +247,16 @@
 	// 분류 코드 등록
 	function fnCmmnCodeInsert() {
 		let $popup = $('[data-popup=bas_code_add]');
-		if ($popup.find(':text[name=codeId]').val() === '') {
+		let $form = $popup.find('form:first');
+		if ($form.find(':text[name=codeId]').val() === '') {
 			toastr.warning('코드를 입력해 주세요.');
 			return;
 		}
-		if ($popup.find(':hidden#idCheck').val() !== 'Y') {
+		if ($form.find(':hidden#idCheck').val() !== 'Y') {
 			toastr.warning('중복체크가 안되었습니다.');
 			return;	
 		}
-		if ($popup.find(':text[name=codeIdNm]').val() === '') {
+		if ($form.find(':text[name=codeIdNm]').val() === '') {
 			toastr.warning('코드명을 입력해 주세요.');
 			return;
 		}
@@ -263,7 +264,7 @@
 			EgovIndexApi.apiExecuteJson(
 				'POST',
 				'/backoffice/bas/codeUpdate.do', 
-				$popup.find('form').serializeObject(),
+				$form.serializeObject(),
 				null,
 				function(json) {
 					toastr.success(json.message);
@@ -279,16 +280,16 @@
 	// 분류 코드 수정
 	function fnCmmnCodeUpdate() {
 		let $popup = $('[data-popup=bas_code_add]');
-		if ($popup.find(':text[name=codeIdNm]').val() === '') {
+		let $form = $popup.find('form:first');
+		if ($form.find(':text[name=codeIdNm]').val() === '') {
 			toastr.warning('코드명을 입력해 주세요.');
 			return;
 		}
-		
-		bPopupConfirm('분류코드 수정', '<b>'+ $popup.find(':text[name=codeId]').val() +'</b> 를(을) 수정 하시겠습니까?', function() {
+		bPopupConfirm('분류코드 수정', '<b>'+ $form.find(':text[name=codeId]').val() +'</b> 를(을) 수정 하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(
 				'POST',
 				'/backoffice/bas/codeUpdate.do', 
-				$popup.find('form').serializeObject(),
+				$form.serializeObject(),
 				null,
 				function(json) {
 					toastr.success(json.message);
@@ -361,7 +362,8 @@
 	// 상세 코드 등록
 	function fnCmmnDetailCodeInsert() {
 		let $popup = $('[data-popup=bas_detailcode_add]');
-		if ($popup.find(':text[name=codeNm]').val() === '') {
+		let $form = $popup.find('form:first');
+		if ($form.find(':text[name=codeNm]').val() === '') {
 			toastr.warning('상세코드명을 입력해 주세요.');
 			return;
 		}
@@ -369,7 +371,7 @@
 			EgovIndexApi.apiExecuteJson(
 				'POST',
 				'/backoffice/bas/CodeDetailUpdate.do', 
-				$popup.find('form').serializeObject(),
+				$form.serializeObject(),
 				null,
 				function(json) {
 					toastr.success(json.message);
@@ -386,15 +388,16 @@
 	// 상세 코드 수정
 	function fnCmmnDetailCodeUpdate() {
 		let $popup = $('[data-popup=bas_detailcode_add]');
-		if ($popup.find(':text[name=codeNm]').val() === '') {
+		let $form = $popup.find('form:first');
+		if ($form.find(':text[name=codeNm]').val() === '') {
 			toastr.warning('상세코드명을 입력해 주세요.');
 			return;
 		}
-		bPopupConfirm('상세코드 수정', '<b>'+ $popup.find(':hidden[name=code]').val() +'</b> 수정 하시겠습니까?', function() {
+		bPopupConfirm('상세코드 수정', '<b>'+ $form.find(':hidden[name=code]').val() +'</b> 수정 하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson( 
 				'POST',
 				'/backoffice/bas/CodeDetailUpdate.do', 
-				$popup.find('form').serializeObject(),
+				$form.serializeObject(),
 				null,
 				function(json) {
 					toastr.success(json.message);

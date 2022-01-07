@@ -268,15 +268,15 @@
 	function fnAdminInsert() {
 		let $popup = $('[data-popup=mng_admin_add]');
 		let $form = $popup.find('form:first');
-		if ($popup.find(':text[name=empNo]').val() === '') {
+		if ($form.find(':text[name=empNo]').val() === '') {
 			toastr.warning('사번을 입력해 주세요.');
 			return;
 		}
-		if ($popup.find(':hidden[name=adminId]').val() === '') {
+		if ($form.find(':hidden[name=adminId]').val() === '') {
 			toastr.warning('중복 체크가 안되었습니다. [검색]으로 직원 검색하세요.');
 			return;
 		}
-		let password = $popup.find(':password[name=adminPwd]').val();
+		let password = $form.find(':password[name=adminPwd]').val();
 		if (password === '') {
 			toastr.warning('비밀번호를 입력해 주세요.');
 			return;
@@ -285,7 +285,7 @@
 				toastr.warning('비밀번호가 유효하지 않습니다.');
 				return;
 			}
-			let password2 = $popup.find(':password[name=adminPwd2]').val();
+			let password2 = $form.find(':password[name=adminPwd2]').val();
 			if (password2 === '') {
 				toastr.warning('비밀번호 확인을 입력해 주세요.');
 				return;
@@ -295,7 +295,7 @@
 				return;
 			}
 		}
-		if ($popup.find('select[name=authorCd]').val() === '') {
+		if ($form.find('select[name=authorCd]').val() === '') {
 			toastr.warning('권한을 선택해 주세요.');
 			return;
 		}
@@ -320,11 +320,11 @@
 	function fnAdminUpdate() {
 		let $popup = $('[data-popup=mng_admin_add]');
 		let $form = $popup.find('form:first');
-		if ($popup.find('select[name=authorCd]').val() === '') {
+		if ($form.find('select[name=authorCd]').val() === '') {
 			toastr.warning('권한을 선택해 주세요.');
 			return;
 		}
-		bPopupConfirm('관리자 수정', '<b>'+ $popup.find('#spEmpNm').text() +'</b>수정 하시겠습니까?', function() {
+		bPopupConfirm('관리자 수정', '<b>'+ $form.find('#spEmpNm').text() +'</b>수정 하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(
 				'POST',
 				'/backoffice/mng/adminUpdate.do', 

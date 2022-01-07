@@ -185,19 +185,20 @@
 	// 프로그램 등록
 	function fnProgramInsert() {
 		let $popup = $('[data-popup=bas_program_add]');
-		if ($popup.find(':text[name=progrmFileNm]').val() === '') {
+		let $form = $popup.find('form:first');
+		if ($form.find(':text[name=progrmFileNm]').val() === '') {
 			toastr.warning('파일명을 입력해 주세요.');
 			return;
 		}
-		if ($popup.find(':hidden#idCheck').val() !== 'Y') {
+		if ($form.find(':hidden#idCheck').val() !== 'Y') {
 			toastr.warning('중복체크가 안되었습니다.');
 			return;	
 		}
-		if ($popup.find(':text[name=progrmKoreannm]').val() === '') {
+		if ($form.find(':text[name=progrmKoreannm]').val() === '') {
 			toastr.warning('한글명을 입력해 주세요.');
 			return;
 		}
-		if ($popup.find(':text[name=url]').val() === '') {
+		if ($form.find(':text[name=url]').val() === '') {
 			toastr.warning('URL를 입력해 주세요.');
 			return;
 		}
@@ -205,7 +206,7 @@
 			EgovIndexApi.apiExecuteJson(
 				'POST',
 				'/backoffice/bas/programeUpdate.do', 
-				$popup.find('form').serializeObject(),
+				$form.serializeObject(),
 				null,
 				function(json) {
 					toastr.success(json.message);
@@ -221,19 +222,20 @@
 	// 프로그램 수정
 	function fnProgramUpdate() {
 		let $popup = $('[data-popup=bas_program_add]');
-		if ($popup.find(':text[name=progrmKoreannm]').val() === '') {
+		let $form = $popup.find('form:first');
+		if ($form.find(':text[name=progrmKoreannm]').val() === '') {
 			toastr.warning('한글명을 입력해 주세요.');
 			return;
 		}
-		if ($popup.find(':text[name=url]').val() === '') {
+		if ($form.find(':text[name=url]').val() === '') {
 			toastr.warning('URL를 입력해 주세요.');
 			return;
 		}
-		bPopupConfirm('프로그램 수정', '<b>'+ $popup.find(':text[name=progrmFileNm]').val() +'</b> 수정 하시겠습니까?', function() {
+		bPopupConfirm('프로그램 수정', '<b>'+ $form.find(':text[name=progrmFileNm]').val() +'</b> 수정 하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(
 				'POST',
 				'/backoffice/bas/programeUpdate.do', 
-				$popup.find('form').serializeObject(),
+				$form.serializeObject(),
 				null,
 				function(json) {
 					toastr.success(json.message);

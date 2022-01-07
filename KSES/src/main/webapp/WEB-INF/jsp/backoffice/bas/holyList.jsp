@@ -280,15 +280,15 @@
 	function fnHolyInsert() {
 		let $popup = $('[data-popup=bas_holiday_add]');
 		let $form = $popup.find('form:first');
-		if ($popup.find(':text[name=holyDt]').val() === '') {
+		if ($form.find(':text[name=holyDt]').val() === '') {
 			toastr.warning('휴일일자를 입력해 주세요.');
 			return;
 		}
-		if ($popup.find(':hidden#idCheck').val() !== 'Y') {
+		if ($form.find(':hidden#idCheck').val() !== 'Y') {
 			toastr.warning('중복체크가 안되었습니다.');
 			return;	
 		}
-		if ($popup.find(':text[name=holyNm]').val() === '') {
+		if ($form.find(':text[name=holyNm]').val() === '') {
 			toastr.warning('휴일명을 입력해 주세요.');
 			return;
 		}
@@ -296,7 +296,7 @@
 			EgovIndexApi.apiExecuteJson(
 				'POST',
 				'/backoffice/bas/holyUpdate.do', 
-				$popup.find('form').serializeObject(),
+				$form.serializeObject(),
 				null,
 				function(json) {
 					toastr.success(json.message);
@@ -314,15 +314,15 @@
 		let $popup = $('[data-popup=bas_holiday_add]');
 		let $form = $popup.find('form:first');
 		$form.find(':text[name=holyDt]').removeAttr('disabled');
-		if ($popup.find(':text[name=holyNm]').val() === '') {
+		if ($form.find(':text[name=holyNm]').val() === '') {
 			toastr.warning('휴일명을 입력해 주세요.');
 			return;
 		}
-		bPopupConfirm('휴일일자 수정', '<b>'+ $popup.find(':text[name=holyDt]').val() +'</b> 수정 하시겠습니까?', function() {
+		bPopupConfirm('휴일일자 수정', '<b>'+ $form.find(':text[name=holyDt]').val() +'</b> 수정 하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(
 				'POST',
 				'/backoffice/bas/holyUpdate.do', 
-				$popup.find('form').serializeObject(),
+				$form.serializeObject(),
 				null,
 				function(json) {
 					toastr.success(json.message);
