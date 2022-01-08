@@ -357,11 +357,11 @@ public class ResJosnController {
 					return model;
 				}
 				if (!qrInot.equals(inOt)) {
+					ERROR_MSG = qrInot.equals("IN") ? "퇴장 정보 없음." : "입장 정보 없음.";
 					ERROR_CD = "ERROR_07";
-					ERROR_MSG = "퇴장 정보 없음.";
 					model.addObject("ERROR_CD", ERROR_CD);
 					model.addObject("ERROR_MSG", ERROR_MSG);
-					return model;
+					return model;	
 				}
 
 				sendInfo.setUserId(userId);
