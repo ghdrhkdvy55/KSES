@@ -677,8 +677,8 @@
 			var item = rowObject;
 			var form = "";
 			
-			/* if(index == 'resv_qr_print' && item.resv_pay_dvsn == 'RESV_PAY_DVSN_2' && (item.resv_state == 'RESV_PAY_DVSN_1' || item.resv_state == 'RESV_PAY_DVSN_2')) {} */
-			if(index == 'resv_qr_print' && (item.resv_state == 'RESV_PAY_DVSN_1' || item.resv_state == 'RESV_PAY_DVSN_2')) {
+			item.resv_pay_dvsn = item.center_pilot_yn == "N" ? "RESV_PAY_DVSN_2" : item.resv_pay_dvsn;
+			if(index == 'resv_qr_print' && item.resv_pay_dvsn == 'RESV_PAY_DVSN_2' && (item.resv_state == 'RESV_STATE_1' || item.resv_state == 'RESV_STATE_2')) {
 				form = '<a href="javascript:jqGridFunc.fn_qrInfo(&#39;' + item.resv_seq + '&#39;);" class="detailBtn">QR출력</a>';	
 			} else if(index == 'resv_end_dt') {
 				form = fn_resvDateFormat(item.resv_end_dt); 	
