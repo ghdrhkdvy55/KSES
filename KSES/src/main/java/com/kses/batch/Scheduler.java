@@ -69,6 +69,7 @@ public class Scheduler {
 				if(noshowResvList.size() != 0) {
 					int successCount = 0;
 					int pilotCount = 0;
+					int ticketCount = 0;
 					
 					for(Map<String, Object> map : noshowResvList) {
 						String resvSeq = SmartUtil.NVL(map.get("resv_seq"),"");
@@ -78,29 +79,34 @@ public class Scheduler {
 						String resvTicketDvsn = SmartUtil.NVL(map.get("resv_ticket_dvsn"),"");
 						
 						if(centerPilotYn.equals("N")) {
-							LOGGER.info("예약번호 : " + resvSeq + " " + i + "차 자동취소 시작" );
-							
-							if(i == 2 && resvPayDvsn.equals("RESV_PAY_DVSN_2") && resvTicketDvsn.equals("RESV_TICKET_DVSN_1")) {
-								jsonObject.put("Pw_YN", "N");
-								jsonObject.put("resvSeq", resvSeq);
-								Map<String, Object> result = interfaceService.SpeedOnCancelPayMent(jsonObject);
+							if(!resvTicketDvsn.equals("RESV_TICKET_DVSN_2")) {
+								LOGGER.info("예약번호 : " + resvSeq + " " + i + "차 자동취소 시작" );
 								
-								if(!SmartUtil.NVL(result.get(Globals.STATUS), "").equals("SUCCESS")) {
-									LOGGER.info("예약번호 : " + resvSeq + " 결제취소실패");
-									LOGGER.info("에러코드 : " + result.get(Globals.STATUS));
-									LOGGER.info("에러메세지 : " + result.get(Globals.STATUS_MESSAGE));
+								if(i == 2 && resvPayDvsn.equals("RESV_PAY_DVSN_2") && resvTicketDvsn.equals("RESV_TICKET_DVSN_1")) {
+									jsonObject.put("Pw_YN", "N");
+									jsonObject.put("resvSeq", resvSeq);
+									Map<String, Object> result = interfaceService.SpeedOnCancelPayMent(jsonObject);
+									
+									if(!SmartUtil.NVL(result.get(Globals.STATUS), "").equals("SUCCESS")) {
+										LOGGER.info("예약번호 : " + resvSeq + " 결제취소실패");
+										LOGGER.info("에러코드 : " + result.get(Globals.STATUS));
+										LOGGER.info("에러메세지 : " + result.get(Globals.STATUS_MESSAGE));
+										continue;
+									} 
+									
+									LOGGER.info("예약번호 : " + resvSeq + " 결제취소성공");
+								}
+								
+								// 노쇼정보등록 & 예약정보취소
+								if(!noshowService.updateNoshowResvInfoTran(resvSeq, noshowCd)) {
 									continue;
-								} 
-								
-								LOGGER.info("예약번호 : " + resvSeq + " 결제취소성공");
+								}
+	
+								successCount++;
+							} else {
+								LOGGER.info("예약번호 : " + resvSeq + " 무인발권기 거래 예약정보 예외처리");
+								ticketCount++;
 							}
-							
-							// 노쇼정보등록 & 예약정보취소
-							if(!noshowService.updateNoshowResvInfoTran(resvSeq, noshowCd)) {
-								continue;
-							}
-
-							successCount++;
 						} else {
 							LOGGER.info("예약번호 : " + resvSeq + " 비시범 지점 예외처리");
 							pilotCount++;
@@ -110,8 +116,9 @@ public class Scheduler {
 					LOGGER.info("=====================================================================================");
 					LOGGER.info(i + "차 노쇼 예약정보(총) : " + noshowResvList.size());
 					LOGGER.info("성공 : " + successCount + "건");
-					LOGGER.info("실패 : " +  ((noshowResvList.size() - pilotCount) - successCount) + "건");
+					LOGGER.info("실패 : " +  ((noshowResvList.size() - pilotCount - ticketCount) - successCount) + "건");
 					LOGGER.info("시범지점예외 : " + pilotCount + "건");
+					LOGGER.info("무인발권기예외 : " + ticketCount + "건");
 					LOGGER.info("=====================================================================================");
 				} else {
 					LOGGER.info("resvNoshowScheduler =>" + i + "차 노쇼 예약정보 없음");

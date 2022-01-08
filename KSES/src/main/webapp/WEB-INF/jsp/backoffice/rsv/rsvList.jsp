@@ -73,8 +73,9 @@
 	              	<select id="searchCondition">
 						<option value="">선택</option>
 						<option value="resvSeq">예약번호</option>
-						<option value="resvName">이름</option>
 						<option value="resvId">아이디</option>
+						<option value="resvName">이름</option>
+						<option value="resvPhone">전화번호</option>
 	              	</select>
 	              	<input type="text" id="searchKeyword" placeholder="검색어를 입력하세요.">
 				</div>
@@ -842,7 +843,8 @@
 								"정상적으로 전체 예약취소 되었습니다." + "<br><br>" +
 								"취소 예약정보 : "  + result.allCount + "건" + "<br>" +
 								"취소 성공 : "  + result.successCount + "건" + "<br>" + 
-								"취소 실패 : "  + result.failCount + "건" + "<br>"; 
+								"취소 실패 : "  + result.failCount + "건" + "<br>";
+								"무인발권기 예외 : "  + result.ticketCount + "건" + "<br>";
 							common_popup(result.message, "Y", "");
 							jqGridFunc.fn_search();
 						} else {

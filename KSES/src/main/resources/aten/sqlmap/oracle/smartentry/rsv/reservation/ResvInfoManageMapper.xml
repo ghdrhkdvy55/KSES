@@ -54,6 +54,9 @@
 						<when test="@org.apache.commons.lang3.StringUtils@equals(params.searchCondition,'resvId')">
 							AND A.USER_ID LIKE '%' || #{params.searchKeyword} || '%'
 						</when>
+						<when test="@org.apache.commons.lang3.StringUtils@equals(params.searchCondition,'resvPhone')">
+							AND A.RESV_USER_CLPHN LIKE '%' || #{params.searchKeyword} || '%'
+						</when>						
 						<otherwise> 
 							AND 
 							(
