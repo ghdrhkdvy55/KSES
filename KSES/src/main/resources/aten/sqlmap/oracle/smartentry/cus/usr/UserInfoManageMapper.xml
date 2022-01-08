@@ -61,7 +61,7 @@
 			USER_RCPT_YN, USER_RCPT_DVSN, USER_RCPT_NUMBER
 		FROM TSER_USER_INFO_I 
 		WHERE USER_CARD_ID = CRYPTO.DEC('normal',#{params.cardId, jdbcType=VARCHAR})
-		AND CARD_SEQ = #{params.cardSeq, jdbcType=VARCHAR}
+		AND USER_CARD_SEQ = #{params.cardSeq, jdbcType=VARCHAR}
    	</select>
    	
 	<select id="selectUserVacntnInfo" resultType="lmap">

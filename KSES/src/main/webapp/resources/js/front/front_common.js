@@ -567,8 +567,8 @@ function fn_resvCancel(resvInfo, payResult, callback) {
 				payResult != null ?
 					fn_openPopup(
 						"예약이 정상적으로 취소되었습니다." + "<br>" +
-						"입금금액 : " + payResult.occurVal + "<br>" +
-						"잔액 : " + payResult.balan, 
+						"입금금액 : " + fn_cashFormat(payResult.occurVal) + "<br>" +
+						"잔액 : " + fn_cashFormat(payResult.balan), 
 						"blue", "SUCCESS", "확인", ""
 					) :
 					fn_openPopup("예약이 정상적으로 취소되었습니다.", "blue", "SUCCESS", "확인", "");
