@@ -119,8 +119,11 @@
 			sortable: 'date',formatter: "date", formatoptions: { newformat: "Y-m-d H:i:s"}}	
 		], false, false, fnSearch);	
 		
-		$("#searchFrom").datepicker(EgovCalendar);
-		$("#searchTo").datepicker(EgovCalendar);
+		// 달력 입력 검색 창 정의				
+		let startDate = new Date(new Date().getFullYear(), 0, 1);
+		let endDate = new Date(new Date().getFullYear(), 11, 31);
+		$('#searchFrom').val($.datepicker.formatDate('yymmdd', startDate))
+		$('#searchTo').val($.datepicker.formatDate('yymmdd', endDate));
 	});
 	
 	function fnSearch(pageNo) {
