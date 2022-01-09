@@ -244,8 +244,6 @@
 			$form.find(':hidden[name=mode]').val('Edt');
 			$form.find(':hidden[name=adminId]').val(rowData.admin_id);
 			$form.find(':text[name=empNo]').prop('readonly', true).val(rowData.emp_no);
-			$form.find(':password[name=adminPwd]').val('');
-			$form.find(':password[name=adminPwd2]').val('');
 			$form.find('select[name=authorCd]').val(rowData.author_cd).trigger('change');
 			$form.find('select[name=centerCd]').val(rowData.center_cd);
 			$form.find(':radio[name=useYn][value='+ rowData.use_yn +']').prop('checked', true);
@@ -269,25 +267,6 @@
 		if ($form.find(':hidden[name=adminId]').val() === '') {
 			toastr.warning('중복 체크가 안되었습니다. [검색]으로 직원 검색하세요.');
 			return;
-		}
-		let password = $form.find(':password[name=adminPwd]').val();
-		if (password === '') {
-			toastr.warning('비밀번호를 입력해 주세요.');
-			return;
-		} else {
-			if (!EgovIndexApi.vaildPassword(password)) {
-				toastr.warning('비밀번호가 유효하지 않습니다.');
-				return;
-			}
-			let password2 = $form.find(':password[name=adminPwd2]').val();
-			if (password2 === '') {
-				toastr.warning('비밀번호 확인을 입력해 주세요.');
-				return;
-			}
-			if ($.trim(password) !== $.trim(password2)) {
-				toastr.warning('비밀번호가 일치하지 않습니다. ');
-				return;
-			}
 		}
 		if ($form.find('select[name=authorCd]').val() === '') {
 			toastr.warning('권한을 선택해 주세요.');
