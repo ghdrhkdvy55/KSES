@@ -62,6 +62,16 @@ public class EgovLoginServiceImpl extends EgovAbstractServiceImpl implements Ego
 
     	return loginVO;
     }
+    
+    @Override
+    public int existAdminUser(String adminId) throws Exception {
+    	return loginUsrManageMapper.existAdminUser(adminId);
+    }
+    
+    @Override
+    public LoginVO findById(String adminId) throws Exception {
+    	return loginUsrManageMapper.findById(adminId);
+    }
 
     /**
 	 * 아이디를 찾는다.

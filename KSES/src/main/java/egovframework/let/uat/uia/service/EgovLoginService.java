@@ -30,6 +30,22 @@ public interface EgovLoginService {
     LoginVO actionLogin(LoginVO vo) throws Exception;
     
     /**
+     * 아이디 존재 유무 확인
+     * @param adminId
+     * @return
+     * @throws Exception
+     */
+    int existAdminUser(String adminId) throws Exception;
+    
+    /**
+     * 아이디로 직원 조회
+     * @param adminId
+     * @return
+     * @throws Exception
+     */
+    LoginVO findById(String adminId) throws Exception;
+    
+    /**
 	 * 아이디를 찾는다.
 	 * @param vo LoginVO
 	 * @return LoginVO

@@ -9,6 +9,27 @@
 		AND ADMIN_LOCKYN = 'N'
 		AND USE_YN = 'Y'
    	</select>
+   	
+   	<select id="existAdminUser" resultType="int">
+   		SELECT COUNT(*) FROM VW_EMPINFO WHERE ADMIN_ID = #{value}
+   	</select>
+   	
+   	<select id="findById" resultType="LoginVO">
+   		SELECT ADMIN_ID
+   			, AUTHOR_CD
+   			, ADMIN_PASS_UPDT_DT
+   			, ADMIN_LOCKYN
+   			, EMP_NM
+   			, DEPT_NM
+   			, USE_YN
+   			, EMP_CLPHN
+   			, EMP_TLPHN
+   			, EMP_EMAIL
+   			, EMP_STATE
+   			, CENTER_CD
+   		FROM VW_EMPINFO
+   		WHERE ADMIN_ID = #{value}
+   	</select>
    
        <!-- SELECT ADMIN_ID AS adminId
 			     , ADMIN_NAME AS adminName			     

@@ -95,7 +95,8 @@ public class Globals {
 	public static final String PAGE_UNIT = "pageUnit";
 	public static final String PROCESS_STATE_NO = "NO_UPDATE";
 	
-	
+	public static final String LOGIN_CONNECT_MTHD_I = "I"; // 로그인
+	public static final String LOGIN_CONNECT_MTHD_O = "O"; // 로그아웃
 	
 	public static final String JSON_NO_KEY = "NO_KEY";
 }

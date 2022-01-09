@@ -69,6 +69,9 @@
 				case '2':
 					toastr.error('세션이 종료되어 로그인 페이지로 이동되었습니다.');
 					break;
+				case '3':
+					toastr.error('권한이 없어 관리자 시스템에 접속하실 수 없습니다.');
+					break;
 				default:
 			}
 			

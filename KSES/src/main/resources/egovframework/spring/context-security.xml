@@ -2,9 +2,15 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:egov-security="http://maven.egovframe.go.kr/schema/egov-security"
 	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
         http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.2.xsd
 		http://maven.egovframe.go.kr/schema/egov-security http://maven.egovframe.go.kr/schema/egov-security/egov-security-3.10.0.xsd">
+
+	<context:component-scan base-package="egovframework, com.kses">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Component"/>
+	</context:component-scan>
 
 	<!-- Web Resources -->
     <security:http pattern="/resources/**" security="none" />
@@ -21,16 +27,50 @@
     
  	<security:http pattern="\A/WEB-INF/jsp/.*\Z" request-matcher="regex" security="none" />
  	
- 	
+	<!--
+		loginUrl: 로그인 페이지
+		loginFailureUrl: 로그인 실패 시
+		defaultTargetUrl: 로그인 성공 시
+		
+		logoutSuccessUrl: 로그아웃 성공 시
+		concurrentExpiredUrl: expired 후 redirect -> 중복로그인 시
+		accessDeniedUrl: 권한이 없는 경우
+	 -->
     <egov-security:config id="securityConfig"
     	loginUrl="/backoffice/login.do"
     	logoutSuccessUrl="/backoffice/login.do"
+    	defaultTargetUrl="/backoffice/actionMain.do"
+    	
     	loginFailureUrl="/backoffice/login.do?login_error=1"
-    	accessDeniedUrl="/backoffice/login.do?login_error=2"
+    	concurrentExpiredUrl="/backoffice/login.do?login_error=2"
+		accessDeniedUrl="/backoffice/login.do?login_error=3"
     	
     	dataSource="dataSource"
-    	jdbcUsersByUsernameQuery="SELECT ADMIN_ID, AUTHOR_CD, EMP_NO, ADMIN_PASS_UPDT_DT, ADMIN_LOCKYN, ADMIN_PWD, EMP_NM, DEPT_NM, GRAD_NM, PSIT_NM, USE_YN, EMP_CLPHN, EMP_TLPHN, EMP_EMAIL, EMP_STATE, EMP_PIC, CENTER_CD  FROM  VW_EMPINFO WHERE ADMIN_ID = ?"
-		jdbcAuthoritiesByUsernameQuery="SELECT ADMIN_ID, AUTHOR_CD  FROM VW_EMPINFO WHERE ADMIN_ID = ?"
+    	jdbcUsersByUsernameQuery="
+    		SELECT ADMIN_ID
+    			, AUTHOR_CD
+    			, EMP_NO
+    			, ADMIN_PASS_UPDT_DT
+    			, ADMIN_LOCKYN
+    			, ADMIN_PWD
+    			, EMP_NM
+    			, DEPT_NM
+    			, GRAD_NM
+    			, PSIT_NM
+    			, USE_YN
+    			, EMP_CLPHN
+    			, EMP_TLPHN
+    			, EMP_EMAIL
+    			, EMP_STATE
+    			, EMP_PIC
+    			, CENTER_CD
+    		FROM VW_EMPINFO 
+    		WHERE ADMIN_ID = ? AND ADMIN_LOCKYN = 'N' AND USE_YN = 'Y'"
+		jdbcAuthoritiesByUsernameQuery="
+			SELECT ADMIN_ID
+				, AUTHOR_CD  
+			FROM VW_EMPINFO 
+			WHERE ADMIN_ID = ?"
 		jdbcMapClass="egovframework.let.uat.uia.service.impl.EgovSessionMapping"
 		
 		requestMatcherType="regex"
@@ -38,9 +78,6 @@
 		hashBase64="false"
 		
 		concurrentMaxSessons="1"
-		concurrentExpiredUrl="/backoffice/actionMain.do"
-		
-    	defaultTargetUrl="/backoffice/actionMain.do"
     />
 
     <egov-security:secured-object-config id="securedObjectConfig"

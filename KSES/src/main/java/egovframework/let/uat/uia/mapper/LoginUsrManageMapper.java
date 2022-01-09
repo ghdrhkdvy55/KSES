@@ -6,6 +6,10 @@ import egovframework.rte.psl.dataaccess.mapper.Mapper;
 @Mapper
 public interface LoginUsrManageMapper {
 
-    public LoginVO actionLogin(LoginVO vo) ;
+    public LoginVO actionLogin(LoginVO vo);
+    
+    public int existAdminUser(String adminId);
+    
+    public LoginVO findById(String adminId);
 
 }
