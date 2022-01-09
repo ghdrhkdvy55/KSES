@@ -3,6 +3,7 @@ package com.kses.backoffice.mng.employee.service.impl;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.kses.backoffice.mng.employee.mapper.EmpInfoManageMapper;
 import com.kses.backoffice.mng.employee.service.EmpInfoManageService;
 import com.kses.backoffice.mng.employee.vo.EmpInfo;
+import com.kses.backoffice.util.SmartUtil;
 
 import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -35,6 +37,8 @@ public class EmpInfoManageServiceImpl extends EgovAbstractServiceImpl implements
 
 	@Override
 	public int updateEmpInfo(EmpInfo params) {
+		String empPassword = !StringUtils.isBlank(params.getEmpPassword()) ? SmartUtil.getEncryptSHA256(params.getEmpPassword()) : "";
+		params.setEmpPassword(empPassword);
 		return  params.getMode().equals(Globals.SAVE_MODE_INSERT) ? empMapper.insertEmpInfo(params) : empMapper.updateEmpInfo(params);
 	}
 

@@ -10,6 +10,7 @@ public class EmpInfo {
 	
 	private String empId = "";
 	private String empNo = "";
+	private String empPassword = "";
 	private String empNm = "";
 	private String deptCd = "";
 	private String deptNm = "";

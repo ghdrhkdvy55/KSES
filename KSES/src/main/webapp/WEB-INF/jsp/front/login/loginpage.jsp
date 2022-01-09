@@ -285,8 +285,8 @@
 					function(result) {
 				    	if(result.regist != null) {
 							if (result.regist.Error_Msg == "SUCCESS" || result.userInfo != null) {
-								console.log(result.userInfo.indvdlinfoAgreDt);
 								if(result.userInfo.indvdlinfoAgreYn == "N") {
+									result.userInfo.indvdlinfoAgreYn = "";
 									loginService.createUserSession(result.userInfo);									
 								} else {
 									$("#agreeCheck .cancel_btn a:eq(0)").click(function () {

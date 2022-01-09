@@ -80,6 +80,7 @@
 	                               ,  LAST_UPDT_DTM = SYSDATE
 	                               ,  AUTHOR_CD = #{authorCd , jdbcType=VARCHAR }
 	                               ,  CENTER_CD = #{centerCd , jdbcType=VARCHAR }
+		                           , ADMIN_LOCKYN ='N'
 		                           <if test="empNo != ''">
 		                            ,  EMP_NO = #{empNo, jdbcType=VARCHAR }
 		                           </if>
@@ -104,13 +105,14 @@
 	                               ,  LAST_UPDT_DTM = SYSDATE
 	                               ,  AUTHOR_CD = #{authorCd , jdbcType=VARCHAR }
 	                               ,  CENTER_CD = #{centerCd , jdbcType=VARCHAR }
+		                           , ADMIN_LOCKYN ='N'
 		                           <if test="empNo != ''">
 		                            ,  EMP_NO = #{empNo, jdbcType=VARCHAR }
 		                           </if>
 	   WHERE ADMIN_ID = #{adminId}
    </update>
    <update id="updateAdminUserLockManage">
-       UPDATE TSEH_ADMIN_INFO_M SET ADMIN_LOCKYN = 'Y' , ADMIN_PASS_UPDT_DT = SYSDATE
+       UPDATE TSEH_ADMIN_INFO_M SET ADMIN_LOCKYN = 'Y'
        WHERE ADMIN_ID = #{adminId}
    </update>
    <delete id="deleteAdminUserManage">
