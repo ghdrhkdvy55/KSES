@@ -80,7 +80,7 @@
    	</select>
    	
    	<select id="selectSpeedOnVacntnInfo" resultType="lmap">
-   		SELECT COVID_DY FROM
+   		SELECT USER_ID, COVID_DY FROM
    		<choose>
    			<when test="@org.apache.commons.lang3.StringUtils@equals(envType,'DEV')">
    				VW_KRACEWEB@SMARTDEVLINK
@@ -169,16 +169,7 @@
    	</update>
    	
 	<update id="updateUserNoshowCount">
-	{CALL
-		DECLARE 
-        BEGIN
-		
 		UPDATE TSER_USER_INFO_I SET USER_NOSHOW_CNT = USER_NOSHOW_CNT + 1 WHERE USER_ID = #{userId};
-		
-		IF (SELECT NVL(USER_NOSHOW_CNT,0) 
-		
-		END
-	}
    	</update>   	
 
    	<delete id="deleteUserInfo">

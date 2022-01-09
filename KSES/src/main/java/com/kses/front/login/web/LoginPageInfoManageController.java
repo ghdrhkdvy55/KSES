@@ -1,6 +1,5 @@
 package com.kses.front.login.web;
 
-import java.net.URLDecoder;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -101,7 +100,7 @@ public class LoginPageInfoManageController {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
-			if(!StringUtils.isBlank(userLoginInfo.getIndvdlinfoAgreYn())) {
+			if(!StringUtils.isBlank(userLoginInfo.getIndvdlinfoAgreYn()) && userLoginInfo.getIndvdlinfoAgreYn().equals("Y")) {
 				String envType = propertiesService.getString("Globals.envType");
 				Map<String, Object> vacntnInfo = null;
 				if(envType.equals("DEV")) {

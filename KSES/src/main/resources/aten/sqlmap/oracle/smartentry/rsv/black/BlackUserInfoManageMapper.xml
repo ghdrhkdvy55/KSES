@@ -18,17 +18,10 @@
 					FN_DETAILCODENM(A.BLKLST_DVSN) AS BLKLST_DVSN_TXT, B.USER_PHONE, B.USER_NM, B.USER_NOSHOW_CNT,
 					B.USER_NOSHOW_LAST_DT, A.BLKLST_DVSN
 				FROM TSER_BLKLST_INFO_I A, TSER_USER_INFO_I B
-				WHERE 1=1 
-				      <choose>
-				         <when test="params.searchBlklstDvsn eq 'BLKLST_DVSN_3'">
-				             AND A.USER_ID(+) = B.USER_ID
-				             AND B.USER_NOSHOW_CNT > 0
-				         </when>
-				         <otherwise>
-				             AND A.USER_ID = B.USER_ID
-				             AND A.BLKLST_DVSN = #{params.searchBlklstDvsn, jdbcType=VARCHAR}
-				         </otherwise>
-				      </choose>
+				WHERE 1=1
+				AND B.USER_DVSN = 'USER_DVSN_1' 
+				AND A.USER_ID = B.USER_ID
+				AND A.BLKLST_DVSN = #{params.searchBlklstDvsn, jdbcType=VARCHAR}
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
 					<choose>
 						<when test="@org.apache.commons.lang3.StringUtils@equals(params.searchCondition,'USER_ID')">
@@ -58,52 +51,44 @@
     </select>
 
     <update id="insertBlackUserInfo">
-        {CALL
-             DECLARE 
-             BEGIN
-                INSERT INTO TSER_BLKLST_INFO_I 
-				(
-					BLKLST_SEQ, USER_ID, USER_DVSN, USER_CLPHN, BLKLST_DVSN, 
-					BLKLST_REASON, BLKLST_CANCEL_YN, FRST_REGTER_ID, FRST_REGIST_DTM, LAST_UPDUSR_ID, 
-					LAST_UPDT_DTM
-				)
-				VALUES
-				(
-					SEQ_SER_BLKLIST_INFO.NEXTVAL, #{userId}, #{userDvsn, jdbcType=VARCHAR}, #{userClphn, jdbcType=VARCHAR}, #{blklstDvsn, jdbcType=VARCHAR}, 
-					#{blklstReason, jdbcType=CLOB}, #{blklstCancelYn, jdbcType=VARCHAR}, #{adminId, jdbcType=VARCHAR}, SYSDATE, #{adminId, jdbcType=VARCHAR}, 
-					SYSDATE
-				);
-				<if test="blklstDvsn == 'BLKLST_DVSN_3'">
-				  
-				   UPDATE TSER_USER_INFO_I SET USER_NOSHOW_LAST_DT = SYSDATE
-				   WHERE USER_ID = #{userId};
-				</if>
-        
-             END
-        }
-		
+		INSERT INTO TSER_BLKLST_INFO_I 
+		(
+			BLKLST_SEQ, USER_ID, USER_DVSN, USER_CLPHN, BLKLST_DVSN, 
+			BLKLST_REASON, BLKLST_CANCEL_YN, FRST_REGTER_ID, FRST_REGIST_DTM, LAST_UPDUSR_ID, 
+			LAST_UPDT_DTM
+		)
+		VALUES
+		(
+			SEQ_SER_BLKLIST_INFO.NEXTVAL, #{userId}, #{userDvsn, jdbcType=VARCHAR}, #{userClphn, jdbcType=VARCHAR}, #{blklstDvsn, jdbcType=VARCHAR}, 
+			#{blklstReason, jdbcType=CLOB}, #{blklstCancelYn, jdbcType=VARCHAR}, #{adminId, jdbcType=VARCHAR}, SYSDATE, #{adminId, jdbcType=VARCHAR}, 
+			SYSDATE
+		)
     </update>	
     
     <update id="updateBlackUserInfo">
-      {CALL
-           DECLARE 
-           BEGIN
-	        <choose>
-	           <when test="blklstDvsn == 'BLKLST_DVSN_3'">
-	              DELETE FROM TSER_BLKLST_INFO_I WHERE BLKLST_SEQ  = #{blklstSeq};
-	               
-			      UPDATE TSER_USER_INFO_I SET USER_NOSHOW_LAST_DT = null, USER_NOSHOW_CNT = 0
-			      WHERE USER_ID = #{userId};
-	           </when>
-	           <otherwise>
-	              UPDATE TSER_BLKLST_INFO_I SET 
+	{CALL
+		DECLARE 
+        BEGIN
+		<choose>
+			<when test="blklstDvsn == 'BLKLST_DVSN_3'">
+				UPDATE TSER_BLKLST_INFO_I SET 
 					BLKLST_CANCEL_YN = #{blklstCancelYn, jdbcType=VARCHAR},
 					LAST_UPDUSR_ID = #{adminId, jdbcType=VARCHAR},
 					LAST_UPDT_DTM = SYSDATE
-				  WHERE BLKLST_SEQ = #{blklstSeq};
-	           </otherwise>
-	        </choose>
-           END 
-      }
+				WHERE BLKLST_SEQ = #{blklstSeq};
+	               
+				UPDATE TSER_USER_INFO_I SET USER_NOSHOW_LAST_DT = null, USER_NOSHOW_CNT = 0
+				WHERE USER_ID = #{userId};
+			</when>
+			<otherwise>
+				UPDATE TSER_BLKLST_INFO_I SET 
+					BLKLST_CANCEL_YN = #{blklstCancelYn, jdbcType=VARCHAR},
+					LAST_UPDUSR_ID = #{adminId, jdbcType=VARCHAR},
+					LAST_UPDT_DTM = SYSDATE
+				WHERE BLKLST_SEQ = #{blklstSeq};
+			</otherwise>
+		</choose>
+		END 
+	}
     </update>	
 </mapper>
