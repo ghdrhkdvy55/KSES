@@ -11,6 +11,7 @@ import com.kses.backoffice.mng.employee.mapper.DeptInfoManageMapper;
 import com.kses.backoffice.mng.employee.service.DeptInfoManageService;
 import com.kses.backoffice.mng.employee.vo.DeptInfo;
 
+import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service
@@ -36,7 +37,7 @@ public class DeptInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 
 	@Override
 	public int updateDeptInfo(DeptInfo deptInfo) throws Exception {
-		return deptInfo.getMode().equals("Ins") ? deptMapper.insertDeptInfo(deptInfo) : deptMapper.updateDeptInfo(deptInfo);
+		return deptInfo.getMode().equals(Globals.SAVE_MODE_INSERT) ? deptMapper.insertDeptInfo(deptInfo) : deptMapper.updateDeptInfo(deptInfo);
 	}
 
 	@Override

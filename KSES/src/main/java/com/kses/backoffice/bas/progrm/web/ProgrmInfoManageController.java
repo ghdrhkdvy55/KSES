@@ -103,10 +103,10 @@ public class ProgrmInfoManageController {
 		
 		int ret = 0;
 		switch (progrmInfo.getMode()) {
-			case "Ins":
+			case Globals.SAVE_MODE_INSERT:
 				ret = progrmService.insertProgrmInfo(progrmInfo);
 				break;
-			case "Edt":
+			case Globals.SAVE_MODE_UPDATE:
 				ret = progrmService.updateProgrmInfo(progrmInfo);
 				break;
 			default:
@@ -116,11 +116,13 @@ public class ProgrmInfoManageController {
 		String messageKey = "";
 		if (ret > 0) {
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-			messageKey = StringUtils.equals(progrmInfo.getMode(), "Ins") ? "sucess.common.insert" : "sucess.common.update";
+			messageKey = StringUtils.equals(progrmInfo.getMode(), Globals.SAVE_MODE_INSERT) 
+					? "sucess.common.insert" : "sucess.common.update";
 		}
 		else {
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			messageKey = StringUtils.equals(progrmInfo.getMode(), "Ins") ? "fail.common.insert" : "fail.common.update";
+			messageKey = StringUtils.equals(progrmInfo.getMode(), Globals.SAVE_MODE_INSERT) 
+					? "fail.common.insert" : "fail.common.update";
 		}
 		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(messageKey));
 		

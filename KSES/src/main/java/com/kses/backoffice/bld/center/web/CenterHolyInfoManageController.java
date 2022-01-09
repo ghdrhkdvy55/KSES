@@ -125,7 +125,7 @@ public class CenterHolyInfoManageController {
 				throw new Exception();
 			}		
 		} catch (Exception e){
-			meesage = (vo.getMode().equals("Ins")) ? "fail.common.insert" : "fail.common.update";
+			meesage = (vo.getMode().equals(Globals.SAVE_MODE_INSERT)) ? "fail.common.insert" : "fail.common.update";
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));	
 		}	

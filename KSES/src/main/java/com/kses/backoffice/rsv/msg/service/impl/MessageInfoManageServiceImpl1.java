@@ -3,6 +3,7 @@ package com.kses.backoffice.rsv.msg.service.impl;
 import java.util.List;
 import java.util.Map;
 
+import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 import org.slf4j.Logger;
@@ -37,7 +38,7 @@ public class MessageInfoManageServiceImpl1 extends EgovAbstractServiceImpl imple
 	public int updateMsgManage(MessageInfo1 vo) throws Exception {
 		int ret = 0;
 		try{
-			if (vo.getMode().equals("Ins"))
+			if (vo.getMode().equals(Globals.SAVE_MODE_INSERT))
 				ret = msgMapper.insertMsgManage(vo);
 			else 
 				ret =msgMapper.updateMsgManage(vo);

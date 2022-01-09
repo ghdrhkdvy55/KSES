@@ -32,6 +32,7 @@ import com.kses.backoffice.sym.log.vo.SysLog;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
+import egovframework.com.cmm.service.Globals;
 import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import egovframework.let.utl.sim.service.EgovClntInfo;
 import lombok.extern.slf4j.Slf4j;
@@ -106,7 +107,7 @@ public class SysLogAspect {
 			}
 			
 			// TODO: 시스템 로그 기록시 검토 후 완성 필요
-			final String processSeCode = ParamToJson.JsonKeyToString(sqlId,"mode").equals("Ins") ? "I" : "U";
+			final String processSeCode = ParamToJson.JsonKeyToString(sqlId,"mode").equals(Globals.SAVE_MODE_INSERT) ? "I" : "U";
 			final String ipAddr = EgovClntInfo.getClntIP(request);
 			final String processTime = Long.toString(stopWatch.getTotalTimeMillis());
 			final String userId = EgovUserDetailsHelper.getAuthenticatedUserId();

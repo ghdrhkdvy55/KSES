@@ -259,7 +259,7 @@ public class EmpInfoManageController {
 			
 			
 			
-			meesage = (searchVO.get("mode").toString().equals("Ins")) ? "sucess.common.insert" : "sucess.common.update";
+			meesage = (searchVO.get("mode").toString().equals(Globals.SAVE_MODE_INSERT)) ? "sucess.common.insert" : "sucess.common.update";
 			if (ret > 0){
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
@@ -270,7 +270,7 @@ public class EmpInfoManageController {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
 			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
-			meesage = (searchVO.get("mode").toString().equals("Ins")) ? "fail.common.insert" : "fail.common.update";
+			meesage = (searchVO.get("mode").toString().equals(Globals.SAVE_MODE_INSERT)) ? "fail.common.insert" : "fail.common.update";
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));			
 		}
@@ -562,7 +562,7 @@ public class EmpInfoManageController {
 			 LoginVO loginVO = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
 			 info.setUserId( loginVO.getAdminId() );
 			 int ret = empService.updateEmpInfo(info); 
-			 meesage = (info.getMode().equals("Ins")) ? "sucess.common.insert" : "sucess.common.update";
+			 meesage = (info.getMode().equals(Globals.SAVE_MODE_INSERT)) ? "sucess.common.insert" : "sucess.common.update";
 			 if (ret > 0){
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
@@ -573,7 +573,7 @@ public class EmpInfoManageController {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
 			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
-			meesage = (info.getMode().equals("Ins")) ? "fail.common.insert" : "fail.common.update";
+			meesage = (info.getMode().equals(Globals.SAVE_MODE_INSERT)) ? "fail.common.insert" : "fail.common.update";
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));			
 		}

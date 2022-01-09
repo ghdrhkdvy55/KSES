@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import com.kses.backoffice.mng.employee.mapper.EmpInfoManageMapper;
 import com.kses.backoffice.mng.employee.service.EmpInfoManageService;
 import com.kses.backoffice.mng.employee.vo.EmpInfo;
+
+import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 
@@ -33,7 +35,7 @@ public class EmpInfoManageServiceImpl extends EgovAbstractServiceImpl implements
 
 	@Override
 	public int updateEmpInfo(EmpInfo params) {
-		return  params.getMode().equals("Ins") ? empMapper.insertEmpInfo(params) : empMapper.updateEmpInfo(params);
+		return  params.getMode().equals(Globals.SAVE_MODE_INSERT) ? empMapper.insertEmpInfo(params) : empMapper.updateEmpInfo(params);
 	}
 
 	@Override

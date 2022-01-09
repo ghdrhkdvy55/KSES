@@ -156,7 +156,7 @@ public class FloorPartInfoManageController {
 			
 	    	vo.setPartMap1(uploadFile.uploadFileNm(mRequest.getFiles("partMap1"), propertiesService.getString("Globals.filePath")));
 			vo.setPartMap2( uploadFile.uploadFileNm(mRequest.getFiles("partMap2"), propertiesService.getString("Globals.filePath")));
-			meesage = vo.getMode().equals("Ins") ? "sucess.common.insert" : "sucess.common.update" ;
+			meesage = vo.getMode().equals(Globals.SAVE_MODE_INSERT) ? "sucess.common.insert" : "sucess.common.update" ;
 					
 			int ret = partService.updateFloorPartInfoManage(vo);
 			if (ret > 0) {

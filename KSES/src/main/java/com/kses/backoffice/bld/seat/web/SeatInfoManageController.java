@@ -219,7 +219,7 @@ public class SeatInfoManageController {
 		try {
 			model.addObject(Globals.STATUS_REGINFO , vo);
 			int ret  = seatService.updateSeatInfo(vo);
-			String meesage = vo.getMode().equals("Ins") ? "sucess.common.insert" : "sucess.common.update" ;
+			String meesage = vo.getMode().equals(Globals.SAVE_MODE_INSERT) ? "sucess.common.insert" : "sucess.common.update" ;
 //			if (ret >0){		
 //				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 //				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
@@ -320,7 +320,7 @@ public class SeatInfoManageController {
 	    		if (!result.equals("FAIL")) {
 	    			QrcodeInfo info = new QrcodeInfo();
 	    			info.setItemId(qrList.get("seat_id").toString());
-	    			info.setMode("Ins");
+	    			info.setMode(Globals.SAVE_MODE_INSERT);
 	    			info.setQrGubun("ITEM_GUBUN_2");
 	    			info.setQrCode(qr_code);
 	    			info.setQrFullPath(path + "/" + qrList.get("seat_id").toString() + ".png");
@@ -508,7 +508,7 @@ public class SeatInfoManageController {
 //			vo.setMeetingFile02( uploadFile.uploadFileNm(mRequest.getFiles("meetingFile2"), propertiesService.getString("Globals.filePath")));
 //			
 //			model.addObject(Globals.STATUS_REGINFO , vo);
-//			String meesage = vo.getMode().equals("Ins") ? "sucess.common.insert" : "sucess.common.update" ;
+//			String meesage = vo.getMode().equals(Globals.SAVE_MODE_INSERT) ? "sucess.common.insert" : "sucess.common.update" ;
 //			int ret = meetingService.updateMeetingRoomManage(vo);
 //			if (ret >0){
 //				model.addObject(Globals.STATUS  , Globals.STATUS_SUCCESS);

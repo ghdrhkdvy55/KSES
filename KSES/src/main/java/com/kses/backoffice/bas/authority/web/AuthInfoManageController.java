@@ -109,10 +109,10 @@ public class AuthInfoManageController {
 		
 		int ret = 0;
 		switch (authInfo.getMode()) {
-			case "Ins":
+			case Globals.SAVE_MODE_INSERT:
 				ret = authService.insertAuthInfo(authInfo);
 				break;
-			case "Edt":
+			case Globals.SAVE_MODE_UPDATE:
 				ret = authService.updateAuthInfo(authInfo);
 				break;
 			default:
@@ -122,11 +122,13 @@ public class AuthInfoManageController {
 		String messageKey = "";
 		if (ret > 0) {
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-			messageKey = StringUtils.equals(authInfo.getMode(), "Ins") ? "sucess.common.insert" : "sucess.common.update";
+			messageKey = StringUtils.equals(authInfo.getMode(), Globals.SAVE_MODE_INSERT) 
+					? "sucess.common.insert" : "sucess.common.update";
 		}
 		else {
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			messageKey = StringUtils.equals(authInfo.getMode(), "Ins") ? "fail.common.insert" : "fail.common.update";
+			messageKey = StringUtils.equals(authInfo.getMode(), Globals.SAVE_MODE_INSERT) 
+					? "fail.common.insert" : "fail.common.update";
 		}
 		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(messageKey));
 		

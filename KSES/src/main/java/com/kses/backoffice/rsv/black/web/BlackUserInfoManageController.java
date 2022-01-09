@@ -144,7 +144,7 @@ public class BlackUserInfoManageController {
 				vo.setAdminId(loginVO.getAdminId());
 			}
 	
-			meesage = vo.getMode().equals("Ins") ? "sucess.common.insert" : "sucess.common.update";
+			meesage = vo.getMode().equals(Globals.SAVE_MODE_INSERT) ? "sucess.common.insert" : "sucess.common.update";
 
 			int ret = blackUserService.updateBlackUserInfoManage(vo);
 			

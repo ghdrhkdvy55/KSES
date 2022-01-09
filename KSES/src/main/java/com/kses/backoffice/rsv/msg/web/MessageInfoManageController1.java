@@ -177,7 +177,7 @@ public class MessageInfoManageController1 {
 		     }
 			 
 			int ret  = msgService.updateMsgManage(vo);
-			meesage = (vo.getMode().equals("Ins")) ? "sucess.common.insert" : "sucess.common.update";
+			meesage = (vo.getMode().equals(Globals.SAVE_MODE_INSERT)) ? "sucess.common.insert" : "sucess.common.update";
 			if (ret >0){
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
@@ -186,7 +186,7 @@ public class MessageInfoManageController1 {
 				throw new Exception();
 			}
 		}catch (Exception e){
-			meesage = (vo.getMode().equals("Ins")) ? "fail.common.insert" : "fail.common.update";
+			meesage = (vo.getMode().equals(Globals.SAVE_MODE_INSERT)) ? "fail.common.insert" : "fail.common.update";
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));			
 		}

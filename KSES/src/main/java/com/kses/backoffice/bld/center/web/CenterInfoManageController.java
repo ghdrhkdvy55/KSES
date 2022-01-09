@@ -216,7 +216,7 @@ public class CenterInfoManageController {
 	    	vo.setCenterImg(uploadFile.uploadFileNm(mRequest.getFiles("centerImg"), propertiesService.getString("Globals.filePath")));
 			vo.setCenterMap(uploadFile.uploadFileNm(mRequest.getFiles("setCenterMap"), propertiesService.getString("Globals.filePath")));
 			
-			meesage = vo.getMode().equals("Ins") ? "sucess.common.insert" : "sucess.common.update";
+			meesage = vo.getMode().equals(Globals.SAVE_MODE_INSERT) ? "sucess.common.insert" : "sucess.common.update";
 			//userid로 변경 
 			loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
 			vo.setUserId(loginVO.getAdminId());

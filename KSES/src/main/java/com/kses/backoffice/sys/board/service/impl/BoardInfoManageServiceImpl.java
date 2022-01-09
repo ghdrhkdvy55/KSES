@@ -7,6 +7,7 @@ import java.util.Map;
 import egovframework.com.cmm.mapper.FileManageManageMapper;
 import egovframework.com.cmm.service.EgovFileMngService;
 import egovframework.com.cmm.service.FileVO;
+import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,7 +52,7 @@ public class BoardInfoManageServiceImpl extends EgovAbstractServiceImpl implemen
 	public int updateBoardManage(BoardInfo vo, List<FileVO> result) throws Exception {
 		int ret  =0;
 		switch (vo.getMode()) {
-		   case "Ins" :
+		   case Globals.SAVE_MODE_INSERT :
 			   ret = boardMapper.insertBoardManage(vo);
 			   break;
 		   case "Edt" : 

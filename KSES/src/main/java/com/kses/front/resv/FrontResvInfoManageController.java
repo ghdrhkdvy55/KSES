@@ -335,7 +335,7 @@ public class FrontResvInfoManageController {
 					user.setUserPhone(vo.getResvUserClphn());
 					user.setUserNm(vo.getResvUserNm());
 					user.setIndvdlinfoAgreYn(vo.getResvIndvdlinfoAgreYn());
-					user.setMode("Ins");
+					user.setMode(Globals.SAVE_MODE_INSERT);
 					
 					userService.updateUserInfo(user);
 				}

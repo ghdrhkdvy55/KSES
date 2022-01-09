@@ -11,6 +11,7 @@ import com.kses.backoffice.mng.employee.mapper.GradInfoManageMapper;
 import com.kses.backoffice.mng.employee.service.GradInfoManageService;
 import com.kses.backoffice.mng.employee.vo.GradInfo;
 
+import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service
@@ -37,7 +38,7 @@ public class GradInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 
 	@Override
 	public int updateGradInfo(GradInfo gradInfo) throws Exception {
-		return gradInfo.getMode().equals("Ins") ?  gradMapper.insertGradInfo(gradInfo) :  gradMapper.updateGradInfo(gradInfo);
+		return gradInfo.getMode().equals(Globals.SAVE_MODE_INSERT) ?  gradMapper.insertGradInfo(gradInfo) :  gradMapper.updateGradInfo(gradInfo);
 	}
 
 }

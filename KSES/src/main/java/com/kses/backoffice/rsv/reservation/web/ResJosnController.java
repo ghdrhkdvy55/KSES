@@ -127,7 +127,7 @@ public class ResJosnController {
 					user.setUserCardId(node.get("Card_No").asText());
 					user.setUserCardSeq(node.get("Card_Seq").asText());
 
-					user.setMode("Ins");
+					user.setMode(Globals.SAVE_MODE_INSERT);
 					userService.updateUserInfo(user);
 
 					// 최초 로그인시 개인정보 동의를 위한 고객정보 전송

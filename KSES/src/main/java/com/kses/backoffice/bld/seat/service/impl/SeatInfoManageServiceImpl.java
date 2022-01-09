@@ -10,6 +10,7 @@ import com.kses.backoffice.bld.seat.mapper.SeatInfoManageMapper;
 import com.kses.backoffice.bld.seat.service.SeatInfoManageService;
 import com.kses.backoffice.bld.seat.vo.SeatInfo;
 
+import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service
@@ -35,7 +36,7 @@ public class SeatInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	
 	@Override
 	public int updateSeatInfo(SeatInfo vo) throws Exception {
-		return vo.getMode().equals("Ins") ?  seatMapper.insertSeatInfo(vo) :  seatMapper.updateSeatInfo(vo);
+		return vo.getMode().equals(Globals.SAVE_MODE_INSERT) ?  seatMapper.insertSeatInfo(vo) :  seatMapper.updateSeatInfo(vo);
 	}
 
 	@Override

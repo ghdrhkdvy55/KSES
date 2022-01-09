@@ -235,7 +235,7 @@ public class BoardInfoManageController {
 				 
 				 int ret = boardSetService.updateBoardSetInfo(info); 
 				 LOGGER.debug("ret:"  + ret);
-				 meesage = (info.getMode().equals("Ins")) ? "sucess.common.insert" : "sucess.common.update";
+				 meesage = (info.getMode().equals(Globals.SAVE_MODE_INSERT)) ? "sucess.common.insert" : "sucess.common.update";
 				 if (ret > 0){
 					model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 					model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
@@ -246,7 +246,7 @@ public class BoardInfoManageController {
 				StackTraceElement[] ste = e.getStackTrace();
 				int lineNumber = ste[0].getLineNumber();
 				LOGGER.info("e:" + e.toString() + ":" + lineNumber);
-				meesage = (info.getMode().equals("Ins")) ? "fail.common.insert" : "fail.common.update";
+				meesage = (info.getMode().equals(Globals.SAVE_MODE_INSERT)) ? "fail.common.insert" : "fail.common.update";
 				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));			
 			}
@@ -523,7 +523,7 @@ public class BoardInfoManageController {
 		    	}
 				
 			    vo.setBoardTopSeq("0");
-			 	String meesage = vo.getMode().equals("Ins") ?  "sucess.common.insert" :  "sucess.common.update";
+			 	String meesage = vo.getMode().equals(Globals.SAVE_MODE_INSERT) ?  "sucess.common.insert" :  "sucess.common.update";
 				vo.setUserId(loginVO.getAdminId());
 				int ret = boardInfoService.updateBoardManage(vo, _result) ;
 				if (ret >0){

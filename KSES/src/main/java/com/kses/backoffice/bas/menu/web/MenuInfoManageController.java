@@ -131,10 +131,10 @@ public class MenuInfoManageController {
 		
 		int ret = 0;
 		switch (menuInfo.getMode()) {
-			case "Ins":
+			case Globals.SAVE_MODE_INSERT:
 				ret = menuService.insertMenuManage(menuInfo);
 				break;
-			case "Edt":
+			case Globals.SAVE_MODE_UPDATE:
 				ret = menuService.insertMenuManage(menuInfo);
 				break;
 			default:
@@ -144,11 +144,13 @@ public class MenuInfoManageController {
 		String messageKey = "";
 		if (ret > 0) {
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-			messageKey = StringUtils.equals(menuInfo.getMode(), "Ins") ? "sucess.common.insert" : "sucess.common.update";
+			messageKey = StringUtils.equals(menuInfo.getMode(), Globals.SAVE_MODE_INSERT) 
+					? "sucess.common.insert" : "sucess.common.update";
 		}
 		else {
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			messageKey = StringUtils.equals(menuInfo.getMode(), "Ins") ? "fail.common.insert" : "fail.common.update";
+			messageKey = StringUtils.equals(menuInfo.getMode(), Globals.SAVE_MODE_INSERT) 
+					? "fail.common.insert" : "fail.common.update";
 		}
 		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(messageKey));
 		
@@ -276,7 +278,7 @@ public class MenuInfoManageController {
 			return model;
 		}
 			
-		if (menuService.selectMenuNoByPk(menuIno) != 0 && menuIno.getMode().equals("Ins")) {
+		if (menuService.selectMenuNoByPk(menuIno) != 0 && menuIno.getMode().equals(Globals.SAVE_MODE_INSERT)) {
 			model.addObject(Globals.STATUS,  Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("common.isExist.msg"));
 			return model;
@@ -286,10 +288,10 @@ public class MenuInfoManageController {
 	    String states = "";
 	    
 	    if (ret > 0) {
-	    	message = menuIno.getMode().equals("Ins") ? egovMessageSource.getMessage("success.common.insert") : egovMessageSource.getMessage("success.common.update");
+	    	message = menuIno.getMode().equals(Globals.SAVE_MODE_INSERT) ? egovMessageSource.getMessage("success.common.insert") : egovMessageSource.getMessage("success.common.update");
 	    	states =  Globals.STATUS_SUCCESS;
 	    }else {
-	    	message = menuIno.getMode().equals("Ins") ? egovMessageSource.getMessage("fail.common.insert") : egovMessageSource.getMessage("fail.common.update");
+	    	message = menuIno.getMode().equals(Globals.SAVE_MODE_INSERT) ? egovMessageSource.getMessage("fail.common.insert") : egovMessageSource.getMessage("fail.common.update");
 	    	states =  Globals.STATUS_FAIL;
 	    }
 	    model.addObject(Globals.STATUS, states);

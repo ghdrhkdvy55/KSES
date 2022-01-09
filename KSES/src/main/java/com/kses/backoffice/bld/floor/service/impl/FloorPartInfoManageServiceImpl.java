@@ -10,6 +10,7 @@ import com.kses.backoffice.bld.floor.mapper.FloorPartInfoManageMapper;
 import com.kses.backoffice.bld.floor.service.FloorPartInfoManageService;
 import com.kses.backoffice.bld.floor.vo.FloorPartInfo;
 
+import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service
@@ -38,7 +39,7 @@ public class FloorPartInfoManageServiceImpl extends EgovAbstractServiceImpl  imp
 
 	@Override
 	public int updateFloorPartInfoManage(FloorPartInfo vo) throws Exception {
-		return vo.getMode().equals("Ins") ? partMapper.insertFloorPartInfo(vo) : partMapper.updateFloorPartInfo(vo);
+		return vo.getMode().equals(Globals.SAVE_MODE_INSERT) ? partMapper.insertFloorPartInfo(vo) : partMapper.updateFloorPartInfo(vo);
 	}
 	
 	@Override

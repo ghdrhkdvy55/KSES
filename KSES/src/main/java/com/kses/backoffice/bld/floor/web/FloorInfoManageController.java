@@ -266,7 +266,7 @@ public class FloorInfoManageController {
 			
 	    	vo.setFloorMap1(uploadFile.uploadFileNm(mRequest.getFiles("floorMap1"), propertiesService.getString("Globals.filePath")));
 			
-			meesage = vo.getMode().equals("Ins") ? "sucess.common.insert" : "sucess.common.update" ;
+			meesage = vo.getMode().equals(Globals.SAVE_MODE_INSERT) ? "sucess.common.insert" : "sucess.common.update" ;
 				  		
 			floorService.updateFloorInfo(vo);
 			model.addObject(Globals.STATUS  , Globals.STATUS_SUCCESS);
@@ -443,7 +443,7 @@ public class FloorInfoManageController {
 			
 	    	vo.setCenterImg( uploadFile.uploadFileNm(mRequest.getFiles("centerImg"), propertiesService.getString("Globals.filePath")));
 			
-			meesage = vo.getMode().equals("Ins") ? "sucess.common.insert" : "sucess.common.update" ;
+			meesage = vo.getMode().equals(Globals.SAVE_MODE_INSERT) ? "sucess.common.insert" : "sucess.common.update" ;
 			int ret = centerInfoManageService.updateCenterInfoManage(vo);
 			if (ret >0){
 				model.addObject(Globals.STATUS  , Globals.STATUS_SUCCESS);
@@ -576,7 +576,7 @@ public class FloorInfoManageController {
 			
 	    	vo.setFloorMap( uploadFile.uploadFileNm(mRequest.getFiles("floorMap"), propertiesService.getString("Globals.filePath")));
 			vo.setFloorMap1( uploadFile.uploadFileNm(mRequest.getFiles("floorMap1"), propertiesService.getString("Globals.filePath")));
-			meesage = vo.getMode().equals("Ins") ? "sucess.common.insert" : "sucess.common.update" ;
+			meesage = vo.getMode().equals(Globals.SAVE_MODE_INSERT) ? "sucess.common.insert" : "sucess.common.update" ;
 			
 			int ckCnt =  uniService.selectIdDoubleCheck("FLOOR_INFO", "tb_floorinfo", "CENTER_CODE = ["+vo.getCenterCode() +"[ and FLOOR_INFO = ["+vo.getFloorInfo() +"[");
 			//중복 층수 체크 
@@ -685,7 +685,7 @@ public class FloorInfoManageController {
 			
 	    	vo.setPartMap1(uploadFile.uploadFileNm(mRequest.getFiles("partMap1"), propertiesService.getString("Globals.filePath")));
 			vo.setPartMap2( uploadFile.uploadFileNm(mRequest.getFiles("partMap2"), propertiesService.getString("Globals.filePath")));
-			meesage = vo.getMode().equals("Ins") ? "sucess.common.insert" : "sucess.common.update" ;
+			meesage = vo.getMode().equals(Globals.SAVE_MODE_INSERT) ? "sucess.common.insert" : "sucess.common.update" ;
 					
 			int ret = partService.updateFloorPartInfoManage(vo);
 			if (ret >0){

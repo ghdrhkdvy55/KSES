@@ -75,12 +75,12 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 
 	@Override
 	public int updateUserResvInfo(ResvInfo vo) throws Exception {
-		return vo.getMode().equals("Ins") ? resvMapper.insertUserResvInfo(vo) : resvMapper.updateUserResvInfo(vo);
+		return vo.getMode().equals(Globals.SAVE_MODE_INSERT) ? resvMapper.insertUserResvInfo(vo) : resvMapper.updateUserResvInfo(vo);
 	}
 	
 	@Override
 	public int updateLongResvInfo(ResvInfo vo) throws Exception {
-		return vo.getMode().equals("Ins") ? resvMapper.insertLongResvInfo(vo) : resvMapper.updateLongResvInfo(vo);
+		return vo.getMode().equals(Globals.SAVE_MODE_INSERT) ? resvMapper.insertLongResvInfo(vo) : resvMapper.updateLongResvInfo(vo);
 	}
 	
 	@Override
@@ -88,7 +88,7 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 		int ret = 0;
 		
 		try {
-			if(vo.getMode().equals("Ins")) {
+			if(vo.getMode().equals(Globals.SAVE_MODE_INSERT)) {
 				resvMapper.insertUserLongResvInfo(vo);
 			} else {
 				resvMapper.updateUserLongResvInfo(vo);

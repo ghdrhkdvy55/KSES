@@ -152,10 +152,10 @@ public class AdminInfoManageController {
 		
 		int ret = 0;
 		switch (adminInfo.getMode()) {
-			case "Ins":
+			case Globals.SAVE_MODE_INSERT:
 				ret = adminInfoService.insertAdminUserManage(adminInfo);
 				break;
-			case "Edt":
+			case Globals.SAVE_MODE_UPDATE:
 				ret = adminInfoService.updateAdminUserManage(adminInfo);
 				break;
 			default:
@@ -165,11 +165,13 @@ public class AdminInfoManageController {
 		String messageKey = "";
 		if (ret > 0) {
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-			messageKey = StringUtils.equals(adminInfo.getMode(), "Ins") ? "sucess.common.insert" : "sucess.common.update";
+			messageKey = StringUtils.equals(adminInfo.getMode(), Globals.SAVE_MODE_INSERT) 
+					? "sucess.common.insert" : "sucess.common.update";
 		}
 		else {
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			messageKey = StringUtils.equals(adminInfo.getMode(), "Ins") ? "fail.common.insert" : "fail.common.update";
+			messageKey = StringUtils.equals(adminInfo.getMode(), Globals.SAVE_MODE_INSERT) 
+					? "fail.common.insert" : "fail.common.update";
 		}
 		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(messageKey));
 		

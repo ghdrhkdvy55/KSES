@@ -279,7 +279,7 @@ public class SeasonInfoManageController {
 			String meesage = "";
 			
 	    	
-			meesage = vo.getMode().equals("Ins") ? "sucess.common.insert" : "sucess.common.update";
+			meesage = vo.getMode().equals(Globals.SAVE_MODE_INSERT) ? "sucess.common.insert" : "sucess.common.update";
 			
 			loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
 			vo.setUserId(loginVO.getAdminId());

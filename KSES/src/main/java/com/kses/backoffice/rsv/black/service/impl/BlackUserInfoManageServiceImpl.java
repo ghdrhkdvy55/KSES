@@ -1,5 +1,6 @@
 package com.kses.backoffice.rsv.black.service.impl;
 
+import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 import java.util.List;
@@ -24,6 +25,6 @@ public class BlackUserInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 	
 	@Override
 	public int updateBlackUserInfoManage(BlackUserInfo vo) throws Exception {
-		return vo.getMode().equals("Ins") ? blackUserMapper.insertBlackUserInfo(vo) : blackUserMapper.updateBlackUserInfo(vo);
+		return vo.getMode().equals(Globals.SAVE_MODE_INSERT) ? blackUserMapper.insertBlackUserInfo(vo) : blackUserMapper.updateBlackUserInfo(vo);
 	}
 }

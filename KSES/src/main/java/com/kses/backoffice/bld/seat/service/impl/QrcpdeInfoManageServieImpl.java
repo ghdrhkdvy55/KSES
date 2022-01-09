@@ -10,6 +10,7 @@ import com.kses.backoffice.bld.seat.mapper.QrcodeInfoManageMapper;
 import com.kses.backoffice.bld.seat.service.QrcpdeInfoManageServie;
 import com.kses.backoffice.bld.seat.vo.QrcodeInfo;
 
+import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service
@@ -30,6 +31,6 @@ public class QrcpdeInfoManageServieImpl extends EgovAbstractServiceImpl implemen
 
 	@Override
 	public int updateQrcodeManage(QrcodeInfo vo) throws Exception {
-		return vo.getMode().equals("Ins") ? qrmapper.insertQrcodeManage(vo) : qrmapper.updateQrcodeManage(vo);
+		return vo.getMode().equals(Globals.SAVE_MODE_INSERT) ? qrmapper.insertQrcodeManage(vo) : qrmapper.updateQrcodeManage(vo);
 	}
 }

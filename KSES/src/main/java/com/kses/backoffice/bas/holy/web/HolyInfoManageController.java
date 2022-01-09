@@ -179,10 +179,10 @@ public class HolyInfoManageController {
 		
 		int ret = 0;
 		switch (holyInfo.getMode()) {
-			case "Ins":
+			case Globals.SAVE_MODE_INSERT:
 				ret = holyService.insertHolyInfo(holyInfo);
 				break;
-			case "Edt":
+			case Globals.SAVE_MODE_UPDATE:
 				ret = holyService.updateHolyInfo(holyInfo);
 				break;
 			default:
@@ -192,11 +192,13 @@ public class HolyInfoManageController {
 		String messageKey = "";
 		if (ret > 0) {
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-			messageKey = StringUtils.equals(holyInfo.getMode(), "Ins") ? "sucess.common.insert" : "sucess.common.update";
+			messageKey = StringUtils.equals(holyInfo.getMode(), Globals.SAVE_MODE_INSERT) 
+					? "sucess.common.insert" : "sucess.common.update";
 		}
 		else {
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			messageKey = StringUtils.equals(holyInfo.getMode(), "Ins") ? "fail.common.insert" : "fail.common.update";
+			messageKey = StringUtils.equals(holyInfo.getMode(), Globals.SAVE_MODE_INSERT) 
+					? "fail.common.insert" : "fail.common.update";
 		}
 		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(messageKey));
 		

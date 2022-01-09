@@ -11,6 +11,7 @@ import com.kses.backoffice.mng.employee.mapper.PositionInfoManageMapper;
 import com.kses.backoffice.mng.employee.service.PositionInfoManageService;
 import com.kses.backoffice.mng.employee.vo.PositionInfo;
 
+import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service
@@ -36,6 +37,6 @@ public class PositionInfoManageServiceImpl extends EgovAbstractServiceImpl imple
 
 	@Override
 	public int updateJikwInfo(PositionInfo positionInfo) throws Exception {
-		return positionInfo.getMode().equals("Ins") ?  positionMapper.insertPositionInfo(positionInfo) : positionMapper.updatePositionInfo(positionInfo) ;
+		return positionInfo.getMode().equals(Globals.SAVE_MODE_INSERT) ?  positionMapper.insertPositionInfo(positionInfo) : positionMapper.updatePositionInfo(positionInfo) ;
 	}
 }

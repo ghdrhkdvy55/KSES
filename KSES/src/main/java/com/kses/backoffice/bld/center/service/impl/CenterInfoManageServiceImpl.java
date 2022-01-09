@@ -15,6 +15,7 @@ import com.kses.backoffice.bld.center.service.CenterInfoManageService;
 import com.kses.backoffice.bld.center.vo.CenterInfo;
 import com.kses.backoffice.util.SmartUtil;
 
+import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service
@@ -49,7 +50,7 @@ public class CenterInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
 	@Transactional
 	public int updateCenterInfoManage(CenterInfo vo) throws Exception {
 		int ret = 0;
-		if (vo.getMode().equals("Ins")){
+		if (vo.getMode().equals(Globals.SAVE_MODE_INSERT)){
 			List<?> floorList =  vo.getFloorInfo().equals("") ? null : SmartUtil.dotToList(vo.getFloorInfo());
 			vo.setFloorList(floorList);
 			ret =  centerMapper.insertCenterInfoManage(vo);

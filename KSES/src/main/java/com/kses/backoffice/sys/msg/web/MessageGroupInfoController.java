@@ -202,12 +202,12 @@ public class MessageGroupInfoController {
 			 LoginVO loginVO = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
 			 info.setUserId(loginVO.getAdminId());
 			 
-			 if ( info.getMode().equals("Ins"))
+			 if ( info.getMode().equals(Globals.SAVE_MODE_INSERT))
 				 info.setGroupCode(egovGroupCodeGnr.getNextStringId());
 			 
 			 int ret = msgGroupService.updateMessageGroupInfo(info); 
 			 LOGGER.debug("ret:"  + ret);
-			 meesage = (info.getMode().equals("Ins")) ? "sucess.common.insert" : "sucess.common.update";
+			 meesage = (info.getMode().equals(Globals.SAVE_MODE_INSERT)) ? "sucess.common.insert" : "sucess.common.update";
 			 if (ret > 0){
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
@@ -218,7 +218,7 @@ public class MessageGroupInfoController {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
 			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
-			meesage = (info.getMode().equals("Ins")) ? "fail.common.insert" : "fail.common.update";
+			meesage = (info.getMode().equals(Globals.SAVE_MODE_INSERT)) ? "fail.common.insert" : "fail.common.update";
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));			
 		}
@@ -573,7 +573,7 @@ public class MessageGroupInfoController {
 			 
 			 int ret = msgTemplateSerice.updateMessageTemplateInfo(info); 
 			 LOGGER.debug("ret:"  + ret);
-			 meesage = (info.getMode().equals("Ins")) ? "sucess.common.insert" : "sucess.common.update";
+			 meesage = (info.getMode().equals(Globals.SAVE_MODE_INSERT)) ? "sucess.common.insert" : "sucess.common.update";
 			 if (ret > 0){
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
@@ -584,7 +584,7 @@ public class MessageGroupInfoController {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
 			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
-			meesage = (info.getMode().equals("Ins")) ? "fail.common.insert" : "fail.common.update";
+			meesage = (info.getMode().equals(Globals.SAVE_MODE_INSERT)) ? "fail.common.insert" : "fail.common.update";
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));			
 		}

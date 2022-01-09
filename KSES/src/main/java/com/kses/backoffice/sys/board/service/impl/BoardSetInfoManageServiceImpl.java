@@ -13,6 +13,7 @@ import com.kses.backoffice.sys.board.service.BoardSetInfoManageService;
 import com.kses.backoffice.sys.board.vo.BoardSetInfo;
 import com.kses.backoffice.util.SmartUtil;
 
+import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service
@@ -37,7 +38,7 @@ public class BoardSetInfoManageServiceImpl extends EgovAbstractServiceImpl imple
 	public int updateBoardSetInfo(BoardSetInfo vo) throws Exception {
 		int ret = 0;
 		try {
-			if (vo.getMode().equals("Ins")) {
+			if (vo.getMode().equals(Globals.SAVE_MODE_INSERT)) {
 				boardSetMapper.insertBoardSettingInfo(vo);
 			}else {
 				boardSetMapper.updateBoardSettingInfo(vo);

@@ -110,10 +110,10 @@ public class EgovCcmCmmnCodeManageController {
 		
 		int ret = 0;
 		switch (cmmnCode.getMode()) {
-			case "Ins":
+			case Globals.SAVE_MODE_INSERT:
 				ret = cmmnCodeManageService.insertCmmnCode(cmmnCode);
 				break;
-			case "Edt":
+			case Globals.SAVE_MODE_UPDATE:
 				ret = cmmnCodeManageService.updateCmmnCode(cmmnCode);
 				break;
 			default:
@@ -123,11 +123,13 @@ public class EgovCcmCmmnCodeManageController {
 		String messageKey = "";
 		if (ret > 0) {
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-			messageKey = StringUtils.equals(cmmnCode.getMode(), "Ins") ? "sucess.common.insert" : "sucess.common.update";
+			messageKey = StringUtils.equals(cmmnCode.getMode(), Globals.SAVE_MODE_INSERT) 
+					? "sucess.common.insert" : "sucess.common.update";
 		}
 		else {
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			messageKey = StringUtils.equals(cmmnCode.getMode(), "Ins") ? "fail.common.insert" : "fail.common.update";
+			messageKey = StringUtils.equals(cmmnCode.getMode(), Globals.SAVE_MODE_INSERT) 
+					? "fail.common.insert" : "fail.common.update";
 		}
 		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(messageKey));
 		

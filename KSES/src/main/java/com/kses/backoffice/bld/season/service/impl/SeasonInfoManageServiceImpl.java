@@ -11,6 +11,7 @@ import com.kses.backoffice.bld.season.service.SeasonInfoManageService;
 import com.kses.backoffice.bld.season.vo.SeasonInfo;
 import com.kses.backoffice.util.SmartUtil;
 
+import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service
@@ -36,7 +37,7 @@ public class SeasonInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
 			ret = -1;
 		}else {
 			try {
-				 ret = vo.getMode().equals("Ins") ?  sessionMapper.insertSeasonInfo(vo) : sessionMapper.updateSeasonInfo(vo) ;
+				 ret = vo.getMode().equals(Globals.SAVE_MODE_INSERT) ?  sessionMapper.insertSeasonInfo(vo) : sessionMapper.updateSeasonInfo(vo) ;
 				 ret = 1; 
 			}catch(Exception e) {
 				System.out.println("updateSeasonInfo error:" + e.toString());

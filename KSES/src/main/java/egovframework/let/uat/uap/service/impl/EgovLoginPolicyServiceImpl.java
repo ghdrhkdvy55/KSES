@@ -3,6 +3,7 @@ package egovframework.let.uat.uap.service.impl;
 import java.util.List;
 import java.util.Map;
 
+import egovframework.com.cmm.service.Globals;
 import egovframework.let.uat.uap.mapper.LoginPolicyMapper;
 import egovframework.let.uat.uap.service.EgovLoginPolicyService;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -57,7 +58,7 @@ public class EgovLoginPolicyServiceImpl extends EgovAbstractServiceImpl implemen
 	 * @param loginPolicy - 로그인정책 model
 	 */
 	public int updateLoginPolicy(LoginPolicy loginPolicy) throws Exception {
-		return loginPolicy.getMode().equals("Ins") ? loginPolicyMapper.insertLoginPolicy(loginPolicy) : loginPolicyMapper.updateLoginPolicy(loginPolicy);
+		return loginPolicy.getMode().equals(Globals.SAVE_MODE_INSERT) ? loginPolicyMapper.insertLoginPolicy(loginPolicy) : loginPolicyMapper.updateLoginPolicy(loginPolicy);
 	}
 
 	/**
