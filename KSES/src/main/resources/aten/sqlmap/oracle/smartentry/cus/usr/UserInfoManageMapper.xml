@@ -131,9 +131,15 @@
 			SYSDATE
 		)		
 		
-		<selectKey resultType="UserLoginInfo" keyProperty="indvdlinfoAgreDt,userRcptYn,userRcptDvsn,userRcptNumber" order="AFTER">
+		<selectKey resultType="UserLoginInfo" keyProperty="indvdlinfoAgreYn,userRcptYn,userRcptDvsn,userRcptNumber" order="AFTER">
         	SELECT
-        		INDVDLINFO_AGRE_DT AS indvdlinfoAgreDt,
+        		<![CDATA[
+        		CASE 
+        			WHEN INDVDLINFO_AGRE_DT IS NULL THEN 'Y'
+	        		WHEN INDVDLINFO_AGRE_DT < TO_CHAR(TO_DATE(SYSDATE - (INTERVAL '3' YEAR)),'YYYYMMDD') THEN 'Y'
+        		ELSE 'N'
+        		END AS indvdlinfoAgreYn,
+        		]]>
         		USER_RCPT_YN AS userRcptYn,
         		USER_RCPT_DVSN AS userRcptDvsn,
         		USER_RCPT_NUMBER AS userRcptNumber 
@@ -161,6 +167,12 @@
 			LAST_UPDT_DTM = SYSDATE                      
 		WHERE USER_ID = #{userId}
    	</update>
+   	
+	<update id="updateUserNoshowCount">
+		UPDATE TSER_USER_INFO_I SET 
+			USER_NOSHOW_CNT = USER_NOSHOW_CNT + 1                   
+		WHERE USER_ID = #{userId}
+   	</update>   	
 
    	<delete id="deleteUserInfo">
    	    <foreach collection="delCds" item="item" separator=";" open="DECLARE BEGIN" close="; END;">  

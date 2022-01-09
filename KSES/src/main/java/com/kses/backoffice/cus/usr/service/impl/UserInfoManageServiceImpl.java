@@ -45,7 +45,7 @@ public class UserInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	public Map<String, Object> selectUserVacntnInfo(String userId) throws Exception {
 		return userMapper.selectUserVacntnInfo(userId);
 	}
-	
+
 	@Override
 	public Map<String, Object> selectSpeedOnVacntnInfo(UserLoginInfo userLoginInfo) throws Exception {
 		return userMapper.selectSpeedOnVacntnInfo(userLoginInfo);
@@ -61,6 +61,11 @@ public class UserInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 		return userMapper.updateUserRcptInfo(vo);
 	}
 
+	@Override
+	public int updateUserNoshowCount(String userId) throws Exception {
+		return userMapper.updateUserNoshowCount(userId);
+	}
+	
 	@Override
 	public boolean deleteUserInfo(String delCds) throws Exception {
         try {
