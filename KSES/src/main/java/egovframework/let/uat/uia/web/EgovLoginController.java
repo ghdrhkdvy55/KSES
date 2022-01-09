@@ -10,10 +10,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -130,11 +127,11 @@ public class EgovLoginController {
 		
 		// 로그인 성공 기록
 		try {
-			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			String clientIp = EgovClntInfo.getClntIP(request);
 			LoginLog loginLog = new LoginLog();
 			loginLog.setConnectMthd(Globals.LOGIN_CONNECT_MTHD_I);
 			loginLog.setConnectId(adminId);
-			loginLog.setConnectIp(((WebAuthenticationDetails) authentication.getDetails()).getRemoteAddress());
+			loginLog.setConnectIp(clientIp);
 			loginLog.setErrorOccrrAt("Y");
 			loginLogService.logInsertLoginLog(loginLog);
 		} catch (Exception e) {

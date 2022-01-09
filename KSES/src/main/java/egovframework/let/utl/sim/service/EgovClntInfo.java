@@ -29,9 +29,10 @@ public class EgovClntInfo {
 	 * @exception Exception
 	*/
 	public static String getClntIP(HttpServletRequest request) throws Exception {
-		
-		// IP주소
 		String ipAddr = request.getRemoteAddr();
+		if (ipAddr.equals("0:0:0:0:0:0:0:1") || ipAddr.equals("127.0.0.1")) {
+			ipAddr = "localhost";
+		}
 		return ipAddr;
 	}
 	
