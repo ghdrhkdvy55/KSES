@@ -48,9 +48,9 @@ public class EgovAuthenticationFailureHandler implements AuthenticationFailureHa
 	@Override
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
 		
-		// TODO: 전자정부시큐리티간소화는 다양하게 Exception 처리할 수 없음, 로그인 실패 후 해당 로직에서 추가 상세 구현 필요.
+		// 전자정부시큐리티간소화는 다양하게 Exception 처리할 수 없음, 로그인 실패 후 해당 로직에서 추가 상세 구현 필요.
 		// 계정 비활성화: 관리자 관리에서 비활성화
-		// 계정 잠김: 비밀번호 수회 틀릴 시 (예: 5회)
+		// 계정 잠김: 비밀번호 수회 틀릴 시 (예: 5회) TODO: 잠김 내용이 들어가면 관리자 관리 화면에서 잠금 푸는 기능 추가 필요
 		final EgovRequestWrapperForSecurity egovRequestWrapperForSecurity = (EgovRequestWrapperForSecurity) request;
 		final String adminId = egovRequestWrapperForSecurity.getUsername();
 		
