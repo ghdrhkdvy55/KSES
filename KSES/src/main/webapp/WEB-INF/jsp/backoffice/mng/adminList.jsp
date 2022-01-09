@@ -100,12 +100,6 @@
                   <td><span id="sp_empNm"></span></td>
                 </tr>
                 <tr>
-                  <th>비밀번호</th>
-                  <td><input type="password" id="adminPwd" name="adminPwd" ></td>
-                  <th>비밀번호 확인</th>
-                  <td><input type="password" id="adminPwd2" name="adminPwd2"></td>
-                </tr>
-                <tr>
                   <th>부서</th>
                   <td><span id="sp_empDeptNm"></span></td>
                   <th>연락처</th>
@@ -361,8 +355,6 @@
 		        }else{
 		        	$("#adminId").val('').prop('readonly', false);
 		        	$("#empNo").val('');
-				    $("#adminPwd").val('');
-				    $("#adminPwd2").val('');
 					$("#selectAuthorCd").val('');
 					$("#centerCd").val('');
 					$("#centerCd").prop('style','display:none');
@@ -377,17 +369,6 @@
         	   if (any_empt_line_span("mng_admin_add", "adminId", "아이디을 입력해 주세요.","sp_message", "savePage") == false) return;
         	   if ($("#mode").val() == "Ins" && $("#idCheck").val() != "Y"){
 				   if (any_empt_line_span("mng_admin_add", "adminId", "중복체크가 안되었습니다.","sp_message", "savePage") == false) return;
-				   if (any_empt_line_span("mng_admin_add", "adminPwd", "비밀번호를 입력해주세요.","sp_message", "savePage") == false) return;
-				   if ( chkPwd($('#adminPwd').val()) == false  ){
-    				   common_popup("비밀 번호 정합성이 일치 하지 않습니다.", "N", "mng_admin_add");
-    				   return;
-    			   }
-    			   if (any_empt_line_span("mng_admin_add", "adminPwd2", "비밀번호를 입력해주세요.","sp_message", "savePage") == false) return;	  
-    			   if ( $.trim($('#adminPwd').val()) !=   $.trim($('#adminPwd2').val())  ){
-    				   common_popup("비밀 번호가 일지 하지 않습니다.", "N", "mng_admin_add");
-    				   return;
-    			   }
-				   
 			   }
 /*         	   alert($("#selectAuthorCd").val()); */
 			   if (any_empt_line_span("mng_admin_add", "selectAuthorCd", "권한을 선택해 주세요.","sp_message", "savePage") == false) return;
@@ -400,7 +381,6 @@
 			  var url = "/backoffice/mng/adminUpdate.do";
 		      var params = {   'adminId' : $("#adminId").val(),
 				    		    'empNo' : $("#empNo").val(),
-				    		    'adminPwd' : $("#adminPwd").val(), 
 				    		    'authorCd' : $("#selectAuthorCd").val(), 
 				    		    'centerCd' : fn_emptyReplace($("#centerCd").val(),""), 
 				    		    'useYn' : fn_emptyReplace($("input[name='useYn']:checked").val(),"Y"),
