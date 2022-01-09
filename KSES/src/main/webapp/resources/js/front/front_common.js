@@ -481,6 +481,7 @@ function fn_resvDuplicateCheck(params) {
 	    function(result) {
 	    	if (result.status == "SUCCESS") {
 	    		if(result.resvCount > 0) {
+	    			fn_openPopup("현재 예약일자에 이미 예약정보가 존재합니다.", "red", "ERROR", "확인", "");
 	    			isResvDuplicate = true;
 	    		} else {
 	    			isResvDuplicate = false;
@@ -567,8 +568,8 @@ function fn_resvCancel(resvInfo, payResult, callback) {
 				payResult != null ?
 					fn_openPopup(
 						"예약이 정상적으로 취소되었습니다." + "<br>" +
-						"입금금액 : " + payResult.occurVal + "<br>" +
-						"잔액 : " + payResult.balan, 
+						"입금금액 : " + fn_cashFormat(payResult.occurVal) + "<br>" +
+						"잔액 : " + fn_cashFormat(payResult.balan), 
 						"blue", "SUCCESS", "확인", ""
 					) :
 					fn_openPopup("예약이 정상적으로 취소되었습니다.", "blue", "SUCCESS", "확인", "");

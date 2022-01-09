@@ -238,8 +238,8 @@
 								var payResult = result.regist.result;
 								fn_openPopup(
 									"결제가 완료되었습니다." + "<br>" +
-									"출금금액 : " + payResult.occurVal + "<br>" +
-									"잔액 : " + payResult.balan, 
+									"출금금액 : " + fn_cashFormat(payResult.occurVal) + "<br>" +
+									"잔액 : " + fn_cashFormat(payResult.balan), 
 									"blue", "SUCCESS", "확인", "javascript:location.reload();"
 								);
 							} else {

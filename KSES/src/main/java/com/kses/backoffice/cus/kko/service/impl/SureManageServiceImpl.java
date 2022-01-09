@@ -12,6 +12,7 @@ import com.kses.backoffice.cus.kko.vo.MmsDataInfo;
 import com.kses.backoffice.cus.kko.vo.SmsDataInfo;
 import com.kses.backoffice.cus.kko.vo.SureDataInfo;
 import com.kses.backoffice.cus.kko.vo.SureMsgInfo;
+import com.kses.backoffice.rsv.reservation.mapper.ResvInfoManageMapper;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.fdl.property.EgovPropertyService;
@@ -26,6 +27,9 @@ public class SureManageServiceImpl extends EgovAbstractServiceImpl implements Su
 	@Autowired
 	private SureManageMapper sureMapper;
 	
+	@Autowired
+	private ResvInfoManageMapper resvMapper;
+	
 	public String selectCertifiCode() throws Exception {
 		return sureMapper.selectCertifiCode();
 	}
@@ -38,10 +42,11 @@ public class SureManageServiceImpl extends EgovAbstractServiceImpl implements Su
 		return sureMapper.insertMmsData(mmsDataInfo);
 	}
 	
-	public boolean insertResvSureData(String msgDvsn, Map<String, Object> resvInfo) throws Exception {
+	public boolean insertResvSureData(String msgDvsn, String resvSeq) throws Exception {
 		int ret = 0;
 		
 		try {
+			Map<String, Object> resvInfo = resvMapper.selectResInfoDetail(resvSeq);
 			SureMsgInfo sureMsgInfo = new SureMsgInfo();
 			SureDataInfo sureDataInfo = sureMsgInfo.resvSureDataMsg(msgDvsn, resvInfo);
 			

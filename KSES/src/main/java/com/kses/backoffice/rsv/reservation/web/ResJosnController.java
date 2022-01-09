@@ -274,6 +274,8 @@ public class ResJosnController {
 	public ModelAndView selectQrCheckInfo(@RequestBody AttendInfo sendInfo, HttpServletRequest request) {
 
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+		AttendInfo attendInfoVO = new AttendInfo();
+		
 		try {
 			EgovFileScrty fileScrty = new EgovFileScrty();
 
@@ -313,16 +315,20 @@ public class ResJosnController {
 				String seatClassNm = attempInfos[14];
 				String floorNm = attempInfos[15];
 				String partNm = attempInfos[16];
+				String resvQrCount = attempInfos[17];
 				
 				for (String value : attempInfos) {
 					LOGGER.debug("value : " + value);
 				}
 
 				String formatedNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-
-				LOGGER.debug("qrTime:" + qrTime.substring(0, 8));
-				LOGGER.debug("formatedNow:" + formatedNow);
-
+				
+				Map<String, Object> searchVO = new HashMap<String, Object>();
+				String nowDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+				searchVO.put("resvSeq", resSeq);
+				searchVO.put("resvDate", nowDate);
+				Map<String, Object> resInfo = resService.selectUserResvInfo(searchVO);
+				
 				if (!qrTime.substring(0, 8).equals(formatedNow.substring(0, 8))) {
 					ERROR_CD = "ERROR_05";
 					ERROR_MSG = "예약일자 오류.";
@@ -356,12 +362,34 @@ public class ResJosnController {
 					model.addObject("ERROR_MSG", ERROR_MSG);
 					return model;
 				}
+				
+				//종이QR일경우 IN/OUT 체크
+				if(gubun.equals("PAPER")) {
+					attendInfoVO.setResvSeq(resSeq);
+					attendInfoVO.setUserId(userId);
+					Map<String, Object> attendInfo = attendService.selectAttendInfoDetail(attendInfoVO);
+					
+					if (attendInfo == null) {
+						inOt = "IN";
+					} else {
+						inOt = SmartUtil.NVL(attendInfo.get("inout_dvsn"), "OT").toString().equals("IN") ? "OT" : "IN";
+					}
+				}
+				 
 				if (!qrInot.equals(inOt)) {
+					ERROR_MSG = qrInot.equals("IN") ? "퇴장 정보 없음." : "입장 정보 없음.";
 					ERROR_CD = "ERROR_07";
-					ERROR_MSG = "퇴장 정보 없음.";
 					model.addObject("ERROR_CD", ERROR_CD);
 					model.addObject("ERROR_MSG", ERROR_MSG);
-					return model;
+					return model;	
+				}
+				
+				if (!resvQrCount.equals(SmartUtil.NVL(resInfo.get("resv_qr_count"),""))) {
+					ERROR_MSG = "QR발급회차 불일치";
+					ERROR_CD = "ERROR_08";
+					model.addObject("ERROR_CD", ERROR_CD);
+					model.addObject("ERROR_MSG", ERROR_MSG);
+					return model;	
 				}
 
 				sendInfo.setUserId(userId);
@@ -371,11 +399,9 @@ public class ResJosnController {
 				sendInfo.setQrCheckTm(formatedNow);
 				sendInfo.setRcvCd("OK");
 				sendInfo.setQrCode(sendInfo.getQrCode());
-
+				
 				sendInfo = attendService.insertAttendInfo(sendInfo);
 				IOGUBUN_TXT = inotMsg;
-
-				LOGGER.debug("rcvCd : " + sendInfo.getRcvCd());
 
 				if (sendInfo.getRcvCd().equals("OK")) {
 					ERROR_CD = "OK";
@@ -444,6 +470,8 @@ public class ResJosnController {
 			searchVO.put("resvSeq", resvSeq);
 			searchVO.put("resvDate", nowDate);
 
+			//QR발급회차 업데이트
+			resService.resvQrCountChange(resvSeq);
 			Map<String, Object> resInfo = resService.selectUserResvInfo(searchVO);
 
 			if (resInfo == null || Integer.valueOf(resInfo.get("resv_end_dt").toString()) < Integer.valueOf(nowDate)) {
@@ -468,10 +496,8 @@ public class ResJosnController {
 					inotMsg = (attend.size() > 2) ? "재입장" : "정상";
 				}
 
-				EgovFileScrty fileScrty = new EgovFileScrty();
 				String gubun = tickPlace.equals("ONLINE") ? "INTERVAL" : "PAPER";
-
-				String qrCode = fileScrty.encode(resvSeq + ":" + qrTime + ":" + inOt + ":" + gubun + ":"
+				String qrCode = EgovFileScrty.encode(resvSeq + ":" + qrTime + ":" + inOt + ":" + gubun + ":"
 						+ SmartUtil.NVL(resInfo.get("user_id"), "").toString() + ":"
 						+ SmartUtil.NVL(resInfo.get("center_pilot_yn"), "").toString() + ":"
 						+ SmartUtil.NVL(resInfo.get("trad_no"), "").toString() + ":"
@@ -483,12 +509,9 @@ public class ResJosnController {
 						+ SmartUtil.NVL(resInfo.get("seat_nm"), "").toString() + ":"
 						+ SmartUtil.NVL(resInfo.get("seat_class"), "").toString() + ":"
 						+ SmartUtil.NVL(resInfo.get("floor_nm"), "").toString() + ":"
-						+ SmartUtil.NVL(resInfo.get("part_nm"), "").toString());
+						+ SmartUtil.NVL(resInfo.get("part_nm"), "").toString() + ":"
+						+ SmartUtil.NVL(resInfo.get("resv_qr_count"), "0").toString());
 				
-				LOGGER.info("QR SEND_1 : " + fileScrty.decode(qrCode));
-				LOGGER.info("QR SEND_2" + qrCode);
-				fileScrty = null;
-
 				model.addObject("vacntnInfo", userService.selectUserVacntnInfo(resInfo.get("user_id").toString()));
 				model.addObject("resvInfo", resInfo);
 				model.addObject("QRCODE", qrCode);
@@ -536,9 +559,7 @@ public class ResJosnController {
 		info.setRequstSysId(SmartUtil.NVL(jsonInfo.get("IF_NO").toString(), "").toString());
 
 		try {
-
 			Map<String, Object> searchVO = new HashMap<String, Object>();
-			LOGGER.debug("RES_NO:" + jsonInfo.get("RES_NO"));
 			searchVO.put("resvSeq", SmartUtil.NVL(jsonInfo.get("RES_NO"), "").toString());
 			String localTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 			searchVO.put("resvDate", localTime);
@@ -573,11 +594,7 @@ public class ResJosnController {
 			info.setRequstInsttId("MACHIN");
 			info.setRequstTrnsmitTm(SmartUtil.NVL(jsonInfo.get("RES_SEND_DATE"), "").toString());
 			info.setRspnsRecptnTm(SmartUtil.nowTime());
-
-			LOGGER.debug("returnCode:" + returnCode);
-
 			info.setResultCode(returnCode);
-
 			info.setSendMessage(jsonObject.toString());
 			info.setRqesterId("admin");
 
@@ -647,6 +664,10 @@ public class ResJosnController {
 			Map<String, Object> searchVO = new HashMap<String, Object>();
 			searchVO.put("resvSeq", SmartUtil.NVL(jsonInfo.get("RES_NO"), "").toString());
 			searchVO.put("resvDate", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+
+			//QR발급회차 업데이트
+			resService.resvQrCountChange(SmartUtil.NVL(jsonInfo.get("RES_NO"), "").toString());
+			
 			Map<String, Object> resInfo = resService.selectUserResvInfo(searchVO);
 			String localTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 			String recDate = SmartUtil.NVL(jsonInfo.get("RES_SEND_DATE"), "19700101").toString();
@@ -676,23 +697,23 @@ public class ResJosnController {
 				partInitial = SmartUtil.NVL(resInfo.get("part_initial"), "").toString();
 				// TO-DO 층/구역명 추가 예정
 				
-				EgovFileScrty fileScrty = new EgovFileScrty();
-				String qrCode = fileScrty.encode(resInfo.get("resv_seq") + ":" + qrTime
+
+				String qrCode = EgovFileScrty.encode(resInfo.get("resv_seq") + ":" + qrTime
 						+ ":IN:PAPER:" + SmartUtil.NVL(resInfo.get("user_id"), "").toString() + ":"
 						+ SmartUtil.NVL(resInfo.get("center_pilot_yn"), "").toString() + ":"
 						+ SmartUtil.NVL(jsonInfo.get("IF_NO"), "").toString() + ":"
 						+ SmartUtil.NVL(resInfo.get("resv_entry_dvsn"), "").toString() + ":"
 						+ SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString() + ":"
 						+ SmartUtil.NVL(resInfo.get("center_rbm_cd"), "").toString() + ":" 
-						+ "종이큐알입장:"
+						+ "PAPER_QR_ENTRY" + ":"
 						+ SmartUtil.NVL(resInfo.get("user_phone"), "").toString() + ":"
 						+ SmartUtil.NVL(resInfo.get("center_nm"), "").toString() + ":"
 						+ SmartUtil.NVL(resInfo.get("seat_nm"), "").toString() + ":"
 						+ SmartUtil.NVL(resInfo.get("seat_class"), "").toString() + ":"
 						+ SmartUtil.NVL(resInfo.get("floor_nm"), "").toString() + ":"
-						+ SmartUtil.NVL(resInfo.get("part_nm"), "").toString());
-				LOGGER.info("ma qrCode : " + qrCode);
-				fileScrty = null;
+						+ SmartUtil.NVL(resInfo.get("part_nm"), "").toString() + ":"
+						+ SmartUtil.NVL(resInfo.get("resv_qr_count"), "0").toString());
+
 
 				resQrUrl = qrCode;
 				seatName = SmartUtil.NVL(resInfo.get("seat_nm"), "").toString();

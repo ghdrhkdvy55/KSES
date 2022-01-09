@@ -125,10 +125,6 @@
 									+ "</em>석</li></ul></li>";
 
 									$(".branch_list").append(setHtml);
-									
-//									+ "</span></li><li></li><li>입석 <em>" 
-//									+ (item.center_stand_max - item.center_standing_use_count) + " / " + item.center_stand_max
-//									+ "</em>석</li></ul></li>";
 								});
 								
 								var sBtn = $(".branch_list > li"); //  ul > li 이를 sBtn으로 칭한다. (클릭이벤트는 li에 적용 된다.)

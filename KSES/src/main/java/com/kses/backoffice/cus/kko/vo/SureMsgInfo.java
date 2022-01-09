@@ -25,7 +25,7 @@ public class SureMsgInfo {
 		String seatNm = resvInfo.get("seat_nm").toString();
 		
 		if(msgDvsn.equals("RESERVATION")) {
-			if(!centerPilotYn.equals("Y")) {
+			if(centerPilotYn.equals("Y")) {
                 if(userDvsn.equals("USER_DVSN_1")) {
                 	templateCode = "KSES_001";
                 	

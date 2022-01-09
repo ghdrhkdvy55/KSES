@@ -73,8 +73,9 @@
 	              	<select id="searchCondition">
 						<option value="">선택</option>
 						<option value="resvSeq">예약번호</option>
-						<option value="resvName">이름</option>
 						<option value="resvId">아이디</option>
+						<option value="resvName">이름</option>
+						<option value="resvPhone">전화번호</option>
 	              	</select>
 	              	<input type="text" id="searchKeyword" placeholder="검색어를 입력하세요.">
 				</div>
@@ -452,12 +453,6 @@
       			<!-- <img src="/resources/img/qrcode.png" alt=""> -->
       		</div>
 			<!--QR 영역//-->
-			
-			<!--접종완료//-->
-            <!--//백신패스 만료-->
-            <!-- <li class="vacState"><span class="vacNon"><img alt="" src="/resources/img/front/error_outline_black_24dp.svg">백신패스 만료</span></li> -->
-                 <li class="vacState"><span class="vacNon">백신패스 만료</span></li>
-            <!--백신패스 만료//-->
                             			
 			<table class="detail_table">
 				<tbody>
@@ -677,8 +672,8 @@
 			var item = rowObject;
 			var form = "";
 			
-			/* if(index == 'resv_qr_print' && item.resv_pay_dvsn == 'RESV_PAY_DVSN_2' && (item.resv_state == 'RESV_PAY_DVSN_1' || item.resv_state == 'RESV_PAY_DVSN_2')) {} */
-			if(index == 'resv_qr_print' && (item.resv_state == 'RESV_PAY_DVSN_1' || item.resv_state == 'RESV_PAY_DVSN_2')) {
+			item.resv_pay_dvsn = item.center_pilot_yn == "N" ? "RESV_PAY_DVSN_2" : item.resv_pay_dvsn;
+			if(index == 'resv_qr_print' && item.resv_pay_dvsn == 'RESV_PAY_DVSN_2' && (item.resv_state == 'RESV_STATE_1' || item.resv_state == 'RESV_STATE_2')) {
 				form = '<a href="javascript:jqGridFunc.fn_qrInfo(&#39;' + item.resv_seq + '&#39;);" class="detailBtn">QR출력</a>';	
 			} else if(index == 'resv_end_dt') {
 				form = fn_resvDateFormat(item.resv_end_dt); 	
@@ -842,7 +837,8 @@
 								"정상적으로 전체 예약취소 되었습니다." + "<br><br>" +
 								"취소 예약정보 : "  + result.allCount + "건" + "<br>" +
 								"취소 성공 : "  + result.successCount + "건" + "<br>" + 
-								"취소 실패 : "  + result.failCount + "건" + "<br>"; 
+								"취소 실패 : "  + result.failCount + "건" + "<br>" +
+								"무인발권기 예외 : "  + result.ticketCount + "건";
 							common_popup(result.message, "Y", "");
 							jqGridFunc.fn_search();
 						} else {
