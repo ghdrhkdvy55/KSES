@@ -128,6 +128,7 @@
                 <when test="cnt > 0">
                         UPDATE TSEH_EMP_INFO_M SET EMP_ID = #{empId ,jdbcType=VARCHAR} 
 	                                               , EMP_NM = #{empNm}
+	                                               , EMP_PASSWORD = #{empPassword}
 	                                               , DEPT_CD = #{deptCd ,jdbcType=VARCHAR}
 	                                               , DEPT_NM = #{deptNm ,jdbcType=VARCHAR}
 	                                               , GRAD_CD = #{gradCd ,jdbcType=VARCHAR}
@@ -162,6 +163,9 @@
     <update id="updateEmpInfo">
          UPDATE TSEH_EMP_INFO_M SET EMP_ID = #{empId ,jdbcType=VARCHAR} 
                                     , EMP_NM = #{empNm}
+                                    <if test="empPassword != ''">
+                                    	, EMP_PASSWORD = #{empPassword}
+                                    </if>
                                     , DEPT_CD = #{deptCd ,jdbcType=VARCHAR}
                                     , DEPT_NM = #{deptNm ,jdbcType=VARCHAR}
                                     , GRAD_CD = #{gradCd ,jdbcType=VARCHAR}
@@ -191,7 +195,7 @@
 		WHEN MATCHED THEN
 		UPDATE SET
 			EMP_ID = B.USER_SPEC_ID,
-			EMP_PASSWORD = B.USER_PASSWORD 
+			EMP_PASSWORD = B.USER_PASSWORD,
 			EMP_NM = B.USER_NAME, 
 			DEPT_NM = B.USER_GROUP_NAME,
 			GRAD_NM = B.USER_TITLE_NAME,
