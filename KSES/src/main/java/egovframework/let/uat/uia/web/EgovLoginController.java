@@ -26,6 +26,7 @@ import com.google.gson.Gson;
 import com.kses.backoffice.bas.menu.service.MenuInfoService;
 import com.kses.backoffice.sym.log.service.LoginLogService;
 import com.kses.backoffice.sym.log.vo.LoginLog;
+import com.kses.backoffice.util.SmartUtil;
 
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.Globals;
@@ -107,7 +108,7 @@ public class EgovLoginController {
 		else {
 			throw new IllegalStateException("No AuthenticationProcessingFilter");
 		}
-		springSecurity.doFilter(new EgovRequestWrapperForSecurity(request, loginVO.getAdminId(), loginVO.getAdminPwd(), clientIp), response, null);
+		springSecurity.doFilter(new EgovRequestWrapperForSecurity(request, loginVO.getAdminId(), SmartUtil.getEncryptSHA256(loginVO.getAdminPwd()), clientIp), response, null);
 	}
 	
 	/**
