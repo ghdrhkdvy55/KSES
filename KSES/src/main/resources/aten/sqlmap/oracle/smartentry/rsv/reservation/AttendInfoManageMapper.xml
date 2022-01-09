@@ -60,7 +60,6 @@
 		WHERE RNUM = 1
    	</select>
    	
-	
 	<insert id="insertAttendInfo">
 		<selectKey keyProperty="userId" resultType="String" order="BEFORE">
              SELECT USER_ID AS userId FROM TSER_RESV_INFO_I WHERE RESV_SEQ = #{resvSeq}

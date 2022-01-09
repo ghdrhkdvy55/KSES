@@ -481,6 +481,7 @@ function fn_resvDuplicateCheck(params) {
 	    function(result) {
 	    	if (result.status == "SUCCESS") {
 	    		if(result.resvCount > 0) {
+	    			fn_openPopup("현재 예약일자에 이미 예약정보가 존재합니다.", "red", "ERROR", "확인", "");
 	    			isResvDuplicate = true;
 	    		} else {
 	    			isResvDuplicate = false;

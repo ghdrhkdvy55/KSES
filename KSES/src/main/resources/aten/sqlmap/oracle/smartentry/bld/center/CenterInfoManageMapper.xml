@@ -108,7 +108,7 @@
 		]]>
 	
         SELECT  
-         	A.CENTER_CD, A.CENTER_NM, A.CENTER_STAND_MAX,
+         	A.CENTER_CD, A.CENTER_NM, A.CENTER_STAND_MAX, A.CENTER_STAND_YN,
 			(
          		SELECT NVL(COUNT(*),0) 
          		FROM TSEB_SEAT_INFO_D 
