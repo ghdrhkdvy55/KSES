@@ -67,6 +67,7 @@ public class Scheduler {
 					
 					for(Map<String, Object> map : noshowResvList) {
 						String userId = SmartUtil.NVL(map.get("user_id"),"");
+						String userDvsn = SmartUtil.NVL(map.get("resv_user_dvsn"),"");
 						String resvSeq = SmartUtil.NVL(map.get("resv_seq"),"");
 						String noshowCd = SmartUtil.NVL(map.get("noshow_cd"),"");
 						String centerPilotYn = SmartUtil.NVL(map.get("center_pilot_yn"),"");
@@ -103,7 +104,10 @@ public class Scheduler {
 									}
 								}
 								
-								userService.updateUserNoshowCount(userId);
+								if(userDvsn.equals("USER_DVSN_1")) {
+									userService.updateUserNoshowCount(userId);
+								}
+								
 								successCount++;
 							} else {
 								LOGGER.info("예약번호 : " + resvSeq + " 무인발권기 거래 예약정보 예외처리");
