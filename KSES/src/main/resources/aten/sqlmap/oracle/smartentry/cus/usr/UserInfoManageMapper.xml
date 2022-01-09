@@ -57,7 +57,7 @@
    	
 	<select id="selectSSOUserInfo" resultType="UserLoginInfo">
 		SELECT 
-			USER_ID, USER_NM, USER_PHONE, USER_SEX_MF, USER_BIRTH_DY, LAST_UPDUSR_ID, LAST_UPDT_DTM,
+			USER_ID, 'USER_DVSN_1' AS USER_DVSN, USER_NM, USER_PHONE, USER_SEX_MF, USER_BIRTH_DY, LAST_UPDUSR_ID, LAST_UPDT_DTM,
 			USER_RCPT_YN, USER_RCPT_DVSN, USER_RCPT_NUMBER
 		FROM TSER_USER_INFO_I 
 		WHERE USER_CARD_ID = KSES_USER.FN_DEC(#{params.cardId, jdbcType=VARCHAR})
@@ -169,9 +169,16 @@
    	</update>
    	
 	<update id="updateUserNoshowCount">
-		UPDATE TSER_USER_INFO_I SET 
-			USER_NOSHOW_CNT = USER_NOSHOW_CNT + 1                   
-		WHERE USER_ID = #{userId}
+	{CALL
+		DECLARE 
+        BEGIN
+		
+		UPDATE TSER_USER_INFO_I SET USER_NOSHOW_CNT = USER_NOSHOW_CNT + 1 WHERE USER_ID = #{userId};
+		
+		IF (SELECT NVL(USER_NOSHOW_CNT,0) 
+		
+		END
+	}
    	</update>   	
 
    	<delete id="deleteUserInfo">
