@@ -340,7 +340,7 @@ public class FrontResvInfoManageController {
 					userService.updateUserInfo(user);
 				}
 				
-				if(sureService.insertResvSureData("RESERVATION", resvInfo)) {
+				if(sureService.insertResvSureData("RESERVATION", resvInfo.get("resv_seq").toString())) {
 					LOGGER.info("예약번호 : " + resvInfo.get("resv_seq").toString() + "번 알림톡 발송성공");
 				} else {
 					LOGGER.info("예약번호 : " + resvInfo.get("resv_seq").toString() + "번 알림톡 발송실패");
@@ -384,7 +384,7 @@ public class FrontResvInfoManageController {
 			int ret = resvService.resvInfoCancel(params);
 			
 			if(ret > 0) {
-				if(sureService.insertResvSureData("CANCEL", params)) {
+				if(sureService.insertResvSureData("CANCEL", params.get("resv_seq").toString())) {
 					LOGGER.info("예약번호 : " + params.get("resv_seq").toString() + "번 예약취소 알림톡 발송성공");
 				} else {
 					LOGGER.info("예약번호 : " + params.get("resv_seq").toString() + "번 예약취소 알림톡 발송실패");

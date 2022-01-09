@@ -10,16 +10,14 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.kses.backoffice.bld.center.service.NoshowInfoManageService;
+import com.kses.backoffice.cus.kko.service.SureManageSevice;
+import com.kses.backoffice.cus.usr.service.UserInfoManageService;
 import com.kses.backoffice.mng.employee.service.EmpInfoManageService;
-import com.kses.backoffice.rsv.reservation.mapper.ResInfoManageMapper;
-import com.kses.backoffice.rsv.reservation.mapper.ResTimeInfoManageMapper;
 import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
 import com.kses.backoffice.sym.log.service.InterfaceInfoManageService;
-import com.kses.backoffice.sym.log.service.ScheduleInfoManageService;
 import com.kses.backoffice.util.SmartUtil;
 
 import egovframework.com.cmm.service.Globals;
-
 
 //spring 배치 서비스 정리 
 @Component
@@ -28,15 +26,6 @@ public class Scheduler {
 
 	private static final Logger LOGGER = Logger.getLogger(Scheduler.class);
 
-	@Autowired
-	private ResTimeInfoManageMapper timeMapper;
-	
-	@Autowired
-	private ResInfoManageMapper resMapper;
-	
-	@Autowired
-	private ScheduleInfoManageService scheduleService;
-	
 	@Autowired
 	private EmpInfoManageService empService;
 	
@@ -49,6 +38,11 @@ public class Scheduler {
 	@Autowired
 	private InterfaceInfoManageService interfaceService;
 	
+	@Autowired
+	private UserInfoManageService userService;
+	
+	@Autowired
+	private SureManageSevice sureService;
 
 	/**
 	 * 노쇼 예약정보 자동취소 스케줄러
@@ -72,6 +66,7 @@ public class Scheduler {
 					int ticketCount = 0;
 					
 					for(Map<String, Object> map : noshowResvList) {
+						String userId = SmartUtil.NVL(map.get("user_id"),"");
 						String resvSeq = SmartUtil.NVL(map.get("resv_seq"),"");
 						String noshowCd = SmartUtil.NVL(map.get("noshow_cd"),"");
 						String centerPilotYn = SmartUtil.NVL(map.get("center_pilot_yn"),"");
@@ -100,8 +95,15 @@ public class Scheduler {
 								// 노쇼정보등록 & 예약정보취소
 								if(!noshowService.updateNoshowResvInfoTran(resvSeq, noshowCd)) {
 									continue;
+								} else {
+									if(sureService.insertResvSureData("CANCEL", resvSeq)) {
+										LOGGER.info("예약번호 : " + resvSeq + "번 예약취소 알림톡 발송성공");
+									} else {
+										LOGGER.info("예약번호 : " + resvSeq + "번 예약취소 알림톡 발송실패");
+									}
 								}
-	
+								
+								userService.updateUserNoshowCount(userId);
 								successCount++;
 							} else {
 								LOGGER.info("예약번호 : " + resvSeq + " 무인발권기 거래 예약정보 예외처리");

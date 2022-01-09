@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kses.backoffice.cus.kko.service.SureManageSevice;
 import com.kses.backoffice.rsv.reservation.mapper.ResvInfoManageMapper;
 import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
 import com.kses.backoffice.rsv.reservation.vo.ResvInfo;
@@ -43,6 +44,9 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
     
     @Autowired
     private InterfaceInfoManageService interfaceService;
+    
+	@Autowired
+	private SureManageSevice sureService;
 	
 	@Override
 	public List<Map<String, Object>> selectResInfoManageListByPagination(Map<String, Object> params) throws Exception {
@@ -158,13 +162,18 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	}
 	
 	@Override
+	public int resvQrCountChange(String resvSeq) throws Exception {
+		return resvMapper.resvQrCountChange(resvSeq);
+	}
+	
+	@Override
 	public int resvInfoCancel(Map<String, Object> params) throws Exception {
 		return resvMapper.resvInfoCancel(params);
 	}
 		
 	@Override
 	@SuppressWarnings("unchecked")
-	public Map<String, String> resvInfoCancelN(String resvSeq) throws Exception {
+	public Map<String, String> resvInfoAdminCancel(String resvSeq) throws Exception {
 		Map<String, String> resultMap = new HashMap<String, String>();
 		
 		ResvInfo resInfo = new ResvInfo();
@@ -183,7 +192,6 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 			String tradeNo = SmartUtil.NVL(resvInfo.get("trade_no"),"");
 			
 			if(!resvState.equals("RESV_STATE_3") && !resvState.equals("RESV_STATE_4")) {
-				
 				//결제 유무 확인
 				if(resvPayDvsn.equals("RESV_PAY_DVSN_2")) {
 					if(resvTicketDvsn.equals("RESV_TICKET_DVSN_1")) {
@@ -214,6 +222,12 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 				if(resvService.resvInfoCancel(params) > 0) {
 					resultMap.put(Globals.STATUS, Globals.STATUS_SUCCESS);
 					resultMap.put(Globals.STATUS_MESSAGE, "예약정보가 정상적으로 취소되었습니다.");
+					
+					if(sureService.insertResvSureData("CANCEL", resvSeq)) {
+						LOGGER.info("예약번호 : " + resvSeq + "번 예약취소 알림톡 발송성공");
+					} else {
+						LOGGER.info("예약번호 : " + resvSeq + "번 예약취소 알림톡 발송실패");
+					}
 				} else {
 					message = "예약취소중 오류가 발생하였습니다.";
 					throw new Exception();

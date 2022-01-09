@@ -453,12 +453,6 @@
       			<!-- <img src="/resources/img/qrcode.png" alt=""> -->
       		</div>
 			<!--QR 영역//-->
-			
-			<!--접종완료//-->
-            <!--//백신패스 만료-->
-            <!-- <li class="vacState"><span class="vacNon"><img alt="" src="/resources/img/front/error_outline_black_24dp.svg">백신패스 만료</span></li> -->
-                 <li class="vacState"><span class="vacNon">백신패스 만료</span></li>
-            <!--백신패스 만료//-->
                             			
 			<table class="detail_table">
 				<tbody>
@@ -843,8 +837,8 @@
 								"정상적으로 전체 예약취소 되었습니다." + "<br><br>" +
 								"취소 예약정보 : "  + result.allCount + "건" + "<br>" +
 								"취소 성공 : "  + result.successCount + "건" + "<br>" + 
-								"취소 실패 : "  + result.failCount + "건" + "<br>";
-								"무인발권기 예외 : "  + result.ticketCount + "건" + "<br>";
+								"취소 실패 : "  + result.failCount + "건" + "<br>" +
+								"무인발권기 예외 : "  + result.ticketCount + "건";
 							common_popup(result.message, "Y", "");
 							jqGridFunc.fn_search();
 						} else {

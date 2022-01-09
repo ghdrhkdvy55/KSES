@@ -267,7 +267,7 @@ public class ResvInfoManageController {
 				return model;	
 		    }
 			
-			Map<String, String> resultMap = resvService.resvInfoCancelN(resvSeq);
+			Map<String, String> resultMap = resvService.resvInfoAdminCancel(resvSeq);
 			
 			model.addObject(Globals.STATUS, resultMap.get(Globals.STATUS));
 			model.addObject(Globals.STATUS_MESSAGE, resultMap.get(Globals.STATUS_MESSAGE));
@@ -312,7 +312,7 @@ public class ResvInfoManageController {
 			for(Map<String,Object> resvInfo : resvList) {
 				if(SmartUtil.NVL(resvInfo.get("resv_ticket_dvsn"),"").equals("RESV_TICKET_DVSN_2")) {
 					String resvSeq = resvInfo.get("resv_seq").toString();
-					Map<String, String> resultMap = resvService.resvInfoCancelN(resvSeq);
+					Map<String, String> resultMap = resvService.resvInfoAdminCancel(resvSeq);
 				
 					if(!resultMap.get(Globals.STATUS).equals("SUCCESS")) {
 						failCount ++;

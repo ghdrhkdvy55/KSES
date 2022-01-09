@@ -169,7 +169,7 @@ public interface ResvInfoManageService {
 	 * @return
 	 * @throws Exception
 	 */
-	public Map<String, String> resvInfoCancelN(String resvSeq) throws Exception;
+	public Map<String, String> resvInfoAdminCancel(String resvSeq) throws Exception;
 	
 	/**
 	 * SPDM 최초 출입시 예약 상태값 변경 
@@ -187,6 +187,15 @@ public interface ResvInfoManageService {
 	 * @throws Exception
 	 */
 	public int resvCompleteUse() throws Exception;
+	
+	/**
+	 * SPDM 예약정보 QR발급 횟수 변경
+	 * 
+	 * @param resvSeq
+	 * @return
+	 * @throws Exception
+	 */
+	public int resvQrCountChange(String resvSeq) throws Exception;	
 	
 	/*
 	 *  입금 또는 환불
