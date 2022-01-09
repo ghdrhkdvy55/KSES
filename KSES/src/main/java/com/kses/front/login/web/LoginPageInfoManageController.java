@@ -160,8 +160,11 @@ public class LoginPageInfoManageController {
 		
 		ModelAndView model = new ModelAndView("/front/login/mainpage");
 		try {
+			LOGGER.info(params.get("cardId").toString());
+			LOGGER.info(URLDecoder.decode(SmartUtil.NVL(params.get("cardId"), ""), "UTF-8"));
 			
 			params.put("cardId", URLDecoder.decode(SmartUtil.NVL(params.get("cardId"), ""), "UTF-8"));
+			LOGGER.info(params.get("cardId").toString());
 			UserLoginInfo userLoginInfo = userService.selectSSOUserInfo(params);
 			
 			if(userLoginInfo != null) {
