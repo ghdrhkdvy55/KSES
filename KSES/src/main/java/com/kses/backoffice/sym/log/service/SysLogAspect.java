@@ -17,6 +17,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.mybatis.spring.MyBatisSystemException;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
@@ -43,8 +44,8 @@ import lombok.extern.slf4j.Slf4j;
 public class SysLogAspect {
 	public static final String KEY_ECODE = "ecode";
 	
-//	@Autowired
-//	private EgovSysLogService sysLogService;
+	@Autowired
+	private EgovSysLogService sysLogService;
 	
 	@Autowired
 	protected EgovMessageSource egovMessageSource;
@@ -106,20 +107,22 @@ public class SysLogAspect {
 				}
 			}
 			
-			// TODO: 시스템 로그 기록시 검토 후 완성 필요
-			final String processSeCode = ParamToJson.JsonKeyToString(sqlId,"mode").equals(Globals.SAVE_MODE_INSERT) ? "I" : "U";
+			final String processSeCode = ParamToJson.JsonKeyToString(sqlId,"mode").equals(Globals.SAVE_MODE_INSERT) 
+					? Globals.SYSLOG_PROCESS_SE_CODE_INSERT : Globals.SYSLOG_PROCESS_SE_CODE_UPDATE;
 			final String ipAddr = EgovClntInfo.getClntIP(request);
 			final String processTime = Long.toString(stopWatch.getTotalTimeMillis());
 			final String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
-			
+			// 시스템 로그 기록
 			SysLog sysLog = new SysLog();
-			sysLog.setErrorCode("200");
+			sysLog.setErrorCode(HttpStatus.OK.value()+"");
+			sysLog.setSrvcNm(clazz.getSimpleName());
+			sysLog.setMethodNm(joinPoint.getSignature().getName());
+			sysLog.setProcessSeCode(processSeCode);
 			sysLog.setProcessTime(processTime);
 			sysLog.setSqlParam(ParamToJson.paramToJson(sqlId));
 			sysLog.setRqesterIp(ipAddr);
 			sysLog.setRqesterId(userId);
-			sysLog.setProcessSeCode(processSeCode);
-//			sysLogService.logInsertSysLog(sysLog);
+			sysLogService.logInsertSysLog(sysLog);
 		}
 	}
 	
@@ -173,20 +176,21 @@ public class SysLogAspect {
 				}
 			}
 			
-			final String processSeCode = "S";
+			final String processSeCode = Globals.SYSLOG_PROCESS_SE_CODE_SELECT;
 			final String ipAddr = EgovClntInfo.getClntIP(request);
 			final String processTime = Long.toString(stopWatch.getTotalTimeMillis());
 			final String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
-			
-			// TODO: 시스템 로그 기록시 검토 후 완성 필요
+			// 시스템 로그 기록
 			SysLog sysLog = new SysLog();
-			sysLog.setErrorCode("200");
+			sysLog.setErrorCode(HttpStatus.OK.value()+"");
+			sysLog.setSrvcNm(clazz.getSimpleName());
+			sysLog.setMethodNm(joinPoint.getSignature().getName());
+			sysLog.setProcessSeCode(processSeCode);
 			sysLog.setProcessTime(processTime);
 			sysLog.setSqlParam(ParamToJson.paramToJson(sqlId));
 			sysLog.setRqesterIp(ipAddr);
 			sysLog.setRqesterId(userId);
-			sysLog.setProcessSeCode(processSeCode);
-//			sysLogService.logInsertSysLog(sysLog);
+			sysLogService.logInsertSysLog(sysLog);
 		}
 	}
 	
@@ -225,20 +229,21 @@ public class SysLogAspect {
 				}
 			}
 			
-			final String processSeCode = "D";
+			final String processSeCode = Globals.SYSLOG_PROCESS_SE_CODE_DELETE;
 			final String ipAddr = EgovClntInfo.getClntIP(request);
 			final String processTime = Long.toString(stopWatch.getTotalTimeMillis());
 			final String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
-			
-			// TODO: 시스템 로그 기록시 검토 후 완성 필요
+			// 시스템 로그 기록
 			SysLog sysLog = new SysLog();
-			sysLog.setErrorCode("200");
+			sysLog.setErrorCode(HttpStatus.OK.value()+"");
+			sysLog.setSrvcNm(clazz.getSimpleName());
+			sysLog.setMethodNm(joinPoint.getSignature().getName());
+			sysLog.setProcessSeCode(processSeCode);
 			sysLog.setProcessTime(processTime);
 			sysLog.setSqlParam(ParamToJson.paramToJson(sqlId));
 			sysLog.setRqesterIp(ipAddr);
 			sysLog.setRqesterId(userId);
-			sysLog.setProcessSeCode(processSeCode);
-//			sysLogService.logInsertSysLog(sysLog);
+			sysLogService.logInsertSysLog(sysLog);
 		}
 	}
 	
@@ -248,7 +253,7 @@ public class SysLogAspect {
 	 * @param error
 	 * @throws Exception
 	 */
-	@AfterThrowing(pointcut = "execution( public * egovframework.let..impl.*Impl.update*(..)) or execution(* com.kses.*Controller.*(..))"
+	@AfterThrowing(pointcut = "execution( public * egovframework.let..web.*Controller.*(..)) or execution(* com.kses..web.*Controller.*(..))"
 		     + " and !@target(com.kses.backoffice.sym.log.annotation.NoLogging)"
 		     + " and !@annotation(com.kses.backoffice.sym.log.annotation.NoLogging))", throwing = "error")
 	public void logUpdateThrow(JoinPoint joinPoint, Exception error) throws Exception  {

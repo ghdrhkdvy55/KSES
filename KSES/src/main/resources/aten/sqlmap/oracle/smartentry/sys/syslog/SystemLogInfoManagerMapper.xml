@@ -5,27 +5,25 @@
 
 <!-- 시스템 로그 등록 -->
     <insert id="logInsertSysLog">
-        <![CDATA[
-            INSERT INTO COMTNSYSLOG 
-                ( REQUST_ID
-                  , SRVC_NM
-                  , METHOD_NM
-                  , PROCESS_SE_CODE
-                  , PROCESS_TIME
-                  , RQESTER_ID
-                  , RQESTER_IP
-                  , OCCRRNC_DE 
-                  )
-            VALUES ( #{requstId}
-                  , #{srvcNm}
-                  , #{methodNm}
-                  , #{processSeCode}
-                  , #{processTime}
-                  , #{rqesterId}
-                  , #{rqesterIp}
-                  , SYSDATE
-                  )
-        ]]>
+		INSERT INTO COMTNSYSLOG ( REQUST_ID
+			, SRVC_NM
+			, METHOD_NM
+			, PROCESS_SE_CODE
+			, PROCESS_TIME
+			, RQESTER_ID
+			, RQESTER_IP
+			, OCCRRNC_DE
+			, OCCRRNC_DATE
+		) VALUES ( #{requstId}
+			, #{srvcNm}
+			, #{methodNm}
+			, #{processSeCode}
+			, #{processTime}
+			, #{rqesterId}
+			, #{rqesterIp}
+			, SYSDATE
+			, SYSDATE
+		)
     </insert>
 
     <!-- 시스템 로그 상세 조회 -->
