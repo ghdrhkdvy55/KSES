@@ -91,12 +91,6 @@
 						<td><span id="spEmpNm"></span></td>
 					</tr>
 					<tr>
-						<th>비밀번호</th>
-						<td><input type="password" name="adminPwd"></td>
-						<th>비밀번호 확인</th>
-						<td><input type="password" name="adminPwd2"></td>
-					</tr>
-					<tr>
 						<th>부서</th>
 						<td><span id="spEmpDeptNm"></span></td>
 						<th>연락처</th>

@@ -67,6 +67,7 @@ import com.kses.backoffice.sym.log.vo.sendEnum;
 
 import egovframework.rte.fdl.property.EgovPropertyService;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -621,7 +622,7 @@ public class SmartUtil {
 	
 	
 	/**
-	 * 비밀번호를 암호화하는 기능(복호화가 되면 안되므로 SHA-256 인코딩 방식 적용)
+	 * 스피드온 비밀번호 암호화 기능(복호화가 되면 안되므로 SHA-256 인코딩 방식 적용)
 	 * 
 	 * @param data 암호화할 비밀번호
 	 * @param salt Salt
@@ -644,5 +645,26 @@ public class SmartUtil {
 		}
 		
 		return new String(Base64.encodeBase64(hashValue)); 
+	}
+	
+	/**
+	 * SPDM제공 관리자 계정 패스워드 암호화 함수
+	 * 
+	 * @param a_origin
+	 * @return
+	 */
+	public static String getEncryptSHA256(String a_origin) {
+		String encryptedSHA256 = "";
+		MessageDigest md;
+		
+		try {
+			md = MessageDigest.getInstance("SHA-256");
+			md.update(a_origin.getBytes(), 0, a_origin.length());
+			encryptedSHA256 = new BigInteger(1, md.digest()).toString(16);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+		
+		return encryptedSHA256;
 	}
 }
