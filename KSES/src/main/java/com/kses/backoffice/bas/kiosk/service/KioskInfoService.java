@@ -15,9 +15,11 @@ public interface KioskInfoService {
 	 */
     List<Map<String, Object>> selectKioskInfoList(Map<String, Object> params) throws Exception;
 	
-
-//    Map<String, Object> selectKioskInfoDetail(String ticketMchnSno) throws Exception;
-	
+    /* 상세 정보 조회 -> 장비 상세 정보를  kiosk.jsp rowData 값으로 가져와 주석처리 
+     * 
+     * Map<String, Object> selectKioskInfoDetail(String ticketMchnSno) throws Exception;
+     */
+    
     /**
      * KSES 장비 정보 수정
      * @param kioskInfo

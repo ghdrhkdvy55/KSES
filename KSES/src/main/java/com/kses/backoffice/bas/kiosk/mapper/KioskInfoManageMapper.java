@@ -13,8 +13,11 @@ import egovframework.rte.psl.dataaccess.mapper.Mapper;
 public interface KioskInfoManageMapper {
 	public List<Map<String, Object>> selectKioskInfoList(@Param("params") Map<String, Object> params);
 	
-//    public Map<String, Object> selectKioskInfoDetail(String ticketMchnSno);
-    
+    /* 상세 정보 조회 -> 장비 상세 정보를  kiosk.jsp rowData 값으로 가져와 주석처리 
+     * 
+     * public Map<String, Object> selectKioskInfoDetail(String ticketMchnSno);
+     */
+	   
     public int insertKioskInfo(KioskInfo kioskInfo);
 	
     public int updateKioskInfo(KioskInfo kioskInfo);

@@ -110,7 +110,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(KioskInfoManageCont
 		return model;
 	}
 	
-	/*
+	/* 상세 정보 조회 -> 장비 상세 정보를  kiosk.jsp rowData 값으로 가져와 주석처리 
+	 * 
 	 * @RequestMapping (value="kioskInfoDetail.do") public ModelAndView
 	 * selectKioskInfoDetail( @ModelAttribute("loginVO") LoginVO loginVO,
 	 * 

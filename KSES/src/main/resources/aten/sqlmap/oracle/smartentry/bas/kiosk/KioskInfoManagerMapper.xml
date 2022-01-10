@@ -53,7 +53,9 @@
 		ORDER BY RNUM DESC
    	</select>
 
-<!--    	<select id="selectKioskInfoDetail" resultType="lmap">
+<!--    상세 정보 조회 -> 장비 상세 정보를  kiosk.jsp rowData 값으로 가져와 주석처리 
+
+		<select id="selectKioskInfoDetail" resultType="lmap">
 			SELECT  TICKET_MCHN_SNO, CENTER_CD, FLOOR_CD, USE_YN, TICKET_MCHN_REMARK,
 			        MACH_DVSN, MACH_ETC1, MACH_ETC2,
 			        FRST_REGTER_ID, FRST_REGIST_DTM, LAST_UPDUSR_ID, LAST_UPDT_DTM
@@ -70,7 +72,8 @@
 			WHERE TICKET_MCHN_SNO = #{ticketMchnSno}
 		) TB
 		WHERE A.CENTER_CD = TB.CENTER_CD AND B.FLOOR_CD = TB.FLOOR_CD
-   	</select> -->
+   	</select> 
+-->
 	
 	<insert id="insertKioskInfo">
 		INSERT INTO TSEC_TICKET_MCHN_M

@@ -28,24 +28,24 @@
       	<div class="whiteBox searchBox">
             <div class="top">
                 <p>검색어</p>
-                <select name="searchMachDvsn" id="searchMachDvsn">
+                <select id="searchMachDvsn">
 					<option value="">선택</option>
 					<c:forEach items="${machInfo}" var="machInfo">
 						<option value="${machInfo.code}">${machInfo.codenm}</option>
 					</c:forEach>
 		        </select>
-                <select name="searchcenterNm" id="searchcenterNm">
+                <select id="searchcenterNm">
 					<option value="">지점 선택</option>
 					<c:forEach items="${centerInfo}" var="centerInfo">
 						<option value="${centerInfo.center_cd}">${centerInfo.center_nm}</option>
 					</c:forEach>
 		        </select>
-                <select id="searchCondition" name="searchCondition">
+                <select id="searchCondition">
                     <option value="ALL">전체</option>
 					<option value="TICKET_MCHN_SNO">장비Serial</option>
 					<option value="TICKET_MCHN_REMARK">위치</option>
                 </select>
-                <input type="text" name="searchKeyword" id="searchKeyword"   placeholder="검색어를 입력하새요.">
+                <input type="text" id="searchKeyword" placeholder="검색어를 입력하새요.">
             </div>
             <div class="inlineBtn ">
                 <a href="javascript:fnSearch(1);" class="grayBtn">검색</a>
