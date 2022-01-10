@@ -119,7 +119,7 @@ public class SysLogAspect {
 			sysLog.setMethodNm(joinPoint.getSignature().getName());
 			sysLog.setProcessSeCode(processSeCode);
 			sysLog.setProcessTime(processTime);
-			sysLog.setSqlParam(ParamToJson.paramToJson(sqlId));
+//			sysLog.setSqlParam(ParamToJson.paramToJson(sqlId));
 			sysLog.setRqesterIp(ipAddr);
 			sysLog.setRqesterId(userId);
 			sysLogService.logInsertSysLog(sysLog);
@@ -187,10 +187,10 @@ public class SysLogAspect {
 			sysLog.setMethodNm(joinPoint.getSignature().getName());
 			sysLog.setProcessSeCode(processSeCode);
 			sysLog.setProcessTime(processTime);
-			sysLog.setSqlParam(ParamToJson.paramToJson(sqlId));
+//			sysLog.setSqlParam(ParamToJson.paramToJson(sqlId));
 			sysLog.setRqesterIp(ipAddr);
 			sysLog.setRqesterId(userId);
-			sysLog.setMethodResult(ParamToJson.paramToJson(result));
+//			sysLog.setMethodResult(ParamToJson.paramToJson(result));
 			sysLogService.logInsertSysLog(sysLog);
 		}
 	}
@@ -241,7 +241,7 @@ public class SysLogAspect {
 			sysLog.setMethodNm(joinPoint.getSignature().getName());
 			sysLog.setProcessSeCode(processSeCode);
 			sysLog.setProcessTime(processTime);
-			sysLog.setSqlParam(ParamToJson.paramToJson(sqlId));
+//			sysLog.setSqlParam(ParamToJson.paramToJson(sqlId));
 			sysLog.setRqesterIp(ipAddr);
 			sysLog.setRqesterId(userId);
 			sysLogService.logInsertSysLog(sysLog);
