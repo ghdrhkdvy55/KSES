@@ -7,11 +7,10 @@
 			    	 SELECT	SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT,
 			    	        ROW_NUMBER() OVER (ORDER BY TB.EMP_NO DESC) AS RNUM, 
 			    	        TB.*
-					  FROM		(SELECT a.EMP_ID, a.EMP_NO, a.EMP_NM,  FN_ORGNM(a.DEPT_CD, 'DEPT') DEPT_NM, FN_ORGNM(a.GRAD_CD, 'DEPT') GRAD_NM, 
+					  FROM		(SELECT a.EMP_ID, a.EMP_NO, a.EMP_NM, a.DEPT_CD, FN_ORGNM(a.DEPT_CD, 'DEPT') DEPT_NM, FN_ORGNM(a.GRAD_CD, 'DEPT') GRAD_NM, 
 					                    FN_ORGNM(a.PSIT_CD, 'POST') PSIT_NM, 
-                                        a.USE_YN, a.EMP_CLPHN, a.EMP_TLPHN, a.EMP_EMAIL, a.ADMIN_DVSN, a.EMP_STATE, a.EMP_PIC, 
+                                        a.USE_YN, a.EMP_CLPHN, a.EMP_TLPHN, a.EMP_EMAIL, a.ADMIN_DVSN, a.EMP_STATE, a.EMP_PIC,  
                                         TO_CHAR(a.LAST_UPDT_DTM, 'YYYY-MM-DD') LAST_UPDT_DTM, a.LAST_UPDUSR_ID, b.CODE_NM
-                                        
                                  FROM   TSEH_EMP_INFO_M a , COMTCCMMNDETAILCODE b
 						         WHERE  a.EMP_STATE = b.CODE
 					                   <if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
