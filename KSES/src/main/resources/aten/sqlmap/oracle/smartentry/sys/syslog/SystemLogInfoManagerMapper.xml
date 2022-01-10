@@ -14,6 +14,8 @@
 			, RQESTER_IP
 			, OCCRRNC_DE
 			, OCCRRNC_DATE
+			, SQL_PARAM
+			, METHOD_RESULT
 		) VALUES ( #{requstId}
 			, #{srvcNm}
 			, #{methodNm}
@@ -23,6 +25,8 @@
 			, #{rqesterIp}
 			, SYSDATE
 			, SYSDATE
+			, #{sqlParam}
+			, #{methodResult}
 		)
     </insert>
 

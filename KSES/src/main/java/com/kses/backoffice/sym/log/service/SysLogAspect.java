@@ -156,7 +156,7 @@ public class SysLogAspect {
 					} catch (JsonProcessingException e) {
 						log.info(" (" + joinPoint.getSignature().getName() + ") Controller Parameters: " + arg);
 					}
-			});
+				});
 			
 			stopWatch.start();
 			Object[] methodArgs = joinPoint.getArgs();
@@ -190,6 +190,7 @@ public class SysLogAspect {
 			sysLog.setSqlParam(ParamToJson.paramToJson(sqlId));
 			sysLog.setRqesterIp(ipAddr);
 			sysLog.setRqesterId(userId);
+			sysLog.setMethodResult(ParamToJson.paramToJson(result));
 			sysLogService.logInsertSysLog(sysLog);
 		}
 	}
