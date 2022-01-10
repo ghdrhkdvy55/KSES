@@ -95,9 +95,9 @@ public class MessageGroupInfoController {
 		switch (loginVO.getAuthorCd()) {
 			case "ROLE_ADMIN":
 			case "ROLE_SYSTEM":
-				model.addObject("centerInfo", centerInfoManageService.selectCenterInfoDetail(loginVO.getCenterCd()));
 				break;
 			default:
+				model.addObject("centerInfo", centerInfoManageService.selectCenterInfoDetail(loginVO.getCenterCd()));
 		}
 		model.addObject("loginVO", loginVO);
 		model.addObject("centerCombo", centerInfoManageService.selectCenterInfoComboList());

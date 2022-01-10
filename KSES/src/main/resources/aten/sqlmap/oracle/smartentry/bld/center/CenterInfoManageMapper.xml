@@ -65,7 +65,7 @@
 			CENTER_PILOT_YN, CENTER_SPEED_CD, CENTER_STAND_YN, CENTER_STAND_MAX, CENTER_ENTRY_PAY_COST,
 			CENTER_RBM_CD
 		 FROM TSEB_CENTER_INFO_M
-		 WHERE CENTER_CD = #{centerCd}		  
+		 WHERE CENTER_CD = #{centerCd, jdbcType=VARCHAR}		  
     </select>
     
 	<select id="selectCenterInfoComboList" resultType="lmap">
