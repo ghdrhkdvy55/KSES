@@ -26,12 +26,12 @@ import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.cmmn.exception.EgovBizException;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/backoffice/bas")
 public class AuthInfoManageController {
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(AuthInfoManageController.class);
 	
     @Autowired
 	protected EgovMessageSource egovMessageSource;
@@ -53,8 +53,9 @@ public class AuthInfoManageController {
 	 * @return
 	 * @throws Exception
 	 */
+	@NoLogging
 	@RequestMapping(value="authList.do", method = RequestMethod.GET)
-	public ModelAndView selectHolyInfoList() throws Exception {
+	public ModelAndView viewAuthList() throws Exception {
 		return new ModelAndView("/backoffice/bas/authList");
 	}
 	
@@ -72,7 +73,7 @@ public class AuthInfoManageController {
 		  
 	    searchVO.put("pageSize", propertiesService.getInt("pageSize"));
 	  
-	    LOGGER.info("pageUnit:" + pageUnit);
+	    log.info("pageUnit:" + pageUnit);
 	  
    	    PaginationInfo paginationInfo = new PaginationInfo();
 	    paginationInfo.setCurrentPageNo( Integer.parseInt(SmartUtil.NVL(searchVO.get("pageIndex"),"1")));
@@ -143,7 +144,7 @@ public class AuthInfoManageController {
 	 */
     @NoLogging
     @RequestMapping (value="authorIDCheck.do", method = RequestMethod.GET)
-    public ModelAndView selectIdCheck(@RequestParam("authorCode") String authorCode) throws Exception {
+    public ModelAndView authorIDCheck(@RequestParam("authorCode") String authorCode) throws Exception {
     	ModelAndView model = new ModelAndView(Globals.JSONVIEW);
     	
     	int ret = uniService.selectIdDoubleCheck("AUTHOR_CODE", "COMTNAUTHORINFO", "AUTHOR_CODE = ["+ authorCode + "[");

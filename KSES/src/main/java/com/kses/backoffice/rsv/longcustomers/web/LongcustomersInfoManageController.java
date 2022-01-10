@@ -5,8 +5,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -19,21 +17,20 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.kses.backoffice.rsv.longcustomers.service.LongcustomersInfoService;
 import com.kses.backoffice.rsv.longcustomers.vo.LongcustomersInfo;
+import com.kses.backoffice.sym.log.annotation.NoLogging;
 import com.kses.backoffice.sym.log.vo.LoginLog;
-import com.kses.backoffice.sym.log.web.InterfaceController;
 import com.kses.backoffice.util.SmartUtil;
 
 import egovframework.com.cmm.EgovMessageSource;
-
 import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/backoffice/rsv")
 public class LongcustomersInfoManageController {
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(InterfaceController.class);
 	
 	@Autowired
 	private LongcustomersInfoService longcustomerService;
@@ -44,11 +41,10 @@ public class LongcustomersInfoManageController {
 	@Autowired
 	protected EgovMessageSource egovMessageSource;
 	
-	@RequestMapping(value = "longcustomersList.do")
-	public ModelAndView selectLoginLogInf(@ModelAttribute("searchVO") LoginLog loginLog) throws Exception {
-		
-		ModelAndView model = new ModelAndView("/backoffice/rsv/longcustomersList");
-		return model;
+	@NoLogging
+	@RequestMapping(value = "longcustomersList.do", method = RequestMethod.GET)
+	public ModelAndView viewLongcustomersList(@ModelAttribute("searchVO") LoginLog loginLog) throws Exception {
+		return new ModelAndView("/backoffice/rsv/longcustomersList");
 	}
 
 	@RequestMapping(value = "longCustomerListsAjax.do")
@@ -87,7 +83,7 @@ public class LongcustomersInfoManageController {
 		}catch (Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
-			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
+			log.info("e:" + e.toString() + ":" + lineNumber);
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 		}

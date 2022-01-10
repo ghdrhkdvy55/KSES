@@ -6,19 +6,19 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kses.backoffice.bas.code.service.EgovCcmCmmnDetailCodeManageService;
 import com.kses.backoffice.rsv.black.service.BlackUserInfoManageService;
 import com.kses.backoffice.rsv.black.vo.BlackUserInfo;
+import com.kses.backoffice.sym.log.annotation.NoLogging;
 import com.kses.backoffice.util.SmartUtil;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -27,13 +27,13 @@ import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/backoffice/rsv")
 public class BlackUserInfoManageController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BlackUserInfoManageController.class);
-    
     @Autowired
     EgovMessageSource egovMessageSource;
 	
@@ -46,8 +46,9 @@ public class BlackUserInfoManageController {
 	@Autowired
 	BlackUserInfoManageService blackUserService;
 
-	@RequestMapping(value="blackList.do")
-	public ModelAndView selectBlackUserInfoList(	@ModelAttribute("loginVO") LoginVO loginVO, 
+	@NoLogging
+	@RequestMapping(value="blackList.do", method = RequestMethod.GET)
+	public ModelAndView viewBlackList(	@ModelAttribute("loginVO") LoginVO loginVO, 
 													@ModelAttribute("searchVO") BlackUserInfo searchVO, 
 													HttpServletRequest request, 
 													BindingResult bindingResult) throws Exception {
@@ -70,7 +71,7 @@ public class BlackUserInfoManageController {
 			
 		    model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		} catch(Exception e) {
-			LOGGER.error("selectBlackUserInfoList : " + e.toString());
+			log.error("selectBlackUserInfoList : " + e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg")); 
 		}
@@ -89,7 +90,7 @@ public class BlackUserInfoManageController {
 			  
 			  searchVO.put("pageSize", propertiesService.getInt("pageSize"));
 			  
-			  LOGGER.debug("------------------------pageUnit : " + pageUnit);
+			  log.debug("------------------------pageUnit : " + pageUnit);
 			  
 			  //Paging
 		   	  PaginationInfo paginationInfo = new PaginationInfo();
@@ -101,23 +102,23 @@ public class BlackUserInfoManageController {
 			  searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
 			  searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
 			  
-			  LOGGER.debug("pageUnit End");
+			  log.debug("pageUnit End");
 			  List<Map<String, Object>> list = blackUserService.selectBlackUserInfoManageListByPagination(searchVO);
-			  LOGGER.debug("[-------------------------------------------list:" + list.size() + "------]");
+			  log.debug("[-------------------------------------------list:" + list.size() + "------]");
 		      model.addObject(Globals.JSON_RETURN_RESULTLISR, list);
 		      model.addObject(Globals.STATUS_REGINFO, searchVO);
 		      int totCnt = list.size() > 0 ? Integer.valueOf( list.get(0).get("total_record_count").toString()) : 0;
 		      
-		      LOGGER.debug("totCnt:" + totCnt);
+		      log.debug("totCnt:" + totCnt);
 		      
 		      paginationInfo.setTotalRecordCount(totCnt);
 		      model.addObject("paginationInfo", paginationInfo);
 		      model.addObject("totalCnt", totCnt);
 		      
 		} catch(Exception e) {
-			LOGGER.debug("---------------------------------------");
+			log.debug("---------------------------------------");
 			StackTraceElement[] ste = e.getStackTrace();
-			LOGGER.error(e.toString() + ":" + ste[0].getLineNumber());
+			log.error(e.toString() + ":" + ste[0].getLineNumber());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));	
 		}

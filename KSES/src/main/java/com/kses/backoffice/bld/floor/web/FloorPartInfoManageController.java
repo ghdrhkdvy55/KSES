@@ -6,12 +6,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.LoginVO;
-import egovframework.com.cmm.service.Globals;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -28,19 +22,20 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.kses.backoffice.bld.floor.service.FloorPartInfoManageService;
 import com.kses.backoffice.bld.floor.vo.FloorPartInfo;
-import com.kses.backoffice.bld.season.vo.SeasonSeatInfo;
-import com.kses.backoffice.sym.log.annotation.NoLogging;
 import com.kses.backoffice.util.service.UniSelectInfoManageService;
 import com.kses.backoffice.util.service.fileService;
 
+import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.LoginVO;
+import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/backoffice/bld")
 public class FloorPartInfoManageController {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(FloorPartInfoManageController.class);
 	
 	@Autowired
 	protected EgovMessageSource egovMessageSource;
@@ -73,7 +68,7 @@ public class FloorPartInfoManageController {
 		    model.addObject(Globals.PAGE_TOTALCNT, totCnt);
 		    model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		} catch(Exception e) {
-			LOGGER.info(e.toString());
+			log.info(e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.delete"));	
 		}
@@ -98,7 +93,7 @@ public class FloorPartInfoManageController {
 			model.addObject(Globals.STATUS_REGINFO, partService.selectFloorPartInfoDetail(partCd));
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		} catch(Exception e) {
-			LOGGER.info(e.toString());
+			log.info(e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 		}
@@ -122,7 +117,7 @@ public class FloorPartInfoManageController {
 			model.addObject(Globals.JSON_RETURN_RESULTLISR, partService.selectFloorPartInfoManageCombo(floorCd));
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		} catch(Exception e) {
-			LOGGER.info(e.toString());
+			log.info(e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 		}
@@ -166,11 +161,11 @@ public class FloorPartInfoManageController {
 				throw new Exception();
 			}
 		}catch (Exception e){
-			LOGGER.error("floorUpdate ERROR : " + e.toString());
+			log.error("floorUpdate ERROR : " + e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.insert"));	
 		}	
-		LOGGER.debug("model:" + model.toString());
+		log.debug("model:" + model.toString());
 		return model;
 	}
 	
@@ -200,7 +195,7 @@ public class FloorPartInfoManageController {
 		    	throw new Exception();		    	  
 		    }
 		}catch (Exception e){
-			LOGGER.info(e.toString());
+			log.info(e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.delete"));			
 		}		
@@ -222,7 +217,7 @@ public class FloorPartInfoManageController {
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
             model.addObject("resutlCnt", result);
 		}catch(Exception e) {
-			LOGGER.info(e.toString());
+			log.info(e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.update"));
 		}

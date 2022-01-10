@@ -4,38 +4,35 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kses.backoffice.bas.code.service.EgovCcmCmmnDetailCodeManageService;
-import com.kses.backoffice.bas.holy.vo.HolyInfo;
 import com.kses.backoffice.rsv.userInfo.service.UserInfoService;
 import com.kses.backoffice.rsv.userInfo.vo.User;
+import com.kses.backoffice.sym.log.annotation.NoLogging;
 import com.kses.backoffice.util.SmartUtil;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.Globals;
+import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
-import egovframework.rte.fdl.property.EgovPropertyService;
+import lombok.extern.slf4j.Slf4j;
 
-
+@Slf4j
 @RestController
 @RequestMapping("/backoffice/rsv")
 public class UserInfoManageController {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserInfoManageController.class);
     
     @Autowired
     EgovMessageSource egovMessageSource;
@@ -49,32 +46,20 @@ public class UserInfoManageController {
 	@Autowired
 	private EgovCcmCmmnDetailCodeManageService cmmnDetailService;
 
-	@RequestMapping(value="userList.do")
-	public ModelAndView selectBlackUserInfoList(	@ModelAttribute("loginVO") LoginVO loginVO,
-													HttpServletRequest request, 
-													BindingResult bindingResult) throws Exception {
+	/**
+	 * 고객정보관리 화면
+	 * @return
+	 * @throws Exception
+	 */
+	@NoLogging
+	@RequestMapping(value="userList.do", method = RequestMethod.GET)
+	public ModelAndView viewUserList() throws Exception {
+		ModelAndView model = new ModelAndView("/backoffice/rsv/userList");
 		
-		ModelAndView model = new ModelAndView("/backoffice/rsv/userList"); 
-		try {
-			Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-			
-			if(!isAuthenticated) {
-				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-				model.setViewName("/backoffice/login");
-				return model;	
-			} else {
-		       HttpSession httpSession = request.getSession(true);
-		       loginVO = (LoginVO)httpSession.getAttribute("LoginVO");
-			}			
-			model.addObject("vacntnRound", cmmnDetailService.selectCmmnDetailCombo("VACNTN_ROUND"));
-			model.addObject("vacntnDvsn", cmmnDetailService.selectCmmnDetailCombo("VACNTN_DVSN"));
-		    model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-		} catch(Exception e) {
-			LOGGER.error("selectVaccineInfoList : " + e.toString());
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg")); 
-		}
+		model.addObject("vacntnRound", cmmnDetailService.selectCmmnDetailCombo("VACNTN_ROUND"));
+		model.addObject("vacntnDvsn", cmmnDetailService.selectCmmnDetailCombo("VACNTN_DVSN"));
+	    model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+	    
 		return model;	
 	}
 	
@@ -91,7 +76,7 @@ public class UserInfoManageController {
 			  
 		    searchVO.put("pageSize", propertiesService.getInt("pageSize"));
 		  
-		    LOGGER.info("pageUnit:" + pageUnit);
+		    log.info("pageUnit:" + pageUnit);
 		                
 	   	    PaginationInfo paginationInfo = new PaginationInfo();
 		    paginationInfo.setCurrentPageNo( Integer.parseInt(SmartUtil.NVL(searchVO.get("pageIndex"), "1") ) );
@@ -112,7 +97,7 @@ public class UserInfoManageController {
 		    model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);	    
 		  
 		}catch(Exception e) {
-			LOGGER.info(e.toString());
+			log.info(e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));	
 		}
@@ -137,7 +122,7 @@ public class UserInfoManageController {
 	    	model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			model.addObject(Globals.STATUS_REGINFO, userService.selectUserDetail(userId));
 	    } catch(Exception e) {
-			LOGGER.info(e.toString());
+	    	log.info(e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 	    }

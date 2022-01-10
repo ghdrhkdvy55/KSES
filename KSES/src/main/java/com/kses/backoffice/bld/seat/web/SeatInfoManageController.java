@@ -5,11 +5,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -18,40 +17,36 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-import egovframework.com.cmm.LoginVO;
-import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.Globals;
-import com.kses.backoffice.bas.code.service.EgovCcmCmmnDetailCodeManageService;
-import egovframework.rte.fdl.property.EgovPropertyService;
-import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
-import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
-
 import com.google.gson.reflect.TypeToken;
-import com.kses.backoffice.mng.employee.service.DeptInfoManageService;
-//import com.kses.backoffice.rsv.msg.service.MessageInfoManageService;
-import com.kses.backoffice.sym.log.annotation.NoLogging;
+import com.kses.backoffice.bas.code.service.EgovCcmCmmnDetailCodeManageService;
 import com.kses.backoffice.bld.center.service.CenterInfoManageService;
 import com.kses.backoffice.bld.floor.service.FloorInfoManageService;
 import com.kses.backoffice.bld.floor.service.FloorPartInfoManageService;
 import com.kses.backoffice.bld.seat.service.QrcpdeInfoManageServie;
 import com.kses.backoffice.bld.seat.service.SeatInfoManageService;
-import com.kses.backoffice.bld.seat.vo.SeatInfo;
 import com.kses.backoffice.bld.seat.vo.QrcodeInfo;
+import com.kses.backoffice.bld.seat.vo.SeatInfo;
+import com.kses.backoffice.mng.employee.service.DeptInfoManageService;
+//import com.kses.backoffice.rsv.msg.service.MessageInfoManageService;
+import com.kses.backoffice.sym.log.annotation.NoLogging;
 import com.kses.backoffice.util.SmartUtil;
 
-import javax.servlet.ServletContext;
+import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.LoginVO;
+import egovframework.com.cmm.service.Globals;
+import egovframework.rte.fdl.property.EgovPropertyService;
+import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
+import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/backoffice/bld")
 public class SeatInfoManageController {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(SeatInfoManageController.class);
 	
 	@Autowired
 	protected EgovMessageSource egovMessageSource;
@@ -86,31 +81,20 @@ public class SeatInfoManageController {
 	@Autowired
     ServletContext servletContext;
 	
-	@RequestMapping(value="seatList.do")
-	public ModelAndView selectCenterInfoList(@ModelAttribute("loginVO") LoginVO loginVO
-															, HttpServletRequest request
-															, BindingResult bindingResult	) throws Exception {
-		
-		
-        ModelAndView model = new ModelAndView(); 
-        Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-        
-        if(!isAuthenticated) {
-        	model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-        	model.setViewName("/backoffice/login");
-        	return model;	
-        } else {
-        	HttpSession httpSession = request.getSession(true);
-        	loginVO = (LoginVO)httpSession.getAttribute("LoginVO");
-        }
-		  
-        model.addObject("centerList", centerInfoManageService.selectCenterInfoComboList()); 
+	/**
+	 * 좌석관리 화면
+	 * @return
+	 * @throws Exception
+	 */
+	@NoLogging
+	@RequestMapping(value="seatList.do", method = RequestMethod.GET)
+	public ModelAndView viwSeatList() throws Exception {
+		ModelAndView model = new ModelAndView("/backoffice/bld/seatList");
+		model.addObject("centerList", centerInfoManageService.selectCenterInfoComboList()); 
         model.addObject("seatClass", cmmnDetailService.selectCmmnDetailCombo("SEAT_CLASS"));
         model.addObject("seatDvsn", cmmnDetailService.selectCmmnDetailCombo("SEAT_DVSN"));
         model.addObject("payDvsn", cmmnDetailService.selectCmmnDetailCombo("PAY_DVSN"));	      
-        model.setViewName("/backoffice/bld/seatList");
-        model.addObject("loginVO" , loginVO);
-        return model;	
+        return model;
 	}
 	
 	//좌석 리스트 보여 주기 
@@ -128,7 +112,7 @@ public class SeatInfoManageController {
 			  
 		    searchVO.put("pageSize", propertiesService.getInt("pageSize"));
 		  
-		    LOGGER.info("pageUnit:" + pageUnit);
+		    log.info("pageUnit:" + pageUnit);
 		  
 	   	    PaginationInfo paginationInfo = new PaginationInfo();
 		    paginationInfo.setCurrentPageNo(Integer.parseInt(SmartUtil.NVL(searchVO.get("pageIndex"), "1")));
@@ -156,7 +140,7 @@ public class SeatInfoManageController {
 		    
 		    //지도 이미지 
 		    if (searchVO.get("searchFloorCd") != null ) {
-		    	LOGGER.info(searchVO.get("searchPartCd").toString());
+		    	log.info(searchVO.get("searchPartCd").toString());
 		    	Map<String, Object> mapInfo = "0".equals((String)searchVO.get("searchPartCd")) ? floorService.selectFloorInfoDetail(searchVO.get("searchFloorCd").toString()) : partService.selectFloorPartInfoDetail(searchVO.get("searchPartCd").toString());
 		    	model.addObject("seatMapInfo", mapInfo);
 		    }
@@ -164,7 +148,7 @@ public class SeatInfoManageController {
 		    model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 
 		} catch(Exception e) {
-			LOGGER.info(e.toString());
+			log.info(e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));	
 		}
@@ -189,7 +173,7 @@ public class SeatInfoManageController {
 	    	model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			model.addObject(Globals.STATUS_REGINFO, seatService.selectSeatInfoDetail(vo.getSeatCd()));
 	    } catch(Exception e) {
-			LOGGER.info(e.toString());
+	    	log.info(e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 	    }
@@ -271,7 +255,7 @@ public class SeatInfoManageController {
 //	    		throw new Exception();		    	  
 //	    	}
 		} catch (Exception e) {
-			LOGGER.info(e.toString());
+			log.info(e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.delete"));			
 		}		
@@ -329,12 +313,12 @@ public class SeatInfoManageController {
 	    		} 	
 	    	}
 	    	
-	    	LOGGER.info("QR CreatCount : " + ret);
+	    	log.info("QR CreatCount : " + ret);
 	    	model.addObject(Globals.STATUS_MESSAGE, "QR 코드가 정상적으로 생성 되었습니다.");
 	    	model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			
 	    } catch(Exception e) {
-			LOGGER.info(e.toString());
+	    	log.info(e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 	    }
@@ -369,7 +353,7 @@ public class SeatInfoManageController {
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
             model.addObject("resutlCnt", result);
 		}catch(Exception e) {
-			LOGGER.info(e.toString());
+			log.info(e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.update"));
 		}
@@ -405,7 +389,7 @@ public class SeatInfoManageController {
             model.addObject("resutlCnt", result);
             
 	    } catch(Exception e) {
-			LOGGER.info(e.toString());
+	    	log.info(e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.insert"));
 	    }
@@ -448,7 +432,7 @@ public class SeatInfoManageController {
 			  
 		  }catch(Exception e) {
 			  StackTraceElement[] ste = e.getStackTrace();
-			  LOGGER.info(e.toString() + ':' + ste[0].getLineNumber());
+			  log.info(e.toString() + ':' + ste[0].getLineNumber());
 			  model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			  model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));	
 		  }

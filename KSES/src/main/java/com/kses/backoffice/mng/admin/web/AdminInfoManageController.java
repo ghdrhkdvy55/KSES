@@ -3,11 +3,7 @@ package com.kses.backoffice.mng.admin.web;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,6 +19,7 @@ import com.kses.backoffice.mng.admin.service.AdminInfoService;
 import com.kses.backoffice.mng.admin.vo.AdminInfo;
 import com.kses.backoffice.mng.employee.service.DeptInfoManageService;
 import com.kses.backoffice.mng.employee.service.PositionInfoManageService;
+import com.kses.backoffice.sym.log.annotation.NoLogging;
 import com.kses.backoffice.util.SmartUtil;
 import com.kses.backoffice.util.service.UniSelectInfoManageService;
 
@@ -36,8 +33,6 @@ import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 @RestController
 @RequestMapping("/backoffice/mng")
 public class AdminInfoManageController {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(AdminInfoManageController.class);
 	
 	@Autowired
 	private AdminInfoService adminInfoService;
@@ -69,8 +64,9 @@ public class AdminInfoManageController {
 	 * @return
 	 * @throws Exception
 	 */
+	@NoLogging
 	@RequestMapping(value="adminList.do", method = RequestMethod.GET)
-	public ModelAndView selectAdminInfoList(@ModelAttribute("AdminInfo") AdminInfo adminInfo) throws Exception {
+	public ModelAndView viewAdminList(@ModelAttribute("AdminInfo") AdminInfo adminInfo) throws Exception {
 		ModelAndView model = new ModelAndView("/backoffice/mng/adminList");
 		model.addObject("authorCd", authoService.selectAuthInfoComboList());
 		model.addObject("dept", deptService.selectDeptInfoComboList());

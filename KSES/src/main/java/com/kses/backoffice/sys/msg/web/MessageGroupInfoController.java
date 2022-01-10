@@ -7,8 +7,6 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -26,6 +24,7 @@ import com.kses.backoffice.bas.code.service.EgovCcmCmmnDetailCodeManageService;
 import com.kses.backoffice.bld.center.service.CenterInfoManageService;
 import com.kses.backoffice.cus.usr.service.UserInfoManageService;
 import com.kses.backoffice.mng.employee.service.EmpInfoManageService;
+import com.kses.backoffice.sym.log.annotation.NoLogging;
 import com.kses.backoffice.sys.msg.service.MessageGroupInfoManageService;
 import com.kses.backoffice.sys.msg.service.MessageGroupUserInfoManageService;
 import com.kses.backoffice.sys.msg.service.MessageTemInfoManageService;
@@ -39,21 +38,15 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.Globals;
 import egovframework.com.cmm.util.EgovUserDetailsHelper;
-import egovframework.let.utl.fcc.service.EgovStringUtil;
 import egovframework.rte.fdl.idgnr.EgovIdGnrService;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
+import lombok.extern.slf4j.Slf4j;
 
-
-
-
-
+@Slf4j
 @RestController
 @RequestMapping("/backoffice/sys")
 public class MessageGroupInfoController {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(MessageGroupInfoController.class);
-	
 	
 	@Autowired
 	protected EgovMessageSource egovMessageSource;
@@ -88,37 +81,30 @@ public class MessageGroupInfoController {
 	@Autowired
 	protected UserInfoManageService userService;
 	
-	@RequestMapping(value="msgState.do")
-	public ModelAndView  selectMsgInfoManageListByPagination(@ModelAttribute("loginVO") LoginVO loginVO
-															, HttpServletRequest request
-															, BindingResult bindingResult) throws Exception {
-		
+	/**
+	 * 메시지 전송 관리 화면
+	 * @return
+	 * @throws Exception
+	 */
+	@NoLogging
+	@RequestMapping(value="msgState.do", method = RequestMethod.GET)
+	public ModelAndView viewMsgState() throws Exception {
 		ModelAndView model = new ModelAndView("/backoffice/sys/msgState");
 		
-		try{
-			  Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-		      if(!isAuthenticated) {
-	    	    model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-	    	    model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
-	    	    model.setViewName("backoffice/login");
-	    		return model;
-		      }
-		      loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
-		      //내용 수정 
-		      model.addObject("centerCombo", centerInfoManageService.selectCenterInfoComboList());
-		      
-		      
-		      model.addObject("loginVO" , loginVO);
-		      if (!loginVO.getAuthorCd().equals("ROLE_ADMIN") && !loginVO.getAuthorCd().equals("ROLE_SYSTEM"))
-		    	  model.addObject("centerInfo" , centerInfoManageService.selectCenterInfoDetail(loginVO.getCenterCd()));
-		      
-		}catch (Exception e){
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject("message", egovMessageSource.getMessage("fail.common.list"));
-			LOGGER.info(e.toString());
-		}			   
+		LoginVO loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
+		switch (loginVO.getAuthorCd()) {
+			case "ROLE_ADMIN":
+			case "ROLE_SYSTEM":
+				model.addObject("centerInfo", centerInfoManageService.selectCenterInfoDetail(loginVO.getCenterCd()));
+				break;
+			default:
+		}
+		model.addObject("loginVO", loginVO);
+		model.addObject("centerCombo", centerInfoManageService.selectCenterInfoComboList());
+		
 		return model;	
 	}
+	
 	@RequestMapping(value="msgGroupList.do")
 	public ModelAndView  selectMsgGroupListAjaxInfo(@ModelAttribute("loginVO") LoginVO loginVO
 			                                        , @RequestBody Map<String, Object> searchVO
@@ -163,7 +149,7 @@ public class MessageGroupInfoController {
 		}catch (Exception e){
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.list"));
-			LOGGER.info(e.toString());
+			log.info(e.toString());
 		}			   
 		return model;	
 	}
@@ -178,7 +164,7 @@ public class MessageGroupInfoController {
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			model.addObject(Globals.STATUS_REGINFO, msgGroupService.selectMessageGroupDetail(groupCode));		    	 
 		} catch (Exception e) {
-			LOGGER.info(e.toString());
+			log.info(e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));			
 		}	
@@ -206,7 +192,7 @@ public class MessageGroupInfoController {
 				 info.setGroupCode(egovGroupCodeGnr.getNextStringId());
 			 
 			 int ret = msgGroupService.updateMessageGroupInfo(info); 
-			 LOGGER.debug("ret:"  + ret);
+			 log.debug("ret:"  + ret);
 			 meesage = (info.getMode().equals(Globals.SAVE_MODE_INSERT)) ? "sucess.common.insert" : "sucess.common.update";
 			 if (ret > 0){
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
@@ -217,7 +203,7 @@ public class MessageGroupInfoController {
 		} catch (Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
-			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
+			log.info("e:" + e.toString() + ":" + lineNumber);
 			meesage = (info.getMode().equals(Globals.SAVE_MODE_INSERT)) ? "fail.common.insert" : "fail.common.update";
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));			
@@ -247,7 +233,7 @@ public class MessageGroupInfoController {
 				throw new Exception();		
 			}
 		} catch (Exception e){
-			LOGGER.info(e.toString());
+			log.info(e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.delete"));			
 		}	
@@ -279,7 +265,7 @@ public class MessageGroupInfoController {
 			List<Map<String, Object>> list = null;
 			String searchCondition = "";
 			
-			LOGGER.debug("searchUserCondition" + searchVO.get("searchUserCondition").toString());
+			log.debug("searchUserCondition" + searchVO.get("searchUserCondition").toString());
 			
 			if (searchVO.get("searchUserGubun").toString().equals("EMP")) {
 
@@ -311,7 +297,7 @@ public class MessageGroupInfoController {
 					    	  searchCondition = "user_phone";
 					    	  break;
 				  }
-		    	  LOGGER.debug("searchVO:" + searchVO.get("searchCondition") + ":" + searchCondition);
+		    	 log.debug("searchVO:" + searchVO.get("searchCondition") + ":" + searchCondition);
 		    	  searchVO.put("searchCondition", searchCondition);
 				  searchVO.put("searchKeyword", searchVO.get("searchUserKeyworkd").toString());
 				  list = 	userService.selectUserInfoListPage(searchVO);	
@@ -329,7 +315,7 @@ public class MessageGroupInfoController {
 		}catch (Exception e){
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.list"));
-			LOGGER.info(e.toString());
+			log.info(e.toString());
 		}			   
 		return model;	
 	}
@@ -375,7 +361,7 @@ public class MessageGroupInfoController {
 		}catch (Exception e){
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.list"));
-			LOGGER.info(e.toString());
+			log.info(e.toString());
 		}			   
 		return model;	
 	}
@@ -412,7 +398,7 @@ public class MessageGroupInfoController {
 		} catch (Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
-			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
+			log.info("e:" + e.toString() + ":" + lineNumber);
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.insert"));			
 		}
@@ -453,7 +439,7 @@ public class MessageGroupInfoController {
 		} catch (Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
-			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
+			log.info("e:" + e.toString() + ":" + lineNumber);
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.insert"));			
 		}
@@ -480,7 +466,7 @@ public class MessageGroupInfoController {
 				throw new Exception();		
 			}
 		} catch (Exception e){
-			LOGGER.info(e.toString());
+			log.info(e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.delete"));			
 		}	
@@ -517,7 +503,7 @@ public class MessageGroupInfoController {
 			searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
 			searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
 			  
-			LOGGER.debug("searchVO" + searchVO.get("adminYn"));
+			log.debug("searchVO" + searchVO.get("adminYn"));
 			
 			List<Map<String, Object>> list =  msgTemplateSerice.selectMessageTemplateInfoList(searchVO);
 			int totCnt = list.size() > 0 ?  Integer.valueOf( list.get(0).get("total_record_count").toString()) : 0;
@@ -531,7 +517,7 @@ public class MessageGroupInfoController {
 		}catch (Exception e){
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.list"));
-			LOGGER.info(e.toString());
+			log.info(e.toString());
 		}			   
 		return model;	
 	}
@@ -546,7 +532,7 @@ public class MessageGroupInfoController {
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			model.addObject(Globals.STATUS_REGINFO, msgTemplateSerice.selectMessageTemplateDetail(tempSeq));		    	 
 		} catch (Exception e) {
-			LOGGER.info(e.toString());
+			log.info(e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));			
 		}	
@@ -572,7 +558,7 @@ public class MessageGroupInfoController {
 			
 			 
 			 int ret = msgTemplateSerice.updateMessageTemplateInfo(info); 
-			 LOGGER.debug("ret:"  + ret);
+			 log.debug("ret:"  + ret);
 			 meesage = (info.getMode().equals(Globals.SAVE_MODE_INSERT)) ? "sucess.common.insert" : "sucess.common.update";
 			 if (ret > 0){
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
@@ -583,7 +569,7 @@ public class MessageGroupInfoController {
 		} catch (Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
-			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
+			log.info("e:" + e.toString() + ":" + lineNumber);
 			meesage = (info.getMode().equals(Globals.SAVE_MODE_INSERT)) ? "fail.common.insert" : "fail.common.update";
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));			
@@ -612,7 +598,7 @@ public class MessageGroupInfoController {
 				throw new Exception();		
 			}
 		} catch (Exception e){
-			LOGGER.info(e.toString());
+			log.info(e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.delete"));			
 		}	

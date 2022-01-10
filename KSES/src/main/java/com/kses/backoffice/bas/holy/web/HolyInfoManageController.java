@@ -61,8 +61,9 @@ public class HolyInfoManageController {
 	 * @return
 	 * @throws Exception
 	 */
+	@NoLogging
 	@RequestMapping(value="holyList.do", method = RequestMethod.GET)
-	public ModelAndView selectHolyInfoList() throws Exception {
+	public ModelAndView viewHolyList() throws Exception {
 		return new ModelAndView("/backoffice/bas/holyList");
 	}
 	
@@ -147,7 +148,7 @@ public class HolyInfoManageController {
 	 */
 	@NoLogging
     @RequestMapping (value="holyDtCheck.do", method = RequestMethod.GET)
-    public ModelAndView selectIdCheck(@RequestParam("holyDt") String holyDt) throws Exception {
+    public ModelAndView holyDtCheck(@RequestParam("holyDt") String holyDt) throws Exception {
     	ModelAndView model = new ModelAndView(Globals.JSONVIEW);
     	
     	int ret = uniService.selectIdDoubleCheck("HOLY_DT", "TSEC_HOLY_INFO_M", "HOLY_DT = ["+ holyDt + "[");

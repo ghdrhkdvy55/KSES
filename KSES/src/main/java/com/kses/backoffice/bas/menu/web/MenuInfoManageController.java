@@ -62,8 +62,15 @@ public class MenuInfoManageController {
 	@Resource(name = "egovMessageSource")
 	EgovMessageSource egovMessageSource;
 	
+	/**
+	 * 메뉴관리 화면
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@NoLogging
 	@RequestMapping(value = "menuList.do", method = RequestMethod.GET)
-	public ModelAndView selectMenuInfoList(ModelMap model) throws Exception {
+	public ModelAndView viewMenuList(ModelMap model) throws Exception {
 		return new ModelAndView("/backoffice/bas/menuList");
 	}
 	
@@ -194,7 +201,7 @@ public class MenuInfoManageController {
 	 */
 	@NoLogging
 	@RequestMapping(value = "menuNoCheck.do", method = RequestMethod.GET)
-	public ModelAndView selectIdCheck(@RequestParam("menuNo") String menuNo) throws Exception {
+	public ModelAndView menuNoCheck(@RequestParam("menuNo") String menuNo) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		
 		int ret = uniService.selectIdDoubleCheck("MENU_NO", "COMTNMENUINFO", "MENU_NO = [" + menuNo + "[");

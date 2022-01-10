@@ -7,23 +7,18 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.LoginVO;
-import egovframework.com.cmm.service.Globals;
-import com.kses.backoffice.bas.code.service.EgovCcmCmmnDetailCodeManageService;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.kses.backoffice.bas.code.service.EgovCcmCmmnDetailCodeManageService;
 import com.kses.backoffice.bld.center.service.CenterInfoManageService;
 import com.kses.backoffice.bld.floor.service.FloorInfoManageService;
 import com.kses.backoffice.bld.floor.service.FloorPartInfoManageService;
@@ -33,15 +28,18 @@ import com.kses.backoffice.util.SmartUtil;
 import com.kses.backoffice.util.service.UniSelectInfoManageService;
 import com.kses.backoffice.util.service.fileService;
 
+import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.LoginVO;
+import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/backoffice/bld")
 public class FloorInfoManageController {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(FloorInfoManageController.class);
 	
 	@Autowired
 	protected EgovMessageSource egovMessageSource;
@@ -71,51 +69,35 @@ public class FloorInfoManageController {
 	@Autowired
 	private FloorPartInfoManageService partService;
 	
-	@RequestMapping (value="floorList.do")
-	public ModelAndView selectFloorInfoList(	@ModelAttribute("loginVO") LoginVO loginVO, 
-												@RequestParam Map<String, String> param,
-												HttpServletRequest request,
-												BindingResult result) throws Exception {
-		
+	/**
+	 * 층관리 화면
+	 * @param param
+	 * @return
+	 * @throws Exception
+	 */
+	@NoLogging
+	@RequestMapping (value="floorList.do", method = RequestMethod.GET)
+	public ModelAndView viewFloorList(@RequestParam Map<String, String> param) throws Exception {
 		ModelAndView model = new ModelAndView("/backoffice/bld/floorList");
-		try {
-			Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-			if(!isAuthenticated) {
-				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-				model.setViewName("/backoffice/login");
-				return model;	
-			} else {
-		       HttpSession httpSession = request.getSession(true);
-		       loginVO = (LoginVO)httpSession.getAttribute("LoginVO");
-			}
-			
-			Map<String, Object> centerInfo = centerInfoManageService.selectCenterInfoDetail(param.get("searchCenterCd"));
-			
-			model.addObject(Globals.STATUS_REGINFO, centerInfo);
-			
-			Map<String, Object> params = new HashMap<String, Object>();
-			params.put("code", "CENTER_FLOOR");
-			params.put("startCode", centerInfo.get("start_floor"));
-			params.put("endCode", centerInfo.get("end_floor"));
-			model.addObject("floorlistInfo", codeDetailService.selectCmmnDetailComboEtc(params));
-			//층수 리스트 
-			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-			
-			// ComboBox Data
-			List<Map<String, Object>> centerInfoComboList = centerInfoService.selectCenterInfoComboList();
-			model.addObject("centerInfoComboList", centerInfoComboList);
-			model.addObject("floorlistInfo", codeDetailService.selectCmmnDetailComboEtc(params));
-			model.addObject("floorListSeq", floorService.selectFloorInfoComboList(param.get("searchCenterCd")));
-			model.addObject("floorPart", codeDetailService.selectCmmnDetailCombo("FLOOR_PART"));
-			model.addObject("seatClass", codeDetailService.selectCmmnDetailCombo("SEAT_CLASS"));
-			model.addObject("seatDvsn", codeDetailService.selectCmmnDetailCombo("SEAT_DVSN"));
-			model.addObject("payDvsn", codeDetailService.selectCmmnDetailCombo("PAY_DVSN"));
-		} catch(Exception e) {
-			LOGGER.error("selectFloorInfoList : " + e.toString());
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg")); 
-		}
+		Map<String, Object> centerInfo = centerInfoManageService.selectCenterInfoDetail(param.get("searchCenterCd"));
+		model.addObject(Globals.STATUS_REGINFO, centerInfo);
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("code", "CENTER_FLOOR");
+		params.put("startCode", centerInfo.get("start_floor"));
+		params.put("endCode", centerInfo.get("end_floor"));
+		model.addObject("floorlistInfo", codeDetailService.selectCmmnDetailComboEtc(params));
+		
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+		
+		List<Map<String, Object>> centerInfoComboList = centerInfoService.selectCenterInfoComboList();
+		model.addObject("centerInfoComboList", centerInfoComboList);
+		model.addObject("floorlistInfo", codeDetailService.selectCmmnDetailComboEtc(params));
+		model.addObject("floorListSeq", floorService.selectFloorInfoComboList(param.get("searchCenterCd")));
+		model.addObject("floorPart", codeDetailService.selectCmmnDetailCombo("FLOOR_PART"));
+		model.addObject("seatClass", codeDetailService.selectCmmnDetailCombo("SEAT_CLASS"));
+		model.addObject("seatDvsn", codeDetailService.selectCmmnDetailCombo("SEAT_DVSN"));
+		model.addObject("payDvsn", codeDetailService.selectCmmnDetailCombo("PAY_DVSN"));
+		
 		return model;
 	}
 	
@@ -153,7 +135,7 @@ public class FloorInfoManageController {
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			
 		} catch(Exception e) {
-			LOGGER.error("selectFloorInfoListAjax : " + e.toString());
+			log.error("selectFloorInfoListAjax : " + e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg")); 
 		}
@@ -175,7 +157,7 @@ public class FloorInfoManageController {
 	    	model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			model.addObject(Globals.STATUS_REGINFO, floorService.selectFloorInfoDetail(floorInfo.getFloorCd()));
 	    } catch(Exception e) {
-			LOGGER.info(e.toString());
+	    	log.info(e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 	    }
@@ -206,12 +188,12 @@ public class FloorInfoManageController {
 			model.addObject(Globals.JSON_RETURN_RESULTLISR, partList);
 		    model.addObject(Globals.PAGE_TOTALCNT, totCnt);
 		    
-		    LOGGER.debug("에러 확인 ");
+		    log.debug("에러 확인 ");
 		    
 	    } catch(Exception e) {
 	    	StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
-			LOGGER.error("selectQrCheckInfo error:" + e.toString() + ":" + lineNumber);
+			log.error("selectQrCheckInfo error:" + e.toString() + ":" + lineNumber);
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 	    }
@@ -231,11 +213,11 @@ public class FloorInfoManageController {
 			model.addObject(Globals.JSON_RETURN_RESULTLISR, floorService.selectFloorInfoComboList(centerCd));
 			
 		}catch (Exception e){
-			LOGGER.error("floorComboInfo ERROR : " + e.toString());
+			log.error("floorComboInfo ERROR : " + e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));	
 		}	
-		LOGGER.debug("model:" + model.toString());
+		log.debug("model:" + model.toString());
 		return model;
 	}
 	
@@ -272,11 +254,11 @@ public class FloorInfoManageController {
 			model.addObject(Globals.STATUS  , Globals.STATUS_SUCCESS);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
 		} catch (Exception e){
-			LOGGER.error("floorInfoUpdate ERROR:" + e.toString());
+			log.error("floorInfoUpdate ERROR:" + e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.insert"));	
 		}	
-		LOGGER.debug("MODEL : " + model.toString());
+		log.debug("MODEL : " + model.toString());
 		return model;
 	}
 	
@@ -306,7 +288,7 @@ public class FloorInfoManageController {
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.delete") );		    	 
 		}catch (Exception e){
-			LOGGER.info(e.toString());
+			log.info(e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.delete"));			
 		}		

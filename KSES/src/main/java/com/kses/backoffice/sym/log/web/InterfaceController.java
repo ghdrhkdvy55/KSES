@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.kses.backoffice.sym.log.annotation.NoLogging;
 import com.kses.backoffice.sym.log.service.InterfaceInfoManageService;
 import com.kses.backoffice.util.SmartUtil;
 
@@ -34,8 +35,14 @@ public class InterfaceController {
 	@Autowired
 	protected EgovMessageSource egovMessageSource;
 	
+	/**
+	 * 인터페이스현황 화면
+	 * @return
+	 * @throws Exception
+	 */
+	@NoLogging
 	@RequestMapping(value = "interfaceLog.do", method = RequestMethod.GET)
-	public ModelAndView selectLoginLogInf() throws Exception {		
+	public ModelAndView viewInterfaceLog() throws Exception {		
 		return new ModelAndView("/backoffice/sys/interfaceLog");
 	}
 	

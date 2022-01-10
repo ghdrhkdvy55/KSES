@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,7 +16,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.kses.backoffice.bas.code.service.EgovCcmCmmnDetailCodeManageService;
 import com.kses.backoffice.bas.kiosk.service.KioskInfoService;
 import com.kses.backoffice.bas.kiosk.vo.KioskInfo;
-import com.kses.backoffice.bas.kiosk.web.KioskInfoManageController;
 import com.kses.backoffice.bld.center.service.CenterInfoManageService;
 import com.kses.backoffice.sym.log.annotation.NoLogging;
 import com.kses.backoffice.util.SmartUtil;
@@ -29,11 +26,12 @@ import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.cmmn.exception.EgovBizException;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/backoffice/bas")
 public class KioskInfoManageController {
-private static final Logger LOGGER = LoggerFactory.getLogger(KioskInfoManageController.class);
 	
     @Autowired
 	protected EgovMessageSource egovMessageSource;
@@ -59,13 +57,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(KioskInfoManageCont
 	 * @return
 	 * @throws Exception
 	 */
+	@NoLogging
 	@RequestMapping(value="kioskList.do", method = RequestMethod.GET)
-	public ModelAndView selectKioskInfoList(@ModelAttribute("kioskInfo") KioskInfo kioskInfo) throws Exception {
-		
+	public ModelAndView viewKioskList(@ModelAttribute("kioskInfo") KioskInfo kioskInfo) throws Exception {
 		ModelAndView model = new ModelAndView("/backoffice/bas/kioskList");
-		
 		List<Map<String, Object>> centerInfoComboList = centerInfoManageService.selectCenterInfoComboList();
-
 		model.addObject("centerInfo", centerInfoComboList);
 		model.addObject("machInfo", codeDetailService.selectCmmnDetailCombo("MACH_GUBUN"));
 		model.setViewName("/backoffice/bas/kioskList");
@@ -87,7 +83,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(KioskInfoManageCont
 	  
 		searchVO.put("pageSize", propertiesService.getInt("pageSize"));
 		
-		LOGGER.info("pageUnit:" + pageUnit);
+		log.info("pageUnit:" + pageUnit);
 		            
 	   	PaginationInfo paginationInfo = new PaginationInfo();
 		paginationInfo.setCurrentPageNo( Integer.parseInt(SmartUtil.NVL(searchVO.get("pageIndex"), "1") ) );
@@ -110,8 +106,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(KioskInfoManageCont
 		return model;
 	}
 	
-	/* 상세 정보 조회 -> 장비 상세 정보를  kiosk.jsp rowData 값으로 가져와 주석처리 
-	 * 
+	/*
 	 * @RequestMapping (value="kioskInfoDetail.do") public ModelAndView
 	 * selectKioskInfoDetail( @ModelAttribute("loginVO") LoginVO loginVO,
 	 * 
@@ -178,7 +173,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(KioskInfoManageCont
 	 */
 	@NoLogging
 	@RequestMapping(value="kisokSerialCheck.do", method = RequestMethod.GET)
-	public ModelAndView selectKisokSerialCheckManger(@RequestParam("ticketMchnSno") String ticketMchnSno) throws Exception {
+	public ModelAndView kisokSerialCheck(@RequestParam("ticketMchnSno") String ticketMchnSno) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 
 			int ret = uniService.selectIdDoubleCheck("TICKET_MCHN_SNO", "TSEC_TICKET_MCHN_M", "TICKET_MCHN_SNO = ["+ ticketMchnSno+ "[" );

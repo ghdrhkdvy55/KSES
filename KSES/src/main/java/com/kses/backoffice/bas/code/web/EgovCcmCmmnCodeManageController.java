@@ -48,8 +48,9 @@ public class EgovCcmCmmnCodeManageController {
 	 * @return
 	 * @throws Exception
 	 */
+	@NoLogging
 	@RequestMapping(value = "codeList.do", method = RequestMethod.GET)
-	public ModelAndView selectCmmnCodeList() throws Exception {
+	public ModelAndView viewCodeList() throws Exception {
 		return new ModelAndView("/backoffice/bas/codeList");
 	}
 
@@ -161,7 +162,7 @@ public class EgovCcmCmmnCodeManageController {
 	 */
 	@NoLogging
 	@RequestMapping(value = "codeIDCheck.do", method = RequestMethod.GET)
-	public ModelAndView selectIdCheck(@RequestParam("codeId") String codeId) throws Exception {
+	public ModelAndView codeIDCheck(@RequestParam("codeId") String codeId) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		
 		int ret = uniService.selectIdDoubleCheck("CODE_ID", "COMTCCMMNCODE", "CODE_ID = [" + codeId + "[");

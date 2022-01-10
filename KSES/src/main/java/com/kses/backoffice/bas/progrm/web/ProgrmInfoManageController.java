@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.kses.backoffice.bas.authority.web.AuthInfoManageController;
 import com.kses.backoffice.bas.progrm.service.ProgrmInfoService;
 import com.kses.backoffice.bas.progrm.vo.ProgrmInfo;
 import com.kses.backoffice.sym.log.annotation.NoLogging;
@@ -26,11 +23,12 @@ import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.cmmn.exception.EgovBizException;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/backoffice/bas")
 public class ProgrmInfoManageController {
-	private static final Logger LOGGER = LoggerFactory.getLogger(AuthInfoManageController.class);
 	
 	@Autowired
 	protected EgovMessageSource egovMessageSource;
@@ -49,8 +47,9 @@ public class ProgrmInfoManageController {
 	 * @return
 	 * @throws Exception
 	 */
+	@NoLogging
 	@RequestMapping(value="programList.do", method = RequestMethod.GET)
-	public ModelAndView selectProgrmInfoList() throws Exception {
+	public ModelAndView viewProgramList() throws Exception {
 		return new ModelAndView("/backoffice/bas/programList");
 	}
 	
@@ -68,7 +67,7 @@ public class ProgrmInfoManageController {
 		  
 	    searchVO.put("pageSize", propertiesService.getInt("pageSize"));
 	  
-	    LOGGER.info("pageUnit:" + pageUnit);
+	    log.info("pageUnit:" + pageUnit);
 	  
    	    PaginationInfo paginationInfo = new PaginationInfo();
 	    paginationInfo.setCurrentPageNo( Integer.parseInt(SmartUtil.NVL(searchVO.get("pageIndex"),"1")));
@@ -160,7 +159,7 @@ public class ProgrmInfoManageController {
 	 */
 	@NoLogging
     @RequestMapping (value="programIDCheck.do", method = RequestMethod.GET)
-    public ModelAndView selectIdCheck(@RequestParam("progrmFileNm") String progrmFileNm) throws Exception {
+    public ModelAndView programIDCheck(@RequestParam("progrmFileNm") String progrmFileNm) throws Exception {
     	ModelAndView model = new ModelAndView(Globals.JSONVIEW);
     	
     	int ret = uniService.selectIdDoubleCheck("PROGRM_FILE_NM", "COMTNPROGRMLIST", "PROGRM_FILE_NM = ["+ progrmFileNm + "[");

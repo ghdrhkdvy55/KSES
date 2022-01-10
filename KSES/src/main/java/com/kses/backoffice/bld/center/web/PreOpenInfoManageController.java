@@ -6,8 +6,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,16 +18,16 @@ import com.kses.backoffice.bld.center.service.CenterInfoManageService;
 import com.kses.backoffice.bld.center.service.PreOpenInfoManageService;
 import com.kses.backoffice.bld.center.vo.PreOpenInfo;
 
-import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/backoffice/bld")
 public class PreOpenInfoManageController {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(PreOpenInfoManageController.class);
     
     @Autowired
     EgovMessageSource egovMessageSource;
@@ -73,7 +71,7 @@ public class PreOpenInfoManageController {
     		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
     		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.select"));
     	} catch (Exception e) {
-    		LOGGER.info("selectPreOpenInfo ERROR : " + e.toString());
+    		log.info("selectPreOpenInfo ERROR : " + e.toString());
     		model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
     		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 		}
@@ -93,7 +91,7 @@ public class PreOpenInfoManageController {
     		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
     		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.update"));
 		} catch (Exception e) {
-    		LOGGER.info("updatePreOpenInfo ERROR : " + e.toString());
+    		log.info("updatePreOpenInfo ERROR : " + e.toString());
     		model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
     		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 		}
@@ -113,7 +111,7 @@ public class PreOpenInfoManageController {
     		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
     		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.update"));
 		} catch (Exception e) {
-    		LOGGER.info("copyPreOpenInfo ERROR : " + e.toString());
+    		log.info("copyPreOpenInfo ERROR : " + e.toString());
     		model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
     		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 		}

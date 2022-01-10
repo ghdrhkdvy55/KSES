@@ -5,10 +5,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -21,23 +18,20 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.kses.backoffice.sym.log.annotation.NoLogging;
 import com.kses.backoffice.sym.log.service.EgovSysLogService;
-import com.kses.backoffice.sym.log.vo.SysLog;
 import com.kses.backoffice.util.SmartUtil;
 
-import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/backoffice/sys")
 public class SysLogController {
-  
-     private static final Logger LOGGER = LoggerFactory.getLogger(SysLogController.class);
-	
-	
   
 	@Autowired
 	protected EgovMessageSource egovMessageSource;
@@ -48,27 +42,17 @@ public class SysLogController {
 	@Resource(name = "propertiesService")
     protected EgovPropertyService propertiesService;
 	
+	/**
+	 * 시스템 로그 화면
+	 * @return
+	 * @throws Exception
+	 */
 	@NoLogging
-	@RequestMapping(value="syslogList.do")
-	public ModelAndView syslogList(@ModelAttribute("loginVO") LoginVO loginVO)throws Exception {
-	
-		      ModelAndView mav = new ModelAndView("/backoffice/sys/syslogList");
-		      try{
-		    	  
-		    	  Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-		          if(!isAuthenticated) {
-			          	mav.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-			          	mav.setViewName("/backoffice/login");
-			          	return mav;	
-		          }
-		      }catch(Exception e){
-		    	  mav.addObject("message", egovMessageSource.getMessage("fail.common.select"));
-		    	  mav.addObject("status", Globals.STATUS_FAIL);
-		    	  LOGGER.debug("selectSysLogList error: " + e.toString());
-		    	  throw e;
-		      }
-		      return mav;
+	@RequestMapping(value="syslogList.do", method = RequestMethod.GET)
+	public ModelAndView viewSyslogList()throws Exception {
+	      return new ModelAndView("/backoffice/sys/syslogList");
 	}
+	
 	@NoLogging
 	@RequestMapping(value="selectlogListAjax.do")
 	public ModelAndView selectlogListAjax(@ModelAttribute("loginVO") LoginVO loginVO
@@ -119,7 +103,7 @@ public class SysLogController {
 		      }catch(Exception e){
 		    	  StackTraceElement[] ste = e.getStackTrace();
 				  int lineNumber = ste[0].getLineNumber();
-				  LOGGER.info("e:" + e.toString() + ":" + lineNumber);
+				  log.info("e:" + e.toString() + ":" + lineNumber);
 				  model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 				  model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 		      }
@@ -136,7 +120,7 @@ public class SysLogController {
 		}catch(Exception e){
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
-			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
+			log.info("e:" + e.toString() + ":" + lineNumber);
 			mav.addObject(Globals.STATUS_MESSAGE,  egovMessageSource.getMessage("fail.common.select"));
 	    	mav.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 	    	//throw e;

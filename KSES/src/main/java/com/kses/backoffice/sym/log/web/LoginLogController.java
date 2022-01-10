@@ -1,22 +1,21 @@
 package com.kses.backoffice.sym.log.web;
 
-
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.kses.backoffice.sym.log.annotation.NoLogging;
 import com.kses.backoffice.sym.log.service.LoginLogService;
 import com.kses.backoffice.sym.log.vo.LoginLog;
 import com.kses.backoffice.util.SmartUtil;
@@ -26,12 +25,12 @@ import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/backoffice/sys")
 public class LoginLogController {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(LoginLogController.class);
 			
 	@Autowired
 	private LoginLogService loginLogService;
@@ -46,18 +45,17 @@ public class LoginLogController {
 	protected EgovMessageSource egovMessageSource;
 
 	/**
-	 * 로그인 로그 목록 조회
-	 *
+	 * 로그인 로그 화면
 	 * @param loginLog
-	 * @return sym/log/clg/EgovLoginLogList
+	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "loginLogList.do")
-	public ModelAndView loginLogInf(@ModelAttribute("searchVO") LoginLog loginLog) throws Exception {
-		
-		ModelAndView model = new ModelAndView("/backoffice/sys/loginLogList");
-		return model;
+	@NoLogging
+	@RequestMapping(value = "loginLogList.do", method = RequestMethod.GET)
+	public ModelAndView viewLoginLogList(@ModelAttribute("searchVO") LoginLog loginLog) throws Exception {
+		return new ModelAndView("/backoffice/sys/loginLogList");
 	}
+	
 	@RequestMapping(value = "selectLoginLogListAjax.do")
 	public ModelAndView selectLoginLogInf(@ModelAttribute("LoginVO") LoginVO loginVO, 
 										  @RequestBody Map<String,Object> searchVO, 
@@ -95,7 +93,7 @@ public class LoginLogController {
 		}catch (Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
-			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
+			log.info("e:" + e.toString() + ":" + lineNumber);
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 		}
@@ -121,7 +119,7 @@ public class LoginLogController {
 		}catch(Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
-			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
+			log.info("e:" + e.toString() + ":" + lineNumber);
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 		}

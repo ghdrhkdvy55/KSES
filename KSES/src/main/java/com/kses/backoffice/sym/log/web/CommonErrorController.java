@@ -2,8 +2,7 @@ package com.kses.backoffice.sym.log.web;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,30 +14,29 @@ import com.kses.backoffice.sym.log.vo.SysLog;
 
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.util.EgovUserDetailsHelper;
+import lombok.extern.slf4j.Slf4j;
 
-
+@Slf4j
 @RestController
 @RequestMapping("/cmm/error")
 public class CommonErrorController extends HttpServlet  {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(CommonErrorController.class);
+	private static final long serialVersionUID = 168148727648170664L;
 	
 	@Autowired
 	private EgovSysLogService sysLogService;
-	
-	
 	
 	@RequestMapping(value="throwable")
 	public ModelAndView throwable(HttpServletRequest request){
 		
 		ModelAndView model = new ModelAndView();
-		LOGGER.info("throwable");
+		log.info("throwable");
 		pageErrorLog(request);
 		model.addObject("msg", "예외가 발생하였습니다");
 		model.setViewName("/cmm/error/ErrorPage");
 		return model;
 		
 	}
+	
 	@RequestMapping(value="egovError", method=RequestMethod.POST)
 	public ModelAndView ErrorPage(HttpServletRequest request, Exception ex ){
 		
@@ -48,7 +46,6 @@ public class CommonErrorController extends HttpServlet  {
 		
 		model.setViewName("/cmm/error/ErrorPage");
 		return model;
-		
 	}
 	
 	
@@ -147,12 +144,12 @@ public class CommonErrorController extends HttpServlet  {
 		
 	}
 	private void pageErrorLog(HttpServletRequest request){
-		LOGGER.info("status_code:" + request.getAttribute("javax.servlet.error.status_code"));
-		LOGGER.info("exception_type:" + request.getAttribute("javax.servlet.error.exception_type"));
-		LOGGER.info("message:" + request.getAttribute("javax.servlet.error.message"));
-		LOGGER.info("request_uri:" + request.getAttribute("javax.servlet.error.request_uri"));
-		LOGGER.info("exception:" + request.getAttribute("javax.servlet.error.exception"));
-		LOGGER.info("servlet_name:" + request.getAttribute("javax.servlet.error.servlet_name"));
+		log.info("status_code:" + request.getAttribute("javax.servlet.error.status_code"));
+		log.info("exception_type:" + request.getAttribute("javax.servlet.error.exception_type"));
+		log.info("message:" + request.getAttribute("javax.servlet.error.message"));
+		log.info("request_uri:" + request.getAttribute("javax.servlet.error.request_uri"));
+		log.info("exception:" + request.getAttribute("javax.servlet.error.exception"));
+		log.info("servlet_name:" + request.getAttribute("javax.servlet.error.servlet_name"));
 	}
 	
 }

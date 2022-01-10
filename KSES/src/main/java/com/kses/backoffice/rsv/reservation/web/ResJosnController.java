@@ -38,17 +38,17 @@ import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.Globals;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 import egovframework.rte.fdl.property.EgovPropertyService;
+import lombok.extern.slf4j.Slf4j;
+
 import com.popbill.api.CashbillService;
 import com.popbill.api.PopbillException;
 import com.popbill.api.CBIssueResponse;
 import com.popbill.api.cashbill.Cashbill;
 
+@Slf4j
 @RestController
 @RequestMapping("/backoffice/rsv")
 public class ResJosnController {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(ResJosnController.class);
-	// 추후 front 로 이동
 
 	@Autowired
 	EgovMessageSource egovMessageSource;
@@ -105,12 +105,12 @@ public class ResJosnController {
 					encryptType = "SHA-512";
 					password = jsonObject.get("User_Pw").toString();
 					jsonObject.put("User_Pw", SmartUtil.encryptPassword(password, encryptType));
-					LOGGER.debug("1 : " + SmartUtil.encryptPassword(password, encryptType));
+					log.debug("1 : " + SmartUtil.encryptPassword(password, encryptType));
 				} else {
 					encryptType = "SHA-256";
 					password = jsonObject.get("Card_Pw").toString();
 					jsonObject.put("Card_Pw", SmartUtil.encryptPassword(password, encryptType));
-					LOGGER.debug("2 : " + SmartUtil.encryptPassword(password, encryptType));
+					log.debug("2 : " + SmartUtil.encryptPassword(password, encryptType));
 				}
 
 				node = SmartUtil.requestHttpJson(Url, jsonObject.toJSONString(), "SPEEDLOGIN", "SPEEDON", "KSES");
@@ -261,7 +261,7 @@ public class ResJosnController {
 		} catch (Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
-			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
+			log.info("e:" + e.toString() + ":" + lineNumber);
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 		}
@@ -283,8 +283,8 @@ public class ResJosnController {
 			String qrCneterCd = sendInfo.getQrCneterCd(); // qr 지점 정보
 			String qrInot = sendInfo.getQrInot(); // qrIO 구분
 			
-			LOGGER.info("QR READ_1 : " + fileScrty.decode(qrInfo));
-			LOGGER.info("QR READ_2 : " + qrInfo);
+			log.info("QR READ_1 : " + fileScrty.decode(qrInfo));
+			log.info("QR READ_2 : " + qrInfo);
 			
 			
 			String result = "";
@@ -318,7 +318,7 @@ public class ResJosnController {
 				String resvQrCount = attempInfos[17];
 				
 				for (String value : attempInfos) {
-					LOGGER.debug("value : " + value);
+					log.debug("value : " + value);
 				}
 
 				String formatedNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
@@ -451,7 +451,7 @@ public class ResJosnController {
 		} catch (Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
-			LOGGER.error("selectQrCheckInfo error:" + e.toString() + ":" + lineNumber);
+			log.error("selectQrCheckInfo error:" + e.toString() + ":" + lineNumber);
 			model.addObject("ERROR_CD", "ERROR_02");
 			model.addObject("ERROR_MSG", "시스템 에러");
 
@@ -520,7 +520,7 @@ public class ResJosnController {
 		} catch (Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
-			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
+			log.info("e:" + e.toString() + ":" + lineNumber);
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 		}
@@ -568,13 +568,13 @@ public class ResJosnController {
 			String recDate = SmartUtil.NVL(jsonInfo.get("RES_SEND_DATE"), "19700101").toString();
 			
 			if (resInfo != null && !SmartUtil.NVL(resInfo.get("resv_pay_dvsn"), "").toString().equals("RESV_PAY_DVSN_1")) {
-				LOGGER.info("RESV_PAY_DVSN123" +  SmartUtil.NVL(resInfo.get("resv_pay_dvsn"), "").toString());
+				log.info("RESV_PAY_DVSN123" +  SmartUtil.NVL(resInfo.get("resv_pay_dvsn"), "").toString());
 				returnCode = "ERROR_04";
 				returnMessage = "이미 결제가 완료 되었습니다.";
 			} else {
 				if (resInfo != null && SmartUtil.NVL(resInfo.get("resv_end_dt"), "").toString().equals(localTime)
 						&& recDate.substring(0, 8).equals(localTime)) {
-					LOGGER.info(localTime);
+					log.info(localTime);
 					resName = SmartUtil.NVL(resInfo.get("user_nm"), "").toString();
 					resPrice = SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString();
 					resDay = SmartUtil.NVL(resInfo.get("resv_start_dt"), "").toString();
@@ -601,7 +601,7 @@ public class ResJosnController {
 		} catch (Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
-			LOGGER.error("selectTickMachinRes error:" + e.toString() + ":" + lineNumber);
+			log.error("selectTickMachinRes error:" + e.toString() + ":" + lineNumber);
 			returnCode = "ERROR_02";
 			info.setRqesterId("admin");
 			info.setResultCode(returnCode);
@@ -673,7 +673,7 @@ public class ResJosnController {
 			String recDate = SmartUtil.NVL(jsonInfo.get("RES_SEND_DATE"), "19700101").toString();
 			String qrTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
 
-			LOGGER.debug(Integer.valueOf(SmartUtil.NVL(jsonInfo.get("RES_PRICE"), "").toString()) + ":"
+			log.debug(Integer.valueOf(SmartUtil.NVL(jsonInfo.get("RES_PRICE"), "").toString()) + ":"
 					+ Integer.valueOf(SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString()));
 			if (resInfo == null || !recDate.substring(0, 8).equals(localTime)) {
 				returnCode = "ERROR_01";
@@ -683,7 +683,7 @@ public class ResJosnController {
 				returnCode = "ERROR_03";
 				returnMessage = "결제 금액 확인 요망.";
 			} else if (resInfo != null && !SmartUtil.NVL(resInfo.get("resv_pay_dvsn"), "").toString().equals("RESV_PAY_DVSN_1")) {
-				LOGGER.info("RESV_PAY_DVSN123" +  SmartUtil.NVL(resInfo.get("resv_pay_dvsn"), "").toString());
+				log.info("RESV_PAY_DVSN123" +  SmartUtil.NVL(resInfo.get("resv_pay_dvsn"), "").toString());
 				returnCode = "ERROR_04";
 				returnMessage = "이미 결제가 완료 되었습니다.";
 			} else {
@@ -749,7 +749,7 @@ public class ResJosnController {
 			// 결제 로직 타기
 
 		} catch (Exception e) {
-			LOGGER.error("selectTickMachinPrice error:" + e.toString());
+			log.error("selectTickMachinPrice error:" + e.toString());
 			returnCode = "ERROR_02";
 			// 애러시 코드 값 입력
 			info.setResultCode(returnCode);
@@ -894,7 +894,7 @@ public class ResJosnController {
 
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
-			LOGGER.error("selectPopBillInfo error:" + e.toString() + ":" + lineNumber);
+			log.error("selectPopBillInfo error:" + e.toString() + ":" + lineNumber);
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, e.getCode() + ":" + e.getMessage());
 

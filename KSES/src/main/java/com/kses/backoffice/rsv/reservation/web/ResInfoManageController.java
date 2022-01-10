@@ -1,86 +1,56 @@
 package com.kses.backoffice.rsv.reservation.web;
 
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 
+import com.kses.backoffice.bas.code.service.EgovCcmCmmnDetailCodeManageService;
+import com.kses.backoffice.bld.center.service.CenterInfoManageService;
+import com.kses.backoffice.bld.floor.service.FloorInfoManageService;
+import com.kses.backoffice.bld.floor.service.FloorPartInfoManageService;
 import com.kses.backoffice.mng.employee.service.DeptInfoManageService;
 import com.kses.backoffice.mng.employee.service.EmpInfoManageService;
 import com.kses.backoffice.rsv.reservation.service.ResInfoManageService;
 import com.kses.backoffice.rsv.reservation.service.ResTimeInfoManageService;
-import com.kses.backoffice.rsv.reservation.vo.ResvInfo;
-import com.kses.backoffice.bld.center.service.CenterInfoManageService;
-import com.kses.backoffice.bld.floor.service.FloorInfoManageService;
-import com.kses.backoffice.bld.floor.service.FloorPartInfoManageService;
-import com.kses.backoffice.util.SmartUtil;
-import com.kses.backoffice.util.service.UniSelectInfoManageService;
 
-import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.Globals;
-import com.kses.backoffice.bas.code.service.EgovCcmCmmnDetailCodeManageService;
 import egovframework.rte.fdl.property.EgovPropertyService;
-import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
-import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 
 @RestController
 @RequestMapping("/backoffice/resManage")
 public class ResInfoManageController {
-
-	
-	    private static final Logger LOGGER = LoggerFactory.getLogger(ResInfoManageController.class);
 	 
-		@Autowired
-		protected EgovMessageSource egovMessageSource;
-		
-		@Autowired
-	    protected EgovPropertyService propertiesService;
-
-		
-		@Autowired
-		private ResInfoManageService resService;
-		
-		@Autowired
-		private EmpInfoManageService empInfo;
-		
-		@Autowired
-		private CenterInfoManageService centerService;
-		
-		@Autowired
-		private DeptInfoManageService deptService;
-		
-		@Autowired
-		private EgovCcmCmmnDetailCodeManageService egovCodeDetailService;
-		
-		//시간 관련 
-		@Autowired
-		private ResTimeInfoManageService timeService;
-		
-		@Autowired
-		private FloorInfoManageService floorService;
-		
-		@Autowired
-		private FloorPartInfoManageService partService;
+	@Autowired
+	protected EgovMessageSource egovMessageSource;
+	
+	@Autowired
+	protected EgovPropertyService propertiesService;
+	
+	
+	@Autowired
+	private ResInfoManageService resService;
+	
+	@Autowired
+	private EmpInfoManageService empInfo;
+	
+	@Autowired
+	private CenterInfoManageService centerService;
+	
+	@Autowired
+	private DeptInfoManageService deptService;
+	
+	@Autowired
+	private EgovCcmCmmnDetailCodeManageService egovCodeDetailService;
+	
+	//시간 관련 
+	@Autowired
+	private ResTimeInfoManageService timeService;
+	
+	@Autowired
+	private FloorInfoManageService floorService;
+	
+	@Autowired
+	private FloorPartInfoManageService partService;
 		
 //        @RequestMapping("reservationProcessChange.do")
 //        public ModelAndView updateResProcessChange(@ModelAttribute("loginVO") LoginVO loginVO

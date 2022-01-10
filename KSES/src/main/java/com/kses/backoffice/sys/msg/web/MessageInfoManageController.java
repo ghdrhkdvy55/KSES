@@ -5,21 +5,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import egovframework.com.cmm.LoginVO;
-import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.Globals;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kses.backoffice.bas.code.service.EgovCcmCmmnDetailCodeManageService;
-import com.kses.backoffice.mng.admin.service.AdminInfoService;
-import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
-
-import egovframework.let.utl.fcc.service.EgovStringUtil;
-import egovframework.rte.fdl.property.EgovPropertyService;
-import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
-import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 /*import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 */
@@ -29,34 +19,38 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kses.backoffice.bas.code.service.EgovCcmCmmnDetailCodeManageService;
+import com.kses.backoffice.mng.admin.service.AdminInfoService;
+import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
+import com.kses.backoffice.sym.log.annotation.NoLogging;
 import com.kses.backoffice.sys.msg.service.MessageGroupUserInfoManageService;
 import com.kses.backoffice.sys.msg.service.MessageInfoManageService;
 import com.kses.backoffice.sys.msg.vo.MessageInfo;
 import com.kses.backoffice.util.SmartUtil;
 
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
+import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.LoginVO;
+import egovframework.com.cmm.service.Globals;
+import egovframework.rte.fdl.property.EgovPropertyService;
+import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
+import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
+import lombok.extern.slf4j.Slf4j;
 
-
-
+@Slf4j
 @RestController
 @RequestMapping("/backoffice/sys")
 public class MessageInfoManageController {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(MessageInfoManageController.class);
 	
 	@Autowired
 	protected EgovMessageSource egovMessageSource;
@@ -79,15 +73,17 @@ public class MessageInfoManageController {
 	@Autowired
 	private ResvInfoManageService  resService;
 	
-	@RequestMapping(value="msgList.do")
-	public ModelAndView  selectMsgInfoManageListByPagination(@ModelAttribute("loginVO") LoginVO loginVO
-															, HttpServletRequest request
-															, BindingResult bindingResult) throws Exception {
-		
-		   ModelAndView model = new ModelAndView();
-		   model.setViewName("/backoffice/sys/msgList");
-		   return model;	
+	/**
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	@NoLogging
+	@RequestMapping(value="msgList.do", method = RequestMethod.GET)
+	public ModelAndView viewMsgList() throws Exception {
+		return new ModelAndView("/backoffice/sys/msgList");
 	}
+	
 	@RequestMapping(value="msgListAjax.do")
 	public ModelAndView selectMsgInfoManageListAjax (@ModelAttribute("loginVO") LoginVO loginVO
 			                                        , @RequestBody Map<String, Object> searchVO
@@ -120,14 +116,14 @@ public class MessageInfoManageController {
 			    List<Map<String, Object>> list =  msgService.selectMsgManageListByPagination(searchVO);   	
 			    int totCnt = list.size() > 0 ?  Integer.valueOf( list.get(0).get("total_record_count").toString()) :0;
 			    paginationInfo.setTotalRecordCount(totCnt);
-			    LOGGER.debug("page check:" + paginationInfo.getCurrentPageNo() + ":"+ paginationInfo.getTotalPageCount() );
+			    log.debug("page check:" + paginationInfo.getCurrentPageNo() + ":"+ paginationInfo.getTotalPageCount() );
 			    model.addObject(Globals.JSON_PAGEINFO,   paginationInfo);
 			    model.addObject(Globals.JSON_RETURN_RESULTLISR,   list);
 			    model.addObject(Globals.PAGE_TOTALCNT,   totCnt);
 			    model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			      
 		    }catch(Exception e){
-		    	LOGGER.error("selectMsgInfoManageListAjax ERROR:"  + e.toString());
+		    	log.error("selectMsgInfoManageListAjax ERROR:"  + e.toString());
 		    	model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 		    }
 		    return model;
@@ -149,7 +145,7 @@ public class MessageInfoManageController {
 				model.addObject(Globals.STATUS,  Globals.STATUS_SUCCESS);
 				model.addObject(Globals.STATUS_REGINFO, msgService.selectMsgManageDetail(seqno));	    
 			}catch(Exception e){
-				LOGGER.error("selectMsgInfoManageListAjax ERROR:"  + e.toString());
+				log.error("selectMsgInfoManageListAjax ERROR:"  + e.toString());
 		    	model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			}
 			
@@ -176,7 +172,7 @@ public class MessageInfoManageController {
 			    	  throw new Exception();		    	  
 			      }
 			}catch (Exception e){
-				LOGGER.info(e.toString());
+				log.info(e.toString());
 				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 			}		
@@ -195,7 +191,7 @@ public class MessageInfoManageController {
 				
 		List<MessageInfo> info =  new ArrayList<MessageInfo>() ;
 		
-	    LOGGER.debug("sendArray:" + sendArray.replace("=",":"));		 
+		log.debug("sendArray:" + sendArray.replace("=",":"));		 
 
 	    
 	   
@@ -282,7 +278,7 @@ public class MessageInfoManageController {
 			    for (int i = 0; i < arrays.size(); i ++) {
 			    	MessageInfo msgInfo = new MessageInfo();
 				    JSONObject jsonObject =  (JSONObject)arrays.get(i);
-				    LOGGER.debug("groupGubun:" + jsonObject.get("groupGubun"));
+				    log.debug("groupGubun:" + jsonObject.get("groupGubun"));
 				    if (jsonObject.get("groupGubun").equals("S")) {
 				   	 //사용자 이면
 				    	 if (jsonObject.get("groupCode").toString().contains("<")) {
@@ -295,7 +291,7 @@ public class MessageInfoManageController {
 				    	 info.add(msgInfo);
 				    }else {
 				    	 searchVO.put("searchGroupCode", jsonObject.get("groupCode"));
-					   	 LOGGER.debug("groupCode:" + searchVO);
+				    	 log.debug("groupCode:" + searchVO);
 					   	 List<Map<String, Object>> groupInfo = msgGroupUserService.selectMessageGroupUserInfoList(searchVO);
 					   	 
 					   	 groupInfo.forEach(x->{
@@ -399,7 +395,7 @@ public class MessageInfoManageController {
 						searchVO_A.put("firstIndex", 0);
 						searchVO_A.put("recordCountPerPage", 1000);
 						searchVO_A.put("searchCenter", SmartUtil.NVL(map.get("sendCnt"), "").toString());
-						LOGGER.debug("sendCnt:" + map.get("sendCnt"));
+						log.debug("sendCnt:" + map.get("sendCnt"));
 						List<Map<String, Object>> adminInfos = adminService.selectAdminUserManageListByPagination(searchVO_A);
 						
 						adminInfos.forEach(x->{
@@ -411,7 +407,7 @@ public class MessageInfoManageController {
 					   	});
 						
 						for (MessageInfo infos : info) {
-							LOGGER.debug("infos:" + infos.toString());
+							log.debug("infos:" + infos.toString());
 						}
 						
 						
@@ -431,12 +427,12 @@ public class MessageInfoManageController {
 				searchVO.put("firstIndex", 0);
 				searchVO.put("recordCountPerPage", 1000);
 				
-				LOGGER.debug("==================="+ arrays.size());
+				log.debug("==================="+ arrays.size());
 				
 			    for (int i = 0; i < arrays.size(); i ++) {
 			    	
 				    JSONObject jsonObject =  (JSONObject)arrays.get(i);
-				    LOGGER.debug("groupGubun:" + jsonObject.get("groupGubun"));
+				    log.debug("groupGubun:" + jsonObject.get("groupGubun"));
 				    if (jsonObject.get("groupGubun").equals("S")) {
 				   	 //사용자 이면
 				    	 MessageInfo msgInfo = new MessageInfo();
@@ -453,7 +449,7 @@ public class MessageInfoManageController {
 				    }else {
 				    //group 이면 
 				    	 searchVO.put("searchGroupCode", jsonObject.get("groupCode"));
-					   	 LOGGER.debug("groupCode:" + searchVO);
+				    	 log.debug("groupCode:" + searchVO);
 					   	 
 					   	 
 					   	 List<Map<String, Object>> groupInfo = msgGroupUserService.selectMessageGroupUserInfoList(searchVO);
@@ -499,7 +495,7 @@ public class MessageInfoManageController {
 		}catch (Exception e){
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
-			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
+			log.info("e:" + e.toString() + ":" + lineNumber);
 			meesage = "fail.common.insert";
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));			

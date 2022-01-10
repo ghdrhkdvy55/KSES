@@ -5,8 +5,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,7 +14,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.kses.backoffice.cus.usr.service.UserInfoManageService;
 import com.kses.backoffice.util.SmartUtil;
-import com.kses.backoffice.util.service.UniSelectInfoManageService;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
@@ -24,23 +21,18 @@ import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/backoffice/cus")
 public class UserInfoController {
-
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(UserInfoController.class);
 	
 	@Autowired
 	protected EgovMessageSource egovMessageSource;
 	
 	@Autowired
-	private UniSelectInfoManageService uniService;
-	
-	@Autowired
 	protected EgovPropertyService propertiesService;
-	
 	
 	@Autowired
 	protected UserInfoManageService userService;
@@ -86,12 +78,11 @@ public class UserInfoController {
 		} catch(Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
-			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
+			log.info("e:" + e.toString() + ":" + lineNumber);
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 		}
 		return model;
 	}
-	
 	
 }
