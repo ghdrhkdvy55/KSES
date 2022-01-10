@@ -157,7 +157,7 @@ public class LoginPageInfoManageController {
 	public ModelAndView frontSSOLogin(	@RequestParam Map<String, Object> params,
 										HttpServletRequest request) throws Exception {
 		
-		ModelAndView model = new ModelAndView("/front/login/mainpage");
+		ModelAndView model = new ModelAndView("/front/main/mainpage");
 		try {
 			UserLoginInfo userLoginInfo = userService.selectSSOUserInfo(params);
 			
