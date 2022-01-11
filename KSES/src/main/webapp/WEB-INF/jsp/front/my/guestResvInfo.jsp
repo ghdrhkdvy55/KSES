@@ -69,7 +69,7 @@
         <!--contents //-->
 		<div id="container" class="result" style="display:none;">
             <div>
-                <div class="contents"> 
+                <div class="contents resv_contents"> 
                     <!--지점선택-->                 
                     <h3>예약 정보 조회</h3>
 <!--                     <ul class="my_rsv">                        
@@ -130,7 +130,7 @@
             </div>
         </div>
 
-<!-- 		<div id="foot_btn">
+		<div id="foot_btn">
 				<div class="contents">
 					<ul>
 						<li class="home"><a href="javascript:fn_pageMove('regist','/front/main.do');">home</a><span>HOME</span></li>
@@ -139,7 +139,7 @@
 		            </ul>
 				<div class="clear"></div>
 			</div>
-		</div> -->
+		</div>
 	</div>
 	</form:form>
 	
@@ -183,7 +183,7 @@
                 	<li>
                     	<ol>
                         	<li>신청일</li>
-                        	<li><span id="cancel_rsv_date"></span></li>
+                        	<li><span id="cancel_rsv_req_date"></span></li>
                     	</ol>
                 	</li> 
                	</ul>
@@ -229,7 +229,6 @@
 						if(result.status == "SUCCESS") {
 							if(result.guestResvInfo.length > 0) {
 								resvInfoList = result.guestResvInfo;
-								console.log(resvInfoList);
 								guestResvService.fn_SmsCertifi();
 							} else {
 								fn_openPopup("해당 정보로 예약된 정보가 존재하지 않습니다.", "red", "ERROR", "확인", "");
@@ -312,38 +311,48 @@
 						
 						if(name != '') {
 							if(!(resvInfo.resv_entry_dvsn == "ENTRY_DVSN_1" && (index == 'floor_nm' || index == 'part_nm'))) {
-								
-								let $li = $('<li></li>').append('<ol><li>' + name + '</li>' + '<li id="' + index +'">' + item + '</li></ol>');
+								let $li = $('<li></li>').append('<ol><li>' + name + '</li>' + '<li class="' + index +'">' + item + '</li></ol>');
 								
 								if(index == 'resv_seq') {
 									$li.find('li').eq(1).addClass('rsv_num');	
 								}
-								
 								$resvInfoUl.append($li);	
 							}
 						}
 					});
 					
  					if((resvInfo.resv_state == "RESV_STATE_1" ||  resvInfo.resv_state == "RESV_STATE_2") && resvInfo.center_pilot_yn == "N") {
- 						$resvInfoUl.append('<li class="qrEnter_code"><p><a href=""><img src="/resources/img/front/qr_code.svg" alt="qr코드"></a></p><p>입장 QR코드</p></li>');
-						$(".qrEnter_code a").attr("href","javascript:fn_moveQrPage('" + resvInfo.resv_seq +"');");
+ 						$resvInfoUl.append('<li class="qrEnter_code"><p><a href="javascript:void(0);"><img src="/resources/img/front/qr_code.svg" alt="qr코드"></a></p><p>입장 QR코드</p></li>');
+ 						$resvInfoUl.find(".qrEnter_code a").attr("href","javascript:fn_moveQrPage('" + resvInfo.resv_seq +"');");
 					} 
 					
-					$(".contents").append($resvInfoUl);
+ 					let $btnUl = $('<ul class="non_memBtn"></ul>'); 
+ 					if(resvInfo.resv_state == "RESV_STATE_1" && resvInfo.resv_ticket_dvsn != "RESV_TICKET_DVSN_2") {
+ 						let $cancelBtnLi = $('<li class="cancelBtn"></li>');
+ 						let $cancelBtnA = $('<a href="javascript:void(0);">예약취소</a>').click(function () {
+ 							guestResvService.fn_resvCancelPop(resvInfo.resv_seq);
+						}).appendTo($cancelBtnLi);
+ 						
+ 						$btnUl.append($cancelBtnLi);
+					}
+ 					$btnUl.append('<li class="close_btn"><a href="javascript:location.reload();">닫기</a></li>');
+ 					
+					$(".resv_contents").append($resvInfoUl);
+					$(".resv_contents").append($btnUl);
 				});
-				
-
-				
-/* 				if(resvInfo.resv_state == "RESV_STATE_1" && resvInfo.resv_ticket_dvsn != "RESV_TICKET_DVSN_2") {
-					$(".non_memBtn .cancelBtn").show();
-					$("#resvCancleBtn").attr("href","javascript:guestResvService.fn_resvCancel('" + resvInfo.resv_seq + "');");
-				} else {
-					$(".non_memBtn .cancelBtn").hide();
-				} */
-				
 				
 				$(".search").hide();
 				$(".result").show();
+			},
+			fn_resvCancelPop : function(resvSeq) {
+				$('#cancel_rsv_num').html($('#' + resvSeq + ' .resv_seq').html());
+				$('#cancel_rsv_date').html($('#' + resvSeq + ' .resv_end_dt').html());
+				$('#cancel_rsv_center').html($('#' + resvSeq + ' .center_nm').html());
+				$('#cancel_rsv_seat').html($('#' + resvSeq + ' .seat_nm').html());
+				$('#cancel_rsv_req_date').html($('#' + resvSeq + ' .resv_req_date').html());
+				
+				$("#resvCancleBtn").attr("href","javascript:guestResvService.fn_resvCancel('" + resvSeq + "');");
+				$('#cancel_rsv_info').bPopup();
 			},
 			fn_resvCancel : function(resvSeq) {
 				var resvInfo = fn_getResvInfo(resvSeq);
