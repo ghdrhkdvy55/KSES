@@ -7,11 +7,11 @@
 				   ROW_NUMBER() OVER (ORDER BY ROWNUM DESC) AS RNUM, 
 				   TB.*
 		 	FROM (
-				    SELECT  a.ADMIN_ID, b.EMP_NM, b.EMP_CLPHN, b.EMP_TLPHN,
+				    SELECT  a.ADMIN_ID, a.EMP_NO, b.EMP_NM, b.EMP_CLPHN, b.EMP_TLPHN,
 	                        b.EMP_EMAIL,  FN_ORGNM(b.DEPT_CD, 'DEPT') DEPT_NM,
-							a.ADMIN_PWD, a.ADMIN_LOCKYN, a.USE_YN,	
+							a.ADMIN_LOCKYN, a.USE_YN,	
 							TO_CHAR(a.LAST_UPDT_DTM, 'YYYY-MM-DD') LAST_UPDT_DTM,
-				            c.AUTHOR_NM	,
+				            a.AUTHOR_CD, c.AUTHOR_NM, a.CENTER_CD,
 				            CASE  WHEN ( AUTHOR_CD != 'ROLE_ADMIN' OR  AUTHOR_CD != 'ROLE_SYSTEM') THEN
 				                     (SELECT CENTER_NM FROM TSEB_CENTER_INFO_M WHERE CENTER_CD = A.CENTER_CD)
 				                  ELSE ''
@@ -56,7 +56,7 @@
    </select>
       
    <select id="selectAdminUserManageDetail" resultType="lmap">
-	     SELECT a.ADMIN_ID, a.ADMIN_PWD, a.EMP_NO, a.AUTHOR_CD, a.ADMIN_LOCKYN, a.USE_YN, a.ADMIN_PASS_UPDT_DT,
+	     SELECT a.ADMIN_ID, a.EMP_NO, a.AUTHOR_CD, a.ADMIN_LOCKYN, a.USE_YN, a.ADMIN_PASS_UPDT_DT,
                 a.FRST_REGIST_DTM, a.FRST_REGTER_ID, a.LAST_UPDT_DTM, a.LAST_UPDUSR_ID,
                 FN_ORGNM(b.DEPT_CD, 'DEPT') DEPT_NM, b.EMP_NM, b.EMP_CLPHN, b.EMP_EMAIL, A.CENTER_CD
 	     FROM TSEH_ADMIN_INFO_M a, TSEH_EMP_INFO_M b
@@ -76,26 +76,21 @@
           <choose>
                 <when test="cnt > 0">
                        UPDATE TSEH_ADMIN_INFO_M SET USE_YN = #{useYn}
-	                               ,  LAST_UPDUSR_ID = #{userId, jdbcType=VARCHAR }
+	                               ,  LAST_UPDUSR_ID = #{lastUpdusrId, jdbcType=VARCHAR }
 	                               ,  LAST_UPDT_DTM = SYSDATE
 	                               ,  AUTHOR_CD = #{authorCd , jdbcType=VARCHAR }
 	                               ,  CENTER_CD = #{centerCd , jdbcType=VARCHAR }
-		                           <if test="adminPwd != ''">
-		                            <!-- , ADMIN_PASSWORD = CRYPTION_AES256.ENC_AES(#{adminPassword}) -->
-		                           , ADMIN_PWD = #{adminPwd} 
-		                           , ADMIN_PASS_UPDT_DT = SYSDATE
 		                           , ADMIN_LOCKYN ='N'
-		                            </if> 
 		                           <if test="empNo != ''">
 		                            ,  EMP_NO = #{empNo, jdbcType=VARCHAR }
 		                           </if>
 	                   WHERE ADMIN_ID = #{adminId};
                 </when>
                 <otherwise>
-				       INSERT INTO TSEH_ADMIN_INFO_M(ADMIN_ID, ADMIN_PWD, EMP_NO, AUTHOR_CD, ADMIN_LOCKYN, USE_YN, ADMIN_PASS_UPDT_DT,
+				       INSERT INTO TSEH_ADMIN_INFO_M(ADMIN_ID, EMP_NO, AUTHOR_CD, ADMIN_LOCKYN, USE_YN, ADMIN_PASS_UPDT_DT,
 				                                     CENTER_CD, FRST_REGIST_DTM, FRST_REGTER_ID, LAST_UPDT_DTM, LAST_UPDUSR_ID)
-				       VALUES (	#{adminId}	, #{adminPwd} , #{empNo}, #{authorCd}, 'N', 'Y', SYSDATE,
-				                #{centerCd ,jdbcType=VARCHAR}, SYSDATE, #{userId ,jdbcType=VARCHAR}, SYSDATE, #{userId ,jdbcType=VARCHAR} );
+				       VALUES (	#{adminId}, #{empNo}, #{authorCd}, 'N', 'Y', SYSDATE,
+				                #{centerCd ,jdbcType=VARCHAR}, SYSDATE, #{frstRegterId ,jdbcType=VARCHAR}, SYSDATE, #{lastUpdusrId ,jdbcType=VARCHAR} );
 				       
 				       UPDATE TSEH_EMP_INFO_M SET ADMIN_DVSN = 'Y' WHERE EMP_NO = #{empNo};
                 </otherwise>
@@ -106,29 +101,24 @@
    </insert>
    <update id="updateAdminUserManage">
 	   UPDATE TSEH_ADMIN_INFO_M SET USE_YN = #{useYn}
-	                               ,  LAST_UPDUSR_ID = #{userId, jdbcType=VARCHAR }
+	                               ,  LAST_UPDUSR_ID = #{lastUpdusrId, jdbcType=VARCHAR }
 	                               ,  LAST_UPDT_DTM = SYSDATE
 	                               ,  AUTHOR_CD = #{authorCd , jdbcType=VARCHAR }
 	                               ,  CENTER_CD = #{centerCd , jdbcType=VARCHAR }
-		                           <if test="adminPwd != ''">
-		                            <!-- , ADMIN_PASSWORD = CRYPTION_AES256.ENC_AES(#{adminPassword}) -->
-		                           , ADMIN_PWD = #{adminPwd} 
-		                           , ADMIN_PASS_UPDT_DT = SYSDATE
 		                           , ADMIN_LOCKYN ='N'
-		                            </if> 
 		                           <if test="empNo != ''">
 		                            ,  EMP_NO = #{empNo, jdbcType=VARCHAR }
 		                           </if>
 	   WHERE ADMIN_ID = #{adminId}
    </update>
    <update id="updateAdminUserLockManage">
-       UPDATE TSEH_ADMIN_INFO_M SET ADMIN_LOCKYN = 'Y' , ADMIN_PASS_UPDT_DT = SYSDATE
+       UPDATE TSEH_ADMIN_INFO_M SET ADMIN_LOCKYN = 'Y'
        WHERE ADMIN_ID = #{adminId}
    </update>
    <delete id="deleteAdminUserManage">
 	   DELETE FROM TSEH_ADMIN_INFO_M
-       WHERE ADMIN_ID = #{adminId}   ;
+       WHERE ADMIN_ID = #{adminId};
 	   UPDATE TSEH_EMP_INFO_M SET ADMIN_DVSN = 'N' 
-	   WHERE EMP_NO = (SELECT EMP_NO FROM TSEH_ADMIN_INFO_M WHERE ADMIN_ID = #{adminId}) 
+	   WHERE EMP_NO = (SELECT EMP_NO FROM TSEH_ADMIN_INFO_M WHERE ADMIN_ID = #{adminId})
    </delete>
 </mapper>

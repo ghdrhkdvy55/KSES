@@ -22,5 +22,7 @@ public interface UserInfoManageService {
     
     int updateUserRcptInfo(UserInfo vo) throws Exception;
     
+    int updateUserNoshowCount(String userId) throws Exception;
+    
     boolean deleteUserInfo(String delCds) throws Exception;
 }

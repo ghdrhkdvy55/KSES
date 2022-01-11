@@ -128,19 +128,64 @@
           	</div>
 			<div class="clear"></div>
 		</div>
+<<<<<<< HEAD
     </div>		
     
     <!-- 비회원 -->				
 	<!-- // 개인정보 수집이용 약관 팝업 -->
+=======
+    </div>	
+    				
+	<!-- // 개인정보 수집이용 약관 팝업-->
+>>>>>>> branch 'master' of https://github.com/ghdrhkdvy55/KSES.git
     <div id="person_agree" data-popup="person_agree" class="popup">
     	<div class="pop_con rsv_popup">
-          	<a class="button b-close">X</a>
+          	<div class="pop_wrap">
+            	<div class="text privacy_text">
+                	<p class="font14 mg_l20">개인정보 수집·이용 및  제 3자 제공 동의서</p><br>                
+                	<p class="font13 mg_l20">코로나19 확산방지를 위하여 경주사업총괄본부에서는 다음과 같이 개인정보 수집·이용 및 제 3자 제공에 대한 동의를 얻고자 합니다.</p>
+                
+                	<div class="tablet_wrap">                		
+						<ol class="person_cont">
+							<li>1. 수집 이용하려는 개인정보의 항목
+						        <ul>
+						           <li>스피드온 회원정보의 ID, 카드ID, 이름, 휴대전화번호, 성별, 나이, 백신접종정보, 방문지점</li>
+						        </ul>
+						    </li>
+						    <li>2. 개인정보 이용기간
+						        <ul>
+						            <li>개인정보 동의일로부터 3년</li>
+						        </ul>
+						    </li>
+						    <li>3. 개인정보 수집이용 거부 및 불이익
+						        <ul>
+						           <li>이용자는 해당 개인정보 수집 및 이용 동의에 대한 거부할 권리가 있습니다. 그러나 동의하지 않을경우 스피드온 회원정보를 통한 스마트입장시스템 서비스 이용이 불가능합니다.</li>
+						        </ul>
+						    </li>						                   			
+						</ol>
+                   	</div>
+                 
+                    <p class="font13 mg_l20">※위의 개인정보 수집·이용 및 3자 제공에 대한 동의를 거부할 권리가 있습니다. 그러나 동의를 거부할 경우 출입이 제한될 수 있습니다. </p><br>
+                </div>                
+            </div>
+		</div>
+		<div class="cancel_btn">
+			<a href="javascript:bPopupClose('person_agree');" class="grayBtn">닫기</a>
+		</div>
+		<div class="clear"></div>
+	</div>
+    <!-- 개인정보 수집이용 약관 팝업 // -->
+    
+	<!-- // 홍보 및 마케팅 활용 동의 팝업-->
+    <div id="mktg_agree" data-popup="mktg_agree" class="popup">
+    	<div class="pop_con rsv_popup">
           	<div class="pop_wrap">
             	<div class="text privacy_text">
                 	<p class="font14 mg_l20">개인정보 수집·이용 및  제 3자 제공 동의서</p><br>                
                 	<p class="font13 mg_l20">코로나19 확산방지를 위하여 경주사업총괄본부에서는 다음과 같이 개인정보 수집·이용 및 제 3자 제공에 대한 동의를 얻고자 합니다.</p>
                 
                 	<div class="tablet_wrap">
+<<<<<<< HEAD
                          <div class="pd_l10 pd_r10">
                         	<p class="font13 mg_l10">▶ 개인정보수집·이용 동의(필수)</p>
                         	<table class="tb3" summary="개인정보수집·이용 동의">
@@ -223,15 +268,26 @@
                     </div><br>
                     
                     <p class="font13 mg_l20">※위의 개인정보 수집·이용 및 3자 제공에 대한 동의를 거부할 권리가 있습니다. 그러나 동의를 거부할 경우 출입이 제한될 수 있습니다. </p><br>
+=======
+						<ol class="person_cont">
+							<li>1. 활용 목적 : 본장 및 지점별 마케팅 문자 발송</li>
+						    <li>2. 활용 항목 : 휴대전화번호</li>
+						    <li>3. 활용 및 보관기간 : 개인정보 동의일로부터 3년</li>
+						    <li>4. 동의를 거부할 권리 및 거부 시 불이익 : 이용자는 해당 개인정보의 마케팅 활용 동의를 거부할 권리가 있으며, 거부 시 불이익은 없습니다.</li>						                   			
+						</ol>
+                   	</div>
+                
+                    <p class="font13 mg_l20">※ 코로나 방역, 천재지변 등으로 인한 긴급알림 문자는 동의가 없어도 해당 영업장 입장신청자들을 대상으로 발송됩니다. </p><br>
+>>>>>>> branch 'master' of https://github.com/ghdrhkdvy55/KSES.git
                 </div>                
             </div>
-          </div>
-          <div class="cancel_btn">
-              <a href="" class="grayBtn">닫기</a>
-          </div>
-          <div class="clear"></div>
-      </div>
-    </div>				
+		</div>
+		<div class="cancel_btn">
+			<a href="javascript:bPopupClose('mktg_agree');" class="grayBtn">닫기</a>
+		</div>
+		<div class="clear"></div>
+	</div>
+    <!-- 홍보 및 마케팅 활용 동의 팝업 // -->  
     				
 	<script type="text/javascript">
 		var loginService = 
@@ -321,8 +377,8 @@
 					function(result) {
 				    	if(result.regist != null) {
 							if (result.regist.Error_Msg == "SUCCESS" || result.userInfo != null) {
-								console.log(result.userInfo.indvdlinfoAgreDt);
-								if(result.userInfo.indvdlinfoAgreDt != null && result.userInfo.indvdlinfoAgreDt != "") {
+								if(result.userInfo.indvdlinfoAgreYn == "N") {
+									result.userInfo.indvdlinfoAgreYn = "";
 									loginService.createUserSession(result.userInfo);									
 								} else {
 									$("#agreeCheck .cancel_btn a:eq(0)").click(function () {
@@ -335,11 +391,11 @@
 								fn_openPopup(result.regist.Error_Msg, "red", "ERROR", "확인", "");
 							}
 				    	} else {
-				    		fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "");
+				    		fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
 				    	}
 					},
 					function(request) {
-						alert("ERROR : " + request.status);	       						
+						fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");    						
 					}    		
 				);	
 			},
@@ -367,11 +423,11 @@
 
 				    		location.href = "/front/main.do";
 				    	} else {
-				    		alert("ERROR : " + result.status);	
+				    		fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");	
 				    	}
 					},
 					function(request) {
-						alert("ERROR : " + request.status);	       						
+						fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");	       						
 					}    		
 				);	
 			},
@@ -382,6 +438,10 @@
 				}
 				
 				userInfo.indvdlinfoAgreYn = $("#person_agree_yn").val();
+				loginService.createUserSession(userInfo);
+			},
+			mktginfoAgre : function(userInfo) {
+				userInfo.mktginfoAgreYn = $("#person_agree_yn").val();
 				loginService.createUserSession(userInfo);
 			}
 		}	

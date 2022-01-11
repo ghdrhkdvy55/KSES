@@ -1,7 +1,5 @@
 package com.kses.backoffice.cus.kko.service;
 
-import java.util.Map;
-
 import com.kses.backoffice.cus.kko.vo.MmsDataInfo;
 import com.kses.backoffice.cus.kko.vo.SmsDataInfo;
 
@@ -12,5 +10,5 @@ public interface SureManageSevice {
 	
 	public int insertMmsData(MmsDataInfo mmsDataInfo) throws Exception;
 	
-	public boolean insertResvSureData(String msgDvsn, Map<String, Object> resvInfo) throws Exception;
+	public boolean insertResvSureData(String msgDvsn, String resvSeq) throws Exception;
 }

@@ -58,6 +58,8 @@ public interface ResvInfoManageMapper {
 	
 	public int resvCompleteUse();
 	
+	public int resvQrCountChange(@Param("resvSeq") String resvSeq);
+	
 	public int resbillChange(ResvInfo vo);
 	
 	public int resPriceChange(ResvInfo vo);

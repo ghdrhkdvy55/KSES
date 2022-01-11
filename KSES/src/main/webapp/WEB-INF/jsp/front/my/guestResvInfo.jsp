@@ -233,6 +233,8 @@
 				    		fn_scrollMove($(".ok_sumit"));
 				    		fn_openPopup("인증번호가 발송 되었습니다.(" +  result.certifiCode + ")", "blue", "SUCCESS", "확인", "");
 							certifiCode = result.certifiCode;
+							$(".rsvInfo").hide();
+							$(".inquiry_btn a").attr("href","javascript:guestResvService.fn_reSmsCertfi();").html("인증번호 재요청");
 				    	} else if(result.status == "LOGIN FAIL") {
 				    		fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
 				    	} else {
@@ -243,6 +245,15 @@
 						fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");	       						
 					}    		
 				);
+			},
+			fn_reSmsCertfi : function() {
+				$(".rsvInfo").show();
+				$(".rsvInfo input").val("");
+				$(".inquiry_btn a").attr("href","javascript:guestResvService.fn_SmsCertifi();").html("인증번호 요청");
+				
+				certifiCode = "";
+				certifiNm = "";
+				certifiNum = "";
 			},
 			fn_checkform : function() {
 				if (certifiCode == "") {

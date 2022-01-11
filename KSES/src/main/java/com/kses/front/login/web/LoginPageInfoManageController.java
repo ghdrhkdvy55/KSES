@@ -100,7 +100,7 @@ public class LoginPageInfoManageController {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
-			if(!StringUtils.isBlank(userLoginInfo.getIndvdlinfoAgreYn())) {
+			if(!StringUtils.isBlank(userLoginInfo.getIndvdlinfoAgreYn()) && userLoginInfo.getIndvdlinfoAgreYn().equals("Y")) {
 				String envType = propertiesService.getString("Globals.envType");
 				Map<String, Object> vacntnInfo = null;
 				if(envType.equals("DEV")) {
@@ -157,9 +157,8 @@ public class LoginPageInfoManageController {
 	public ModelAndView frontSSOLogin(	@RequestParam Map<String, Object> params,
 										HttpServletRequest request) throws Exception {
 		
-		ModelAndView model = new ModelAndView("/front/login/mainpage");
+		ModelAndView model = new ModelAndView("/front/main/mainpage");
 		try {
-			
 			UserLoginInfo userLoginInfo = userService.selectSSOUserInfo(params);
 			
 			if(userLoginInfo != null) {

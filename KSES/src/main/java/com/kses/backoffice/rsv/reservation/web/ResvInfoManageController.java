@@ -267,7 +267,7 @@ public class ResvInfoManageController {
 				return model;	
 		    }
 			
-			Map<String, String> resultMap = resvService.resvInfoCancelN(resvSeq);
+			Map<String, String> resultMap = resvService.resvInfoAdminCancel(resvSeq);
 			
 			model.addObject(Globals.STATUS, resultMap.get(Globals.STATUS));
 			model.addObject(Globals.STATUS_MESSAGE, resultMap.get(Globals.STATUS_MESSAGE));
@@ -289,7 +289,7 @@ public class ResvInfoManageController {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		List<Map<String, String>> resvCancelList = new LinkedList<Map<String, String>>();
 		int failCount = 0;
-		
+		int ticketCount = 0;
 		try {
 		    Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
 			if(!isAuthenticated) {
@@ -310,20 +310,25 @@ public class ResvInfoManageController {
 			List<Map<String, Object>> resvList = resvService.selectResInfoManageListByPagination(params);
 
 			for(Map<String,Object> resvInfo : resvList) {
-				String resvSeq = resvInfo.get("resv_seq").toString();
-				Map<String, String> resultMap = resvService.resvInfoCancelN(resvSeq);
+				if(!SmartUtil.NVL(resvInfo.get("resv_ticket_dvsn"),"").equals("RESV_TICKET_DVSN_2")) {
+					String resvSeq = resvInfo.get("resv_seq").toString();
+					Map<String, String> resultMap = resvService.resvInfoAdminCancel(resvSeq);
 				
-				if(!resultMap.get(Globals.STATUS).equals("SUCCESS")) {
-					failCount ++;
+					if(!resultMap.get(Globals.STATUS).equals("SUCCESS")) {
+						failCount ++;
+					}
+				
+					resultMap.put("resvSeq", resvSeq);
+					resvCancelList.add(resultMap);
+				} else {
+					ticketCount ++;
 				}
-				
-				resultMap.put("resvSeq", resvSeq);
-				resvCancelList.add(resultMap);
 			}
 			
 			model.addObject("allCount", resvList.size());
-			model.addObject("successCount", resvList.size() - failCount);
+			model.addObject("successCount", resvList.size() - (failCount + ticketCount));
 			model.addObject("failCount", failCount);
+			model.addObject("ticketCount", ticketCount);
 			model.addObject("resvCancelList", resvCancelList);
 			
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);

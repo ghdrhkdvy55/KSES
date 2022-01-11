@@ -438,7 +438,7 @@
 										setHtml = "";
 										setHtml += "<li><span><a href='javascript:mainService.fn_userResvInfo(&#39;NOW&#39;, &#39;" + obj.resv_seq + "&#39;, &#39;rsv_info&#39;);' >" + obj.center_nm + " " + obj.seat_nm + "</a></span></li>";
 										
-										setHtml += obj.resv_ticket_dvsn == "RESV_TICKET_DVSN_1" ? 
+										setHtml += obj.resv_ticket_dvsn != "RESV_TICKET_DVSN_2" ? 
 												"<li class='rsv_cancel'><a href='javascript:mainService.fn_userResvInfo(&#39;CANCEL&#39;, &#39;" + obj.resv_seq + "&#39;, &#39;cancel_rsv_info&#39;);'>예약취소</a></li>" 
 												: "";
 										
@@ -611,7 +611,9 @@
    	    								     );
     	    					         }
     	    					     });
-    	    					}	
+    	    					} else {
+    	    						$(".null_cont").show();
+    	    					}
     	    				} else {
 								fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
     	    				} 

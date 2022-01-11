@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.kses.backoffice.bas.menu.service.MenuInfoService;
+import com.kses.backoffice.util.SmartUtil;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
@@ -109,16 +110,13 @@ public class EgovLoginController {
 		String userIp = EgovClntInfo.getClntIP(request);
 		
 		// 1. 일반 로그인 처리
+		loginVO.setAdminPwd(SmartUtil.getEncryptSHA256(loginVO.getAdminPwd()));
 		LoginVO resultVO = loginService.actionLogin(loginVO);
 		LOGGER.debug("==========================================================");
 		LOGGER.debug("userIp:" + userIp);
 		resultVO.setIp(userIp);
 		LOGGER.debug("==========================================================");
 		boolean loginPolicyYn = true;
-		
-		
-		
-		
 		
         /* 로그인 정책 할건지 확인 필요 
          * 

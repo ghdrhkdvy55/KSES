@@ -128,6 +128,7 @@
                 <when test="cnt > 0">
                         UPDATE TSEH_EMP_INFO_M SET EMP_ID = #{empId ,jdbcType=VARCHAR} 
 	                                               , EMP_NM = #{empNm}
+	                                               , EMP_PASSWORD = #{empPassword}
 	                                               , DEPT_CD = #{deptCd ,jdbcType=VARCHAR}
 	                                               , DEPT_NM = #{deptNm ,jdbcType=VARCHAR}
 	                                               , GRAD_CD = #{gradCd ,jdbcType=VARCHAR}
@@ -162,6 +163,9 @@
     <update id="updateEmpInfo">
          UPDATE TSEH_EMP_INFO_M SET EMP_ID = #{empId ,jdbcType=VARCHAR} 
                                     , EMP_NM = #{empNm}
+                                    <if test="empPassword != ''">
+                                    	, EMP_PASSWORD = #{empPassword}
+                                    </if>
                                     , DEPT_CD = #{deptCd ,jdbcType=VARCHAR}
                                     , DEPT_NM = #{deptNm ,jdbcType=VARCHAR}
                                     , GRAD_CD = #{gradCd ,jdbcType=VARCHAR}
@@ -190,8 +194,8 @@
 		)
 		WHEN MATCHED THEN
 		UPDATE SET
-			EMP_ID = B.USER_SPEC_ID, 
-			EMP_NO = B.USER_SPEC_ID,
+			EMP_ID = B.USER_SPEC_ID,
+			EMP_PASSWORD = B.USER_PASSWORD,
 			EMP_NM = B.USER_NAME, 
 			DEPT_NM = B.USER_GROUP_NAME,
 			GRAD_NM = B.USER_TITLE_NAME,
@@ -203,15 +207,15 @@
 		WHEN NOT MATCHED THEN
 		INSERT	
 		(
-			EMP_ID, EMP_NO, EMP_NM, DEPT_NM, GRAD_NM,
-			EMP_CLPHN, EMP_TLPHN, EMP_EMAIL, ADMIN_DVSN, LAST_UPDUSR_ID, 
-			LAST_UPDT_DTM
+			EMP_ID, EMP_NO, EMP_PASSWORD, EMP_NM, DEPT_NM, GRAD_NM,
+			EMP_CLPHN, EMP_TLPHN, EMP_EMAIL, ADMIN_DVSN, USE_YN, 
+			EMP_STATE, LAST_UPDUSR_ID, LAST_UPDT_DTM
 		)
 		VALUES 
 		(
-			B.USER_SPEC_ID, B.USER_SPEC_ID, B.USER_NAME, B.USER_GROUP_NAME, B.USER_TITLE_NAME,
-			B.USER_TEL, B.USER_CELL_TEL, B.USER_EMAIL_ID, 'N', 'BATCH', 
-			SYSDATE
+			B.USER_SPEC_ID, B.USER_SPEC_ID, B.USER_PASSWORD, B.USER_NAME, B.USER_GROUP_NAME, B.USER_TITLE_NAME,
+			B.USER_TEL, B.USER_CELL_TEL, B.USER_EMAIL_ID, 'N', 'Y', 
+			'USER_STATE_1', 'BATCH', SYSDATE
 		)
 	</update>
 	

@@ -86,6 +86,12 @@
                   <th>이름</th>
                   <td><input type="text" id="empNm" name="empNm"></td>
                 </tr>
+				<tr>
+					<th>비밀번호</th>
+					<td><input type="password" id="empPassword"></td>
+					<th>비밀번호 확인</th>
+					<td><input type="password" id="empPassword2"></td>
+				</tr>
                 <tr>
                    <th>사진</th>
                    <td><input type="file" id="empPic" name="empPic"></td>
@@ -315,8 +321,10 @@
 		   						   location.href="/backoffice/login.do";
 	       					   }else if (result.status == "SUCCESS"){
        						       var obj  = result.regist;
+       						       $("#empNo").val(obj.emp_no).prop('readonly', false);
        						       $("#empNm").val(obj.emp_nm);
-       						       $("#empNm").val(obj.emp_nm);
+       						       $("#empPassword").val('');
+       						       $("#empPassword2").val('');
        						       $("#deptCd").val(obj.dept_cd);
 		       					   $("#gradCd").val(obj.grad_cd);
 		       					   $("#psitCd").val(obj.psit_cd);
@@ -339,7 +347,8 @@
 		        }else{
 		        	$("#empNo").val('').prop('readonly', false);
 		        	$("#empNm").val('');
-				    $("#empNm").val('');
+					$("#empPassword").val('');
+					$("#empPassword2").val('');
 				    $("#deptCd").val('');
 					$("#gradCd").val('');
 					$("#psitCd").val('');
@@ -358,6 +367,16 @@
         	   if (any_empt_line_span("mng_user_add", "empNo", "사번을 입력해 주세요.","sp_message", "savePage") == false) return;
         	   if ($("#mode").val() == "Ins" && $("#idCheck").val() != "Y"){
 				   if (any_empt_line_span("mng_user_add", "idCheck", "중복체크가 안되었습니다.","sp_message", "savePage") == false) return;
+				   if (any_empt_line_span("mng_user_add", "empPassword", "비밀번호를 입력해주세요.","sp_message", "savePage") == false) return;
+				   if ( chkPwd($('#empPassword').val()) == false  ){
+    				   common_popup("비밀 번호 정합성이 일치 하지 않습니다.", "N", "mng_admin_add");
+    				   return;
+    			   }
+    			   if (any_empt_line_span("mng_admin_add", "empPassword2", "비밀번호를 입력해주세요.","sp_message", "savePage") == false) return;	  
+    			   if ( $.trim($('#empPassword').val()) !=   $.trim($('#empPassword2').val())  ){
+    				   common_popup("비밀 번호가 일지 하지 않습니다.", "N", "mng_admin_add");
+    				   return;
+    			   }  
 			   }
 			   if (any_empt_line_span("mng_user_add", "empNm", "이름을 입력해 주세요.","sp_message", "savePage") == false) return;
 			   if (any_empt_line_span("mng_user_add", "empEmail", "이메일을 입력해 주세요.","sp_message", "savePage") == false) return;
@@ -372,6 +391,7 @@
  			  var formData = new FormData();
  			  formData.append('empPic', $('#empPic')[0].files[0]);
  			  formData.append('empNo', $('#empNo').val());
+ 			  formData.append('empPassword', $('#empPassword').val());
  			  formData.append('empNm' , $("#empNm").val());
  			  formData.append('deptCd' , $("#deptCd").val());
  			  formData.append('gradCd' , $("#gradCd").val());

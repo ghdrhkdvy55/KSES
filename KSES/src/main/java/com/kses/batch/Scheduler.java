@@ -10,16 +10,13 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.kses.backoffice.bld.center.service.NoshowInfoManageService;
+import com.kses.backoffice.cus.usr.service.UserInfoManageService;
 import com.kses.backoffice.mng.employee.service.EmpInfoManageService;
-import com.kses.backoffice.rsv.reservation.mapper.ResInfoManageMapper;
-import com.kses.backoffice.rsv.reservation.mapper.ResTimeInfoManageMapper;
 import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
 import com.kses.backoffice.sym.log.service.InterfaceInfoManageService;
-import com.kses.backoffice.sym.log.service.ScheduleInfoManageService;
 import com.kses.backoffice.util.SmartUtil;
 
 import egovframework.com.cmm.service.Globals;
-
 
 //spring 배치 서비스 정리 
 @Component
@@ -28,15 +25,6 @@ public class Scheduler {
 
 	private static final Logger LOGGER = Logger.getLogger(Scheduler.class);
 
-	@Autowired
-	private ResTimeInfoManageMapper timeMapper;
-	
-	@Autowired
-	private ResInfoManageMapper resMapper;
-	
-	@Autowired
-	private ScheduleInfoManageService scheduleService;
-	
 	@Autowired
 	private EmpInfoManageService empService;
 	
@@ -49,6 +37,8 @@ public class Scheduler {
 	@Autowired
 	private InterfaceInfoManageService interfaceService;
 	
+	@Autowired
+	private UserInfoManageService userService;
 
 	/**
 	 * 노쇼 예약정보 자동취소 스케줄러
@@ -68,16 +58,17 @@ public class Scheduler {
 				
 				if(noshowResvList.size() != 0) {
 					int successCount = 0;
-					int pilotCount = 0;
+					int ticketCount = 0;
 					
 					for(Map<String, Object> map : noshowResvList) {
+						String userId = SmartUtil.NVL(map.get("user_id"),"");
+						String userDvsn = SmartUtil.NVL(map.get("resv_user_dvsn"),"");
 						String resvSeq = SmartUtil.NVL(map.get("resv_seq"),"");
 						String noshowCd = SmartUtil.NVL(map.get("noshow_cd"),"");
-						String centerPilotYn = SmartUtil.NVL(map.get("center_pilot_yn"),"");
 						String resvPayDvsn = SmartUtil.NVL(map.get("resv_pay_dvsn"),"");
 						String resvTicketDvsn = SmartUtil.NVL(map.get("resv_ticket_dvsn"),"");
 						
-						if(centerPilotYn.equals("N")) {
+						if(!resvTicketDvsn.equals("RESV_TICKET_DVSN_2")) {
 							LOGGER.info("예약번호 : " + resvSeq + " " + i + "차 자동취소 시작" );
 							
 							if(i == 2 && resvPayDvsn.equals("RESV_PAY_DVSN_2") && resvTicketDvsn.equals("RESV_TICKET_DVSN_1")) {
@@ -97,21 +88,26 @@ public class Scheduler {
 							
 							// 노쇼정보등록 & 예약정보취소
 							if(!noshowService.updateNoshowResvInfoTran(resvSeq, noshowCd)) {
+								LOGGER.info("예약번호 : " + resvSeq + " 예약취소 및 노쇼예약정보 등록 실패");
 								continue;
 							}
-
+							
+							if(userDvsn.equals("USER_DVSN_1")) {
+								userService.updateUserNoshowCount(userId);
+							}
+							
 							successCount++;
 						} else {
-							LOGGER.info("예약번호 : " + resvSeq + " 시범지점 예외처리");
-							pilotCount++;
+							LOGGER.info("예약번호 : " + resvSeq + " 무인발권기 거래 예약정보 예외처리");
+							ticketCount++;
 						}
 					}
 					
 					LOGGER.info("=====================================================================================");
 					LOGGER.info(i + "차 노쇼 예약정보(총) : " + noshowResvList.size());
 					LOGGER.info("성공 : " + successCount + "건");
-					LOGGER.info("실패 : " +  ((noshowResvList.size() - pilotCount) - successCount) + "건");
-					LOGGER.info("시범지점예외 : " + pilotCount + "건");
+					LOGGER.info("실패 : " +  (noshowResvList.size() - (ticketCount + successCount)) + "건");
+					LOGGER.info("무인발권기예외 : " + ticketCount + "건");
 					LOGGER.info("=====================================================================================");
 				} else {
 					LOGGER.info("resvNoshowScheduler =>" + i + "차 노쇼 예약정보 없음");
@@ -127,18 +123,21 @@ public class Scheduler {
 	@Scheduled(cron="0 0 23 * * ?")
 	public void ksesResvCompleteUse() throws Exception {		
 		try {
+			LOGGER.info("----------------------------KSES COMPLETE USE BATCH START----------------------------");
 			resvService.resvCompleteUse();
 		} catch (RuntimeException re) {
 			LOGGER.error("ksesResvCompleteUse =>  Run Failed", re);
 		} catch (Exception e) {
 			LOGGER.error("ksesResvCompleteUse => Failed", e);
 		}
+		LOGGER.info("----------------------------KSES COMPLETE USE BATCH END----------------------------");
 	}
 
 	
 	@Scheduled(cron="0 0 08 * * ?")
 	public void ksesEmpInfoUpdateScheduler() throws Exception {		
 		try {
+			LOGGER.info("----------------------------KSES EMP BATCH START----------------------------");
 			int ret = empService.mergeEmpInfo();
 			if(ret >= 0) {
 				LOGGER.info("ksesEmpInfoUpdateScheduler =>" + "인사정보 " + ret + "건 갱신");
@@ -150,6 +149,7 @@ public class Scheduler {
 		} catch (Exception e) {
 			LOGGER.error("ksesEmpInfoUpdateScheduler => Failed", e);
 		}
+		LOGGER.info("----------------------------KSES EMP BATCH END----------------------------");
 	}
 
 	
