@@ -2528,10 +2528,14 @@ ul.tabs li{
 #mask {
     height: 240px!important;
 }
-	.branch_list >li ul {
-	    text-align: center;
-	    padding: 2.5rem 0;
-	}
+.branch_list >li ul {
+    text-align: center;
+    padding: 2.5rem 0;
+    height: 60px;
+    display: table-cell;
+    vertical-align: middle;
+    width: 50%;
+}
   .f_logo_box {padding: 1.5rem 0;  padding-bottom:10rem; margin-top:2rem;}
   .linkBox {
     border-bottom: 1px solid #959595;
@@ -2554,7 +2558,8 @@ ul.tabs li{
 	.price table td {padding :1rem 0.5rem;}
 	.main_user_rsv li span a {font-size: 2em;}
 	.pay_passWord li input {font-size:12px;}
-	.rsvBack #container {padding:2rem 0}
+	.rsvBack #container {padding-bottom:15rem}
+	
 }
 
 /*1227*/
