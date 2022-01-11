@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="ui" uri="http://egovframework.gov/ctl/ui"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!DOCTYPE html>
@@ -254,7 +255,7 @@
 													<td>
 														<img src="${item.codeetc2}">${item.codenm}
 													<c:if test="${item.codeetc1 ne 0}">
-														<span>${item.codeetc1}원</span>
+														<span><fmt:formatNumber value="${item.codeetc1}" pattern="#,###" />원</span>
 													</c:if>
 													<c:if test="${item.codeetc1 eq 0}">
 														<span>무료</span>
