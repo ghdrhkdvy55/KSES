@@ -52,7 +52,7 @@
                     </ul>
 
                     <div class="inquiry_btn">
-                        <a href="javascript:guestResvService.fn_SmsCertifi();">인증번호 요청</a>
+                        <a href="javascript:guestResvService.fn_getGuestResvInfo();;">인증번호 요청</a>
                     </div>
                     
                     <div class="ok_sumit">
@@ -72,7 +72,7 @@
                 <div class="contents"> 
                     <!--지점선택-->                 
                     <h3>예약 정보 조회</h3>
-                    <ul class="my_rsv rsvInfo_result">                        
+<!--                     <ul class="my_rsv">                        
                         <li>
                             <ol>
                                 <li>예약번호</li>
@@ -125,12 +125,12 @@
                     <ul class="non_memBtn">
                         <li class="cancelBtn"><a href="javascript:$('#cancel_rsv_info').bPopup();">예약취소</a></li>
                         <li class="close_btn"><a href="javascript:location.reload();">닫기</a></li>
-                    </ul>
+                    </ul> -->
                 </div>
             </div>
         </div>
 
-		<div id="foot_btn">
+<!-- 		<div id="foot_btn">
 				<div class="contents">
 					<ul>
 						<li class="home"><a href="javascript:fn_pageMove('regist','/front/main.do');">home</a><span>HOME</span></li>
@@ -139,7 +139,7 @@
 		            </ul>
 				<div class="clear"></div>
 			</div>
-		</div>
+		</div> -->
 	</div>
 	</form:form>
 	
@@ -201,25 +201,51 @@
 		var certifiCode = "";
 		var certifiNm = "";
 		var certifiNum = "";
+		var resvInfoList = new Object();
     
 		var guestResvService = {
-			fn_SmsCertifi : function() {
-				certifiNm = $("#resvUserNm").val();
-				certifiNum = $("#resvUserClphn").val();
-					
-
-				if(certifiNm == "") {
+			fn_getGuestResvInfo : function() {
+				if($("#resvUserNm").val() == "") {
 					fn_openPopup("이름을 입력해주세요.", "red", "ERROR", "확인", ""); return;
-				} else if (certifiNum == "") {
+				} else if ($("#resvUserClphn").val() == "") {
 					fn_openPopup("휴대폰번호를 입력해주세요.", "red", "ERROR", "확인", ""); return;
-				} else if (!validPhNum(certifiNum)) {
+				} else if (!validPhNum($("#resvUserClphn").val())) {
 					fn_openPopup("올바른 휴대폰번호를 입력해주세요.", "red", "ERROR", "확인", ""); return;
 				}
-						
+				
+				var url = "/front/guestMyResvInfo.do";
+				var params = {
+					"resvUserNm" : $("#resvUserNm").val(),
+					"resvUserClphn" : $("#resvUserClphn").val()
+				}
+
+				fn_Ajax
+				(
+				    url,
+				    "POST",
+					params,
+					false,
+					function(result) {
+						if(result.status == "SUCCESS") {
+							if(result.guestResvInfo.length > 0) {
+								resvInfoList = result.guestResvInfo;
+								console.log(resvInfoList);
+								guestResvService.fn_SmsCertifi();
+							} else {
+								fn_openPopup("해당 정보로 예약된 정보가 존재하지 않습니다.", "red", "ERROR", "확인", "");
+							}
+						} 
+					},
+					function(request) {
+						fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");	       						
+					}    		
+				);
+			},
+			fn_SmsCertifi : function() {
 				var url = "/front/resvCertifiSms.do";
 				var params = {
-					"certifiNm" : certifiNm,
-					"certifiNum" : certifiNum
+					"certifiNm" : $("#resvUserNm").val(),
+					"certifiNum" : $("#resvUserClphn").val()
 				}
 					
 				fn_Ajax
@@ -230,9 +256,12 @@
 					false,
 					function(result) {
 				    	if(result.status == "SUCCESS") {
-				    		fn_scrollMove($(".ok_sumit"));
 				    		fn_openPopup("인증번호가 발송 되었습니다.(" +  result.certifiCode + ")", "blue", "SUCCESS", "확인", "");
+				    		
+							certifiNm = $("#resvUserNm").val();
+							certifiNum = $("#resvUserClphn").val();
 							certifiCode = result.certifiCode;
+							
 							$(".rsvInfo").hide();
 							$(".inquiry_btn a").attr("href","javascript:guestResvService.fn_reSmsCertfi();").html("인증번호 재요청");
 				    	} else if(result.status == "LOGIN FAIL") {
@@ -263,69 +292,58 @@
 					fn_openPopup("인증번호가 일치하지 않습니다.", "red", "ERROR", "확인", "");
 					return;
 				}
-				
-				var url = "/front/guestMyResvInfo.do";
-				var params = {
-					"resvUserNm" : certifiNm,
-					"resvUserClphn" : certifiNum
-				}
 
-				fn_Ajax
-				(
-				    url,
-				    "POST",
-					params,
-					false,
-					function(result) {
-						if(result.status == "SUCCESS") {
-							if(result.guestResvInfo != null) {
-								var guestResvInfo = result.guestResvInfo;
+				$.each(resvInfoList, function(index, resvInfo) {
+					let $resvInfoUl = $('<ul class="my_rsv"><ul>').attr('id', resvInfo.resv_seq);
+					
+					$.each(resvInfo, function(index, item) {
+						let name = '';
+						
+						switch(index) {
+							case 'resv_seq' : name = '예약번호';	 item = fn_resvSeqFormat(item); break;
+							case 'resv_end_dt' : name = '경주일'; item = fn_resvDateFormat(item); break;
+							case 'resv_user_nm' : name = '이름'; break;
+							case 'center_nm' : name = '지점'; 	break;
+							case 'floor_nm' : name = '층';	 break;
+							case 'part_nm' : name = '구역'; break;
+							case 'seat_nm' : name = '좌석'; break;
+							case 'resv_req_date' : name = '신청일'; break;
+						}
+						
+						if(name != '') {
+							if(!(resvInfo.resv_entry_dvsn == "ENTRY_DVSN_1" && (index == 'floor_nm' || index == 'part_nm'))) {
 								
-								$("#rsv_num, #cancel_rsv_num").html(fn_resvSeqFormat(guestResvInfo.resv_seq));
-								$("#rsv_date, #cancel_rsv_date").html(fn_resvDateFormat(guestResvInfo.resv_end_dt));
-								$("#rsv_name").html(guestResvInfo.resv_user_nm);
-								$("#rsv_center, #cancel_rsv_center").html(guestResvInfo.center_nm);
+								let $li = $('<li></li>').append('<ol><li>' + name + '</li>' + '<li id="' + index +'">' + item + '</li></ol>');
 								
-								if(guestResvInfo.resv_entry_dvsn == "ENTRY_DVSN_1") {									
-									$(".rsvInfo_result").children().eq(4).hide();
-									$(".rsvInfo_result").children().eq(5).hide();
-									$("#cancel_rsv_info ul > li:eq(3)").hide();
-									$("#cancel_rsv_info ul > li:eq(4)").hide();
-								} else {
-									$(".rsvInfo_result").children().eq(4).show();
-									$(".rsvInfo_result").children().eq(5).show();
-									$("#cancel_rsv_info ul > li:eq(3)").show();
-									$("#cancel_rsv_info ul > li:eq(4)").show();
-									$("#rsv_floor, #cancel_rsv_floor").html(guestResvInfo.floor_nm);
-									$("#rsv_part, #cancel_rsv_part").html(guestResvInfo.part_nm);										
+								if(index == 'resv_seq') {
+									$li.find('li').eq(1).addClass('rsv_num');	
 								}
 								
-								$("#rsv_seat, #cancel_rsv_seat").html(guestResvInfo.seat_nm);
-								$("#rsv_req_date, #cancel_rsv_req_date").html(guestResvInfo.resv_req_date);
-								
-								if(guestResvInfo.resv_state == "RESV_STATE_1" && guestResvInfo.resv_ticket_dvsn != "RESV_TICKET_DVSN_2") {
-									$(".non_memBtn .cancelBtn").show();
-									$("#resvCancleBtn").attr("href","javascript:guestResvService.fn_resvCancel('" + guestResvInfo.resv_seq + "');");
-								} else {
-									$(".non_memBtn .cancelBtn").hide();
-								}
-								
-								if(guestResvInfo.center_pilot_yn == "N") {
-									$(".rsvInfo_result").append('<li class="qrEnter_code"><p><a href=""><img src="/resources/img/front/qr_code.svg" alt="qr코드"></a></p><p>입장 QR코드</p></li>');
-									$(".qrEnter_code a").attr("href","javascript:fn_moveQrPage('" + guestResvInfo.resv_seq +"');");
-								}
-								
-								$(".search").hide();
-								$(".result").show();
-							} else {
-								fn_openPopup("해당 정보로 예약된 정보가 존재하지 않습니다.", "red", "ERROR", "확인", "");
+								$resvInfoUl.append($li);	
 							}
-						} 
-					},
-					function(request) {
-						fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");	       						
-					}    		
-				);
+						}
+					});
+					
+ 					if((resvInfo.resv_state == "RESV_STATE_1" ||  resvInfo.resv_state == "RESV_STATE_2") && resvInfo.center_pilot_yn == "N") {
+ 						$resvInfoUl.append('<li class="qrEnter_code"><p><a href=""><img src="/resources/img/front/qr_code.svg" alt="qr코드"></a></p><p>입장 QR코드</p></li>');
+						$(".qrEnter_code a").attr("href","javascript:fn_moveQrPage('" + resvInfo.resv_seq +"');");
+					} 
+					
+					$(".contents").append($resvInfoUl);
+				});
+				
+
+				
+/* 				if(resvInfo.resv_state == "RESV_STATE_1" && resvInfo.resv_ticket_dvsn != "RESV_TICKET_DVSN_2") {
+					$(".non_memBtn .cancelBtn").show();
+					$("#resvCancleBtn").attr("href","javascript:guestResvService.fn_resvCancel('" + resvInfo.resv_seq + "');");
+				} else {
+					$(".non_memBtn .cancelBtn").hide();
+				} */
+				
+				
+				$(".search").hide();
+				$(".result").show();
 			},
 			fn_resvCancel : function(resvSeq) {
 				var resvInfo = fn_getResvInfo(resvSeq);

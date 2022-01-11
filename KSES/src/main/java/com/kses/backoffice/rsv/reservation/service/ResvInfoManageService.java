@@ -142,7 +142,7 @@ public interface ResvInfoManageService {
 	 * @return
 	 * @throws Exception
 	 */
-	public Map<String, Object> selectGuestMyResvInfo(Map<String, Object> params) throws Exception;
+	public List<Map<String, Object>> selectGuestMyResvInfo(Map<String, Object> params) throws Exception;
 	
 	/**
 	 * SPDM 예약 좌석 변경
