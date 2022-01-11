@@ -1008,8 +1008,17 @@ p.myPin {
 }
 .noti_date {color: #808080; font-size: 1.3em; } 
 .notice_date {color: #808080; font-size: 1.3em;} 
-.notice_stat {color: #808080;position: absolute;top: 3.5rem;right: 2rem;}
-.notice_stat .cancel {background: #f56d6d; color: #fff;}
+.notice_stat {
+    color: #808080;
+    display: inline-block;
+    float: left;
+    margin-top: 0.8rem;
+    margin-right: .5rem;
+}
+.notice_stat .cancel {
+    color: #6a6a6a;
+    border: 1px solid #dbdbdb;
+}
 .notice_tit {
     font-size: 1.5em;
     color: #000;
@@ -1448,7 +1457,7 @@ h2.guide_tit {
 }
 
 /*예약된 화면*/
-.branch {margin-right: 5px; font-weight: 700;}
+.branch {margin-right: 5px; font-weight: 700; margin-bottom:1.5rem;}
 .member_rsv li span a {color: #47d6be;}
 .rsv_cancel {
     float: right;
@@ -1590,13 +1599,13 @@ h2.guide_tit {
 .rsv_info .backImg {background: url("/resources/img/front/logo_bg.svg") no-repeat right; height: 90px; position: relative; top: -11rem;}
 .rsv_info .rsv_branch {
     position: relative;
-    top: -6.5rem;
+    top: -6rem;
     font-size: 1.4em;
 }
 .rsv_info .rsv_state {
     position: fixed;
     top: 5px;
-    font-size: .8em;
+    font-size: 1em;
 }
 .rsv_info .rsv_state .date {font-weight: 800;}
 .contents h3 {border-bottom: 1px solid #F2F2F2; padding-bottom: 1rem;}
@@ -1858,7 +1867,7 @@ ul.tabs li{
   border-radius: 8px;
   vertical-align: middle;
 }
-.disable {background: #EFEFEF;}
+.disable {background: #b3b3b3;}
 .possible {background: #FFB047;}
 .select_Seat {background: #0094DB;}
 .seat_select select {width:-webkit-fill-available}
@@ -1964,12 +1973,9 @@ ul.tabs li{
 .history_list >div:nth-child(2) {border-top: 1px solid #c9c9c9; }
 .date_srch, .srch_opt {font-size:1.5em ;}
 .notice_stat span {
-    padding: 0.5rem 1.5rem;
-    background: #ebebeb;
+    padding: 0.1rem 1.5rem;
     border-radius: 15px;
-    width: 50px;
-    display: inline-block;
-    text-align: center;
+
     font-size: 1.3em;
 }
 /*.cancel {color: red;}*/
@@ -2132,8 +2138,6 @@ ul.tabs li{
 .summit_btn a:last-child{background:#9E9E9E}
 .pop_wrap h4 img {
     vertical-align: middle;
-    width: 19px;
-    margin-right: 5px;
 }
 .main_pop2 h4{border-bottom:1px solid #dbdbdb; margin-bottom:1rem;}
 .qrEnter {text-align: center; font-size: .9em;} 
@@ -2559,6 +2563,7 @@ ul.tabs li{
 	.main_user_rsv li span a {font-size: 2em;}
 	.pay_passWord li input {font-size:12px;}
 	.rsvBack #container {padding-bottom:15rem}
+	.qrEnter {padding-bottom:2rem;}
 	
 }
 

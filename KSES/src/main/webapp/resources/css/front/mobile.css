@@ -155,7 +155,7 @@
 @media screen and (max-width: 480px) {
   #showHide_seat section .cert_confirm input[type=text] ,
   #showHide section .cert_confirm input[type=text] {width: 70%;} 
-  .detail_srch select, .detail_srch input {width: 71%!important;}
+  .detail_srch select, .detail_srch input {width: 75%!important;}
   .rsv_btn li a {padding: 2rem 3rem}
   .rsv_btn li:first-child a {padding: 2rem 6rem}  
   .rsv_cancel {float: left;margin: 1.5rem 0 0.5rem;} 
