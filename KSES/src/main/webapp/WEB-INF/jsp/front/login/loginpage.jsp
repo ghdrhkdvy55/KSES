@@ -129,7 +129,8 @@
 			<div class="clear"></div>
 		</div>
     </div>		
-    				
+    
+    <!-- 비회원 -->				
 	<!-- // 개인정보 수집이용 약관 팝업 -->
     <div id="person_agree" data-popup="person_agree" class="popup">
     	<div class="pop_con rsv_popup">
@@ -141,7 +142,7 @@
                 
                 	<div class="tablet_wrap">
                          <div class="pd_l10 pd_r10">
-                        	<p class="font13 mg_l10">▶ 개인정보수집·이용 동의</p>
+                        	<p class="font13 mg_l10">▶ 개인정보수집·이용 동의(필수)</p>
                         	<table class="tb3" summary="개인정보수집·이용 동의">
                             	<caption>개인정보수집·이용 동의</caption>
                             	<colgroup>
@@ -158,7 +159,7 @@
                             	</thead>
                             	<tbody>             
 	                                <tr>
-	                                    <td>성명,전화번호,<br>출입시설,출입시간</td>
+	                                    <td>이름,휴대전화번호,<br>방문지점,입장시간</td>
 	                                    <td>코로나19 확진자<br>발생시 역학조사 및 <br>안내문자 발송</td>
 	                                    <td class="text_center" style="color:red; font-size:12px; font-weight:bold;">4주</td>
 	                                </tr>                                              
@@ -191,6 +192,34 @@
                                 </tr>
                             </tbody>
                         </table>
+
+							<p class="font13 mg_l10">▶ 기타 고지 사항</p>
+							<p>개인정보 보호법 제 15조 제1항 제2호에 따라 정보주체의 동의 없이 개인정보를 수집·이용 합니다.</p>
+                        	<table class="tb3" summary="">
+                            	
+                            	<colgroup>
+	                                <col width="27%">
+	                                <col width="29%">
+	                                <col width="26%">
+	                                <col width="18%">
+                            	</colgroup>
+								<thead>
+	                                <tr>
+	                                    <th scope="col">개인정보 처리사유</th>
+	                                    <th scope="col">개인정보 항목</th>
+	                                    <th scope="col">보유기간</th>
+	                                    <th scope="col">수집근거</th>
+	                                </tr>
+	                            </thead>
+	                            <tbody>             
+	                                <tr>
+	                                    <td class="text_center" style="color:red; font-size:12px; font-weight:bold;">레저세<br>납부</td>
+	                                    <td class="text_center" style="color:red; font-size:11px; font-weight:bold;">휴대전화번호, <br>방문지점, <br>입장시간</td>
+	                                    <td class="text_center" style="color:red; font-size:12px; font-weight:bold;">5년</td>
+	                                    <td class="text_center" style="color:red; font-size:12px; font-weight:bold;">지방세법』제43조 <br>동법 시행령 제58조</td>
+	                                </tr>
+	                            </tbody>
+	                        </table>
                     </div><br>
                     
                     <p class="font13 mg_l20">※위의 개인정보 수집·이용 및 3자 제공에 대한 동의를 거부할 권리가 있습니다. 그러나 동의를 거부할 경우 출입이 제한될 수 있습니다. </p><br>
