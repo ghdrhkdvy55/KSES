@@ -1752,7 +1752,11 @@ h2.guide_tit {
   font-size: .8em;
 }
 
-.price table td {padding: 1.5rem; border: 1px solid #e0e0e0; }
+.price table td {
+    padding: 1.5rem;
+    border-bottom: 1px solid #e0e0e0;
+    background: #f7f7f7;
+}
 .price table td img {vertical-align: sub; margin-right: 0.5rem;}
 .price table td span {float: right;}
 /*
@@ -2120,8 +2124,9 @@ ul.tabs li{
     background: #393939;
     border-radius: 8px;
     display: block;
-    font-size: 1.6em;
+    font-size: 1.3em;
 }
+.cancel_btn a.dbBtn {background:#cdcdcd}
 .cancel_btn li .dislBtn  {background: #c0c0c0;}
 .summit_btn {
 	margin-top:4rem;
@@ -2138,6 +2143,7 @@ ul.tabs li{
 .summit_btn a:last-child{background:#9E9E9E}
 .pop_wrap h4 img {
     vertical-align: middle;
+    margin-right: 0.3rem;
 }
 .main_pop2 h4{border-bottom:1px solid #dbdbdb; margin-bottom:1rem;}
 .qrEnter {text-align: center; font-size: .9em;} 

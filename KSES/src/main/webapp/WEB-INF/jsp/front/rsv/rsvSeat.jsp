@@ -464,10 +464,14 @@
     <div data-popup="rsv_cancel" class="popup">
       <div class="pop_con rsv_popup">
           <div class="pop_wrap">
-              <h4><img src="/resources/img/front/cancle.svg" alt="예약취소">예약이 취소 되었습니다.</h4>
+              <h4><img src="/resources/img/front/cancle.svg" alt="예약취소">예약을 취소 하시겠습니까?</h4>
           </div>
           <div class="cancel_btn">
-              <a href="/front/main.do" class="grayBtn">처음으로</a>
+          	<ul>
+          		<li><a href="" class="grayBtn">취소</a></li>
+          		<li><a href="/front/main.do" class="dbBtn">처음으로</a></li>
+          	</ul>
+              
           </div>
           <div class="clear"></div>
       </div>
