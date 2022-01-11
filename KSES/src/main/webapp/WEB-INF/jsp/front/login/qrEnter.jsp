@@ -190,7 +190,7 @@
 				    		
 				    		$("#accessType").val() != "WEB" ? $(".pay_btn li:eq(1)").hide() : $(".pay_btn li:eq(1)").show();  
 						} else {
-							fn_openPopup("QR코드 생성에 실패하였습니다.", "red", "ERROR", "확인", "/front/main.do");
+							fn_openPopup(result.message, "red", "ERROR", "확인", "/front/main.do");
 						}
 					},
 					function(request) {
