@@ -2080,7 +2080,7 @@ ul.tabs li{
     margin-top: 5rem;
 }
 
-.pop_wrap h4 {font-size: 1em; line-height: 2em; text-align: center;}
+.pop_wrap h4 {font-size: 1em; line-height: 2em; text-align: center; letter-spacing:-0.1em;}
 .pop_wrap p {
     font-size: .8em;
     text-decoration: none;
@@ -2554,6 +2554,7 @@ ul.tabs li{
 	.price table td {padding :1rem 0.5rem;}
 	.main_user_rsv li span a {font-size: 2em;}
 	.pay_passWord li input {font-size:12px;}
+	.rsvBack #container {padding:2rem 0}
 }
 
 /*1227*/
