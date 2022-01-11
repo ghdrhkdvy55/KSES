@@ -100,6 +100,6 @@ public class NoshowInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
 			LOGGER.info("예약번호 : " + resvSeq + " 예외발생 트랜잭션 실행");
 		}
 		
-		return resultCount > 1 ? true : false  ;
+		return resultCount > 0 ? true : false;
 	}
 }
