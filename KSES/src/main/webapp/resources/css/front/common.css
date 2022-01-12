@@ -493,7 +493,7 @@ bottom:0;
  }
 .topImg { 
     background: url("/resources/img/front/logo1.svg")no-repeat right;
-    width: 20vh;
+    width: 23vh;
     height: 6rem;
     float: right;
     position: relative;
@@ -2570,6 +2570,10 @@ ul.tabs li{
 	.pay_passWord li input {font-size:12px;}
 	.rsvBack #container {padding-bottom:15rem}
 	.qrEnter {padding-bottom:2rem;}
+	.branchSel {padding-bottom:0}
+	.gui_seat {height:180px;}
+	#mask {height: 180px!important;}
+	#showHide_seat section {padding-bottom:0}
 	
 }
 
