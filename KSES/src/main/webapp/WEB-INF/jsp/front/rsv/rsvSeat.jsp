@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="ui" uri="http://egovframework.gov/ctl/ui"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!DOCTYPE html>
@@ -254,7 +255,7 @@
 													<td>
 														<img src="${item.codeetc2}">${item.codenm}
 													<c:if test="${item.codeetc1 ne 0}">
-														<span>${item.codeetc1}원</span>
+														<span><fmt:formatNumber value="${item.codeetc1}" pattern="#,###" />원</span>
 													</c:if>
 													<c:if test="${item.codeetc1 eq 0}">
 														<span>무료</span>
@@ -461,20 +462,17 @@
     <!-- 예약완료 팝업 // -->
 
     <!-- // 예약취소 팝업 -->
-    <div data-popup="rsv_cancel" class="popup">
-      <div class="pop_con rsv_popup">
-          <div class="pop_wrap">
-              <h4><img src="/resources/img/front/cancle.svg" alt="예약취소">예약을 취소 하시겠습니까?</h4>
-          </div>
-          <div class="cancel_btn">
-          	<ul>
-          		<li><a href="" class="grayBtn">취소</a></li>
-          		<li><a href="/front/main.do" class="dbBtn">처음으로</a></li>
-          	</ul>
-              
-          </div>
-          <div class="clear"></div>
-      </div>
+    <div id="rsv_cancel" data-popup="rsv_cancel" class="popup">
+		<div class="pop_con rsv_popup">
+          	<div class="pop_wrap">
+              	<h4><img src="/resources/img/front/cancle.svg" alt="예약취소">예약을 취소하시겠습니까?</h4>
+          	</div>
+          	<div class="cancel_btn">
+          		<a href="/front/main.do" class="grayBtn">예</a>
+				<a href="javascript:bPopupClose('rsv_cancel');" class="grayBtn">아니요</a>
+          	</div>
+          	<div class="clear"></div>
+      	</div>
     </div>
     <!-- 예약취소 팝업 // -->
     

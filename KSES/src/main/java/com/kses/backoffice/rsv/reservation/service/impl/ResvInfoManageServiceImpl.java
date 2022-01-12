@@ -137,7 +137,7 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	}
 	
 	@Override
-	public Map<String, Object> selectGuestMyResvInfo(Map<String, Object> params) throws Exception {
+	public List<Map<String, Object>> selectGuestMyResvInfo(Map<String, Object> params) throws Exception {
 		return resvMapper.selectGuestMyResvInfo(params);
 	}
 	
