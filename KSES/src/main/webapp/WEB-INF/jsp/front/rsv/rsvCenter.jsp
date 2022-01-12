@@ -118,12 +118,16 @@
 									+ item.center_nm 
 									+ "</span></li><li>지정석 <em>" 
 									+ (item.center_seat_max_count - item.center_seat_use_count) + " / " + item.center_seat_max_count
-									+ "</em>석"
-									+ "<br>"
-									+ "입석 <em>"
-									+ (item.center_stand_max - item.center_standing_use_count) + " / " + item.center_stand_max
-									+ "</em>석</li></ul></li>";
+									+ "</em>석";
+									
+									//if(item.center_stand_yn == "Y") {
+										setHtml += "<br>"
+										+ "입석 <em>"
+										+ (item.center_stand_max - item.center_standing_use_count) + " / " + item.center_stand_max
+										+ "</em>석";
+									//}
 
+									setHtml += "</li></ul></li>";
 									$(".branch_list").append(setHtml);
 								});
 								

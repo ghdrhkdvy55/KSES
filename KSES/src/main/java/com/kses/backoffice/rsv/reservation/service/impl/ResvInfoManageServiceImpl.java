@@ -223,11 +223,7 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 					resultMap.put(Globals.STATUS, Globals.STATUS_SUCCESS);
 					resultMap.put(Globals.STATUS_MESSAGE, "예약정보가 정상적으로 취소되었습니다.");
 					
-					if(sureService.insertResvSureData("CANCEL", resvSeq)) {
-						LOGGER.info("예약번호 : " + resvSeq + "번 예약취소 알림톡 발송성공");
-					} else {
-						LOGGER.info("예약번호 : " + resvSeq + "번 예약취소 알림톡 발송실패");
-					}
+					sureService.insertResvSureData("CANCEL", resvSeq);
 				} else {
 					message = "예약취소중 오류가 발생하였습니다.";
 					throw new Exception();
