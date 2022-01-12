@@ -122,9 +122,9 @@
 					</tr>
 					<tr>
 						<th>내선번호</th>
-						<td><input type="text" name="empTlphn"></td>
+						<td><input type="text" name="empTlphn" phoneonly></td>
 						<th>핸드폰</th>
-						<td><input type="text" name="empClphn"></td>
+						<td><input type="text" name="empClphn" phoneonly></td>
 					</tr>
 					<tr>
 						<th>사용여부</th>
@@ -280,6 +280,25 @@
 			toastr.warning('이름을 입력해 주세요.');
 			return;
 		}
+		let password = $form.find(':password[name=empPassword]').val();
+		if (password === '') {
+			toastr.warning('비밀번호를 입력해 주세요.');
+			return;
+		} else {
+			if (!EgovIndexApi.vaildPassword(password)) {
+				toastr.warning('비밀번호가 유효하지 않습니다.');
+				return;
+			}
+			let password2 = $form.find(':password[name=empPassword2]').val();
+			if (password2 === '') {
+				toastr.warning('비밀번호 확인을 입력해 주세요.');
+				return;
+			}
+			if ($.trim(password) !== $.trim(password2)) {
+				toastr.warning('비밀번호가 일치하지 않습니다. ');
+				return;
+			}
+		}
 		bPopupConfirm('사용자 등록', '등록 하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(
 				'POST',
@@ -301,6 +320,39 @@
 	function fnEmpUpdate() {
 		let $popup = $('[data-popup=mng_emp_add]');
 		let $form = $popup.find('form:first');
+		if ($form.find(':text[name=empNm]').val() === '') {
+			toastr.warning('이름을 입력해 주세요.');
+			return;
+		}
+		let password = $form.find(':password[name=empPassword]').val();
+		if (password === '') {
+			toastr.warning('비밀번호를 입력해 주세요.');
+			return;
+		} else {
+			if (!EgovIndexApi.vaildPassword(password)) {
+				toastr.warning('비밀번호가 유효하지 않습니다.');
+				return;
+			}
+			let password2 = $form.find(':password[name=empPassword2]').val();
+			if (password2 === '') {
+				toastr.warning('비밀번호 확인을 입력해 주세요.');
+				return;
+			}
+			if ($.trim(password) !== $.trim(password2)) {
+				toastr.warning('비밀번호가 일치하지 않습니다. ');
+				return;
+			}
+		}
+		let email = $form.find('text[name=empEmail]').val();
+		if (email === '') {
+			toastr.warning('이메일을 입력해주세요.');
+			return;
+		} else {
+			if (!EgovIndexApi.validEmail(email)) {
+				toastr.warning('이메일 형식에 맞지 않습니다.');
+				return;
+			}
+		}
 		bPopupConfirm('사용자 수정', '<b>'+ $form.find(':text[name=empNo]').val() +'</b> 수정 하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(
 				'POST',

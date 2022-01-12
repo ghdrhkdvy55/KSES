@@ -98,7 +98,7 @@ $.EgovIndexApi.prototype.s2ab = function(s) {
 };
 
 $.EgovIndexApi.prototype.numberOnly = function() {
-	$('input:text[numberOnly]').on('focus', function () {
+	$('input:text[numberonly]').on('focus', function () {
 		let x = $(this).val();
 		$(this).val(x);
 	}).on('focusout', function() {
@@ -114,9 +114,36 @@ $.EgovIndexApi.prototype.numberOnly = function() {
 	});
 };
 
-$.EgovIndexApi.prototype.vaildPassword = function() {
-	let reg_pwd = /^.*(?=.{10,20})(?=.*[0-9])(?=.*[a-zA-Z]).*$/;
-	if (!reg_pwd.test(str)) {
+$.EgovIndexApi.prototype.phoneOnly = function() {
+	$('input:text[phoneonly]').attr({
+		maxlength: '13'
+	}).on('focus', function () {
+		let x = $(this).val();
+		$(this).val(x);
+	}).on('focusout', function() {
+		let x = $(this).val();
+		if (x && x.length > 0) {
+			if ($.isNumeric(x)) {
+				x = x.replace(/[^0-9][-]/g, "");
+			}
+			$(this).val(x);
+		}
+	}).on('keyup', function() {
+		$(this).val($(this).val().replace(/[^0-9][-]/g, ""));
+	});
+};
+
+$.EgovIndexApi.prototype.vaildPassword = function(str) {
+	let regExp = /^.*(?=.{10,20})(?=.*[0-9])(?=.*[a-zA-Z]).*$/;
+	if (!regExp.test(str)) {
+		return false;
+	}
+	return true;
+};
+
+$.EgovIndexApi.prototype.validEmail = function(str) {
+	var regExp = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
+	if (!regExp.test(str)) {
 		return false;
 	}
 	return true;
