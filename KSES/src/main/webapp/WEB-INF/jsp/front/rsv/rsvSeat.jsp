@@ -1025,46 +1025,50 @@
 				var certifiNm = $("#" + entryDvsn + "_resvUserNm").val();
 				var certifiNum = $("#" + entryDvsn + "_resvUserClphn").val();
 				
-				if(certifiYn) {
-					fn_openPopup("이미 인증을 진행하였습니다.", "red", "ERROR", "확인", "");
-					return;
-				} else {
-					if(certifiNm == "") {
-						fn_openPopup("이름을 입력해주세요.", "red", "ERROR", "확인", ""); return;
-					} else if (certifiNum == "") {
-						fn_openPopup("휴대폰번호를 입력해주세요.", "red", "ERROR", "확인", ""); return;
-					} else if (!validPhNum(certifiNum)) {
-						fn_openPopup("올바른 휴대폰번호를 입력해주세요.", "red", "ERROR", "확인", ""); return;
+				var duplicateParams = {"userDvsn" : $("#userDvsn").val(), "userPhone" : certifiNum, "resvDate" : $("#resvDate").val()};
+				
+				if(!fn_resvDuplicateCheck(duplicateParams)) {
+					if(certifiYn) {
+						fn_openPopup("이미 인증을 진행하였습니다.", "red", "ERROR", "확인", "");
+						return;
+					} else {
+						if(certifiNm == "") {
+							fn_openPopup("이름을 입력해주세요.", "red", "ERROR", "확인", ""); return;
+						} else if (certifiNum == "") {
+							fn_openPopup("휴대폰번호를 입력해주세요.", "red", "ERROR", "확인", ""); return;
+						} else if (!validPhNum(certifiNum)) {
+							fn_openPopup("올바른 휴대폰번호를 입력해주세요.", "red", "ERROR", "확인", ""); return;
+						}
+						
+						var url = "/front/resvCertifiSms.do";
+						var params = {
+							"certifiNm" : certifiNm,
+							"certifiNum" : certifiNum
+						}
+						
+						fn_Ajax
+						(
+						    url,
+						    "POST",
+						    params,
+							false,
+							function(result) {
+						    	if(result.status == "SUCCESS") {
+						    		fn_openPopup("인증번호가 발송 되었습니다.(" +  result.certifiCode + ")", "blue", "SUCCESS", "확인", "");
+									certifiCode = result.certifiCode;
+							    	resvUserNm = certifiNm;
+							    	resvUserClphn = certifiNum;
+						    	} else if(result.status == "LOGIN FAIL") {
+						    		fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
+						    	} else {
+						    		fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
+						    	}
+							},
+							function(request) {
+								fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");	       						
+							}    		
+						);
 					}
-					
-					var url = "/front/resvCertifiSms.do";
-					var params = {
-						"certifiNm" : certifiNm,
-						"certifiNum" : certifiNum
-					}
-					
-					fn_Ajax
-					(
-					    url,
-					    "POST",
-					    params,
-						false,
-						function(result) {
-					    	if(result.status == "SUCCESS") {
-					    		fn_openPopup("인증번호가 발송 되었습니다.(" +  result.certifiCode + ")", "blue", "SUCCESS", "확인", "");
-								certifiCode = result.certifiCode;
-						    	resvUserNm = certifiNm;
-						    	resvUserClphn = certifiNum;
-					    	} else if(result.status == "LOGIN FAIL") {
-					    		fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
-					    	} else {
-					    		fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
-					    	}
-						},
-						function(request) {
-							fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");	       						
-						}    		
-					);
 				}
 			},
 			fn_checkCertifiCode : function() {

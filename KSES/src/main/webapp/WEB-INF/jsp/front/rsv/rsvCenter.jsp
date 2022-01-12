@@ -139,7 +139,7 @@
 									
 									var params = {
 										"centerCd" : $("#centerCd").val(),
-										"seatCd" : "",
+										"userDvsn" : $("#userDvsn").val(),
 										"checkDvsn" : "CENTER"
 									}
 									centerService.fn_resvVaildCheck(params);
