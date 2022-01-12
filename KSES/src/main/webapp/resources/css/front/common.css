@@ -2225,7 +2225,7 @@ ul.tabs li{
 .ok_input {width:45%;}
 
 .seat li.none {
-    background: #959595;
+    background: #848484;
     color: white;
 }
 
@@ -2237,6 +2237,7 @@ ul.tabs li{
 
 /*qr코드 211118*/
 .qr_enter_code {
+	display : none;
 	margin:auto; 
 	width:256px;
 	border: 4px solid #cfcfcf;
