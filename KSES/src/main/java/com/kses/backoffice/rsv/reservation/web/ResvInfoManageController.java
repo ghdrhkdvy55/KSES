@@ -292,7 +292,7 @@ public class ResvInfoManageController {
 			List<Map<String, Object>> resvList = resvService.selectResInfoManageListByPagination(params);
 
 			for(Map<String,Object> resvInfo : resvList) {
-				if(SmartUtil.NVL(resvInfo.get("resv_ticket_dvsn"),"").equals("RESV_TICKET_DVSN_2")) {
+				if(!SmartUtil.NVL(resvInfo.get("resv_ticket_dvsn"),"").equals("RESV_TICKET_DVSN_2")) {
 					String resvSeq = resvInfo.get("resv_seq").toString();
 					Map<String, String> resultMap = resvService.resvInfoAdminCancel(resvSeq);
 				

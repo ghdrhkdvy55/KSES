@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.kses.backoffice.bld.center.mapper.NoshowInfoManageMapper;
 import com.kses.backoffice.bld.center.service.NoshowInfoManageService;
 import com.kses.backoffice.bld.center.vo.NoshowInfo;
+import com.kses.backoffice.cus.kko.service.SureManageSevice;
 import com.kses.backoffice.rsv.reservation.vo.NoShowHisInfo;
 import com.kses.backoffice.rsv.reservation.vo.ResvInfo;
 
@@ -24,6 +25,9 @@ public class NoshowInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
 	
 	@Autowired
 	NoshowInfoManageMapper noshowMapper;
+	
+	@Autowired
+	private SureManageSevice sureService;
 	
 	@Override
 	public List<Map<String, Object>> selectNoshowInfoList(String centerCd) throws Exception {
@@ -60,7 +64,6 @@ public class NoshowInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
 		return noshowMapper.copyNoshowInfo(params);
 	}
 	
-	
 	@Override
 	@Transactional(propagation=Propagation.REQUIRES_NEW, rollbackFor=Exception.class)
 	public boolean updateNoshowResvInfoTran(String resvSeq, String noshowCd) throws Exception {
@@ -79,6 +82,11 @@ public class NoshowInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
 				resultCount = noshowMapper.updateNoshowResvInfoTranCancel(resvInfo);
 				if(resultCount > 0) {
 					LOGGER.info("예약번호 : " + resvSeq + " 예약 정보 취소성공");
+					if(sureService.insertResvSureData("CANCEL", resvSeq)) {
+						LOGGER.info("예약번호 : " + resvSeq + "번 예약취소 알림톡 발송성공");
+					} else {
+						LOGGER.info("예약번호 : " + resvSeq + "번 예약취소 알림톡 발송실패");
+					}
 				} else {
 					resultCount = 0;
 					LOGGER.info("예약번호 : " + resvSeq + " 예약 정보 취소실패");
