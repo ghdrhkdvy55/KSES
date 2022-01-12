@@ -24,8 +24,8 @@
     <script type="text/javascript" src="/resources/toastr/toastr.min.js"></script>
 </head>
 <body>
-<input type="hidden" id="loginAuthorCd" name="loginAuthorCd" value="${LoginVO.authorCd}">
-<input type="hidden" id="loginCenterCd" name="loginCenterCd" value="${LoginVO.centerCd}">
+<sec:authentication var="loginAuthorCd" property="principal.egovUserVO.authorCd"/>
+<sec:authentication var="loginCenterCd" property="principal.egovUserVO.centerCd"/>
 <div class="wrapper">
 	<div class="header_wrap">
 		<header>
@@ -34,7 +34,7 @@
 	        	<li class="toggle"><a href="#" onclick="toggleNav();" class="menu"></a></li>
 	        	<li class="logo1"><img src="/resources/img/logo1.png" alt=""></li>
 	        	<li class="logout"><img src="/resources/img/logout.png" alt="로그아웃"><a href="/backoffie/actionLogout.do">로그아웃</a></li>
-	        	<li class="member"><img src="/resources/img/login.png" alt=""><span><sec:authentication property="principal.username"/></span> 님</li>
+	        	<li class="member"><img src="/resources/img/login.png" alt=""><span><sec:authentication property="principal.egovUserVO.empNm"/></span> 님</li>
 			</ul>
 		</header>
 		<div id="mySidenav" class="sidenav">
@@ -121,6 +121,7 @@
 			$('.cal_icon').prop('maxlength', '8').datepicker(EgovCalendar);
 			// 숫자형 Input 정의
 			EgovIndexApi.numberOnly();
+			EgovIndexApi.phoneOnly();
 		});
 	}
 	
