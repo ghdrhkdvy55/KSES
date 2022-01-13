@@ -469,7 +469,7 @@
           	</div>
           	<div class="cancel_btn">
           		<a href="/front/main.do" class="grayBtn">예</a>
-				<a href="javascript:bPopupClose('rsv_cancel');" class="grayBtn">아니요</a>
+				<a href="javascript:bPopupClose('rsv_cancel');" class="dbBtn">아니요</a>
           	</div>
           	<div class="clear"></div>
       	</div>
