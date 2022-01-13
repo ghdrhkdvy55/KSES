@@ -2485,7 +2485,7 @@ ul.tabs li{
     padding: 2px 8px;
     border-radius: 25px;  
 }
-.thVac {color: #2667f7;}
+.thVac {color: #1ba100;}
 .nonVac {color: #f72626; }
 
 /*1214 qr코드 백신정보*/
@@ -2503,7 +2503,7 @@ ul.tabs li{
     font-size:1.3em;
     line-height: 1.5em;
 }
-.vacState .vacDone {color: #2667f7;}
+.vacState .vacDone {color: #1ba100;}
 .vacState .vacNon {
     color: #f72626;
     background-size: 19px;
