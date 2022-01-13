@@ -340,11 +340,7 @@ public class FrontResvInfoManageController {
 					userService.updateUserInfo(user);
 				}
 				
-				if(sureService.insertResvSureData("RESERVATION", resvInfo.get("resv_seq").toString())) {
-					LOGGER.info("예약번호 : " + resvInfo.get("resv_seq").toString() + "번 알림톡 발송성공");
-				} else {
-					LOGGER.info("예약번호 : " + resvInfo.get("resv_seq").toString() + "번 알림톡 발송실패");
-				}
+				sureService.insertResvSureData("RESERVATION", resvInfo.get("resv_seq").toString());
 				
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
@@ -372,24 +368,15 @@ public class FrontResvInfoManageController {
 			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
 			
 			if(userLoginInfo == null) {
-				userLoginInfo = new UserLoginInfo();
-				userLoginInfo.setUserDvsn("USER_DVSN_2");
-				httpSession.setAttribute("userLoginInfo", userLoginInfo);
-				
 				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
 				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
 				return model;
 			}
 			
 			int ret = resvService.resvInfoCancel(params);
-			
 			if(ret > 0) {
-				if(sureService.insertResvSureData("CANCEL", params.get("resv_seq").toString())) {
-					LOGGER.info("예약번호 : " + params.get("resv_seq").toString() + "번 예약취소 알림톡 발송성공");
-				} else {
-					LOGGER.info("예약번호 : " + params.get("resv_seq").toString() + "번 예약취소 알림톡 발송실패");
-				}
-				
+				sureService.insertResvSureData("CANCEL", params.get("resv_seq").toString());
+
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("sucess.common.reservation"));
 			} else {
@@ -416,7 +403,6 @@ public class FrontResvInfoManageController {
 			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
 			
 			if(userLoginInfo == null) {
-				userLoginInfo = new UserLoginInfo();
 				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
 				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
 				return model;
@@ -447,10 +433,6 @@ public class FrontResvInfoManageController {
 			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
 			
 			if(userLoginInfo == null) {
-				userLoginInfo = new UserLoginInfo();
-				userLoginInfo.setUserDvsn("USER_DVSN_2");
-				httpSession.setAttribute("userLoginInfo", userLoginInfo);
-				
 				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
 				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
 				return model;

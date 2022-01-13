@@ -82,11 +82,7 @@ public class NoshowInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
 				resultCount = noshowMapper.updateNoshowResvInfoTranCancel(resvInfo);
 				if(resultCount > 0) {
 					LOGGER.info("예약번호 : " + resvSeq + " 예약 정보 취소성공");
-					if(sureService.insertResvSureData("CANCEL", resvSeq)) {
-						LOGGER.info("예약번호 : " + resvSeq + "번 예약취소 알림톡 발송성공");
-					} else {
-						LOGGER.info("예약번호 : " + resvSeq + "번 예약취소 알림톡 발송실패");
-					}
+					sureService.insertResvSureData("CANCEL", resvSeq);
 				} else {
 					resultCount = 0;
 					LOGGER.info("예약번호 : " + resvSeq + " 예약 정보 취소실패");

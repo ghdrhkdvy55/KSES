@@ -316,7 +316,7 @@ public class ResJosnController {
 				String floorNm = attempInfos[15];
 				String partNm = attempInfos[16];
 				String resvQrCount = attempInfos[17];
-				
+			
 				for (String value : attempInfos) {
 					LOGGER.debug("value : " + value);
 				}
@@ -332,6 +332,15 @@ public class ResJosnController {
 				if (!qrTime.substring(0, 8).equals(formatedNow.substring(0, 8))) {
 					ERROR_CD = "ERROR_05";
 					ERROR_MSG = "예약일자 오류.";
+					model.addObject("ERROR_CD", ERROR_CD);
+					model.addObject("ERROR_MSG", ERROR_MSG);
+					return model;
+				}
+				
+				String resvState = SmartUtil.NVL(resInfo.get("resv_state"),""); 
+				if (resvState.equals("RESV_STATE_3") || resvState.equals("RESV_STATE_4")) {
+					ERROR_CD = "ERROR_09";
+					ERROR_MSG = "취소된 예약 번호.";
 					model.addObject("ERROR_CD", ERROR_CD);
 					model.addObject("ERROR_MSG", ERROR_MSG);
 					return model;
@@ -375,7 +384,16 @@ public class ResJosnController {
 						inOt = SmartUtil.NVL(attendInfo.get("inout_dvsn"), "OT").toString().equals("IN") ? "OT" : "IN";
 					}
 				}
-				 
+				
+				LOGGER.info("resvQrCount : " + resvQrCount + " resv_qr_count" + SmartUtil.NVL(resInfo.get("resv_qr_count"),""));
+				if (!resvQrCount.equals(SmartUtil.NVL(resInfo.get("resv_qr_count"),""))) {
+					ERROR_MSG = "QR발급회차 불일치";
+					ERROR_CD = "ERROR_08";
+					model.addObject("ERROR_CD", ERROR_CD);
+					model.addObject("ERROR_MSG", ERROR_MSG);
+					return model;	
+				}
+				LOGGER.info("큐알 장비에서 보내주는 값 : " + qrInot + " 큐알 코드 안에 있는 inot값 : " + inOt);
 				if (!qrInot.equals(inOt)) {
 					ERROR_MSG = qrInot.equals("IN") ? "퇴장 정보 없음." : "입장 정보 없음.";
 					ERROR_CD = "ERROR_07";
@@ -384,14 +402,6 @@ public class ResJosnController {
 					return model;	
 				}
 				
-				if (!resvQrCount.equals(SmartUtil.NVL(resInfo.get("resv_qr_count"),""))) {
-					ERROR_MSG = "QR발급회차 불일치";
-					ERROR_CD = "ERROR_08";
-					model.addObject("ERROR_CD", ERROR_CD);
-					model.addObject("ERROR_MSG", ERROR_MSG);
-					return model;	
-				}
-
 				sendInfo.setUserId(userId);
 				sendInfo.setResvSeq(resSeq);
 				sendInfo.setInoutDvsn(inOt);
@@ -517,7 +527,7 @@ public class ResJosnController {
 						+ SmartUtil.NVL(resInfo.get("seat_class"), "").toString() + ":"
 						+ SmartUtil.NVL(resInfo.get("floor_nm"), "").toString() + ":"
 						+ SmartUtil.NVL(resInfo.get("part_nm"), "").toString() + ":"
-						+ String.valueOf(Integer.valueOf(SmartUtil.NVL(resInfo.get("resv_qr_count"), "0").toString())) + 1);
+						+ String.valueOf(Integer.valueOf(SmartUtil.NVL(resInfo.get("resv_qr_count"), "0")) + 1));
 				
 				model.addObject("vacntnInfo", userService.selectUserVacntnInfo(resInfo.get("user_id").toString()));
 				model.addObject("resvInfo", resInfo);
@@ -716,9 +726,7 @@ public class ResJosnController {
 						+ SmartUtil.NVL(resInfo.get("seat_class"), "").toString() + ":"
 						+ SmartUtil.NVL(resInfo.get("floor_nm"), "").toString() + ":"
 						+ SmartUtil.NVL(resInfo.get("part_nm"), "").toString() + ":"
-						+ String.valueOf(Integer.valueOf(SmartUtil.NVL(resInfo.get("resv_qr_count"), "0").toString())) + 1);
-
-
+						+ String.valueOf(Integer.valueOf(SmartUtil.NVL(resInfo.get("resv_qr_count"), "0")) + 1));
 				resQrUrl = qrCode;
 				seatName = SmartUtil.NVL(resInfo.get("seat_nm"), "").toString();
 				resPersonCnt = "1";

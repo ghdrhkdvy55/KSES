@@ -617,7 +617,6 @@ function fn_payment(resvInfo) {
 	    	if(result.regist != null) {
 				if(result.regist.Error_Msg == "SUCCESS") {
 					isSuccess = fn_resvCancel(resvInfo, result.regist.result);
-					console.log(isSuccess);
 				} else {
 					fn_openPopup(result.regist.Error_Msg, "red", "ERROR", "확인", "javascript:location.reload();");
 				}
