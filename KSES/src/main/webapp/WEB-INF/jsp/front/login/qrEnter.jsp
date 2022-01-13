@@ -157,7 +157,7 @@
 				    		
 							$(".vacState span").removeClass()
 				    		switch (vacntnInfo.pass_yn) {
-								case "Y" : $(".vacState span").addClass("vacDone").html("접종 완료"); $("#qr_enter_code").css("border-color","#2667f7"); break;
+								case "Y" : $(".vacState span").addClass("vacDone").html("접종 완료"); $("#qr_enter_code").css("border-color","#1ba100"); break;
 								case "N" : $(".vacState span").addClass("vacNon").html("백신패스 만료"); $("#qr_enter_code").css("border-color","#f72626"); break;  
 								default: $(".vacState span").addClass("vacNon").html("접종정보 없음"); $("#qr_enter_code").css("border-color","#cfcfcf"); break;
 							}				    			
