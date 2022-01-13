@@ -367,7 +367,7 @@ bottom:0;
 #footer {height: 100%; width: 100%; }
 .footer_tit {padding: 3.5rem 0 1rem; border-bottom: 2px solid #525252;}
 .footer_tit h2 { font-size: 1.8rem; font-weight: 400; float: left; color: #000;  }
-.footer_tit a.main_noti_link {font-size: 1.2rem;float: right;display: block;padding-right: 2rem;color: #000;background: url("/resources/img/front/ic_notice_more_arrow.svg")center right no-repeat; line-height: 1.8em;}
+.footer_tit a.main_noti_link {font-size: 1.3rem;float: right;display: block;padding-right: 2rem;color: #000;background: url("/resources/img/front/ic_notice_more_arrow.svg")center right no-repeat; line-height: 1.8em;}
 .main_noti_list {width: 100%;height: auto;}
 .main_noti_list li {width: 100%; padding: 1.5rem 0; border-bottom: 1px solid #4d4d4d}
 .main_noti_list li a{
@@ -478,7 +478,7 @@ bottom:0;
 #foot_btn li.my.active a{background: url("/resources/img/front/mySel.svg")top no-repeat;  position: relative; top: -1.8rem;}
 #foot_btn li span {
     text-align: center;
-    font-size: 1.4rem;
+    font-size: 1.6rem;
     display: flex;
     flex-direction: column;
     top: -1rem;
@@ -1606,13 +1606,13 @@ h2.guide_tit {
 .rsv_info .backImg {background: url("/resources/img/front/logo_bg.svg") no-repeat right; height: 90px; position: relative; top: -11rem;}
 .rsv_info .rsv_branch {
     position: relative;
-    top: -5.5rem;
+    top: -5rem;
     font-size: 1.4em;
 }
 .rsv_info .rsv_state {
     position: fixed;
     top: 5px;
-    font-size: 1.2em;
+    font-size: 1.1em;
 }
 .rsv_info .rsv_state .date {font-weight: 800;}
 .contents h3 {border-bottom: 1px solid #F2F2F2; padding-bottom: 1rem;}
@@ -1620,7 +1620,7 @@ h2.guide_tit {
 .null {display: block;}
 .change_br a {
     color: #949494;
-    font-size: 0.8em;
+    font-size: 0.9em;
     font-weight: 500;
 }
 .change_br a img {vertical-align: sub;}
@@ -1676,14 +1676,14 @@ h2.guide_tit {
 
 
 #showHide { width:100%;  display: none; }
-#showHide h4 {margin-top: 2rem; font-size:18px;}
+#showHide h4 {margin-top: 2rem; font-size:1.1em;}
 #showHide section {text-align: left; padding-bottom: 30rem;}
 #showHide section li:first-child input[type=text] {margin-bottom: 0;}
 #showHide section input[type=text] {
   height: 3rem; 
   border: 1px solid #e0e0e0; 
   margin: 1rem 0; 
-  font-size: 0.8em; 
+  font-size: 1em; 
   padding: 1rem;
   width: -webkit-fill-available;
 }
@@ -1692,7 +1692,7 @@ h2.guide_tit {
 }
 
 #showHide_seat { width:100%;  display: none; }
-#showHide_seat h4 {margin-top: 2.5rem; font-size:18px;}
+#showHide_seat h4 {margin-top: 2.5rem; font-size:1.1em;}
 #showHide_seat section {text-align: left; padding-bottom: 25rem;}
 #showHide_seat section input[type=text] {
   height: 3rem; 
@@ -1721,7 +1721,7 @@ h2.guide_tit {
 }
 .certify a {color:#000}
 .certify img {vertical-align: sub; margin-right: 1rem;}
-.covid19_qna {padding: 1rem; border: 1px solid #e0e0e0; margin-top: 2rem; font-size: 0.8em; color: #878787;}
+.covid19_qna {padding: 1rem; border: 1px solid #e0e0e0; margin-top: 2rem; font-size: .9em; color: #878787;}
 .covid19_qna p {color: #000; margin-bottom: 1rem; text-align: center;}
 .covid19_qna ol {margin-top: 2rem;}
 .covid19_qna ol li {list-style: circle; margin-left: 2rem; line-height:1.6em ;}
@@ -1739,18 +1739,18 @@ h2.guide_tit {
 .rsv_btn {margin-top: 3rem;}
 .rsv_btn li {display: inline-block;  border-radius: 8px; text-align: center;}
 .rsv_btn li:first-child a {padding: 2rem 15rem; }
-.rsv_btn li a {padding: 2rem 10rem; display: inherit; color: #fff; font-weight: 600;}
+.rsv_btn li a {padding: 2rem 10rem; display: inherit; color: #fff; font-weight: 600; font-size:1.1em;}
 .rsv_btn li:first-child {width: 64%; background: #47D6BE; }
 .rsv_btn li:last-child {width: 45%;background:#9E9E9E ;width: 34%;}
 .select_box {
     width: -webkit-fill-available;
-    padding: 1.5rem;
-    font-size: 1em;
+    padding: 1.5rem 1rem;
+    font-size: 1.1em;
     margin-top: 1rem;
     border: 1px solid #e0e0e0;
 }
 #section_sel {display: none;}
-#section_sel h5 {margin-top: 1.8rem; color:#5A5A5A;}
+#section_sel h5 {margin-top: 1.8rem; color:#5A5A5A; font-size:1.1em}
 #section_sel h5 span {color: #808080;}
 .price table {
   margin-top: 1rem;
@@ -1867,10 +1867,10 @@ ul.tabs li{
 #section_sel .seat_tit ul {
     display: inline;
     float: right;
-    font-size: 0.8em;
+    font-size: 0.9em;
     margin-top: 3.8rem;
 }
-#section_sel .seat_tit ul li {display: inline-block; margin-left: 1rem;}
+#section_sel .seat_tit ul li {display: inline-block; }
 #section_sel .seat_tit ul li span {
   display: inline-block; 
   width: 1.5rem; 
@@ -1915,7 +1915,7 @@ ul.tabs li{
     margin-left: 1.8rem;
     font-size: 1em;
 }
-.my_wrap {font-size: 1.7em; padding:0 2rem;}
+.my_wrap {font-size: 1.8em; padding:0 2rem;}
 .mypage_name span {margin-right: 1rem;}
 .my_box {border-bottom: 5px solid #EAEAEA; padding: 3rem 0}
 .my_box h1 {font-size: 1.3em; line-height: 1em; text-align: center;}
@@ -2042,13 +2042,13 @@ ul.tabs li{
     font-size: .9em;
 }
 .check_use {margin-left: 2rem;}
-.check_use span {font-size: 0.8em; margin-left: 1rem; color: #808080;}
+.check_use span {font-size: 0.9em; margin-left: 1rem; color: #808080;}
 
 .rsvInfo input[type=text] {
     height: 3rem;
     border: 1px solid #e0e0e0;
     margin: 1rem 0;
-    font-size: 0.8em;
+    font-size: 1em;
     padding: 1rem;
     width: -webkit-fill-available;
 }
@@ -2130,8 +2130,8 @@ ul.tabs li{
     background: #393939;
     border-radius: 8px;
     display: block;
-    font-size: 1.3em;
-    width: 49%;
+    font-size: 1.1em;
+    width: 48%;
     display: inline-block;
 }
 .cancel_btn a.dbBtn {background:#cdcdcd}
@@ -2219,7 +2219,7 @@ ul.tabs li{
     height: 3rem;
     border: 1px solid #e0e0e0;
     margin: 1rem 0;
-    font-size: 0.8em;
+    font-size: .9em;
     padding: 1rem;
     width: -webkit-fill-available;
 }
@@ -2310,7 +2310,7 @@ ul.tabs li{
     padding: 1rem;
     border: 1px solid #e0e0e0;
     margin-top: 2rem;
-    font-size: 0.8em;
+    font-size: .9em;
     color: #878787;
 }
 .person_check p {
@@ -2319,7 +2319,7 @@ ul.tabs li{
     text-align: center;
 }
 .person_check ol {margin-top: 2rem; }
-.person_check ol li {line-height:1.6em ;}
+
 .person_check ol li:last-child {list-style: none; }
 .person_check .check_impnt {color: #3197ff; text-align:center}
 
@@ -2342,7 +2342,7 @@ ul.tabs li{
 .marginTop input[type=text] {margin-top: 0!important;}
 .bill_confirm {
     padding: 1rem;
-    font-size: 0.8em;
+    font-size: 0.9em;
     color: #878787;
   }
 .bill_confirm li {display: inline-block; margin-left: 10px; }
@@ -2361,10 +2361,10 @@ ul.tabs li{
     list-style: none!important;
     padding: 0 1rem;
     background: #ebebeb;
-    width: 50px;
+    width: 55px;
     border-radius: 4px;
     border: 1px solid #c7c7c7;
-    margin-top: 4px;
+    margin-top: 8px;
     font-size:.9em; color:#525252!important;
     cursor:pointer;
 }
@@ -2530,7 +2530,7 @@ ul.tabs li{
 .linkBox li:last-child:after{display: none;}
 .linkBox li:nth-child(1){border-bottom: 2px solid #222; box-sizing: border-box;}
 .linkBox li:nth-child(1) a{color: #222;}
-.linkBox a{display: block; padding: 15px 20px; font-size: 1.2rem; line-height: 1rem; color: #787878;}
+.linkBox a{display: block; padding: 15px 20px; font-size: 1.3rem; line-height: 1rem; color: #787878;}
 .addressBox{position: relative; padding: 20px 0; font-size: 1.2rem; line-height: 2rem; text-align: left;}
 .addressBox address span{display: inline-block; padding-right: 15px; position: relative;}
 .addressBox address span:after{content: ''; display: block; width: 1px; height: 12px; background: #666; position: absolute; right: 4px; top: calc(50% - 6px);}
@@ -2563,7 +2563,7 @@ ul.tabs li{
 }
   .linkBox ul{border-bottom: none;}
   .linkBox li{height: 30px;}
-  .linkBox a{padding: 10px 4px; letter-spacing: -0.07em;}
+  .linkBox a{padding: 10px 5px;}
   .addressBox{padding-top: 10px; padding-bottom: 60px; font-size: 1.3rem;line-height: 2.4rem; }
   .addressBox .banner{width: 100%; transform: translateY(10px);}
   .addressBox .banner img{max-width: 150px; width: 32%;}
@@ -2575,7 +2575,7 @@ ul.tabs li{
 }
 
 @media screen and (max-width: 320px){
-	.linkBox a{padding: 10px 3px; letter-spacing: -0.15em;}	
+	.linkBox a{padding: 10px 3px;}	
 	.price table td {padding :1rem 0.5rem;}
 	.main_user_rsv li span a {font-size: 2em;}
 	.pay_passWord li input {font-size:12px;}
@@ -2628,7 +2628,7 @@ ul.tabs li{
 }
 .null_cont, .null_list, .null_center {text-align:center; display: none;}
 .null_cont p, .null_list p, .null_center p {
-	font-size: 1.3em;
+	font-size: 1.5em;
     color: #a7a7a7;
     padding: 4rem 0;
 }

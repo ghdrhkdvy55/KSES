@@ -40,3 +40,8 @@
     article, aside, hgroup, header, footer, figure, figcaption, nav, section,time, mark, canvas, video, audio, details, summary {
          display:block;
     }
+    
+ @media screen and (max-width: 320px){
+ 	body,html,table,input,textarea,select,button{ font:10px 'NanumSquare', sans-serif;}
+ 
+ }

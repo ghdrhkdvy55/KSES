@@ -189,11 +189,11 @@
 								
 								<!--기타고지사항-->
 								<li class="person_check nonMemberArea">
-									<p>	
-										<span>&lt;기타 고지 사항 &gt;</span>																															
-						                <h5 class="notiCon">개인정보 보호법 제15조 제1항 제2호에 따라 정보주체의 동의 없이 개인정보를 수집·이용합니다.</h5>																																						
-										<p class="prsn_agree"><a data-popup-open="ect_agree">자세히 &gt;</a></p>									
-									</p>
+									<p><span>&lt;기타 고지 사항 &gt;</span></p>
+									<ol>
+										<li class="notiCon">개인정보 보호법 제15조 제1항 제2호에 따라 정보주체의 동의 없이 개인정보를 수집·이용합니다.</li>
+										<li class="prsn_agree"><a data-popup-open="ect_agree">자세히 &gt;</a></li>
+									</ol>																														
 								</li>    
                             </ul>
 
@@ -361,11 +361,11 @@
 										
 										<!--기타고지사항-->
 										<li class="person_check nonMemberArea">
-											<p>	
-												<span>&lt;기타 고지 사항 &gt;</span>																															
-								                <h5 class="notiCon">개인정보 보호법 제15조 제1항 제2호에 따라 정보주체의 동의 없이 개인정보를 수집·이용합니다.</h5>																																						
-												<p class="prsn_agree"><a data-popup-open="ect_agree">자세히 &gt;</a></p>									
-											</p>
+											<p><span>&lt;기타 고지 사항 &gt;</span>	</p>
+											<ol>
+												<li class="notiCon">개인정보 보호법 제15조 제1항 제2호에 따라 정보주체의 동의 없이 개인정보를 수집·이용합니다.</li>
+												<li class="prsn_agree"><a data-popup-open="ect_agree">자세히 &gt;</a></li>
+											</ol>
 										</li>                                               
                                     </ul>
 
