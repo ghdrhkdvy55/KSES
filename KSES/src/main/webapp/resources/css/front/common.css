@@ -1551,7 +1551,14 @@ h2.guide_tit {
 .branch_list >li {width: 48%; border-radius: 8px; background: #F3F3F3; display: inline-block; margin-bottom: 2rem; cursor: pointer; }
 .branch_list >li span {font-weight: 700;}
 .branch_list >li:nth-child(even) {float:right;}
-.branch_list >li ul {text-align: center; padding: 2.5rem 1rem; }
+.branch_list >li ul {
+    text-align: center;
+    padding: 2.5rem 1rem;
+    height: 60px;
+    display: table-cell;
+    width: 25%;
+    vertical-align: middle;
+}
 .branch_list >li ul li:last-child {color: #8E8E8E; font-size: 0.9em; letter-spacing:-0.1em;}
 
 .branch_list >li:hover ,
@@ -2125,6 +2132,8 @@ ul.tabs li{
     border-radius: 8px;
     display: block;
     font-size: 1.3em;
+    width: 49%;
+    display: inline-block;
 }
 .cancel_btn a.dbBtn {background:#cdcdcd}
 .cancel_btn li .dislBtn  {background: #c0c0c0;}
