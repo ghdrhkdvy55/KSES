@@ -1548,7 +1548,7 @@ h2.guide_tit {
 /*#rsv_header .rsv_info li:nth-child(2) {padding: 7rem 0 0 2rem; }*/
 .rsvBack {font-size: 1.7em;}
 .branchSel {margin-top: 2rem; padding-bottom: 20rem; }
-.branch_list >li {width: 48%; border-radius: 8px; background: #F3F3F3; display: inline-block; margin-bottom: 2rem; cursor: pointer; }
+.branch_list >li {width: 48%; border-radius: 8px; background: #F3F3F3; display: inline-block; margin-bottom: 2rem; cursor: pointer; min-height: 120px}
 .branch_list >li span {font-weight: 700;}
 .branch_list >li:nth-child(even) {float:right;}
 .branch_list >li ul {

@@ -51,8 +51,9 @@
 	<input type="hidden" name="resvDate" id="resvDate" value="${resvInfo.resvDate}">
 	
 	<input type="hidden" name="centerEntryPayCost" id="centerEntryPayCost" value="${resvInfo.center_entry_pay_cost}">
-	<input type="hidden" name="centerStandYn" id="centerStandYn" value="${resvInfo.center_stand_yn}">	
-	
+	<input type="hidden" name="centerStandYn" id="centerStandYn" value="${resvInfo.center_stand_yn}">
+	<input type="hidden" name="centerPilotYn" id="centerPilotYn" value="${resvInfo.center_pilot_yn}">
+		
 	<!-- 예약정보 sessionStorage검토 -->
 	<input type="hidden" name="seasonCd" id="seasonCd">
 	<input type="hidden" name="centerCd" id="centerCd" value="${resvInfo.centerCd}">
@@ -639,53 +640,30 @@
             	$("#"+tab_id).addClass('current');
     		});
 			
-
 			$(".date").html(fn_resvDateFormat($("#resvDate").val()));
-			resvUsingTimeCheck(sessionStorage.getItem("resvUsingTime"));
 			
-			if($("#isReSeat").val() == "Y") {
+			if($("#isReSeat").val() != "Y") {
+				// TO-DO : 비시범지점일 경우 "좌석" 버튼숨김 임시적용
+				// 2022-04월 제거 예정
+				if($("#centerStandYn").val() == "N" && $("#centerPilotYn").val() == "Y") {
+					$("#ENTRY_DVSN_2").trigger("click");
+					$(".enter_type").hide();
+					$(".contents > h4:eq(0)").hide();		
+				} else if ($("#centerStandYn").val() == "Y" && $("#centerPilotYn").val() == "N") {
+					$("#ENTRY_DVSN_1").trigger("click");
+					$(".enter_type").hide();
+					$(".contents > h4:eq(0)").hide();					
+				} else if ($("#centerStandYn").val() == "N" && $("#centerPilotYn").val() == "N") {
+					fn_openPopup("예약 가능한 항목이 존재하지 않습니다.", "red", "ERROR", "확인", "");
+					$(".enter_type").hide();					
+				}
+			} else {
 				seatService.fn_reSeat();
-			} else if($("#centerStandYn").val() == "N") {
-				$("#ENTRY_DVSN_2").trigger("click");
-				$(".enter_type").hide();
-				$(".contents > h4:eq(0)").hide();
 			}
 		});
 		
 		var seatService =
 		{ 
-			fn_makeResvArea: function(centerCd) {
-				var url = "/front/rsvSeatAjax.do";
-				
-				var parmas = {"resvDate" : $("resvDate").val()};
-				
-				fn_Ajax
-				(
-				    url,
-				    "GET",
-				    parmas,
-					false,
-					function(result) {
-						if (result.status == "SUCCESS") {
-							if(result.resultlist != null) {
-								$(".branch_list").empty();
-								$.each(result.resultlist, function(index, item) {
-									var setHtml = "";
-									setHtml += "<li><ul id='" + item.center_cd + "'><li><span>" 
-									+ item.center_nm + "</span></li><li></li><li>잔여석 <em>" 
-									+ (item.center_seat_max_count - item.center_seat_use_count) 
-									+ "</em>석</li></ul></li>";
-									$(".branch_list").append(setHtml);
-								});
-								centerService.fn_centerButtonSetting();
-							}
-						}
-					},
-					function(request) {
-						fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");	       						
-					}    		
-				);
-			},
 			fn_reSeat : function() {
 				$("#" + $("#reEnterDvsn").val()).addClass("active");
 				$("#" + $("#reEnterDvsn").val()).trigger("click");
@@ -703,7 +681,7 @@
 						
 						$(".rsv_list").children("li").eq(2).hide();
 						$(".rsv_list").children("li").eq(3).hide();
-					} else {
+					} else { 
 						$("#section_sel").hide();
 						$("#selectFloorCd").val("");
 
