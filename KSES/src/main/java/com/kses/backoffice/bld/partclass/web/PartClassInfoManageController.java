@@ -122,6 +122,16 @@ import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 		return model; 
 	}
   
+	/**
+	 * 구역 정보 등록 및 삭제
+	 * @param request
+	 * @param mRequest
+	 * @param loginVO
+	 * @param partClassInfo
+	 * @param result
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping (value="partClassUpdate.do", method = RequestMethod.POST)
 	public ModelAndView updatePartClassInfo(HttpServletRequest request,
 											MultipartRequest mRequest,
@@ -161,7 +171,12 @@ import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 		return model; 
 	}
   
-  
+	/**
+	 * 구역 정보 삭제
+	 * @param partClassInfo
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value = "partClassDelete.do", method = RequestMethod.POST)
 	public ModelAndView deletePartClassInfo(@RequestBody PartClassInfo partClassInfo) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);

@@ -578,8 +578,8 @@ public class ResJosnController {
 			searchVO.put("resvSeq", SmartUtil.NVL(jsonInfo.get("RES_NO"), "").toString());
 			String localTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 			searchVO.put("resvDate", localTime);
-			Map<String, Object> resInfo = resService.selectUserResvInfo(searchVO);
-
+			Map<String, Object> resInfo = resService.selectUserResvInfo(searchVO);		
+			
 			String recDate = SmartUtil.NVL(jsonInfo.get("RES_SEND_DATE"), "19700101").toString();
 			
 			if (resInfo != null && !SmartUtil.NVL(resInfo.get("resv_pay_dvsn"), "").toString().equals("RESV_PAY_DVSN_1")) {
@@ -681,15 +681,26 @@ public class ResJosnController {
 			searchVO.put("resvDate", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
 			
 			Map<String, Object> resInfo = resService.selectUserResvInfo(searchVO);
+			
+			Map<String, Object> machineVO = new HashMap<String, Object>();
+			machineVO.put("ticketMchnSno", SmartUtil.NVL(jsonInfo.get("MACHINE_SERIAL"), "").toString());
+			machineVO.put("centerCd", SmartUtil.NVL(resInfo.get("center_cd"), "").toString());
+			Map<String, Object> machineSerial = resService.selectTicketMchnSnoCheck(machineVO);
+			LOGGER.info("머신시리얼 체크 : " + machineSerial.get("cnt"));
+			
 			String localTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 			String recDate = SmartUtil.NVL(jsonInfo.get("RES_SEND_DATE"), "19700101").toString();
 			String qrTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+			
 
 			LOGGER.debug(Integer.valueOf(SmartUtil.NVL(jsonInfo.get("RES_PRICE"), "").toString()) + ":"
 					+ Integer.valueOf(SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString()));
 			if (resInfo == null || !recDate.substring(0, 8).equals(localTime)) {
 				returnCode = "ERROR_01";
 				returnMessage = "예약 정보 없음.";
+			} else if (machineSerial.get("cnt").toString().equals("0")) {
+				returnCode = "ERROR_05";
+				returnMessage = "장소 오류.";
 			} else if (resInfo != null && !SmartUtil.NVL(jsonInfo.get("RES_PRICE"), "").toString().equals(SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString())) {
 				returnCode = "ERROR_03";
 				returnMessage = "결제 금액 확인 요망.";

@@ -111,7 +111,7 @@
                   		</td>
                   		<th>정렬순서</th>
                   		<td>
-                  			<input type="text" name="centerOrder">
+                  			<input type="text" name="partClassOrder">
                   		</td>
 	                </tr>
 	            </tbody>
@@ -151,7 +151,7 @@
 			{ label: '구역 비용', name:'part_pay_cost', align:'center'},
 			{ label: '사용유무', name:'use_yn_value', align:'center', hidden:true},
 			{ label: '사용유무', name:'use_yn', align:'center'},
-			{ label: '정렬순서', name:'center_order', align:'center', hidden: true},
+			{ label: '정렬순서', name:'part_class_order', align:'center', hidden: true},
 			{ label: '수정자', name:'last_updusr_id', align:'center'},
             { label: '수정일자', name:'last_updt_dtm', align:'center'},
 		], false, false, fnSearch);
@@ -190,7 +190,7 @@
 			$form.find('select[name=centerCd]').val(rowData.center_cd).prop('disabled', true);
 			$form.find('select[name=partClass]').val(rowData.part_class).prop('disabled', true);
 			$form.find(':text[name=partPayCost]').val(rowData.part_pay_cost);
-			$form.find(':text[name=centerOrder]').val(rowData.center_order);
+			$form.find(':text[name=partClassOrder]').val(rowData.part_class_order);
 			$form.find(':radio[name=useYn][value='+ rowData.use_yn_value +']').prop('checked', true);
 		}
 		$popup.bPopup();
@@ -216,7 +216,7 @@
 			alert('구역 금액을 입력해 주세요.');
 			return;
 		}	
-		if ($popup.find(':text[name=centerOrder]').val() === '') {
+		if ($popup.find(':text[name=partClassOrder]').val() === '') {
 			//toastr.warning('정렬 순서를 입력해 주세요.');
 			alert('정렬 순서를 입력해 주세요.');
 			return;
@@ -230,7 +230,7 @@
 	 	    formData.append('centerCd' , $form.find('select[name=centerCd]').val());
 	 	    formData.append('partClass' , $form.find('select[name=partClass]').val());
 	 	    formData.append('partPayCost' , $form.find(':text[name=partPayCost]').val());
-	 	    formData.append('centerOrder' , $form.find(':text[name=centerOrder]').val());
+	 	    formData.append('partClassOrder' , $form.find(':text[name=partClassOrder]').val());
 	 	   	formData.append('useYn', $form.find('input[name=useYn]:checked').val());
 	 	   	formData.append('mode' , $form.find(':hidden[name=mode]').val());
 	 	   
@@ -280,7 +280,7 @@
 			alert('구역 금액을 입력해 주세요.');
 			return;
 		}
-		if ($popup.find(':text[name=centerOrder]').val() === '') {
+		if ($popup.find(':text[name=partClassOrder]').val() === '') {
 			//toastr.warning('정렬 순서를 입력해 주세요.');
 			alert('정렬 순서를 입력해 주세요.');
 			return;
@@ -297,7 +297,7 @@
 	 	    formData.append('centerCd' , $form.find('select[name=centerCd]').val());
 	 	    formData.append('partClass' , $form.find('select[name=partClass]').val());
 	 	    formData.append('partPayCost' , $form.find(':text[name=partPayCost]').val());
-	 	    formData.append('centerOrder' , $form.find(':text[name=centerOrder]').val());
+	 	    formData.append('partClassOrder' , $form.find(':text[name=partClassOrder]').val());
 	 	   	formData.append('useYn', $form.find('input[name=useYn]:checked').val());
 	 	   	formData.append('mode' , $form.find(':hidden[name=mode]').val());
 	 	   

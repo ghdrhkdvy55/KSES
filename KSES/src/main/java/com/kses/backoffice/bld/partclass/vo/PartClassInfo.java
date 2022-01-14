@@ -37,7 +37,7 @@ public class PartClassInfo {
 	private String lastUpdusrId;
 	
 	// 정렬 순서
-	private String centerOrder;
+	private String partClassOrder;
 	
 	//
 	private String mode;
