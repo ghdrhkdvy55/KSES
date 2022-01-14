@@ -59,9 +59,17 @@
 		SELECT 
 			USER_ID, 'USER_DVSN_1' AS USER_DVSN, USER_NM, USER_PHONE, USER_SEX_MF, USER_BIRTH_DY, LAST_UPDUSR_ID, LAST_UPDT_DTM,
 			USER_RCPT_YN, USER_RCPT_DVSN, USER_RCPT_NUMBER
-		FROM TSER_USER_INFO_I 
-		WHERE USER_CARD_ID = FC_DEC(#{params.cardId, jdbcType=VARCHAR})
-		AND USER_CARD_SEQ = #{params.cardSeq, jdbcType=VARCHAR}
+		FROM TSER_USER_INFO_I
+		<choose>
+		<when test="@org.apache.commons.lang3.StringUtils@equals(params.envType,'CLOUD')">
+			WHERE USER_CARD_ID = #{params.cardId, jdbcType=VARCHAR}
+		</when>
+		<otherwise>
+			WHERE USER_CARD_ID = FC_DEC(#{params.cardId, jdbcType=VARCHAR})
+			AND USER_CARD_SEQ = #{params.cardSeq, jdbcType=VARCHAR}
+		</otherwise>
+		</choose>
+		
    	</select>
    	
 	<select id="selectUserVacntnInfo" resultType="lmap">
