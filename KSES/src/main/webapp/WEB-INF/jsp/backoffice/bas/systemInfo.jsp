@@ -86,6 +86,29 @@
 						<th>블랙리스트 해제일</th>
                         <td><input type="number" id="blklstRlsdt" name="blklstRlsdt" value="${regist.blklstRlsdt}"></td>
                     </tr>
+                    <tr>
+						<th>비회원 예약 여부</th>
+	                  	<td>
+                    		<label for="guestResvPossibleYn_Y">
+                    			<input 
+                    				id="guestResvPossibleYn_Y" 
+                    				type="radio" 
+                    				name="guestResvPossibleYnYn" 
+                    				value="Y" 
+                    				<c:if test="${regist.guestResvPossibleYn == 'Y' }"> checked </c:if>
+                    			>Y
+                    		</label>
+                    		<label for="guestResvPossibleYn_N">
+                    			<input 
+                    				id="guestResvPossibleYn_N" 
+                    				type="radio" 
+                    				name="guestResvPossibleYnYn" 
+                    				value="N" <c:if test="${regist.guestResvPossibleYn == 'N' }"> checked </c:if>
+                    			>N
+                    		</label>
+                    		<td colspan="2"></td>
+                  		</td>
+                    </tr>
             	</tbody>
         	</table>
     	</div>
@@ -119,6 +142,7 @@
 			'centerAutoCancleAmtm' : $.trim($("#centerAutoCancleAmtm").val()).replace(":",""),
 			'centerAutoCanclePmtm' : $.trim($("#centerAutoCanclePmtm").val()).replace(":",""),
 			'centerAutoCancleAlltm' :  $.trim($("#centerAutoCancleAlltm").val()).replace(":",""),
+			'guestResvPossibleYn' : $('input[name=guestResvPossibleYn]:checked').val(),
 			'blklstRlsdt' :  $.trim($("#blklstRlsdt").val())
 		}; 
     	
