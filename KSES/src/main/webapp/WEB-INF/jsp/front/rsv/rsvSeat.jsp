@@ -105,7 +105,7 @@
                         <ul>
 							<li id="ENTRY_DVSN_1" onclick="seatService.fn_enterTypeChange('ENTRY_DVSN_1');">
 								<ul>
-									<li>입석</li>
+									<li>자유석</li>
 								</ul>
 							</li>
 							<li id="ENTRY_DVSN_2" onclick="seatService.fn_enterTypeChange('ENTRY_DVSN_2');">
@@ -620,7 +620,7 @@
 		    });
 
 			
-			//입석 좌석 버튼 이벤트 정의
+			//자유석 좌석 버튼 이벤트 정의
 			$(function(){
 				var sBtn = $(".section_menu ul > li, .enter_type ul > li");   //  ul > li 이를 sBtn으로 칭한다. (클릭이벤트는 li에 적용 된다.)
 				sBtn.find("ul").click(function(){   // sBtn에 속해 있는  ul 찾아 클릭 하면.
@@ -1099,7 +1099,7 @@
 					$("#rsv_floor").html($(".sel_floor_nm").html());
 					$("#rsv_seat").html($(".sel_seat_nm").html());
 				} else {
-					$("#rsv_seat").html("입석").show();					
+					$("#rsv_seat").html("자유석").show();					
 				}
 				
 				$("#rsv_done").bPopup();
@@ -1109,17 +1109,6 @@
 				var url = "/front/updateUserResvInfo.do";
 				var params = {};
 				
-/* 				// 동일자 예약 중복 체크
-				params = {
-					"userDvsn" : $("#userDvsn").val(), 
-					"userId" : $("#userId").val(), 
-					"userPhone" : resvUserClphn,
-					"resvDate" : $("#resvDate").val()
-				};
-				
-				if(fn_resvDuplicateCheck(params)) {fn_openPopup("현재 예약일자에 이미 예약정보가 존재합니다.", "red", "ERROR", "확인", ""); return;} */
-						
-				// 예약 유효성 검사
 				var checkDvsn = entryDvsn == "ENTRY_DVSN_1" ? "STANDING" : "SEAT";
 				params = {
 					"checkDvsn" : checkDvsn,

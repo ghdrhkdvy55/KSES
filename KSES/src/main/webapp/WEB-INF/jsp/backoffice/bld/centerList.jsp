@@ -134,14 +134,14 @@
                     		<label for="centerPilotYn_Y"><input id="centerPilotYn_Y" type="radio" name="centerPilotYn" value="Y" checked>Y</label>
                     		<label for="centerPilotYn_N"><input id="centerPilotYn_N" type="radio" name="centerPilotYn" value="N">N</label>
                   		</td>
-                  		<th>입석 여부</th>
+                  		<th>자유석 여부</th>
 	                  	<td>
                     		<label for="centerStandYn_Y"><input id="centerStandYn_Y" type="radio" name="centerStandYn" value="Y" checked>Y</label>
                     		<label for="centerStandYn_N"><input id="centerStandYn_N" type="radio" name="centerStandYn" value="N">N</label>
                   		</td>
 					</tr>
 					<tr>
-						<th>최대 입석수</th>
+						<th>최대 자유석수</th>
 	                  	<td><input type="text" id="centerStandMax" name="centerStandMax" onkeypress="onlyNum();"></td>
 	                  	<th>지점 입장료</th>
 	                  	<td><input type="text" id="centerEntryPayCost" name="centerEntryPayCost" onkeypress="onlyNum();"></td>
@@ -353,7 +353,7 @@
 					{label: '연락처', name:'center_tel', index:'center_tel', align:'center'},
 					{label: '주소', name:'center_addr', index:'center_addr', align:'center', formatter:jqGridFunc.address},
 					{label: '사용유무', name:'use_yn', index:'use_yn', align:'center', sortable : false, formatter:jqGridFunc.useYn},
-					{label: '최대입석수', name:'center_stand_max', index:'center_stand_max', align:'center'},
+					{label: '최대자유석수', name:'center_stand_max', index:'center_stand_max', align:'center'},
 					{label: '사전예약시간', name:'preOpenSetting', index:'preOpenSetting', align:'center', sortable : false, formatter:jqGridFunc.preOpenSettingButton},
 					{label: '자동취소', name: 'noshowSetting',  index:'noshowSetting', align:'center', sortable : false, formatter:jqGridFunc.noshowSettingButton},
 					{label: '층 관리', name: 'floorInfoSetting',  index:'floorInfoSetting', align:'center', sortable : false, formatter:jqGridFunc.floorInfoButton},

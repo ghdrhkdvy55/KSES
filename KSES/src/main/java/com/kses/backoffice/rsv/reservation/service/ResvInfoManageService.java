@@ -118,7 +118,7 @@ public interface ResvInfoManageService {
 	public String selectResvUserId(String resvSeq) throws Exception;
 	
 	/**
-	 * SPDM 예약정보 입석 좌석 정보 조회
+	 * SPDM 예약정보 자유석 좌석 정보 조회
 	 * 
 	 * @param resvSeq
 	 * @return

@@ -233,7 +233,6 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 				throw new Exception();
 			}
 		} catch(Exception e) {
-			LOGGER.debug("---------------------------------------");
 			StackTraceElement[] ste = e.getStackTrace();
 			LOGGER.error(e.toString() + ":" + ste[0].getLineNumber());
 			resultMap.put(Globals.STATUS, Globals.STATUS_FAIL);

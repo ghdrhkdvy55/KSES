@@ -748,7 +748,7 @@
 						$("#rsvPopResvState").html(obj.resv_state_text);
 						
 						
-						if(obj.seat_nm != "입석" && obj.resv_state == "RESV_STATE_1") { 
+						if(obj.seat_nm != "자유석" && obj.resv_state == "RESV_STATE_1") { 
 							$("#rsvPopSeatChange a").show().click(function (e) {
 								jqGridFunc.fn_resvSeatInfo("CHANGE",obj);
 							});		

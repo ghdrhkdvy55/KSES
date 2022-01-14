@@ -66,7 +66,7 @@ public class ResvInfo {
 	// 예약 총 금액 
 	private String resvPayCost = "";
 	
-	// 입석/좌석 구분
+	// 자유석/좌석 구분
 	private String resvEntryDvsn = "";
 	
 	// 문진표 작성 여부

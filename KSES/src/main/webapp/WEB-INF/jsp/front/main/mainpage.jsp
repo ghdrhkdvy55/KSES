@@ -685,7 +685,7 @@
 										});										
 									} else {
 										$("#rebookBtn").css("background","#808080");
-										$("#rebookBtn").html("현재 예약할수 없는 좌석 또는 입석 예약으로 진행하셨습니다.")
+										$("#rebookBtn").html("현재 예약할수 없는 좌석 또는 자유석 예약으로 진행하셨습니다.")
 									}
 								} else {
 									$("#cancel_rsv_info .name").html(userLoginInfo.userNm);
