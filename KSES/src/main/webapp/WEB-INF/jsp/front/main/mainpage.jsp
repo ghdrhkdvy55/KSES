@@ -402,10 +402,6 @@
 					var url = "/front/userInfo.do";
 					var params = {"userId" : userId}
 					
-					// 예약 단계별 화면처리를 위한 sessionStorage
-					// loginType : 회원 -> 1  비회원 -> 2 
-					sessionStorage.setItem("loginType","1");
-					
 					fn_Ajax
 					(
 					    url,
@@ -417,6 +413,7 @@
 								var today = new Date().format("yyyy-MM-dd");
 								var reservationInfo = result.reservationInfo;
 								var userLoginInfo = result.userLoginInfo;
+								var systemInfo = result.systemInfo;
 								
 								// 마지막 예약정보가 존재할 경우
 								if(result.reservationInfo != null) {
@@ -437,12 +434,9 @@
 										// 유저정보하단 HTML생성
 										setHtml = "";
 										setHtml += "<li><span><a href='javascript:mainService.fn_userResvInfo(&#39;NOW&#39;, &#39;" + obj.resv_seq + "&#39;, &#39;rsv_info&#39;);' >" + obj.center_nm + " " + obj.seat_nm + "</a></span></li>";
-										
-										setHtml += obj.resv_ticket_dvsn != "RESV_TICKET_DVSN_2" ? 
-												"<li class='rsv_cancel'><a href='javascript:mainService.fn_userResvInfo(&#39;CANCEL&#39;, &#39;" + obj.resv_seq + "&#39;, &#39;cancel_rsv_info&#39;);'>예약취소</a></li>" 
-												: "";
-										
+										setHtml += "<li class='rsv_cancel'><a href='javascript:mainService.fn_userResvInfo(&#39;CANCEL&#39;, &#39;" + obj.resv_seq + "&#39;, &#39;cancel_rsv_info&#39;);'>예약취소</a></li>";
 										setHtml += "<li><em><img src='/resources/img/front/alert_icon.svg' alt='알림'>15시 까지 미 입장시 입장예약이 취소됩니다.</em></li>";
+										
 										userInfoBottomArea.append(setHtml);
 										
 										// 현재 예약정보 팝업창 정보 입력
@@ -530,15 +524,17 @@
 					// 유저정보하단 HTML생성
 					setHtml = "";
 					setHtml += "<li><a href='/front/login.do'>로그인</a></li>";
-					setHtml += "<li><a href='/front/rsvCenter.do'>비회원 예약</a></li>";
+					if(systemInfo.guestResvPossibleYn == "Y") {
+						setHtml += "<li><a href='/front/rsvCenter.do'>비회원 예약</a></li>";
+					}
 					userInfoBottomArea.append(setHtml);
 					//일반 공지 정리 하기 
 				}
 				// 공지값 넣기 
-				mainService.fn_boardINfo("NOT");
+				mainService.fn_boardInfo("NOT");
 				
 			},
-    	    fn_boardINfo  : function (centerCd){
+    	    fn_boardInfo  : function (centerCd){
     	    	
     	    	var url = "/front/boardInfo.do";
     	    	var params = {
@@ -550,82 +546,81 @@
     	    	}
     	    	fn_Ajax 
     	    	(
-    	    			url,
-    	    			"POST",
-    	    			params,
-    	    			false,
-    	    			function(result){
-    	    				if (result.status == "SUCCESS") {
-    	    					if (result.resultlist.length>0){
-    	    						$(".null_cont").hide();
-    	    						var sHTML = "";
-    	    						
-    	    						for (var i in result.resultlist){
-    	    							var cssClass = (i == 0) ? "class='main_noti_list'":"";
-    	    							var obj = result.resultlist[i];
-    	    							sHTML += "<div "+cssClass+">"
-    	    		                          +  "  <div class='notice_con' id='n_"+obj.board_seq+"'> "                           
-    	    		                          +  "     <p class='notice_date'>'"+obj.last_updt_dtm+"'</p>"
-    	    		                          +  "     <p class='notice_tit'><span>'"+obj.board_title+"'</span></p>"
-    	    		                          +  "	</div>"
-    	    		                          +  "	<div class='notice_inner' id='c_"+obj.board_seq+"'>1231313121</div>"
-    	    		                          +  "</div>"; 
-    	    							$("#main_notice:last").append(sHTML);
-    	    							sHTML = "";
-    	    						}
-    	    						
-    	    						 $('.notice_con').click(function(e) {
-    	    					         e.preventDefault();
-    	    					         var $this = $(this);
-    	    					         var id = $(this).attr("id");
-    	    					         
-    	    					         if ($this.next().hasClass('show')) {
-    	    					        	 $("#c_"+ id.replace("n_", "") ).html("");
-    	    					             $this.next().removeClass('show');
-    	    					             $this.next().slideUp(350);
-    	    					         } else {
-    	    					        	
-    	    					        	 $this.parent().parent().find('.notice_inner').removeClass('show');
-    	    					             $this.parent().parent().find('.notice_inner').slideUp(350);
-    	    					             $this.next().toggleClass('show');
-    	    					             $this.next().slideToggle(350);
-    	    					            
-    	    					        	 fn_Ajax
-   	    									 (
-   	    										"/front/boardInfoDetail.do",
-   	    										"GET",
-   	    										{boardSeq : id.replace("n_", "")},
-   	    										false,
-   	    										function(result) {
-   	    											if (result.status == "SUCCESS") {
-   	    												var obj = result.result;
-   	    				    	    					$("#c_"+ id.replace("n_", "") ).html(obj.board_cn);
-   	    				    	    					if (result.resultlist != undefined){
-   	    				    	    						//파일 리스트 표출 
-   	    				    	    					}
-   	    								            }
-   	    								         },
-   	    								         function(request) {
-   	    								        	 fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");	
-   	    								         }
-   	    								     );
-    	    					         }
-    	    					     });
-    	    					} else {
-    	    						$(".null_cont").show();
-    	    					}
-    	    				} else {
-								fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
-    	    				} 
-    	    				
-    	    			}
+					url,
+					"POST",
+					params,
+					false,
+	    	    	function(result){
+	    	    		if (result.status == "SUCCESS") {
+	    	    			if (result.resultlist.length>0){
+	    	    				$(".null_cont").hide();
+	    	    				var sHTML = "";
+	    	    				
+	    	    				for (var i in result.resultlist){
+	    	    					var cssClass = (i == 0) ? "class='main_noti_list'":"";
+	    	    					var obj = result.resultlist[i];
+	    	    					sHTML += "<div "+cssClass+">"
+	    	                              +  "  <div class='notice_con' id='n_"+obj.board_seq+"'> "                           
+	    	                              +  "     <p class='notice_date'>'"+obj.last_updt_dtm+"'</p>"
+	    	                              +  "     <p class='notice_tit'><span>'"+obj.board_title+"'</span></p>"
+	    	                              +  "	</div>"
+	    	                              +  "	<div class='notice_inner' id='c_"+obj.board_seq+"'>1231313121</div>"
+	    	                              +  "</div>"; 
+	    	    					$("#main_notice:last").append(sHTML);
+	    	    					sHTML = "";
+	    	    				}
+	    	    				
+	    	    				 $('.notice_con').click(function(e) {
+	    	    			         e.preventDefault();
+	    	    			         var $this = $(this);
+	    	    			         var id = $(this).attr("id");
+	    	    			         
+	    	    			         if ($this.next().hasClass('show')) {
+	    	    			        	 $("#c_"+ id.replace("n_", "") ).html("");
+	    	    			             $this.next().removeClass('show');
+	    	    			             $this.next().slideUp(350);
+	    	    			         } else {
+	    	    			        	
+	    	    			        	 $this.parent().parent().find('.notice_inner').removeClass('show');
+	    	    			             $this.parent().parent().find('.notice_inner').slideUp(350);
+	    	    			             $this.next().toggleClass('show');
+	    	    			             $this.next().slideToggle(350);
+	    	    			            
+	    	    			        	 fn_Ajax
+	   	    							 (
+	   	    								"/front/boardInfoDetail.do",
+	   	    								"GET",
+	   	    								{boardSeq : id.replace("n_", "")},
+	   	    								false,
+	   	    								function(result) {
+	   	    									if (result.status == "SUCCESS") {
+	   	    										var obj = result.result;
+	   	    		    	    					$("#c_"+ id.replace("n_", "") ).html(obj.board_cn);
+	   	    		    	    					if (result.resultlist != undefined){
+	   	    		    	    						//파일 리스트 표출 
+	   	    		    	    					}
+	   	    						            }
+	   	    						         },
+	   	    						         function(request) {
+	   	    						        	 fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");	
+	   	    						         }
+	   	    						     );
+	    	    			         }
+	    	    			     });
+	    	    			} else {
+	    	    				$(".null_cont").show();
+	    	    			}
+	    	    		} else {
+							fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
+	    	    		} 
+	    	    		
+	    	    	}
     	    	)
     	    },
 			fn_userResvInfo : function(division, resvSeq, popup) {				
 				var url = "/front/userResvInfo.do";
 				var params = {
-					"resvSeq" : resvSeq,
-					"resvDate" : sessionStorage.getItem("resvDate"),
+					"resvSeq" : resvSeq
 				}
 				
 				fn_Ajax
@@ -712,7 +707,7 @@
 							$("#resvSeq").val(resvSeq);
 							$("#" + popup).bPopup();
 						} else {
-							fn_openPopup("error")
+							fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
 						}
 					},
 					function(request) {
@@ -724,14 +719,18 @@
 				var resvInfo = fn_getResvInfo(resvSeq);
 				
 				if(resvInfo.isSuccess) {
-					if(resvInfo.resv_pay_dvsn == "RESV_PAY_DVSN_1") {
-						mainService.fn_resvCancel(resvInfo);
+					if(resvInfo.resv_pay_dvsn != "RESV_PAY_DVSN_1") {
+						if(resvInfo.resv_ticket_dvsn != 'RESV_TICKET_DVSN_2') {
+							$("#pay_number").bPopup();
+							$("#Card_Pw").val("");
+							$("#pay_number a:eq(1)").click(function(resvSeq) {
+								mainService.fn_payment(resvInfo);	
+							});
+						} else {
+							fn_openPopup("종이 QR발권 상태입니다.", "red", "ERROR", "확인", "");
+						}
 					} else {
-						$("#pay_number").bPopup();
-						$("#Card_Pw").val("");
-						$("#pay_number a:eq(1)").click(function(resvSeq) {
-							mainService.fn_payment(resvInfo);	
-						});
+						mainService.fn_resvCancel(resvInfo);
 					}
 				}
 			},

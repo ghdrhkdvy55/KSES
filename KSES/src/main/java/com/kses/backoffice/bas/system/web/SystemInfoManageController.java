@@ -46,7 +46,7 @@ public class SystemInfoManageController {
 											BindingResult bindingResult) throws Exception {
 		
 		ModelAndView model = new ModelAndView();
-		SystemInfo result = systemInfoService.selectSystemInfo(searchVO);   	
+		SystemInfo result = systemInfoService.selectSystemInfo();   	
 
         model.addObject(Globals.STATUS_REGINFO, result);
         model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);

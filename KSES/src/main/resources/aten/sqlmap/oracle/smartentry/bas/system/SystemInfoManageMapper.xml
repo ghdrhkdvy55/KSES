@@ -23,7 +23,7 @@
 			CENTER_AUTO_CANCLE_PMTM = #{centerAutoCanclePmtm, jdbcType=VARCHAR},
 			CENTER_AUTO_CANCLE_ALLTM = #{centerAutoCancleAlltm, jdbcType=VARCHAR}, 
 			BLKLST_RLSDT = #{blklstRlsdt, jdbcType=VARCHAR},
-			GUEST_RESV_POSSIBLE_YN = #{guestResvYn, jdbcType=VARCHAR}
+			GUEST_RESV_POSSIBLE_YN = #{guestResvPossibleYn, jdbcType=VARCHAR}
 		WHERE SYSTEM_CD = 'KSES'
    </update>
 </mapper>

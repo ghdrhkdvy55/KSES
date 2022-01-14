@@ -10,7 +10,7 @@ import com.kses.backoffice.bas.system.vo.SystemInfo;
  */
 public interface SystemInfoManageService {
 	
-    public SystemInfo selectSystemInfo(SystemInfo searchVO) throws Exception;
+    public SystemInfo selectSystemInfo() throws Exception;
 	
     public int updateSystemInfo(SystemInfo vo) throws Exception;
 }
