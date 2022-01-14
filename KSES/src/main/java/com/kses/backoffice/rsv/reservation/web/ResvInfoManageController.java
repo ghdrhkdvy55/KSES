@@ -157,7 +157,6 @@ public class ResvInfoManageController {
 			LoginVO loginVO = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
 			params.put("userId", loginVO.getAdminId());
 			int ret = resvService.resvSeatChange(params);
-			System.out.println(ret);
 			
 			if(ret > 0) {
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);

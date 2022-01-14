@@ -46,14 +46,9 @@ public class EgovLoginServiceImpl extends EgovAbstractServiceImpl implements Ego
 	 */
     @Override
 	public LoginVO actionLogin(LoginVO vo) throws Exception {
-
-    	// 1. 입력한 비밀번호를 암호화한다.
-    	//String enpassword = EgovFileScrty.encryptPassword(vo.getPassword(), vo.getId());
-    	//vo.setPassword(enpassword);
-
-    	// 2. 아이디와 암호화된 비밀번호가 DB와 일치하는지 확인한다.
+    	// 1. 아이디와 암호화된 비밀번호가 DB와 일치하는지 확인한다.
     	LoginVO loginVO = loginUsrManageMapper.actionLogin(vo);
-    	// 3. 결과를 리턴한다.
+    	// 2. 결과를 리턴한다.
     	if (loginVO != null && !loginVO.getAdminId().equals("") && !loginVO.getAdminPwd().equals("")) {
     		return loginVO;
     	} else {
@@ -72,7 +67,7 @@ public class EgovLoginServiceImpl extends EgovAbstractServiceImpl implements Ego
     public LoginVO findById(String adminId) throws Exception {
     	return loginUsrManageMapper.findById(adminId);
     }
-
+    
     /**
 	 * 아이디를 찾는다.
 	 * @param vo LoginVO
@@ -82,20 +77,16 @@ public class EgovLoginServiceImpl extends EgovAbstractServiceImpl implements Ego
     /*
     @Override
 	public LoginVO searchId(LoginVO vo) throws Exception {
-
     	// 1. 이름, 이메일주소가 DB와 일치하는 사용자 ID를 조회한다.
     	LoginVO loginVO = loginDAO.searchId(vo);
-
     	// 2. 결과를 리턴한다.
     	if (loginVO != null && !loginVO.getId().equals("")) {
     		return loginVO;
     	} else {
     		loginVO = new LoginVO();
     	}
-
     	return loginVO;
     }
-
     /**
 	 * 비밀번호를 찾는다.
 	 * @param vo LoginVO
@@ -104,15 +95,12 @@ public class EgovLoginServiceImpl extends EgovAbstractServiceImpl implements Ego
 	
     @Override
 	public boolean searchPassword(LoginVO vo) throws Exception {
-
     	boolean result = true;
-
     	// 1. 아이디, 이름, 이메일주소, 비밀번호 힌트, 비밀번호 정답이 DB와 일치하는 사용자 Password를 조회한다.
     	LoginVO loginVO = loginDAO.searchPassword(vo);
     	if (loginVO == null || loginVO.getPassword() == null || loginVO.getPassword().equals("")) {
     		return false;
     	}
-
     	// 2. 임시 비밀번호를 생성한다.(영+영+숫+영+영+숫=6자리)
     	String newpassword = "";
     	for (int i = 1; i <= 6; i++) {
@@ -124,7 +112,6 @@ public class EgovLoginServiceImpl extends EgovAbstractServiceImpl implements Ego
     			newpassword += EgovNumberUtil.getRandomNum(0, 9);
     		}
     	}
-
     	// 3. 임시 비밀번호를 암호화하여 DB에 저장한다.
     	LoginVO pwVO = new LoginVO();
     	String enpassword = EgovFileScrty.encryptPassword(newpassword, vo.getAdminId());
@@ -132,7 +119,6 @@ public class EgovLoginServiceImpl extends EgovAbstractServiceImpl implements Ego
     	pwVO.setAdminPassword(enpassword);
     	pwVO.setUserSe(vo.getUserSe());
     	loginDAO.updatePassword(pwVO);
-
     	// 4. 임시 비밀번호를 이메일 발송한다.(메일연동솔루션 활용)
     	//SndngMailVO sndngMailVO = new SndngMailVO();
     	//sndngMailVO.setDsptchPerson("webmaster");
@@ -140,9 +126,7 @@ public class EgovLoginServiceImpl extends EgovAbstractServiceImpl implements Ego
     	//sndngMailVO.setSj("[MOPAS] 임시 비밀번호를 발송했습니다.");
     	//sndngMailVO.setEmailCn("고객님의 임시 비밀번호는 " + newpassword + " 입니다.");
     	//sndngMailVO.setAtchFileId("");
-
     	//result = sndngMailRegistService.insertSndngMail(sndngMailVO);
-
     	return result;
     }
      */

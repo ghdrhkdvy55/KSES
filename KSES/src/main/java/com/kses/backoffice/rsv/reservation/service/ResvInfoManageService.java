@@ -3,6 +3,8 @@ package com.kses.backoffice.rsv.reservation.service;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.kses.backoffice.rsv.reservation.vo.ResvInfo;
 
 public interface ResvInfoManageService {
@@ -118,7 +120,7 @@ public interface ResvInfoManageService {
 	public String selectResvUserId(String resvSeq) throws Exception;
 	
 	/**
-	 * SPDM 예약정보 입석 좌석 정보 조회
+	 * SPDM 예약정보 자유석 좌석 정보 조회
 	 * 
 	 * @param resvSeq
 	 * @return
@@ -142,7 +144,7 @@ public interface ResvInfoManageService {
 	 * @return
 	 * @throws Exception
 	 */
-	public Map<String, Object> selectGuestMyResvInfo(Map<String, Object> params) throws Exception;
+	public List<Map<String, Object>> selectGuestMyResvInfo(Map<String, Object> params) throws Exception;
 	
 	/**
 	 * SPDM 예약 좌석 변경
@@ -214,4 +216,6 @@ public interface ResvInfoManageService {
 	 * @throws Exception
 	 */
 	public String resvValidCheck(Map<String, Object> params) throws Exception;
+	
+	public Map<String, Object> selectTicketMchnSnoCheck(@Param("params") Map<String, Object> params);
 }

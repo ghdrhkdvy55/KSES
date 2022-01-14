@@ -235,7 +235,7 @@ public class MyPageInfoManageController {
 	}
 	
 	@RequestMapping (value="guestResvInfo.do")
-	public ModelAndView selectFrontGuestResvInfopage(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo,
+	public ModelAndView viewGuestResvInfopage(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo,
 														@RequestParam Map<String, String> param,
 														HttpServletRequest request,
 														BindingResult result) throws Exception {
@@ -253,7 +253,7 @@ public class MyPageInfoManageController {
 			
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		} catch(Exception e) {
-			LOGGER.error("selectFrontGuestResvInfopage : " + e.toString());
+			LOGGER.error("viewGuestResvInfopage : " + e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg")); 
 		}
@@ -271,7 +271,7 @@ public class MyPageInfoManageController {
 			HttpSession httpSession = request.getSession(true);
 			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
 						
-			Map<String, Object> guestResvInfo = resvService.selectGuestMyResvInfo(params);
+			List<Map<String, Object>> guestResvInfo = resvService.selectGuestMyResvInfo(params);
 			
 			model.addObject("guestResvInfo", guestResvInfo);
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
@@ -282,6 +282,7 @@ public class MyPageInfoManageController {
 		}
 		return model;
 	}
+	
 	@RequestMapping (value="notice.do")
 	public ModelAndView selectnoticeInfo() throws Exception {
 		

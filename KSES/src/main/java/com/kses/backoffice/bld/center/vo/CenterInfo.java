@@ -88,15 +88,24 @@ public class CenterInfo {
 	 // 등록/수정자 ID
 	 private String userId = "";
 	 
+	 // 시범 지점 유무 
 	 private String centerPilotYn = "";
 	 
+	 // 스피드온 지점코드
 	 private String centerSpeedCd = "";
 	 
+	 // 자유석 사용 유무
 	 private String centerStandYn = "";
 	 
+	 // 비회원 예약 가능 유무
+	 private String centerGuestYn = "";
+	 
+	 // 지점 최대 자유석 수
 	 private String centerStandMax = "";
 	 
+	 // 지점 입장료
 	 private String centerEntryPayCost = "";
 	 
+	 // SPDM 지점코드
 	 private String centerRbmCd = "";
 }

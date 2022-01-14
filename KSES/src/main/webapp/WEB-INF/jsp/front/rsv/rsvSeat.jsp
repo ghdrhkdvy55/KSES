@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="ui" uri="http://egovframework.gov/ctl/ui"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!DOCTYPE html>
@@ -50,8 +51,9 @@
 	<input type="hidden" name="resvDate" id="resvDate" value="${resvInfo.resvDate}">
 	
 	<input type="hidden" name="centerEntryPayCost" id="centerEntryPayCost" value="${resvInfo.center_entry_pay_cost}">
-	<input type="hidden" name="centerStandYn" id="centerStandYn" value="${resvInfo.center_stand_yn}">	
-	
+	<input type="hidden" name="centerStandYn" id="centerStandYn" value="${resvInfo.center_stand_yn}">
+	<input type="hidden" name="centerPilotYn" id="centerPilotYn" value="${resvInfo.center_pilot_yn}">
+		
 	<!-- 예약정보 sessionStorage검토 -->
 	<input type="hidden" name="seasonCd" id="seasonCd">
 	<input type="hidden" name="centerCd" id="centerCd" value="${resvInfo.centerCd}">
@@ -104,7 +106,7 @@
                         <ul>
 							<li id="ENTRY_DVSN_1" onclick="seatService.fn_enterTypeChange('ENTRY_DVSN_1');">
 								<ul>
-									<li>입석</li>
+									<li>자유석</li>
 								</ul>
 							</li>
 							<li id="ENTRY_DVSN_2" onclick="seatService.fn_enterTypeChange('ENTRY_DVSN_2');">
@@ -188,11 +190,11 @@
 								
 								<!--기타고지사항-->
 								<li class="person_check nonMemberArea">
-									<p>	
-										<span>&lt;기타 고지 사항 &gt;</span>																															
-						                <h5 class="notiCon">개인정보 보호법 제15조 제1항 제2호에 따라 정보주체의 동의 없이 개인정보를 수집·이용합니다.</h5>																																						
-										<p class="prsn_agree"><a data-popup-open="ect_agree">자세히 &gt;</a></p>									
-									</p>
+									<p><span>&lt;기타 고지 사항 &gt;</span></p>
+									<ol>
+										<li class="notiCon">개인정보 보호법 제15조 제1항 제2호에 따라 정보주체의 동의 없이 개인정보를 수집·이용합니다.</li>
+										<li class="prsn_agree"><a data-popup-open="ect_agree">자세히 &gt;</a></li>
+									</ol>																														
 								</li>    
                             </ul>
 
@@ -254,7 +256,7 @@
 													<td>
 														<img src="${item.codeetc2}">${item.codenm}
 													<c:if test="${item.codeetc1 ne 0}">
-														<span>${item.codeetc1}원</span>
+														<span><fmt:formatNumber value="${item.codeetc1}" pattern="#,###" />원</span>
 													</c:if>
 													<c:if test="${item.codeetc1 eq 0}">
 														<span>무료</span>
@@ -360,11 +362,11 @@
 										
 										<!--기타고지사항-->
 										<li class="person_check nonMemberArea">
-											<p>	
-												<span>&lt;기타 고지 사항 &gt;</span>																															
-								                <h5 class="notiCon">개인정보 보호법 제15조 제1항 제2호에 따라 정보주체의 동의 없이 개인정보를 수집·이용합니다.</h5>																																						
-												<p class="prsn_agree"><a data-popup-open="ect_agree">자세히 &gt;</a></p>									
-											</p>
+											<p><span>&lt;기타 고지 사항 &gt;</span>	</p>
+											<ol>
+												<li class="notiCon">개인정보 보호법 제15조 제1항 제2호에 따라 정보주체의 동의 없이 개인정보를 수집·이용합니다.</li>
+												<li class="prsn_agree"><a data-popup-open="ect_agree">자세히 &gt;</a></li>
+											</ol>
 										</li>                                               
                                     </ul>
 
@@ -461,16 +463,17 @@
     <!-- 예약완료 팝업 // -->
 
     <!-- // 예약취소 팝업 -->
-    <div data-popup="rsv_cancel" class="popup">
-      <div class="pop_con rsv_popup">
-          <div class="pop_wrap">
-              <h4><img src="/resources/img/front/cancle.svg" alt="예약취소">예약이 취소 되었습니다.</h4>
-          </div>
-          <div class="cancel_btn">
-              <a href="/front/main.do" class="grayBtn">처음으로</a>
-          </div>
-          <div class="clear"></div>
-      </div>
+    <div id="rsv_cancel" data-popup="rsv_cancel" class="popup">
+		<div class="pop_con rsv_popup">
+          	<div class="pop_wrap">
+              	<h4><img src="/resources/img/front/cancle.svg" alt="예약취소">예약을 취소하시겠습니까?</h4>
+          	</div>
+          	<div class="cancel_btn">
+          		<a href="/front/main.do" class="grayBtn">예</a>
+				<a href="javascript:bPopupClose('rsv_cancel');" class="dbBtn">아니요</a>
+          	</div>
+          	<div class="clear"></div>
+      	</div>
     </div>
     <!-- 예약취소 팝업 // -->
     
@@ -618,7 +621,7 @@
 		    });
 
 			
-			//입석 좌석 버튼 이벤트 정의
+			//자유석 좌석 버튼 이벤트 정의
 			$(function(){
 				var sBtn = $(".section_menu ul > li, .enter_type ul > li");   //  ul > li 이를 sBtn으로 칭한다. (클릭이벤트는 li에 적용 된다.)
 				sBtn.find("ul").click(function(){   // sBtn에 속해 있는  ul 찾아 클릭 하면.
@@ -637,53 +640,30 @@
             	$("#"+tab_id).addClass('current');
     		});
 			
-
 			$(".date").html(fn_resvDateFormat($("#resvDate").val()));
-			resvUsingTimeCheck(sessionStorage.getItem("resvUsingTime"));
 			
-			if($("#isReSeat").val() == "Y") {
+			if($("#isReSeat").val() != "Y") {
+				// TO-DO : 비시범지점일 경우 "좌석" 버튼숨김 임시적용
+				// 2022-04월 제거 예정
+				if($("#centerStandYn").val() == "N" && $("#centerPilotYn").val() == "Y") {
+					$("#ENTRY_DVSN_2").trigger("click");
+					$(".enter_type").hide();
+					$(".contents > h4:eq(0)").hide();		
+				} else if ($("#centerStandYn").val() == "Y" && $("#centerPilotYn").val() == "N") {
+					$("#ENTRY_DVSN_1").trigger("click");
+					$(".enter_type").hide();
+					$(".contents > h4:eq(0)").hide();					
+				} else if ($("#centerStandYn").val() == "N" && $("#centerPilotYn").val() == "N") {
+					fn_openPopup("예약 가능한 항목이 존재하지 않습니다.", "red", "ERROR", "확인", "");
+					$(".enter_type").hide();					
+				}
+			} else {
 				seatService.fn_reSeat();
-			} else if($("#centerStandYn").val() == "N") {
-				$("#ENTRY_DVSN_2").trigger("click");
-				$(".enter_type").hide();
-				$(".contents > h4:eq(0)").hide();
 			}
 		});
 		
 		var seatService =
 		{ 
-			fn_makeResvArea: function(centerCd) {
-				var url = "/front/rsvSeatAjax.do";
-				
-				var parmas = {"resvDate" : $("resvDate").val()};
-				
-				fn_Ajax
-				(
-				    url,
-				    "GET",
-				    parmas,
-					false,
-					function(result) {
-						if (result.status == "SUCCESS") {
-							if(result.resultlist != null) {
-								$(".branch_list").empty();
-								$.each(result.resultlist, function(index, item) {
-									var setHtml = "";
-									setHtml += "<li><ul id='" + item.center_cd + "'><li><span>" 
-									+ item.center_nm + "</span></li><li></li><li>잔여석 <em>" 
-									+ (item.center_seat_max_count - item.center_seat_use_count) 
-									+ "</em>석</li></ul></li>";
-									$(".branch_list").append(setHtml);
-								});
-								centerService.fn_centerButtonSetting();
-							}
-						}
-					},
-					function(request) {
-						fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");	       						
-					}    		
-				);
-			},
 			fn_reSeat : function() {
 				$("#" + $("#reEnterDvsn").val()).addClass("active");
 				$("#" + $("#reEnterDvsn").val()).trigger("click");
@@ -701,7 +681,7 @@
 						
 						$(".rsv_list").children("li").eq(2).hide();
 						$(".rsv_list").children("li").eq(3).hide();
-					} else {
+					} else { 
 						$("#section_sel").hide();
 						$("#selectFloorCd").val("");
 
@@ -1023,46 +1003,50 @@
 				var certifiNm = $("#" + entryDvsn + "_resvUserNm").val();
 				var certifiNum = $("#" + entryDvsn + "_resvUserClphn").val();
 				
-				if(certifiYn) {
-					fn_openPopup("이미 인증을 진행하였습니다.", "red", "ERROR", "확인", "");
-					return;
-				} else {
-					if(certifiNm == "") {
-						fn_openPopup("이름을 입력해주세요.", "red", "ERROR", "확인", ""); return;
-					} else if (certifiNum == "") {
-						fn_openPopup("휴대폰번호를 입력해주세요.", "red", "ERROR", "확인", ""); return;
-					} else if (!validPhNum(certifiNum)) {
-						fn_openPopup("올바른 휴대폰번호를 입력해주세요.", "red", "ERROR", "확인", ""); return;
+				var duplicateParams = {"userDvsn" : $("#userDvsn").val(), "userPhone" : certifiNum, "resvDate" : $("#resvDate").val()};
+				
+				if(!fn_resvDuplicateCheck(duplicateParams)) {
+					if(certifiYn) {
+						fn_openPopup("이미 인증을 진행하였습니다.", "red", "ERROR", "확인", "");
+						return;
+					} else {
+						if(certifiNm == "") {
+							fn_openPopup("이름을 입력해주세요.", "red", "ERROR", "확인", ""); return;
+						} else if (certifiNum == "") {
+							fn_openPopup("휴대폰번호를 입력해주세요.", "red", "ERROR", "확인", ""); return;
+						} else if (!validPhNum(certifiNum)) {
+							fn_openPopup("올바른 휴대폰번호를 입력해주세요.", "red", "ERROR", "확인", ""); return;
+						}
+						
+						var url = "/front/resvCertifiSms.do";
+						var params = {
+							"certifiNm" : certifiNm,
+							"certifiNum" : certifiNum
+						}
+						
+						fn_Ajax
+						(
+						    url,
+						    "POST",
+						    params,
+							false,
+							function(result) {
+						    	if(result.status == "SUCCESS") {
+						    		fn_openPopup("인증번호가 발송 되었습니다.(" +  result.certifiCode + ")", "blue", "SUCCESS", "확인", "");
+									certifiCode = result.certifiCode;
+							    	resvUserNm = certifiNm;
+							    	resvUserClphn = certifiNum;
+						    	} else if(result.status == "LOGIN FAIL") {
+						    		fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
+						    	} else {
+						    		fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
+						    	}
+							},
+							function(request) {
+								fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");	       						
+							}    		
+						);
 					}
-					
-					var url = "/front/resvCertifiSms.do";
-					var params = {
-						"certifiNm" : certifiNm,
-						"certifiNum" : certifiNum
-					}
-					
-					fn_Ajax
-					(
-					    url,
-					    "POST",
-					    params,
-						false,
-						function(result) {
-					    	if(result.status == "SUCCESS") {
-					    		fn_openPopup("인증번호가 발송 되었습니다.(" +  result.certifiCode + ")", "blue", "SUCCESS", "확인", "");
-								certifiCode = result.certifiCode;
-						    	resvUserNm = certifiNm;
-						    	resvUserClphn = certifiNum;
-					    	} else if(result.status == "LOGIN FAIL") {
-					    		fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
-					    	} else {
-					    		fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
-					    	}
-						},
-						function(request) {
-							fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");	       						
-						}    		
-					);
 				}
 			},
 			fn_checkCertifiCode : function() {
@@ -1093,7 +1077,7 @@
 					$("#rsv_floor").html($(".sel_floor_nm").html());
 					$("#rsv_seat").html($(".sel_seat_nm").html());
 				} else {
-					$("#rsv_seat").html("입석").show();					
+					$("#rsv_seat").html("자유석").show();					
 				}
 				
 				$("#rsv_done").bPopup();
@@ -1103,17 +1087,6 @@
 				var url = "/front/updateUserResvInfo.do";
 				var params = {};
 				
-/* 				// 동일자 예약 중복 체크
-				params = {
-					"userDvsn" : $("#userDvsn").val(), 
-					"userId" : $("#userId").val(), 
-					"userPhone" : resvUserClphn,
-					"resvDate" : $("#resvDate").val()
-				};
-				
-				if(fn_resvDuplicateCheck(params)) {fn_openPopup("현재 예약일자에 이미 예약정보가 존재합니다.", "red", "ERROR", "확인", ""); return;} */
-						
-				// 예약 유효성 검사
 				var checkDvsn = entryDvsn == "ENTRY_DVSN_1" ? "STANDING" : "SEAT";
 				params = {
 					"checkDvsn" : checkDvsn,

@@ -8,7 +8,8 @@
 			    CENTER_AUTO_CANCLE_AMTM,  
 			    CENTER_AUTO_CANCLE_PMTM, 
 			    CENTER_AUTO_CANCLE_ALLTM,
-			    BLKLST_RLSDT
+			    BLKLST_RLSDT,
+			    GUEST_RESV_POSSIBLE_YN
 		FROM TSEC_SYSTEM_INFO_M
 		WHERE SYSTEM_CD = 'KSES'
    	</select>
@@ -21,7 +22,8 @@
 			CENTER_AUTO_CANCLE_AMTM = #{centerAutoCancleAmtm, jdbcType=VARCHAR},  
 			CENTER_AUTO_CANCLE_PMTM = #{centerAutoCanclePmtm, jdbcType=VARCHAR},
 			CENTER_AUTO_CANCLE_ALLTM = #{centerAutoCancleAlltm, jdbcType=VARCHAR}, 
-			BLKLST_RLSDT = #{blklstRlsdt, jdbcType=VARCHAR}
+			BLKLST_RLSDT = #{blklstRlsdt, jdbcType=VARCHAR},
+			GUEST_RESV_POSSIBLE_YN = #{guestResvPossibleYn, jdbcType=VARCHAR}
 		WHERE SYSTEM_CD = 'KSES'
    </update>
 </mapper>

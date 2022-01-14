@@ -169,7 +169,6 @@
 	 		var today = new Date();
 	 		$("#searchDayFrom").val(today.format("yyyyMMdd"));
 	 		
-	 		
 	 		var day7 = new Date(today.getTime() + 604800000);
 	 		$("#searchDayTo").val(day7.format("yyyyMMdd"));	 		
  			
@@ -243,7 +242,7 @@
 				                        setHtml += "</ul>";
 				                        
 				                        setHtml += "<ul class='rsv_stat_btn'>";
-				                        if(item.resv_state == "RESV_STATE_1" && item.resv_ticket_dvsn != "RESV_TICKET_DVSN_2") {
+				                        if(item.resv_state == "RESV_STATE_1") {
 			                            	setHtml += "<li><a href='javascript:userResvService.fn_resvCancelCheck(&#39;" + item.resv_seq +"&#39;)'>예약 취소</a></li>";
 				                        }
 			                            setHtml += "</ul>";
@@ -261,7 +260,6 @@
 								});
 							} else {
 								$(".null_list").show();
-								/* fn_openPopup("예약된 정보가 존재하지 않습니다.", "red", "ERROR", "확인", ""); */
 							}
 						} else if(result.status == "LOGINFAIL"){
 							fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
@@ -292,19 +290,23 @@
 				var resvInfo = fn_getResvInfo(resvSeq);
 				
 				if(resvInfo.isSuccess) {
-					if(resvInfo.resv_pay_dvsn == "RESV_PAY_DVSN_1") {
+					if(resvInfo.resv_pay_dvsn != "RESV_PAY_DVSN_1") {
+						if(resvInfo.resv_ticket_dvsn != 'RESV_TICKET_DVSN_2') {
+							$("#pay_number").bPopup();
+							$("#Card_Pw").val("");
+							$("#pay_number a:eq(1)").click(function(resvSeq) {
+								if(fn_payment(resvInfo)){
+									userResvService.fn_userResvInfo(true);
+									bPopupClose("pay_number");
+								}
+							});
+						} else {
+							fn_openPopup("종이 QR발권 상태입니다.", "red", "ERROR", "확인", "");
+						}
+					} else {
 						if(fn_resvCancel(resvInfo)){
 							userResvService.fn_userResvInfo(true);
 						}
-					} else {
-						$("#pay_number").bPopup();
-						$("#Card_Pw").val("");
-						$("#pay_number a:eq(1)").click(function(resvSeq) {
-							if(fn_payment(resvInfo)){
-								userResvService.fn_userResvInfo(true);
-								bPopupClose("pay_number");
-							}
-						});
 					}
 				}
 			}

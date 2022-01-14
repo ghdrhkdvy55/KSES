@@ -1,7 +1,7 @@
 html,body{background: #f7f7f7;}
 .clear{clear: both;}
 a{color:inherit; cursor: pointer;}
-input, select{padding: 3px 0;min-width: 125px;display: inline-block;box-sizing: border-box;vertical-align: sub;}
+input, select{padding: 3px 0;min-width: 118px;display: inline-block;box-sizing: border-box;vertical-align: sub;}
 .srchTxt {vertical-align: baseline !important;}
 .branch_magt input, .branch_magt select {
     background: #6d8cb7;
@@ -677,7 +677,7 @@ canvas {
 .pop_wrap{margin-bottom: 20px;}
 /*.popup th{width: 20%;}*/
 .popup input[type="text"], .popup select, .popup textarea{
-  width: 140px;
+  width: 137px;
   vertical-align: top;
   border: 1px solid #c0c0c0;
   padding: 4px;
@@ -923,8 +923,8 @@ padding-left: 5px;
     padding: 4px 10px;
     border-radius: 25px;
 }
-.vacState .vacDone {color: #2667f7;}
-.vacState .vacNon {color: #f72626; }
+.vacState .vacDone {color: #1ba100;}
+.vacState .vacNon {color: #f72626;}
 
 /*1217 qr코드출력버튼*/
 .pint_a a {

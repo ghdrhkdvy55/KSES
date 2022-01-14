@@ -48,7 +48,7 @@ public class SystemInfoManageController {
 	@RequestMapping(value="systemInfo.do", method = RequestMethod.GET)
 	public ModelAndView viewSystemInfo(@ModelAttribute("searchVO") SystemInfo searchVO) throws Exception {
 		ModelAndView model = new ModelAndView("/backoffice/bas/systemInfo");
-		SystemInfo result = systemInfoService.selectSystemInfo(searchVO);   	
+		SystemInfo result = systemInfoService.selectSystemInfo();   	
         model.addObject(Globals.STATUS_REGINFO, result);
         model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
         return model;	

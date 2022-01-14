@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.kses.backoffice.bas.system.service.SystemInfoManageService;
 import com.kses.backoffice.cus.usr.service.UserInfoManageService;
 import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
 import com.kses.backoffice.sym.log.annotation.NoLogging;
@@ -54,6 +55,9 @@ public class MainPageInfoManageController {
 	@Autowired
 	private UserInfoManageService userService;
 	
+	@Autowired
+	private SystemInfoManageService systemService;
+	
 	@RequestMapping (value="main.do")
 	public ModelAndView selectFrontMainPage(HttpServletRequest request) throws Exception {
 		
@@ -68,8 +72,11 @@ public class MainPageInfoManageController {
 				userLoginInfo = new UserLoginInfo();
 				userLoginInfo.setUserDvsn("USER_DVSN_2");
 				httpSession.setAttribute("userLoginInfo", userLoginInfo);
+				httpSession.setAttribute("systemInfo", systemService.selectSystemInfo());
 				return model;
 			}
+			
+			
 		} catch(Exception e) {
 			LOGGER.error("selectFrontMainPage : " + e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);

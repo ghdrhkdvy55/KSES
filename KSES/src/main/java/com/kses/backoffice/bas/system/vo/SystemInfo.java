@@ -31,5 +31,8 @@ public class SystemInfo {
 	
 	// 블랙리스트 해제일
 	private String blklstRlsdt;
+	
+	//비회원 예약 가능 여부
+	private String guestResvPossibleYn;
 }
 

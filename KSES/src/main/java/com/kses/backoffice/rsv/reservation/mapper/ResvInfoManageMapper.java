@@ -30,7 +30,7 @@ public interface ResvInfoManageMapper {
 	
 	public List<Map<String, Object>> selectUserMyResvInfo(@Param("params") Map<String, Object> paramMap);
 	
-	public Map<String, Object> selectGuestMyResvInfo(@Param("params") Map<String, Object> paramMap);
+	public List<Map<String, Object>> selectGuestMyResvInfo(@Param("params") Map<String, Object> paramMap);
 	
 	public int resvSeatChange(@Param("params") Map<String, Object> paramMap);
 	
@@ -65,4 +65,6 @@ public interface ResvInfoManageMapper {
 	public int resPriceChange(ResvInfo vo);
 	
 	public String resvValidCheck(@Param("params") Map<String, Object> params);
+	
+	public Map<String, Object> selectTicketMchnSnoCheck(@Param("params") Map<String, Object> params);
 }

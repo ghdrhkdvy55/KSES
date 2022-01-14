@@ -51,6 +51,7 @@ tr.ui-search-toolbar select {margin: 1px 0 0 0}
     border-bottom-color: inherit;
     border-bottom-style: solid;
     border-right: 1px solid #e7e7e7;
+    cursor: pointer;
 }
 .ui-jqgrid tr.jqgfirstrow td {padding: 0 2px 0 2px;border-right-width: 1px; border-right-style: solid;}
 .ui-jqgrid tr.jqgroup td {font-weight: normal; overflow: hidden; white-space: pre; height: 22px;padding: 0 2px 0 2px;border-bottom-width: 1px; border-bottom-color: inherit; border-bottom-style: solid;}

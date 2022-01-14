@@ -57,7 +57,7 @@
                             <!-- <li class="vacState"><span class="vacNon"><img alt="" src="/resources/img/front/error_outline_black_24dp.svg">백신패스 만료</span></li> -->
                             <li class="vacState"><span class="vacNon">백신패스 만료</span></li>
                             <!--백신패스 만료//-->
-                            <li class="qr_tit">입장을 위한 QR코드</li>
+                            <li class="qr_tit">스마트입장시스템 QR코드</li>
                             <li>
                                 <p> QR코드 유출(양도)로 인한 책임은 본인에게 있으며, <br>  해당 QR코드는 인식 시 즉시 폐기됩니다. <br>    타인에게 양도시 본인의 출입이 금지될 수 있습니다.
                                 </p>
@@ -157,9 +157,9 @@
 				    		
 							$(".vacState span").removeClass()
 				    		switch (vacntnInfo.pass_yn) {
-								case "Y" : $(".vacState span").addClass("vacDone").html("접종 완료"); break;
-								case "N" : $(".vacState span").addClass("vacNon").html("백신패스 만료"); break;  
-								default: $(".vacState span").addClass("vacNon").html("접종정보 없음"); break;
+								case "Y" : $(".vacState span").addClass("vacDone").html("접종 완료"); $("#qr_enter_code").css("border-color","#1ba100"); break;
+								case "N" : $(".vacState span").addClass("vacNon").html("백신패스 만료"); $("#qr_enter_code").css("border-color","#f72626"); break;  
+								default: $(".vacState span").addClass("vacNon").html("접종정보 없음"); $("#qr_enter_code").css("border-color","#cfcfcf"); break;
 							}				    			
 				    		
 							
@@ -190,7 +190,7 @@
 				    		
 				    		$("#accessType").val() != "WEB" ? $(".pay_btn li:eq(1)").hide() : $(".pay_btn li:eq(1)").show();  
 						} else {
-							fn_openPopup("QR코드 생성에 실패하였습니다.", "red", "ERROR", "확인", "/front/main.do");
+							fn_openPopup(result.message, "red", "ERROR", "확인", "/front/main.do");
 						}
 					},
 					function(request) {

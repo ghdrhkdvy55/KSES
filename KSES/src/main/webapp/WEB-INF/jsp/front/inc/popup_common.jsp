@@ -27,7 +27,6 @@
 		$("#common_popup").bPopup();
 		$("#common_popup h4").html("").css("color", messageColor);
 		$("#common_popup h4").html(imgSrc + resultMessage);
-		$("#common_popup h4 img").css({'width':'35px', 'height':'35px'});
 		$("#common_popup a").html(btnMessage);
 		$("#common_popup a").attr("href",btnHref);
 		

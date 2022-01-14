@@ -210,7 +210,6 @@
 					$("#idForm p,span, #pwForm p,span, #cardNoForm p,span, #cardPwForm p,span").hide();		
 					
 					$("#login_type").val(loginType);
-
 					if(loginType == "1"){
 						$("#idForm, #pwForm, #saveIdArea").show();
 						$("#cardNoForm, #cardPwForm, #saveCardNoArea").hide();
@@ -328,7 +327,6 @@
 				    					localStorage.setItem("saveCardNo", $("#cardNo").val()) :
 										localStorage.removeItem("saveCardNo");				    			
 				    		}
-
 				    		location.href = "/front/main.do";
 				    	} else {
 				    		fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");	
