@@ -51,10 +51,9 @@
 			) TB 
 		)TA 
 		WHERE RNUM  BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
-     </select> 
+	</select> 
      
 	<select id="selectBoardMainManageListByPagination" resultType="lmap">
-	
 		SELECT * FROM 
 		( 
 			SELECT  
@@ -63,22 +62,21 @@
 			FROM 
 			(
 				SELECT 
-					a.BOARD_SEQ, a.BOARD_TITLE, SUBSTRING(DATE_FORMAT( a.BOARD_REGDATE, '%Y-%m-%d'), 0,10) boardRegdate, a.BOARD_ALL_NOTICE, a.BOARD_NOTICE_STARTDAY, 
-					a.BOARD_NOTICE_ENDDAY
-				FROM  TSES_BOARD_INFO_I a
-				WHERE a.board_seq NOT in (SELECT board_seq FROM TSES_BOARD_INFO_I d WHERE d.BOARD_GUBUN='NOT')
+					A.BOARD_SEQ, A.BOARD_TITLE, SUBSTRING(DATE_FORMAT(A.BOARD_REGDATE, '%Y-%m-%d'), 0, 10) boardRegdate, A.BOARD_ALL_NOTICE, A.BOARD_NOTICE_STARTDAY, 
+					A.BOARD_NOTICE_ENDDAY
+				FROM TSES_BOARD_INFO_I A
+				WHERE A.BOARD_SEQ NOT IN (SELECT BOARD_SEQ FROM TSES_BOARD_INFO_I D WHERE D.BOARD_GUBUN = 'NOT')
 				<![CDATA[
-				AND d.BOARD_NOTICE_STARTDAY > TO_CHAR(SYSDATE, 'yyyyMMdd' ) OR d.board_notice_endday <  TO_CHAR(SYSDATE, 'yyyyMMdd') )
+				AND D.BOARD_NOTICE_STARTDAY > TO_CHAR(SYSDATE, 'YYYYMMDD' ) OR D.BOARD_NOTICE_ENDDAY < TO_CHAR(SYSDATE, 'YYYYMMDD') )
 				]]>         		 
-				AND	a.BOARD_NOTICE_USEYN != 'N'
-				
+				AND	A.BOARD_NOTICE_USEYN != 'N'
 			) TB
 		) 
-		WHERE RNUM  BETWEEN  1 AND 5
-
+		WHERE RNUM BETWEEN 1 AND 5
 	</select> 
-     <resultMap id="getBoardListResult" type="HashMap"> 
-        <result property="board_seq" column="BOARD_SEQ" /> 
+	
+	<resultMap id="getBoardListResult" type="HashMap"> 
+		<result property="board_seq" column="BOARD_SEQ" /> 
         <result property="board_cd" column="BOARD_CD" />
         <result property="board_refno" column="BOARD_REFNO" />
         <result property="board_clevel" column="BOARD_CLEVEL" />
@@ -96,92 +94,98 @@
         <result property="last_updt_dtm" column="LAST_UPDT_DTM" />
         <result property="board_center_id" column="BOARD_CENTER_ID" /> 
         <result property="board_all_notice" column="BOARD_ALL_NOTICE" /> 
-        
         <result property="board_cn" column="BOARD_CN" jdbcType="CLOB" javaType="java.lang.String" /> 
      </resultMap>
 
+	<select id="selectBoardManageDetail"  resultMap="getBoardListResult">
+	<![CDATA[
+		SELECT 
+			BOARD_SEQ, BOARD_CD, BOARD_REFNO, BOARD_CLEVEL, BOARD_NOTICE_START_DAY, 
+			BOARD_NOTICE_END_DAY, BOARD_POPUP, BOARD_TITLE, BOARD_TOP_SEQ, BOARD_VISIT_CNT, 
+			USE_YN, BOARD_CN, BOARD_GROUP, FRST_REGTER_ID, FRST_REGIST_DTM, 
+			LAST_UPDUSR_ID, LAST_UPDT_DTM , BOARD_CENTER_ID, BOARD_ALL_NOTICE
+		FROM TSES_BOARD_INFO_I A        	
+		WHERE BOARD_SEQ = #{boardSeq}
+	]]>	
+	</select>     
 	
-     <select id="selectBoardManageDetail"  resultMap="getBoardListResult">
-     <![CDATA[
-          SELECT BOARD_SEQ, BOARD_CD, BOARD_REFNO, BOARD_CLEVEL, BOARD_NOTICE_START_DAY, BOARD_NOTICE_END_DAY,
-                 BOARD_POPUP, BOARD_TITLE, BOARD_TOP_SEQ, BOARD_VISIT_CNT, USE_YN, BOARD_CN, BOARD_GROUP,
-                 FRST_REGTER_ID, FRST_REGIST_DTM, LAST_UPDUSR_ID, LAST_UPDT_DTM , BOARD_CENTER_ID, BOARD_ALL_NOTICE
-		  FROM 	TSES_BOARD_INFO_I a        	
-		  WHERE 	BOARD_SEQ = #{boardSeq}
-			]]>	
-     </select>     
-     <update id="updateBoardTopSeq">
-			UPDATE 	TSES_BOARD_INFO_I SET BOARD_TOP_SEQ = BOARD_TOP_SEQ + 1
-			WHERE 	BOARD_NOTICE_USEYN='Y' AND BOARD_GUBUN='NOT'
-     </update>
+	<update id="updateBoardTopSeq">
+		UPDATE TSES_BOARD_INFO_I SET 
+			BOARD_TOP_SEQ = BOARD_TOP_SEQ + 1
+		WHERE BOARD_NOTICE_USEYN='Y' 
+		AND BOARD_GUBUN='NOT'
+	</update>
    
-
-    
-    
-    
-     <insert id="insertBoardManage" >
-            
-			<selectKey keyProperty="seq" resultType="Integer" order="BEFORE">
-	             SELECT BOARDSEQ_SEQ.NEXTVAL AS boardSeq 
-	             FROM DUAL
-	        </selectKey>
-	        <choose>
-	           <when test="mode == 'Ins'">
-	                 INSERT INTO TSES_BOARD_INFO_I (
-		                   BOARD_SEQ, BOARD_CD, BOARD_REFNO, BOARD_CLEVEL, BOARD_GROUP, BOARD_NOTICE_START_DAY, BOARD_NOTICE_END_DAY,
-		                   BOARD_POPUP, BOARD_TITLE, BOARD_TOP_SEQ, BOARD_VISIT_CNT, USE_YN, BOARD_CN,
-		                   FRST_REGTER_ID, FRST_REGIST_DTM, LAST_UPDUSR_ID, LAST_UPDT_DTM ,    
-		                   BOARD_CENTER_ID, BOARD_ALL_NOTICE               
-                   )
-                   VALUES (#{seq},  #{boardCd},  #{boardRefno}, #{boardClevel}, ${seq},  #{boardNoticeStartDay,jdbcType=VARCHAR}, #{boardNoticeEndDay,jdbcType=VARCHAR}
-		                    , #{boardPopup, jdbcType=VARCHAR}, #{boardTitle}, #{boardTopSeq,jdbcType=VARCHAR}, 0, #{useYn,jdbcType=VARCHAR}, #{boardCn,jdbcType=VARCHAR}
-		                    , #{userId,jdbcType=VARCHAR}, SYSDATE, #{userId,jdbcType=VARCHAR}, SYSDATE
-		                    , #{boardCenterId ,jdbcType=VARCHAR}   , #{boardAllNotice ,jdbcType=VARCHAR}                     
-		                    )
-	           </when>
-	           <otherwise>
-	                INSERT INTO TSES_BOARD_INFO_I (
-		                   BOARD_SEQ, BOARD_CD, BOARD_REFNO, BOARD_CLEVEL, BOARD_GROUP, BOARD_NOTICE_START_DAY, BOARD_NOTICE_END_DAY,
-		                   BOARD_POPUP, BOARD_TITLE, BOARD_TOP_SEQ, BOARD_VISIT_CNT, USE_YN, BOARD_CN,
-		                   FRST_REGTER_ID, FRST_REGIST_DTM, LAST_UPDUSR_ID, LAST_UPDT_DTM,
-		                   BOARD_CENTER_ID , BOARD_ALL_NOTICE                   
-                   )
-                   VALUES (#{seq},  #{boardCd},  #{boardRefno}, #{boardClevel}, #{boardGroup},  #{boardNoticeStartDay,jdbcType=VARCHAR}, #{boardNoticeEndDay,jdbcType=VARCHAR}
-		                    , #{boardPopup, jdbcType=VARCHAR}, #{boardTitle}, #{boardTopSeq,jdbcType=VARCHAR}, 0, #{useYn,jdbcType=VARCHAR}, #{boardCn,jdbcType=VARCHAR}
-		                    , #{userId,jdbcType=VARCHAR}, SYSDATE, #{userId,jdbcType=VARCHAR}, SYSDATE  
-		                    , #{boardCenterId ,jdbcType=VARCHAR}   , #{boardAllNotice ,jdbcType=VARCHAR}                    
-		                    )
+	<insert id="insertBoardManage" >
+		<selectKey keyProperty="seq" resultType="Integer" order="BEFORE">
+			SELECT BOARDSEQ_SEQ.NEXTVAL AS boardSeq FROM DUAL
+		</selectKey>
+		
+		<choose>
+			<when test="mode == 'Ins'">
+				INSERT INTO TSES_BOARD_INFO_I 
+				(
+					BOARD_SEQ, BOARD_CD, BOARD_REFNO, BOARD_CLEVEL, BOARD_GROUP, 
+					BOARD_NOTICE_START_DAY, BOARD_NOTICE_END_DAY, BOARD_POPUP, BOARD_TITLE, BOARD_TOP_SEQ, 
+					BOARD_VISIT_CNT, USE_YN, BOARD_CN, FRST_REGTER_ID, FRST_REGIST_DTM, 
+					LAST_UPDUSR_ID, LAST_UPDT_DTM, BOARD_CENTER_ID, BOARD_ALL_NOTICE               
+				)
+				VALUES 
+				(
+					#{seq}, #{boardCd}, #{boardRefno}, #{boardClevel}, #{seq},  
+					#{boardNoticeStartDay,jdbcType=VARCHAR}, #{boardNoticeEndDay,jdbcType=VARCHAR}, #{boardPopup, jdbcType=VARCHAR}, #{boardTitle}, #{boardTopSeq,jdbcType=VARCHAR}, 
+					0, #{useYn,jdbcType=VARCHAR}, #{boardCn,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, SYSDATE, 
+					#{userId,jdbcType=VARCHAR}, SYSDATE, #{boardCenterId ,jdbcType=VARCHAR}, #{boardAllNotice ,jdbcType=VARCHAR}                     
+				)
+			</when>
+			<otherwise>
+				INSERT INTO TSES_BOARD_INFO_I 
+				(
+					BOARD_SEQ, BOARD_CD, BOARD_REFNO, BOARD_CLEVEL, BOARD_GROUP, 
+					BOARD_NOTICE_START_DAY, BOARD_NOTICE_END_DAY, BOARD_POPUP, BOARD_TITLE, BOARD_TOP_SEQ, 
+					BOARD_VISIT_CNT, USE_YN, BOARD_CN, FRST_REGTER_ID, FRST_REGIST_DTM, 
+					LAST_UPDUSR_ID, LAST_UPDT_DTM, BOARD_CENTER_ID , BOARD_ALL_NOTICE                   
+				)
+				VALUES 
+				(
+					#{seq},  #{boardCd},  #{boardRefno}, #{boardClevel}, #{boardGroup},  
+					#{boardNoticeStartDay,jdbcType=VARCHAR}, #{boardNoticeEndDay,jdbcType=VARCHAR}, #{boardPopup, jdbcType=VARCHAR}, #{boardTitle}, #{boardTopSeq,jdbcType=VARCHAR}, 
+					0, #{useYn,jdbcType=VARCHAR}, #{boardCn,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, SYSDATE, 
+					#{userId,jdbcType=VARCHAR}, SYSDATE, #{boardCenterId ,jdbcType=VARCHAR}, #{boardAllNotice ,jdbcType=VARCHAR}                    
+				)
 	           
-	           </otherwise>
-	        </choose>
-           
+			</otherwise>
+		</choose>   
      </insert>
+     
      <update id="updateBoardVisitedManage">
-          UPDATE  TSES_BOARD_INFO_I SET BOARD_VISIT_CNT = BOARD_VISIT_CNT + 1
+          UPDATE TSES_BOARD_INFO_I SET 
+          	BOARD_VISIT_CNT = BOARD_VISIT_CNT + 1
           WHERE BOARD_SEQ = #{boardSeq} 
      </update>
+     
      <update id="updateBoardManage" >
      <![CDATA[
-       UPDATE  TSES_BOARD_INFO_I SET BOARD_TITLE = #{boardTitle} ,
-	                                 BOARD_CD = #{boardCd, jdbcType=VARCHAR},
-	                                 BOARD_REFNO = #{boardRefno,jdbcType=VARCHAR},
-	                                 BOARD_CLEVEL = #{boardClevel,jdbcType=VARCHAR},
-	                                 BOARD_NOTICE_START_DAY = #{boardNoticeStartDay,jdbcType=VARCHAR} ,
-	                                 BOARD_NOTICE_END_DAY = #{boardNoticeEndDay,jdbcType=VARCHAR} ,
-	                                 BOARD_POPUP = #{boardPopup, jdbcType=VARCHAR},
-	                                 USE_YN = #{useYn, jdbcType=VARCHAR},
-	                                 BOARD_CN = #{boardCn, jdbcType=VARCHAR} ,
-	                                 LAST_UPDUSR_ID =#{userId,jdbcType=VARCHAR} ,
-	                                 LAST_UPDT_DTM = SYSDATE,
-	                                 BOARD_CENTER_ID = #{boardCenterId,jdbcType=VARCHAR},  
-	                                 BOARD_ALL_NOTICE = #{boardAllNotice,jdbcType=VARCHAR},  
-	                                 BOARD_TOP_SEQ = #{boardTopSeq}
-      WHERE BOARD_SEQ = #{boardSeq}   
-      ]]>        
-     </update>
+		UPDATE TSES_BOARD_INFO_I SET 
+			BOARD_TITLE = #{boardTitle},
+			BOARD_CD = #{boardCd, jdbcType=VARCHAR},
+			BOARD_REFNO = #{boardRefno,jdbcType=VARCHAR},
+			BOARD_CLEVEL = #{boardClevel,jdbcType=VARCHAR},
+			BOARD_NOTICE_START_DAY = #{boardNoticeStartDay,jdbcType=VARCHAR},
+			BOARD_NOTICE_END_DAY = #{boardNoticeEndDay,jdbcType=VARCHAR},
+			BOARD_POPUP = #{boardPopup, jdbcType=VARCHAR},
+			USE_YN = #{useYn, jdbcType=VARCHAR},
+			BOARD_CN = #{boardCn, jdbcType=VARCHAR},
+			LAST_UPDUSR_ID =#{userId,jdbcType=VARCHAR},
+			LAST_UPDT_DTM = SYSDATE,
+			BOARD_CENTER_ID = #{boardCenterId,jdbcType=VARCHAR},  
+			BOARD_ALL_NOTICE = #{boardAllNotice,jdbcType=VARCHAR},  
+			BOARD_TOP_SEQ = #{boardTopSeq}
+      	WHERE BOARD_SEQ = #{boardSeq}   
+	]]>        
+	</update>
      
-     <delete id="deleteBoardManage">
-       DELETE FROM TSES_BOARD_INFO_I  WHERE BOARD_SEQ = #{boardSeq}
-     </delete>
-     
+	<delete id="deleteBoardManage">
+		DELETE FROM TSES_BOARD_INFO_I WHERE BOARD_SEQ = #{boardSeq}
+	</delete>
 </mapper>
