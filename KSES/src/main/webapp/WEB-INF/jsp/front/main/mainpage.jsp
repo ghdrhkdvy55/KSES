@@ -31,6 +31,7 @@
 	<form:form name="regist" commandName="regist" method="post" action="/front/main.do">
 	<input type="hidden" id="userDvsn" name="userDvsn" value="${sessionScope.userLoginInfo.userDvsn}">
 	<input type="hidden" name="userId" id="userId" value="${sessionScope.userLoginInfo.userId}">
+	<input type="hidden" name="guestResvPossibleYn" id="guestResvPossibleYn" value="${sessionScope.systemInfo.guestResvPossibleYn}">
 	<input type="hidden" name="resvSeq" id="resvSeq" value="">
 
 	<div class="wrapper mainBack">
@@ -413,7 +414,6 @@
 								var today = new Date().format("yyyy-MM-dd");
 								var reservationInfo = result.reservationInfo;
 								var userLoginInfo = result.userLoginInfo;
-								var systemInfo = result.systemInfo;
 								
 								// 마지막 예약정보가 존재할 경우
 								if(result.reservationInfo != null) {
@@ -524,7 +524,7 @@
 					// 유저정보하단 HTML생성
 					setHtml = "";
 					setHtml += "<li><a href='/front/login.do'>로그인</a></li>";
-					if(systemInfo.guestResvPossibleYn == "Y") {
+					if($("#guestResvPossibleYn").val() == "Y") {
 						setHtml += "<li><a href='/front/rsvCenter.do'>비회원 예약</a></li>";
 					}
 					userInfoBottomArea.append(setHtml);

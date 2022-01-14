@@ -72,8 +72,11 @@ public class MainPageInfoManageController {
 				userLoginInfo = new UserLoginInfo();
 				userLoginInfo.setUserDvsn("USER_DVSN_2");
 				httpSession.setAttribute("userLoginInfo", userLoginInfo);
+				httpSession.setAttribute("systemInfo", systemService.selectSystemInfo());
 				return model;
 			}
+			
+			
 		} catch(Exception e) {
 			LOGGER.error("selectFrontMainPage : " + e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
@@ -190,7 +193,6 @@ public class MainPageInfoManageController {
 				return model;	
 			}
 			
-			model.addObject("systemInfo", systemService.selectSystemInfo());
 			model.addObject("userLoginInfo", userLoginInfo);
 			model.addObject(Globals.JSON_RETURN_RESULTLISR, resvService.selectUserResvInfo(params));
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
