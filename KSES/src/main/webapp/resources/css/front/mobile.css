@@ -147,8 +147,8 @@
 .sub_con_view .sub_food_img {width:400px;height: 400px;float: none !important;margin: auto;position: relative;overflow: inherit;}
 @media screen and (max-width: 768px) {
 
-  .rsv_btn li a {padding: 2rem 6rem}
-  .rsv_btn li:first-child a {padding: 2rem 10rem}
+  .rsv_btn li a {padding: 2rem 4rem}
+  .rsv_btn li:first-child a {padding: 2rem 4rem}
   .sub_con_view .sub_food_img {width: 100%; height: 360px;float: none !important}
   .sub_con_view .food_img_box img { width: 100%; max-width:  100%; height: auto}
 }

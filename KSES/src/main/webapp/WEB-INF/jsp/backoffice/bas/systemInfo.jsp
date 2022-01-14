@@ -88,7 +88,8 @@
                     </tr>
                     <tr>
 						<th>비회원 예약 여부</th>
-	                  	<td>
+	                  	<td style="text-align:left;">
+	                  		<!-- 
                     		<label for="guestResvPossibleYn_Y">
                     			<input 
                     				id="guestResvPossibleYn_Y" 
@@ -97,7 +98,18 @@
                     				value="Y" 
                     				<c:if test="${regist.guestResvPossibleYn == 'Y' }"> checked </c:if>
                     			>Y
-                    		</label>
+                    		</label> -->
+                    		<input 
+                    				style ="width:0; left:0;"
+                    				id="guestResvPossibleYn_Y" 
+                    				type="radio" 
+                    				name="guestResvPossibleYnYn" 
+                    				value="Y" 
+                    				<c:if test="${regist.guestResvPossibleYn == 'Y' }"> checked </c:if>
+                    			>
+                            <label for="guestResvPossibleYn_Y">Y</label>
+                            
+                            <!--
                     		<label for="guestResvPossibleYn_N">
                     			<input 
                     				id="guestResvPossibleYn_N" 
@@ -105,7 +117,18 @@
                     				name="guestResvPossibleYnYn" 
                     				value="N" <c:if test="${regist.guestResvPossibleYn == 'N' }"> checked </c:if>
                     			>N
-                    		</label>
+                    		</label>-->
+                    		
+                    		
+                    		<input 
+                    				style ="width:0; left:0;"
+                    				id="guestResvPossibleYn_N" 
+                    				type="radio" 
+                    				name="guestResvPossibleYnYn" 
+                    				value="N" <c:if test="${regist.guestResvPossibleYn == 'N' }"> checked </c:if>
+                    			>
+                            <label for="guestResvPossibleYn_N">N</label>
+                            
                     		<td colspan="2"></td>
                   		</td>
                     </tr>
