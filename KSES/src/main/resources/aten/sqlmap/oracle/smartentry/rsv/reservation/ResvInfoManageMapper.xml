@@ -494,4 +494,12 @@
 		)
 	}
 	</select>   
+	
+	<!-- 무인 발권시 지점 정보 확인 -->
+	<select id="selectTicketMchnSnoCheck" resultType="lmap">
+		SELECT count(*) AS CNT
+			FROM TSEC_TICKET_MCHN_M  
+		WHERE TICKET_MCHN_SNO = #{params.ticketMchnSno}
+		AND CENTER_CD = #{params.centerCd}
+	</select>
 </mapper>
