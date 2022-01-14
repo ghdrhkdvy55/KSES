@@ -41,7 +41,7 @@ public class SureMsgInfo {
 				
                 msg += SmartUtil.getSmsName(resvInfo) + "님 " + resvDate.substring(4,6) + "월 " + resvDate.substring(6,8) + "일 ";
                 msg += centerNm + "지점 " + seatNm + "에 예약 완료되었습니다. ";
-                msg += "(예약번호 : " + resvSeq + ")";
+                msg += "(예약번호 : " + resvSeq.replaceAll("\\B(?=(\\d{4})+(?!\\d))", "-") + ")";
                 
                 msg += userDvsn.equals("USER_DVSN_1") ? "" : "\n예약한 영업장의 무인발권기에서 현금결제를 통해 종이QR입장권을 발급해주시기 바랍니다.";           
 			} else {
@@ -49,7 +49,7 @@ public class SureMsgInfo {
 				
 				msg += SmartUtil.getSmsName(resvInfo) + "님 " + resvDate.substring(4,6) + "월 " + resvDate.substring(6,8) + "일 ";
                 msg += centerNm + "지점 " + seatNm + "에 예약 완료되었습니다. ";
-                msg += "(예약번호 : " + resvSeq + ")";
+                msg += "(예약번호 : " + resvSeq.replaceAll("\\B(?=(\\d{4})+(?!\\d))", "-") + ")";
                 
                 buttonType = "WL";
             	buttonNm = "QR링크";
