@@ -129,7 +129,7 @@
 			<a class="button b-close">X</a>
           	<div class="pop_wrap">
 				<h4><span class="name"></span>님의 예약 정보 입니다.</h4>
-              	<p>15시 까지 미 입장시 입장예약이 취소됩니다.</p>
+              	<p></p>
 
                	<ul class="rsv_list">
 					<li>
@@ -189,8 +189,8 @@
       	<div class="pop_con rsv_popup">
           	<!-- 닫기버튼으로 대체 <a class="button b-close">X</a>-->
           	<div class="pop_wrap">
-              	<h4>예약 취소 하시겠습니까?</h4>
-              	<p>15시 까지 미 입장시 입장예약이 취소됩니다.</p>
+              	<h4>예약을 취소 하시겠습니까?</h4>
+              	<p></p>
 				<ul class="rsv_list">
                 	<li>
                     	<ol>
@@ -374,7 +374,7 @@
           	</div>
           	<div class="clear"></div>
       	</div>
-    </div>
+    </div></div></div>
     <!-- 자료무단복제금지 팝업 // -->
     
     
@@ -435,7 +435,9 @@
 										setHtml = "";
 										setHtml += "<li><span><a href='javascript:mainService.fn_userResvInfo(&#39;NOW&#39;, &#39;" + obj.resv_seq + "&#39;, &#39;rsv_info&#39;);' >" + obj.center_nm + " " + obj.seat_nm + "</a></span></li>";
 										setHtml += "<li class='rsv_cancel'><a href='javascript:mainService.fn_userResvInfo(&#39;CANCEL&#39;, &#39;" + obj.resv_seq + "&#39;, &#39;cancel_rsv_info&#39;);'>예약취소</a></li>";
-										setHtml += "<li><em><img src='/resources/img/front/alert_icon.svg' alt='알림'>15시 까지 미 입장시 입장예약이 취소됩니다.</em></li>";
+										setHtml += "<li><em></em></li>";
+										//setHtml += "<li style='font-size : 20px; font-weight : bold;'>예약번호 : " + fn_resvSeqFormat(obj.resv_seq) + "</li>";
+										//setHtml += "<li><em><img src='/resources/img/front/alert_icon.svg' alt='알림'>15시 까지 미 입장시 입장예약이 취소됩니다.</em></li>";
 										
 										userInfoBottomArea.append(setHtml);
 										
