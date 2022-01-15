@@ -72,10 +72,8 @@ public class MainPageInfoManageController {
 				userLoginInfo = new UserLoginInfo();
 				userLoginInfo.setUserDvsn("USER_DVSN_2");
 				httpSession.setAttribute("userLoginInfo", userLoginInfo);
-				httpSession.setAttribute("systemInfo", systemService.selectSystemInfo());
 				return model;
 			}
-			
 			
 		} catch(Exception e) {
 			LOGGER.error("selectFrontMainPage : " + e.toString());
