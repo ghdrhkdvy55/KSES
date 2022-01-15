@@ -81,7 +81,7 @@
                 	<span class="sel_seat_nm"></span>
 				</li>	
                 <li class="rsv_state"><span class="date"></span> 좌석 예약 중 입니다.</li>
-                <li></li>
+                <li class="rsv_paycost">결제금액 : <span><c:out value="${resvInfo.center_entry_pay_cost}"/>원</span></li>
             </ul>             
         </div>
         <!-- header //-->
@@ -612,15 +612,14 @@
     	var center ="";
     	
 		$(document).ready(function() {
-			if(sessionStorage.getItem("accessCheck") != "1") {
-				location.href = "/front/main.do";
+ 			if(sessionStorage.getItem("accessCheck") != "1") {
+				//location.href = "/front/main.do";
 			}
 			
 		    $(window).on("beforeunload", function(){
 		    	sessionStorage.removeItem("accessCheck");
 		    });
 
-			
 			//자유석 좌석 버튼 이벤트 정의
 			$(function(){
 				var sBtn = $(".section_menu ul > li, .enter_type ul > li");   //  ul > li 이를 sBtn으로 칭한다. (클릭이벤트는 li에 적용 된다.)
@@ -898,8 +897,11 @@
 				    		    	if($(this).attr("id") == $("#seatCd").val()){
 				    		    		$("#seatCd").val("");
 				    		    		$(".sel_seat_nm").html("");
+				    		    		
 				    		    		$(this).removeClass("select");
 				    		    		$(this).addClass("seatUse");
+				    		    		
+				    		    		$(".rsv_paycost span").html($("#centerEntryPayCost").val() + "원")
 				    		    		return;
 				    		    	};
 
@@ -918,6 +920,8 @@
  										var seatNm = $(this).attr("name");
 										$(".sel_seat_nm").html(seatNm);
 										
+										var payCost = parseInt($("#centerEntryPayCost").val()) + parseInt($("#" + $(this).attr("id")).data("seat_paycost"));
+										$(".rsv_paycost span").html(payCost + "원");
 										fn_scrollMove($("#ENTRY_DVSN_2_resv_area"));
 				    		    	}
 								});
@@ -1188,6 +1192,7 @@
 				}
 				
 				$("#seasonCd").val("");
+				$(".rsv_paycost span").html($("#centerEntryPayCost").val() + "원");
 			}
 		}
     </script>

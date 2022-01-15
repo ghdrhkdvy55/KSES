@@ -1609,6 +1609,14 @@ h2.guide_tit {
     top: -5rem;
     font-size: 1.4em;
 }
+/* 임시 */
+.rsv_info .rsv_paycost {
+	position: fixed;
+	top: 7rem;
+	left: 20rem;
+	font-weight: bold;
+	font-size: 1.em;
+}
 .rsv_info .rsv_state {
     position: fixed;
     top: 5px;
