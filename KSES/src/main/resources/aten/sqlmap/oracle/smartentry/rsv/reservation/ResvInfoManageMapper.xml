@@ -354,7 +354,7 @@
            			#{userId, jdbcType=VARCHAR}, 
 				</when>
 				<otherwise>
-					FN_NON_MEMBERID(#{centerCd}),
+					CONCAT('NOC',#{resvSeq}),
 				</otherwise>
 			</choose>
 			#{resvUserNm}, #{resvUserClphn}, #{resvUserAskYn, jdbcType=VARCHAR}, '',
