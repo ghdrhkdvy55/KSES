@@ -368,18 +368,27 @@ public class ResJosnController {
 					return model;
 				}
 				
-				//종이QR일경우 IN/OUT 체크
-				if(gubun.equals("PAPER")) {
-					attendInfoVO.setResvSeq(resSeq);
-					attendInfoVO.setUserId(userId);
-					Map<String, Object> attendInfo = attendService.selectAttendInfoDetail(attendInfoVO);
-					
-					if (attendInfo == null) {
-						inOt = "IN";
-					} else {
-						inOt = SmartUtil.NVL(attendInfo.get("inout_dvsn"), "OT").toString().equals("IN") ? "OT" : "IN";
-					}
+				//-------------------------------- 수정 
+				AttendInfo vo = new AttendInfo();
+				vo.setResvSeq(resSeq);
+				vo.setUserId(userId);
+				Map<String, Object> attend = attendService.selectAttendInfoDetail(vo);
+				String ckInOt ;
+				if (attend == null) {
+					ckInOt = "OT";
+				} else {
+					ckInOt = SmartUtil.NVL(attend.get("inout_dvsn"), "OT").toString();
 				}
+				
+				//QR일경우 IN/OUT 체크
+				if (!gubun.equals("PAPER") && ckInOt.equals(inOt)) {
+					ERROR_MSG = qrInot.equals("IN") ? "퇴장 정보 없음." : "입장 정보 없음.";
+					ERROR_CD = "ERROR_07";
+					model.addObject("ERROR_CD", ERROR_CD);
+					model.addObject("ERROR_MSG", ERROR_MSG);
+					return model;	
+				}
+				//
 				
 				LOGGER.info("resvQrCount : " + resvQrCount + " resv_qr_count" + SmartUtil.NVL(resInfo.get("resv_qr_count"),""));
 				if (!resvQrCount.equals(SmartUtil.NVL(resInfo.get("resv_qr_count"),""))) {
@@ -477,7 +486,7 @@ public class ResJosnController {
 			searchVO.put("resvDate", nowDate);
 
 			Map<String, Object> resInfo = resService.selectUserResvInfo(searchVO);
-			String resvTicketDvsn = SmartUtil.NVL(resInfo.get("resv_pay_dvsn"), "");
+			String resvTicketDvsn = SmartUtil.NVL(resInfo.get("resv_ticket_dvsn"), "");
 			String resvState = SmartUtil.NVL(resInfo.get("resv_state"), "");
 			
 			if(resInfo == null || Integer.valueOf(resInfo.get("resv_end_dt").toString()) < Integer.valueOf(nowDate)) {
@@ -488,7 +497,7 @@ public class ResJosnController {
 				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 				model.addObject(Globals.STATUS_MESSAGE, "예약 취소된 예약정보 입니다.");
 				return model;
-			} else if(resvTicketDvsn.toString().equals("RESV_PAY_DVSN_2")) { 
+			} else if(resvTicketDvsn.toString().equals("RESV_TICKET_DVSN_2")) { 
 				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 				model.addObject(Globals.STATUS_MESSAGE, "종이QR발급된  예약정보입니다.");
 				return model;
