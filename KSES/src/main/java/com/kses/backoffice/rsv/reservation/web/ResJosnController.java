@@ -277,9 +277,7 @@ public class ResJosnController {
 		AttendInfo attendInfoVO = new AttendInfo();
 		
 		try {
-			EgovFileScrty fileScrty = new EgovFileScrty();
-
-			String qrInfo = fileScrty.decode(sendInfo.getQrCode());
+			String qrInfo = EgovFileScrty.decode(sendInfo.getQrCode());
 			String qrCneterCd = sendInfo.getQrCneterCd(); // qr 지점 정보
 			String qrInot = sendInfo.getQrInot(); // qrIO 구분
 			
@@ -312,17 +310,13 @@ public class ResJosnController {
 				String floorNm = attempInfos[15];
 				String partNm = attempInfos[16];
 				String resvQrCount = attempInfos[17];
-			
-				for (String value : attempInfos) {
-					LOGGER.debug("value : " + value);
-				}
-
 				String formatedNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
 				
 				Map<String, Object> searchVO = new HashMap<String, Object>();
 				String nowDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 				searchVO.put("resvSeq", resSeq);
 				searchVO.put("resvDate", nowDate);
+				
 				Map<String, Object> resInfo = resService.selectUserResvInfo(searchVO);
 				
 				if (!qrTime.substring(0, 8).equals(formatedNow.substring(0, 8))) {
@@ -368,29 +362,20 @@ public class ResJosnController {
 					return model;
 				}
 				
-				//-------------------------------- 수정 
-				AttendInfo vo = new AttendInfo();
-				vo.setResvSeq(resSeq);
-				vo.setUserId(userId);
-				Map<String, Object> attend = attendService.selectAttendInfoDetail(vo);
-				String ckInOt ;
-				if (attend == null) {
-					ckInOt = "OT";
-				} else {
-					ckInOt = SmartUtil.NVL(attend.get("inout_dvsn"), "OT").toString();
+				//종이QR일경우 IN/OUT 체크
+				if(gubun.equals("PAPER")) {
+					attendInfoVO.setResvSeq(resSeq);
+					attendInfoVO.setUserId(userId);
+					Map<String, Object> attendInfo = attendService.selectAttendInfoDetail(attendInfoVO);
+					
+					if (attendInfo == null) {
+						inOt = "IN";
+					} else {
+						inOt = SmartUtil.NVL(attendInfo.get("inout_dvsn"), "OT").toString().equals("IN") ? "OT" : "IN";
+					}
 				}
 				
-				//QR일경우 IN/OUT 체크
-				if (!gubun.equals("PAPER") && ckInOt.equals(inOt)) {
-					ERROR_MSG = qrInot.equals("IN") ? "퇴장 정보 없음." : "입장 정보 없음.";
-					ERROR_CD = "ERROR_07";
-					model.addObject("ERROR_CD", ERROR_CD);
-					model.addObject("ERROR_MSG", ERROR_MSG);
-					return model;	
-				}
-				//
-				
-				LOGGER.info("resvQrCount : " + resvQrCount + " resv_qr_count" + SmartUtil.NVL(resInfo.get("resv_qr_count"),""));
+
 				if (!resvQrCount.equals(SmartUtil.NVL(resInfo.get("resv_qr_count"),""))) {
 					ERROR_MSG = "QR발급회차 불일치";
 					ERROR_CD = "ERROR_08";
@@ -398,7 +383,7 @@ public class ResJosnController {
 					model.addObject("ERROR_MSG", ERROR_MSG);
 					return model;	
 				}
-				LOGGER.info("큐알 장비에서 보내주는 값 : " + qrInot + " 큐알 코드 안에 있는 inot값 : " + inOt);
+
 				if (!qrInot.equals(inOt)) {
 					ERROR_MSG = qrInot.equals("IN") ? "퇴장 정보 없음." : "입장 정보 없음.";
 					ERROR_CD = "ERROR_07";
