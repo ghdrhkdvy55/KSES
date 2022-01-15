@@ -32,7 +32,6 @@
 	<input type="hidden" name="userId" id="userId" value="${sessionScope.userLoginInfo.userId}">
 	<input type="hidden" id="userNm" name="userNm" value="${sessionScope.userLoginInfo.userNm}">
 	<input type="hidden" id="userDvsn" name="userDvsn" value="${sessionScope.userLoginInfo.userDvsn}">
-	<input type="hidden" name="guestResvPossibleYn" id="guestResvPossibleYn" value="${sessionScope.systemInfo.guestResvPossibleYn}">
 	
     <div class="wrapper">
         <div class="my_wrap contents">
@@ -112,7 +111,7 @@
 					$("#mybox").html(setHtml);
 
 					// 마이페이지 서비스
-					if($("#guestResvPossibleYn").val() == "Y") {
+					if(fn_guestResvPossibleYn()) {
 						setHtml = "";
 						setHtml += "<p>설정</p>";
 						setHtml += "<li><a href='/front/guestResvInfo.do'>비회원 예약 조회</a></li>";
