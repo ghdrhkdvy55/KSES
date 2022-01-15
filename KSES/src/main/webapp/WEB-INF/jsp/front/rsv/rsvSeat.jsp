@@ -254,11 +254,11 @@
 											<c:forEach var="item" items="${seatClass}" begin="0" step="1" varStatus="status">
 												<c:if test="${(status.index + 1)%2 != 0}"><tr></c:if>
 													<td>
-														<img src="${item.codeetc2}">${item.codenm}
-													<c:if test="${item.codeetc1 ne 0}">
-														<span><fmt:formatNumber value="${item.codeetc1}" pattern="#,###" />원</span>
+														<img src="/upload/${item.part_icon}">${item.part_class_nm}
+													<c:if test="${item.part_pay_cost ne 0}">
+														<span><fmt:formatNumber value="${item.part_pay_cost}" pattern="#,###" />원</span>
 													</c:if>
-													<c:if test="${item.codeetc1 eq 0}">
+													<c:if test="${item.part_pay_cost eq 0}">
 														<span>무료</span>
 													</c:if>
 													</td>

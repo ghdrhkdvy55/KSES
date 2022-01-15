@@ -24,6 +24,7 @@ import com.kses.backoffice.bas.system.service.SystemInfoManageService;
 import com.kses.backoffice.bld.center.service.CenterInfoManageService;
 import com.kses.backoffice.bld.floor.service.FloorInfoManageService;
 import com.kses.backoffice.bld.floor.service.FloorPartInfoManageService;
+import com.kses.backoffice.bld.partclass.service.PartClassInfoManageService;
 import com.kses.backoffice.bld.season.service.SeasonInfoManageService;
 import com.kses.backoffice.bld.season.service.SeasonSeatInfoManageService;
 import com.kses.backoffice.bld.seat.service.SeatInfoManageService;
@@ -63,6 +64,9 @@ public class FrontResvInfoManageController {
 	
 	@Autowired
 	private FloorPartInfoManageService floorPartService;
+	
+	@Autowired
+	private PartClassInfoManageService partClassService;
 	
 	@Autowired
 	private SeatInfoManageService seatService;
@@ -143,23 +147,18 @@ public class FrontResvInfoManageController {
 			
 			if(userLoginInfo == null) {
 				userLoginInfo = new UserLoginInfo();
-				userLoginInfo.setUserDvsn("USER_DVSN_2");
-				httpSession.setAttribute("userLoginInfo", userLoginInfo);
 				model.setViewName("redirect:/front/main.do");
 			}
 			
 			String centerCd = (String)params.get("centerCd");
 			String resvDate = (String)params.get("resvDate");
 			
-
 			Map<String, Object> resvInfo = centerService.selectCenterInfoDetail(centerCd);
 			List<Map<String, Object>> floorList = floorService.selectFloorInfoComboList(centerCd);
-			List<Map<String, Object>>  seatClass = codeDetailService.selectCmmnDetailCombo("SEAT_CLASS");
-			
+			List<Map<String, Object>> seatClass = partClassService.selectPartClassComboList(centerCd);
 			
 			resvInfo.put("centerCd", centerCd);
 			resvInfo.put("resvDate", resvDate);
-			
 			resvInfo.forEach((key, value) -> params.merge(key, value, (v1, v2) -> v2));
 			
 			model.addObject("seatClass", seatClass);

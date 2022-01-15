@@ -10,42 +10,47 @@ import com.kses.backoffice.bld.partclass.vo.PartClassInfo;
 public interface PartClassInfoManageService {
 
 	/**
-	* 장비 관리 목록 조회
-	* 
-	* @param searchVO
-	* @return
-	* @throws Exception
-	*/
-
+	 * SPDM 구역 등급 관리 리스트 조회
+	 * 
+	 * @param searchVO
+	 * @return
+	 * @throws Exception
+	 */
 	List<Map<String, Object>> selectPartClassList (@Param("params") Map<String, Object> searchVO) throws Exception;
 
 	/**
-	* 장비 정보 등록
-	* 
-	* @param partClassInfo
-	* @return
-	* @throws Exception
-	*/
-
+	 * SPDM 구역 등급 관리 콤보 리스트 조회
+	 * 
+	 * @param centerCd
+	 * @return
+	 */
+	List<Map<String, Object>> selectPartClassComboList (String centerCd) throws Exception;
+	
+	/**
+	 * SPDM 구역 등급 정보 등록
+	 * 
+	 * @param partClassInfo
+	 * @return
+	 * @throws Exception
+	 */
 	int insertPartClassInfo(PartClassInfo partClassInfo) throws Exception;
 
 	/**
-	* 구역 정보 수정
-	* 
-	* @param partClassInfo
-	* @return
-	* @throws Exception
-	*/
-
+	 * SPDM 구역 등급 정보 갱신
+	 * 
+	 * @param partClassInfo
+	 * @return
+	 * @throws Exception
+	 */
 	int updatePartClassInfo(PartClassInfo partClassInfo) throws Exception;
 
 	/**
-	* 구역 정보 삭제
-	* 
-	* @param partSeq
-	* @return
-	* @throws Exception
-	*/
+	 * SPDM 구역 등급 정보 삭제
+	 * 
+	 * @param partSeq
+	 * @return
+	 * @throws Exception
+	 */
 	int deletePartClassInfo(String partSeq) throws Exception; 
 }
 		 

@@ -28,6 +28,7 @@ import com.kses.backoffice.bld.center.service.CenterInfoManageService;
 import com.kses.backoffice.bld.floor.service.FloorInfoManageService;
 import com.kses.backoffice.bld.floor.service.FloorPartInfoManageService;
 import com.kses.backoffice.bld.floor.vo.FloorInfo;
+import com.kses.backoffice.bld.partclass.service.PartClassInfoManageService;
 import com.kses.backoffice.sym.log.annotation.NoLogging;
 import com.kses.backoffice.util.SmartUtil;
 import com.kses.backoffice.util.service.UniSelectInfoManageService;
@@ -71,6 +72,9 @@ public class FloorInfoManageController {
 	@Autowired
 	private FloorPartInfoManageService partService;
 	
+	@Autowired
+	private PartClassInfoManageService partClassService;
+	
 	@RequestMapping (value="floorList.do")
 	public ModelAndView selectFloorInfoList(	@ModelAttribute("loginVO") LoginVO loginVO, 
 												@RequestParam Map<String, String> param,
@@ -108,7 +112,7 @@ public class FloorInfoManageController {
 			model.addObject("floorlistInfo", codeDetailService.selectCmmnDetailComboEtc(params));
 			model.addObject("floorListSeq", floorService.selectFloorInfoComboList(param.get("searchCenterCd")));
 			model.addObject("floorPart", codeDetailService.selectCmmnDetailCombo("FLOOR_PART"));
-			model.addObject("seatClass", codeDetailService.selectCmmnDetailCombo("SEAT_CLASS"));
+			model.addObject("seatClass", partClassService.selectPartClassComboList(param.get("searchCenterCd")));
 			model.addObject("seatDvsn", codeDetailService.selectCmmnDetailCombo("SEAT_DVSN"));
 			model.addObject("payDvsn", codeDetailService.selectCmmnDetailCombo("PAY_DVSN"));
 		} catch(Exception e) {

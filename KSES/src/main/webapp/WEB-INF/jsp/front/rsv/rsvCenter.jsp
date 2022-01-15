@@ -91,7 +91,7 @@
 			var today = date.format("yyyy-MM-dd");
 			$(".date").html(today);
 			
-			resvUsingTimeCheck(sessionStorage.getItem("resvUsingTime"));
+			/* resvUsingTimeCheck(sessionStorage.getItem("resvUsingTime")); */
     		centerService.fn_makeCenterInfoArea(sessionStorage.getItem("resvDate"));
     	});
     	
