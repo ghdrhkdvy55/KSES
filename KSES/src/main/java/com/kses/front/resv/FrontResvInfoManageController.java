@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kses.backoffice.bas.code.service.EgovCcmCmmnDetailCodeManageService;
+import com.kses.backoffice.bas.system.service.SystemInfoManageService;
 import com.kses.backoffice.bld.center.service.CenterInfoManageService;
 import com.kses.backoffice.bld.floor.service.FloorInfoManageService;
 import com.kses.backoffice.bld.floor.service.FloorPartInfoManageService;
@@ -80,6 +81,9 @@ public class FrontResvInfoManageController {
 	
 	@Autowired
 	private UserInfoManageService userService;
+	
+	@Autowired
+	private SystemInfoManageService systemService;
 		
 	@RequestMapping (value="rsvCenter.do")
 	public ModelAndView selectRsvCenterList(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo,
@@ -291,6 +295,32 @@ public class FrontResvInfoManageController {
 			}
 			
 			model.addObject("resvInfo", resvService.selectResInfoDetail(resvSeq));
+			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+		} catch(Exception e) {
+			LOGGER.error("getResvInfo : " + e.toString());
+			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
+		}
+		return model;
+	}
+	
+	@RequestMapping(value="getSystemInfo.do")
+	public ModelAndView getSystemInfo(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo, 
+										HttpServletRequest request,
+										BindingResult result) throws Exception {
+		
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+		try {
+			HttpSession httpSession = request.getSession(true);
+			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
+			
+			if(userLoginInfo == null) {
+				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
+				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
+				return model;
+			}
+
+			model.addObject("systemInfo", systemService.selectSystemInfo());
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		} catch(Exception e) {
 			LOGGER.error("getResvInfo : " + e.toString());

@@ -145,15 +145,20 @@ public class BlackUserInfoManageController {
 			}
 	
 			meesage = vo.getMode().equals("Ins") ? "sucess.common.insert" : "sucess.common.update";
-
-			int ret = blackUserService.updateBlackUserInfoManage(vo);
 			
-			if(ret > 0) {
-				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
-			} else {
-				throw new Exception();
-			}
+			blackUserService.updateBlackUserInfoManage(vo);
+			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
+
+
+//			int ret = blackUserService.updateBlackUserInfoManage(vo);
+//			
+//			if(ret > 0) {
+//				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+//				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
+//			} else {
+//				throw new Exception();
+//			}
 		} catch (Exception e){
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.insert"));	
