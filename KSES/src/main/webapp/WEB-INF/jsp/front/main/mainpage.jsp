@@ -31,7 +31,6 @@
 	<form:form name="regist" commandName="regist" method="post" action="/front/main.do">
 	<input type="hidden" id="userDvsn" name="userDvsn" value="${sessionScope.userLoginInfo.userDvsn}">
 	<input type="hidden" name="userId" id="userId" value="${sessionScope.userLoginInfo.userId}">
-	<input type="hidden" name="guestResvPossibleYn" id="guestResvPossibleYn" value="${sessionScope.systemInfo.guestResvPossibleYn}">
 	<input type="hidden" name="resvSeq" id="resvSeq" value="">
 
 	<div class="wrapper mainBack">
@@ -524,7 +523,7 @@
 					setHtml = "";
 					setHtml += "<li><a href='/front/login.do'>로그인</a></li>";
 					if(fn_guestResvPossibleYn()) {
-						setHtml += "<li><a href='/front/rsvCenter.do'>비회원 예약</a></li>";
+						setHtml += "<li><a href='javascript:fn_guestResvPossibleYn();'>비회원 예약</a></li>";
 					}
 					userInfoBottomArea.append(setHtml);
 					//일반 공지 정리 하기 

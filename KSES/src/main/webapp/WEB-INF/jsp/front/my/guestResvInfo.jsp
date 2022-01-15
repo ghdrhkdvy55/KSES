@@ -52,7 +52,7 @@
                     </ul>
 
                     <div class="inquiry_btn">
-                        <a href="javascript:guestResvService.fn_getGuestResvInfo();;">인증번호 요청</a>
+                        <a href="javascript:guestResvService.fn_getGuestResvInfo();">인증번호 요청</a>
                     </div>
                     
                     <div class="ok_sumit">
