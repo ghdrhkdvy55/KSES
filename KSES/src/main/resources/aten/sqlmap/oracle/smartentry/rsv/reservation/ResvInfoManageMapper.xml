@@ -27,9 +27,9 @@
 					C.CENTER_NM, C.CENTER_PILOT_YN, D.USER_NM, REGEXP_REPLACE(D.USER_PHONE, '(02|.{3})(.+)(.{4})', '\1-\2-\3') AS USER_PHONE
 				FROM TSER_RESV_INFO_I A, TSEB_SEAT_INFO_D B, TSEB_CENTER_INFO_M C, TSER_USER_INFO_I D, TSEB_PART_INFO_D E
 				WHERE A.SEAT_CD = B.SEAT_CD(+)
+				AND A.PART_CD = E.PART_CD(+)
 				AND A.CENTER_CD = C.CENTER_CD
 				AND A.USER_ID = D.USER_ID
-				AND B.PART_CD = E.PART_CD
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchCenterCd)">
 					AND A.CENTER_CD = #{params.searchCenterCd}
 				</if>
