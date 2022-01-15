@@ -114,7 +114,7 @@
             <div class="contents">
                 <ul>
                     <li class="home active"><a href="/front/main.do">home</a><span>HOME</span></li>
-                    <li class="rsv"><a href="/front/rsvCenter.do">rsv</a><span>입장예약</span></li>
+                    <li class="rsv"><a href="javascript:fn_moveReservation();">rsv</a><span>입장예약</span></li>
                     <li class="my"><a href="javascript:fn_pageMove('regist','/front/mypage.do');">my</a><span>마이페이지</span></li>
                 </ul>
                 <div class="clear"></div>
@@ -501,16 +501,13 @@
 									}	
 								}
 							} else if(result.status == "LOGINFAIL"){
-								fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
+								fn_openPopup("세션 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
 							}
 						},
 						function(request) {
 							fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");	       						
 						}    		
 					);
-					
-					//여기 부분 공지 사항 들어가는 자리 
-					
 				} else {
 					// 비로그인 상태(비회원)
 					$("#user_rsv_area").addClass("main_user_rsv");
@@ -526,7 +523,7 @@
 					// 유저정보하단 HTML생성
 					setHtml = "";
 					setHtml += "<li><a href='/front/login.do'>로그인</a></li>";
-					if($("#guestResvPossibleYn").val() == "Y") {
+					if(fn_guestResvPossibleYn()) {
 						setHtml += "<li><a href='/front/rsvCenter.do'>비회원 예약</a></li>";
 					}
 					userInfoBottomArea.append(setHtml);
@@ -792,7 +789,7 @@
 								fn_openPopup(result.regist.Error_Msg, "red", "ERROR", "확인", "javascript:location.reload();");
 							}
 				    	} else {
-				    		fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "");
+				    		fn_openPopup("세션 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "");
 				    	}
 					},
 					function(request) {
@@ -843,7 +840,7 @@
 								validResult = result.validResult;
 							}
 						} else if (result.status == "LOGIN FAIL"){
-							fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/login.do'");
+							fn_openPopup("세션 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/login.do'");
 						}
 					},
 					function(request) {
