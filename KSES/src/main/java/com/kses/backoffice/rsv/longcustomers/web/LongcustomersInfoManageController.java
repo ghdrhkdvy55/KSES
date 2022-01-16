@@ -24,9 +24,10 @@ import com.kses.backoffice.sym.log.web.InterfaceController;
 import com.kses.backoffice.util.SmartUtil;
 
 import egovframework.com.cmm.EgovMessageSource;
-
+import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.property.EgovPropertyService;
+import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 
 @RestController
@@ -52,13 +53,18 @@ public class LongcustomersInfoManageController {
 	}
 
 	@RequestMapping(value = "longCustomerListsAjax.do")
-	public ModelAndView selectLongcustomerInfo(@RequestBody Map<String,Object> searchVO, 
-										  HttpServletRequest request,
-										  BindingResult bindingResult) throws Exception {
+	public ModelAndView selectLongcustomerInfo(@RequestBody Map<String,Object> searchVO,
+											   @ModelAttribute("loginVO") LoginVO loginVO,
+											   HttpServletRequest request,
+											   BindingResult bindingResult) throws Exception {
 
 	
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
+            loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
+			searchVO.put("authorCd", loginVO.getAuthorCd());
+			searchVO.put("centerCd", loginVO.getCenterCd());
+			
 			int pageUnit = searchVO.get("pageUnit") == null ? propertiesService.getInt("pageUnit") : Integer.valueOf((String) searchVO.get("pageUnit"));
 			
 			PaginationInfo paginationInfo = new PaginationInfo();
