@@ -92,15 +92,15 @@
 					<tr>
 						<th>구역금액</th>
 						<td>
-							<input type="text" name="partPayCost">원</input>
+							<input type="text" name="partPayCost">원
 						</td>
 						<th>사용 유무</th>
 					    <td>
 				            <span>
-			                    <input type="radio" name="useYn" value="Y">사용</input>
+			                    <input type="radio" name="useYn" value="Y">사용
 							</span>
 						    <span>
-					            <input type="radio" name="useYn" value="N">사용 안함</input>
+					            <input type="radio" name="useYn" value="N">사용 안함
 			                </span>
 		                </td>
 	                </tr>
@@ -141,6 +141,12 @@
 <script type="text/javascript" src="/resources/js/temporary.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
+		if($("#loginAuthorCd").val() != "ROLE_ADMIN" && $("#loginAuthorCd").val() != "ROLE_SYSTEM") {
+			$("#searchCenterCd").val($("#loginCenterCd").val()).trigger('change');
+			$(".whiteBox").eq(0).hide();
+			
+		}
+		
 		EgovJqGridApi.mainGrid([
             { label: '구역 시퀀스', name:'part_seq', align:'center', key: true, hidden:true},
             { label: '지점 코드', name:'center_cd', align:'center', hidden:true},
