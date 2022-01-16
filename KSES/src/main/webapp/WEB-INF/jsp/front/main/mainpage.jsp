@@ -720,8 +720,8 @@
 					if(resvInfo.resv_state != "RESV_STATE_4") {
 						if(resvInfo.resv_pay_dvsn != "RESV_PAY_DVSN_1") {
 							if(resvInfo.resv_ticket_dvsn != 'RESV_TICKET_DVSN_2') {
-								$("#pay_number").bPopup();
 								$("#Card_Pw").val("");
+								$("#pay_number").bPopup();
 								$("#pay_number a:eq(1)").click(function(resvSeq) {
 									mainService.fn_payment(resvInfo);	
 								});
