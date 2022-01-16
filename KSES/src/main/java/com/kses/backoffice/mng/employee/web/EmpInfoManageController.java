@@ -1,8 +1,5 @@
 package com.kses.backoffice.mng.employee.web;
 
-
-
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +14,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartRequest;
@@ -31,7 +27,6 @@ import com.kses.backoffice.mng.employee.vo.DeptInfo;
 import com.kses.backoffice.mng.employee.vo.EmpInfo;
 import com.kses.backoffice.mng.employee.vo.GradInfo;
 import com.kses.backoffice.mng.employee.vo.PositionInfo;
-import com.kses.backoffice.sym.log.annotation.NoLogging;
 import com.kses.backoffice.util.SmartUtil;
 import com.kses.backoffice.util.service.UniSelectInfoManageService;
 import com.kses.backoffice.util.service.fileService;
@@ -72,9 +67,6 @@ public class EmpInfoManageController {
 		
 	@Autowired
 	private UniSelectInfoManageService uniService;
-		
-	@Autowired
-	private EgovCcmCmmnDetailCodeManageService egovCodeDetailService;
 	
     @Autowired
 	private fileService uploadFile;

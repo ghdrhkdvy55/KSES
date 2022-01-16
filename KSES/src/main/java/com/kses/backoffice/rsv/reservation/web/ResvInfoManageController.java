@@ -135,7 +135,7 @@ public class ResvInfoManageController {
 			  searchVO.put("centerCd", loginVO.getCenterCd());
 			  
 			  
-			  List<Map<String, Object>> list = resvService.selectResInfoManageListByPagination(searchVO);
+			  List<Map<String, Object>> list = resvService.selectResvInfoManageListByPagination(searchVO);
 			  LOGGER.debug("[-------------------------------------------list:" + list.size() + "------]");
 		      model.addObject(Globals.JSON_RETURN_RESULTLISR, list);
 		      model.addObject(Globals.STATUS_REGINFO, searchVO);
@@ -236,7 +236,7 @@ public class ResvInfoManageController {
 	}
 	
 	@RequestMapping (value="rsvInfoDetail.do")
-	public ModelAndView selectCenterInfoDetail(	@RequestParam("resvSeq") String resvSeq, 
+	public ModelAndView selectRsvInfoDetail(	@RequestParam("resvSeq") String resvSeq, 
 												HttpServletRequest request) throws Exception {	
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
@@ -248,13 +248,13 @@ public class ResvInfoManageController {
 	    }	
 		
 		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-		model.addObject(Globals.STATUS_REGINFO, resvService.selectResInfoDetail(resvSeq));	     	
+		model.addObject(Globals.STATUS_REGINFO, resvService.selectResvInfoDetail(resvSeq));	     	
 		return model;
 	}
 	
 	@RequestMapping (value="resvInfoCancel.do")
-	public ModelAndView resvInfoCancel(	@RequestParam("resvSeq") String resvSeq, 
-										HttpServletRequest request) throws Exception {	
+	public ModelAndView updateResvInfoCancel(	@RequestParam("resvSeq") String resvSeq, 
+												HttpServletRequest request) throws Exception {	
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 
@@ -271,7 +271,6 @@ public class ResvInfoManageController {
 			model.addObject(Globals.STATUS, resultMap.get(Globals.STATUS));
 			model.addObject(Globals.STATUS_MESSAGE, resultMap.get(Globals.STATUS_MESSAGE));
 		} catch(Exception e) {
-			LOGGER.debug("---------------------------------------");
 			StackTraceElement[] ste = e.getStackTrace();
 			LOGGER.error(e.toString() + ":" + ste[0].getLineNumber());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
@@ -282,8 +281,8 @@ public class ResvInfoManageController {
 	}
 	
 	@RequestMapping (value="resvInfoCancelAll.do")
-	public ModelAndView resvInfoCancelAll(	@RequestBody Map<String,Object> params, 
-											HttpServletRequest request) throws Exception {	
+	public ModelAndView updateResvInfoCancelAll(	@RequestBody Map<String,Object> params, 
+													HttpServletRequest request) throws Exception {	
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		List<Map<String, String>> resvCancelList = new LinkedList<Map<String, String>>();
@@ -299,14 +298,14 @@ public class ResvInfoManageController {
 			
 			params.put("firstIndex", 0);
 			params.put("recordCountPerPage", 5000);
-			params.put("searchCenterCd",params.get("centerCd").toString());
-			params.put("searchFrom",params.get("resvDate").toString());
-			params.put("searchTo",params.get("resvDate").toString());
+			params.put("searchCenterCd", params.get("centerCd").toString());
+			params.put("searchFrom", params.get("resvDate").toString());
+			params.put("searchTo", params.get("resvDate").toString());
 			params.put("searchDayCondition","resvDate");
 			params.put("searchResvState","RESV_STATE_4");
 			params.put("searchStateCondition","cancel");
 			
-			List<Map<String, Object>> resvList = resvService.selectResInfoManageListByPagination(params);
+			List<Map<String, Object>> resvList = resvService.selectResvInfoManageListByPagination(params);
 
 			for(Map<String,Object> resvInfo : resvList) {
 				if(!SmartUtil.NVL(resvInfo.get("resv_ticket_dvsn"),"").equals("RESV_TICKET_DVSN_2")) {
@@ -334,7 +333,6 @@ public class ResvInfoManageController {
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("request.success.msg"));
 
 		} catch(Exception e) {
-			LOGGER.debug("---------------------------------------");
 			StackTraceElement[] ste = e.getStackTrace();
 			LOGGER.error(e.toString() + ":" + ste[0].getLineNumber());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);

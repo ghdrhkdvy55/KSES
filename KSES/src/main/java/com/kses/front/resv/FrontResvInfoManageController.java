@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.kses.backoffice.bas.code.service.EgovCcmCmmnDetailCodeManageService;
 import com.kses.backoffice.bas.system.service.SystemInfoManageService;
 import com.kses.backoffice.bld.center.service.CenterInfoManageService;
 import com.kses.backoffice.bld.floor.service.FloorInfoManageService;
@@ -52,9 +51,6 @@ public class FrontResvInfoManageController {
     
 	@Autowired
     protected EgovPropertyService propertiesService;
-	
-	@Autowired
-	private EgovCcmCmmnDetailCodeManageService codeDetailService;
 	
 	@Autowired
 	private CenterInfoManageService centerService;
@@ -293,7 +289,7 @@ public class FrontResvInfoManageController {
 				return model;
 			}
 			
-			model.addObject("resvInfo", resvService.selectResInfoDetail(resvSeq));
+			model.addObject("resvInfo", resvService.selectResvInfoDetail(resvSeq));
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		} catch(Exception e) {
 			LOGGER.error("getResvInfo : " + e.toString());

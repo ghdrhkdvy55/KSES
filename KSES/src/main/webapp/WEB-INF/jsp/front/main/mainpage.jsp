@@ -451,7 +451,7 @@
 										
 										// QR코드 영역 활성화
 										$(qrEnterArea).show();
-										$(qrEnterArea).find("a").attr("href","javascript:mainService.fn_moveQrPage('" + obj.resv_seq + "');");
+										$(qrEnterArea).find("a").attr("href","javascript:fn_moveQrPage('" + obj.resv_seq + "');");
 									} else {								
 										// 유저정보상단 HTML생성
 										var setHtml = "";
@@ -717,18 +717,22 @@
 				var resvInfo = fn_getResvInfo(resvSeq);
 				
 				if(resvInfo.isSuccess) {
-					if(resvInfo.resv_pay_dvsn != "RESV_PAY_DVSN_1") {
-						if(resvInfo.resv_ticket_dvsn != 'RESV_TICKET_DVSN_2') {
-							$("#pay_number").bPopup();
-							$("#Card_Pw").val("");
-							$("#pay_number a:eq(1)").click(function(resvSeq) {
-								mainService.fn_payment(resvInfo);	
-							});
+					if(resvInfo.resv_state != "RESV_STATE_4") {
+						if(resvInfo.resv_pay_dvsn != "RESV_PAY_DVSN_1") {
+							if(resvInfo.resv_ticket_dvsn != 'RESV_TICKET_DVSN_2') {
+								$("#pay_number").bPopup();
+								$("#Card_Pw").val("");
+								$("#pay_number a:eq(1)").click(function(resvSeq) {
+									mainService.fn_payment(resvInfo);	
+								});
+							} else {
+								fn_openPopup("종이 QR발권 상태입니다.", "red", "ERROR", "확인", "");
+							}
 						} else {
-							fn_openPopup("종이 QR발권 상태입니다.", "red", "ERROR", "확인", "");
+							mainService.fn_resvCancel(resvInfo);
 						}
 					} else {
-						mainService.fn_resvCancel(resvInfo);
+						fn_openPopup("이미 취소된 예약정보 입니다.", "red", "ERROR", "확인", "");
 					}
 				}
 			},
@@ -848,9 +852,6 @@
 				);	
 				
 				return validResult;
-			},
-			fn_moveQrPage : function(resvSeq) {
-				location.href = "/front/qrEnter.do?resvSeq=" + resvSeq + "&accessType=WEB";
 			}
 		}
     </script>
