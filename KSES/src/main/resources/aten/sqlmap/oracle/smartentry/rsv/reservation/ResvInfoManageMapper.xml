@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kses.backoffice.rsv.reservation.mapper.ResvInfoManageMapper">
 	<!-- backoffice -->
-	<select id="selectResInfoManageListByPagination" resultType="lmap">
+	<select id="selectResvInfoManageListByPagination" resultType="lmap">
 		SELECT * FROM 
 		( 
 			SELECT 	
@@ -92,11 +92,11 @@
 		ORDER BY TA.RESV_SEQ DESC
     </select>
     
-	<select id="selectResInfoDetail" resultType="lmap">
+	<select id="selectResvInfoDetail" resultType="lmap">
 		SELECT
 			A.RESV_SEQ, A.SEAT_CD, A.SEASON_CD, A.RESV_START_DT, A.RESV_END_DT, A.RESV_DVSN,
 			A.RESV_START_TM, A.RESV_END_TM, TO_CHAR(A.RESV_REQ_DATE,'YYYY-MM-DD HH24:MI') AS RESV_REQ_DATE, A.USER_ID,
-			A.RESV_STATE, A.RESV_USER_ASK_YN, A.RESV_RCPT_YN, A.RESV_RCPT_NUMBER, A.RESV_PAY_COST, 
+			A.RESV_STATE, A.RESV_USER_ASK_YN, A.RESV_RCPT_YN, A.RESV_RCPT_NUMBER, A.RESV_PAY_COST, A.RESV_ENTRY_DVSN,
 			A.RESV_RCPT_DVSN, A.RESV_PAY_DVSN, A.RESV_USER_DVSN, A.RESV_USER_NM, REGEXP_REPLACE(A.RESV_USER_CLPHN, '(02|.{3})(.+)(.{4})', '\1-\2-\3') AS RESV_USER_CLPHN, 
 			A.RESV_ENTRY_PAY_COST, A.RESV_SEAT_PAY_COST, A.RESV_TICKET_DVSN,
 			FN_DETAILCODENM(A.RESV_USER_DVSN) AS RESV_USER_DVSN_TEXT,

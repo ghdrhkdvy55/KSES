@@ -14,7 +14,7 @@ public interface ResvInfoManageMapper {
 	
 	public Map<String, Object> selectUserLastResvInfo(@Param("userId") String userId);
 	
-	public Map<String, Object> selectResInfoDetail(String resvSeq);
+	public Map<String, Object> selectResvInfoDetail(String resvSeq);
 	
 	public String selectResvUserId(@Param("resvSeq") String resvSeq) throws Exception;
 	
@@ -38,7 +38,7 @@ public interface ResvInfoManageMapper {
 	
 	public int resvInfoDuplicateCheck(@Param("params") Map<String, Object> params);
 	//신규 추가
-	public List<Map<String, Object>> selectResInfoManageListByPagination(@Param("params") Map<String, Object> params);
+	public List<Map<String, Object>> selectResvInfoManageListByPagination(@Param("params") Map<String, Object> params);
 	
 	public Map<String, Object> selectUserResvInfo(@Param("params") Map<String, Object> params);
 	

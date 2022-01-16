@@ -49,17 +49,17 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	private SureManageSevice sureService;
 	
 	@Override
-	public List<Map<String, Object>> selectResInfoManageListByPagination(Map<String, Object> params) throws Exception {
+	public List<Map<String, Object>> selectResvInfoManageListByPagination(Map<String, Object> params) throws Exception {
 		params.forEach((key, value)
 			    -> System.out.println("key: " + key + ", value: " + value));
 		
 		
-		return resvMapper.selectResInfoManageListByPagination(params);
+		return resvMapper.selectResvInfoManageListByPagination(params);
 	}
 	
 	@Override
-	public Map<String, Object> selectResInfoDetail(String resvSeq) throws Exception {
-		return resvMapper.selectResInfoDetail(resvSeq);
+	public Map<String, Object> selectResvInfoDetail(String resvSeq) throws Exception {
+		return resvMapper.selectResvInfoDetail(resvSeq);
 	}
 	
 	@Override

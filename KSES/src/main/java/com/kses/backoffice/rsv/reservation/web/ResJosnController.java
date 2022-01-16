@@ -148,7 +148,7 @@ public class ResJosnController {
 					switch (SmartUtil.NVL(resvInfo.get("resv_state"),"")) {
 						case "RESV_STATE_2" : Message = "이미 이용중인 예약정보 입니다.";  break;
 						case "RESV_STATE_3" : Message = "이미 이용완료 처리된 예약정보 입니다.";  break;
-						case "RESV_STATE_4" : Message = "이미 취소된 예약정보입니다.";  break;
+						case "RESV_STATE_4" : Message = "이미 취소된 예약정보 입니다.";  break;
 						default: Message = "알수없는 예약정보 입니다."; break;
 					}
 					model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
@@ -801,7 +801,7 @@ public class ResJosnController {
 		try {
 			String corpNum = propertiesService.getString("Company.Number");
 
-			Map<String, Object> resInfo = resService.selectResInfoDetail(resvSeq);
+			Map<String, Object> resInfo = resService.selectResvInfoDetail(resvSeq);
 
 			String msgKey = tranGubun.equals("bill") ? resvSeq + "_001" : resvSeq + "_002";
 			String msgTradType = tranGubun.equals("bill") ? "승인거래" : "취소거래";

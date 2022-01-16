@@ -46,7 +46,7 @@ public class SureManageServiceImpl extends EgovAbstractServiceImpl implements Su
 		int ret = 0;
 		
 		try {
-			Map<String, Object> resvInfo = resvMapper.selectResInfoDetail(resvSeq);
+			Map<String, Object> resvInfo = resvMapper.selectResvInfoDetail(resvSeq);
 			SureMsgInfo sureMsgInfo = new SureMsgInfo();
 			SureDataInfo sureDataInfo = sureMsgInfo.resvSureDataMsg(msgDvsn, resvInfo);
 			

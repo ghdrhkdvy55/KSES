@@ -290,23 +290,27 @@
 				var resvInfo = fn_getResvInfo(resvSeq);
 				
 				if(resvInfo.isSuccess) {
-					if(resvInfo.resv_pay_dvsn != "RESV_PAY_DVSN_1") {
-						if(resvInfo.resv_ticket_dvsn != 'RESV_TICKET_DVSN_2') {
-							$("#pay_number").bPopup();
-							$("#Card_Pw").val("");
-							$("#pay_number a:eq(1)").click(function(resvSeq) {
-								if(fn_payment(resvInfo)){
-									userResvService.fn_userResvInfo(true);
-									bPopupClose("pay_number");
-								}
-							});
+					if(resvInfo.resv_state != "RESV_STATE_4") {
+						if(resvInfo.resv_pay_dvsn != "RESV_PAY_DVSN_1") {
+							if(resvInfo.resv_ticket_dvsn != 'RESV_TICKET_DVSN_2') {
+								$("#pay_number").bPopup();
+								$("#Card_Pw").val("");
+								$("#pay_number a:eq(1)").click(function(resvSeq) {
+									if(fn_payment(resvInfo)){
+										userResvService.fn_userResvInfo(true);
+										bPopupClose("pay_number");
+									}
+								});
+							} else {
+								fn_openPopup("종이 QR발권 상태입니다.", "red", "ERROR", "확인", "");
+							}
 						} else {
-							fn_openPopup("종이 QR발권 상태입니다.", "red", "ERROR", "확인", "");
+							if(fn_resvCancel(resvInfo)){
+								userResvService.fn_userResvInfo(true);
+							}
 						}
 					} else {
-						if(fn_resvCancel(resvInfo)){
-							userResvService.fn_userResvInfo(true);
-						}
+						fn_openPopup("이미 취소된 예약정보 입니다.", "red", "ERROR", "확인", "");
 					}
 				}
 			}
