@@ -187,7 +187,7 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 			params.put("resvSeq", resvSeq);
 			Map<String, Object> resvInfo = resvService.selectUserResvInfo(params);
 			String resvState = resvInfo.get("resv_state").toString();
-			String resvTicketDvsn = SmartUtil.NVL(resvInfo.get("resv_pay_dvsn").toString(),"");
+			String resvTicketDvsn = SmartUtil.NVL(resvInfo.get("resv_ticket_dvsn").toString(),"");
 			String resvPayDvsn = resvInfo.get("resv_pay_dvsn").toString();
 			String tradeNo = SmartUtil.NVL(resvInfo.get("trade_no"),"");
 			

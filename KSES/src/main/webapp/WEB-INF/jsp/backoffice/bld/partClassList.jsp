@@ -309,7 +309,6 @@
 					//결과값 추후 확인 하기 	
 					if (result.status == "SUCCESS"){
 						common_modelCloseM(result.message, "bld_partClass_add");
-						alert(result.message);
 						fnSearch(1);
 					} else if (result.status == "LOGIN FAIL") {
 						common_modelClose("bld_partClass_add");
