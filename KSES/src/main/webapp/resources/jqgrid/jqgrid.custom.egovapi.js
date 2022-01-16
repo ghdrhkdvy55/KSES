@@ -177,8 +177,9 @@ $.EgovJqGridApi.prototype.popGrid = function(id, colModel, pagerId) {
 	this._jqGridParams['url'] = null;
 	this._jqGridParams['pager'] = $('#'+ pagerId);
 	this._jqGridParams['rowList'] = [];
-	this._jqGridParams['rownumbers'] = false;
-	return $('#'+id).jqGrid(this._jqGridParams);
+	let retGrid = $('#'+id).jqGrid(this._jqGridParams);
+	$('th#'+id+'_rn').children('div:first').append('NO');
+	return retGrid;
 };
 
 $.EgovJqGridApi.prototype.popGridAjax = function(id, url, params, searchFunc) {
