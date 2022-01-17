@@ -127,7 +127,7 @@
 		<li class="active">층 관리</li>
 	</ol>
 </div>
-<h2 class="title">${regist.center_nm} 층 관리</h2>
+<h2 class="title"><c:out value='${regist.center_nm}'/> 층 관리</h2>
 <div class="clear"></div>
 <div class="dashboard">
   	<div class="boardlist">
@@ -140,7 +140,7 @@
 				<select id="searchCenterCd">
 					<option value="">지점 선택</option>
 					<c:forEach items="${centerInfoComboList}" var="centerInfoComboList">
-						<option value="${centerInfoComboList.center_cd}">${centerInfoComboList.center_nm}</option>
+						<option value="<c:out value='${centerInfoComboList.center_cd}'/>"><c:out value='${centerInfoComboList.center_nm}'/></option>
 					</c:forEach>
 				</select>
         		<input type="text" placeholder="검색어를 입력하세요.">
@@ -182,7 +182,7 @@
 							<select id="floorPartDvsn">
 								<option value="">구역 사용여부</option>
 								<c:forEach items="${floorPart}" var="floorPart">
-									<option value="${floorPart.code}">${floorPart.codenm}</option>
+									<option value="<c:out value='${floorPart.code}'/>"><c:out value='${floorPart.codenm}'/></option>
 								</c:forEach>
 							</select>
                       	</td>
@@ -220,12 +220,12 @@
                     	<td colspan="3">
                         	<select id="seatStr" name="seatStr">
 		                  		<c:forEach var="cnt" begin="1" end="1000" step="1">
-		                     		<option value="${cnt}">${cnt}</option>
+		                     		<option value="<c:out value='${cnt}'/>"><c:out value='${cnt}'/></option>
 		                  		</c:forEach> 
 			             	</select>~
 			             	<select id="seatEnd" name="seatEnd">
 			                  	<c:forEach var="cnt" begin="1" end="1000" step="1">
-			                     	<option value="${cnt}">${cnt}</option>
+			                     	<option value="<c:out value='${cnt}'/>"><c:out value='${cnt}'/></option>
 			                  	</c:forEach> 
 			             	</select>
                     	</td>
@@ -276,7 +276,7 @@
 							<select id="partClass">
 							<option value="">구역 등급 선택</option>
 							<c:forEach items="${seatClass}" var="seatClass">
-								<option value="${seatClass.part_class}">${seatClass.part_class_nm}</option>
+								<option value="<c:out value='${seatClass.part_class}'/>"><c:out value='${seatClass.part_class_nm}'/></option>
 							</c:forEach>
 						</select>
 					</td>
@@ -356,7 +356,7 @@
 								<select class="" id="searchFloorCd" name="searchFloorCd" onChange="seatService.fn_floorChange('search');">
 									<option value="">검색 층수</option>
 									<c:forEach items="${floorListSeq}" var="floorList">
-										<option value="${floorList.floor_cd}">${floorList.floor_nm}</option>
+										<option value="<c:out value='${floorList.floor_cd}'/>"><c:out value='${floorList.floor_nm}'/></option>
 									</c:forEach>
 								</select>
 							</td>
@@ -378,7 +378,7 @@
 								<select class="" id="searchFloorCd_P" name="searchFloorCd_P" onChange="floorService.fn_floorMap()">
 									<option value="">검색 층수</option>
 									<c:forEach items="${floorListSeq}" var="floorList">
-										<option value="${floorList.floor_cd}">${floorList.floor_nm}</option>
+										<option value="<c:out value='${floorList.floor_cd}'/>"><c:out value='${floorList.floor_nm}'/></option>
 									</c:forEach>
 								</select>
 							</td>

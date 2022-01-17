@@ -463,7 +463,10 @@
 										// 유저정보하단 HTML생성
 										setHtml = "";
 										setHtml += "<li><span><a href='javascript:mainService.fn_userResvInfo(&#39;PRE&#39;, &#39;" + obj.resv_seq + "&#39;,&#39;re_rsv_info&#39;);' >최근좌석 다시앉기<img src='/resources/img/front/arrow.png' alt='예약하기'></a></span></li>";
-										setHtml += "<li><em><img src='/resources/img/front/alert_icon.svg' alt='알림'>과거 예약한 정보로 다시 앉으실 수 있습니다.</em></li>";
+										setHtml += "<li><em class="n_class">노블레스</em></li>";
+										//setHtml += "<li><em class="p_class">프리미엄</em></li>";
+										//setHtml += "<li><em class="s_class">스탠다드</em></li>";
+										//setHtml += "<li><em class="nm_class">일반석</em></li>";
 										userInfoBottomArea.append(setHtml);
 										
 										// 다시앉기 팝업창 정보 입력

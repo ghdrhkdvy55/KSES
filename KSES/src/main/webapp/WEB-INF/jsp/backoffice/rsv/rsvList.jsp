@@ -42,8 +42,8 @@
               		<p class="hideAuthor">지점</p>
               		<select id="searchCenterCd" class="hideAuthor">
 						<option value="">지점 선택</option>
-							<c:forEach items="${centerInfo}" var="centerInfo">
-						<option value="${centerInfo.center_cd}">${centerInfo.center_nm}</option>
+						<c:forEach items="${centerInfo}" var="centerInfo">
+							<option value="${centerInfo.center_cd}">${centerInfo.center_nm}</option>
 						</c:forEach>
               		</select>
 
@@ -59,14 +59,14 @@
 					<select id="searchResvState">
 						<option value="">선택</option>
 						<c:forEach items="${resvState}" var="resvState">
-							<option value="${resvState.code}">${resvState.codenm}</option>
+							<option value="<c:out value='${resvState.code}'/>"><c:out value='${resvState.codenm}'/></option>
 						</c:forEach>
 	              	</select>
 	              	<p>결재 상태</p>
 	              	<select id="searchResvPayDvsn">
 	              		<option value="">선택</option>
 						<c:forEach items="${resvPayDvsn}" var="resvPayDvsn">
-							<option value="${resvPayDvsn.code}">${resvPayDvsn.codenm}</option>
+							<option value="<c:out value='${resvPayDvsn.code}'/>"><c:out value='${resvPayDvsn.codenm}'/></option>
 						</c:forEach>
 	              	</select>
 	              	<p>검색어</p>
@@ -366,7 +366,7 @@
             		<select id="resvCenterCd" onChange="jqGridFunc.fn_centerChange()">
             			<option value="">선택</option>
 						<c:forEach items="${centerInfo}" var="centerInfo">
-							<option value="${centerInfo.center_cd}">${centerInfo.center_nm}</option>
+							<option value="<c:out value='${centerInfo.center_cd}'/>"><c:out value='${centerInfo.center_nm}'/></option>
 						</c:forEach>
             		</select>
           		</p>
@@ -419,7 +419,7 @@
             				<select id="cancelResvCenterCd">
             					<option value="">선택</option>
 								<c:forEach items="${centerInfo}" var="centerInfo">
-									<option value="${centerInfo.center_cd}">${centerInfo.center_nm}</option>
+									<option value="<c:out value='${centerInfo.center_cd}'/>"><c:out value='${centerInfo.center_nm}'/></option>
 								</c:forEach>
             				</select>
 	                    </td>
@@ -1093,7 +1093,7 @@
 			}		
 		},
 		fn_resvVaildCheck : function(params) {
-			var url = "/front/resvValidCheck.do";
+			var url = "/backoffice/rsv/resvValidCheck.do";
 			var validResult;
 			
 			fn_Ajax

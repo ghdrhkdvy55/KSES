@@ -34,12 +34,12 @@
                 <select id="send_G">
                    	<c:choose>
 						<c:when test="${loginVO.authorCd ne 'ROLE_ADMIN' && loginVO.authorCd ne 'ROLE_SYSTEM' }">
-						    <option value="${loginVO.centerCd}">${centerInfo.center_nm}</option>
+						    <option value="<c:out value='${loginVO.centerCd}'/>"><c:out value='${centerInfo.center_nm}'/></option>
 						</c:when>
 						<c:otherwise>
 						    <option value="">관리자 전체 </option>
 						    <c:forEach items="${centerCombo}" var="centerCombo">
-						       <option value="${centerCombo.center_cd}">${centerCombo.center_nm}</option>
+						       <option value="<c:out value='${centerCombo.center_cd}'/>"><c:out value='${centerCombo.center_nm}'/></option>
 							 </c:forEach>
 						</c:otherwise>
 					</c:choose>
@@ -54,12 +54,12 @@
                 <select id="send_U">
                   	<c:choose>
 						<c:when test="${(loginVO.authorCd ne 'ROLE_ADMIN' && loginVO.authorCd ne 'ROLE_SYSTEM') }">
-						    <option value="${loginVO.centerCd}">${centerInfo.center_nm}</option>
+						    <option value="<c:out value='${loginVO.centerCd}'/>"><c:out value='${centerInfo.center_nm}'/></option>
 						</c:when>
 						<c:otherwise>
 						    <option value="">사용자 전체 </option>
 						    <c:forEach items="${centerCombo}" var="centerCombo">
-						       <option value="${centerCombo.center_cd}">${centerCombo.center_nm}</option>
+						       <option value="<c:out value='${centerCombo.center_cd}'/>"><c:out value='${centerCombo.center_nm}'/></option>
 							 </c:forEach>
 						</c:otherwise>
 					</c:choose>

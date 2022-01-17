@@ -21,7 +21,7 @@
 					<tr>
                         <th>사이트 명</th>
                         <td><input type="text" id="comTitle" name="comTitle" value="${regist.comTitle}"></td>
-						<td colspan="2"></td>
+						<td colspan="3"></td>
                     </tr>
                 	<tr>
                     	<th>전일 오픈 시간(회원)</th>
