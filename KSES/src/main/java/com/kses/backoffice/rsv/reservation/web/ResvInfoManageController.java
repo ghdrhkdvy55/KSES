@@ -418,4 +418,33 @@ public class ResvInfoManageController {
 		}	
 		return model;
 	}
+	
+	@RequestMapping (value="resvValidCheck.do")
+	public ModelAndView resvValidCheck(	@ModelAttribute("loginVO") LoginVO loginVO,
+										@RequestBody Map<String, Object> params,
+										HttpServletRequest request,
+										BindingResult result) throws Exception {
+		
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+		try {
+			HttpSession httpSession = request.getSession(true);
+			loginVO = (LoginVO)httpSession.getAttribute("LoginVO");
+			
+			if(loginVO == null) {
+				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
+				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
+				return model;
+			}
+			
+			resvService.resvValidCheck(params);
+			
+			model.addObject("validResult", params);
+			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+		} catch(Exception e) {
+			LOGGER.error("resvValidCheck : " + e.toString());
+			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg")); 
+		}
+		return model;
+	}
 }

@@ -32,7 +32,7 @@
              	<select id="searchCenterCd">
                     <option value="">선택</option>
                      <c:forEach items="${centerInfo}" var="centerInfo">
-						<option value="${centerInfo.center_cd}">${centerInfo.center_nm}</option>
+						<option value="<c:out value='${centerInfo.center_cd}'/>"><c:out value='${centerInfo.center_nm}'/></option>
                      </c:forEach>
             	</select>  
                 <!-- <p>검색어</p>
@@ -75,7 +75,7 @@
 			            	<select name="centerCd">
 								<option value="">지점 선택</option>
 								<c:forEach items="${centerInfo}" var="centerInfo">
-									<option value="${centerInfo.center_cd}">${centerInfo.center_nm}</option>
+									<option value="<c:out value='${centerInfo.center_cd}'/>"><c:out value='${centerInfo.center_nm}'/></option>
 								</c:forEach>
 			                 </select>
 						</td> 
@@ -84,7 +84,7 @@
 							<select name="partClass">
 								<option value="">선택</option>
 								<c:forEach items="${partClassInfo}" var="partClassInfo">
-									<option value="${partClassInfo.code}">${partClassInfo.codenm}</option>
+									<option value="<c:out value='${partClassInfo.code}'/>"><c:out value='${partClassInfo.codenm}'/></option>
 								</c:forEach>
 							</select>
 						</td>
@@ -270,17 +270,6 @@
 	function fnPartClassUpdate() {
 		let $popup = $('[data-popup=bld_partClass_add]');
 		let $form = $popup.find('form:first');
-		if ($popup.find('select[name=centerCd]').val() === '') {
-			//toastr.warning('지점명을 선택해 주세요.');
-			alert('지점명을 선택해 주세요.');
-			return;
-		}
-		if ($popup.find('select[name=partClass]').val() === '') {
-			//toastr.warning('구역 등급을 선택해 주세요.');
-			alert('구역 등급을 선택해 주세요.');
-			
-			return;	
-		}
 		if ($popup.find(':text[name=partPayCost]').val() === '') {
 			//toastr.warning('구역 금액을 입력해 주세요.');
 			alert('구역 금액을 입력해 주세요.');
@@ -296,8 +285,6 @@
 			$("select[name=centerCd]").removeAttr('disabled');
 			//체크 박스 체그 값 알아오기 
 			var formData = new FormData();
-			console.log($form.find(':file[name=partIcon]')[0].files[0]);
-			//formData.append('partIcon', $('#centerImg')[0].files[0]);
 			formData.append('partSeq', $form.find(':hidden[name=partSeq]').val());;
 			formData.append('partIcon', $form.find(':file[name=partIcon]')[0].files[0]);
 	 	    formData.append('centerCd' , $form.find('select[name=centerCd]').val());
