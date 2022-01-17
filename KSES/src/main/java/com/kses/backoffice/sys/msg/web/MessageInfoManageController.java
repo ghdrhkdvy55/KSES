@@ -327,7 +327,7 @@ public class MessageInfoManageController {
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.insert"));
 			
 		} catch (ParseException e) {
-			e.printStackTrace();
+			LOGGER.error("testMsgInsert ParseException ERROR : " + e.toString());
 		}
 		return model;
 	}

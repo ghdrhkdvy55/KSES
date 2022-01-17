@@ -1,6 +1,5 @@
 package com.kses.backoffice.sts.error.web;
 
-import java.io.PrintWriter;
 import java.io.StringWriter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,8 +12,6 @@ import com.kses.backoffice.sym.log.vo.SysLog;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import egovframework.com.cmm.LoginVO;
-import egovframework.com.cmm.util.EgovUserDetailsHelper;
 
 public class CustomExceptionResolver extends SimpleMappingExceptionResolver {
 
@@ -47,12 +44,9 @@ public class CustomExceptionResolver extends SimpleMappingExceptionResolver {
 	 //ajax Error 체크 하기
 	 @Override
 	 protected ModelAndView doResolveException( HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
-
 			 // Log exception, both at debug log level and at warn level, if desired.
 		     SysLog sysLog = new SysLog();
 		     StringWriter sw = new StringWriter(); 
-		     ex.printStackTrace(new PrintWriter(sw)); 
-
 		     
 		     sysLog.setMethodResult(sw.toString());
 			 if (LOGGER.isDebugEnabled()) {
@@ -97,10 +91,10 @@ public class CustomExceptionResolver extends SimpleMappingExceptionResolver {
 				  }
 				  sysLog.setErrorCode(String.valueOf( statusCode.intValue()));
 				  try {
-					  LOGGER.debug("sysLog error:" + statusCode.intValue());  
+					  LOGGER.debug("sysLog ERROR : " + statusCode.intValue());  
 		    		//	sysLogService.logInsertSysLog(sysLog);
 		    	  } catch (Exception e) {
-		    			e.printStackTrace();
+		    		  LOGGER.error("sysLog ERROR : " + e.toString());
 		    	  }
 				  LOGGER.debug("getModelAndView 로 이동");
 				  return getModelAndView(viewName, ex, request);

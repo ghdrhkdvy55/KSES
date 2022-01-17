@@ -9,10 +9,14 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.servlet.view.AbstractView;
 
-public class FileDownloadView extends AbstractView{
+public class FileDownloadView extends AbstractView {
+	private static final Logger LOGGER = LoggerFactory.getLogger(FileDownloadView.class);
+	
 	public FileDownloadView(){
         //content type을 지정. 
         setContentType("apllication/download; charset=utf-8");
@@ -38,13 +42,13 @@ public class FileDownloadView extends AbstractView{
             fis = new FileInputStream(file);
             FileCopyUtils.copy(fis, out);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("FileDownloadView ERROR : " + e.toString());
         } finally {
             if(fis != null) {
                 try { 
                     fis.close(); 
-                }catch (IOException e) {
-                    e.printStackTrace();
+                } catch (IOException e) {
+                	LOGGER.error("FileDownloadView ERROR : " + e.toString());
                 }
             }
         }
