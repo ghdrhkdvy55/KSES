@@ -39,11 +39,11 @@
       		<div class="top">
       			<!--// Date Picker -->
 				<div>
-              		<p class="hideAuthor">지점</p>
-              		<select id="searchCenterCd" class="hideAuthor">
+              		<p>지점</p>
+              		<select id="searchCenterCd">
 						<option value="">지점 선택</option>
 						<c:forEach items="${centerInfo}" var="centerInfo">
-							<option value="${centerInfo.center_cd}">${centerInfo.center_nm}</option>
+							<option value="${centerInfo.center_cd}"><c:out value='${centerInfo.center_nm}'/></option>
 						</c:forEach>
               		</select>
 
@@ -59,14 +59,14 @@
 					<select id="searchResvState">
 						<option value="">선택</option>
 						<c:forEach items="${resvState}" var="resvState">
-							<option value="<c:out value='${resvState.code}'/>"><c:out value='${resvState.codenm}'/></option>
+							<option value="${resvState.code}"><c:out value='${resvState.codenm}'/></option>
 						</c:forEach>
 	              	</select>
 	              	<p>결재 상태</p>
 	              	<select id="searchResvPayDvsn">
 	              		<option value="">선택</option>
 						<c:forEach items="${resvPayDvsn}" var="resvPayDvsn">
-							<option value="<c:out value='${resvPayDvsn.code}'/>"><c:out value='${resvPayDvsn.codenm}'/></option>
+							<option value="${resvPayDvsn.code}"><c:out value='${resvPayDvsn.codenm}'/></option>
 						</c:forEach>
 	              	</select>
 	              	<p>검색어</p>
@@ -366,7 +366,7 @@
             		<select id="resvCenterCd" onChange="jqGridFunc.fn_centerChange()">
             			<option value="">선택</option>
 						<c:forEach items="${centerInfo}" var="centerInfo">
-							<option value="<c:out value='${centerInfo.center_cd}'/>"><c:out value='${centerInfo.center_nm}'/></option>
+							<option value="${centerInfo.center_cd}"><c:out value='${centerInfo.center_nm}'/></option>
 						</c:forEach>
             		</select>
           		</p>
@@ -419,7 +419,7 @@
             				<select id="cancelResvCenterCd">
             					<option value="">선택</option>
 								<c:forEach items="${centerInfo}" var="centerInfo">
-									<option value="<c:out value='${centerInfo.center_cd}'/>"><c:out value='${centerInfo.center_nm}'/></option>
+									<option value="${centerInfo.center_cd}"><c:out value='${centerInfo.center_nm}'/></option>
 								</c:forEach>
             				</select>
 	                    </td>
@@ -490,10 +490,6 @@
 	var seatSearchInfo = {};
 
 	$(document).ready(function() { 
-		if($("#LoginAuthorCd").val() != "ROLE_ADMIN" && $("#LoginAuthorCd").val() != "ROLE_SYSTEM") {
-			/* $(".hideAuthor").hide(); */
-		}
-		
 		jqGridFunc.setGrid("mainGrid");
 		var clareCalendar = {
 			monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],

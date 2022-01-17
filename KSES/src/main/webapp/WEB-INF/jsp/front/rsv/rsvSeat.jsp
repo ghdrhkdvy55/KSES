@@ -81,7 +81,7 @@
                 	<span class="sel_seat_nm"></span>
 				</li>	
                 <li class="rsv_state"><span class="date"></span> 좌석 예약 중 입니다.</li>
-                <li class="rsv_paycost">결제금액 : <span><c:out value="${resvInfo.center_entry_pay_cost}"/>원</span></li>
+                <li class="rsv_paycost">[결제금액 : <span><c:out value="${resvInfo.center_entry_pay_cost}"/>원]</span></li>
             </ul>             
         </div>
         <!-- header //-->
@@ -124,7 +124,7 @@
                             <ul id="standing_resv_area">
                                 <li><input type="text" id="ENTRY_DVSN_1_resvUserNm" class="nonMemberArea" placeholder="이름을 입력해주세요."></li>
                                 <li><input type="text" id="ENTRY_DVSN_1_resvUserClphn" class="nonMemberArea" onkeypress="onlyNum(this);" placeholder="전화번호를 '-'없이 입력해주세요."></li>
-                                <li class="certify nonMemberArea" onclick="javascript:seatService.fn_SmsCertifi();">
+                                <li class="certify nonMemberArea subNm" onclick="javascript:seatService.fn_SmsCertifi();">
                                 	<a href="javascript:void(0);"><img src="/resources/img/front/certify.svg" alt="">인증번호 받기</a>
                                 </li>
 								
@@ -233,7 +233,7 @@
                                 <select id="selectFloorCd" class="select_box" onchange="seatService.fn_floorChange();">
                                     <option value="">층 선택</option>
 									<c:forEach items="${floorList}" var="floorList">
-										<option value="<c:out value='${floorList.floor_cd}'/>"><c:out value='${floorList.floor_nm}'/></option>
+										<option value="${floorList.floor_cd}"><c:out value='${floorList.floor_nm}'/></option>
 									</c:forEach>
                                 </select>
                             </div>
@@ -254,7 +254,7 @@
 											<c:forEach var="item" items="${seatClass}" begin="0" step="1" varStatus="status">
 												<c:if test="${(status.index + 1)%2 != 0}"><tr></c:if>
 													<td>
-														<img src="/upload/<c:out value='${item.part_icon}'/>"><c:out value='${item.part_class_nm}'/>
+														<img src="/upload/${item.part_icon}"><c:out value='${item.part_class_nm}'/>
 													<c:if test="${item.part_pay_cost ne 0}">
 														<span><fmt:formatNumber value="${item.part_pay_cost}" pattern="#,###" />원</span>
 													</c:if>
@@ -468,7 +468,7 @@
           	<div class="pop_wrap">
               	<h4><img src="/resources/img/front/cancle.svg" alt="예약취소">예약을 취소하시겠습니까?</h4>
           	</div>
-          	<div class="cancel_btn ">
+          	<div class="cancel_btn other_btn">
           		<a href="/front/main.do" class="grayBtn">예</a>
 				<a href="javascript:bPopupClose('rsv_cancel');" class="dbBtn">아니요</a>
           	</div>
@@ -585,7 +585,7 @@
                 </div>                
 			</div>
 		</div>
-		<div class="cancel_btn">
+		<div class="cancel_btn resizeBtn">
 			<a href="javascript:bPopupClose('ect_agree');" class="grayBtn">닫기</a>
 		</div>
 		<div class="clear"></div>
@@ -653,7 +653,7 @@
 					$(".enter_type").hide();
 					$(".contents > h4:eq(0)").hide();					
 				} else if ($("#centerStandYn").val() == "N" && $("#centerPilotYn").val() == "N") {
-					fn_openPopup("예약 가능한 항목이 존재하지 않습니다.", "red", "ERROR", "확인", "");
+					fn_openPopup("예약 가능한 항목이 존재하지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
 					$(".enter_type").hide();					
 				}
 			} else {
@@ -1065,7 +1065,6 @@
 			},
 			fn_checkForm : function() {
 				var entryDvsn = $("#entryDvsn").val();
-				var url = "/front/updateUserResvInfo.do";
 				
 				if(entryDvsn != "ENTRY_DVSN_1" && $("#seatCd").val() == "") {fn_openPopup("좌석을 선택해주세요", "red", "ERROR", "확인", ""); return;}
 				if(!isMember && !certifiYn) {fn_openPopup("본인인증을 진행해주세요", "red", "ERROR", "확인", ""); return;}					

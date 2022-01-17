@@ -112,11 +112,6 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	}
 	
 	@Override
-	public Map<String, Object> selectResvQrInfo(String resvSeq) throws Exception {
-		return resvMapper.selectResvQrInfo(resvSeq);
-	}
-	
-	@Override
 	public int resvInfoDuplicateCheck(Map<String, Object> params) throws Exception {
 		return resvMapper.resvInfoDuplicateCheck(params);
 	}
@@ -187,7 +182,7 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 			params.put("resvSeq", resvSeq);
 			Map<String, Object> resvInfo = resvService.selectUserResvInfo(params);
 			String resvState = resvInfo.get("resv_state").toString();
-			String resvTicketDvsn = SmartUtil.NVL(resvInfo.get("resv_ticket_dvsn").toString(),"");
+			String resvTicketDvsn = SmartUtil.NVL(resvInfo.get("resv_ticket_dvsn"),"");
 			String resvPayDvsn = resvInfo.get("resv_pay_dvsn").toString();
 			String tradeNo = SmartUtil.NVL(resvInfo.get("trade_no"),"");
 			

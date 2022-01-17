@@ -27,6 +27,7 @@
 <h2 class="title">사용자 관리</h2>
 <div class="clear"></div>
 <div class="dashboard">
+<<<<<<< HEAD
 	<div class="boardlist">
 		<div class="whiteBox searchBox">
 			<div class="top">
@@ -61,9 +62,50 @@
 			<div id="pager"></div>
 		</div>
 	</div>
+=======
+      <div class="boardlist">
+        <div class="whiteBox searchBox">
+              <div class="sName">
+                <h3>검색 옵션</h3>
+              </div>
+          <div class="top">
+            <p>부서</p>
+            <select id="searchDepth" name="searchDepth">
+               <option value="">부서 선택</option>
+               <c:forEach items="${DEPT}" var="dept">
+                  <option value="${dept.code_cd}"><c:out value='${dept.code_nm}'/></option>
+               </c:forEach>
+            </select>
+            <p>검색어</p>
+            <select id="searchCondition" name="searchCondition">
+              <option value="EMP_NM">이름</option>
+              <option value="EMP_NO">사번</option>
+            </select>
+            <input type="text" id="searchKeyword" name="searchKeyword" placeholder="검색어를 입력하세요.">
+          </div>
+          <div class="inlineBtn">
+            <a href="#" onClick="jqGridFunc.fn_search()" class="grayBtn">검색</a>
+          </div>
+        </div>
+        <div class="left_box mng_countInfo">
+          <p>총 : <span id="sp_totcnt"></span>건</p>
+         
+        </div>
+        <div class="right_box">
+            <a href="#" onClick="jqGridFunc.fn_empInfo('Ins', '')" class="blueBtn">사용자 등록</a> 
+            <a href="#" onClick="jqGridFunc.fn_empDel()" class="grayBtn">삭제</a>
+        </div>
+        <div class="clear"></div>
+        <div class="whiteBox">
+            <table id="mainGrid"></table>
+            <div id="pager" class="scroll" style="text-align:center;"></div>  
+        </div> 
+      </div>
+>>>>>>> refs/remotes/origin/master
 </div>
 <!-- contents//-->
 <!-- //popup -->
+<<<<<<< HEAD
 <!-- // 직원 등록 팝업 -->
 <div data-popup="mng_emp_add" class="popup">
 	<div class="pop_con">
@@ -149,6 +191,99 @@
 		</div>
 		<div class="clear"></div>
 	</div>
+=======
+<!-- // 관리자ㅏ용자 등록 팝업 -->
+<div data-popup="mng_user_add" id="mng_user_add" class="popup">
+  <div class="pop_con">
+      <a class="button b-close">X</a>
+      <h2 class="pop_tit">사용자 등록</h2>
+      <div class="pop_wrap">
+          <table class="detail_table">
+              <tbody>
+                <tr>
+                  <th>사번</th>
+                  <td><input type="text" id="empNo" name="empNo">
+                      <span id="sp_Unqi">
+                      <a href="javascript:jqGridFunc.fn_idCheck()" class="blueBtn">중복확인</a>
+                      <input type="hidden" id="idCheck">
+                      </span>
+                  </td>
+                  <th>이름</th>
+                  <td><input type="text" id="empNm" name="empNm"></td>
+                </tr>
+				<tr>
+					<th>비밀번호</th>
+					<td><input type="password" id="empPassword"></td>
+					<th>비밀번호 확인</th>
+					<td><input type="password" id="empPassword2"></td>
+				</tr>
+                <tr>
+                   <th>사진</th>
+                   <td><input type="file" id="empPic" name="empPic"></td>
+                </tr>
+                <tr>
+                  <th>부서</th>
+                  <td>
+                     <select id="deptCd" name="deptCd">
+			               <option value="">부서 선택</option>
+			               <c:forEach items="${DEPT}" var="dept">
+			                  <option value="${dept.code_cd}"><c:out value='${dept.code_nm}'/></option>
+			               </c:forEach>
+			          </select> 
+                  </td>
+                  <th>직급</th>
+                  <td><select id="gradCd" name="gradCd">
+			               <option value="">직급 선택</option>
+			               <c:forEach items="${GRAD}" var="grad">
+			                  <option value="${grad.code_cd}"><c:out value='${grad.code_nm}'/></option>
+			               </c:forEach>
+			          </select> 
+			      </td>
+                </tr>
+                <tr>
+                  <th>직책</th>
+                  <td>
+                     <select id="psitCd" name="psitCd">
+			               <option value="">직책 선택</option>
+			               <c:forEach items="${POST}" var="post">
+			                  <option value="<c:out value='${post.code_cd}'/>"><c:out value='${post.code_nm}'/></option>
+			               </c:forEach>
+			          </select> 
+                  </td>
+                  <th>이메일</th>
+                  <td><input type="text" id="empEmail" name="empEmail" onClick="fn_join('empEmail',  'mng_user_add')"></td>
+                </tr>
+                <tr>
+                  <th>내선번호</th>
+                  <td><input type="text" id="empTlphn" name="empTlphn"></td>
+                  <th>핸드폰</th>
+                  <td><input type="text" id="empClphn" name="empClphn"></td>
+                </tr>
+                <tr>
+                  <th>사용여부</th>
+                  <td>
+                    <label for="useAt_Y"><input name="useYn" type="radio" id="useAt_Y" value="Y"/>사용</label>
+                    <label for="useAt_N"><input name="useYn" type="radio" id="useAt_N" value="N"/>사용 안함</label>
+                  </td>
+                  <th>사용자상태</th>
+                  <td><select id="empState" name="empState">
+			               <option value="">상태</option>
+			               <c:forEach items="${userState}" var="userState">
+			                  <option value="${userState.code}"><c:out value='${userState.codenm}'/></option>
+			               </c:forEach>
+			          </select> 
+			      </td>
+                </tr>
+              </tbody>
+          </table>
+      </div>
+      <div class="right_box">
+          <a href="#" onClick="jqGridFunc.fn_CheckForm()" id="btnUpdate" class="blueBtn">저장</a>
+          <a href="#" onClick="jqGridFunc.fn_close()" class="grayBtn">취소</a>
+      </div>
+      <div class="clear"></div>
+  </div>
+>>>>>>> refs/remotes/origin/master
 </div>
 <!-- popup// -->
 <script type="text/javascript" src="/resources/jqgrid/jqgrid.custom.egovapi.js"></script>

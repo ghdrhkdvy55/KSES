@@ -75,20 +75,20 @@ input[type=password]::-ms-input-placeholder { /* Microsoft Edge */
 .pw_icon{background:url(/resources/img/front/ic_login_pw.svg)no-repeat left center;padding-left:26px;display: inline-block;}
 .pin_icon{background:url(/resources/img/front/ic_pin.svg)no-repeat left center;display:block;padding-left:26px;text-align: left;}
 .fido_icon{background:url(/resources/img/front/fido_icon.svg)no-repeat left center;display: inline-block;padding-left:33px;}
-.loginBtn{
-  outline: none;
-  border:none;
-  width: 100%;
-  height: 55px;
-  background-color: #47D6BE;
-  text-align:center;
-  display:block;
-  font-size:1.9rem;
-  color:#fff;
-  cursor : pointer;
-  letter-spacing:-0.36px;
-  border-radius:4px;
-  line-height: 2.8em;
+.loginBtn {
+    outline: none;
+    border: none;
+    width: 100%;
+    height: 60px;
+    background-color: #47D6BE;
+    text-align: center;
+    display: block;
+    font-size: 1.1em;
+    color: #fff;
+    cursor: pointer;
+    letter-spacing: -0.36px;
+    border-radius: 4px;
+    line-height: 3em;
 }
 .no_login {background:#e6e6e6 !important;color:#b3b3b3 !important;}
 .check_wrap ul li{float:left;}
@@ -1556,10 +1556,10 @@ h2.guide_tit {
     padding: 2.5rem 1rem;
     height: 60px;
     display: table-cell;
-    width: 25%;
+    width: 5%;
     vertical-align: middle;
 }
-.branch_list >li ul li:last-child {color: #8E8E8E; font-size: 0.9em; letter-spacing:-0.1em;}
+.branch_list >li ul li:nth-child(2) {color: #8E8E8E; font-size: 0.9em; letter-spacing:-0.1em;}
 
 .branch_list >li:hover ,
 .branch_list >li:active ,
@@ -1610,17 +1610,17 @@ h2.guide_tit {
     font-size: 1.4em;
 }
 /* 220117수정 */
+
 .rsv_info .rsv_paycost {
-    top: -4.2rem;
     font-weight: bold;
-    font-size: 1.em;
-    float: right;
-    position: relative;
-    background: #fdc528;
-    color: #fff;
-    padding: 0 1rem;
+    position: absolute;
+    color: #477ad6;
+    padding: 0 0.5rem;
     border-radius: 25px;
     padding-bottom: 0.2rem;
+    right: 1.5rem;
+    top: 6.5rem;
+    /*border: 1px solid #477ad6;*/
 }
 .rsv_info .rsv_state {
     position: fixed;
@@ -1773,7 +1773,7 @@ h2.guide_tit {
 }
 
 .price table td {
-    padding: 1.5rem;
+    padding: 1rem;
     border-bottom: 1px solid #e0e0e0;
     background: #f7f7f7;
 }
@@ -2069,7 +2069,7 @@ ul.tabs li{
 .inquiry_btn a {
     display: block;
     background: #47D6BE;
-    padding: 2rem 0;
+    padding: 1.6rem 0;
     text-align: center;
     border-radius: 8px;
     font-size: 1.1em;
@@ -2568,7 +2568,6 @@ ul.tabs li{
     height: 60px;
     display: table-cell;
     vertical-align: middle;
-    width: 50%;
 }
   .f_logo_box {padding: 1.5rem 0;  padding-bottom:10rem; margin-top:2rem;}
   .linkBox {
@@ -2583,7 +2582,7 @@ ul.tabs li{
 }
 @media screen and (max-width: 360px){
 	.branch_list >li {width:49%;}
-	.branch_list >li ul li:last-child {font-size:0.8em;}
+	.branch_list >li ul li:nth-child(2) {font-size:0.8em;}
 
 }
 
@@ -2598,6 +2597,7 @@ ul.tabs li{
 	.gui_seat {height:180px;}
 	#mask {height: 180px!important;}
 	#showHide_seat section {padding-bottom:0}
+	.rsv_info .rsv_branch {top:-6rem;}
 	
 }
 
@@ -2670,6 +2670,7 @@ ul.tabs li{
 }
 
 /*메인하단등급표시*/
+.main_user_rsv li:last-child {margin-top:0.5rem;}
 .main_user_rsv li:last-child em {
     padding: 0.5rem 1rem;
     color: #fff;
@@ -2679,3 +2680,7 @@ ul.tabs li{
 .n_class {background:#11195d;}
 .s_class {background:#80d242;}
 .nm_class {background:#8d8d8d;}
+
+.other_btn a{width:48%; display:inline-block;}
+.resizeBtn {font-size:1.7em !important;}
+.subNm {background:#e3e3e3}

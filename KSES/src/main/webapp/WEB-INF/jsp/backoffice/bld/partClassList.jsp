@@ -32,7 +32,7 @@
              	<select id="searchCenterCd">
                     <option value="">선택</option>
                      <c:forEach items="${centerInfo}" var="centerInfo">
-						<option value="<c:out value='${centerInfo.center_cd}'/>"><c:out value='${centerInfo.center_nm}'/></option>
+						<option value="${centerInfo.center_cd}"><c:out value='${centerInfo.center_nm}'/></option>
                      </c:forEach>
             	</select>  
                 <!-- <p>검색어</p>
@@ -75,7 +75,7 @@
 			            	<select name="centerCd">
 								<option value="">지점 선택</option>
 								<c:forEach items="${centerInfo}" var="centerInfo">
-									<option value="<c:out value='${centerInfo.center_cd}'/>"><c:out value='${centerInfo.center_nm}'/></option>
+									<option value="${centerInfo.center_cd}"><c:out value='${centerInfo.center_nm}'/></option>
 								</c:forEach>
 			                 </select>
 						</td> 
@@ -84,7 +84,7 @@
 							<select name="partClass">
 								<option value="">선택</option>
 								<c:forEach items="${partClassInfo}" var="partClassInfo">
-									<option value="<c:out value='${partClassInfo.code}'/>"><c:out value='${partClassInfo.codenm}'/></option>
+									<option value="${partClassInfo.code}"><c:out value='${partClassInfo.codenm}'/></option>
 								</c:forEach>
 							</select>
 						</td>

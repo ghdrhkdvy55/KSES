@@ -92,7 +92,7 @@
         <select id="searchCenter" name="searchCenter">
            <option value="">지점</option>
            <c:forEach items="${centerCombo}" var="centerCombo">
-                 <option value="<c:out value='${centerCombo.center_cd}'/>"><c:out value='${centerCombo.center_nm}'/></option>
+                 <option value="${centerCombo.center_cd}"><c:out value='${centerCombo.center_nm}'/></option>
 		   </c:forEach>
         </select>
         <p>검색어</p>

@@ -61,8 +61,6 @@
                             <div id="user_rsv_area">
                                 <ul id="user_info_bottom_area">
 
-                                    <li class="rsv_cancel"><a data-popup-open="rsv_cancel_pop">예약취소</a></li>
-
                                 </ul>
                             </div>
                         </div>
@@ -399,7 +397,7 @@
 				// 회원일 경우
 				if(userId != "") {
 					// 로그인 상태(회원)
-					var url = "/front/userInfo.do";
+					var url = "/front/mainResvInfo.do";
 					var params = {"userId" : userId}
 					
 					fn_Ajax
@@ -434,10 +432,11 @@
 										setHtml = "";
 										setHtml += "<li><span><a href='javascript:mainService.fn_userResvInfo(&#39;NOW&#39;, &#39;" + obj.resv_seq + "&#39;, &#39;rsv_info&#39;);' >" + obj.center_nm + " " + obj.seat_nm + "</a></span></li>";
 										setHtml += "<li class='rsv_cancel'><a href='javascript:mainService.fn_userResvInfo(&#39;CANCEL&#39;, &#39;" + obj.resv_seq + "&#39;, &#39;cancel_rsv_info&#39;);'>예약취소</a></li>";
-										setHtml += "<li><em></em></li>";
-										//setHtml += "<li style='font-size : 20px; font-weight : bold;'>예약번호 : " + fn_resvSeqFormat(obj.resv_seq) + "</li>";
-										//setHtml += "<li><em><img src='/resources/img/front/alert_icon.svg' alt='알림'>15시 까지 미 입장시 입장예약이 취소됩니다.</em></li>";
 										
+										if(obj.resv_entry_dvsn == "ENTRY_DVSN_2") {
+											setHtml += "<li><em class='n_class'>" + obj.resv_seat_class +"</em></li>";
+										}
+
 										userInfoBottomArea.append(setHtml);
 										
 										// 현재 예약정보 팝업창 정보 입력
@@ -463,10 +462,7 @@
 										// 유저정보하단 HTML생성
 										setHtml = "";
 										setHtml += "<li><span><a href='javascript:mainService.fn_userResvInfo(&#39;PRE&#39;, &#39;" + obj.resv_seq + "&#39;,&#39;re_rsv_info&#39;);' >최근좌석 다시앉기<img src='/resources/img/front/arrow.png' alt='예약하기'></a></span></li>";
-										setHtml += "<li><em class="n_class">노블레스</em></li>";
-										//setHtml += "<li><em class="p_class">프리미엄</em></li>";
-										//setHtml += "<li><em class="s_class">스탠다드</em></li>";
-										//setHtml += "<li><em class="nm_class">일반석</em></li>";
+
 										userInfoBottomArea.append(setHtml);
 										
 										// 다시앉기 팝업창 정보 입력
@@ -526,7 +522,7 @@
 					setHtml = "";
 					setHtml += "<li><a href='/front/login.do'>로그인</a></li>";
 					if(fn_guestResvPossibleYn()) {
-						setHtml += "<li><a href='javascript:fn_guestResvPossibleYn();'>비회원 예약</a></li>";
+						setHtml += "<li><a href='javascript:fn_moveReservation();'>비회원 예약</a></li>";
 					}
 					userInfoBottomArea.append(setHtml);
 					//일반 공지 정리 하기 
