@@ -53,7 +53,7 @@ public class HTMLCharacterEscapes extends CharacterEscapes {
 
 	@Override
 	public int[] getEscapeCodesForAscii() {
-		return asciiEscapes;
+		return asciiEscapes.clone();
 	}
 
 	@Override
