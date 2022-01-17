@@ -24,7 +24,7 @@
     	<li class="active">조직도 관리</li>
   	</ol>
 </div>
-<h2 class="title" id="h_title">${regist.orgTitle }</h2>
+<h2 class="title" id="h_title"><c:out value='${regist.orgTitle}'/></h2>
 <div class="clear"></div>
 <div class="dashboard">
     <div class="boardlist">
@@ -53,7 +53,7 @@
             <table class="detail_table">
                 <tbody>
                     <tr>
-                        <th id="th_orgCode">${regist.orgCode }</th>
+                        <th id="th_orgCode"><c:out value='${regist.orgCode}'/></th>
                         <td>
                             <input type="text" id="code" name="code">
                             <span id="sp_Unqi">
@@ -63,7 +63,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <th id="th_orgCodeNm">${regist.orgCodeNm }</th>
+                        <th id="th_orgCodeNm"><c:out value='${regist.orgCodeNm}'/></th>
                         <td>
                             <input type="text" id="codeNm" name="codeNm">
                         </td>

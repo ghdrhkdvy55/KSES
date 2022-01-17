@@ -92,7 +92,7 @@
         <select id="searchCenter" name="searchCenter">
            <option value="">지점</option>
            <c:forEach items="${centerCombo}" var="centerCombo">
-                 <option value="${centerCombo.center_cd}">${centerCombo.center_nm}</option>
+                 <option value="<c:out value='${centerCombo.center_cd}'/>"><c:out value='${centerCombo.center_nm}'/></option>
 		   </c:forEach>
         </select>
         <p>검색어</p>
@@ -157,7 +157,7 @@
                     <td colspan="3">
                       <c:forEach items="${centerCombo}" var="centerCombo">
                          <input type="checkbox" name="seasonCenterinfo" id="${centerCombo.center_cd}" value="${centerCombo.center_cd}" />
-                         ${centerCombo.center_nm}
+                         <c:out value='${centerCombo.center_nm}'/>
 			          </c:forEach>
                     </td>
                   </tr>

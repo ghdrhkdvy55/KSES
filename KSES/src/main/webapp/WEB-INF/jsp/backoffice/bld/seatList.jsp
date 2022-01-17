@@ -40,7 +40,7 @@
              	<select id="searchCenterCd" onChange="jqGridFunc.fn_centerChange('search')">
                     <option value="">선택</option>
                      <c:forEach items="${centerList}" var="centerList">
-						<option value="${centerList.center_cd}">${centerList.center_nm}</option>
+						<option value="<c:out value='${centerList.center_cd}'/>"><c:out value='${centerList.center_nm}'/></option>
                      </c:forEach>
             	</select>
             	<p>층</p>
@@ -92,7 +92,7 @@
 	                     	<select id="centerCd" onChange="jqGridFunc.fn_centerChange('popup')">
 		                        <option value="">지점선택</option>
 								<c:forEach items="${centerList}" var="centerList">
-									<option value="${centerList.center_cd}">${centerList.center_nm}</option>
+									<option value="<c:out value='${centerList.center_cd}'/>"><c:out value='${centerList.center_nm}'/></option>
 								</c:forEach>
 	                    	</select>
                         	<select id="floorCd" onChange="jqGridFunc.fn_floorChange('popup')">
