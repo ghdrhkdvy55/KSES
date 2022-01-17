@@ -10,9 +10,14 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.kses.backoffice.util.service.impl.fileServiceImpl;
+
 
 public class RequestBodyXSSFIleter implements Filter {
-	
+	private static final Logger LOGGER = LoggerFactory.getLogger(fileServiceImpl.class);
 	
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)throws IOException, ServletException {
@@ -22,11 +27,10 @@ public class RequestBodyXSSFIleter implements Filter {
  		RequestWrapper requestWrapper = null;
  		try{
  			requestWrapper = new RequestWrapper(request);
- 		}catch(Exception e){
- 			e.printStackTrace();
+ 		} catch(Exception e) {
+ 			LOGGER.error("RequestBodyXSSFilter Exception ERROR : " + e.toString());
  		}
  		chain.doFilter(requestWrapper, response);
-
 	}
 
 	@Override

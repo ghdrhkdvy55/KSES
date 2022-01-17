@@ -903,15 +903,14 @@ public class ResJosnController {
 
 		} catch (PopbillException e) {
 			// 예외 발생 시, e.getCode() 로 오류 코드를 확인하고, e.getMessage()로 오류 메시지를 확인합니다.
-			System.out.println("오류 코드" + e.getCode());
-			System.out.println("오류 메시지" + e.getMessage());
+			LOGGER.error("오류 코드" + e.getCode());
+			LOGGER.error("오류 메시지" + e.getMessage());
 
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
 			LOGGER.error("selectPopBillInfo error:" + e.toString() + ":" + lineNumber);
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, e.getCode() + ":" + e.getMessage());
-
 		}
 
 		return model;

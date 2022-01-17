@@ -12,12 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 public class HtmlEscapingObjectMapperFactory implements FactoryBean<ObjectMapper> {
-
-
-
     private final ObjectMapper objectMapper;
-
-
 
 	public HtmlEscapingObjectMapperFactory() {
 		System.out.println("HtmlEscapingObjectMapperFactory===================================");
@@ -26,41 +21,25 @@ public class HtmlEscapingObjectMapperFactory implements FactoryBean<ObjectMapper
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
-
-
     @Override
     public ObjectMapper getObject() throws Exception {
         return objectMapper;
     }
-
-
 
     @Override
     public Class<?> getObjectType() {
         return ObjectMapper.class;
     }
 
-
-
     @Override
     public boolean isSingleton() {
-
         return true;
-
     }
 
-
-
     public static class HTMLCharacterEscapes extends CharacterEscapes {
-
-
-
         private final int[] asciiEscapes;
 
-        
-
         public HTMLCharacterEscapes() {
-        	
         	// start with set of characters known to require escaping (double-quote, backslash etc)
             asciiEscapes = CharacterEscapes.standardAsciiEscapesForJSON();
             // and force escaping of a few others:
@@ -69,26 +48,16 @@ public class HtmlEscapingObjectMapperFactory implements FactoryBean<ObjectMapper
             asciiEscapes['&'] = CharacterEscapes.ESCAPE_CUSTOM;
             asciiEscapes['"'] = CharacterEscapes.ESCAPE_CUSTOM;
             asciiEscapes['\''] = CharacterEscapes.ESCAPE_CUSTOM;
-
         }
-
-
-
-
 
         @Override
         public int[] getEscapeCodesForAscii() {
-            return asciiEscapes;
+            return asciiEscapes.clone();
         }
-
-
-
-        // and this for others; we don't need anything special here
 
         @Override
         public SerializableString getEscapeSequence(int ch) {
             return new SerializedString(StringEscapeUtils.escapeHtml4(Character.toString((char) ch)));
         }
     }
-
 }
