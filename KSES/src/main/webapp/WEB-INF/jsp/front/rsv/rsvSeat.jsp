@@ -48,7 +48,7 @@
 	<input type="hidden" name="isReSeat" id="isReSeat" value="${resvInfo.isReSeat}">
 	<input type="hidden" name="resvUserNm" id="resvUserNm" value="">
 	<input type="hidden" name="resvSeq" id="resvSeq" value="">
-	<input type="hidden" name="resvDate" id="resvDate" value="${resvInfo.resvDate}">
+	<input type="hidden" name="resvDate" id="resvDate" value='<c:out value="${resvInfo.resvDate}"/>'>
 	
 	<input type="hidden" name="centerEntryPayCost" id="centerEntryPayCost" value="${resvInfo.center_entry_pay_cost}">
 	<input type="hidden" name="centerStandYn" id="centerStandYn" value="${resvInfo.center_stand_yn}">
