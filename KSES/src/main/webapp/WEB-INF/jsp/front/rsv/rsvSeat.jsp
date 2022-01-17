@@ -81,7 +81,7 @@
                 	<span class="sel_seat_nm"></span>
 				</li>	
                 <li class="rsv_state"><span class="date"></span> 좌석 예약 중 입니다.</li>
-                <li class="rsv_paycost">결제금액 : <span><c:out value="${resvInfo.center_entry_pay_cost}"/>원</span></li>
+                <li class="rsv_paycost">[결제금액 : <span><c:out value="${resvInfo.center_entry_pay_cost}"/>원]</span></li>
             </ul>             
         </div>
         <!-- header //-->
@@ -124,7 +124,7 @@
                             <ul id="standing_resv_area">
                                 <li><input type="text" id="ENTRY_DVSN_1_resvUserNm" class="nonMemberArea" placeholder="이름을 입력해주세요."></li>
                                 <li><input type="text" id="ENTRY_DVSN_1_resvUserClphn" class="nonMemberArea" onkeypress="onlyNum(this);" placeholder="전화번호를 '-'없이 입력해주세요."></li>
-                                <li class="certify nonMemberArea" onclick="javascript:seatService.fn_SmsCertifi();">
+                                <li class="certify nonMemberArea subNm" onclick="javascript:seatService.fn_SmsCertifi();">
                                 	<a href="javascript:void(0);"><img src="/resources/img/front/certify.svg" alt="">인증번호 받기</a>
                                 </li>
 								
@@ -233,7 +233,7 @@
                                 <select id="selectFloorCd" class="select_box" onchange="seatService.fn_floorChange();">
                                     <option value="">층 선택</option>
 									<c:forEach items="${floorList}" var="floorList">
-										<option value="<c:out value='${floorList.floor_cd}'/>"><c:out value='${floorList.floor_nm}'/></option>
+										<option value="${floorList.floor_cd}"><c:out value='${floorList.floor_nm}'/></option>
 									</c:forEach>
                                 </select>
                             </div>
@@ -254,7 +254,7 @@
 											<c:forEach var="item" items="${seatClass}" begin="0" step="1" varStatus="status">
 												<c:if test="${(status.index + 1)%2 != 0}"><tr></c:if>
 													<td>
-														<img src="/upload/<c:out value='${item.part_icon}'/>"><c:out value='${item.part_class_nm}'/>
+														<img src="/upload/${item.part_icon}"><c:out value='${item.part_class_nm}'/>
 													<c:if test="${item.part_pay_cost ne 0}">
 														<span><fmt:formatNumber value="${item.part_pay_cost}" pattern="#,###" />원</span>
 													</c:if>

@@ -1620,7 +1620,7 @@ h2.guide_tit {
     padding-bottom: 0.2rem;
     right: 1.5rem;
     top: 6.5rem;
-    border: 1px solid #477ad6;
+    /*border: 1px solid #477ad6;*/
 }
 .rsv_info .rsv_state {
     position: fixed;
@@ -2682,3 +2682,4 @@ ul.tabs li{
 
 .other_btn a{width:48%; display:inline-block;}
 .resizeBtn {font-size:1.7em !important;}
+.subNm {background:#e3e3e3}
