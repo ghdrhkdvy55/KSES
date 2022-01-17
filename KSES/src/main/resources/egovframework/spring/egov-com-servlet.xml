@@ -86,18 +86,15 @@
     <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/backoffice/**/*.do" />
-<!--     		<mvc:exclude-mapping path="/backoffice/login.do"/> -->
-<!--     		<mvc:exclude-mapping path="/backoffice/SecurityLogin.do"/> -->
-<!--     		<mvc:exclude-mapping path="/backoffice/billPrint.do"/> -->
-<!--     		<mvc:exclude-mapping path="/backoffice/rsv/qrReadCheck.do"/>  -->
-<!--     		<mvc:exclude-mapping path="/backoffice/rsv/qrSend.do"/>  -->
-    		
+			<!-- Ajax 통신 예외 처리 적용 필요 -->
+    		<mvc:exclude-mapping path="/backoffice/rsv/speedCheck.do"/>
+    		<mvc:exclude-mapping path="/backoffice/rsv/qrSend.do"/> 
+    		<!-- Ajax 통신에 대한 Interceptor 처리 -->
     		<bean class="egovframework.com.cmm.interceptor.AuthenticInterceptor" />
         </mvc:interceptor>
     </mvc:interceptors>
     
 <!-- 	<mvc:resources mapping="/upload/**" location="/upload/" />   -->
-<!-- 	<mvc:resources mapping="/resource/**" location="/SE/" />      -->
 
 	 <!-- Aspect -->
 	 <aop:aspectj-autoproxy/>
