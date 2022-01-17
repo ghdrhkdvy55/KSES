@@ -469,7 +469,7 @@ function resvUsingTimeCheck(time) {
 }
 
 function fn_guestResvPossibleYn() {
-	var url = "/front/getSystemInfo.do";
+	var url = "/front/selectSystemInfo.do";
 	var guestYn = false;
 	
 	fn_Ajax
@@ -548,7 +548,7 @@ function fn_resvDuplicateCheck(params) {
  * @returns
  */
 function fn_getResvInfo (resvSeq) {
-	var url = "/front/getResvInfo.do";
+	var url = "/front/selectResvInfo.do";
 	var isSuccess = false;
 	var resvResult = {};
 	

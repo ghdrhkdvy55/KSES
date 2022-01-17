@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.kses.backoffice.bas.system.service.SystemInfoManageService;
 import com.kses.backoffice.cus.usr.service.UserInfoManageService;
 import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
 import com.kses.backoffice.sym.log.annotation.NoLogging;
@@ -55,19 +54,14 @@ public class MainPageInfoManageController {
 	@Autowired
 	private UserInfoManageService userService;
 	
-	@Autowired
-	private SystemInfoManageService systemService;
-	
 	@RequestMapping (value="main.do")
-	public ModelAndView selectFrontMainPage(HttpServletRequest request) throws Exception {
+	public ModelAndView viewFrontMainpage(HttpServletRequest request) throws Exception {
 		
 		ModelAndView model = new ModelAndView("/front/main/mainpage");
 		try {
 			
-			HttpSession httpSession = request.getSession(true);
-			UserLoginInfo userLoginInfo = new UserLoginInfo();
-			
-			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
+			HttpSession httpSession = request.getSession();
+			UserLoginInfo userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
 			if(userLoginInfo ==  null) {
 				userLoginInfo = new UserLoginInfo();
 				userLoginInfo.setUserDvsn("USER_DVSN_2");
@@ -76,7 +70,7 @@ public class MainPageInfoManageController {
 			}
 			
 		} catch(Exception e) {
-			LOGGER.error("selectFrontMainPage : " + e.toString());
+			LOGGER.error("viewFrontMainpage : " + e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg")); 
 		}
@@ -134,7 +128,6 @@ public class MainPageInfoManageController {
 		    search.put("fileSeq",boardSeq);
 			List<Map<String, Object>> fileList = egocFileService.selectFileInfs(search);
 			
-			
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS); 
 			model.addObject(Globals.JSON_RETURN_RESULT, boardInfoService.selectBoardManageDetail(boardSeq));
 			if (fileList.size() > 0)
@@ -152,7 +145,7 @@ public class MainPageInfoManageController {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
-			HttpSession httpSession = request.getSession(true);
+			HttpSession httpSession = request.getSession();
 			UserLoginInfo userLoginInfo = new UserLoginInfo();
 			
 			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
@@ -181,7 +174,7 @@ public class MainPageInfoManageController {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
-			HttpSession httpSession = request.getSession(true);
+			HttpSession httpSession = request.getSession();
 			UserLoginInfo userLoginInfo = new UserLoginInfo();
 			
 			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");

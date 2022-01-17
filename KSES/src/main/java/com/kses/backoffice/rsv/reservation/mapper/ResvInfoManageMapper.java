@@ -26,8 +26,6 @@ public interface ResvInfoManageMapper {
 	
 	public Map<String, Object> selectInUserResvInfo(ResvInfo paramResvInfo);
 	
-	public Map<String, Object> selectResvQrInfo(@Param("resvSeq") String paramString);
-	
 	public List<Map<String, Object>> selectUserMyResvInfo(@Param("params") Map<String, Object> paramMap);
 	
 	public List<Map<String, Object>> selectGuestMyResvInfo(@Param("params") Map<String, Object> paramMap);

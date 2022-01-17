@@ -81,7 +81,7 @@ public class LoginPageInfoManageController {
 		
 		ModelAndView model = new ModelAndView("/front/main/mainpage");
 		try {		
-			HttpSession httpSession = request.getSession(true);
+			HttpSession httpSession = request.getSession();
 			httpSession.removeAttribute("userLoginInfo");
 
 			UserLoginInfo userLoginInfo = new UserLoginInfo();
@@ -116,7 +116,7 @@ public class LoginPageInfoManageController {
 				userService.updateUserInfo(userLoginInfo);
 			}
 			
-		    HttpSession httpSession = request.getSession(true);
+		    HttpSession httpSession = request.getSession();
 			httpSession.setAttribute("userLoginInfo", userLoginInfo);
 			
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
@@ -203,26 +203,6 @@ public class LoginPageInfoManageController {
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		} catch(Exception e) {
 			LOGGER.error("selectFrontQrEnterPage : " + e.toString());
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
-		}
-		return model;
-	}
-	
-	@RequestMapping (value="resvQrInfo.do")
-	public ModelAndView selectResvQrInfo(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo, 
-											@RequestParam("resvSeq") String resvSeq,
-											HttpServletRequest request,
-											BindingResult result) throws Exception {
-		
-		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-		try {		
-			
-			Map<String, Object> resvQrInfo = resvService.selectResvQrInfo(resvSeq);
-			model.addObject("resvQrInfo", resvQrInfo);
-			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-		} catch(Exception e) {
-			LOGGER.error("selectResvQrInfo : " + e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 		}

@@ -86,7 +86,7 @@ public class FrontResvInfoManageController {
 	private SystemInfoManageService systemService;
 		
 	@RequestMapping (value="rsvCenter.do")
-	public ModelAndView selectRsvCenterList(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo,
+	public ModelAndView viewResvCenterList(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo,
 												@RequestParam Map<String, Object> params,
 												HttpServletRequest request,
 												BindingResult result) throws Exception {
@@ -104,7 +104,7 @@ public class FrontResvInfoManageController {
 			
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		} catch(Exception e) {
-			LOGGER.error("selectRsvCenterList : " + e.toString());
+			LOGGER.error("viewResvCenterList : " + e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg")); 
 		}
@@ -131,7 +131,7 @@ public class FrontResvInfoManageController {
 	}
 	
 	@RequestMapping (value="rsvSeat.do")
-	public ModelAndView selectRsvSeatList(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo, 
+	public ModelAndView viewResvSeatList(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo, 
 											@RequestParam Map<String, Object> params,
 											HttpServletRequest request,
 											BindingResult result) throws Exception {
@@ -272,15 +272,15 @@ public class FrontResvInfoManageController {
 		return model;
 	}
 	
-	@RequestMapping(value="getResvInfo.do")
-	public ModelAndView getResvInfo(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo, 
+	@RequestMapping(value="selectResvInfo.do")
+	public ModelAndView selectResvInfo(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo, 
 										@RequestParam("resvSeq") String resvSeq,
 										HttpServletRequest request,
 										BindingResult result) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
-			HttpSession httpSession = request.getSession(true);
+			HttpSession httpSession = request.getSession();
 			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
 			
 			if(userLoginInfo == null) {
@@ -292,21 +292,21 @@ public class FrontResvInfoManageController {
 			model.addObject("resvInfo", resvService.selectResvInfoDetail(resvSeq));
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		} catch(Exception e) {
-			LOGGER.error("getResvInfo : " + e.toString());
+			LOGGER.error("selectResvInfo : " + e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 		}
 		return model;
 	}
 	
-	@RequestMapping(value="getSystemInfo.do")
-	public ModelAndView getSystemInfo(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo, 
+	@RequestMapping(value="selectSystemInfo.do")
+	public ModelAndView selectSystemInfo(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo, 
 										HttpServletRequest request,
 										BindingResult result) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
-			HttpSession httpSession = request.getSession(true);
+			HttpSession httpSession = request.getSession();
 			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
 			
 			if(userLoginInfo == null) {
@@ -318,7 +318,7 @@ public class FrontResvInfoManageController {
 			model.addObject("systemInfo", systemService.selectSystemInfo());
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		} catch(Exception e) {
-			LOGGER.error("getResvInfo : " + e.toString());
+			LOGGER.error("selectSystemInfo : " + e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 		}
@@ -334,7 +334,7 @@ public class FrontResvInfoManageController {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
-			HttpSession httpSession = request.getSession(true);
+			HttpSession httpSession = request.getSession();
 			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
 			
 			if(userLoginInfo == null) {
@@ -389,7 +389,7 @@ public class FrontResvInfoManageController {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
-			HttpSession httpSession = request.getSession(true);
+			HttpSession httpSession = request.getSession();
 			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
 			
 			if(userLoginInfo == null) {
@@ -424,7 +424,7 @@ public class FrontResvInfoManageController {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
-			HttpSession httpSession = request.getSession(true);
+			HttpSession httpSession = request.getSession();
 			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
 			
 			if(userLoginInfo == null) {
@@ -454,7 +454,7 @@ public class FrontResvInfoManageController {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
-			HttpSession httpSession = request.getSession(true);
+			HttpSession httpSession = request.getSession();
 			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
 			
 			if(userLoginInfo == null) {
