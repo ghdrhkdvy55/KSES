@@ -122,7 +122,7 @@ public class SysLogAspect {
 //			sysLog.setSqlParam(ParamToJson.paramToJson(sqlId));
 			sysLog.setRqesterIp(ipAddr);
 			sysLog.setRqesterId(userId);
-			sysLogService.logInsertSysLog(sysLog);
+//			sysLogService.logInsertSysLog(sysLog);
 		}
 	}
 	
@@ -191,7 +191,7 @@ public class SysLogAspect {
 			sysLog.setRqesterIp(ipAddr);
 			sysLog.setRqesterId(userId);
 //			sysLog.setMethodResult(ParamToJson.paramToJson(result));
-			sysLogService.logInsertSysLog(sysLog);
+//			sysLogService.logInsertSysLog(sysLog);
 		}
 	}
 	
@@ -244,7 +244,7 @@ public class SysLogAspect {
 //			sysLog.setSqlParam(ParamToJson.paramToJson(sqlId));
 			sysLog.setRqesterIp(ipAddr);
 			sysLog.setRqesterId(userId);
-			sysLogService.logInsertSysLog(sysLog);
+//			sysLogService.logInsertSysLog(sysLog);
 		}
 	}
 	
