@@ -139,9 +139,9 @@ public class MainPageInfoManageController {
 		}
 		return model;
 	}
-	@RequestMapping (value="userInfo.do")
-	public ModelAndView selectUserInfo(	@RequestParam("userId") String userId,
-										HttpServletRequest request) throws Exception {
+	@RequestMapping (value="mainResvInfo.do")
+	public ModelAndView selectMainResvInfo(	@RequestParam("userId") String userId,
+											HttpServletRequest request) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
@@ -161,7 +161,7 @@ public class MainPageInfoManageController {
 			
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		} catch(Exception e) {
-			LOGGER.error("selectUserInfo : " + e.toString());
+			LOGGER.error("selectMainResvInfo : " + e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 		}

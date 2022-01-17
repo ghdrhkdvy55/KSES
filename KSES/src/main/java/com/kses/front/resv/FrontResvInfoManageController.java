@@ -225,8 +225,7 @@ public class FrontResvInfoManageController {
 	}
 	
 	@RequestMapping(value="resvCertifiSms.do")
-	public ModelAndView insertResvCertifiSmsInfo(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo, 
-													@RequestBody Map<String, Object> params,
+	public ModelAndView insertResvCertifiSmsInfo(	@RequestBody Map<String, Object> params,
 													HttpServletRequest request,
 													BindingResult result) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
@@ -273,15 +272,14 @@ public class FrontResvInfoManageController {
 	}
 	
 	@RequestMapping(value="selectResvInfo.do")
-	public ModelAndView selectResvInfo(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo, 
-										@RequestParam("resvSeq") String resvSeq,
+	public ModelAndView selectResvInfo(	@RequestParam("resvSeq") String resvSeq,
 										HttpServletRequest request,
 										BindingResult result) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
 			HttpSession httpSession = request.getSession();
-			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
+			UserLoginInfo userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
 			
 			if(userLoginInfo == null) {
 				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
@@ -300,14 +298,12 @@ public class FrontResvInfoManageController {
 	}
 	
 	@RequestMapping(value="selectSystemInfo.do")
-	public ModelAndView selectSystemInfo(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo, 
-										HttpServletRequest request,
-										BindingResult result) throws Exception {
+	public ModelAndView selectSystemInfo(HttpServletRequest request) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
 			HttpSession httpSession = request.getSession();
-			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
+			UserLoginInfo userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
 			
 			if(userLoginInfo == null) {
 				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
@@ -327,15 +323,14 @@ public class FrontResvInfoManageController {
 	
 	@RequestMapping (value="updateUserResvInfo.do")
 	@Transactional(rollbackFor = Exception.class)
-	public ModelAndView updateUserResvInfo(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo, 
-											@RequestBody ResvInfo vo,
+	public ModelAndView updateUserResvInfo( @RequestBody ResvInfo vo,
 											HttpServletRequest request,
 											BindingResult result) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
 			HttpSession httpSession = request.getSession();
-			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
+			UserLoginInfo userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
 			
 			if(userLoginInfo == null) {
 				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
@@ -382,15 +377,14 @@ public class FrontResvInfoManageController {
 	}
 	
 	@RequestMapping (value="resvInfoCancel.do")
-	public ModelAndView resvInfoCancel(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo, 
-										@RequestBody Map<String, Object> params,
+	public ModelAndView resvInfoCancel( @RequestBody Map<String, Object> params,
 										HttpServletRequest request,
 										BindingResult result) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
 			HttpSession httpSession = request.getSession();
-			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
+			UserLoginInfo userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
 			
 			if(userLoginInfo == null) {
 				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
@@ -417,15 +411,14 @@ public class FrontResvInfoManageController {
 	}
 	
 	@RequestMapping (value="resvInfoDuplicateCheck.do")
-	public ModelAndView resvInfoDuplicateCheck(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo, 
-												@RequestBody Map<String, Object> params,
+	public ModelAndView resvInfoDuplicateCheck( @RequestBody Map<String, Object> params,
 												HttpServletRequest request,
 												BindingResult result) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
 			HttpSession httpSession = request.getSession();
-			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
+			UserLoginInfo userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
 			
 			if(userLoginInfo == null) {
 				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
@@ -447,15 +440,14 @@ public class FrontResvInfoManageController {
 	}
 	
 	@RequestMapping (value="resvValidCheck.do")
-	public ModelAndView resvValidCheck(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo, 
-										@RequestBody Map<String, Object> params,
+	public ModelAndView resvValidCheck(	@RequestBody Map<String, Object> params,
 										HttpServletRequest request,
 										BindingResult result) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
 			HttpSession httpSession = request.getSession();
-			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
+			UserLoginInfo userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
 			
 			if(userLoginInfo == null) {
 				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
