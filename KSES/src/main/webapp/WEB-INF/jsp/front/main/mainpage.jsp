@@ -463,7 +463,7 @@
 										// 유저정보하단 HTML생성
 										setHtml = "";
 										setHtml += "<li><span><a href='javascript:mainService.fn_userResvInfo(&#39;PRE&#39;, &#39;" + obj.resv_seq + "&#39;,&#39;re_rsv_info&#39;);' >최근좌석 다시앉기<img src='/resources/img/front/arrow.png' alt='예약하기'></a></span></li>";
-										setHtml += "<li><em class="n_class">노블레스</em></li>";
+										//setHtml += "<li><em class="n_class">노블레스</em></li>";
 										//setHtml += "<li><em class="p_class">프리미엄</em></li>";
 										//setHtml += "<li><em class="s_class">스탠다드</em></li>";
 										//setHtml += "<li><em class="nm_class">일반석</em></li>";
@@ -526,7 +526,7 @@
 					setHtml = "";
 					setHtml += "<li><a href='/front/login.do'>로그인</a></li>";
 					if(fn_guestResvPossibleYn()) {
-						setHtml += "<li><a href='javascript:fn_guestResvPossibleYn();'>비회원 예약</a></li>";
+						setHtml += "<li><a href='javascript:fn_moveReservation();'>비회원 예약</a></li>";
 					}
 					userInfoBottomArea.append(setHtml);
 					//일반 공지 정리 하기 

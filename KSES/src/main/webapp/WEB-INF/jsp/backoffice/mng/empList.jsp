@@ -36,7 +36,7 @@
             <select id="searchDepth" name="searchDepth">
                <option value="">부서 선택</option>
                <c:forEach items="${DEPT}" var="dept">
-                  <option value="<c:out value='${dept.code_cd}'/>"><c:out value='${dept.code_nm}'/></option>
+                  <option value="${dept.code_cd}"><c:out value='${dept.code_nm}'/></option>
                </c:forEach>
             </select>
             <p>검색어</p>
@@ -102,7 +102,7 @@
                      <select id="deptCd" name="deptCd">
 			               <option value="">부서 선택</option>
 			               <c:forEach items="${DEPT}" var="dept">
-			                  <option value="<c:out value='${dept.code_cd}'/>"><c:out value='${dept.code_nm}'/></option>
+			                  <option value="${dept.code_cd}"><c:out value='${dept.code_nm}'/></option>
 			               </c:forEach>
 			          </select> 
                   </td>
@@ -110,7 +110,7 @@
                   <td><select id="gradCd" name="gradCd">
 			               <option value="">직급 선택</option>
 			               <c:forEach items="${GRAD}" var="grad">
-			                  <option value="<c:out value='${grad.code_cd}'/>"><c:out value='${grad.code_nm}'/></option>
+			                  <option value="${grad.code_cd}"><c:out value='${grad.code_nm}'/></option>
 			               </c:forEach>
 			          </select> 
 			      </td>
@@ -144,12 +144,11 @@
                   <td><select id="empState" name="empState">
 			               <option value="">상태</option>
 			               <c:forEach items="${userState}" var="userState">
-			                  <option value="<c:out value='${userState.code}'/>"><c:out value='${userState.codenm}'/></option>
+			                  <option value="${userState.code}"><c:out value='${userState.codenm}'/></option>
 			               </c:forEach>
 			          </select> 
 			      </td>
                 </tr>
-                
               </tbody>
           </table>
       </div>
