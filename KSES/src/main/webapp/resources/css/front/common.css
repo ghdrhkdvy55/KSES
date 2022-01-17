@@ -75,20 +75,20 @@ input[type=password]::-ms-input-placeholder { /* Microsoft Edge */
 .pw_icon{background:url(/resources/img/front/ic_login_pw.svg)no-repeat left center;padding-left:26px;display: inline-block;}
 .pin_icon{background:url(/resources/img/front/ic_pin.svg)no-repeat left center;display:block;padding-left:26px;text-align: left;}
 .fido_icon{background:url(/resources/img/front/fido_icon.svg)no-repeat left center;display: inline-block;padding-left:33px;}
-.loginBtn{
-  outline: none;
-  border:none;
-  width: 100%;
-  height: 55px;
-  background-color: #47D6BE;
-  text-align:center;
-  display:block;
-  font-size:1.9rem;
-  color:#fff;
-  cursor : pointer;
-  letter-spacing:-0.36px;
-  border-radius:4px;
-  line-height: 2.8em;
+.loginBtn {
+    outline: none;
+    border: none;
+    width: 100%;
+    height: 60px;
+    background-color: #47D6BE;
+    text-align: center;
+    display: block;
+    font-size: 1.1em;
+    color: #fff;
+    cursor: pointer;
+    letter-spacing: -0.36px;
+    border-radius: 4px;
+    line-height: 3em;
 }
 .no_login {background:#e6e6e6 !important;color:#b3b3b3 !important;}
 .check_wrap ul li{float:left;}
@@ -2069,7 +2069,7 @@ ul.tabs li{
 .inquiry_btn a {
     display: block;
     background: #47D6BE;
-    padding: 2rem 0;
+    padding: 1.6rem 0;
     text-align: center;
     border-radius: 8px;
     font-size: 1.1em;
@@ -2670,6 +2670,7 @@ ul.tabs li{
 }
 
 /*메인하단등급표시*/
+.main_user_rsv li:last-child {margin-top:0.5rem;}
 .main_user_rsv li:last-child em {
     padding: 0.5rem 1rem;
     color: #fff;
