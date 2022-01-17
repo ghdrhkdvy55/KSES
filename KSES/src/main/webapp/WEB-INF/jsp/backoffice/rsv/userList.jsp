@@ -116,7 +116,7 @@
 							<select name="vacntnRound" id="vacntnRound">
 								<option value="">선택</option>
 								<c:forEach items="${vacntnRound}" var="vacntnRound">
-									<option value="${vacntnRound.code}">${vacntnRound.codenm}</option>
+									<option value="<c:out value='${vacntnRound.code}'/>"><c:out value='${vacntnRound.codenm}'/></option>
 				               	</c:forEach>
 							</select>
 						</td>
@@ -125,7 +125,7 @@
 							<select id="vacntnDvsn" name="vacntnDvsn">
 								<option value="">선택</option>
 								<c:forEach items="${vacntnDvsn}" var="vacntnDvsn">
-									<option value="${vacntnDvsn.code}">${vacntnDvsn.codenm}</option>
+									<option value="<c:out value='${vacntnDvsn.code}'/>"><c:out value='${vacntnDvsn.codenm}'/></option>
 			               		</c:forEach>
 							</select> 
 						</td>

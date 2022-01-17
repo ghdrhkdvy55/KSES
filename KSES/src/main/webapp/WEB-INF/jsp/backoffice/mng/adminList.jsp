@@ -36,14 +36,14 @@
         <select id="searchAuthorCd" name="searchAuthorCd">
            <option value="">권한 선택</option>
            <c:forEach items="${authorCd}" var="authorCd">
-              <option value="${authorCd.author_code}">${authorCd.author_nm}</option>
+              <option value="<c:out value='${authorCd.author_code}'/>"><c:out value='${authorCd.author_nm}'/></option> 
            </c:forEach>
         </select>
         <p>부서</p>
         <select id="searchDeptCd" name="searchDeptCd">
            <option value="">부서 선택</option>
            <c:forEach items="${dept}" var="dept">
-              <option value="${dept.deptCd}">${dept.deptNm}</option>
+              <option value="<c:out value='${dept.deptCd}'/>"><c:out value='${dept.deptNm}'/></option>
            </c:forEach>
         </select>
         <p>검색어</p>
@@ -110,7 +110,7 @@
                   <td><select id="selectAuthorCd" onChange="jqGridFunc.fn_centerSearch()">
                            <option value="">권한 선택</option>
 			               <c:forEach items="${authorCd}" var="authorCd">
-			                  <option value="${authorCd.author_code}">${authorCd.author_nm}</option>
+			                  <option value="<c:out value='${authorCd.author_code}'/>"><c:out value='${authorCd.author_nm}'/></option>
 			               </c:forEach>
                       </select>
                   </td>
@@ -118,7 +118,7 @@
                   <td><select id="centerCd" name="centerCd" style="display:none">
                          <option value="">지점 선택</option>
 			               <c:forEach items="${centerCd}" var="centerCd">
-			                  <option value="${centerCd.center_cd}">${centerCd.center_nm}</option>
+			                  <option value="<c:out value='${centerCd.center_cd}'/>"><c:out value='${centerCd.center_nm}'/></option>
 			               </c:forEach>
                       </select>
                   </td>

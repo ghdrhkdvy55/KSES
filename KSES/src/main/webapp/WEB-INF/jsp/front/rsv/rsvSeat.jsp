@@ -75,7 +75,7 @@
             <ul class="rsv_info rsv_prsc">
                 <li class="backImg"></li>
                 <li class="rsv_branch">
-                	<span class="sel_center_nm">${resvInfo.center_nm}</span>
+                	<span class="sel_center_nm"><c:out value='${resvInfo.center_nm}'/></span>
                 	<span class="sel_floor_nm"></span> 
                 	<span class="sel_part_nm"></span>
                 	<span class="sel_seat_nm"></span>
@@ -233,7 +233,7 @@
                                 <select id="selectFloorCd" class="select_box" onchange="seatService.fn_floorChange();">
                                     <option value="">층 선택</option>
 									<c:forEach items="${floorList}" var="floorList">
-										<option value="${floorList.floor_cd}">${floorList.floor_nm}</option>
+										<option value="<c:out value='${floorList.floor_cd}'/>"><c:out value='${floorList.floor_nm}'/></option>
 									</c:forEach>
                                 </select>
                             </div>
@@ -254,7 +254,7 @@
 											<c:forEach var="item" items="${seatClass}" begin="0" step="1" varStatus="status">
 												<c:if test="${(status.index + 1)%2 != 0}"><tr></c:if>
 													<td>
-														<img src="/upload/${item.part_icon}">${item.part_class_nm}
+														<img src="/upload/<c:out value='${item.part_icon}'/>"><c:out value='${item.part_class_nm}'/>
 													<c:if test="${item.part_pay_cost ne 0}">
 														<span><fmt:formatNumber value="${item.part_pay_cost}" pattern="#,###" />원</span>
 													</c:if>
