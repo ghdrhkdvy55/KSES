@@ -468,7 +468,7 @@
           	<div class="pop_wrap">
               	<h4><img src="/resources/img/front/cancle.svg" alt="예약취소">예약을 취소하시겠습니까?</h4>
           	</div>
-          	<div class="cancel_btn ">
+          	<div class="cancel_btn other_btn">
           		<a href="/front/main.do" class="grayBtn">예</a>
 				<a href="javascript:bPopupClose('rsv_cancel');" class="dbBtn">아니요</a>
           	</div>

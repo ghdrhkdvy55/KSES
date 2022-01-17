@@ -1610,17 +1610,18 @@ h2.guide_tit {
     font-size: 1.4em;
 }
 /* 220117수정 */
+
 .rsv_info .rsv_paycost {
-    top: -4.2rem;
     font-weight: bold;
     font-size: 1.em;
-    float: right;
-    position: relative;
-    background: #fdc528;
+    position: absolute;
+    background: #5c5c5c;
     color: #fff;
     padding: 0 1rem;
     border-radius: 25px;
     padding-bottom: 0.2rem;
+    right: 1.5rem;
+    top: 6.5rem;
 }
 .rsv_info .rsv_state {
     position: fixed;
@@ -2598,6 +2599,7 @@ ul.tabs li{
 	.gui_seat {height:180px;}
 	#mask {height: 180px!important;}
 	#showHide_seat section {padding-bottom:0}
+	.rsv_info .rsv_branch {top:-6rem;}
 	
 }
 
@@ -2679,3 +2681,5 @@ ul.tabs li{
 .n_class {background:#11195d;}
 .s_class {background:#80d242;}
 .nm_class {background:#8d8d8d;}
+
+.other_btn a{width:48%; display:inline-block;}
