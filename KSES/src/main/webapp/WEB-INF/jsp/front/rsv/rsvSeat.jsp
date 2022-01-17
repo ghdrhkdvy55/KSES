@@ -81,7 +81,7 @@
                 	<span class="sel_seat_nm"></span>
 				</li>	
                 <li class="rsv_state"><span class="date"></span> 좌석 예약 중 입니다.</li>
-                <li class="rsv_paycost">결제금액 : <span><c:out value="${resvInfo.center_entry_pay_cost}"/>원</span></li>
+                <li class="rsv_paycost">[결제금액 : <span><c:out value="${resvInfo.center_entry_pay_cost}"/>원]</span></li>
             </ul>             
         </div>
         <!-- header //-->
@@ -124,7 +124,7 @@
                             <ul id="standing_resv_area">
                                 <li><input type="text" id="ENTRY_DVSN_1_resvUserNm" class="nonMemberArea" placeholder="이름을 입력해주세요."></li>
                                 <li><input type="text" id="ENTRY_DVSN_1_resvUserClphn" class="nonMemberArea" onkeypress="onlyNum(this);" placeholder="전화번호를 '-'없이 입력해주세요."></li>
-                                <li class="certify nonMemberArea" onclick="javascript:seatService.fn_SmsCertifi();">
+                                <li class="certify nonMemberArea subNm" onclick="javascript:seatService.fn_SmsCertifi();">
                                 	<a href="javascript:void(0);"><img src="/resources/img/front/certify.svg" alt="">인증번호 받기</a>
                                 </li>
 								
