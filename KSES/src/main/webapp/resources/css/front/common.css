@@ -1609,13 +1609,18 @@ h2.guide_tit {
     top: -5rem;
     font-size: 1.4em;
 }
-/* 임시 */
+/* 220117수정 */
 .rsv_info .rsv_paycost {
-	position: fixed;
-	top: 7rem;
-	left: 20rem;
-	font-weight: bold;
-	font-size: 1.em;
+    top: -4.2rem;
+    font-weight: bold;
+    font-size: 1.em;
+    float: right;
+    position: relative;
+    background: #fdc528;
+    color: #fff;
+    padding: 0 1rem;
+    border-radius: 25px;
+    padding-bottom: 0.2rem;
 }
 .rsv_info .rsv_state {
     position: fixed;
