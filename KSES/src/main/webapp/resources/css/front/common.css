@@ -1613,15 +1613,14 @@ h2.guide_tit {
 
 .rsv_info .rsv_paycost {
     font-weight: bold;
-    font-size: 1.em;
     position: absolute;
-    background: #5c5c5c;
-    color: #fff;
-    padding: 0 1rem;
+    color: #477ad6;
+    padding: 0 0.5rem;
     border-radius: 25px;
     padding-bottom: 0.2rem;
     right: 1.5rem;
     top: 6.5rem;
+    border: 1px solid #477ad6;
 }
 .rsv_info .rsv_state {
     position: fixed;
@@ -1774,7 +1773,7 @@ h2.guide_tit {
 }
 
 .price table td {
-    padding: 1.5rem;
+    padding: 1rem;
     border-bottom: 1px solid #e0e0e0;
     background: #f7f7f7;
 }
@@ -2683,3 +2682,4 @@ ul.tabs li{
 .nm_class {background:#8d8d8d;}
 
 .other_btn a{width:48%; display:inline-block;}
+.resizeBtn {font-size:1.7em !important;}

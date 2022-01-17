@@ -585,7 +585,7 @@
                 </div>                
 			</div>
 		</div>
-		<div class="cancel_btn">
+		<div class="cancel_btn resizeBtn">
 			<a href="javascript:bPopupClose('ect_agree');" class="grayBtn">닫기</a>
 		</div>
 		<div class="clear"></div>
