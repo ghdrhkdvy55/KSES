@@ -419,7 +419,8 @@ function fn_resvDateFormat(el) {
 	if(el.length == 8) {
 		el = el.substring(0,4) + "-" + el.substring(4,6) + "-" + el.substring(6,8);
 	} else {
-		fn_openPopup("올바른 예약일자가 아닙니다.", "red", "ERROR", "확인", "");
+		fn_openPopup("예약일자가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
+		el = "ERROR";
 	}
 	return el;
 }

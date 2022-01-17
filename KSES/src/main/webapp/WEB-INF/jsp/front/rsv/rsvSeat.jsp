@@ -653,7 +653,7 @@
 					$(".enter_type").hide();
 					$(".contents > h4:eq(0)").hide();					
 				} else if ($("#centerStandYn").val() == "N" && $("#centerPilotYn").val() == "N") {
-					fn_openPopup("예약 가능한 항목이 존재하지 않습니다.", "red", "ERROR", "확인", "");
+					fn_openPopup("예약 가능한 항목이 존재하지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
 					$(".enter_type").hide();					
 				}
 			} else {
@@ -1065,7 +1065,6 @@
 			},
 			fn_checkForm : function() {
 				var entryDvsn = $("#entryDvsn").val();
-				var url = "/front/updateUserResvInfo.do";
 				
 				if(entryDvsn != "ENTRY_DVSN_1" && $("#seatCd").val() == "") {fn_openPopup("좌석을 선택해주세요", "red", "ERROR", "확인", ""); return;}
 				if(!isMember && !certifiYn) {fn_openPopup("본인인증을 진행해주세요", "red", "ERROR", "확인", ""); return;}					
