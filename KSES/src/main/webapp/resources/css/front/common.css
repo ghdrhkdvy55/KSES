@@ -1602,7 +1602,7 @@ h2.guide_tit {
     height: 10rem;
 }
 .rsv_branch {font-size: 1em;}
-.rsv_prsc .backImg {top: 1rem !important;}
+.rsv_prsc .backImg {top: 0rem !important;}
 .rsv_info .backImg {background: url("/resources/img/front/logo_bg.svg") no-repeat right; height: 90px; position: relative; top: -11rem;}
 .rsv_info .rsv_branch {
     position: relative;
@@ -2655,3 +2655,14 @@ ul.tabs li{
     padding: 3px 4px;
     border-radius: 3px;
 }
+
+/*메인하단등급표시*/
+.main_user_rsv li:last-child em {
+    padding: 0.5rem 1rem;
+    color: #fff;
+    border-radius: 25px;
+}
+.p_class {background:#ec4a4f;}
+.n_class {background:#11195d;}
+.s_class {background:#80d242;}
+.nm_class {background:#8d8d8d;}
