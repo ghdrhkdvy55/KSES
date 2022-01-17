@@ -91,7 +91,6 @@
 			var today = date.format("yyyy-MM-dd");
 			$(".date").html(today);
 			
-			/* resvUsingTimeCheck(sessionStorage.getItem("resvUsingTime")); */
     		centerService.fn_makeCenterInfoArea(sessionStorage.getItem("resvDate"));
     	});
     	
@@ -180,7 +179,7 @@
 							} else {
 								fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "/front/main.do");	
 							}
-						} else if (result.status == "LOGIN FAIL"){
+						} else if (result.status == "LOGIN FAIL") {
 							fn_openPopup("세션 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
 						}
 					},

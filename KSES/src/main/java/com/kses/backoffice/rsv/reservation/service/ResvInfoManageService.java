@@ -93,15 +93,6 @@ public interface ResvInfoManageService {
 	public Map<String, Object> selectInUserResvInfo(ResvInfo vo) throws Exception;
 	
 	/**
-	 * SPDM QR코드 생성용 예약정보 조회
-	 * 
-	 * @param vo
-	 * @return
-	 * @throws Exception
-	 */
-	public Map<String, Object> selectResvQrInfo(String resvSeq) throws Exception;
-	
-	/**
 	 * SPDM 회원 현재 예약일자 예약정보 유무 확인
 	 * 
 	 * @param params

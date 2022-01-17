@@ -233,7 +233,7 @@
                                 <select id="selectFloorCd" class="select_box" onchange="seatService.fn_floorChange();">
                                     <option value="">층 선택</option>
 									<c:forEach items="${floorList}" var="floorList">
-										<option value="<c:out value='${floorList.floor_cd}'/>"><c:out value='${floorList.floor_nm}'/></option>
+										<option value="${floorList.floor_cd}"><c:out value='${floorList.floor_nm}'/></option>
 									</c:forEach>
                                 </select>
                             </div>
@@ -254,7 +254,7 @@
 											<c:forEach var="item" items="${seatClass}" begin="0" step="1" varStatus="status">
 												<c:if test="${(status.index + 1)%2 != 0}"><tr></c:if>
 													<td>
-														<img src="/upload/<c:out value='${item.part_icon}'/>"><c:out value='${item.part_class_nm}'/>
+														<img src="/upload/${item.part_icon}"><c:out value='${item.part_class_nm}'/>
 													<c:if test="${item.part_pay_cost ne 0}">
 														<span><fmt:formatNumber value="${item.part_pay_cost}" pattern="#,###" />원</span>
 													</c:if>
