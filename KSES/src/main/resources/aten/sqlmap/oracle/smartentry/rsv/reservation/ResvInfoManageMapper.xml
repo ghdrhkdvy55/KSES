@@ -120,19 +120,6 @@
 	</select>
 	
 	<!-- Front -->
-	<!-- QR 예약정보 조회 -->
-	<select id="selectResvQrInfo" resultType="lmap">
-		SELECT 
-			RESV_SEQ, SEAT_CD, SEASON_CD, RESV_START_DT, RESV_END_DT, RESV_DVSN, 
-			RESV_START_TM, RESV_END_TM, RESV_REQ_DATE, USER_ID, RESV_USER_DVSN, 
-			RESV_USER_ASK_YN, RESV_TICKET_DVSN, RESV_STATE, RESV_CANCEL_ID, RESV_CANCEL_DC, 
-			RESV_CANCEL_DT, RESV_CANCEL_CD, RESV_CANCEL_COST, RESV_RCPT_YN, RESV_RCPT_NUMBER, 
-			FRST_REGIST_DTM, FRST_REGTER_ID, LAST_UPDT_DTM, LAST_UPDUSR_ID, RESV_ENTRY_DVSN, 
-			CENTER_CD, FLOOR_CD, PART_CD, CERT_NO
-		FROM TSER_RESV_INFO_I
-		WHERE RESV_SEQ = #{resvSeq}
-	</select>
-	
 	<!-- 회원 마지막 에약정보 조회 -->
 	<select id="selectUserLastResvInfo" resultType="lmap">
 	<![CDATA[
