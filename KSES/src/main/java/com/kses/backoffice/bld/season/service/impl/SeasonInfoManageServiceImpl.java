@@ -3,6 +3,8 @@ package com.kses.backoffice.bld.season.service.impl;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +18,8 @@ import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service
 public class SeasonInfoManageServiceImpl extends EgovAbstractServiceImpl implements SeasonInfoManageService{
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(SeasonInfoManageServiceImpl.class);
+	
 	@Autowired
 	private SeasonInfoManageMapper sessionMapper;
 	
@@ -40,7 +43,7 @@ public class SeasonInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
 				 ret = vo.getMode().equals(Globals.SAVE_MODE_INSERT) ?  sessionMapper.insertSeasonInfo(vo) : sessionMapper.updateSeasonInfo(vo) ;
 				 ret = 1; 
 			}catch(Exception e) {
-				System.out.println("updateSeasonInfo error:" + e.toString());
+				LOGGER.error("updateSeasonInfo error:" + e.toString());
 				ret = 0; 
 			}
 		}

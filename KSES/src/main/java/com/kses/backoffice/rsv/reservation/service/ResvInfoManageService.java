@@ -15,7 +15,7 @@ public interface ResvInfoManageService {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<Map<String, Object>> selectResInfoManageListByPagination(Map<String, Object> params) throws Exception;
+	public List<Map<String, Object>> selectResvInfoManageListByPagination(Map<String, Object> params) throws Exception;
 	
 	/**
 	 * SPDM 예약정보 상세 조회
@@ -24,7 +24,7 @@ public interface ResvInfoManageService {
 	 * @return
 	 * @throws Exception
 	 */
-	public Map<String, Object> selectResInfoDetail(String resvSeq) throws Exception;
+	public Map<String, Object> selectResvInfoDetail(String resvSeq) throws Exception;
 	
 	
 	String selectFindPassword(Map<String, Object> paramMap ) throws Exception;

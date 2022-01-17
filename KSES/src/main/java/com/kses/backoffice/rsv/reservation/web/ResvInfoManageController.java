@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -117,7 +118,7 @@ public class ResvInfoManageController {
 			  searchVO.put("centerCd", loginVO.getCenterCd());
 			  
 			  
-			  List<Map<String, Object>> list = resvService.selectResInfoManageListByPagination(searchVO);
+			  List<Map<String, Object>> list = resvService.selectResvInfoManageListByPagination(searchVO);
 			  log.debug("[-------------------------------------------list:" + list.size() + "------]");
 		      model.addObject(Globals.JSON_RETURN_RESULTLISR, list);
 		      model.addObject(Globals.STATUS_REGINFO, searchVO);
@@ -218,7 +219,7 @@ public class ResvInfoManageController {
 	}
 	
 	@RequestMapping (value="rsvInfoDetail.do")
-	public ModelAndView selectCenterInfoDetail(	@RequestParam("resvSeq") String resvSeq, 
+	public ModelAndView selectRsvInfoDetail(	@RequestParam("resvSeq") String resvSeq, 
 												HttpServletRequest request) throws Exception {	
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
@@ -230,12 +231,12 @@ public class ResvInfoManageController {
 	    }	
 		
 		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-		model.addObject(Globals.STATUS_REGINFO, resvService.selectResInfoDetail(resvSeq));	     	
+		model.addObject(Globals.STATUS_REGINFO, resvService.selectResvInfoDetail(resvSeq));	     	
 		return model;
 	}
 	
 	@RequestMapping (value="resvInfoCancel.do")
-	public ModelAndView resvInfoCancel(	@RequestParam("resvSeq") String resvSeq, 
+	public ModelAndView updateResvInfoCancel(	@RequestParam("resvSeq") String resvSeq, 
 										HttpServletRequest request) throws Exception {	
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
@@ -253,7 +254,6 @@ public class ResvInfoManageController {
 			model.addObject(Globals.STATUS, resultMap.get(Globals.STATUS));
 			model.addObject(Globals.STATUS_MESSAGE, resultMap.get(Globals.STATUS_MESSAGE));
 		} catch(Exception e) {
-			log.debug("---------------------------------------");
 			StackTraceElement[] ste = e.getStackTrace();
 			log.error(e.toString() + ":" + ste[0].getLineNumber());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
@@ -264,7 +264,7 @@ public class ResvInfoManageController {
 	}
 	
 	@RequestMapping (value="resvInfoCancelAll.do")
-	public ModelAndView resvInfoCancelAll(	@RequestBody Map<String,Object> params, 
+	public ModelAndView updateResvInfoCancelAll(	@RequestBody Map<String,Object> params, 
 											HttpServletRequest request) throws Exception {	
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
@@ -288,7 +288,7 @@ public class ResvInfoManageController {
 			params.put("searchResvState","RESV_STATE_4");
 			params.put("searchStateCondition","cancel");
 			
-			List<Map<String, Object>> resvList = resvService.selectResInfoManageListByPagination(params);
+			List<Map<String, Object>> resvList = resvService.selectResvInfoManageListByPagination(params);
 
 			for(Map<String,Object> resvInfo : resvList) {
 				if(!SmartUtil.NVL(resvInfo.get("resv_ticket_dvsn"),"").equals("RESV_TICKET_DVSN_2")) {
@@ -316,7 +316,6 @@ public class ResvInfoManageController {
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("request.success.msg"));
 
 		} catch(Exception e) {
-			log.debug("---------------------------------------");
 			StackTraceElement[] ste = e.getStackTrace();
 			log.error(e.toString() + ":" + ste[0].getLineNumber());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
@@ -400,6 +399,35 @@ public class ResvInfoManageController {
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.insert"));	
 		}	
+		return model;
+	}
+	
+	@RequestMapping (value="resvValidCheck.do")
+	public ModelAndView resvValidCheck(	@ModelAttribute("loginVO") LoginVO loginVO,
+										@RequestBody Map<String, Object> params,
+										HttpServletRequest request,
+										BindingResult result) throws Exception {
+		
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+		try {
+			HttpSession httpSession = request.getSession(true);
+			loginVO = (LoginVO)httpSession.getAttribute("LoginVO");
+			
+			if(loginVO == null) {
+				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
+				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
+				return model;
+			}
+			
+			resvService.resvValidCheck(params);
+			
+			model.addObject("validResult", params);
+			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+		} catch(Exception e) {
+			log.error("resvValidCheck : " + e.toString());
+			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg")); 
+		}
 		return model;
 	}
 }

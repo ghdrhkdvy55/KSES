@@ -395,13 +395,17 @@ function today_get() {
 }
 
 //팝업열기
-function bPopupOpen(el) {
-	$("#" + el).bPopup();
+function bPopupOpen() {
+	$.each(arguments,function(index, item) {
+		$("#" + item).bPopup();
+	});
 }
 
 //팝업닫기
-function bPopupClose(el) {
-	$("#" + el).bPopup().close();
+function bPopupClose() {
+	$.each(arguments,function(index, item) {
+		$("#" + item).bPopup().close();
+	});
 }
 
 /* FRONT RESERVATION */
@@ -414,6 +418,8 @@ function bPopupClose(el) {
 function fn_resvDateFormat(el) {
 	if(el.length == 8) {
 		el = el.substring(0,4) + "-" + el.substring(4,6) + "-" + el.substring(6,8);
+	} else {
+		fn_openPopup("올바른 예약일자가 아닙니다.", "red", "ERROR", "확인", "");
 	}
 	return el;
 }
@@ -456,10 +462,46 @@ function resvUsingTimeCheck(time) {
 		var today = date.format("yyyyMMddHHmm");
 		
 		if(time < today){
-/*			alert("예약페이지 이용시간을 초과하였습니다.");
-			location.href = "/front/main.do";*/
+			alert("예약페이지 이용시간을 초과하였습니다.");
+			location.href = "/front/main.do";
 		}
 	},5000);
+}
+
+function fn_guestResvPossibleYn() {
+	var url = "/front/getSystemInfo.do";
+	var guestYn = false;
+	
+	fn_Ajax
+	(
+	    url,
+	    "POST",
+	    null,
+	    false,
+	    function(result) {
+	    	if (result.status == "SUCCESS") {
+	    		if(result.systemInfo.guestResvPossibleYn == "Y") {
+	    			guestYn = true;
+	    		}
+	    	}
+	    },
+	    function(request) {
+	    	fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");	       						
+	    }    		
+	);
+	
+	return guestYn;
+}
+
+function fn_moveReservation() {
+	if($("#userDvsn").val() != "USER_DVSN_1") {
+		if(!fn_guestResvPossibleYn()) {
+			fn_openPopup("로그인 후 이용 바랍니다.", "red", "ERROR", "확인", "");
+			return;
+		}
+	}
+	
+	location.href ="/front/rsvCenter.do";
 }
 
 /**
@@ -487,7 +529,7 @@ function fn_resvDuplicateCheck(params) {
 	    			isResvDuplicate = false;
 	    		}
 	    	} else if(result.status == "LOGIN FAIL") {
-	    		fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
+	    		fn_openPopup("세션 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
 	    	} else {
 	    		fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
 	    	}
@@ -529,7 +571,7 @@ function fn_getResvInfo (resvSeq) {
 		    		fn_openPopup("해당 예약정보가 존재하지 않습니다.", "red", "ERROR", "확인", "");
 		    	}
 	    	} else if(result.status == "LOGIN FAIL") {
-	    		fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
+	    		fn_openPopup("세션 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
 	    	} else {
 	    		fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
 	    	}
@@ -575,7 +617,7 @@ function fn_resvCancel(resvInfo, payResult, callback) {
 					fn_openPopup("예약이 정상적으로 취소되었습니다.", "blue", "SUCCESS", "확인", "");
 				isSuccess = true;
 			} else if (result.status == "LOGIN FAIL") {
-				fn_openPopup("로그인 정보가 올바르지 않습니다.", "blue", "SUCCESS", "확인", "/front/main.do");
+				fn_openPopup("세션 정보가 올바르지 않습니다.", "blue", "SUCCESS", "확인", "/front/main.do");
 			} else {
 				fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
 			}
@@ -621,7 +663,7 @@ function fn_payment(resvInfo) {
 					fn_openPopup(result.regist.Error_Msg, "red", "ERROR", "확인", "javascript:location.reload();");
 				}
 	    	} else if (result.status == "LOGIN FAIL") {
-	    		fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
+	    		fn_openPopup("세션 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
 	    	} else {
 	    		fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
 	    	}
@@ -659,7 +701,7 @@ function fn_resvVaildCheck(params) {
 					validResult = result.validResult;
 				}
 			} else if (result.status == "LOGIN FAIL"){
-				fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/login.do");
+				fn_openPopup("세션 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/login.do");
 			}
 		},
 		function(request) {

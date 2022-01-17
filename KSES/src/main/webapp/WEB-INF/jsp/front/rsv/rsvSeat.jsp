@@ -48,7 +48,7 @@
 	<input type="hidden" name="isReSeat" id="isReSeat" value="${resvInfo.isReSeat}">
 	<input type="hidden" name="resvUserNm" id="resvUserNm" value="">
 	<input type="hidden" name="resvSeq" id="resvSeq" value="">
-	<input type="hidden" name="resvDate" id="resvDate" value="${resvInfo.resvDate}">
+	<input type="hidden" name="resvDate" id="resvDate" value='<c:out value="${resvInfo.resvDate}"/>'>
 	
 	<input type="hidden" name="centerEntryPayCost" id="centerEntryPayCost" value="${resvInfo.center_entry_pay_cost}">
 	<input type="hidden" name="centerStandYn" id="centerStandYn" value="${resvInfo.center_stand_yn}">
@@ -75,13 +75,13 @@
             <ul class="rsv_info rsv_prsc">
                 <li class="backImg"></li>
                 <li class="rsv_branch">
-                	<span class="sel_center_nm">${resvInfo.center_nm}</span>
+                	<span class="sel_center_nm"><c:out value='${resvInfo.center_nm}'/></span>
                 	<span class="sel_floor_nm"></span> 
                 	<span class="sel_part_nm"></span>
                 	<span class="sel_seat_nm"></span>
 				</li>	
                 <li class="rsv_state"><span class="date"></span> 좌석 예약 중 입니다.</li>
-                <li></li>
+                <li class="rsv_paycost">결제금액 : <span><c:out value="${resvInfo.center_entry_pay_cost}"/>원</span></li>
             </ul>             
         </div>
         <!-- header //-->
@@ -233,7 +233,7 @@
                                 <select id="selectFloorCd" class="select_box" onchange="seatService.fn_floorChange();">
                                     <option value="">층 선택</option>
 									<c:forEach items="${floorList}" var="floorList">
-										<option value="${floorList.floor_cd}">${floorList.floor_nm}</option>
+										<option value="<c:out value='${floorList.floor_cd}'/>"><c:out value='${floorList.floor_nm}'/></option>
 									</c:forEach>
                                 </select>
                             </div>
@@ -254,11 +254,11 @@
 											<c:forEach var="item" items="${seatClass}" begin="0" step="1" varStatus="status">
 												<c:if test="${(status.index + 1)%2 != 0}"><tr></c:if>
 													<td>
-														<img src="${item.codeetc2}">${item.codenm}
-													<c:if test="${item.codeetc1 ne 0}">
-														<span><fmt:formatNumber value="${item.codeetc1}" pattern="#,###" />원</span>
+														<img src="/upload/<c:out value='${item.part_icon}'/>"><c:out value='${item.part_class_nm}'/>
+													<c:if test="${item.part_pay_cost ne 0}">
+														<span><fmt:formatNumber value="${item.part_pay_cost}" pattern="#,###" />원</span>
 													</c:if>
-													<c:if test="${item.codeetc1 eq 0}">
+													<c:if test="${item.part_pay_cost eq 0}">
 														<span>무료</span>
 													</c:if>
 													</td>
@@ -406,7 +406,7 @@
             <div class="contents">
                 <ul>
                     <li class="home"><a href="javascript:fn_pageMove('regist','/front/main.do');">home</a><span>HOME</span></li>
-                    <li class="rsv active"><a href="/front/rsvCenter.do">rsv</a><span>입장예약</span></li>
+                    <li class="rsv active"><a href="javascript:fn_moveReservation();">rsv</a><span>입장예약</span></li>
                     <li class="my"><a href="/front/mypage.do">my</a><span>마이페이지</span></li>
                 </ul>
                 <div class="clear"></div>
@@ -468,7 +468,7 @@
           	<div class="pop_wrap">
               	<h4><img src="/resources/img/front/cancle.svg" alt="예약취소">예약을 취소하시겠습니까?</h4>
           	</div>
-          	<div class="cancel_btn">
+          	<div class="cancel_btn ">
           		<a href="/front/main.do" class="grayBtn">예</a>
 				<a href="javascript:bPopupClose('rsv_cancel');" class="dbBtn">아니요</a>
           	</div>
@@ -612,15 +612,14 @@
     	var center ="";
     	
 		$(document).ready(function() {
-			if(sessionStorage.getItem("accessCheck") != "1") {
-				location.href = "/front/main.do";
+ 			if(sessionStorage.getItem("accessCheck") != "1") {
+				//location.href = "/front/main.do";
 			}
 			
 		    $(window).on("beforeunload", function(){
 		    	sessionStorage.removeItem("accessCheck");
 		    });
 
-			
 			//자유석 좌석 버튼 이벤트 정의
 			$(function(){
 				var sBtn = $(".section_menu ul > li, .enter_type ul > li");   //  ul > li 이를 sBtn으로 칭한다. (클릭이벤트는 li에 적용 된다.)
@@ -898,8 +897,11 @@
 				    		    	if($(this).attr("id") == $("#seatCd").val()){
 				    		    		$("#seatCd").val("");
 				    		    		$(".sel_seat_nm").html("");
+				    		    		
 				    		    		$(this).removeClass("select");
 				    		    		$(this).addClass("seatUse");
+				    		    		
+				    		    		$(".rsv_paycost span").html($("#centerEntryPayCost").val() + "원")
 				    		    		return;
 				    		    	};
 
@@ -918,6 +920,8 @@
  										var seatNm = $(this).attr("name");
 										$(".sel_seat_nm").html(seatNm);
 										
+										var payCost = parseInt($("#centerEntryPayCost").val()) + parseInt($("#" + $(this).attr("id")).data("seat_paycost"));
+										$(".rsv_paycost span").html(payCost + "원");
 										fn_scrollMove($("#ENTRY_DVSN_2_resv_area"));
 				    		    	}
 								});
@@ -1037,7 +1041,7 @@
 							    	resvUserNm = certifiNm;
 							    	resvUserClphn = certifiNum;
 						    	} else if(result.status == "LOGIN FAIL") {
-						    		fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
+						    		fn_openPopup("세션 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
 						    	} else {
 						    		fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
 						    	}
@@ -1151,7 +1155,7 @@
 				    			setTimeout("location.replace('/front/main.do')", 5000);
 				    		}
 				    	} else if(result.status == "LOGIN FAIL") {
-				    		fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
+				    		fn_openPopup("세션 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
 				    	} else {
 				    		fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "/front/main.do");
 				    	}
@@ -1188,6 +1192,7 @@
 				}
 				
 				$("#seasonCd").val("");
+				$(".rsv_paycost span").html($("#centerEntryPayCost").val() + "원");
 			}
 		}
     </script>

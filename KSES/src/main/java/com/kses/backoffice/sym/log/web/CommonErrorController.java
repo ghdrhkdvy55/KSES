@@ -27,8 +27,8 @@ public class CommonErrorController extends HttpServlet  {
 	
 	@RequestMapping(value="throwable")
 	public ModelAndView throwable(HttpServletRequest request){
-		
 		ModelAndView model = new ModelAndView();
+		
 		log.info("throwable");
 		pageErrorLog(request);
 		model.addObject("msg", "예외가 발생하였습니다");
@@ -39,8 +39,8 @@ public class CommonErrorController extends HttpServlet  {
 	
 	@RequestMapping(value="egovError", method=RequestMethod.POST)
 	public ModelAndView ErrorPage(HttpServletRequest request, Exception ex ){
-		
 		ModelAndView model = new ModelAndView();
+		
 		pageErrorLog(request);
 		model.addObject("msg", "예외가 발생하였습니다");
 		
@@ -57,8 +57,8 @@ public class CommonErrorController extends HttpServlet  {
 		model.addObject("msg", "예외가 발생하였습니다");
 		model.setViewName("/cmm/error/ErrorPage");
 		return model;
-		
 	}
+		
 	@RequestMapping(value="400")
 	public ModelAndView pageError400(HttpServletRequest request){
 		
@@ -68,18 +68,18 @@ public class CommonErrorController extends HttpServlet  {
 		model.addObject("msg", "잘못된 요청 입니다.");
 		model.setViewName("/cmm/error/ErrorPage");
 		return model;
-		
 	}
+		
 	@RequestMapping(value="403")
 	public ModelAndView pageError403(HttpServletRequest request){
-		
 		ModelAndView model = new ModelAndView();
+		
 		pageErrorLog(request);
 		model.addObject("msg", "접근이 금지되었습니다.");
 		model.setViewName("/cmm/error/ErrorPage");
 		return model;
-		
 	}
+		
 	@RequestMapping(value="500",method=RequestMethod.GET)
 	public ModelAndView pageError500(HttpServletRequest request, Exception e){
 		
@@ -122,7 +122,7 @@ public class CommonErrorController extends HttpServlet  {
 	    	 try {
 		 			sysLogService.logInsertSysLog(sysLog);
 		 	 } catch (Exception e1) {
-		 			e1.printStackTrace();
+				log.error("pageError404 ERROR : " + e1.toString());
 		 	 }
 	    	 sysLog = null;
 	    	// goView로 이동 
@@ -141,8 +141,8 @@ public class CommonErrorController extends HttpServlet  {
 		model.addObject("msg", "서버스를 사용할 수 없습니다.");
 		model.setViewName("/cmm/error/ErrorPage");
 		return model;
-		
 	}
+		
 	private void pageErrorLog(HttpServletRequest request){
 		log.info("status_code:" + request.getAttribute("javax.servlet.error.status_code"));
 		log.info("exception_type:" + request.getAttribute("javax.servlet.error.exception_type"));

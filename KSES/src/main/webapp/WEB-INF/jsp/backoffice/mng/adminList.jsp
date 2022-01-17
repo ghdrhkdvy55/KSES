@@ -32,14 +32,14 @@
 				<select id="searchAuthorCd">
 					<option value="">권한 선택</option>
 					<c:forEach var="item" items="${authorCd}">
-						<option value="${item.author_code}">${item.author_nm}</option>
+						<option value="${item.author_code}"><c:out value="${item.author_nm}"/></option>
 					</c:forEach>
 				</select>
 				<p>부서</p>
 				<select id="searchDeptCd">
 					<option value="">부서 선택</option>
 					<c:forEach var="item" items="${dept}">
-						<option value="${item.deptCd}">${item.deptNm}</option>
+						<option value="${item.deptCd}"><c:out value="${item.deptNm}"/></option>
 					</c:forEach>
 				</select>
 				<p>검색어</p>

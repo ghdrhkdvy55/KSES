@@ -70,9 +70,6 @@ public class EmpInfoManageController {
 		
 	@Autowired
 	private UniSelectInfoManageService uniService;
-		
-	@Autowired
-	private EgovCcmCmmnDetailCodeManageService egovCodeDetailService;
 	
     @Autowired
 	private fileService uploadFile;

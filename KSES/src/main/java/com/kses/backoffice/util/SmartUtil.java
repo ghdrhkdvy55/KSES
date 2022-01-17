@@ -185,7 +185,6 @@ public class SmartUtil {
         } catch (Exception e) {
         	data = "FAIL";
         	LOGGER.error("getQrCode ERROR" + e.toString());
-            e.printStackTrace();
         }  
 		
 		return data;
@@ -421,7 +420,6 @@ public class SmartUtil {
         }
         catch (Exception ex) {
         	LOGGER.error("sendMail ERROR:" + ex.toString());
-            ex.printStackTrace();
         } finally {
           transport.close();
         }
@@ -488,7 +486,7 @@ public class SmartUtil {
 		return !isEmpty(s);
 	}
 	//fomr  전송 응답
-	public JsonNode requestHttpForm(String _url, Map<String, String> _sendInfos){
+	public JsonNode requestHttpForm(String _url, Map<String, String> _sendInfos) {
 
         HttpClient client = HttpClientBuilder.create().build();
 
@@ -524,7 +522,7 @@ public class SmartUtil {
             }
             return node;
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("requestHttpForm IOException requestHttpForm : " + e.toString());
         }
 
         return null;
@@ -582,7 +580,7 @@ public class SmartUtil {
             
             return node;
         } catch (Exception e) {
-            e.printStackTrace();
+        	LOGGER.error("requestHttpJson Exception ERROR : " + e.toString());
         }
 
         return null;
@@ -637,7 +635,7 @@ public class SmartUtil {
 			hashValue = md.digest(data.getBytes());
 
 		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+			LOGGER.error("encryptPassword NoSuchAlgorithmException ERROR : " + e.toString());
 		}
 		
 		return new String(Base64.encodeBase64(hashValue)); 
@@ -658,7 +656,7 @@ public class SmartUtil {
 			md.update(a_origin.getBytes(), 0, a_origin.length());
 			encryptedSHA256 = new BigInteger(1, md.digest()).toString(16);
 		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+			LOGGER.error("getEncryptSHA256 NoSuchAlgorithmException ERROR : " + e.toString());
 		}
 		
 		return encryptedSHA256;

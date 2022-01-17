@@ -235,7 +235,7 @@ public class MessageInfoManageController {
 					searchVO_U.put("searchFrom",  SmartUtil.NVL(vo.get("from"), "").toString());
 					searchVO_U.put("searchTo",  SmartUtil.NVL(vo.get("to"), "").toString());
 					
-					List<Map<String, Object>>  userInfo = resService.selectResInfoManageListByPagination(searchVO_U);
+					List<Map<String, Object>>  userInfo = resService.selectResvInfoManageListByPagination(searchVO_U);
 					
 					userInfo.forEach(x->{
 				   		 msgInfo.setCallname(x.get("user_nm").toString());
@@ -323,7 +323,7 @@ public class MessageInfoManageController {
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.insert"));
 			
 		} catch (ParseException e) {
-			e.printStackTrace();
+			log.error("testMsgInsert ParseException ERROR : " + e.toString());
 		}
 		return model;
 	}
@@ -377,7 +377,7 @@ public class MessageInfoManageController {
 						searchVO_U.put("searchFrom",  SmartUtil.NVL(map.get("from"), "").toString());
 						searchVO_U.put("searchTo",  SmartUtil.NVL(map.get("to"), "").toString());
 						searchVO_U.put("searchDayCondition",  "resvDate");
-						List<Map<String, Object>>  userInfo = resService.selectResInfoManageListByPagination(searchVO_U);
+						List<Map<String, Object>>  userInfo = resService.selectResvInfoManageListByPagination(searchVO_U);
 						
 						
 						userInfo.forEach(x->{

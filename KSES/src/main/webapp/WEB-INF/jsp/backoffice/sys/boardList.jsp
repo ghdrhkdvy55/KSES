@@ -60,10 +60,10 @@
 <div class="breadcrumb">
 	<ol class="breadcrumb-item">
     	<li>공용 게시판&nbsp;&gt;&nbsp;</li>
-    	<li class="active">${regist.board_title}</li>
+    	<li class="active"><c:out value='${regist.board_title}'/></li>
 	</ol>
 </div>
-<h2 class="title"> ${regist.board_title }</h2>
+<h2 class="title"><c:out value='${regist.board_title}'/></h2>
 <div class="clear"></div>
 <div class="dashboard">
     <div class="boardlist">

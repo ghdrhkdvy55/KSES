@@ -31,7 +31,6 @@
 	<form:form name="regist" commandName="regist" method="post" action="/front/main.do">
 	<input type="hidden" id="userDvsn" name="userDvsn" value="${sessionScope.userLoginInfo.userDvsn}">
 	<input type="hidden" name="userId" id="userId" value="${sessionScope.userLoginInfo.userId}">
-	<input type="hidden" name="guestResvPossibleYn" id="guestResvPossibleYn" value="${sessionScope.systemInfo.guestResvPossibleYn}">
 	<input type="hidden" name="resvSeq" id="resvSeq" value="">
 
 	<div class="wrapper mainBack">
@@ -114,7 +113,7 @@
             <div class="contents">
                 <ul>
                     <li class="home active"><a href="/front/main.do">home</a><span>HOME</span></li>
-                    <li class="rsv"><a href="/front/rsvCenter.do">rsv</a><span>입장예약</span></li>
+                    <li class="rsv"><a href="javascript:fn_moveReservation();">rsv</a><span>입장예약</span></li>
                     <li class="my"><a href="javascript:fn_pageMove('regist','/front/mypage.do');">my</a><span>마이페이지</span></li>
                 </ul>
                 <div class="clear"></div>
@@ -452,7 +451,7 @@
 										
 										// QR코드 영역 활성화
 										$(qrEnterArea).show();
-										$(qrEnterArea).find("a").attr("href","javascript:mainService.fn_moveQrPage('" + obj.resv_seq + "');");
+										$(qrEnterArea).find("a").attr("href","javascript:fn_moveQrPage('" + obj.resv_seq + "');");
 									} else {								
 										// 유저정보상단 HTML생성
 										var setHtml = "";
@@ -464,7 +463,10 @@
 										// 유저정보하단 HTML생성
 										setHtml = "";
 										setHtml += "<li><span><a href='javascript:mainService.fn_userResvInfo(&#39;PRE&#39;, &#39;" + obj.resv_seq + "&#39;,&#39;re_rsv_info&#39;);' >최근좌석 다시앉기<img src='/resources/img/front/arrow.png' alt='예약하기'></a></span></li>";
-										setHtml += "<li><em><img src='/resources/img/front/alert_icon.svg' alt='알림'>과거 예약한 정보로 다시 앉으실 수 있습니다.</em></li>";
+										setHtml += "<li><em class="n_class">노블레스</em></li>";
+										//setHtml += "<li><em class="p_class">프리미엄</em></li>";
+										//setHtml += "<li><em class="s_class">스탠다드</em></li>";
+										//setHtml += "<li><em class="nm_class">일반석</em></li>";
 										userInfoBottomArea.append(setHtml);
 										
 										// 다시앉기 팝업창 정보 입력
@@ -501,16 +503,13 @@
 									}	
 								}
 							} else if(result.status == "LOGINFAIL"){
-								fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
+								fn_openPopup("세션 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
 							}
 						},
 						function(request) {
 							fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");	       						
 						}    		
 					);
-					
-					//여기 부분 공지 사항 들어가는 자리 
-					
 				} else {
 					// 비로그인 상태(비회원)
 					$("#user_rsv_area").addClass("main_user_rsv");
@@ -526,8 +525,8 @@
 					// 유저정보하단 HTML생성
 					setHtml = "";
 					setHtml += "<li><a href='/front/login.do'>로그인</a></li>";
-					if($("#guestResvPossibleYn").val() == "Y") {
-						setHtml += "<li><a href='/front/rsvCenter.do'>비회원 예약</a></li>";
+					if(fn_guestResvPossibleYn()) {
+						setHtml += "<li><a href='javascript:fn_guestResvPossibleYn();'>비회원 예약</a></li>";
 					}
 					userInfoBottomArea.append(setHtml);
 					//일반 공지 정리 하기 
@@ -721,18 +720,22 @@
 				var resvInfo = fn_getResvInfo(resvSeq);
 				
 				if(resvInfo.isSuccess) {
-					if(resvInfo.resv_pay_dvsn != "RESV_PAY_DVSN_1") {
-						if(resvInfo.resv_ticket_dvsn != 'RESV_TICKET_DVSN_2') {
-							$("#pay_number").bPopup();
-							$("#Card_Pw").val("");
-							$("#pay_number a:eq(1)").click(function(resvSeq) {
-								mainService.fn_payment(resvInfo);	
-							});
+					if(resvInfo.resv_state != "RESV_STATE_4") {
+						if(resvInfo.resv_pay_dvsn != "RESV_PAY_DVSN_1") {
+							if(resvInfo.resv_ticket_dvsn != 'RESV_TICKET_DVSN_2') {
+								$("#Card_Pw").val("");
+								$("#pay_number").bPopup();
+								$("#pay_number a:eq(1)").click(function(resvSeq) {
+									mainService.fn_payment(resvInfo);	
+								});
+							} else {
+								fn_openPopup("종이 QR발권 상태입니다.", "red", "ERROR", "확인", "");
+							}
 						} else {
-							fn_openPopup("종이 QR발권 상태입니다.", "red", "ERROR", "확인", "");
+							mainService.fn_resvCancel(resvInfo);
 						}
 					} else {
-						mainService.fn_resvCancel(resvInfo);
+						fn_openPopup("이미 취소된 예약정보 입니다.", "red", "ERROR", "확인", "");
 					}
 				}
 			},
@@ -792,7 +795,7 @@
 								fn_openPopup(result.regist.Error_Msg, "red", "ERROR", "확인", "javascript:location.reload();");
 							}
 				    	} else {
-				    		fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "");
+				    		fn_openPopup("세션 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "");
 				    	}
 					},
 					function(request) {
@@ -843,7 +846,7 @@
 								validResult = result.validResult;
 							}
 						} else if (result.status == "LOGIN FAIL"){
-							fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/login.do'");
+							fn_openPopup("세션 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/login.do'");
 						}
 					},
 					function(request) {
@@ -852,9 +855,6 @@
 				);	
 				
 				return validResult;
-			},
-			fn_moveQrPage : function(resvSeq) {
-				location.href = "/front/qrEnter.do?resvSeq=" + resvSeq + "&accessType=WEB";
 			}
 		}
     </script>

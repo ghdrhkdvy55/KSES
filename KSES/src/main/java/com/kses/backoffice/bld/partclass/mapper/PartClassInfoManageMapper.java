@@ -14,7 +14,9 @@ import egovframework.rte.psl.dataaccess.mapper.Mapper;
 public interface PartClassInfoManageMapper { 
 	  
 	public List<Map<String, Object>> selectPartClassList (@Param("params") Map<String, Object> searchVO);
-	  
+	
+	public List<Map<String, Object>> selectPartClassComboList (@Param("centerCd") String centerCd);
+	
 	public int insertPartClassInfo(PartClassInfo partClassInfo);
 	
 	public int updatePartClassInfo(PartClassInfo partClassInfo);

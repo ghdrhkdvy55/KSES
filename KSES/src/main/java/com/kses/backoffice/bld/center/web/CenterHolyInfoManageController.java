@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.kses.backoffice.bld.center.service.CenterHolyInfoManageService;
 import com.kses.backoffice.bld.center.service.CenterInfoManageService;
 import com.kses.backoffice.bld.center.vo.CenterHolyInfo;
+import com.kses.backoffice.util.service.UniSelectInfoManageService;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
@@ -41,6 +42,9 @@ public class CenterHolyInfoManageController {
 	
 	@Autowired
 	private CenterInfoManageService centerInfoManageService;
+	
+	@Autowired
+	private UniSelectInfoManageService uniService;
     
     @RequestMapping("centerHolyInfoListAjax.do")
     public ModelAndView selectCenterHolyInfo(	@ModelAttribute("loginVO") LoginVO loginVO,
@@ -103,8 +107,16 @@ public class CenterHolyInfoManageController {
 			vo.setLastUpdusrId(loginVO.getAdminId());
 	    }
 		
-		try {			
-			int ret  = centerHolyInfoService.updateCenterHolyInfo(vo);
+		try {	
+			Map<String, Object> centerUpdateSelect = centerHolyInfoService.centerUpdateSelect(vo.getCenterHolySeq());
+			
+			int ret;
+			if (centerUpdateSelect.get("holy_dt").equals(vo.getHolyDt()) && centerUpdateSelect.get("center_holy_seq").toString().equals(vo.getCenterHolySeq().toString())) {
+				ret = centerHolyInfoService.updateCenterHolyInfo(vo);
+			} else {
+				ret = (uniService.selectIdDoubleCheck("HOLY_DT", "TSEB_CENTERHOLY_INFO_I", "HOLY_DT = ["+ vo.getHolyDt() + "[ AND CENTER_CD = ["+ vo.getCenterCd() + "[" ) > 0) ? -1 : centerHolyInfoService.updateCenterHolyInfo(vo);
+			}
+	
 			meesage = (vo.getMode().equals("Edt")) ? "sucess.common.update" : "sucess.common.insert";
 			
 			if (ret > 0) {

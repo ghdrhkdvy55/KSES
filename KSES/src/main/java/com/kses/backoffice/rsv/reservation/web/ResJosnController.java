@@ -277,9 +277,7 @@ public class ResJosnController {
 		AttendInfo attendInfoVO = new AttendInfo();
 		
 		try {
-			EgovFileScrty fileScrty = new EgovFileScrty();
-
-			String qrInfo = fileScrty.decode(sendInfo.getQrCode());
+			String qrInfo = EgovFileScrty.decode(sendInfo.getQrCode());
 			String qrCneterCd = sendInfo.getQrCneterCd(); // qr 지점 정보
 			String qrInot = sendInfo.getQrInot(); // qrIO 구분
 			
@@ -312,11 +310,6 @@ public class ResJosnController {
 				String floorNm = attempInfos[15];
 				String partNm = attempInfos[16];
 				String resvQrCount = attempInfos[17];
-				
-				for (String value : attempInfos) {
-					log.debug("value : " + value);
-				}
-
 				String formatedNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
 				
 				Map<String, Object> searchVO = new HashMap<String, Object>();
@@ -381,7 +374,7 @@ public class ResJosnController {
 					}
 				}
 				 
-				log.info("resvQrCount : " + resvQrCount + " resv_qr_count" + SmartUtil.NVL(resInfo.get("resv_qr_count"),""));
+
 				if (!resvQrCount.equals(SmartUtil.NVL(resInfo.get("resv_qr_count"),""))) {
 					ERROR_MSG = "QR발급회차 불일치";
 					ERROR_CD = "ERROR_08";
@@ -389,7 +382,7 @@ public class ResJosnController {
 					model.addObject("ERROR_MSG", ERROR_MSG);
 					return model;	
 				}
-				log.info("큐알 장비에서 보내주는 값 : " + qrInot + " 큐알 코드 안에 있는 inot값 : " + inOt);
+
 				if (!qrInot.equals(inOt)) {
 					ERROR_MSG = qrInot.equals("IN") ? "퇴장 정보 없음." : "입장 정보 없음.";
 					ERROR_CD = "ERROR_07";
@@ -477,7 +470,7 @@ public class ResJosnController {
 			searchVO.put("resvDate", nowDate);
 
 			Map<String, Object> resInfo = resService.selectUserResvInfo(searchVO);
-			String resvTicketDvsn = SmartUtil.NVL(resInfo.get("resv_pay_dvsn"), "");
+			String resvTicketDvsn = SmartUtil.NVL(resInfo.get("resv_ticket_dvsn"), "");
 			String resvState = SmartUtil.NVL(resInfo.get("resv_state"), "");
 
 			if (resInfo == null || Integer.valueOf(resInfo.get("resv_end_dt").toString()) < Integer.valueOf(nowDate)) {
@@ -488,7 +481,7 @@ public class ResJosnController {
 				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 				model.addObject(Globals.STATUS_MESSAGE, "예약 취소된 예약정보 입니다.");
 				return model;
-			} else if(resvTicketDvsn.toString().equals("RESV_PAY_DVSN_2")) { 
+			} else if(resvTicketDvsn.toString().equals("RESV_TICKET_DVSN_2")) { 
 				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 				model.addObject(Globals.STATUS_MESSAGE, "종이QR발급된  예약정보입니다.");
 				return model;
@@ -726,8 +719,7 @@ public class ResJosnController {
 						+ SmartUtil.NVL(jsonInfo.get("IF_NO"), "").toString() + ":"
 						+ SmartUtil.NVL(resInfo.get("resv_entry_dvsn"), "").toString() + ":"
 						+ SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString() + ":"
-						+ SmartUtil.NVL(resInfo.get("center_rbm_cd"), "").toString() + ":" 
-						+ "PAPER_QR_ENTRY" + ":"
+						+ SmartUtil.NVL(resInfo.get("center_rbm_cd"), "").toString() + "::" 
 						+ SmartUtil.NVL(resInfo.get("user_phone"), "").toString() + ":"
 						+ SmartUtil.NVL(resInfo.get("center_nm"), "").toString() + ":"
 						+ SmartUtil.NVL(resInfo.get("seat_nm"), "").toString() + ":"
@@ -807,7 +799,7 @@ public class ResJosnController {
 		try {
 			String corpNum = propertiesService.getString("Company.Number");
 
-			Map<String, Object> resInfo = resService.selectResInfoDetail(resvSeq);
+			Map<String, Object> resInfo = resService.selectResvInfoDetail(resvSeq);
 
 			String msgKey = tranGubun.equals("bill") ? resvSeq + "_001" : resvSeq + "_002";
 			String msgTradType = tranGubun.equals("bill") ? "승인거래" : "취소거래";
@@ -909,8 +901,8 @@ public class ResJosnController {
 
 		} catch (PopbillException e) {
 			// 예외 발생 시, e.getCode() 로 오류 코드를 확인하고, e.getMessage()로 오류 메시지를 확인합니다.
-			System.out.println("오류 코드" + e.getCode());
-			System.out.println("오류 메시지" + e.getMessage());
+			log.error("오류 코드" + e.getCode());
+			log.error("오류 메시지" + e.getMessage());
 
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();

@@ -32,7 +32,6 @@
 	<input type="hidden" name="userId" id="userId" value="${sessionScope.userLoginInfo.userId}">
 	<input type="hidden" id="userNm" name="userNm" value="${sessionScope.userLoginInfo.userNm}">
 	<input type="hidden" id="userDvsn" name="userDvsn" value="${sessionScope.userLoginInfo.userDvsn}">
-	<input type="hidden" name="guestResvPossibleYn" id="guestResvPossibleYn" value="${sessionScope.systemInfo.guestResvPossibleYn}">
 	
     <div class="wrapper">
         <div class="my_wrap contents">
@@ -55,7 +54,7 @@
             <div class="contents">
                 <ul>
                     <li class="home"><a href="javascript:fn_pageMove('regist','/front/main.do');">home</a><span>HOME</span></li>
-                    <li class="rsv"><a href="/front/rsvCenter.do">rsv</a><span>입장예약</span></li>
+                    <li class="rsv"><a href="javascript:fn_moveReservation();">rsv</a><span>입장예약</span></li>
                     <li class="my active"><a href="javascript:fn_pageMove('regist','/front/mypage.do');">my</a><span>마이페이지</span></li>
                 </ul>
                 <div class="clear"></div>
@@ -112,7 +111,7 @@
 					$("#mybox").html(setHtml);
 
 					// 마이페이지 서비스
-					if($("#guestResvPossibleYn").val() == "Y") {
+					if(fn_guestResvPossibleYn()) {
 						setHtml = "";
 						setHtml += "<p>설정</p>";
 						setHtml += "<li><a href='/front/guestResvInfo.do'>비회원 예약 조회</a></li>";

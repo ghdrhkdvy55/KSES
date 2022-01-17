@@ -104,13 +104,13 @@
 	                     	<select id="startFloor" onChange="jqGridFunc.fn_floorChange('')" style="width:120px">
 		                        <option value="">시작 층수</option>
 		                         <c:forEach items="${floorInfo}" var="floorList">
-									<option value="${floorList.code}">${floorList.codenm}</option>
+									<option value="<c:out value='${floorList.code}'/>"><c:out value='${floorList.codenm}'/></option>
 		                         </c:forEach>
 	                    	</select> ~
 	                    	<select id="endFloor" onChange="jqGridFunc.fn_floorChange('')"  style="width:120px">
 		                        <option value="">종료 층수</option>
 		                        <c:forEach items="${floorInfo}" var="floorList">
-		                            <option value="${floorList.code}">${floorList.codenm}</option>
+		                            <option value="<c:out value='${floorList.code}'/>"><c:out value='${floorList.codenm}'/></option>
 								</c:forEach>
 	                    	</select> 
                   		</td>
@@ -176,7 +176,7 @@
 	            <select id="preOpenCenterList" onChange="jqGridFunc.fn_preOpenInfo('change',this)">
 					<option value="">지점 선택</option>
 					<c:forEach items="${centerInfoComboList}" var="centerInfoComboList">
-						<option value="${centerInfoComboList.center_cd}">${centerInfoComboList.center_nm}</option>
+						<option value="<c:out value='${centerInfoComboList.center_cd}'/>"><c:out value='${centerInfoComboList.center_nm}'/></option>
 					</c:forEach>
 	            </select>
 	            <a href="javascript:jqGridFunc.fn_preOpenCopyModel();" class="grayBtn">복사</a>
@@ -216,7 +216,7 @@
 				<select id="noshowCenterList" onChange="jqGridFunc.fn_noshowInfo('change',this)">
 					<option value="">지점 선택</option>
 					<c:forEach items="${centerInfoComboList}" var="centerInfoComboList">
-						<option value="${centerInfoComboList.center_cd}">${centerInfoComboList.center_nm}</option>
+						<option value="<c:out value='${centerInfoComboList.center_cd}'/>"><c:out value='${centerInfoComboList.center_nm}'/></option>
 					</c:forEach>
 	            </select>
 	            <a href="javascript:jqGridFunc.fn_noshowInfoCopy();" class="grayBtn">복사</a>
@@ -254,7 +254,7 @@
 	            	<p>복사지점</p>
 	            	<select id="centerHolyList" onChange="jqGridFunc.fn_centerHolyInfo('change',this)">
 						<c:forEach items="${centerInfoComboList}" var="centerInfoComboList">
-						<option value="${centerInfoComboList.center_cd}">${centerInfoComboList.center_nm}</option>
+							<option value="<c:out value='${centerInfoComboList.center_cd}'/>"><c:out value='${centerInfoComboList.center_nm}'/></option>
 						</c:forEach>
 	            	</select>
 					<a href="javascript:jqGridFunc.fn_centerHolyCopyModel();"class="grayBtn">복사</a>
