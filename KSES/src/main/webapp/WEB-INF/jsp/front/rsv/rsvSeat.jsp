@@ -51,8 +51,9 @@
 	<input type="hidden" name="resvDate" id="resvDate" value="${resvInfo.resvDate}">
 	
 	<input type="hidden" name="centerEntryPayCost" id="centerEntryPayCost" value="${resvInfo.center_entry_pay_cost}">
-	<input type="hidden" name="centerStandYn" id="centerStandYn" value="${resvInfo.center_stand_yn}">	
-	
+	<input type="hidden" name="centerStandYn" id="centerStandYn" value="${resvInfo.center_stand_yn}">
+	<input type="hidden" name="centerPilotYn" id="centerPilotYn" value="${resvInfo.center_pilot_yn}">
+		
 	<!-- 예약정보 sessionStorage검토 -->
 	<input type="hidden" name="seasonCd" id="seasonCd">
 	<input type="hidden" name="centerCd" id="centerCd" value="${resvInfo.centerCd}">
@@ -80,7 +81,7 @@
                 	<span class="sel_seat_nm"></span>
 				</li>	
                 <li class="rsv_state"><span class="date"></span> 좌석 예약 중 입니다.</li>
-                <li></li>
+                <li class="rsv_paycost">결제금액 : <span><c:out value="${resvInfo.center_entry_pay_cost}"/>원</span></li>
             </ul>             
         </div>
         <!-- header //-->
@@ -253,11 +254,11 @@
 											<c:forEach var="item" items="${seatClass}" begin="0" step="1" varStatus="status">
 												<c:if test="${(status.index + 1)%2 != 0}"><tr></c:if>
 													<td>
-														<img src="${item.codeetc2}">${item.codenm}
-													<c:if test="${item.codeetc1 ne 0}">
-														<span><fmt:formatNumber value="${item.codeetc1}" pattern="#,###" />원</span>
+														<img src="/upload/${item.part_icon}">${item.part_class_nm}
+													<c:if test="${item.part_pay_cost ne 0}">
+														<span><fmt:formatNumber value="${item.part_pay_cost}" pattern="#,###" />원</span>
 													</c:if>
-													<c:if test="${item.codeetc1 eq 0}">
+													<c:if test="${item.part_pay_cost eq 0}">
 														<span>무료</span>
 													</c:if>
 													</td>
@@ -405,7 +406,7 @@
             <div class="contents">
                 <ul>
                     <li class="home"><a href="javascript:fn_pageMove('regist','/front/main.do');">home</a><span>HOME</span></li>
-                    <li class="rsv active"><a href="/front/rsvCenter.do">rsv</a><span>입장예약</span></li>
+                    <li class="rsv active"><a href="javascript:fn_moveReservation();">rsv</a><span>입장예약</span></li>
                     <li class="my"><a href="/front/mypage.do">my</a><span>마이페이지</span></li>
                 </ul>
                 <div class="clear"></div>
@@ -611,15 +612,14 @@
     	var center ="";
     	
 		$(document).ready(function() {
-			if(sessionStorage.getItem("accessCheck") != "1") {
-				location.href = "/front/main.do";
+ 			if(sessionStorage.getItem("accessCheck") != "1") {
+				//location.href = "/front/main.do";
 			}
 			
 		    $(window).on("beforeunload", function(){
 		    	sessionStorage.removeItem("accessCheck");
 		    });
 
-			
 			//자유석 좌석 버튼 이벤트 정의
 			$(function(){
 				var sBtn = $(".section_menu ul > li, .enter_type ul > li");   //  ul > li 이를 sBtn으로 칭한다. (클릭이벤트는 li에 적용 된다.)
@@ -639,53 +639,30 @@
             	$("#"+tab_id).addClass('current');
     		});
 			
-
 			$(".date").html(fn_resvDateFormat($("#resvDate").val()));
-			resvUsingTimeCheck(sessionStorage.getItem("resvUsingTime"));
 			
-			if($("#isReSeat").val() == "Y") {
+			if($("#isReSeat").val() != "Y") {
+				// TO-DO : 비시범지점일 경우 "좌석" 버튼숨김 임시적용
+				// 2022-04월 제거 예정
+				if($("#centerStandYn").val() == "N" && $("#centerPilotYn").val() == "Y") {
+					$("#ENTRY_DVSN_2").trigger("click");
+					$(".enter_type").hide();
+					$(".contents > h4:eq(0)").hide();		
+				} else if ($("#centerStandYn").val() == "Y" && $("#centerPilotYn").val() == "N") {
+					$("#ENTRY_DVSN_1").trigger("click");
+					$(".enter_type").hide();
+					$(".contents > h4:eq(0)").hide();					
+				} else if ($("#centerStandYn").val() == "N" && $("#centerPilotYn").val() == "N") {
+					fn_openPopup("예약 가능한 항목이 존재하지 않습니다.", "red", "ERROR", "확인", "");
+					$(".enter_type").hide();					
+				}
+			} else {
 				seatService.fn_reSeat();
-			} else if($("#centerStandYn").val() == "N") {
-				$("#ENTRY_DVSN_2").trigger("click");
-				$(".enter_type").hide();
-				$(".contents > h4:eq(0)").hide();
 			}
 		});
 		
 		var seatService =
 		{ 
-			fn_makeResvArea: function(centerCd) {
-				var url = "/front/rsvSeatAjax.do";
-				
-				var parmas = {"resvDate" : $("resvDate").val()};
-				
-				fn_Ajax
-				(
-				    url,
-				    "GET",
-				    parmas,
-					false,
-					function(result) {
-						if (result.status == "SUCCESS") {
-							if(result.resultlist != null) {
-								$(".branch_list").empty();
-								$.each(result.resultlist, function(index, item) {
-									var setHtml = "";
-									setHtml += "<li><ul id='" + item.center_cd + "'><li><span>" 
-									+ item.center_nm + "</span></li><li></li><li>잔여석 <em>" 
-									+ (item.center_seat_max_count - item.center_seat_use_count) 
-									+ "</em>석</li></ul></li>";
-									$(".branch_list").append(setHtml);
-								});
-								centerService.fn_centerButtonSetting();
-							}
-						}
-					},
-					function(request) {
-						fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");	       						
-					}    		
-				);
-			},
 			fn_reSeat : function() {
 				$("#" + $("#reEnterDvsn").val()).addClass("active");
 				$("#" + $("#reEnterDvsn").val()).trigger("click");
@@ -703,7 +680,7 @@
 						
 						$(".rsv_list").children("li").eq(2).hide();
 						$(".rsv_list").children("li").eq(3).hide();
-					} else {
+					} else { 
 						$("#section_sel").hide();
 						$("#selectFloorCd").val("");
 
@@ -920,8 +897,11 @@
 				    		    	if($(this).attr("id") == $("#seatCd").val()){
 				    		    		$("#seatCd").val("");
 				    		    		$(".sel_seat_nm").html("");
+				    		    		
 				    		    		$(this).removeClass("select");
 				    		    		$(this).addClass("seatUse");
+				    		    		
+				    		    		$(".rsv_paycost span").html($("#centerEntryPayCost").val() + "원")
 				    		    		return;
 				    		    	};
 
@@ -940,6 +920,8 @@
  										var seatNm = $(this).attr("name");
 										$(".sel_seat_nm").html(seatNm);
 										
+										var payCost = parseInt($("#centerEntryPayCost").val()) + parseInt($("#" + $(this).attr("id")).data("seat_paycost"));
+										$(".rsv_paycost span").html(payCost + "원");
 										fn_scrollMove($("#ENTRY_DVSN_2_resv_area"));
 				    		    	}
 								});
@@ -1059,7 +1041,7 @@
 							    	resvUserNm = certifiNm;
 							    	resvUserClphn = certifiNum;
 						    	} else if(result.status == "LOGIN FAIL") {
-						    		fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
+						    		fn_openPopup("세션 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
 						    	} else {
 						    		fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
 						    	}
@@ -1173,7 +1155,7 @@
 				    			setTimeout("location.replace('/front/main.do')", 5000);
 				    		}
 				    	} else if(result.status == "LOGIN FAIL") {
-				    		fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
+				    		fn_openPopup("세션 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
 				    	} else {
 				    		fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "/front/main.do");
 				    	}
@@ -1210,6 +1192,7 @@
 				}
 				
 				$("#seasonCd").val("");
+				$(".rsv_paycost span").html($("#centerEntryPayCost").val() + "원");
 			}
 		}
     </script>

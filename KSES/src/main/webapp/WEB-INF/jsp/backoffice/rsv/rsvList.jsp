@@ -555,13 +555,12 @@
 					{label: '아이디', name:'user_id', index:'user_id', align:'center'},
 					{label: '이름', name:'user_nm', index:'user_nm', align:'center'},
 					{label: '전화번호', name:'user_phone', index:'user_phone', align:'center'},
-					/* {label: '발권구분', name: 'resv_ticket_dvsn_text',  index:'resv_ticket_dvsn_text', align:'center'}, */
 					{label: '금액', name: 'resv_pay_cost', index:'resv_pay_cost', align:'center', formatter:jqGridFunc.formSetting},
 					{label: '신청일자', name:'resv_req_date', index:'resv_req_date', align:'center'},
 					{label: '예약일자', name:'resv_end_dt', index:'resv_end_dt', align:'center', formatter:jqGridFunc.formSetting},
 					{label: '예약상태', name:'resv_state_text', index:'resv_state_text', align:'center'},
-					/* {label: '문진', name:'resv_user_ask_yn', index:'resv_user_ask_yn', align:'center', width : "50px"}, */
-					{label: '결재상태', name:'resv_pay_dvsn_text', index:'resv_pay_dvsn_text', align:'center'},
+					{label: '결제상태', name:'resv_pay_dvsn_text', index:'resv_pay_dvsn_text', align:'center'},
+					{label: '결제구분', name: 'resv_ticket_dvsn_text',  index:'resv_ticket_dvsn_text', align:'center'},
 					{label: 'QR출력', name:'resv_qr_print', index:'resv_qr_print', align:'center', sortable : false, formatter:jqGridFunc.formSetting},
 					/* {label: '현금영수증출력', name:'resv_rcpt_print', index:'resv_rcpt_print', align:'center', sortable : false, formatter:jqGridFunc.formSetting}, */
 				], 
@@ -740,15 +739,12 @@
 						$("#rsvPopResvUserNm").html(obj.user_nm);
 						$("#rsvPopResvUserPhone").html(obj.user_phone);
 						$("#rsvPopResvPayDvsn").html(obj.resv_pay_dvsn_text);
-/* 						obj.resv_user_ask_yn = obj.resv_user_ask_yn == "Y" ? "동의" : "미동의"; 
-						$("#rsvPopResvUserAskYn").html(obj.resv_user_ask_yn); */
 						$("#rsvPopResvSeatPayCost").html(obj.resv_seat_pay_cost + "원");
 						$("#rsvPopResvEntryPayCost").html(obj.resv_entry_pay_cost + "원");
 						$("#rsvPopResvTicketDvsn").html(obj.resv_ticket_dvsn_text);
 						$("#rsvPopResvState").html(obj.resv_state_text);
 						
-						
-						if(obj.seat_nm != "자유석" && obj.resv_state == "RESV_STATE_1") { 
+						if(obj.resv_entry_dvsn == "ENTRY_DVSN_2" && obj.resv_state == "RESV_STATE_1" && obj.resv_pay_dvsn == "RESV_PAY_DVSN_1") { 
 							$("#rsvPopSeatChange a").show().click(function (e) {
 								jqGridFunc.fn_resvSeatInfo("CHANGE",obj);
 							});		

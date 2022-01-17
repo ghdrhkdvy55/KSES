@@ -16,8 +16,8 @@ public class SystemInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
 	private SystemInfoManageMapper systemMapper;
 
 	@Override
-	public SystemInfo selectSystemInfo(SystemInfo searchVO) throws Exception {
-		return systemMapper.selectSystemInfo(searchVO);
+	public SystemInfo selectSystemInfo() throws Exception {
+		return systemMapper.selectSystemInfo();
 	}
 
 	@Override

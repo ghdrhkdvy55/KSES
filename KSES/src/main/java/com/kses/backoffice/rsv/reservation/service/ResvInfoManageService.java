@@ -3,6 +3,8 @@ package com.kses.backoffice.rsv.reservation.service;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.kses.backoffice.rsv.reservation.vo.ResvInfo;
 
 public interface ResvInfoManageService {
@@ -13,7 +15,7 @@ public interface ResvInfoManageService {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<Map<String, Object>> selectResInfoManageListByPagination(Map<String, Object> params) throws Exception;
+	public List<Map<String, Object>> selectResvInfoManageListByPagination(Map<String, Object> params) throws Exception;
 	
 	/**
 	 * SPDM 예약정보 상세 조회
@@ -22,7 +24,7 @@ public interface ResvInfoManageService {
 	 * @return
 	 * @throws Exception
 	 */
-	public Map<String, Object> selectResInfoDetail(String resvSeq) throws Exception;
+	public Map<String, Object> selectResvInfoDetail(String resvSeq) throws Exception;
 	
 	
 	String selectFindPassword(Map<String, Object> paramMap ) throws Exception;
@@ -214,4 +216,6 @@ public interface ResvInfoManageService {
 	 * @throws Exception
 	 */
 	public String resvValidCheck(Map<String, Object> params) throws Exception;
+	
+	public Map<String, Object> selectTicketMchnSnoCheck(@Param("params") Map<String, Object> params);
 }

@@ -49,17 +49,17 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	private SureManageSevice sureService;
 	
 	@Override
-	public List<Map<String, Object>> selectResInfoManageListByPagination(Map<String, Object> params) throws Exception {
+	public List<Map<String, Object>> selectResvInfoManageListByPagination(Map<String, Object> params) throws Exception {
 		params.forEach((key, value)
 			    -> System.out.println("key: " + key + ", value: " + value));
 		
 		
-		return resvMapper.selectResInfoManageListByPagination(params);
+		return resvMapper.selectResvInfoManageListByPagination(params);
 	}
 	
 	@Override
-	public Map<String, Object> selectResInfoDetail(String resvSeq) throws Exception {
-		return resvMapper.selectResInfoDetail(resvSeq);
+	public Map<String, Object> selectResvInfoDetail(String resvSeq) throws Exception {
+		return resvMapper.selectResvInfoDetail(resvSeq);
 	}
 	
 	@Override
@@ -187,7 +187,7 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 			params.put("resvSeq", resvSeq);
 			Map<String, Object> resvInfo = resvService.selectUserResvInfo(params);
 			String resvState = resvInfo.get("resv_state").toString();
-			String resvTicketDvsn = SmartUtil.NVL(resvInfo.get("resv_pay_dvsn").toString(),"");
+			String resvTicketDvsn = SmartUtil.NVL(resvInfo.get("resv_ticket_dvsn").toString(),"");
 			String resvPayDvsn = resvInfo.get("resv_pay_dvsn").toString();
 			String tradeNo = SmartUtil.NVL(resvInfo.get("trade_no"),"");
 			
@@ -268,5 +268,10 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	@Override
 	public int resbillChange(ResvInfo vo) throws Exception {
 		return resvMapper.resbillChange(vo);
+	}
+	
+	@Override
+	public Map<String, Object> selectTicketMchnSnoCheck(Map<String, Object> params) {
+		return resvMapper.selectTicketMchnSnoCheck(params);
 	}
 }

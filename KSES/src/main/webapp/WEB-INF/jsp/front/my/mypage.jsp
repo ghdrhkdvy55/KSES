@@ -54,7 +54,7 @@
             <div class="contents">
                 <ul>
                     <li class="home"><a href="javascript:fn_pageMove('regist','/front/main.do');">home</a><span>HOME</span></li>
-                    <li class="rsv"><a href="/front/rsvCenter.do">rsv</a><span>입장예약</span></li>
+                    <li class="rsv"><a href="javascript:fn_moveReservation();">rsv</a><span>입장예약</span></li>
                     <li class="my active"><a href="javascript:fn_pageMove('regist','/front/mypage.do');">my</a><span>마이페이지</span></li>
                 </ul>
                 <div class="clear"></div>
@@ -111,10 +111,12 @@
 					$("#mybox").html(setHtml);
 
 					// 마이페이지 서비스
-					setHtml = "";
-					setHtml += "<p>설정</p>";
-					setHtml += "<li><a href='/front/guestResvInfo.do'>비회원 예약 조회</a></li>";
-					$("#myset").html(setHtml);
+					if(fn_guestResvPossibleYn()) {
+						setHtml = "";
+						setHtml += "<p>설정</p>";
+						setHtml += "<li><a href='/front/guestResvInfo.do'>비회원 예약 조회</a></li>";
+						$("#myset").html(setHtml);
+					}
 					
 					setHtml = "";
 					setHtml += "<p>주요 서비스</p>";

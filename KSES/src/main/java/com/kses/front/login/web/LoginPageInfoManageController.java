@@ -159,6 +159,9 @@ public class LoginPageInfoManageController {
 		
 		ModelAndView model = new ModelAndView("/front/main/mainpage");
 		try {
+			//외부 테스트 로그인
+			String envType = propertiesService.getString("Globals.envType");
+			params.put("envType", envType);
 			UserLoginInfo userLoginInfo = userService.selectSSOUserInfo(params);
 			
 			if(userLoginInfo != null) {

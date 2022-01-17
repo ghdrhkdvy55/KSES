@@ -1548,7 +1548,7 @@ h2.guide_tit {
 /*#rsv_header .rsv_info li:nth-child(2) {padding: 7rem 0 0 2rem; }*/
 .rsvBack {font-size: 1.7em;}
 .branchSel {margin-top: 2rem; padding-bottom: 20rem; }
-.branch_list >li {width: 48%; border-radius: 8px; background: #F3F3F3; display: inline-block; margin-bottom: 2rem; cursor: pointer; }
+.branch_list >li {width: 48%; border-radius: 8px; background: #F3F3F3; display: inline-block; margin-bottom: 2rem; cursor: pointer; min-height: 120px}
 .branch_list >li span {font-weight: 700;}
 .branch_list >li:nth-child(even) {float:right;}
 .branch_list >li ul {
@@ -1608,6 +1608,14 @@ h2.guide_tit {
     position: relative;
     top: -5rem;
     font-size: 1.4em;
+}
+/* 임시 */
+.rsv_info .rsv_paycost {
+	position: fixed;
+	top: 7rem;
+	left: 20rem;
+	font-weight: bold;
+	font-size: 1.em;
 }
 .rsv_info .rsv_state {
     position: fixed;
@@ -2131,8 +2139,8 @@ ul.tabs li{
     border-radius: 8px;
     display: block;
     font-size: 1.1em;
-    width: 48%;
-    display: inline-block;
+/*     width: 48%;
+    display: inline-block; */
 }
 .cancel_btn a.dbBtn {background:#cdcdcd}
 .cancel_btn li .dislBtn  {background: #c0c0c0;}
@@ -2249,7 +2257,7 @@ ul.tabs li{
 	display : none;
 	margin:auto; 
 	width:256px;
-	border: 4px solid #cfcfcf;
+	border: 8px solid #cfcfcf;
 	padding: 4px;
 }
 

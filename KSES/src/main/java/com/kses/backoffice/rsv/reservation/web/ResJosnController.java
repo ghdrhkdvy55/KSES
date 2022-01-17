@@ -148,7 +148,7 @@ public class ResJosnController {
 					switch (SmartUtil.NVL(resvInfo.get("resv_state"),"")) {
 						case "RESV_STATE_2" : Message = "이미 이용중인 예약정보 입니다.";  break;
 						case "RESV_STATE_3" : Message = "이미 이용완료 처리된 예약정보 입니다.";  break;
-						case "RESV_STATE_4" : Message = "이미 취소된 예약정보입니다.";  break;
+						case "RESV_STATE_4" : Message = "이미 취소된 예약정보 입니다.";  break;
 						default: Message = "알수없는 예약정보 입니다."; break;
 					}
 					model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
@@ -277,9 +277,7 @@ public class ResJosnController {
 		AttendInfo attendInfoVO = new AttendInfo();
 		
 		try {
-			EgovFileScrty fileScrty = new EgovFileScrty();
-
-			String qrInfo = fileScrty.decode(sendInfo.getQrCode());
+			String qrInfo = EgovFileScrty.decode(sendInfo.getQrCode());
 			String qrCneterCd = sendInfo.getQrCneterCd(); // qr 지점 정보
 			String qrInot = sendInfo.getQrInot(); // qrIO 구분
 			
@@ -312,17 +310,13 @@ public class ResJosnController {
 				String floorNm = attempInfos[15];
 				String partNm = attempInfos[16];
 				String resvQrCount = attempInfos[17];
-			
-				for (String value : attempInfos) {
-					LOGGER.debug("value : " + value);
-				}
-
 				String formatedNow = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
 				
 				Map<String, Object> searchVO = new HashMap<String, Object>();
 				String nowDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 				searchVO.put("resvSeq", resSeq);
 				searchVO.put("resvDate", nowDate);
+				
 				Map<String, Object> resInfo = resService.selectUserResvInfo(searchVO);
 				
 				if (!qrTime.substring(0, 8).equals(formatedNow.substring(0, 8))) {
@@ -381,7 +375,7 @@ public class ResJosnController {
 					}
 				}
 				
-				LOGGER.info("resvQrCount : " + resvQrCount + " resv_qr_count" + SmartUtil.NVL(resInfo.get("resv_qr_count"),""));
+
 				if (!resvQrCount.equals(SmartUtil.NVL(resInfo.get("resv_qr_count"),""))) {
 					ERROR_MSG = "QR발급회차 불일치";
 					ERROR_CD = "ERROR_08";
@@ -389,7 +383,7 @@ public class ResJosnController {
 					model.addObject("ERROR_MSG", ERROR_MSG);
 					return model;	
 				}
-				LOGGER.info("큐알 장비에서 보내주는 값 : " + qrInot + " 큐알 코드 안에 있는 inot값 : " + inOt);
+
 				if (!qrInot.equals(inOt)) {
 					ERROR_MSG = qrInot.equals("IN") ? "퇴장 정보 없음." : "입장 정보 없음.";
 					ERROR_CD = "ERROR_07";
@@ -477,7 +471,7 @@ public class ResJosnController {
 			searchVO.put("resvDate", nowDate);
 
 			Map<String, Object> resInfo = resService.selectUserResvInfo(searchVO);
-			String resvTicketDvsn = SmartUtil.NVL(resInfo.get("resv_pay_dvsn"), "");
+			String resvTicketDvsn = SmartUtil.NVL(resInfo.get("resv_ticket_dvsn"), "");
 			String resvState = SmartUtil.NVL(resInfo.get("resv_state"), "");
 			
 			if(resInfo == null || Integer.valueOf(resInfo.get("resv_end_dt").toString()) < Integer.valueOf(nowDate)) {
@@ -488,7 +482,7 @@ public class ResJosnController {
 				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 				model.addObject(Globals.STATUS_MESSAGE, "예약 취소된 예약정보 입니다.");
 				return model;
-			} else if(resvTicketDvsn.toString().equals("RESV_PAY_DVSN_2")) { 
+			} else if(resvTicketDvsn.toString().equals("RESV_TICKET_DVSN_2")) { 
 				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 				model.addObject(Globals.STATUS_MESSAGE, "종이QR발급된  예약정보입니다.");
 				return model;
@@ -578,8 +572,8 @@ public class ResJosnController {
 			searchVO.put("resvSeq", SmartUtil.NVL(jsonInfo.get("RES_NO"), "").toString());
 			String localTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 			searchVO.put("resvDate", localTime);
-			Map<String, Object> resInfo = resService.selectUserResvInfo(searchVO);
-
+			Map<String, Object> resInfo = resService.selectUserResvInfo(searchVO);		
+			
 			String recDate = SmartUtil.NVL(jsonInfo.get("RES_SEND_DATE"), "19700101").toString();
 			
 			if (resInfo != null && !SmartUtil.NVL(resInfo.get("resv_pay_dvsn"), "").toString().equals("RESV_PAY_DVSN_1")) {
@@ -681,15 +675,26 @@ public class ResJosnController {
 			searchVO.put("resvDate", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
 			
 			Map<String, Object> resInfo = resService.selectUserResvInfo(searchVO);
+			
+			Map<String, Object> machineVO = new HashMap<String, Object>();
+			machineVO.put("ticketMchnSno", SmartUtil.NVL(jsonInfo.get("MACHINE_SERIAL"), "").toString());
+			machineVO.put("centerCd", SmartUtil.NVL(resInfo.get("center_cd"), "").toString());
+			Map<String, Object> machineSerial = resService.selectTicketMchnSnoCheck(machineVO);
+			LOGGER.info("머신시리얼 체크 : " + machineSerial.get("cnt"));
+			
 			String localTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 			String recDate = SmartUtil.NVL(jsonInfo.get("RES_SEND_DATE"), "19700101").toString();
 			String qrTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+			
 
 			LOGGER.debug(Integer.valueOf(SmartUtil.NVL(jsonInfo.get("RES_PRICE"), "").toString()) + ":"
 					+ Integer.valueOf(SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString()));
 			if (resInfo == null || !recDate.substring(0, 8).equals(localTime)) {
 				returnCode = "ERROR_01";
 				returnMessage = "예약 정보 없음.";
+			} else if (machineSerial.get("cnt").toString().equals("0")) {
+				returnCode = "ERROR_05";
+				returnMessage = "장소 오류.";
 			} else if (resInfo != null && !SmartUtil.NVL(jsonInfo.get("RES_PRICE"), "").toString().equals(SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString())) {
 				returnCode = "ERROR_03";
 				returnMessage = "결제 금액 확인 요망.";
@@ -716,8 +721,7 @@ public class ResJosnController {
 						+ SmartUtil.NVL(jsonInfo.get("IF_NO"), "").toString() + ":"
 						+ SmartUtil.NVL(resInfo.get("resv_entry_dvsn"), "").toString() + ":"
 						+ SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString() + ":"
-						+ SmartUtil.NVL(resInfo.get("center_rbm_cd"), "").toString() + ":" 
-						+ "PAPER_QR_ENTRY" + ":"
+						+ SmartUtil.NVL(resInfo.get("center_rbm_cd"), "").toString() + "::" 
 						+ SmartUtil.NVL(resInfo.get("user_phone"), "").toString() + ":"
 						+ SmartUtil.NVL(resInfo.get("center_nm"), "").toString() + ":"
 						+ SmartUtil.NVL(resInfo.get("seat_nm"), "").toString() + ":"
@@ -797,7 +801,7 @@ public class ResJosnController {
 		try {
 			String corpNum = propertiesService.getString("Company.Number");
 
-			Map<String, Object> resInfo = resService.selectResInfoDetail(resvSeq);
+			Map<String, Object> resInfo = resService.selectResvInfoDetail(resvSeq);
 
 			String msgKey = tranGubun.equals("bill") ? resvSeq + "_001" : resvSeq + "_002";
 			String msgTradType = tranGubun.equals("bill") ? "승인거래" : "취소거래";

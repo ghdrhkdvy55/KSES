@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kses.backoffice.rsv.reservation.mapper.ResvInfoManageMapper">
 	<!-- backoffice -->
-	<select id="selectResInfoManageListByPagination" resultType="lmap">
+	<select id="selectResvInfoManageListByPagination" resultType="lmap">
 		SELECT * FROM 
 		( 
 			SELECT 	
@@ -27,9 +27,9 @@
 					C.CENTER_NM, C.CENTER_PILOT_YN, D.USER_NM, REGEXP_REPLACE(D.USER_PHONE, '(02|.{3})(.+)(.{4})', '\1-\2-\3') AS USER_PHONE
 				FROM TSER_RESV_INFO_I A, TSEB_SEAT_INFO_D B, TSEB_CENTER_INFO_M C, TSER_USER_INFO_I D, TSEB_PART_INFO_D E
 				WHERE A.SEAT_CD = B.SEAT_CD(+)
+				AND A.PART_CD = E.PART_CD(+)
 				AND A.CENTER_CD = C.CENTER_CD
 				AND A.USER_ID = D.USER_ID
-				AND B.PART_CD = E.PART_CD
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchCenterCd)">
 					AND A.CENTER_CD = #{params.searchCenterCd}
 				</if>
@@ -92,11 +92,11 @@
 		ORDER BY TA.RESV_SEQ DESC
     </select>
     
-	<select id="selectResInfoDetail" resultType="lmap">
+	<select id="selectResvInfoDetail" resultType="lmap">
 		SELECT
 			A.RESV_SEQ, A.SEAT_CD, A.SEASON_CD, A.RESV_START_DT, A.RESV_END_DT, A.RESV_DVSN,
 			A.RESV_START_TM, A.RESV_END_TM, TO_CHAR(A.RESV_REQ_DATE,'YYYY-MM-DD HH24:MI') AS RESV_REQ_DATE, A.USER_ID,
-			A.RESV_STATE, A.RESV_USER_ASK_YN, A.RESV_RCPT_YN, A.RESV_RCPT_NUMBER, A.RESV_PAY_COST, 
+			A.RESV_STATE, A.RESV_USER_ASK_YN, A.RESV_RCPT_YN, A.RESV_RCPT_NUMBER, A.RESV_PAY_COST, A.RESV_ENTRY_DVSN,
 			A.RESV_RCPT_DVSN, A.RESV_PAY_DVSN, A.RESV_USER_DVSN, A.RESV_USER_NM, REGEXP_REPLACE(A.RESV_USER_CLPHN, '(02|.{3})(.+)(.{4})', '\1-\2-\3') AS RESV_USER_CLPHN, 
 			A.RESV_ENTRY_PAY_COST, A.RESV_SEAT_PAY_COST, A.RESV_TICKET_DVSN,
 			FN_DETAILCODENM(A.RESV_USER_DVSN) AS RESV_USER_DVSN_TEXT,
@@ -165,7 +165,7 @@
 			A.RESV_SEQ,
 			A.CENTER_CD, A.PART_CD, A.FLOOR_CD, A.SEAT_CD, A.SEASON_CD, A.RESV_START_DT, A.RESV_END_DT, A.RESV_DVSN,
 			A.RESV_START_TM, A.RESV_END_TM, TO_CHAR(A.RESV_REQ_DATE,'YYYY-MM-DD HH24:MI') AS RESV_REQ_DATE, A.RESV_ENTRY_DVSN,
-			A.RESV_PAY_COST, A.RESV_USER_NM, A.RESV_USER_CLPHN, A.RESV_QR_COUNT,
+			A.RESV_PAY_COST, A.RESV_USER_NM, A.RESV_USER_CLPHN, A.RESV_QR_COUNT, A.RESV_TICKET_DVSN,
 			CASE  
     			WHEN A.RESV_ENTRY_DVSN = 'ENTRY_DVSN_1' THEN '자유석' 
     			ELSE (SELECT SEAT_NM FROM TSEB_SEAT_INFO_D WHERE SEAT_CD = A.SEAT_CD)
@@ -354,13 +354,13 @@
            			#{userId, jdbcType=VARCHAR}, 
 				</when>
 				<otherwise>
-					FN_NON_MEMBERID(#{centerCd}),
+					CONCAT('NOC',#{resvSeq}),
 				</otherwise>
 			</choose>
 			#{resvUserNm}, #{resvUserClphn}, #{resvUserAskYn, jdbcType=VARCHAR}, '',
 			'RESV_STATE_1', 'N', #{resvIndvdlinfoAgreYn, jdbcType=VARCHAR},
-			#{resvEntryDvsn, jdbcType=VARCHAR}, 'RESV_PAY_DVSN_1', FN_PAYCOST(#{centerCd, jdbcType=VARCHAR}), #{resvSeatPayCost, jdbcType=VARCHAR}, 
-			FN_PAYCOST(#{centerCd, jdbcType=VARCHAR}) + #{resvSeatPayCost, jdbcType=VARCHAR}, SYSDATE, 'admin', 
+			#{resvEntryDvsn, jdbcType=VARCHAR}, 'RESV_PAY_DVSN_1', FN_ENTRYPAYCOST(#{centerCd, jdbcType=VARCHAR}), #{resvSeatPayCost, jdbcType=VARCHAR}, 
+			FN_ENTRYPAYCOST(#{centerCd, jdbcType=VARCHAR}) + #{resvSeatPayCost, jdbcType=VARCHAR}, SYSDATE, 'admin', 
 			SYSDATE, 'admin'  	
 		)
     </insert>
@@ -387,8 +387,8 @@
 				TO_CHAR(TO_DATE(#{resvDate, jdbcType=VARCHAR},'YYYYMMDD') - (INTERVAL '1' DAY),'YYYYMMDD'), #{resvDate, jdbcType=VARCHAR}, 'TEMP', '0000', '2359',
 				SYSDATE, #{resvUserDvsn, jdbcType=VARCHAR}, #{userId, jdbcType=VARCHAR}, #{resvUserNm}, #{resvUserClphn}, #{resvUserAskYn, jdbcType=VARCHAR}, '',
 				'RESV_STATE_1', 'N', #{resvIndvdlinfoAgreYn, jdbcType=VARCHAR},
-				#{resvEntryDvsn, jdbcType=VARCHAR}, 'RESV_PAY_DVSN_1', FN_PAYCOST(#{centerCd, jdbcType=VARCHAR}), #{resvSeatPayCost, jdbcType=VARCHAR}, 
-				FN_PAYCOST(#{centerCd, jdbcType=VARCHAR}) + #{resvSeatPayCost, jdbcType=VARCHAR}, 
+				#{resvEntryDvsn, jdbcType=VARCHAR}, 'RESV_PAY_DVSN_1', FN_ENTRYPAYCOST(#{centerCd, jdbcType=VARCHAR}), #{resvSeatPayCost, jdbcType=VARCHAR}, 
+				FN_ENTRYPAYCOST(#{centerCd, jdbcType=VARCHAR}) + #{resvSeatPayCost, jdbcType=VARCHAR}, 
 				SYSDATE, #{adminId, jdbcType=VARCHAR}, SYSDATE, #{adminId, jdbcType=VARCHAR}  	
 			)
 		</foreach>
@@ -416,8 +416,8 @@
     		FLOOR_CD = #{params.floorCd},
     		PART_CD = #{params.partCd},
     		SEAT_CD = #{params.seatCd},
-    		RESV_ENTRY_PAY_COST = FN_PAYCOST(#{params.centerCd}),
-    		RESV_PAY_COST = FN_PAYCOST(#{params.centerCd}) + #{params.resvSeatPayCost},
+    		RESV_ENTRY_PAY_COST = FN_ENTRYPAYCOST(#{params.centerCd}),
+    		RESV_PAY_COST = FN_ENTRYPAYCOST(#{params.centerCd}) + #{params.resvSeatPayCost},
     		RESV_SEAT_PAY_COST = #{params.resvSeatPayCost},
     		LAST_UPDUSR_ID = #{params.userId},
     		LAST_UPDT_DTM = SYSDATE
@@ -494,4 +494,12 @@
 		)
 	}
 	</select>   
+	
+	<!-- 무인 발권시 지점 정보 확인 -->
+	<select id="selectTicketMchnSnoCheck" resultType="lmap">
+		SELECT count(*) AS CNT
+			FROM TSEC_TICKET_MCHN_M  
+		WHERE TICKET_MCHN_SNO = #{params.ticketMchnSno}
+		AND CENTER_CD = #{params.centerCd}
+	</select>
 </mapper>

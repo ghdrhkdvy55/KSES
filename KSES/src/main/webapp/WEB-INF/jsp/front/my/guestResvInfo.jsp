@@ -52,7 +52,7 @@
                     </ul>
 
                     <div class="inquiry_btn">
-                        <a href="javascript:guestResvService.fn_getGuestResvInfo();;">인증번호 요청</a>
+                        <a href="javascript:guestResvService.fn_getGuestResvInfo();">인증번호 요청</a>
                     </div>
                     
                     <div class="ok_sumit">
@@ -134,7 +134,7 @@
 				<div class="contents">
 					<ul>
 						<li class="home"><a href="javascript:fn_pageMove('regist','/front/main.do');">home</a><span>HOME</span></li>
-						<li class="rsv"><a href="/front/rsvCenter.do">rsv</a><span>입장예약</span></li>
+						<li class="rsv"><a href="javascript:fn_moveReservation();">rsv</a><span>입장예약</span></li>
 						<li class="my active"><a href="javascript:fn_pageMove('regist','/front/mypage.do');">my</a><span>마이페이지</span></li>
 		            </ul>
 				<div class="clear"></div>
@@ -264,7 +264,7 @@
 							$(".rsvInfo").hide();
 							$(".inquiry_btn a").attr("href","javascript:guestResvService.fn_reSmsCertfi();").html("인증번호 재요청");
 				    	} else if(result.status == "LOGIN FAIL") {
-				    		fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
+				    		fn_openPopup("세션 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
 				    	} else {
 				    		fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
 				    	}

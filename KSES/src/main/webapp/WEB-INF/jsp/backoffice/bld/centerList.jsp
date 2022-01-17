@@ -948,7 +948,7 @@
 			fn_updateSelect : function(mode, centerHolySeq){
 			$("#centerHolySeq").val(centerHolySeq);
 			$("#mode").val(mode);
-			
+			lastUpdusrId
 			var url = "/backoffice/bld/centerHolyUpdateSelect.do";
 			var param = {
 							"centerHolySeq" : centerHolySeq,
@@ -971,7 +971,6 @@
 						$("#centerHolySeq").val(obj.center_holy_seq);
 						$("#holyDt").val(obj.holy_dt);
 						$("#holyNm").val(obj.holy_nm);
-						$("#lastUpdusrId").val(obj.last_updusr_id);
 						$("#useYn").val(obj.use_yn).prop("selected", true);;
 					}
 				},
