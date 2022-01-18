@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -48,53 +47,28 @@ public class MyPageInfoManageController {
 	private CenterInfoManageService centerInfoManageService;
 	
 	@RequestMapping (value="mypage.do")
-	public ModelAndView selectFrontMypage(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo,
-											@RequestParam Map<String, String> param,
-											HttpServletRequest request,
-											BindingResult result) throws Exception {
-		
-		ModelAndView model = new ModelAndView("/front/my/mypage");
-		try {
-			HttpSession httpSession = request.getSession(true);
-			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
-			
-			if(userLoginInfo == null) {
-				userLoginInfo = new UserLoginInfo();
-				userLoginInfo.setUserDvsn("USER_DVSN_2");
-				httpSession.setAttribute("userLoginInfo", userLoginInfo);
-			}
-			
-			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-		} catch(Exception e) {
-			LOGGER.error("selectFrontMypage : " + e.toString());
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg")); 
-		}
-		return model;
+	public ModelAndView viewFrontmypage() throws Exception {
+		return new ModelAndView("/front/my/mypage");
 	}
 	
 	@RequestMapping (value="userResvHistory.do")
-	public ModelAndView selectFrontUserResvHistory(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo,
-														@RequestParam Map<String, String> param,
-														HttpServletRequest request,
-														BindingResult result) throws Exception {
+	public ModelAndView viewFrontUserResvHistory(	@RequestParam Map<String, String> param,
+													HttpServletRequest request,
+													BindingResult result) throws Exception {
 		
 		ModelAndView model = new ModelAndView("/front/my/userResvHistory");
 		try {
-			HttpSession httpSession = request.getSession(true);
-			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
+			HttpSession httpSession = request.getSession();
+			UserLoginInfo userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
 			
 			if(userLoginInfo == null) {
-				userLoginInfo = new UserLoginInfo();
-				userLoginInfo.setUserDvsn("USER_DVSN_2");
-				httpSession.setAttribute("userLoginInfo", userLoginInfo);
 				model.setViewName("redirect:/front/main.do");
 				return model;
 			}
 			
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		} catch(Exception e) {
-			LOGGER.error("selectFrontUserResvHistory : " + e.toString());
+			LOGGER.error("viewFrontUserResvHistory : " + e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg")); 
 		}
@@ -102,27 +76,21 @@ public class MyPageInfoManageController {
 	}
 	
 	@RequestMapping (value="userRcptInfo.do")
-	public ModelAndView selectFrontUserRcptInfo(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo,
-													@RequestParam Map<String, String> param,
-													HttpServletRequest request,
-													BindingResult result) throws Exception {
+	public ModelAndView viewFrontUserRcptInfo(HttpServletRequest request) throws Exception {
 		
 		ModelAndView model = new ModelAndView("/front/my/userRcptInfo");
 		try {
-			HttpSession httpSession = request.getSession(true);
-			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
+			HttpSession httpSession = request.getSession();
+			UserLoginInfo userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
 			
 			if(userLoginInfo == null) {
-				userLoginInfo = new UserLoginInfo();
-				userLoginInfo.setUserDvsn("USER_DVSN_2");
-				httpSession.setAttribute("userLoginInfo", userLoginInfo);
 				model.setViewName("redirect:/front/main.do");
 				return model;
 			} 
 			
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		} catch(Exception e) {
-			LOGGER.error("selectFrontUserRcptInfo : " + e.toString());
+			LOGGER.error("viewFrontUserRcptInfo : " + e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg")); 
 		}
@@ -130,20 +98,14 @@ public class MyPageInfoManageController {
 	}
 	
 	@RequestMapping (value="userRcptInfoAjax.do")
-	public ModelAndView selectFrontUserRcptInfoAjax(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo,
-														HttpServletRequest request,
-														BindingResult result) throws Exception {
+	public ModelAndView selectFrontUserRcptInfoAjax(HttpServletRequest request) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
-			HttpSession httpSession = request.getSession(true);
-			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
+			HttpSession httpSession = request.getSession();
+			UserLoginInfo userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
 			
 			if(userLoginInfo == null) {
-				userLoginInfo = new UserLoginInfo();
-				userLoginInfo.setUserDvsn("USER_DVSN_2");
-				httpSession.setAttribute("userLoginInfo", userLoginInfo);
-
 				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
 				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
 				return model;
@@ -201,22 +163,16 @@ public class MyPageInfoManageController {
 	}
 	
 	@RequestMapping (value="userMyResvInfo.do")
-	public ModelAndView selectFrontUserMyResvInfo(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo,
-													@RequestBody Map<String, Object> params,
+	public ModelAndView selectFrontUserMyResvInfo(	@RequestBody Map<String, Object> params,
 													HttpServletRequest request,
 													BindingResult result) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
 			HttpSession httpSession = request.getSession(true);
-			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
+			UserLoginInfo userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
 			
 			if(userLoginInfo == null) {
-				userLoginInfo = new UserLoginInfo();
-				userLoginInfo.setUserDvsn("USER_DVSN_2");
-				
-				httpSession.setAttribute("userLoginInfo", userLoginInfo);
-				
 				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
 				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login")); 
 				return model;
@@ -235,44 +191,18 @@ public class MyPageInfoManageController {
 	}
 	
 	@RequestMapping (value="guestResvInfo.do")
-	public ModelAndView viewGuestResvInfopage(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo,
-														@RequestParam Map<String, String> param,
-														HttpServletRequest request,
-														BindingResult result) throws Exception {
-		
-		ModelAndView model = new ModelAndView("/front/my/guestResvInfo");
-		try {
-			HttpSession httpSession = request.getSession(true);
-			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
-			
-			if(userLoginInfo == null) {
-				userLoginInfo = new UserLoginInfo();
-				userLoginInfo.setUserDvsn("USER_DVSN_2");
-				httpSession.setAttribute("userLoginInfo", userLoginInfo);
-			}
-			
-			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-		} catch(Exception e) {
-			LOGGER.error("viewGuestResvInfopage : " + e.toString());
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg")); 
-		}
-		return model;
+	public ModelAndView viewGuestResvInfopage() throws Exception {
+		return new ModelAndView("/front/my/guestResvInfo");
 	}
 	
 	@RequestMapping (value="guestMyResvInfo.do")
-	public ModelAndView selectGuestMyResvInfo(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo,
-												@RequestBody Map<String, Object> params,
+	public ModelAndView selectGuestMyResvInfo(	@RequestBody Map<String, Object> params,
 												HttpServletRequest request,
 												BindingResult result) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-		try {
-			HttpSession httpSession = request.getSession(true);
-			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
-						
+		try {	
 			List<Map<String, Object>> guestResvInfo = resvService.selectGuestMyResvInfo(params);
-			
 			model.addObject("guestResvInfo", guestResvInfo);
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		} catch(Exception e) {
@@ -288,12 +218,8 @@ public class MyPageInfoManageController {
 		
 		ModelAndView model = new ModelAndView("/front/my/notice");
 		try {
-			
-			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			model.addObject("centerInfo", centerInfoManageService.selectCenterInfoComboList());
-			
-			
-			
+			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		} catch(Exception e) {
 			LOGGER.error("selectGuestMyResvInfo : " + e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);

@@ -86,36 +86,13 @@ public class FrontResvInfoManageController {
 	private SystemInfoManageService systemService;
 		
 	@RequestMapping (value="rsvCenter.do")
-	public ModelAndView viewResvCenterList(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo,
-												@RequestParam Map<String, Object> params,
-												HttpServletRequest request,
-												BindingResult result) throws Exception {
-		
-		ModelAndView model = new ModelAndView("/front/rsv/rsvCenter");
-		try {
-			HttpSession httpSession = request.getSession(true);
-			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
-			
-			if(userLoginInfo == null) {
-				userLoginInfo = new UserLoginInfo();
-				userLoginInfo.setUserDvsn("USER_DVSN_2");
-				httpSession.setAttribute("userLoginInfo", userLoginInfo);
-			}
-			
-			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-		} catch(Exception e) {
-			LOGGER.error("viewResvCenterList : " + e.toString());
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg")); 
-		}
-		return model;
+	public ModelAndView viewResvCenterList() throws Exception {
+		return new ModelAndView("/front/rsv/rsvCenter");
 	}
 	
 	@RequestMapping (value="rsvCenterListAjax.do")
-	public ModelAndView selectRsvCenterListAjax(	@ModelAttribute("loginVO") LoginVO loginVO, 
-													@RequestParam("resvDate") String resvDate,
-													HttpServletRequest request,
-													BindingResult result) throws Exception {
+	public ModelAndView selectRsvCenterListAjax(	@RequestParam("resvDate") String resvDate,
+													HttpServletRequest request) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
@@ -131,18 +108,15 @@ public class FrontResvInfoManageController {
 	}
 	
 	@RequestMapping (value="rsvSeat.do")
-	public ModelAndView viewResvSeatList(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo, 
-											@RequestParam Map<String, Object> params,
-											HttpServletRequest request,
-											BindingResult result) throws Exception {
+	public ModelAndView viewResvSeatList(	@RequestParam Map<String, Object> params,
+											HttpServletRequest request) throws Exception {
 		
 		ModelAndView model = new ModelAndView("/front/rsv/rsvSeat");
 		try {
-			HttpSession httpSession = request.getSession(true);
-			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
+			HttpSession httpSession = request.getSession();
+			UserLoginInfo userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
 			
 			if(userLoginInfo == null) {
-				userLoginInfo = new UserLoginInfo();
 				model.setViewName("redirect:/front/main.do");
 			}
 			
@@ -162,7 +136,7 @@ public class FrontResvInfoManageController {
 			model.addObject("floorList", floorList);
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		} catch(Exception e) {
-			LOGGER.error("selectRsvSeatList : " + e.toString());
+			LOGGER.error("viewResvSeatList : " + e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg")); 
 		}
@@ -170,10 +144,8 @@ public class FrontResvInfoManageController {
 	}
 	
 	@RequestMapping (value="rsvPartListAjax.do")
-	public ModelAndView selectRsvPartListAjax(	@ModelAttribute("loginVO") UserLoginInfo userLoginInfo, 
-												@RequestBody Map<String, Object> params,
-												HttpServletRequest request,
-												BindingResult result) throws Exception {
+	public ModelAndView selectRsvPartListAjax(	@RequestBody Map<String, Object> params,
+												HttpServletRequest request) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
@@ -193,10 +165,8 @@ public class FrontResvInfoManageController {
 	}
 	
 	@RequestMapping (value="rsvSeatListAjax.do")
-	public ModelAndView selectRsvSeatListAjax(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo, 
-												@RequestBody Map<String, Object> params,
-												HttpServletRequest request,
-												BindingResult result) throws Exception {
+	public ModelAndView selectRsvSeatListAjax(	@RequestBody Map<String, Object> params,
+												HttpServletRequest request) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
