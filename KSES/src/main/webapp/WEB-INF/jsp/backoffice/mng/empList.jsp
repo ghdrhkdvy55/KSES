@@ -168,7 +168,10 @@
 			{ label: '사용유무', name:'use_yn', align:'center' },
 			{ label: '관리자여부', name:'admin_dvsn', align:'center' },
 			{ label: '최종수정자', name:'last_updusr_id', hidden: true },
-			{ label: '최종수정일', name:'last_updt_dtm', align:'center', formatter: 'date' }
+			{ label: '최종수정일', name:'last_updt_dtm', align:'center', formatter: 'date' },
+			{ label: '수정', align:'center', width: 50, fixed: true, formatter: (c, o, row) =>
+	        	'<a href="javascript:fnEmpInfo(\''+ row.emp_no +'\');" class="edt_icon"></a>'
+	        }
 		], false, false, fnSearch);
 	});
 	// 메인 목록 검색
@@ -181,13 +184,12 @@
 			searchDepth: $('#searchDepth').val()
 		};
 		EgovJqGridApi.mainGridAjax('/backoffice/mng/empListAjax.do', params, fnSearch);
-		EgovJqGridApi.mainGridDetail(fnEmpInfo);
 	}
 	// 메인 상세 팝업 정의
-	function fnEmpInfo(id, rowData) {
+	function fnEmpInfo(rowId) {
 		let $popup = $('[data-popup=mng_emp_add]');
 		let $form = $popup.find('form:first');
-		if (id === undefined || id === null) {
+		if (rowId === undefined || rowId === null) {
 			$popup.find('h2:first').text('사용자 등록');
 			$popup.find('span#sp_Unqi').show();
 			$popup.find('tr#trPassword').show();
@@ -204,6 +206,7 @@
 			$form.find('select[name=empState]').removeAttr('disabled');
 		}
 		else {
+			let rowData = $('#mainGrid').jqGrid('getRowData', rowId);
 			// 직원일 경우 수정 불가
 			if (rowData.last_updusr_id === 'BATCH') {
 				$popup.find('h2:first').text('사용자 상세');

@@ -121,7 +121,10 @@
 			{ label: '한글명',  name: 'progrm_koreannm', align: 'left', fixed: true },
 			{ label: '저장경로', name: 'progrm_stre_path', hidden: true },
 			{ label: 'URL', name: 'url', align: 'left' },
-			{ label: '설명', name: 'progrm_dc', align: 'left', sortable: false }
+			{ label: '설명', name: 'progrm_dc', align: 'left', sortable: false },
+			{ label: '수정', align:'center', width: 50, fixed: true, formatter: (c, o, row) =>
+	        	'<a href="javascript:fnProgramInfo(\''+ row.progrm_file_nm +'\');" class="edt_icon"></a>'
+	        }
 		], false, false, fnSearch);
 	});
 	// 메인 목록 검색
@@ -132,13 +135,12 @@
 			searchKeyword: $('#searchKeyword').val()
 		};
 		EgovJqGridApi.mainGridAjax('/backoffice/bas/progrmListAjax.do', params, fnSearch);
-		EgovJqGridApi.mainGridDetail(fnProgramInfo);
 	}
 	// 프로그램 상세 팝업 정의
-	function fnProgramInfo(id, rowData) {
+	function fnProgramInfo(rowId) {
 		let $popup = $('[data-popup=bas_program_add]');
 		let $form = $popup.find('form:first');
-		if (id === undefined || id === null) {
+		if (rowId === undefined || rowId === null) {
 			$popup.find('h2:first').text('프로그램 등록');
 			$popup.find('span#sp_Unqi').show();
 			$popup.find('button.blueBtn').off('click').click(fnProgramInsert);
@@ -148,6 +150,7 @@
 			$form.find(':text[name=progrmFileNm]').removeAttr('readonly');
 		}
 		else {
+			let rowData = $('#mainGrid').jqGrid('getRowData', rowId);
 			$popup.find('h2:first').text('프로그램 수정');
 			$popup.find('span#sp_Unqi').hide();
 			$popup.find('button.blueBtn').off('click').click(fnProgramUpdate);

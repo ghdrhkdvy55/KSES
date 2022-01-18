@@ -182,7 +182,10 @@
 			{ label: '사용유무', name:'use_yn', align:'center' },
 			{ label: '지점코드', name:'center_cd', hidden: true },
 			{ label: '지점', name:'admin_dvsn', align:'center' },
-			{ label: '최종수정일', name:'last_updt_dtm', align:'center', formatter: 'date' }
+			{ label: '최종수정일', name:'last_updt_dtm', align:'center', formatter: 'date' },
+			{ label: '수정', align:'center', width: 50, fixed: true, formatter: (c, o, row) =>
+	        	'<a href="javascript:fnAdminInfo(\''+ row.admin_id +'\');" class="edt_icon"></a>'
+	        }
 		], true, false, fnSearch);
 		// 직원 검색 JqGrid 정의
 		EgovJqGridApi.popGrid('popGrid', [
@@ -216,13 +219,12 @@
 			searchDeptCd: $('#searchDeptCd').val()
 		};
 		EgovJqGridApi.mainGridAjax('/backoffice/mng/adminListAjax.do', params, fnSearch);
-		EgovJqGridApi.mainGridDetail(fnAdminInfo);
 	}
 	// 메인 상세 팝업 정의
-	function fnAdminInfo(id, rowData) {
+	function fnAdminInfo(rowId) {
 		let $popup = $('[data-popup=mng_admin_add]');
 		let $form = $popup.find('form:first');
-		if (id === undefined || id === null) {
+		if (rowId === undefined || rowId === null) {
 			$popup.find('h2:first').text('관리자 등록');
 			$popup.find('button.blueBtn').off('click').click(fnAdminInsert);
 			$popup.find('a.grayBtn').show();
@@ -238,6 +240,7 @@
 			$form.find('#spEmpEmail').text('');
 		}
 		else {
+			let rowData = $('#mainGrid').jqGrid('getRowData', rowId);
 			$popup.find('h2:first').text('관리자 수정');
 			$popup.find('button.blueBtn').off('click').click(fnAdminUpdate);
 			$popup.find('a.grayBtn').hide();
@@ -251,8 +254,6 @@
 			$form.find('#spEmpDeptNm').text(rowData.dept_nm);
 			$form.find('#spEmpClphn').text(rowData.emp_clphn);
 			$form.find('#spEmpEmail').text(rowData.emp_email);
-			// checkbox 있는 경우 필요
-			$('#mainGrid').jqGrid('setSelection', id);
 		}
 		$popup.bPopup();
 	}

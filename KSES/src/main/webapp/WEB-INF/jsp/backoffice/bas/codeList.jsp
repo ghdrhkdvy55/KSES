@@ -160,9 +160,12 @@
 			{ label: '분류코드ID',  name:'code_id', align: 'center', fixed: true, key: true },
 			{ label: '분류코드명', name:'code_id_nm', align:'center', fixed: true },
 			{ label: '분류코드설명', name:'code_id_dc', align:'left', sortable: false },
-			{ label: '사용유무', name:'use_at', align:'center', width:'100', fixed: true },
-            { label: '수정자', name:'last_updusr_id', align:'center', width:'120', fixed: true },
-            { label: '수정일자', name:'last_updt_pnttm', align:'center', width:'120', fixed: true, formatter: 'date' },
+			{ label: '사용유무', name:'use_at', align:'center', fixed: true },
+            { label: '수정자', name:'last_updusr_id', align:'center', fixed: true },
+            { label: '수정일자', name:'last_updt_pnttm', align:'center', fixed: true, formatter: 'date' },
+            { label: '수정', align:'center', width: 50, fixed: true, formatter: (c, o, row) =>
+            	'<a href="javascript:fnCmmnCodeInfo(\''+ row.code_id +'\');" class="edt_icon"></a>'
+            }
 		], false, true, fnSearch);
 	});
 	// 메인 목록 검색
@@ -173,7 +176,6 @@
 			searchKeyword: $('#searchKeyword').val()
 		};
 		EgovJqGridApi.mainGridAjax('/backoffice/bas/codeListAjax.do', params, fnSearch, fnSubGrid);
-		EgovJqGridApi.mainGridDetail(fnCmmnCodeInfo);
 	}
 	// 서브 목록 정의
 	function fnSubGrid(id, codeId) {
@@ -189,7 +191,7 @@
             { label: '수정자', name:'last_updusr_id', align:'center', width:'120', fixed: true },
             { label: '수정일자', name:'last_updt_pnttm', align:'center', width:'120', fixed: true, formatter: 'date' },
             { label: '삭제', align: 'center', width: 50, fixed: true, sortable: false, formatter: (c, o, row) => 
-            	'<a href="javascript:fnCmmnDetailCodeDelete(\''+ row.code +'\',\''+ row.code_id +'\');">삭제</a>'
+            	'<a href="javascript:fnCmmnDetailCodeDelete(\''+ row.code +'\',\''+ row.code_id +'\');" class="del_icon"></a>'
            	}
 		], '/backoffice/bas/CmmnDetailCodeList.do', {
 			codeId: codeId
@@ -197,10 +199,10 @@
 		EgovJqGridApi.subGridDetail(subGridId, fnCmmnDetailCodeInfo);
 	}
 	// 분류 코드 상세 팝업 정의
-	function fnCmmnCodeInfo(id, rowData) {
+	function fnCmmnCodeInfo(rowId) {
 		let $popup = $('[data-popup=bas_code_add]');
 		let $form = $popup.find('form:first');
-		if (id === undefined || id === null) {
+		if (rowId === undefined || rowId === null) {
 			$popup.find('h2:first').text('분류코드 등록');
 			$popup.find('span#sp_Unqi').show();
 			$popup.find('button.blueBtn').off('click').click(fnCmmnCodeInsert);
@@ -211,6 +213,7 @@
 			$form.find(':radio[name=useAt]:first').prop('checked', true);
 		}
 		else {
+			let rowData = $('#mainGrid').jqGrid('getRowData', rowId);
 			$popup.find('h2:first').text('분류코드 수정');
 			$popup.find('span#sp_Unqi').hide();
 			$popup.find('button.blueBtn').off('click').click(fnCmmnCodeUpdate);

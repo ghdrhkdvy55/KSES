@@ -142,7 +142,10 @@
 			{ label: '사용유무', name:'use_yn', align:'center', fixed: true },
 			{ label: '지점적용', name:'holy_center_spread', align:'center', fixed: true },
 			{ label: '수정자', name: 'last_updusr_id', align:'center', fixed: true },
-			{ label: '수정일자', name:'last_updt_dtm', align:'center', fixed: true }
+			{ label: '수정일자', name:'last_updt_dtm', align:'center', fixed: true },
+			{ label: '수정', align:'center', width: 50, fixed: true, formatter: (c, o, row) =>
+	        	'<a href="javascript:fnHolyInfo(\''+ row.holy_seq +'\');" class="edt_icon"></a>'
+	        }
 		], true, false, fnSearch);
 		// 휴일 적용 센터 JqGrid 정의
 		EgovJqGridApi.popGrid('popGrid', [
@@ -220,13 +223,12 @@
 			searchTo: $('#searchTo').val()
 		};
 		EgovJqGridApi.mainGridAjax('/backoffice/bas/holyListAjax.do', params, fnSearch);
-		EgovJqGridApi.mainGridDetail(fnHolyInfo);
 	}
 	// 메인 상세 팝업 정의
-	function fnHolyInfo(id, rowData) {
+	function fnHolyInfo(rowId) {
 		let $popup = $('[data-popup=bas_holiday_add]');
 		let $form = $popup.find('form:first');
-		if (id === undefined || id === null) {
+		if (rowId === undefined || rowId === null) {
 			$popup.find('h2:first').text('휴일정보 등록');
 			$popup.find('span#sp_Unqi').show();
 			$popup.find('#popCenterList').hide();
@@ -239,6 +241,7 @@
 			$form.find(':radio[name=useYn]:first').prop('checked', true);
 		}
 		else {
+			let rowData = $('#mainGrid').jqGrid('getRowData', rowId);
 			$popup.find('h2:first').text('휴일정보 수정');
 			$popup.find('span#sp_Unqi').hide();
 			$popup.find('#popCenterList').show();
@@ -248,8 +251,6 @@
 			$form.find(':text[name=holyDt]').prop('disabled', true).val(rowData.holy_dt);
 			$form.find(':text[name=holyNm]').val(rowData.holy_nm);
 			$form.find(':radio[name=useYn][value='+ rowData.use_yn +']').prop('checked', true);
-			// checkbox 있는 경우 필요
-			$('#mainGrid').jqGrid('setSelection', id);
 			fnCenterHolyInfoSearch(1);
 		}
 		$popup.bPopup();

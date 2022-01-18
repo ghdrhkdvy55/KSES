@@ -126,7 +126,10 @@
 			{ label: '생성일', name: 'author_creat_de',  align:'center', width:'120', fixed: true, formatter: 'date' },
 			{ label: '메뉴설정여부', align:'center', width:'100', fixed: true, sortable: false, formatter: (c, o, row) => 
 				row.chk_menu === 0 ? '미생성' : '생성' 
-			}
+			},
+			{ label: '수정', align:'center', width: 50, fixed: true, formatter: (c, o, row) =>
+	        	'<a href="javascript:fnAuthInfo(\''+ row.author_code +'\');" class="edt_icon"></a>'
+	        }
 		], false, false, fnSearch);
 		// 전체 메뉴 정보 얻기 -> 메뉴 설정 팝업 트리 적용
 		EgovIndexApi.apiExecuteJson(
@@ -182,13 +185,12 @@
 			searchKeyword: $('#searchKeyword').val()
 		};
 		EgovJqGridApi.mainGridAjax('/backoffice/bas/authListAjax.do', params, fnSearch);
-		EgovJqGridApi.mainGridDetail(fnAuthInfo);
 	}
 	// 메인 상세 팝업 정의
-	function fnAuthInfo(id, rowData) {
+	function fnAuthInfo(rowId) {
 		let $popup = $('[data-popup=bas_auth_add]');
 		let $form = $popup.find('form:first');
-		if (id === undefined || id === null) {
+		if (rowId === undefined || rowId === null) {
 			$popup.find('h2:first').text('권한코드 등록');
 			$popup.find('span#sp_Unqi').show();
 			$popup.find('button.blueBtn').off('click').click(fnAuthInsert);
@@ -198,6 +200,7 @@
 			$form.find(':text[name=authorCode]').removeAttr('readonly');
 		}
 		else {
+			let rowData = $('#mainGrid').jqGrid('getRowData', rowId);
 			$popup.find('h2:first').text('권한코드 수정');
 			$popup.find('span#sp_Unqi').hide();
 			$popup.find('button.blueBtn').off('click').click(fnAuthUpdate);
