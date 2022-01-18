@@ -486,9 +486,7 @@ public class SmartUtil {
 		else return obj == null;
 		
 	}
-	public static boolean isEmpty(String s) {
-		return !isEmpty(s);
-	}
+
 	//fomr  전송 응답
 	public JsonNode requestHttpForm(String _url, Map<String, String> _sendInfos) {
 
