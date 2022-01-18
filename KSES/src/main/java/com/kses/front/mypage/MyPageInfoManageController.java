@@ -9,7 +9,6 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -53,8 +52,7 @@ public class MyPageInfoManageController {
 	
 	@RequestMapping (value="userResvHistory.do")
 	public ModelAndView viewFrontUserResvHistory(	@RequestParam Map<String, String> param,
-													HttpServletRequest request,
-													BindingResult result) throws Exception {
+													HttpServletRequest request) throws Exception {
 		
 		ModelAndView model = new ModelAndView("/front/my/userResvHistory");
 		try {
@@ -125,8 +123,7 @@ public class MyPageInfoManageController {
 	
 	@RequestMapping (value="updateUserRcptInfo.do")
 	public ModelAndView updateUserRcptInfo(	HttpServletRequest request,
-											@RequestBody UserInfo userInfo,
-											BindingResult result) throws Exception {
+											@RequestBody UserInfo userInfo) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
@@ -163,9 +160,8 @@ public class MyPageInfoManageController {
 	}
 	
 	@RequestMapping (value="userMyResvInfo.do")
-	public ModelAndView selectFrontUserMyResvInfo(	@RequestBody Map<String, Object> params,
-													HttpServletRequest request,
-													BindingResult result) throws Exception {
+	public ModelAndView selectFrontUserMyResvInfo(	HttpServletRequest request,
+													@RequestBody Map<String, Object> params) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
@@ -196,9 +192,8 @@ public class MyPageInfoManageController {
 	}
 	
 	@RequestMapping (value="guestMyResvInfo.do")
-	public ModelAndView selectGuestMyResvInfo(	@RequestBody Map<String, Object> params,
-												HttpServletRequest request,
-												BindingResult result) throws Exception {
+	public ModelAndView selectGuestMyResvInfo(	HttpServletRequest request,
+												@RequestBody Map<String, Object> params) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {	

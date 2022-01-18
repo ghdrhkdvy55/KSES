@@ -11,8 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,7 +35,6 @@ import com.kses.backoffice.util.SmartUtil;
 import com.kses.front.login.vo.UserLoginInfo;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.property.EgovPropertyService;
 
@@ -196,8 +193,7 @@ public class FrontResvInfoManageController {
 	
 	@RequestMapping(value="resvCertifiSms.do")
 	public ModelAndView insertResvCertifiSmsInfo(	@RequestBody Map<String, Object> params,
-													HttpServletRequest request,
-													BindingResult result) throws Exception {
+													HttpServletRequest request) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		
 		try {
@@ -243,8 +239,7 @@ public class FrontResvInfoManageController {
 	
 	@RequestMapping(value="selectResvInfo.do")
 	public ModelAndView selectResvInfo(	@RequestParam("resvSeq") String resvSeq,
-										HttpServletRequest request,
-										BindingResult result) throws Exception {
+										HttpServletRequest request) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
@@ -294,8 +289,7 @@ public class FrontResvInfoManageController {
 	@RequestMapping (value="updateUserResvInfo.do")
 	@Transactional(rollbackFor = Exception.class)
 	public ModelAndView updateUserResvInfo( @RequestBody ResvInfo vo,
-											HttpServletRequest request,
-											BindingResult result) throws Exception {
+											HttpServletRequest request) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
@@ -348,8 +342,7 @@ public class FrontResvInfoManageController {
 	
 	@RequestMapping (value="resvInfoCancel.do")
 	public ModelAndView resvInfoCancel( @RequestBody Map<String, Object> params,
-										HttpServletRequest request,
-										BindingResult result) throws Exception {
+										HttpServletRequest request) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
@@ -382,8 +375,7 @@ public class FrontResvInfoManageController {
 	
 	@RequestMapping (value="resvInfoDuplicateCheck.do")
 	public ModelAndView resvInfoDuplicateCheck( @RequestBody Map<String, Object> params,
-												HttpServletRequest request,
-												BindingResult result) throws Exception {
+												HttpServletRequest request) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
@@ -411,8 +403,7 @@ public class FrontResvInfoManageController {
 	
 	@RequestMapping (value="resvValidCheck.do")
 	public ModelAndView resvValidCheck(	@RequestBody Map<String, Object> params,
-										HttpServletRequest request,
-										BindingResult result) throws Exception {
+										HttpServletRequest request) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {

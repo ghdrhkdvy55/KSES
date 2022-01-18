@@ -140,8 +140,8 @@ public class MainPageInfoManageController {
 		return model;
 	}
 	@RequestMapping (value="mainResvInfo.do")
-	public ModelAndView selectMainResvInfo(	@RequestParam("userId") String userId,
-											HttpServletRequest request) throws Exception {
+	public ModelAndView selectMainResvInfo(	HttpServletRequest request,
+											@RequestParam("userId") String userId) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
@@ -169,8 +169,8 @@ public class MainPageInfoManageController {
 	}
 	
 	@RequestMapping (value="userResvInfo.do") 
-	public ModelAndView selectUserResvInfo(	@RequestBody Map<String, Object> params,
-											HttpServletRequest request) throws Exception {
+	public ModelAndView selectUserResvInfo(	HttpServletRequest request,
+											@RequestBody Map<String, Object> params) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {

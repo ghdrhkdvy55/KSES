@@ -9,8 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -61,8 +59,7 @@ public class LoginPageInfoManageController {
 			
 	@RequestMapping (value="userSessionCreate.do")
 	public ModelAndView setUserSession(	@RequestBody UserLoginInfo userLoginInfo,
-										HttpServletRequest request,
-										BindingResult result) throws Exception {
+										HttpServletRequest request) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
@@ -95,15 +92,12 @@ public class LoginPageInfoManageController {
 	}
 	
 	@RequestMapping (value="login.do")
-	public ModelAndView viewFrontLoginpage(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo, 
-												@RequestParam Map<String, String> param,
-												HttpServletRequest request,
-												BindingResult result) throws Exception {
+	public ModelAndView viewFrontLoginpage(HttpServletRequest request) throws Exception {
 		
 		ModelAndView model = new ModelAndView("/front/login/loginpage");
 		try {		
 			HttpSession httpSession = request.getSession();
-			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
+			UserLoginInfo userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
 			
 			if(userLoginInfo != null) {
 				String view = userLoginInfo.getUserDvsn().equals("USER_DVSN_1") ? "/front/main/mainpage" : "/front/login/loginpage";
@@ -120,8 +114,8 @@ public class LoginPageInfoManageController {
 	}
 	
 	@RequestMapping (value="ssoLogin.do")
-	public ModelAndView frontSSOLogin(	@RequestParam Map<String, Object> params,
-										HttpServletRequest request) throws Exception {
+	public ModelAndView frontSSOLogin(	HttpServletRequest request,
+										@RequestParam Map<String, Object> params) throws Exception {
 		
 		ModelAndView model = new ModelAndView("/front/main/mainpage");
 		try {
@@ -146,16 +140,14 @@ public class LoginPageInfoManageController {
 	}
 	
 	@RequestMapping (value="qrEnter.do")
-	public ModelAndView viewFrontQrEnterpage(	@ModelAttribute("userLoginInfo") UserLoginInfo userLoginInfo,
+	public ModelAndView viewFrontQrEnterpage(	HttpServletRequest request,
 												@RequestParam("resvSeq") String resvSeq,
-												@RequestParam("accessType") String accessType,
-												HttpServletRequest request,
-												BindingResult result) throws Exception {
+												@RequestParam("accessType") String accessType) throws Exception {
 		
 		ModelAndView model = new ModelAndView("/front/login/qrEnter");
 		try {		
 			HttpSession httpSession = request.getSession();
-			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
+			UserLoginInfo userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
 			
 			if(userLoginInfo == null && accessType.equals("WEB")) {
 				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
