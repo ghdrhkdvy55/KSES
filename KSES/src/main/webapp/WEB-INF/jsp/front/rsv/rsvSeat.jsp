@@ -96,7 +96,7 @@
                         </span>
                     </h3>
                     <div class="branch">
-                        <p>${resvInfo.center_nm}</p>
+                        <p><c:out value='${resvInfo.center_nm}'/></p>
                     </div>
                     <div class="null"></div>
 
