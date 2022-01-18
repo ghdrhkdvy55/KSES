@@ -1,5 +1,4 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -35,7 +34,9 @@
 	        	<li class="toggle"><a href="#" onclick="toggleNav();" class="menu"></a></li>
 	        	<li class="logo1"><img src="/resources/img/logo1.png" alt=""></li>
 	        	<li class="logout"><img src="/resources/img/logout.png" alt="로그아웃"><a href="/backoffie/actionLogout.do">로그아웃</a></li>
-	        	<li class="member"><img src="/resources/img/login.png" alt=""><span><sec:authentication property="principal.egovUserVO.empNm"/></span> 님</li>
+				<li class="member">
+					<img src="/resources/img/login.png"><span><c:out value="${usernmae}"/></span>&nbsp;님
+				</li>
 			</ul>
 		</header>
 		<div id="mySidenav" class="sidenav">

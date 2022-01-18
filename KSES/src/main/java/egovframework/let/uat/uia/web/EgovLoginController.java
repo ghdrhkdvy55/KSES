@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.google.gson.Gson;
 import com.kses.backoffice.bas.menu.service.MenuInfoService;
@@ -119,18 +120,16 @@ public class EgovLoginController {
 		if (!EgovUserDetailsHelper.isAuthenticated()) {
 			return "redirect:/backoffice/login.do?login_error=1";
 		}
-		
-		String adminId = EgovUserDetailsHelper.getAuthenticatedUserId();
+		LoginVO loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
 		// 메뉴정보 세션에 저장
-		List<Map<String, Object>> menuList = menuService.selectMainMenuLeft(adminId);
+		List<Map<String, Object>> menuList = menuService.selectMainMenuLeft(loginVO.getAdminId());
 		session.setAttribute("MenuJson", new Gson().toJson(menuList));
-		
 		// 로그인 성공 기록
 		try {
 			String clientIp = EgovClntInfo.getClntIP(request);
 			LoginLog loginLog = new LoginLog();
 			loginLog.setConnectMthd(Globals.LOGIN_CONNECT_MTHD_I);
-			loginLog.setConnectId(adminId);
+			loginLog.setConnectId(loginVO.getAdminId());
 			loginLog.setConnectIp(clientIp);
 			loginLog.setErrorOccrrAt("Y");
 			loginLogService.logInsertLoginLog(loginLog);
@@ -172,11 +171,14 @@ public class EgovLoginController {
 	 * @return
 	 */
 	@RequestMapping(value="/backoffice/index.do")
-	public String index(ModelMap model) {
+	public ModelAndView index() {
+		ModelMap model = new ModelMap();
 		log.info("EgovUserDetailsHelper.isAuthenticated(): "+ EgovUserDetailsHelper.isAuthenticated());
-		log.info("EgovUserDetailsHelper.isAuthenticated(): "+ EgovUserDetailsHelper.getAuthenticatedUser());
-		
-		return "/backoffice/index";
+		if (EgovUserDetailsHelper.isAuthenticated()) {
+			LoginVO loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
+			model.addAttribute("usernmae", loginVO.getEmpNm());
+		}
+		return new ModelAndView("/backoffice/index", model);
 	}
 	
 }
