@@ -69,7 +69,10 @@
 			AND USER_CARD_SEQ = #{params.cardSeq, jdbcType=VARCHAR}
 		</otherwise>
 		</choose>
-		
+   	</select>
+   	
+   	<select id="selectDecodeCardId" resultType="String">
+   		SELECT FC_DEC(#{cardId, jdbcType=VARCHAR}) FROM DUAL
    	</select>
    	
 	<select id="selectUserVacntnInfo" resultType="lmap">

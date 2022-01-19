@@ -42,6 +42,11 @@ public class UserInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	}
 	
 	@Override
+	public String selectDecodeCardId(String cardId) throws Exception {
+		return userMapper.selectDecodeCardId(cardId);
+	}
+	
+	@Override
 	public Map<String, Object> selectUserVacntnInfo(String userId) throws Exception {
 		return userMapper.selectUserVacntnInfo(userId);
 	}

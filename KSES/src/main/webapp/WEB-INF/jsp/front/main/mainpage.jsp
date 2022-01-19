@@ -534,18 +534,17 @@
 				}
 				// 공지값 넣기 
 				mainService.fn_boardInfo("NOT");
-				
 			},
     	    fn_boardInfo  : function (centerCd){
-    	    	
     	    	var url = "/front/boardInfo.do";
     	    	var params = {
-    	    			"boardCd" : "Not",
-    	    			"firstIndex" : "0",
-    	    			"pageSize" : "5",
-    	    			"pageUnit" : "5",
-    	    			"searchCenterCd" : centerCd
+					"boardCd" : "Not",
+					"firstIndex" : "0",
+					"pageSize" : "5",
+					"pageUnit" : "5",
+					"searchCenterCd" : centerCd
     	    	}
+    	    	
     	    	fn_Ajax 
     	    	(
 					url,

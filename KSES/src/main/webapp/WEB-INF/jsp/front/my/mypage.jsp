@@ -102,12 +102,12 @@
 					
 					// 마이페이지 상단
 					var setHtml = "";
-					setHtml += "<ul>";
-					setHtml +=     "<li>로그인 하시고 <br>빠르게 입장 예약 하세요!</li>";
-					setHtml +=     "<li>";
-					setHtml += 	       "<a href='/front/login.do' class='loginBtn'>로그인</button>";
-					setHtml +=     "</li>";
-					setHtml += "</ul>";
+//					setHtml += "<ul>";
+//					setHtml +=     "<li>로그인 하시고 <br>빠르게 입장 예약 하세요!</li>";
+//					setHtml +=     "<li>";
+//					setHtml += 	       "<a href='/front/login.do' class='loginBtn'>로그인</button>";
+//					setHtml +=     "</li>";
+//					setHtml += "</ul>";
 					$("#mybox").html(setHtml);
 
 					// 마이페이지 서비스

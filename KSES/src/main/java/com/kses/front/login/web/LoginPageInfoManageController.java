@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.kses.backoffice.cus.usr.service.UserInfoManageService;
 import com.kses.backoffice.util.SmartUtil;
 import com.kses.front.annotation.LoginUncheck;
+import com.kses.front.annotation.ReferrerUncheck;
 import com.kses.front.login.service.UserLoginService;
 import com.kses.front.login.vo.UserLoginInfo;
 
@@ -117,6 +118,7 @@ public class LoginPageInfoManageController {
 	}
 	
 	@LoginUncheck
+	@ReferrerUncheck
 	@RequestMapping (value="ssoLogin.do")
 	public ModelAndView frontSSOLogin(	HttpServletRequest request,
 										@RequestParam Map<String, Object> params) throws Exception {
@@ -133,6 +135,11 @@ public class LoginPageInfoManageController {
 				userLoginInfo.setSecretKey(EgovFileScrty.encryptPassword(userLoginInfo.getUserId(),httpSession.getId().getBytes()));
 				httpSession.setAttribute("userLoginInfo",userLoginInfo);
 				httpSession.setMaxInactiveInterval(600);
+			} else {
+				String decodeCardId = envType.equals("CLOUD") ? SmartUtil.NVL(params.get("cardId"),"") : userService.selectDecodeCardId(SmartUtil.NVL(params.get("cardId"),""));
+				model.addObject("decodeCardId", decodeCardId);
+				model.setViewName("/front/login/loginpage");
+				return model;
 			}
  			
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
