@@ -382,7 +382,7 @@
     		var status = "${status}";
     		var message = "${message}";
     			
-    		if(status != "") {    			
+    		if(status != "" && status != "SUCCESS") {    			
 				fn_openPopup(message, "red", "ERROR", "확인", "");
     		}
     		
@@ -445,7 +445,7 @@
 										userInfoBottomArea.append(setHtml);
 										
 										// 현재 예약정보 팝업창 정보 입력
-										$("#rsv_info .name").html(userLoginInfo.userNm);
+										$("#rsv_info .name").html(userNm);
 										$("#rsv_center").html(obj.center_nm);
 										$("#rsv_seat").html(obj.seat_nm);
 										$("#rsv_date").html(obj.frst_regist_dtm);
