@@ -2559,6 +2559,17 @@ ul.tabs li{
 	    padding: 0 2rem 0;
 	    margin-top: 10px;
 	}
+	
+	.error {
+		margin: 115px auto;
+	}
+	
+	.error > .logo em{
+		display: block;
+		text-align: right;
+	}
+}
+	
 #mask {
     height: 240px!important;
 }
@@ -2684,3 +2695,34 @@ ul.tabs li{
 .other_btn a{width:48%; display:inline-block;}
 .resizeBtn {font-size:1.7em !important;}
 .subNm {background:#e3e3e3}
+
+/* 공통 에러페이지 CSS */
+.error {
+	text-align: center;
+	width: 55%;
+	margin: 225px auto;
+}
+
+.error > .logo {
+	width: auto;
+	height: auto;
+	float: none;
+	margin-top: 0;
+	background: no-repeat;
+	font-size: 1.3em;
+	font-weight: 700;
+	color: #374da5;
+}
+
+.error h1 {
+	padding-top: 45px;
+	margin-top: 45px;
+	font-size: 32px;
+	border-top: 1px solid #b7b7b7;
+}
+
+.error p {
+	margin-top: 25px;
+	line-height: 36px;
+	font-size: 22px;
+}
