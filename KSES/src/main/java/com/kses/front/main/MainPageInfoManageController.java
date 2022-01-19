@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngService;
@@ -25,7 +24,8 @@ import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
 import com.kses.backoffice.sym.log.annotation.NoLogging;
 import com.kses.backoffice.sys.board.service.BoardInfoManageService;
 import com.kses.backoffice.util.SmartUtil;
-import com.kses.front.login.vo.UserLoginInfo;
+import com.kses.front.annotation.LoginUncheck;
+import com.kses.front.annotation.ReferrerUncheck;
 
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
@@ -54,30 +54,14 @@ public class MainPageInfoManageController {
 	@Autowired
 	private UserInfoManageService userService;
 	
+	@ReferrerUncheck
+	@LoginUncheck
 	@RequestMapping (value="main.do")
 	public ModelAndView viewFrontMainpage(HttpServletRequest request) throws Exception {
-		
-		ModelAndView model = new ModelAndView("/front/main/mainpage");
-		try {
-			
-			HttpSession httpSession = request.getSession();
-			UserLoginInfo userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
-			if(userLoginInfo ==  null) {
-				userLoginInfo = new UserLoginInfo();
-				userLoginInfo.setUserDvsn("USER_DVSN_2");
-				httpSession.setAttribute("userLoginInfo", userLoginInfo);
-				return model;
-			}
-			
-		} catch(Exception e) {
-			LOGGER.error("viewFrontMainpage : " + e.toString());
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg")); 
-		}
-		return model;
+		return new ModelAndView("/front/main/mainpage");
 	}
 	
-	
+	@LoginUncheck
 	@RequestMapping (value="boardInfo.do")
 	public ModelAndView selectFrontMainBoardLst (@RequestBody Map<String,Object>  searchVO) throws Exception{
 		
@@ -117,6 +101,8 @@ public class MainPageInfoManageController {
 		}
 		return model;
 	}
+	
+	@LoginUncheck
 	@RequestMapping (value="boardInfoDetail.do")
 	public ModelAndView selectFrontDetailBoardLst (@RequestParam("boardSeq") String boardSeq) throws Exception{
 		
@@ -139,26 +125,15 @@ public class MainPageInfoManageController {
 		}
 		return model;
 	}
+	
 	@RequestMapping (value="mainResvInfo.do")
 	public ModelAndView selectMainResvInfo(	HttpServletRequest request,
 											@RequestParam("userId") String userId) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
-			HttpSession httpSession = request.getSession();
-			UserLoginInfo userLoginInfo = new UserLoginInfo();
-			
-			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
-			if(userLoginInfo == null) {
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
-				return model;	
-			}
-			
 			model.addObject("vacntnInfo", userService.selectUserVacntnInfo(userId));
 			model.addObject("reservationInfo", resvService.selectUserLastResvInfo(userId));
-			model.addObject("userLoginInfo", userLoginInfo);
-			
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		} catch(Exception e) {
 			LOGGER.error("selectMainResvInfo : " + e.toString());
@@ -174,17 +149,6 @@ public class MainPageInfoManageController {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
-			HttpSession httpSession = request.getSession();
-			UserLoginInfo userLoginInfo = new UserLoginInfo();
-			
-			userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
-			if(userLoginInfo ==  null) {
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
-				return model;	
-			}
-			
-			model.addObject("userLoginInfo", userLoginInfo);
 			model.addObject(Globals.JSON_RETURN_RESULTLISR, resvService.selectUserResvInfo(params));
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		} catch(Exception e) {
@@ -196,6 +160,8 @@ public class MainPageInfoManageController {
 	}
 	
 	@NoLogging
+	@ReferrerUncheck
+	@LoginUncheck
 	@RequestMapping(value="inc/popup_common.do")
 	public ModelAndView frontCommonPopup() throws Exception{		
 		ModelAndView model = new ModelAndView("/front/inc/popup_common");
@@ -203,6 +169,8 @@ public class MainPageInfoManageController {
 	}
 	
 	@NoLogging
+	@ReferrerUncheck
+	@LoginUncheck
 	@RequestMapping(value="inc/footer.do")
 	public ModelAndView frontCommonFooter() throws Exception{		
 		ModelAndView model = new ModelAndView("/front/inc/footer");

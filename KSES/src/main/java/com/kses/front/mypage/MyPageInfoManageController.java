@@ -19,6 +19,7 @@ import com.kses.backoffice.bld.center.service.CenterInfoManageService;
 import com.kses.backoffice.cus.usr.service.UserInfoManageService;
 import com.kses.backoffice.cus.usr.vo.UserInfo;
 import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
+import com.kses.front.annotation.LoginUncheck;
 import com.kses.front.login.vo.UserLoginInfo;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -45,6 +46,7 @@ public class MyPageInfoManageController {
 	@Autowired
 	private CenterInfoManageService centerInfoManageService;
 	
+	@LoginUncheck
 	@RequestMapping (value="mypage.do")
 	public ModelAndView viewFrontmypage() throws Exception {
 		return new ModelAndView("/front/my/mypage");
@@ -53,46 +55,12 @@ public class MyPageInfoManageController {
 	@RequestMapping (value="userResvHistory.do")
 	public ModelAndView viewFrontUserResvHistory(	@RequestParam Map<String, String> param,
 													HttpServletRequest request) throws Exception {
-		
-		ModelAndView model = new ModelAndView("/front/my/userResvHistory");
-		try {
-			HttpSession httpSession = request.getSession();
-			UserLoginInfo userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
-			
-			if(userLoginInfo == null) {
-				model.setViewName("redirect:/front/main.do");
-				return model;
-			}
-			
-			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-		} catch(Exception e) {
-			LOGGER.error("viewFrontUserResvHistory : " + e.toString());
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg")); 
-		}
-		return model;
+		return new ModelAndView("/front/my/userResvHistory");
 	}
 	
 	@RequestMapping (value="userRcptInfo.do")
 	public ModelAndView viewFrontUserRcptInfo(HttpServletRequest request) throws Exception {
-		
-		ModelAndView model = new ModelAndView("/front/my/userRcptInfo");
-		try {
-			HttpSession httpSession = request.getSession();
-			UserLoginInfo userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
-			
-			if(userLoginInfo == null) {
-				model.setViewName("redirect:/front/main.do");
-				return model;
-			} 
-			
-			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-		} catch(Exception e) {
-			LOGGER.error("viewFrontUserRcptInfo : " + e.toString());
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg")); 
-		}
-		return model;
+		return new ModelAndView("/front/my/userRcptInfo");
 	}
 	
 	@RequestMapping (value="userRcptInfoAjax.do")
@@ -130,15 +98,8 @@ public class MyPageInfoManageController {
 			HttpSession httpSession = request.getSession(true);
 			UserLoginInfo userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
 			
-			if(userLoginInfo == null) {				
-				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-				return model;
-			}
-			
 			userInfo.setUserId(userLoginInfo.getUserId());
 			int ret = userService.updateUserRcptInfo(userInfo);
-			
 			
 			if(ret > 0) {
 				userLoginInfo.setUserRcptYn(userInfo.getUserRcptYn());
@@ -165,15 +126,6 @@ public class MyPageInfoManageController {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
-			HttpSession httpSession = request.getSession(true);
-			UserLoginInfo userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
-			
-			if(userLoginInfo == null) {
-				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login")); 
-				return model;
-			} 
-			
 			List<Map<String, Object>> userResvInfo = resvService.selectUserMyResvInfo(params);
 			
 			model.addObject("userResvInfo", userResvInfo);
@@ -186,11 +138,13 @@ public class MyPageInfoManageController {
 		return model;
 	}
 	
+	@LoginUncheck
 	@RequestMapping (value="guestResvInfo.do")
 	public ModelAndView viewGuestResvInfopage() throws Exception {
 		return new ModelAndView("/front/my/guestResvInfo");
 	}
 	
+	@LoginUncheck
 	@RequestMapping (value="guestMyResvInfo.do")
 	public ModelAndView selectGuestMyResvInfo(	HttpServletRequest request,
 												@RequestBody Map<String, Object> params) throws Exception {
@@ -208,6 +162,7 @@ public class MyPageInfoManageController {
 		return model;
 	}
 	
+	@LoginUncheck
 	@RequestMapping (value="notice.do")
 	public ModelAndView selectnoticeInfo() throws Exception {
 		

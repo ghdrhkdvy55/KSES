@@ -80,6 +80,7 @@
 
     
     <mvc:interceptors>
+    	<!-- BackOffice Interceptor -->
         <mvc:interceptor>
             <mvc:mapping path="/backoffice/**/*.do" />
     		<mvc:exclude-mapping path="/backoffice/login.do"/>
@@ -91,7 +92,13 @@
     		<mvc:exclude-mapping path="/backoffice/rsv/tickMachinRes.do"/> 
     		
     		<bean class="egovframework.com.cmm.interceptor.AuthenticInterceptor" />
-        </mvc:interceptor>
+		</mvc:interceptor>
+		
+		<!-- Front Interceptor -->
+		<mvc:interceptor>
+			<mvc:mapping path="/front/**/*.do" />
+			<bean class="com.kses.front.interceptor.FrontLoginInterceptor" />
+		</mvc:interceptor>
     </mvc:interceptors>
     
 	<mvc:resources mapping="/upload/**" location="/upload/" />  

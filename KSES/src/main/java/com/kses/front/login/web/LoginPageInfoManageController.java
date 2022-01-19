@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.kses.backoffice.cus.usr.service.UserInfoManageService;
 import com.kses.backoffice.util.SmartUtil;
+import com.kses.front.annotation.LoginUncheck;
 import com.kses.front.login.service.UserLoginService;
 import com.kses.front.login.vo.UserLoginInfo;
 
@@ -41,6 +42,7 @@ public class LoginPageInfoManageController {
 	@Autowired
 	private UserInfoManageService userService;
 	
+	@LoginUncheck
 	@RequestMapping (value="actionLogout.do")
 	public ModelAndView actionLogout(HttpServletRequest request) throws Exception {
 		
@@ -48,15 +50,13 @@ public class LoginPageInfoManageController {
 		try {		
 			HttpSession httpSession = request.getSession();
 			httpSession.invalidate();
-			
-			LOGGER.error("actionLogout SUCCESS");
-			//httpSession.removeAttribute("userLoginInfo");		
 		} catch(Exception e) {
 			LOGGER.error("actionLogout Exception ERROR : " + e.toString());
 		}
 		return model;
 	}
 			
+	@LoginUncheck
 	@RequestMapping (value="userSessionCreate.do")
 	public ModelAndView setUserSession(	@RequestBody UserLoginInfo userLoginInfo,
 										HttpServletRequest request) throws Exception {
@@ -91,6 +91,7 @@ public class LoginPageInfoManageController {
 		return model;
 	}
 	
+	@LoginUncheck
 	@RequestMapping (value="login.do")
 	public ModelAndView viewFrontLoginpage(HttpServletRequest request) throws Exception {
 		
@@ -113,6 +114,7 @@ public class LoginPageInfoManageController {
 		return model;
 	}
 	
+	@LoginUncheck
 	@RequestMapping (value="ssoLogin.do")
 	public ModelAndView frontSSOLogin(	HttpServletRequest request,
 										@RequestParam Map<String, Object> params) throws Exception {
@@ -139,6 +141,7 @@ public class LoginPageInfoManageController {
 		return model;
 	}
 	
+	@LoginUncheck
 	@RequestMapping (value="qrEnter.do")
 	public ModelAndView viewFrontQrEnterpage(	HttpServletRequest request,
 												@RequestParam("resvSeq") String resvSeq,

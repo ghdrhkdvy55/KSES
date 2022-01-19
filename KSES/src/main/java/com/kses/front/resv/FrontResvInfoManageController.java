@@ -32,6 +32,7 @@ import com.kses.backoffice.cus.usr.vo.UserInfo;
 import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
 import com.kses.backoffice.rsv.reservation.vo.ResvInfo;
 import com.kses.backoffice.util.SmartUtil;
+import com.kses.front.annotation.LoginUncheck;
 import com.kses.front.login.vo.UserLoginInfo;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -82,11 +83,13 @@ public class FrontResvInfoManageController {
 	@Autowired
 	private SystemInfoManageService systemService;
 		
+	@LoginUncheck
 	@RequestMapping (value="rsvCenter.do")
 	public ModelAndView viewResvCenterList() throws Exception {
 		return new ModelAndView("/front/rsv/rsvCenter");
 	}
 	
+	@LoginUncheck
 	@RequestMapping (value="rsvCenterListAjax.do")
 	public ModelAndView selectRsvCenterListAjax(	@RequestParam("resvDate") String resvDate,
 													HttpServletRequest request) throws Exception {
@@ -104,19 +107,13 @@ public class FrontResvInfoManageController {
 		return model;
 	}
 	
+	@LoginUncheck
 	@RequestMapping (value="rsvSeat.do")
 	public ModelAndView viewResvSeatList(	@RequestParam Map<String, Object> params,
 											HttpServletRequest request) throws Exception {
 		
 		ModelAndView model = new ModelAndView("/front/rsv/rsvSeat");
 		try {
-			HttpSession httpSession = request.getSession();
-			UserLoginInfo userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
-			
-			if(userLoginInfo == null) {
-				model.setViewName("redirect:/front/main.do");
-			}
-			
 			String centerCd = (String)params.get("centerCd");
 			String resvDate = (String)params.get("resvDate");
 			
@@ -140,6 +137,7 @@ public class FrontResvInfoManageController {
 		return model;
 	}
 	
+	@LoginUncheck
 	@RequestMapping (value="rsvPartListAjax.do")
 	public ModelAndView selectRsvPartListAjax(	@RequestBody Map<String, Object> params,
 												HttpServletRequest request) throws Exception {
@@ -161,6 +159,7 @@ public class FrontResvInfoManageController {
 		return model;
 	}
 	
+	@LoginUncheck
 	@RequestMapping (value="rsvSeatListAjax.do")
 	public ModelAndView selectRsvSeatListAjax(	@RequestBody Map<String, Object> params,
 												HttpServletRequest request) throws Exception {
@@ -191,6 +190,7 @@ public class FrontResvInfoManageController {
 		return model;
 	}
 	
+	@LoginUncheck
 	@RequestMapping(value="resvCertifiSms.do")
 	public ModelAndView insertResvCertifiSmsInfo(	@RequestBody Map<String, Object> params,
 													HttpServletRequest request) throws Exception {
@@ -202,8 +202,6 @@ public class FrontResvInfoManageController {
 			smsDataInfo.setSendid("kcycle");
 			smsDataInfo.setSendname("SYSTEM");
 			
-			LOGGER.debug(params.get("certifiNum").toString());
-			LOGGER.debug(SmartUtil.NVL(params.get("certifiNum"), ""));
 			String phNum[] = SmartUtil.getSplitPhNum(SmartUtil.NVL(params.get("certifiNum"), ""));
 			smsDataInfo.setRecvname(SmartUtil.NVL(params.get("certifiNm"), ""));
 			smsDataInfo.setRphone1(phNum[0]);
@@ -237,21 +235,13 @@ public class FrontResvInfoManageController {
 		return model;
 	}
 	
+	@LoginUncheck
 	@RequestMapping(value="selectResvInfo.do")
 	public ModelAndView selectResvInfo(	@RequestParam("resvSeq") String resvSeq,
 										HttpServletRequest request) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
-			HttpSession httpSession = request.getSession();
-			UserLoginInfo userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
-			
-			if(userLoginInfo == null) {
-				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-				return model;
-			}
-			
 			model.addObject("resvInfo", resvService.selectResvInfoDetail(resvSeq));
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		} catch(Exception e) {
@@ -262,20 +252,12 @@ public class FrontResvInfoManageController {
 		return model;
 	}
 	
+	@LoginUncheck
 	@RequestMapping(value="selectSystemInfo.do")
 	public ModelAndView selectSystemInfo(HttpServletRequest request) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
-			HttpSession httpSession = request.getSession();
-			UserLoginInfo userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
-			
-			if(userLoginInfo == null) {
-				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-				return model;
-			}
-
 			model.addObject("systemInfo", systemService.selectSystemInfo());
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		} catch(Exception e) {
@@ -286,6 +268,7 @@ public class FrontResvInfoManageController {
 		return model;
 	}
 	
+	@LoginUncheck
 	@RequestMapping (value="updateUserResvInfo.do")
 	@Transactional(rollbackFor = Exception.class)
 	public ModelAndView updateUserResvInfo( @RequestBody ResvInfo vo,
@@ -296,12 +279,10 @@ public class FrontResvInfoManageController {
 			HttpSession httpSession = request.getSession();
 			UserLoginInfo userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
 			
-			if(userLoginInfo == null) {
-				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-				return model;
-			} else {
+			if(userLoginInfo != null) {
 				vo.setUserId(userLoginInfo.getUserId());
+			} else {
+				vo.setResvUserDvsn("USER_DVSN_2");
 			}
 			
 			int ret = resvService.updateUserResvInfo(vo);
@@ -340,21 +321,13 @@ public class FrontResvInfoManageController {
 		return model;
 	}
 	
+	@LoginUncheck
 	@RequestMapping (value="resvInfoCancel.do")
 	public ModelAndView resvInfoCancel( @RequestBody Map<String, Object> params,
 										HttpServletRequest request) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
-			HttpSession httpSession = request.getSession();
-			UserLoginInfo userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
-			
-			if(userLoginInfo == null) {
-				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-				return model;
-			}
-			
 			int ret = resvService.resvInfoCancel(params);
 			if(ret > 0) {
 				sureService.insertResvSureData("CANCEL", params.get("resv_seq").toString());
@@ -373,6 +346,7 @@ public class FrontResvInfoManageController {
 		return model;
 	}
 	
+	@LoginUncheck
 	@RequestMapping (value="resvInfoDuplicateCheck.do")
 	public ModelAndView resvInfoDuplicateCheck( @RequestBody Map<String, Object> params,
 												HttpServletRequest request) throws Exception {
@@ -381,13 +355,7 @@ public class FrontResvInfoManageController {
 		try {
 			HttpSession httpSession = request.getSession();
 			UserLoginInfo userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
-			
-			if(userLoginInfo == null) {
-				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-				return model;
-			}
-			
+
 			params.put("userId", userLoginInfo.getUserId());
 			int resvCount = resvService.resvInfoDuplicateCheck(params);
 	    	
@@ -401,21 +369,13 @@ public class FrontResvInfoManageController {
 		return model;
 	}
 	
+	@LoginUncheck
 	@RequestMapping (value="resvValidCheck.do")
 	public ModelAndView resvValidCheck(	@RequestBody Map<String, Object> params,
 										HttpServletRequest request) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
-			HttpSession httpSession = request.getSession();
-			UserLoginInfo userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
-			
-			if(userLoginInfo == null) {
-				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-				return model;
-			}
-			
 			resvService.resvValidCheck(params);
 			
 			model.addObject("validResult", params);
