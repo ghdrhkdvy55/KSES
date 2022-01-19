@@ -75,13 +75,13 @@
             <ul class="rsv_info rsv_prsc">
                 <li class="backImg"></li>
                 <li class="rsv_branch">
-                	<span class="sel_center_nm"><c:out value=''/></span>
+                	<span class="sel_center_nm"><c:out value='${resvInfo.centerNm}'/></span>
                 	<span class="sel_floor_nm"></span> 
                 	<span class="sel_part_nm"></span>
                 	<span class="sel_seat_nm"></span>
 				</li>	
                 <li class="rsv_state"><span class="date"></span> 좌석 예약 중 입니다.</li>
-                <li class="rsv_paycost">[결제금액 : <span><fmt:formatNumber value="${resvInfo.center_entry_pay_cost}" pattern="#,###" />원]</span></li>
+                <li class="rsv_paycost">[결제금액 : <span><fmt:formatNumber value="${resvInfo.center_entry_pay_cost}" pattern="#,###" />원</span>]</li>
             </ul>             
         </div>
         <!-- header //-->

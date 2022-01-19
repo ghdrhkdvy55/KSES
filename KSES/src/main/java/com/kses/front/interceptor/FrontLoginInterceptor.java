@@ -13,7 +13,6 @@ import org.springframework.web.servlet.ModelAndViewDefiningException;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.kses.backoffice.sym.log.annotation.NoLogging;
-import com.kses.backoffice.util.SmartUtil;
 import com.kses.front.annotation.LoginUncheck;
 import com.kses.front.annotation.ReferrerUncheck;
 import com.kses.front.login.vo.UserLoginInfo;
@@ -54,8 +53,9 @@ public class FrontLoginInterceptor extends HandlerInterceptorAdapter{
 		if (loginUncheck == null) {
 			if(request.getRequestedSessionId() != null && request.isRequestedSessionIdValid()) {
 				UserLoginInfo userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
-				String compareUserId = request.getParameter("userId") != null ? request.getParameter("userId") : "";
-				if(userLoginInfo != null && userLoginInfo.getUserId().equals(compareUserId)) {
+				//String compareUserId = request.getParameter("userId") != null ? request.getParameter("userId") : "";
+				//if(userLoginInfo != null && userLoginInfo.getUserId().equals(compareUserId)) {
+				if(userLoginInfo != null) {
 					// Check Success
 				} else {
 					LOGGER.info("LOGIN INFO ERROR");

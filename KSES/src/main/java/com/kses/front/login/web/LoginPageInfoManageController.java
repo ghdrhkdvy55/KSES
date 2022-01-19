@@ -159,15 +159,15 @@ public class LoginPageInfoManageController {
 		
 		ModelAndView model = new ModelAndView("/front/login/qrEnter");
 		try {		
-			HttpSession httpSession = request.getSession();
-			UserLoginInfo userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
+//          HttpSession httpSession = request.getSession();
+//			UserLoginInfo userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
 			
-			if(userLoginInfo == null && accessType.equals("WEB")) {
-				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));	
-				model.setViewName("/front/main/mainpage");
-				return model;
-			}
+//			if(userLoginInfo == null && accessType.equals("WEB")) {
+//				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
+//				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));	
+//				model.setViewName("/front/main/mainpage");
+//				return model;
+//			}
 			
 			model.addObject("accessType", accessType);
 			model.addObject("resvSeq", resvSeq);

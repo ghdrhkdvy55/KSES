@@ -281,6 +281,7 @@ public class FrontResvInfoManageController {
 			
 			if(userLoginInfo != null) {
 				vo.setUserId(userLoginInfo.getUserId());
+				vo.setResvUserDvsn("USER_DVSN_1");
 			} else {
 				vo.setResvUserDvsn("USER_DVSN_2");
 			}
@@ -355,14 +356,15 @@ public class FrontResvInfoManageController {
 		try {
 			HttpSession httpSession = request.getSession();
 			UserLoginInfo userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
-
-			params.put("userId", userLoginInfo.getUserId());
+			
+			String userId = userLoginInfo != null ? userLoginInfo.getUserId() : "";
+			params.put("userId", userId);
 			int resvCount = resvService.resvInfoDuplicateCheck(params);
 	    	
 	    	model.addObject("resvCount", resvCount);
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		} catch(Exception e) {
-			LOGGER.error("selectRsvPartListAjax : " + e.toString());
+			LOGGER.error("resvInfoDuplicateCheck : " + e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg")); 
 		}

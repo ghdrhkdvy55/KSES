@@ -299,14 +299,14 @@
 						let name = '';
 						
 						switch(index) {
-							case 'resv_seq' : name = '예약번호';	 item = fn_resvSeqFormat(item); break;
-							case 'resv_end_dt' : name = '경주일'; item = fn_resvDateFormat(item); break;
-							case 'resv_user_nm' : name = '이름'; break;
-							case 'center_nm' : name = '지점'; 	break;
-							case 'floor_nm' : name = '층';	 break;
-							case 'part_nm' : name = '구역'; break;
-							case 'seat_nm' : name = '좌석'; break;
-							case 'resv_req_date' : name = '신청일'; break;
+							case 'resv_seq' 	 : name = '예약번호';	item = fn_resvSeqFormat(item);  break;
+							case 'resv_end_dt' 	 : name = '경주일'; 	item = fn_resvDateFormat(item); break;
+							case 'resv_user_nm'  : name = '이름'; 	break;
+							case 'center_nm' 	 : name = '지점'; 	break;
+							case 'floor_nm' 	 : name = '층';	 	break;
+							case 'part_nm' 		 : name = '구역'; 	break;
+							case 'seat_nm' 		 : name = '좌석'; 	break;
+							case 'resv_req_date' : name = '신청일'; 	break;
 						}
 						
 						if(name != '') {
@@ -321,10 +321,10 @@
 						}
 					});
 					
- 					if((resvInfo.resv_state == "RESV_STATE_1" ||  resvInfo.resv_state == "RESV_STATE_2") && resvInfo.center_pilot_yn == "N") {
+ 					//if((resvInfo.resv_state == "RESV_STATE_1" ||  resvInfo.resv_state == "RESV_STATE_2") && resvInfo.center_pilot_yn == "N") {
  						$resvInfoUl.append('<li class="qrEnter_code"><p><a href="javascript:void(0);"><img src="/resources/img/front/qr_code.svg" alt="qr코드"></a></p><p>입장 QR코드</p></li>');
  						$resvInfoUl.find(".qrEnter_code a").attr("href","javascript:fn_moveQrPage('" + resvInfo.resv_seq +"');");
-					} 
+					//} 
 					
  					let $btnUl = $('<ul class="non_memBtn"></ul>'); 
  					if(resvInfo.resv_state == "RESV_STATE_1" && resvInfo.resv_ticket_dvsn != "RESV_TICKET_DVSN_2") {
