@@ -371,7 +371,7 @@ public class ResJosnController {
 					if (attendInfo == null) {
 						inOt = "IN";
 					} else {
-						inOt = SmartUtil.NVL(attendInfo.get("inout_dvsn"), "OT").toString().equals("IN") ? "OT" : "IN";
+						inOt = "IN";
 					}
 				}
 				
@@ -402,7 +402,8 @@ public class ResJosnController {
 				
 				sendInfo = attendService.insertAttendInfo(sendInfo);
 				IOGUBUN_TXT = inotMsg;
-
+				LOGGER.info("inOt??? : " + inOt);
+				LOGGER.info("RcvCd?? : " + sendInfo.getRcvCd());
 				if (sendInfo.getRcvCd().equals("OK")) {
 					ERROR_CD = "OK";
 					ERROR_MSG = "";
@@ -498,8 +499,8 @@ public class ResJosnController {
 					inOt = "IN";
 					inotMsg = "입장기록 없음";
 				} else {
-					inOt = SmartUtil.NVL(attend.get("inout_dvsn"), "OT").toString().equals("IN") ? "OT" : "IN";
-					inotMsg = (attend.size() > 2) ? "재입장" : "정상";
+					inOt = "IN";
+					inotMsg = "입장";
 				}
 				
 				//QR발급회차 업데이트
@@ -574,12 +575,20 @@ public class ResJosnController {
 			searchVO.put("resvDate", localTime);
 			Map<String, Object> resInfo = resService.selectUserResvInfo(searchVO);		
 			
+			Map<String, Object> machineVO = new HashMap<String, Object>();
+			machineVO.put("ticketMchnSno", SmartUtil.NVL(jsonInfo.get("MACHINE_SERIAL"), "").toString());
+			machineVO.put("centerCd", SmartUtil.NVL(resInfo.get("center_cd"), "").toString());
+			Map<String, Object> machineSerial = resService.selectTicketMchnSnoCheck(machineVO);
+			
 			String recDate = SmartUtil.NVL(jsonInfo.get("RES_SEND_DATE"), "19700101").toString();
 			
 			if (resInfo != null && !SmartUtil.NVL(resInfo.get("resv_pay_dvsn"), "").toString().equals("RESV_PAY_DVSN_1")) {
 				LOGGER.info("RESV_PAY_DVSN123" +  SmartUtil.NVL(resInfo.get("resv_pay_dvsn"), "").toString());
 				returnCode = "ERROR_04";
 				returnMessage = "이미 결제가 완료 되었습니다.";
+			} else if (machineSerial.get("cnt").toString().equals("0")) {
+				returnCode = "ERROR_03";
+				returnMessage = "장소 오류.";
 			} else {
 				if (resInfo != null && SmartUtil.NVL(resInfo.get("resv_end_dt"), "").toString().equals(localTime)
 						&& recDate.substring(0, 8).equals(localTime)) {
@@ -676,11 +685,7 @@ public class ResJosnController {
 			
 			Map<String, Object> resInfo = resService.selectUserResvInfo(searchVO);
 			
-			Map<String, Object> machineVO = new HashMap<String, Object>();
-			machineVO.put("ticketMchnSno", SmartUtil.NVL(jsonInfo.get("MACHINE_SERIAL"), "").toString());
-			machineVO.put("centerCd", SmartUtil.NVL(resInfo.get("center_cd"), "").toString());
-			Map<String, Object> machineSerial = resService.selectTicketMchnSnoCheck(machineVO);
-			LOGGER.info("머신시리얼 체크 : " + machineSerial.get("cnt"));
+
 			
 			String localTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 			String recDate = SmartUtil.NVL(jsonInfo.get("RES_SEND_DATE"), "19700101").toString();
@@ -692,9 +697,6 @@ public class ResJosnController {
 			if (resInfo == null || !recDate.substring(0, 8).equals(localTime)) {
 				returnCode = "ERROR_01";
 				returnMessage = "예약 정보 없음.";
-			} else if (machineSerial.get("cnt").toString().equals("0")) {
-				returnCode = "ERROR_05";
-				returnMessage = "장소 오류.";
 			} else if (resInfo != null && !SmartUtil.NVL(jsonInfo.get("RES_PRICE"), "").toString().equals(SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString())) {
 				returnCode = "ERROR_03";
 				returnMessage = "결제 금액 확인 요망.";

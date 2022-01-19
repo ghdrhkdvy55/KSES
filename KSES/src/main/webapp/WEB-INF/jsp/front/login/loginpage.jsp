@@ -59,7 +59,7 @@
                             </ul>
                             <div class="check_wrap">
                                 <ul>
-									<li id="saveCardNoArea" style="display:none;">
+									<li id="saveCardNoArea">
                                         <input class="magic-checkbox" type="checkbox" name="layout" id="saveCardNo" value="option" class="pass-form ">
                                         <label for="saveCardNo"></label>
                                         <label class="text" for="saveCardNo">
