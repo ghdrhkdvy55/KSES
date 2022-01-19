@@ -17,6 +17,8 @@ public interface UserInfoManageMapper {
     
     public UserLoginInfo selectSSOUserInfo(@Param("params") Map<String, Object> params);
     
+    public String selectDecodeCardId(@Param("cardId") String cardId);
+    
     public Map<String, Object> selectUserVacntnInfo(String userId);
     
     public Map<String, Object> selectSpeedOnVacntnInfo(UserLoginInfo userLoginInfo);

@@ -29,9 +29,6 @@
 
 <body>
 <form:form name="regist" commandName="regist" method="get" action="/front/rsvCenter.do">	
-	<input type="hidden" name="userDvsn" id="userDvsn" value="${sessionScope.userLoginInfo.userDvsn}">
-	<input type="hidden" name="userId" id="userId" value="${sessionScope.userLoginInfo.userId}">
-	
 	<input type="hidden" id="centerCd" name="centerCd" value="">
 	<input type="hidden" id="resvDate" name="resvDate" value="">
     
@@ -52,18 +49,12 @@
                 <div class="contents"> 
                     <!--지점선택-->                 
                     <h3>지점을 선택하세요.</h3>                    
-                	
                     <div class="branchSel">
-
-                		                		
                         <ul class="branch_list">
 
                         </ul>
-                        
-                    </div>
-                                        	
+                    </div>           	
                 </div>
-               
             </div>
             <!-- 예약가능 지점 없을때 표출 -->
             <div class="null_center"><p>현재 예약가능한 지점이 없습니다.</p></div>
@@ -83,7 +74,7 @@
             </div>
         </div>
     </div>  
-
+</div>
     <!--메뉴버튼 속성-->
     <script>
 		$(document).ready(function() {			

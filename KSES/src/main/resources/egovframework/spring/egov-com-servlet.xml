@@ -84,6 +84,7 @@
 
     
     <mvc:interceptors>
+    	<!-- BackOffice Interceptor -->
         <mvc:interceptor>
             <mvc:mapping path="/backoffice/**/*.do" />
 			<!-- Ajax 통신 예외 처리 적용 필요 -->
@@ -91,7 +92,13 @@
     		<mvc:exclude-mapping path="/backoffice/rsv/qrSend.do"/> 
     		<!-- Ajax 통신에 대한 Interceptor 처리 -->
     		<bean class="egovframework.com.cmm.interceptor.AuthenticInterceptor" />
-        </mvc:interceptor>
+		</mvc:interceptor>
+		
+		<!-- Front Interceptor -->
+		<mvc:interceptor>
+			<mvc:mapping path="/front/**/*.do" />
+			<bean class="com.kses.front.interceptor.FrontLoginInterceptor" />
+		</mvc:interceptor>
     </mvc:interceptors>
     
 <!-- 	<mvc:resources mapping="/upload/**" location="/upload/" />   -->

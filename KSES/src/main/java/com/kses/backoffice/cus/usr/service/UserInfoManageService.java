@@ -14,6 +14,8 @@ public interface UserInfoManageService {
     
     UserLoginInfo selectSSOUserInfo(Map<String, Object> params) throws Exception;
     
+    public String selectDecodeCardId(String cardId) throws Exception;
+    
     Map<String, Object> selectUserVacntnInfo(String userId) throws Exception;
     
     Map<String, Object> selectSpeedOnVacntnInfo(UserLoginInfo userLoginInfo) throws Exception;

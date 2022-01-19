@@ -47,4 +47,29 @@ public class AuthenticInterceptor extends HandlerInterceptorAdapter {
 		return super.preHandle(request, response, handler);
 	}
 	
+//	@Override
+//	public void postHandle(HttpServletRequest request,  HttpServletResponse response, Object handler, ModelAndView modeAndView) throws Exception {
+//		//WebLog webLog = new WebLog();
+//		String reqURL = request.getRequestURI();
+//		String uniqId = "";
+//    	   
+//        Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+//    	if(isAuthenticated.booleanValue()) {
+//    		LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
+//			uniqId = user.getAdminId();
+//			
+//    	}else {
+//    		LOGGER.debug("=================================isAuthenticated:" + isAuthenticated);
+//    	}
+//    	LOGGER.debug("reqURL:" + reqURL);
+//    	//  response //쿠키 또는 해더 값 등을 변경 정리 할 수 있다.
+//    	//handler 객처  
+//    	LOGGER.debug("handler:" + handler.toString());
+//    	//결과값
+//    	//LOGGER.debug("modeAndView:" + modeAndView.toString());
+//
+// 
+//		//webLogService.logInsertWebLog(webLog);
+// 
+//	}
 }

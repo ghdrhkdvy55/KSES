@@ -29,9 +29,10 @@
 </head>
 <body>
 	<form:form name="regist" commandName="regist" method="post" action="/front/main.do">
+	<input type="hidden" id="secretKey" name="secretKey" value="${sessionScope.userLoginInfo.secretKey}">
 	<input type="hidden" id="userDvsn" name="userDvsn" value="${sessionScope.userLoginInfo.userDvsn}">
-	<input type="hidden" name="userId" id="userId" value="${sessionScope.userLoginInfo.userId}">
-	<input type="hidden" name="resvSeq" id="resvSeq" value="">
+	<input type="hidden" id="userId" name="userId"  value="${sessionScope.userLoginInfo.userId}">
+	<input type="hidden" id="resvSeq" name="resvSeq" value="">
 
 	<div class="wrapper mainBack">
 		<!--// header -->
@@ -378,6 +379,13 @@
     <!-- mainpage.jsp script -->
     <script>
     	$(document).ready(function() {
+    		var status = "${status}";
+    		var message = "${message}";
+    			
+    		if(status != "" && status != "SUCCESS") {    			
+				fn_openPopup(message, "red", "ERROR", "확인", "");
+    		}
+    		
 			// 메인영역생성
     		var userId = $("#userId").val();
     		mainService.fn_makeUserInfoArea(userId, mainService.fn_makeNoticeArea);
@@ -410,7 +418,7 @@
 							if (result.status == "SUCCESS") {
 								var today = new Date().format("yyyy-MM-dd");
 								var reservationInfo = result.reservationInfo;
-								var userLoginInfo = result.userLoginInfo;
+								var userNm = "${sessionScope.userLoginInfo.userNm}";
 								
 								// 마지막 예약정보가 존재할 경우
 								if(result.reservationInfo != null) {
@@ -423,7 +431,7 @@
 										
 										// 유저정보상단 HTML생성
 										var setHtml = "";
-										setHtml += "<li class='vacStat'><em class='user_name'>" + userLoginInfo.userNm + "</em>님 입장예약 현황. <span class=''></span></li>";
+										setHtml += "<li class='vacStat'><em class='user_name'>" + userNm + "</em>님 입장예약 현황. <span class=''></span></li>";
 										setHtml += "<li><span class='today_date'>" + fn_resvDateFormat(obj.resv_end_dt) + "</span></li>";
 										
 										userInfoTopArea.append(setHtml);
@@ -432,15 +440,12 @@
 										setHtml = "";
 										setHtml += "<li><span><a href='javascript:mainService.fn_userResvInfo(&#39;NOW&#39;, &#39;" + obj.resv_seq + "&#39;, &#39;rsv_info&#39;);' >" + obj.center_nm + " " + obj.seat_nm + "</a></span></li>";
 										setHtml += "<li class='rsv_cancel'><a href='javascript:mainService.fn_userResvInfo(&#39;CANCEL&#39;, &#39;" + obj.resv_seq + "&#39;, &#39;cancel_rsv_info&#39;);'>예약취소</a></li>";
-										
-										if(obj.resv_entry_dvsn == "ENTRY_DVSN_2") {
-											setHtml += "<li><em class='n_class'>" + obj.resv_seat_class +"</em></li>";
-										}
+										setHtml += obj.resv_entry_dvsn == "ENTRY_DVSN_2" ? "<li><em class='n_class'>" + obj.resv_seat_class +"</em></li>" : "<li><em></em></li>";
 
 										userInfoBottomArea.append(setHtml);
 										
 										// 현재 예약정보 팝업창 정보 입력
-										$("#rsv_info .name").html(userLoginInfo.userNm);
+										$("#rsv_info .name").html(userNm);
 										$("#rsv_center").html(obj.center_nm);
 										$("#rsv_seat").html(obj.seat_nm);
 										$("#rsv_date").html(obj.frst_regist_dtm);
@@ -454,7 +459,7 @@
 									} else {								
 										// 유저정보상단 HTML생성
 										var setHtml = "";
-										setHtml += "<li class='vacStat'><em class='user_name'>" + userLoginInfo.userNm + "</em>님 예약내역이 없습니다. <span class=''></span></li>";
+										setHtml += "<li class='vacStat'><em class='user_name'>" + userNm + "</em>님 예약내역이 없습니다. <span class=''></span></li>";
 										setHtml += "<li><span class='today_date'>" + today + "</span></li>";  
 										
 										userInfoTopArea.append(setHtml);
@@ -467,7 +472,7 @@
 										
 										// 다시앉기 팝업창 정보 입력
 										// TODO 추후 제거
-										$("#re_rsv_info .name").html(userLoginInfo.userNm);
+										$("#re_rsv_info .name").html(userNm);
 										
 										// 처음부터 예약하기 영역 활성화
 										$("#rsv_reset_area").show();
@@ -476,7 +481,7 @@
 									$("#user_rsv_area").addClass("main_user_rsv");
 									// 유저정보상단 HTML생성
 									var setHtml = "";
-									setHtml += "<li class='vacStat'><em class='user_name'>" + userLoginInfo.userNm + "</em>님 예약내역이 없습니다. <span class=''></span></li>";
+									setHtml += "<li class='vacStat'><em class='user_name'>" + userNm + "</em>님 예약내역이 없습니다. <span class=''></span></li>";
 									setHtml += "<li><span class='today_date'>" + today + "</span></li>";  
 									
 									userInfoTopArea.append(setHtml);
@@ -529,18 +534,17 @@
 				}
 				// 공지값 넣기 
 				mainService.fn_boardInfo("NOT");
-				
 			},
     	    fn_boardInfo  : function (centerCd){
-    	    	
     	    	var url = "/front/boardInfo.do";
     	    	var params = {
-    	    			"boardCd" : "Not",
-    	    			"firstIndex" : "0",
-    	    			"pageSize" : "5",
-    	    			"pageUnit" : "5",
-    	    			"searchCenterCd" : centerCd
+					"boardCd" : "Not",
+					"firstIndex" : "0",
+					"pageSize" : "5",
+					"pageUnit" : "5",
+					"searchCenterCd" : centerCd
     	    	}
+    	    	
     	    	fn_Ajax 
     	    	(
 					url,
@@ -630,10 +634,10 @@
 				    	if (result.status == "SUCCESS") {
 				    		if(result.resultlist != null) {
 				    			var obj = result.resultlist;
-				    			var userLoginInfo = result.userLoginInfo;
+				    			var userNm = "${sessionScope.userLoginInfo.userNm}";
 				    			
 								if(division == "NOW") {
-									$("#rsv_info .name").html(userLoginInfo.userNm);
+									$("#rsv_info .name").html(userNm);
 									$("#rsv_num").html(fn_resvSeqFormat(obj.resv_seq));
 									$("#rsv_date").html(fn_resvDateFormat(obj.resv_end_dt));
 									$("#rsv_center").html(obj.center_nm);
@@ -651,7 +655,7 @@
 									$("#rsv_seat").html(obj.seat_nm);
 									$("#rsv_req_date").html(obj.resv_req_date);
 								} else if(division == "PRE"){
-									$("#re_rsv_info .name").html(userLoginInfo.userNm);
+									$("#re_rsv_info .name").html(userNm);
 									$("#re_rsv_num").html(fn_resvSeqFormat(obj.resv_seq));
 									$("#re_rsv_date").html(fn_resvDateFormat(obj.resv_end_dt));
 									$("#re_rsv_center").html(obj.center_nm);
@@ -680,7 +684,7 @@
 										$("#rebookBtn").html("현재 예약할수 없는 좌석 또는 자유석 예약으로 진행하셨습니다.")
 									}
 								} else {
-									$("#cancel_rsv_info .name").html(userLoginInfo.userNm);
+									$("#cancel_rsv_info .name").html(userNm);
 									$("#cancel_rsv_num").html(fn_resvSeqFormat(obj.resv_seq));
 									$("#cancel_rsv_date").html(fn_resvDateFormat(obj.resv_end_dt));
 									$("#cancel_rsv_center").html(obj.center_nm);
@@ -815,7 +819,7 @@
 				
 				var result = mainService.fn_resvVaildCheck(params);
 				
-				if(result != ""){
+				if(result != "") {
 					params.resvDate = result.resvDate;
 					sessionStorage.setItem("accessCheck","1");
 					$.each(result, function(index, item) {

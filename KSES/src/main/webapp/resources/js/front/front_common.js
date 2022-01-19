@@ -495,7 +495,7 @@ function fn_guestResvPossibleYn() {
 }
 
 function fn_moveReservation() {
-	if($("#userDvsn").val() != "USER_DVSN_1") {
+	if("${sessionScope.userLoginInfo.userDvsn}" != "USER_DVSN_1") {
 		if(!fn_guestResvPossibleYn()) {
 			fn_openPopup("로그인 후 이용 바랍니다.", "red", "ERROR", "확인", "");
 			return;

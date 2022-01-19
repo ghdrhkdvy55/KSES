@@ -23,8 +23,6 @@
     <script src="/resources/js/front/bpopup.js"></script>
 </head>
 <body>
-	<input type="hidden" id="login_type" name="login_type" value="1">
-    
     <div class="wrapper">
         <div class="login_wrap">
             <div class="log_box">
@@ -35,23 +33,14 @@
                 <div id="tab-menu">
                     <div class="login_num_info" id="tab_btn">
                         <ul>
-                          <li id="id_login_tab"><a href="javascript:;" onclick="loginService.changeLoginType('1')">아이디 로그인</a></li>
-                          <li id="card_login_tab" class="active"><a href="javascript:;" onclick="loginService.changeLoginType('2')">카드번호 로그인</a></li>
+                          <li id="card_login_tab"><a href="javascript:void(0);">카드번호 로그인</a></li>
                         </ul>
                     </div>
                     <div id="tab_cont">
                         <div>
                             <ul>
                                 <li>
-                                <%-- <form id="idForm" class="checkNo"> --%>
-                                    <form id="idForm" onsubmit="return false;">
-                                        <input type="text" id="id" name="id" placeholder="아이디를 입력해주세요." class="login-form " value="" />
-                                          
-                                        <input type="reset" class="input_reset hidden">
-                                        <span class="checkNo_icon" style="display : none;"></span>
-                                        <p class="check_noti" style="display : none;"></p>
-                                    </form>
-									<form id="cardNoForm" onsubmit="return false;" style="display:none;">
+									<form id="cardNoForm" onsubmit="return false;">
                                         <input type="text" id="cardNo" name="cardNo" placeholder="카드번호를 입력해주세요." class="login-form " value=""/>
                                         <input type="reset" class="input_reset hidden">
                                         <span class="checkNo_icon" style="display : none;"></span>
@@ -60,13 +49,7 @@
                                     
                                 </li>
                                 <li>
-                                    <form id="pwForm" onsubmit="return false;">
-                                        <input type="password" id="pw" name="pw" placeholder="비밀번호를 입력해 주세요." class="login-form " value=""/> 
-                                        <input type="reset" class="input_reset hidden">
-                                        <span class="checkNo_icon" style="display : none;"></span>
-                                        <p class="check_noti" style="display : none;"></p>
-                                    </form>
-									<form id="cardPwForm" onsubmit="return false;" style="display:none;">
+									<form id="cardPwForm" onsubmit="return false;">
                                         <input type="password" id="cardPw" name="cardPw" placeholder="비밀번호를 입력해 주세요." class="login-form " value=""/> 
                                         <input type="reset" class="input_reset hidden">
                                         <span class="checkNo_icon" style="display : none;"></span>
@@ -76,14 +59,7 @@
                             </ul>
                             <div class="check_wrap">
                                 <ul>
-                                    <li id="saveIdArea">
-                                        <input class="magic-checkbox" type="checkbox" name="layout" id="saveId" value="option" class="pass-form ">
-                                        <label for="saveId"></label>
-                                        <label class="text" for="saveId">
-                                           	아이디 저장
-                                        </label>
-                                    </li>
-									<li id="saveCardNoArea" style="display:none;">
+									<li id="saveCardNoArea">
                                         <input class="magic-checkbox" type="checkbox" name="layout" id="saveCardNo" value="option" class="pass-form ">
                                         <label for="saveCardNo"></label>
                                         <label class="text" for="saveCardNo">
@@ -198,33 +174,49 @@
     <!-- 홍보 및 마케팅 활용 동의 팝업 // -->  
     				
 	<script type="text/javascript">
+		$(document).ready(function() {
+			var cardId = "${decodeCardId}";
+			
+			if(cardId != null && cardId != "") {
+				$("#cardNo").val(cardId);
+			} else {
+				var saveList = ["saveCardNo"];
+				
+				$.each(saveList, function(index, item) {
+					if(localStorage.getItem(item) != null) {
+						var tag = item == "saveId" ? "#id" : "#cardNo";
+						$(tag).val(localStorage.getItem(item));
+						$("input:checkbox[id='" + item + "']").prop("checked", true);
+					}
+				});
+			}
+			
+		    $("input[name=cardPw],input[name=cardNo]").keydown(function (key) {
+		        if(key.keyCode == 13){
+		        	loginService.checkForm();
+		        }
+		    });
+			
+			var spinner = new jQuerySpinner({
+				parentId: 'loading'
+			});
+	    	
+			document.getElementById("loading").addEventListener("click", function(evt) {
+				spinner.show();
+				setTimeout(function() {
+					spinner.hide();
+				}, 2000);
+			});
+		});
+	
 		var loginService = 
 		{
-			// 로그인 방식 변경
-			// 1 : 아이디&비밀번호  / 2 : 카드번호&비밀번호 
-			changeLoginType: function(loginType) {
-				if($("#login_type").val() == loginType) {
-					return;
-				} else {
-					$("#idForm, #pwForm, #cardNoForm, #cardPwForm").removeClass("checkNo");
-					$("#idForm p,span, #pwForm p,span, #cardNoForm p,span, #cardPwForm p,span").hide();		
-					
-					$("#login_type").val(loginType);
-					if(loginType == "1"){
-						$("#idForm, #pwForm, #saveIdArea").show();
-						$("#cardNoForm, #cardPwForm, #saveCardNoArea").hide();
-					} else {
-						$("#idForm, #pwForm, #saveIdArea").hide();
-						$("#cardNoForm, #cardPwForm, #saveCardNoArea").show();
-					}					
-				}
-			},
 			// 로그인 유효성 검사
 			checkForm : function() {
-				var idNotiText = $("#login_type").val() == 1 ? "*아이디를 입력해주세요" : "*카드번호를 입력해주세요"; 
-				var pwNotiText = $("#login_type").val() == 1 ? "*비밀번호를 입력해주세요" : "*카드 비밀번호를 입력해주세요";
-				var idTag = $("#login_type").val() == 1 ? "#id" : "#cardNo";
-				var pwTag = $("#login_type").val() == 1 ? "#pw" : "#cardPw";
+				var idNotiText = "*카드번호를 입력해주세요"; 
+				var pwNotiText = "*카드 비밀번호를 입력해주세요";
+				var idTag = "#cardNo";
+				var pwTag = "#cardPw";
 				
 				var checkList = 
 				[
@@ -237,10 +229,6 @@
 						"noti" : idNotiText
 					}
 				];
-				
-				// 기존 noti관련 class&tag 제거 및 hide처리
-				$("#idForm, #pwForm").removeClass("checkNo");
-				$("#idForm p,span, #pwForm p,span").hide();
 				
 				var valid = true;
 				$.each(checkList, function(index, item) {
@@ -265,7 +253,7 @@
 				var params = {
 					"gubun" : "login",
 					"sendInfo" : {
-						"Login_Type" : $("#login_type").val(),
+						"Login_Type" : "2",
 						"User_Id" : $("#id").val(),
 						"User_Pw" : $("#pw").val(),
 						"Card_No" : $("#cardNo").val(),
@@ -318,15 +306,10 @@
 					false,
 					function(result) {
 				    	if (result == "SUCCESS") {
-				    		if($("#login_type").val() == "1") {
-				    			$("input:checkbox[id='saveId']").is(":checked") ? 
-				    					localStorage.setItem("saveId", $("#id").val()) :
-										localStorage.removeItem("saveId");
-				    		} else if($("#login_type").val() == "2") {
-				    			$("input:checkbox[id='saveCardNo']").is(":checked") ? 
-				    					localStorage.setItem("saveCardNo", $("#cardNo").val()) :
-										localStorage.removeItem("saveCardNo");				    			
-				    		}
+				    		$("input:checkbox[id='saveCardNo']").is(":checked") ? 
+				    		localStorage.setItem("saveCardNo", $("#cardNo").val()) :
+							localStorage.removeItem("saveCardNo");				    			
+
 				    		location.href = "/front/main.do";
 				    	} else {
 				    		fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");	
@@ -357,35 +340,5 @@
 	<script src="/resources/js/front/jquery-spinner.min.js"></script>
 	<script src="/resources/js/front/common.js"></script>
 	<script src="/resources/js/front/front_common.js"></script>
-	<script type="text/javascript">
-		window.onload = function() {
-			var saveList = ["saveId", "saveCardNo"];
-			
-			$.each(saveList, function(index, item) {
-				if(localStorage.getItem(item) != null) {
-					var tag = item == "saveId" ? "#id" : "#cardNo";
-					$(tag).val(localStorage.getItem(item));
-					$("input:checkbox[id='" + item + "']").prop("checked", true);
-				}
-			});
-			
-		    $("input[name=id],input[name=pw],input[name=cardPw],input[name=cardNo]").keydown(function (key) {
-		        if(key.keyCode == 13){
-		        	loginService.checkForm();
-		        }
-		    });
-			
-			var spinner = new jQuerySpinner({
-				parentId: 'loading'
-			});
-	    	
-			document.getElementById("loading").addEventListener("click", function(evt) {
-				spinner.show();
-				setTimeout(function() {
-					spinner.hide();
-				}, 2000);
-			});
-		}
-	</script>
 </body>  
 </html>

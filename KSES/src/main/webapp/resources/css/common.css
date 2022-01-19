@@ -275,3 +275,33 @@ padding: 0 !important;
 }
 .cost_list li li:first-child {background: url("/resources/img/front/arrow_right_black_24dp.svg") no-repeat; padding-left: 2rem;}
 
+/* 공통 에러페이지 CSS */
+.error {
+	text-align: center;
+	width: 55%;
+	margin: 225px auto;
+}
+
+.error > .logo {
+	width: auto;
+	height: auto;
+	float: none;
+	margin-top: 0;
+	background: no-repeat;
+	font-size: 1.3em;
+	font-weight: 700;
+	color: #374da5;
+}
+
+.error h1 {
+	padding-top: 45px;
+	margin-top: 45px;
+	font-size: 32px;
+	border-top: 1px solid #b7b7b7;
+}
+
+.error p {
+	margin-top: 25px;
+	line-height: 36px;
+	font-size: 22px;
+}

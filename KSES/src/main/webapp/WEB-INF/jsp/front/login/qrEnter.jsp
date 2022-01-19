@@ -185,10 +185,15 @@
 				    			$(".pay_btn li:eq(0)").show();
 								$(".qr_enter_code").hide();
 								$(".qr_info").hide();
+								
+								var payHtml = resvInfo.resv_user_dvsn == "USER_DVSN_1" ? "스마트 입장을 위한 <br>결제를 진행 해주세요." : "무인발권기를 통한  <br>결제를 진행 해주세요";
+								$(".pay_noti p:eq(1)").html(payHtml);
 								$(".pay_noti").show();
 				    		}
 				    		
-				    		$("#accessType").val() != "WEB" ? $(".pay_btn li:eq(1)").hide() : $(".pay_btn li:eq(1)").show();  
+				    		
+				    		$("#accessType").val() == "WEB" && resvInfo.resv_user_dvsn == "USER_DVSN_1" ?
+				    				$(".pay_btn li:eq(0)").show() : $(".pay_btn li:eq(0)").hide();  
 						} else {
 							fn_openPopup(result.message, "red", "ERROR", "확인", "/front/main.do");
 						}

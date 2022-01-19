@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 public class UserLoginInfo extends UserInfo{
 	// 로그인 Key
-	private String loginKey = "";
+	private String secretKey = "";
 	
 	// 구분값
 	// 1: 아이디, 비밀번호 / 2: 카드번호, 비밀번호
