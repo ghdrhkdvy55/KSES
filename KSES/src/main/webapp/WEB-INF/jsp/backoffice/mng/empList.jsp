@@ -143,11 +143,7 @@
 			</table>
 			</form>
 		</div>
-		<div class="right_box">
-			<button type="button" class="blueBtn">저장</button>
-			<button type="button" class="grayBtn b-close">취소</a>
-		</div>
-		<div class="clear"></div>
+		<popup-right-button />
 	</div>
 </div>
 <!-- popup// -->

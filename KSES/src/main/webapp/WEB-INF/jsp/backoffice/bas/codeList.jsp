@@ -54,8 +54,8 @@
 <!-- //popup -->
 <div data-popup="bas_code_add" class="popup m_pop">
 	<div class="pop_con">
-        <a class="button b-close">X</a>
-        <h2 class="pop_tit">분류 코드 등록</h2>
+		<a class="button b-close">X</a>
+        <h2 class="pop_tit"></h2>
         <div class="pop_wrap">
         	<form>
         	<input type="hidden" name="mode" value="Ins">
@@ -90,18 +90,14 @@
             </table>
             </form>
         </div>
-        <div class="right_box">
-        	<button type="button" class="blueBtn">저장</button>
-        	<button type="button" class="grayBtn b-close">취소</button>
-        </div>
-        <div class="clear"></div>
+        <popup-right-button />
     </div>
 </div>
 <!-- 상세코드 추가 팝업 -->
 <div data-popup="bas_detailcode_add" class="popup m_pop">
     <div class="pop_con">
-        <a class="button b-close">X</a>
-        <h2 class="pop_tit">상세 코드 등록</h2>
+    	<a class="button b-close">X</a>
+        <h2 class="pop_tit"></h2>
         <div class="pop_wrap">
         	<form>
         	<input type="hidden" name="mode" value="Ins">
@@ -144,11 +140,7 @@
             </table>
             </form>
         </div>
-        <div class="right_box">
-        	<button type="button" class="blueBtn">저장</button>
-        	<button type="button" class="grayBtn b-close">취소</button>
-        </div>
-        <div class="clear"></div>
+        <popup-right-button />
     </div>
 </div>
 <!-- popup// -->

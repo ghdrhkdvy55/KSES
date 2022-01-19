@@ -129,11 +129,7 @@
 			</table>
 			</form>
 		</div>
-		<div class="right_box">
-			<button type="button" class="blueBtn">저장</button>
-			<button type="button" class="grayBtn b-close">닫기</button>
-		</div>
-		<div class="clear"></div>
+		<popup-right-button />
 	</div>
 </div>
 <!-- 관리자 등록 팝업 // -->
@@ -158,10 +154,7 @@
 				<div id="popPager"></div>
 			</div>
 		</div>
-		<div class="right_box">
-	    	<button type="button" onclick="fnAdminIdCheck();" class="blueBtn">선택</button>
-	    	<button type="button" class="grayBtn b-close">취소</button>
-		</div>
+		<popup-right-button successText="선택" clickFunc="fnAdminIdCheck();" />
 	</div>
 </div>
 <!-- popup// -->

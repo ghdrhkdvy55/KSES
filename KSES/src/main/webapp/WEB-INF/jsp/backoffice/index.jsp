@@ -47,15 +47,14 @@
 	<div id="contents"></div>
 </div>
 <div data-popup="popupConfirm" class="popup m_pop">
-      <div class="pop_con">
-        <a id="a_closePop" class="button b-close">X</a>
-        <p class="pop_tit">메세지</p>
-        <p class="pop_wrap"><span></span></p>
-        <div class="right_box">
-		  <button class="blueBtn" style="cursor:pointer;">예</button>
-          <a href="javascript:$('[data-popup=popupConfirm]').bPopup().close();" class="grayBtn">아니요</a>
-      </div>
-      </div>
+	<div class="pop_con">
+		<a class="button b-close">X</a>
+		<p class="pop_tit"></p>
+		<p class="pop_wrap">
+			<span></span>
+		</p>
+		<popup-right-button />
+	</div>
 </div>
 <script type="text/javascript" src="/resources/js/common.js"></script>
 <script type="text/javascript" src="/resources/js/back_common.js"></script>
@@ -115,6 +114,8 @@
 			$('#mySidenav a#'+ menuId).closest('div').prev().removeClass('toggle_off').addClass('toggle_on');
 		}
 		fnSetActiveContent();
+		
+		customElements.define('popup-right-button', PopupRightButton);
 	});
 
 	function fnSetActiveContent() {

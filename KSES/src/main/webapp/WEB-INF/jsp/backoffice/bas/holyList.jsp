@@ -37,7 +37,7 @@
                 <p>검색어</p>
                 <input type="text" id="searchKeyword" placeholder="검색어를 입력하새요.">
             </div>
-            <div class="inlineBtn ">
+            <div class="inlineBtn">
                 <a href="javascript:fnSearch(1);" class="grayBtn">검색</a>
             </div>
         </div>
@@ -106,11 +106,7 @@
 				<div id="popPager"></div>
 			</div>
 		</div>
-	    <div class="right_box">
-	    	<button type="button" class="blueBtn">저장</button>
-	    	<button type="button" class="grayBtn b-close">취소</button>
-		</div>
-		<div class="clear"></div>
+	    <popup-right-button />
 	</div>
 </div>
 <div data-popup="bas_excel_upload" class="popup m_pop">
@@ -123,11 +119,7 @@
         <div style="float:left;margin-top:5px;">
         	<a href="/backoffice/bas/holyInfoUploadSampleDownload.do" class="orangeBtn">샘플</a>
         </div>
-        <div class="right_box">
-        	<button type="button" class="blueBtn">업로드</a>
-            <button type="button" class="grayBtn b-close">취소</a>
-        </div>
-        <div class="clear"></div>
+        <popup-right-button successText="업로드" />
 	</div>
 </div>
 <!-- popup// -->

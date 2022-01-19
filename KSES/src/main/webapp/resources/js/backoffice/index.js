@@ -163,3 +163,22 @@ const EgovCalendar = {
 	buttonImageOnly: false,
 	yearRange: '2020:2100'
 };
+
+class PopupRightButton extends HTMLElement {
+	constructor() {
+		super();
+		let html = [];
+		html.push('<div class="right_box">');
+		
+		let successText = this.getAttribute('successText') === null ? '저장' : this.getAttribute('successText');
+		if (this.getAttribute('clickFunc') === null) {
+			html.push('<button type="button" class="blueBtn">'+ successText +'</button>');
+		} else {
+			html.push('<button type="button" onclick="'+ this.getAttribute('clickFunc') +'" class="blueBtn">'+ successText +'</button>');
+		}
+			html.push('<button type="button" class="grayBtn b-close">취소</button>');
+		html.push('</div>');
+		html.push('<div class="clear"></div>');
+		$(this).html(html.join(''));		
+	}
+}

@@ -91,11 +91,7 @@
             </table>
             </form>
         </div>
-        <div class="right_box">
-        	<button type="button" class="blueBtn">저장</button>
-        	<button type="button" class="grayBtn b-close">취소</button>            
-        </div>
-        <div class="clear"></div>
+        <popup-right-button />
     </div>
 </div>
 <!-- 프로그램 추가 팝업-->
@@ -107,11 +103,7 @@
         	<input type="hidden" name="authorCode"> 
             <div id="jstree" style="overflow:auto; height:700px; border:1px #eee solid; margin-bottom:20px;" />
         </div>
-        <div class="right_box">
-        	<button type="button" onclick="fnMenuSettingSave();" class="blueBtn">저장</button>
-        	<button type="button" class="grayBtn b-close">취소</button>
-        </div>
-        <div class="clear"></div>
+        <popup-right-button clickFunc="fnMenuSettingSave();" />
     </div>
 </div>
 <!-- popup// -->
@@ -325,6 +317,10 @@
 	function fnMenuSetting() {
 		let $popup = $('[data-popup=bas_menu_setting]');
 		let rowId = $('#mainGrid').jqGrid('getGridParam', 'selrow');
+		if (rowId === undefined || rowId === null) {
+			toastr.info('권한을 선택해 주세요.');
+			return;
+		}
 		$popup.find(':hidden[name=authorCode]').val(rowId);
 		$('#jstree').jstree('uncheck_all');
 		EgovIndexApi.apiExecuteJson(
