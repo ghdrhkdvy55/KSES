@@ -275,9 +275,9 @@
 			<when test="@org.apache.commons.lang3.StringUtils@equals(params.userDvsn,'USER_DVSN_1')">
 				WHERE (A.USER_ID = #{params.userId} OR A.RESV_USER_CLPHN = #{params.userPhone}) 
 			</when>
-			<when test="@org.apache.commons.lang3.StringUtils@equals(params.userDvsn,'USER_DVSN_2')">
+			<otherwise>
 				WHERE A.RESV_USER_CLPHN = #{params.userPhone}
-			</when>
+			</otherwise>
 		</choose>
 		AND A.RESV_END_DT = #{params.resvDate}
 		AND A.RESV_STATE NOT IN ('RESV_STATE_4')

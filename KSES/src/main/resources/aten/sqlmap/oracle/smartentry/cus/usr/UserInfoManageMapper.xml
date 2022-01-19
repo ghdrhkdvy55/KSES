@@ -177,7 +177,7 @@
    	</update>
    	
 	<update id="updateUserNoshowCount">
-		UPDATE TSER_USER_INFO_I SET USER_NOSHOW_CNT = USER_NOSHOW_CNT + 1 WHERE USER_ID = #{userId};
+		UPDATE TSER_USER_INFO_I SET USER_NOSHOW_CNT = USER_NOSHOW_CNT + 1 WHERE USER_ID = #{userId}
    	</update>   	
 
    	<delete id="deleteUserInfo">

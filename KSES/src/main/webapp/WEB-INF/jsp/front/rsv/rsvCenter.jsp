@@ -29,9 +29,6 @@
 
 <body>
 <form:form name="regist" commandName="regist" method="get" action="/front/rsvCenter.do">	
-	<input type="hidden" name="userDvsn" id="userDvsn" value="${sessionScope.userLoginInfo.userDvsn}">
-	<input type="hidden" name="userId" id="userId" value="${sessionScope.userLoginInfo.userId}">
-	
 	<input type="hidden" id="centerCd" name="centerCd" value="">
 	<input type="hidden" id="resvDate" name="resvDate" value="">
     

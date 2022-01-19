@@ -83,7 +83,7 @@ input[type=password]::-ms-input-placeholder { /* Microsoft Edge */
     background-color: #47D6BE;
     text-align: center;
     display: block;
-    font-size: 1.1em;
+    font-size: 1.9rem;
     color: #fff;
     cursor: pointer;
     letter-spacing: -0.36px;

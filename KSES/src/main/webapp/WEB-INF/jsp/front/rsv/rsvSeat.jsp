@@ -75,13 +75,13 @@
             <ul class="rsv_info rsv_prsc">
                 <li class="backImg"></li>
                 <li class="rsv_branch">
-                	<span class="sel_center_nm"><c:out value='${resvInfo.center_nm}'/></span>
+                	<span class="sel_center_nm"><c:out value=''/></span>
                 	<span class="sel_floor_nm"></span> 
                 	<span class="sel_part_nm"></span>
                 	<span class="sel_seat_nm"></span>
 				</li>	
                 <li class="rsv_state"><span class="date"></span> 좌석 예약 중 입니다.</li>
-                <li class="rsv_paycost">[결제금액 : <span><c:out value="${resvInfo.center_entry_pay_cost}"/>원]</span></li>
+                <li class="rsv_paycost">[결제금액 : <span><fmt:formatNumber value="${resvInfo.center_entry_pay_cost}" pattern="#,###" />원]</span></li>
             </ul>             
         </div>
         <!-- header //-->
@@ -901,7 +901,7 @@
 				    		    		$(this).removeClass("select");
 				    		    		$(this).addClass("seatUse");
 				    		    		
-				    		    		$(".rsv_paycost span").html($("#centerEntryPayCost").val() + "원")
+				    		    		$(".rsv_paycost span").html(fn_cashFormat($("#centerEntryPayCost").val()) + "원")
 				    		    		return;
 				    		    	};
 
@@ -920,7 +920,7 @@
  										var seatNm = $(this).attr("name");
 										$(".sel_seat_nm").html(seatNm);
 										
-										var payCost = parseInt($("#centerEntryPayCost").val()) + parseInt($("#" + $(this).attr("id")).data("seat_paycost"));
+										var payCost = fn_cashFormat(parseInt($("#centerEntryPayCost").val()) + parseInt($("#" + $(this).attr("id")).data("seat_paycost")));
 										$(".rsv_paycost span").html(payCost + "원");
 										fn_scrollMove($("#ENTRY_DVSN_2_resv_area"));
 				    		    	}
@@ -1191,7 +1191,7 @@
 				}
 				
 				$("#seasonCd").val("");
-				$(".rsv_paycost span").html($("#centerEntryPayCost").val() + "원");
+				$(".rsv_paycost span").html(fn_cashFormat($("#centerEntryPayCost").val()) + "원");
 			}
 		}
     </script>
