@@ -23,6 +23,7 @@ import com.kses.front.login.vo.UserLoginInfo;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.Globals;
+import egovframework.let.utl.sim.service.EgovFileScrty;
 import egovframework.rte.fdl.property.EgovPropertyService;
 
 @RestController
@@ -80,6 +81,7 @@ public class LoginPageInfoManageController {
 			}
 			
 		    HttpSession httpSession = request.getSession();
+		    userLoginInfo.setSecretKey(EgovFileScrty.encryptPassword(userLoginInfo.getUserId(),httpSession.getId().getBytes()));
 			httpSession.setAttribute("userLoginInfo", userLoginInfo);
 			
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
@@ -101,7 +103,7 @@ public class LoginPageInfoManageController {
 			UserLoginInfo userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
 			
 			if(userLoginInfo != null) {
-				String view = userLoginInfo.getUserDvsn().equals("USER_DVSN_1") ? "/front/main/mainpage" : "/front/login/loginpage";
+				String view = userLoginInfo != null ? "/front/main/mainpage" : "/front/login/loginpage";
 				model.setViewName(view);
 			} 
 			
@@ -128,6 +130,7 @@ public class LoginPageInfoManageController {
 			
 			if(userLoginInfo != null) {
 				HttpSession httpSession = request.getSession();
+				userLoginInfo.setSecretKey(EgovFileScrty.encryptPassword(userLoginInfo.getUserId(),httpSession.getId().getBytes()));
 				httpSession.setAttribute("userLoginInfo",userLoginInfo);
 				httpSession.setMaxInactiveInterval(600);
 			}

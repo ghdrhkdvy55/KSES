@@ -67,11 +67,9 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 	}
 	@Override
 	public void postHandle(HttpServletRequest request,  HttpServletResponse response, Object handler, ModelAndView modeAndView) throws Exception {
- 
 		//WebLog webLog = new WebLog();
 		String reqURL = request.getRequestURI();
 		String uniqId = "";
- 
     	   
         Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
     	if(isAuthenticated.booleanValue()) {

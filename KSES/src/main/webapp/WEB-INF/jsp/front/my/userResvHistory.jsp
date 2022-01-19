@@ -32,9 +32,8 @@
 
 <body>
 	<form:form name="regist" commandName="regist" method="post" action="/front/userResvHistory.do">
-	<input type="hidden" name="userDvsn" id="userDvsn" value="${sessionScope.userLoginInfo.userDvsn}">
 	<input type="hidden" name="userId" id="userId" value="${sessionScope.userLoginInfo.userId}">
-	
+	<input type="hidden" name="userDvsn" id="userDvsn" value="${sessionScope.userLoginInfo.userDvsn}">
 	<input type="hidden" id="userNm" name="userNm" value="${sessionScope.userLoginInfo.userNm}">
 	
     <div class="wrapper">

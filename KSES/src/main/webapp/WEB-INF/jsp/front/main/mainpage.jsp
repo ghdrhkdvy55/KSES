@@ -29,9 +29,10 @@
 </head>
 <body>
 	<form:form name="regist" commandName="regist" method="post" action="/front/main.do">
+	<input type="hidden" id="secretKey" name="secretKey" value="${sessionScope.userLoginInfo.secretKey}">
 	<input type="hidden" id="userDvsn" name="userDvsn" value="${sessionScope.userLoginInfo.userDvsn}">
-	<input type="hidden" name="userId" id="userId" value="${sessionScope.userLoginInfo.userId}">
-	<input type="hidden" name="resvSeq" id="resvSeq" value="">
+	<input type="hidden" id="userId" name="userId"  value="${sessionScope.userLoginInfo.userId}">
+	<input type="hidden" id="resvSeq" name="resvSeq" value="">
 
 	<div class="wrapper mainBack">
 		<!--// header -->

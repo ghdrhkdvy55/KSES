@@ -13,6 +13,7 @@ import org.springframework.web.servlet.ModelAndViewDefiningException;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.kses.backoffice.sym.log.annotation.NoLogging;
+import com.kses.backoffice.util.SmartUtil;
 import com.kses.front.annotation.LoginUncheck;
 import com.kses.front.annotation.ReferrerUncheck;
 import com.kses.front.login.vo.UserLoginInfo;
@@ -36,16 +37,11 @@ public class FrontLoginInterceptor extends HandlerInterceptorAdapter{
 		LoginUncheck loginUncheck = handlerMethod.getMethodAnnotation(LoginUncheck.class);
 		
 		ModelAndView model = new ModelAndView("/front/main/mainpage");
-		HttpSession httpSession = request.getSession(false);
-		
-		
-		// Session Check
-		
-		
+		HttpSession httpSession = request.getSession();
+
 		// Referrer Check
 		if(referrerUncheck == null && !this.isAjaxRequest(request)) {
 			String referer = request.getHeader("referer");
-			System.out.println("Referer : " + referer);
 			if(referer == null) {
 				LOGGER.info("REFERER ERROR");
 				model.addObject(Globals.STATUS, Globals.STATUS_REFERRERFAIL);
@@ -56,10 +52,13 @@ public class FrontLoginInterceptor extends HandlerInterceptorAdapter{
 		
 		// Login Check		
 		if (loginUncheck == null) {
-			if(httpSession != null) {
+			if(request.getRequestedSessionId() != null && request.isRequestedSessionIdValid()) {
 				UserLoginInfo userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
-				if(userLoginInfo == null) {
-					LOGGER.info("LOGIN ERROR");
+				String compareUserId = request.getParameter("userId") != null ? request.getParameter("userId") : "";
+				if(userLoginInfo != null && userLoginInfo.getUserId().equals(compareUserId)) {
+					// Check Success
+				} else {
+					LOGGER.info("LOGIN INFO ERROR");
 					model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
 					model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));	
 					throw new ModelAndViewDefiningException(model);
