@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -24,8 +25,8 @@
     <script type="text/javascript" src="/resources/toastr/toastr.min.js"></script>
 </head>
 <body>
-<sec:authentication var="loginAuthorCd" property="principal.egovUserVO.authorCd"/>
-<sec:authentication var="loginCenterCd" property="principal.egovUserVO.centerCd"/>
+<input type="hidden" id="loginAuthorCd" value="${authorcode}"/>
+<input type="hidden" id="loginCenterCd" value="${centercode}"/>
 <div class="wrapper">
 	<div class="header_wrap">
 		<header>

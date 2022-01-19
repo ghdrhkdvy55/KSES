@@ -177,6 +177,8 @@ public class EgovLoginController {
 		if (EgovUserDetailsHelper.isAuthenticated()) {
 			LoginVO loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
 			model.addAttribute("usernmae", loginVO.getEmpNm());
+			model.addAttribute("authorcode", loginVO.getAuthorCd());
+			model.addAttribute("centercode", loginVO.getCenterCd());
 		}
 		return new ModelAndView("/backoffice/index", model);
 	}
