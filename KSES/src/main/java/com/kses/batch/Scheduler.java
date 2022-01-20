@@ -10,7 +10,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.kses.backoffice.bld.center.service.NoshowInfoManageService;
-import com.kses.backoffice.cus.usr.service.UserInfoManageService;
 import com.kses.backoffice.mng.employee.service.EmpInfoManageService;
 import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
 import com.kses.backoffice.sym.log.service.InterfaceInfoManageService;
@@ -36,16 +35,12 @@ public class Scheduler {
 	
 	@Autowired
 	private InterfaceInfoManageService interfaceService;
-	
-	@Autowired
-	private UserInfoManageService userService;
 
 	/**
 	 * 노쇼 예약정보 자동취소 스케줄러
 	 * 
 	 * @throws Exception
 	 */
-
 	@Scheduled(cron = "0 0/30 * * * * ")
 	//@Transactional(rollbackFor=Exception.class)
 	public void resvNoshowScheduler() throws Exception {
@@ -61,10 +56,7 @@ public class Scheduler {
 					int ticketCount = 0;
 					
 					for(Map<String, Object> map : noshowResvList) {
-						String userId = SmartUtil.NVL(map.get("user_id"),"");
-						String userDvsn = SmartUtil.NVL(map.get("resv_user_dvsn"),"");
 						String resvSeq = SmartUtil.NVL(map.get("resv_seq"),"");
-						String noshowCd = SmartUtil.NVL(map.get("noshow_cd"),"");
 						String resvPayDvsn = SmartUtil.NVL(map.get("resv_pay_dvsn"),"");
 						String resvTicketDvsn = SmartUtil.NVL(map.get("resv_ticket_dvsn"),"");
 						
@@ -87,13 +79,9 @@ public class Scheduler {
 							}
 							
 							// 노쇼정보등록 & 예약정보취소
-							if(!noshowService.updateNoshowResvInfoTran(resvSeq, noshowCd)) {
+							if(!noshowService.updateNoshowResvInfoTran(map)) {
 								LOGGER.info("예약번호 : " + resvSeq + " 예약취소 및 노쇼예약정보 등록 실패");
 								continue;
-							}
-							
-							if(userDvsn.equals("USER_DVSN_1")) {
-								userService.updateUserNoshowCount(userId);
 							}
 							
 							successCount++;

@@ -16,8 +16,10 @@ import com.kses.backoffice.bld.center.mapper.NoshowInfoManageMapper;
 import com.kses.backoffice.bld.center.service.NoshowInfoManageService;
 import com.kses.backoffice.bld.center.vo.NoshowInfo;
 import com.kses.backoffice.cus.kko.service.SureManageSevice;
+import com.kses.backoffice.cus.usr.service.UserInfoManageService;
 import com.kses.backoffice.rsv.reservation.vo.NoShowHisInfo;
 import com.kses.backoffice.rsv.reservation.vo.ResvInfo;
+import com.kses.backoffice.util.SmartUtil;
 
 @Service
 public class NoshowInfoManageServiceImpl extends EgovAbstractServiceImpl implements NoshowInfoManageService {
@@ -28,6 +30,9 @@ public class NoshowInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
 	
 	@Autowired
 	private SureManageSevice sureService;
+	
+	@Autowired
+	private UserInfoManageService userService;
 	
 	@Override
 	public List<Map<String, Object>> selectNoshowInfoList(String centerCd) throws Exception {
@@ -66,15 +71,20 @@ public class NoshowInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
 	
 	@Override
 	@Transactional(propagation=Propagation.REQUIRES_NEW, rollbackFor=Exception.class)
-	public boolean updateNoshowResvInfoTran(String resvSeq, String noshowCd) throws Exception {
+	public boolean updateNoshowResvInfoTran(Map<String, Object> params) throws Exception {
 		int resultCount = 0;
+		String userId = SmartUtil.NVL(params.get("user_id"),"");
+		String resvSeq = SmartUtil.NVL(params.get("resv_seq"),"");
+		String noshowCd = SmartUtil.NVL(params.get("noshow_cd"),"");
 		
 		try {
 			NoShowHisInfo noshowHisInfo = new NoShowHisInfo();
 			ResvInfo resvInfo = new ResvInfo();
+			noshowHisInfo.setUserId(userId);
 			noshowHisInfo.setNoshowCd(noshowCd);
 			noshowHisInfo.setResvSeq(resvSeq);
 			resultCount = noshowMapper.insertNoshowResvInfo(noshowHisInfo);
+			userService.updateUserNoshowCount(userId);
 			
 			if(resultCount > 0) {
 				LOGGER.info("예약번호 : " + resvSeq + " 노쇼 정보 등록성공");
