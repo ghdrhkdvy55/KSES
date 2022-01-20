@@ -29,8 +29,8 @@ import com.kses.backoffice.util.service.fileService;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.Globals;
+import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import egovframework.rte.fdl.property.EgovPropertyService;
-import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import lombok.extern.slf4j.Slf4j;
 
@@ -108,55 +108,49 @@ public class CenterInfoManageController {
 		return model;	
 	}
 	
-	@RequestMapping(value="centerListAjax.do")
-	public ModelAndView selectCenterAjaxInfo(	@ModelAttribute("loginVO") LoginVO loginVO, 
-												@RequestBody Map<String,Object> searchVO, 
-												HttpServletRequest request, 
-												BindingResult bindingResult	) throws Exception {
+	/**
+	 * 지점 목록 조회
+	 * @param searchVO
+	 * @param request
+	 * @param bindingResult
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="centerListAjax.do", method = RequestMethod.POST)
+	public ModelAndView selectCenterAjaxInfo(@RequestBody Map<String,Object> searchVO) throws Exception {
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		
-		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
-		try {
-			  int pageUnit = searchVO.get("pageUnit") == null ? propertiesService.getInt("pageUnit") : Integer.valueOf((String) searchVO.get("pageUnit"));
-			  
-			  searchVO.put("pageSize", propertiesService.getInt("pageSize"));
-			  
-			  log.debug("------------------------pageUnit : " + pageUnit);
-			  
-			  //Paging
-		   	  PaginationInfo paginationInfo = new PaginationInfo();
-			  paginationInfo.setCurrentPageNo(Integer.parseInt(SmartUtil.NVL(searchVO.get("pageIndex"), "1").toString()));
-			  paginationInfo.setRecordCountPerPage(pageUnit);
-			  paginationInfo.setPageSize(propertiesService.getInt("pageSize"));
-			  
-			  searchVO.put("firstIndex", paginationInfo.getFirstRecordIndex());
-			  searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
-			  searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
-			  
-			  
-              loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
-			  searchVO.put("authorCd", loginVO.getAuthorCd());
-			  searchVO.put("centerCd", loginVO.getCenterCd());
-			  
-			  log.debug("pageUnit End");
-			  List<Map<String, Object>> list = centerInfoManageService.selectCenterInfoList(searchVO);
-			  log.debug("[-------------------------------------------list:" + list.size() + "------]");
-		      model.addObject(Globals.JSON_RETURN_RESULTLISR, list);
-		      model.addObject(Globals.STATUS_REGINFO, searchVO);
-		      int totCnt = list.size() > 0 ? Integer.valueOf( list.get(0).get("total_record_count").toString()) :0;
-		      
-		      log.debug("totCnt:" + totCnt);
-		      
-		      paginationInfo.setTotalRecordCount(totCnt);
-		      model.addObject("paginationInfo", paginationInfo);
-		      model.addObject("totalCnt", totCnt);
-		      
-		} catch(Exception e) {
-			log.debug("---------------------------------------");
-			StackTraceElement[] ste = e.getStackTrace();
-			log.error(e.toString() + ":" + ste[0].getLineNumber());
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));	
-		}
+		int pageUnit = searchVO.get("pageUnit") == null ? propertiesService.getInt("pageUnit") : Integer.valueOf((String) searchVO.get("pageUnit"));
+		  
+		searchVO.put("pageSize", propertiesService.getInt("pageSize"));
+		
+		log.debug("------------------------pageUnit : " + pageUnit);
+		LoginVO loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
+		
+		//Paging
+		PaginationInfo paginationInfo = new PaginationInfo();
+		paginationInfo.setCurrentPageNo(Integer.parseInt(SmartUtil.NVL(searchVO.get("pageIndex"), "1").toString()));
+		paginationInfo.setRecordCountPerPage(pageUnit);
+		paginationInfo.setPageSize(propertiesService.getInt("pageSize"));
+		
+		searchVO.put("firstIndex", paginationInfo.getFirstRecordIndex());
+		searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
+		searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
+		searchVO.put("authorCd", loginVO.getAuthorCd());
+		searchVO.put("centerCd", loginVO.getCenterCd());
+		
+		List<Map<String, Object>> list = centerInfoManageService.selectCenterInfoList(searchVO);
+		log.debug("[-------------------------------------------list:" + list.size() + "------]");
+		model.addObject(Globals.JSON_RETURN_RESULTLISR, list);
+		model.addObject(Globals.STATUS_REGINFO, searchVO);
+		int totCnt = list.size() > 0 ? Integer.valueOf( list.get(0).get("total_record_count").toString()) :0;
+		
+		log.debug("totCnt:" + totCnt);
+		
+		paginationInfo.setTotalRecordCount(totCnt);
+		model.addObject("paginationInfo", paginationInfo);
+		model.addObject("totalCnt", totCnt);
+		
 		return model;
 	}
 	

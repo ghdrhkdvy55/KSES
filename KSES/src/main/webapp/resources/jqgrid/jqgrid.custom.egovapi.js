@@ -89,19 +89,22 @@ $.EgovJqGridApi.prototype.getPage = function(id, pgButton, page, lastpage) {
 /** JqGrid 메인 그리드 출력 
 	- 출력 후 자동 검색 함수 호출
  */
-$.EgovJqGridApi.prototype.mainGrid = function(colModel, multiselect, subGrid, searchFunc) {
+$.EgovJqGridApi.prototype.mainGrid = function(colModel, multiselect, subGrid, searchFunc, resize) {
 	this._formatter(colModel);
 	this._init('POST', colModel, multiselect, subGrid, false);
 	this._jqGridParams['pager'] = $(_MainPagerSelector);
-	$(_MainGridSelector).jqGrid(this._jqGridParams);
-	$(window).bind('resize', function() {
-		// 그리드의 width를 div 에 맞춰서 적용 
-		$(_MainGridSelector).setGridWidth($(_MainGridSelector).closest('div.boardlist').width() , true);
-	}).trigger('resize');
+	let retGrid = $(_MainGridSelector).jqGrid(this._jqGridParams);
+	if (resize !== false) {
+		$(window).bind('resize', function() {
+			// 그리드의 width를 div 에 맞춰서 적용 
+			$(_MainGridSelector).setGridWidth($(_MainGridSelector).closest('div.boardlist').width() , true);
+		}).trigger('resize');		
+	}
 	if (searchFunc) {
 		setTimeout(function() { searchFunc(1) }, _JqGridDelay);
 	}
 	$('th#'+_MainGridId+'_rn').children('div:first').append('NO');
+	return retGrid;
 };
 /** JqGrid 메인 그리드 검색 함수에서 필요한 데이터 호출 함수 
 	- 페이징 정의
