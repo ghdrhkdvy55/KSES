@@ -493,7 +493,7 @@ bottom:0;
  }
 .topImg { 
     background: url("/resources/img/front/logo1.svg")no-repeat right;
-    width: 23vh;
+    width: 18vh;
     height: 6rem;
     float: right;
     position: relative;
@@ -1037,7 +1037,7 @@ p.myPin {
 .notice_inner {
   overflow: hidden;
   display: none;
-  padding:2rem; font-size: 1.4rem; 
+  padding:1.2rem; font-size: 1.5rem; 
   border-bottom: 5px solid #ebebeb;
 
 }
