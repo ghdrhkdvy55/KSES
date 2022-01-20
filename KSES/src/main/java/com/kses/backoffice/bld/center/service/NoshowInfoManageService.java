@@ -78,5 +78,5 @@ public interface NoshowInfoManageService {
 	 * @return
 	 * @throws Exception
 	 */
-	public boolean updateNoshowResvInfoTran(String resvSeq, String noshowCd) throws Exception;
+	public boolean updateNoshowResvInfoTran(Map<String, Object> params) throws Exception;
 }
