@@ -282,6 +282,7 @@ public class ResJosnController {
 			String qrInfo = EgovFileScrty.decode(sendInfo.getQrCode());
 			String qrCneterCd = sendInfo.getQrCneterCd(); // qr 지점 정보
 			String qrInot = sendInfo.getQrInot(); // qrIO 구분
+			String qrCheck = sendInfo.getQrCode();
 			
 			String result = "";
 			String ERROR_CD = "";
@@ -319,6 +320,11 @@ public class ResJosnController {
 				searchVO.put("resvSeq", resSeq);
 				searchVO.put("resvDate", nowDate);
 				
+				Map<String, Object> doubleCheckVO = new HashMap<String, Object>();
+				doubleCheckVO.put("resvSeq", SmartUtil.NVL(resSeq, "").toString());
+				doubleCheckVO.put("qrCode", SmartUtil.NVL(qrCheck, "").toString());
+				Map<String, Object> qrDoubleCheck = resService.resvQrDoubleCheck(doubleCheckVO);
+				
 				Map<String, Object> resInfo = resService.selectUserResvInfo(searchVO);
 				
 				if (!qrTime.substring(0, 8).equals(formatedNow.substring(0, 8))) {
@@ -338,6 +344,15 @@ public class ResJosnController {
 					return model;
 				}
 
+				if (!gubun.equals("PAPER")) {
+					if (!qrDoubleCheck.get("cnt").toString().equals("0")) {
+						ERROR_CD = "ERROR_10";
+						ERROR_MSG = "중복된 큐알.";
+						model.addObject("ERROR_CD", ERROR_CD);
+						model.addObject("ERROR_MSG", ERROR_MSG);
+						return model;
+					}
+				}
 				// 시간 비교
 				if (Integer.valueOf(SmartUtil.timeCheck(qrTime)) < -30 && gubun.equals("INTERVAL")) {
 					ERROR_CD = "ERROR_01";
@@ -377,7 +392,6 @@ public class ResJosnController {
 					}
 				}
 				
-
 				if (!resvQrCount.equals(SmartUtil.NVL(resInfo.get("resv_qr_count"),""))) {
 					ERROR_MSG = "QR발급회차 불일치";
 					ERROR_CD = "ERROR_08";

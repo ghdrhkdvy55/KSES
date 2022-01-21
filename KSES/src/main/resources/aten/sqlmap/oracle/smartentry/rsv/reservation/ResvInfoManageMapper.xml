@@ -435,7 +435,14 @@
 		UPDATE TSER_RESV_INFO_I SET 	
 			RESV_QR_COUNT = RESV_QR_COUNT + 1
         WHERE RESV_SEQ = #{resvSeq}
-    </update>      
+    </update>     
+    
+    <select id="resvQrDoubleCheck" resultType="lmap">
+    	SELECT NVL(COUNT(*),0) AS CNT
+		FROM TSER_QR_CHECK_H  
+		WHERE RESV_SEQ = #{params.resvSeq}
+		AND QR_CODE = #{params.qrCode}
+    </select>
     
 	<update id="resPriceChange">
 		UPDATE TSER_RESV_INFO_I SET 
