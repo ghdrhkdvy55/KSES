@@ -162,6 +162,11 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	}
 	
 	@Override
+	public Map<String, Object> resvQrDoubleCheck(Map<String, Object> params) throws Exception {
+		return resvMapper.resvQrDoubleCheck(params);
+	}
+	
+	@Override
 	public int resvInfoCancel(Map<String, Object> params) throws Exception {
 		return resvMapper.resvInfoCancel(params);
 	}

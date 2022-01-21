@@ -190,6 +190,15 @@ public interface ResvInfoManageService {
 	 */
 	public int resvQrCountChange(String resvSeq) throws Exception;	
 	
+	
+	/**
+	 * SPDM 모바일 큐알 체크인 시 같은 큐알 체크
+	 * @param resvSeq
+	 * @return
+	 * @throws Exception
+	 */
+	public Map<String, Object> resvQrDoubleCheck(@Param("params") Map<String, Object> params) throws Exception;	
+	
 	/*
 	 *  입금 또는 환불
 	 * 
@@ -208,5 +217,10 @@ public interface ResvInfoManageService {
 	 */
 	public String resvValidCheck(Map<String, Object> params) throws Exception;
 	
+	/**
+	 * SPDM 무인발권기 조회 시 지점 체크
+	 * @param params
+	 * @return
+	 */
 	public Map<String, Object> selectTicketMchnSnoCheck(@Param("params") Map<String, Object> params);
 }
