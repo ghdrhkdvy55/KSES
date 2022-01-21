@@ -18,7 +18,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.kses.backoffice.cus.usr.service.UserInfoManageService;
 import com.kses.backoffice.util.SmartUtil;
 import com.kses.front.annotation.LoginUncheck;
-import com.kses.front.annotation.ReferrerUncheck;
 import com.kses.front.login.service.UserLoginService;
 import com.kses.front.login.vo.UserLoginInfo;
 
@@ -118,7 +117,6 @@ public class LoginPageInfoManageController {
 	}
 	
 	@LoginUncheck
-	@ReferrerUncheck
 	@RequestMapping (value="ssoLogin.do")
 	public ModelAndView frontSSOLogin(	HttpServletRequest request,
 										@RequestParam Map<String, Object> params) throws Exception {

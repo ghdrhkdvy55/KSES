@@ -456,7 +456,8 @@
     
     <!--  현금 영수증 출력  -->
     <update id="resbillChange">
-		UPDATE TSER_RESV_INFO_I SET RESV_RCPT_NUMBER = #{resvRcptNumber}
+		UPDATE TSER_RESV_INFO_I SET 
+			RESV_RCPT_NUMBER = #{resvRcptNumber}
         WHERE RESV_SEQ = #{resvSeq}
     </update>
     
