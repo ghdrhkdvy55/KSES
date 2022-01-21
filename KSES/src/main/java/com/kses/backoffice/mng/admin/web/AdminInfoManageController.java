@@ -85,24 +85,25 @@ public class AdminInfoManageController {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		
 		//페이징 처리 할 부분 정리 하기 
-		int pageUnit = searchVO.get("pageUnit") == null ? propertiesService.getInt("pageUnit") : Integer.valueOf((String) searchVO.get("pageUnit"));
+		int pageUnit = searchVO.get("pageUnit") == null ? propertiesService.getInt("pageUnit")
+				: Integer.valueOf((String) searchVO.get("pageUnit"));
 		
 		PaginationInfo paginationInfo = new PaginationInfo();
 		paginationInfo.setCurrentPageNo( Integer.parseInt( SmartUtil.NVL(searchVO.get("pageIndex"), "1")));
 		paginationInfo.setRecordCountPerPage(pageUnit);
 		paginationInfo.setPageSize(propertiesService.getInt("pageSize"));
 		
-		searchVO.put("pageSize", propertiesService.getInt("pageSize"));
 		searchVO.put("firstIndex", paginationInfo.getFirstRecordIndex());
 		searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
 		searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
 	
 		List<Map<String, Object>> list = adminInfoService.selectAdminUserManageListByPagination(searchVO) ;
 		int totCnt = list.size() > 0 ? Integer.valueOf( list.get(0).get("total_record_count").toString()) : 0;
-	
+		paginationInfo.setTotalRecordCount(totCnt);
+
+		model.addObject(Globals.STATUS_REGINFO, searchVO);
 		model.addObject(Globals.JSON_RETURN_RESULTLISR, list);
 		model.addObject(Globals.PAGE_TOTALCNT, totCnt);
-		paginationInfo.setTotalRecordCount(totCnt);
 		model.addObject(Globals.JSON_PAGEINFO, paginationInfo);
 		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		

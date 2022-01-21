@@ -63,12 +63,9 @@ public class ProgrmInfoManageController {
 	public ModelAndView selectProgrmInfoListAjax(@RequestBody Map<String, Object> searchVO) throws Exception {
 		ModelAndView model = new ModelAndView (Globals.JSONVIEW);
 		
-		int pageUnit = searchVO.get("pageUnit") == null ?  propertiesService.getInt("pageUnit") : Integer.valueOf((String) searchVO.get("pageUnit"));
+		int pageUnit = searchVO.get("pageUnit") == null ? propertiesService.getInt("pageUnit")
+				: Integer.valueOf((String) searchVO.get("pageUnit"));
 		  
-	    searchVO.put("pageSize", propertiesService.getInt("pageSize"));
-	  
-	    log.info("pageUnit:" + pageUnit);
-	  
    	    PaginationInfo paginationInfo = new PaginationInfo();
 	    paginationInfo.setCurrentPageNo( Integer.parseInt(SmartUtil.NVL(searchVO.get("pageIndex"),"1")));
 	    paginationInfo.setRecordCountPerPage(pageUnit);
@@ -80,10 +77,11 @@ public class ProgrmInfoManageController {
 	    			  
 		List<Map<String, Object>> list = progrmService .selectProgrmInfoList(searchVO);
         int totCnt =  list.size() > 0 ? Integer.valueOf(list.get(0).get("total_record_count").toString()) : 0;
-   
+		paginationInfo.setTotalRecordCount(totCnt);
+
+		model.addObject(Globals.STATUS_REGINFO, searchVO);
 		model.addObject(Globals.JSON_RETURN_RESULTLISR, list);
 	    model.addObject(Globals.PAGE_TOTALCNT, totCnt);
-	    paginationInfo.setTotalRecordCount(totCnt);
 	    model.addObject(Globals.JSON_PAGEINFO, paginationInfo);
 	    model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		

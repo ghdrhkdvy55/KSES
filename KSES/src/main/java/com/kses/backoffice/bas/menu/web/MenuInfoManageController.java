@@ -84,7 +84,8 @@ public class MenuInfoManageController {
 	public ModelAndView selectMenuInfoListAjax(@RequestBody Map<String, Object> searchVO) throws Exception {
 		ModelAndView model = new ModelAndView (Globals.JSONVIEW);
 		
-		int pageUnit = searchVO.get("pageUnit") == null ?  propertiesService.getInt("pageUnit") : Integer.valueOf((String) searchVO.get("pageUnit"));
+		int pageUnit = searchVO.get("pageUnit") == null ?  propertiesService.getInt("pageUnit")
+				: Integer.valueOf((String) searchVO.get("pageUnit"));
 	  
    	    PaginationInfo paginationInfo = new PaginationInfo();
 	    paginationInfo.setCurrentPageNo( Integer.parseInt(SmartUtil.NVL(searchVO.get("pageIndex"),"1")));
@@ -94,16 +95,14 @@ public class MenuInfoManageController {
 	    searchVO.put("firstIndex", paginationInfo.getFirstRecordIndex());
 	    searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
 	    searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
-	    
-	    log.info("searchVO:" + searchVO);
-	    
+
 	    List<Map<String, Object>> menuList = menuService.selectMenuManageList(searchVO);
-	    
 	    int totCnt =  menuList.size() > 0 ? Integer.valueOf(menuList.get(0).get("total_record_count").toString()) : 0;
-		   
+		paginationInfo.setTotalRecordCount(totCnt);
+
+		model.addObject(Globals.STATUS_REGINFO, searchVO);
 		model.addObject(Globals.JSON_RETURN_RESULTLISR, menuList);
 	    model.addObject(Globals.PAGE_TOTALCNT, totCnt);
-	    paginationInfo.setTotalRecordCount(totCnt);
 	    model.addObject(Globals.JSON_PAGEINFO, paginationInfo);
 	    model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 	    
@@ -163,11 +162,10 @@ public class MenuInfoManageController {
 		
 		return model;
 	}
-	
+
 	/**
 	 * 메뉴 삭제
-	 * @param menuNo
-	 * @param mmp
+	 * @param menuInfo
 	 * @return
 	 * @throws Exception
 	 */
@@ -192,10 +190,10 @@ public class MenuInfoManageController {
 
 		return model;
 	}
-	
+
 	/**
 	 * 메뉴 아이디 중복 체크
-	 * @param codeId
+	 * @param menuNo
 	 * @return
 	 * @throws Exception
 	 */
@@ -264,11 +262,11 @@ public class MenuInfoManageController {
 
 	/**
 	 * 메뉴정보를 등록화면으로 이동 및 등록 한다.
-	 * @param menuManageVO    MenuManageVO
-	 * @param commandMap      Map
-	 * @return 출력페이지정보 등록화면 호출시 "sym/mnu/mpm/EgovMenuRegist",
-	 *         출력페이지정보 등록처리시 "forward:/sym/mnu/mpm/EgovMenuManageSelect.do"
-	 * @exception Exception
+	 * @param commandMap
+	 * @param menuIno
+	 * @param bindingResult
+	 * @return
+	 * @throws Exception
 	 */
 	@RequestMapping(value = "menuRegistUpdate.do")
 	public ModelAndView insertMenuManage(@RequestParam Map<String, Object> commandMap, 
@@ -311,9 +309,10 @@ public class MenuInfoManageController {
 
 	/**
 	 * 메뉴생성 일괄삭제프로세스
-	 * @param menuManageVO MenuManageVO
-	 * @return 출력페이지정보 "sym/mnu/mpm/EgovMenuBndeRegist"
-	 * @exception Exception
+	 * @param menuInfo
+	 * @param mmp
+	 * @return
+	 * @throws Exception
 	 */
 	@RequestMapping(value = "menuBndeAllDelete.do")
 	public ModelAndView menuBndeAllDelete(@ModelAttribute("MenuInfo") MenuInfo menuInfo, 
@@ -341,11 +340,12 @@ public class MenuInfoManageController {
 
 	/**
 	 * 메뉴일괄등록화면 호출 및  메뉴일괄등록처리 프로세스
-	 * @param commandMap    Map
-	 * @param menuManageVO  MenuManageVO
-	 * @param request       HttpServletRequest
-	 * @return 출력페이지정보 "sym/mnu/mpm/EgovMenuBndeRegist"
-	 * @exception Exception
+	 * @param commandMap
+	 * @param request
+	 * @param menuInfo
+	 * @param mmp
+	 * @return
+	 * @throws Exception
 	 */
 	@RequestMapping(value = "menuBndeRegist.do")
 	public ModelAndView menuBndeRegist(@RequestParam Map<String, Object> commandMap, 
@@ -481,10 +481,10 @@ public class MenuInfoManageController {
 		}
 		return model;
 	}
-	
+
 	/**
 	 * 권한 코드에 따른 매핑 메뉴 정보 저장
-	 * @param createInfo
+	 * @param params
 	 * @return
 	 * @throws Exception
 	 */

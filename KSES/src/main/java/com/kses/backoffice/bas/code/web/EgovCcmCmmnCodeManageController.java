@@ -72,23 +72,18 @@ public class EgovCcmCmmnCodeManageController {
 		paginationInfo.setRecordCountPerPage(pageUnit);
 		paginationInfo.setPageSize(propertiesService.getInt("pageSize"));
 
-		searchVO.put("pageSize", propertiesService.getInt("pageSize"));
 		searchVO.put("searchKeyword", SmartUtil.NVL(searchVO.get("searchKeyword"), ""));
 		searchVO.put("firstIndex", paginationInfo.getFirstRecordIndex());
 		searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
 		searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
 
-		model.addObject(Globals.STATUS_REGINFO, searchVO);
-		log.info("searchVO:" + searchVO);
-
 		List<Map<String, Object>> list = cmmnCodeManageService.selectCmmnCodeListByPagination(searchVO);
-		model.addObject(Globals.JSON_RETURN_RESULTLISR, list);
-
 		int totCnt = list.size() > 0 ? Integer.valueOf(list.get(0).get("total_record_count").toString()) : 0;
-
-		model.addObject(Globals.PAGE_TOTALCNT, totCnt);
-
 		paginationInfo.setTotalRecordCount(totCnt);
+
+		model.addObject(Globals.STATUS_REGINFO, searchVO);
+		model.addObject(Globals.JSON_RETURN_RESULTLISR, list);
+		model.addObject(Globals.PAGE_TOTALCNT, totCnt);
 		model.addObject(Globals.JSON_PAGEINFO, paginationInfo);
 		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 

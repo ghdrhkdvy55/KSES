@@ -77,11 +77,8 @@ public class HolyInfoManageController {
 	public ModelAndView selectHolyInfoListAjax(@RequestBody Map<String, Object> searchVO) throws Exception {
 		ModelAndView model = new ModelAndView (Globals.JSONVIEW);
 			
-		int pageUnit = searchVO.get("pageUnit") == null ?   propertiesService.getInt("pageUnit") : Integer.valueOf((String) searchVO.get("pageUnit"));
-		  
-	    searchVO.put("pageSize", propertiesService.getInt("pageSize"));
-	  
-	    log.info("pageUnit:" + pageUnit);
+		int pageUnit = searchVO.get("pageUnit") == null ? propertiesService.getInt("pageUnit")
+				: Integer.valueOf((String) searchVO.get("pageUnit"));
 	                
    	    PaginationInfo paginationInfo = new PaginationInfo();
 	    paginationInfo.setCurrentPageNo( Integer.parseInt(SmartUtil.NVL(searchVO.get("pageIndex"), "1") ) );
@@ -94,19 +91,20 @@ public class HolyInfoManageController {
 	    			  
 		List<Map<String, Object>> list = holyService.selectHolyInfoList(searchVO);
         int totCnt =  list.size() > 0 ? Integer.valueOf( list.get(0).get("total_record_count").toString()) :0;
-   
+		paginationInfo.setTotalRecordCount(totCnt);
+
+		model.addObject(Globals.STATUS_REGINFO, searchVO);
 		model.addObject(Globals.JSON_RETURN_RESULTLISR, list);
 	    model.addObject(Globals.PAGE_TOTALCNT, totCnt);
-	    paginationInfo.setTotalRecordCount(totCnt);
 	    model.addObject(Globals.JSON_PAGEINFO, paginationInfo);
 	    model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 	    
 		return model;
 	}
-	
+
 	/**
 	 * 휴일 적용 센터 목록 조회
-	 * @param holyDt
+	 * @param searchVO
 	 * @return
 	 * @throws Exception
 	 */
@@ -139,10 +137,10 @@ public class HolyInfoManageController {
 	    
 		return model;
 	}
-	
+
 	/**
 	 * 휴일일자 중복 체크
-	 * @param authorCode
+	 * @param holyDt
 	 * @return
 	 * @throws Exception
 	 */

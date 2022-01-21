@@ -44,23 +44,20 @@ public class EgovCcmCmmnDetailCodeManageController {
 	@RequestMapping(value="CmmnDetailCodeList.do", method = RequestMethod.GET)
     public ModelAndView selectCmmnDetailCodeList(@RequestParam("codeId") String codeId) throws Exception {
     	ModelAndView model = new 	ModelAndView(Globals.JSONVIEW);
-    	
-    	log.debug("codeId: "+ codeId);
+
     	List<CmmnDetailCode> codeDetailList = (List<CmmnDetailCode>) cmmnDetailCodeManageService.selectCmmnDetailCodeList(codeId);
         int totCnt = codeDetailList.size() > 0 ? codeDetailList.size()  : 0;
-        model.addObject(Globals.JSON_RETURN_RESULTLISR, codeDetailList);
-        model.addObject( Globals.STATUS_REGINFO, codeId);
+
+		model.addObject( Globals.STATUS_REGINFO, codeId);
+		model.addObject(Globals.JSON_RETURN_RESULTLISR, codeDetailList);
         model.addObject(Globals.PAGE_TOTALCNT, totCnt);
         
         return model;
 	}
-	
+
 	/**
 	 * 공통상세코드 저장
-	 * @param loginVO
-	 * @param vo
-	 * @param modelMe
-	 * @param bindingResult
+	 * @param cmmnDetailCode
 	 * @return
 	 * @throws Exception
 	 */
@@ -98,13 +95,11 @@ public class EgovCcmCmmnDetailCodeManageController {
     	
     	return model;
     }
-	
+
 	/**
 	 * 공통상세코드를 삭제한다.
-	 * @param loginVO
 	 * @param cmmnDetailCode
-	 * @param model
-	 * @return "forward:/sym/ccm/cde/EgovCcmCmmnDetailCodeList.do"
+	 * @return
 	 * @throws Exception
 	 */
     @RequestMapping(value="codeDetailCodeDelete.do", method = RequestMethod.POST)

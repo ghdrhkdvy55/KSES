@@ -68,13 +68,10 @@ public class AuthInfoManageController {
 	@RequestMapping(value="authListAjax.do", method = RequestMethod.POST)
 	public ModelAndView selectAuthInfoListAjax(@RequestBody Map<String, Object> searchVO) throws Exception {
 		ModelAndView model = new ModelAndView (Globals.JSONVIEW);
-		
-		int pageUnit = searchVO.get("pageUnit") == null ?  propertiesService.getInt("pageUnit") : Integer.valueOf((String) searchVO.get("pageUnit"));
-		  
-	    searchVO.put("pageSize", propertiesService.getInt("pageSize"));
-	  
-	    log.info("pageUnit:" + pageUnit);
-	  
+
+		int pageUnit = searchVO.get("pageUnit") == null ?  propertiesService.getInt("pageUnit")
+				: Integer.valueOf((String) searchVO.get("pageUnit"));
+
    	    PaginationInfo paginationInfo = new PaginationInfo();
 	    paginationInfo.setCurrentPageNo( Integer.parseInt(SmartUtil.NVL(searchVO.get("pageIndex"),"1")));
 	    paginationInfo.setRecordCountPerPage(pageUnit);
@@ -83,15 +80,14 @@ public class AuthInfoManageController {
 	    searchVO.put("firstIndex", paginationInfo.getFirstRecordIndex());
 	    searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
 	    searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
-	    			  
-		//List<Map<String, Object>> list = authService.selectAuthInfoList(searchVO);
+
 	    List<Map<String, Object>> list = menuCreateService.selectMenuCreatManagList(searchVO);
-	    
         int totCnt =  list.size() > 0 ? Integer.valueOf(list.get(0).get("total_record_count").toString()) : 0;
-   
+		paginationInfo.setTotalRecordCount(totCnt);
+
+		model.addObject(Globals.STATUS_REGINFO, searchVO);
 		model.addObject(Globals.JSON_RETURN_RESULTLISR, list);
 	    model.addObject(Globals.PAGE_TOTALCNT, totCnt);
-	    paginationInfo.setTotalRecordCount(totCnt);
 	    model.addObject(Globals.JSON_PAGEINFO, paginationInfo);
 	    model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 	    
@@ -107,7 +103,7 @@ public class AuthInfoManageController {
 	@RequestMapping (value="authUpdate.do", method = RequestMethod.POST)
 	public ModelAndView updateAuthInfoManage(@RequestBody AuthInfo authInfo) throws Exception{
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-		
+
 		int ret = 0;
 		switch (authInfo.getMode()) {
 			case Globals.SAVE_MODE_INSERT:
