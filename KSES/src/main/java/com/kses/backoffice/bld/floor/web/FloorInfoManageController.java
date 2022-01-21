@@ -104,45 +104,42 @@ public class FloorInfoManageController {
 		
 		return model;
 	}
-	
-	@RequestMapping (value="floorListAjax.do")
-	public ModelAndView selectFloorInfoListAjax(	@ModelAttribute("loginVO") LoginVO loginVO, 
-													@RequestBody Map<String,Object> searchVO, 
-													BindingResult result) throws Exception {
-		
-		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-		try {
-			Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-			if(!isAuthenticated) {
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
-				return model;	
-		    }	
 
-			// 센터 값이 안들어 오면 에러 보내기 
-			PaginationInfo paginationInfo = new PaginationInfo();
-		    paginationInfo.setCurrentPageNo(Integer.parseInt(SmartUtil.NVL(searchVO.get("pageIndex"), "1")));
-		    paginationInfo.setRecordCountPerPage(100);
-		    paginationInfo.setPageSize(propertiesService.getInt("pageSize"));
-			
-			Map<String, Object> search = new HashMap<String,Object>();
-			search.put("centerCd",  searchVO.get("centerCd"));
-			search.put("firstIndex", "0");
-			search.put("recordCountPerPage", "100");
-			List<Map<String, Object>> floorList = floorService.selectFloorInfoList(search);
-			int totCnt = floorList.size() > 0 ?  Integer.valueOf( floorList.get(0).get("total_record_count").toString()) :0;
-			model.addObject(Globals.JSON_RETURN_RESULTLISR, floorList);
-			model.addObject(Globals.PAGE_TOTALCNT, totCnt);
-			paginationInfo.setTotalRecordCount(totCnt);
-		    model.addObject(Globals.JSON_PAGEINFO, paginationInfo);
-			
-			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-			
-		} catch(Exception e) {
-			log.error("selectFloorInfoListAjax : " + e.toString());
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg")); 
-		}
+	/**
+	 * 층관리 목록 조회
+	 * @param searchVO
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "floorListAjax.do", method = RequestMethod.POST)
+	public ModelAndView selectFloorInfoListAjax(@RequestBody Map<String,Object> searchVO) throws Exception {
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+
+		String centerCd = (String) searchVO.get("centerCd");
+		int pageUnit = searchVO.get("pageUnit") == null ?  propertiesService.getInt("pageUnit")
+				: Integer.valueOf((String) searchVO.get("pageUnit"));
+
+		// 센터 값이 안들어 오면 에러 보내기
+		PaginationInfo paginationInfo = new PaginationInfo();
+		paginationInfo.setCurrentPageNo(Integer.parseInt(SmartUtil.NVL(searchVO.get("pageIndex"), "1")));
+		paginationInfo.setRecordCountPerPage(pageUnit);
+		paginationInfo.setPageSize(propertiesService.getInt("pageSize"));
+
+		searchVO.put("centerCd",  centerCd);
+		searchVO.put("firstIndex", paginationInfo.getFirstRecordIndex());
+		searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
+		searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
+
+		List<Map<String, Object>> floorList = floorService.selectFloorInfoList(searchVO);
+		int totCnt = floorList.size() > 0 ?  Integer.valueOf( floorList.get(0).get("total_record_count").toString()) : 0;
+		paginationInfo.setTotalRecordCount(totCnt);
+
+		model.addObject(Globals.STATUS_REGINFO, searchVO);
+		model.addObject(Globals.JSON_RETURN_RESULTLISR, floorList);
+		model.addObject(Globals.PAGE_TOTALCNT, totCnt);
+		model.addObject(Globals.JSON_PAGEINFO, paginationInfo);
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+
 		return model;
 	}
 	
@@ -197,7 +194,7 @@ public class FloorInfoManageController {
 	    } catch(Exception e) {
 	    	StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
-			log.error("selectQrCheckInfo error:" + e.toString() + ":" + lineNumber);
+			log.error("selectQrCheckInfo error:" + e + ":" + lineNumber);
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 	    }
@@ -217,11 +214,11 @@ public class FloorInfoManageController {
 			model.addObject(Globals.JSON_RETURN_RESULTLISR, floorService.selectFloorInfoComboList(centerCd));
 			
 		}catch (Exception e){
-			log.error("floorComboInfo ERROR : " + e.toString());
+			log.error("floorComboInfo ERROR : " + e);
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));	
 		}	
-		log.debug("model:" + model.toString());
+		log.debug("model:" + model);
 		return model;
 	}
 	
@@ -258,11 +255,11 @@ public class FloorInfoManageController {
 			model.addObject(Globals.STATUS  , Globals.STATUS_SUCCESS);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
 		} catch (Exception e){
-			log.error("floorInfoUpdate ERROR:" + e.toString());
+			log.error("floorInfoUpdate ERROR:" + e);
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.insert"));	
 		}	
-		log.debug("MODEL : " + model.toString());
+		log.debug("MODEL : " + model);
 		return model;
 	}
 	

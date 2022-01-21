@@ -63,6 +63,7 @@
 <!-- popup// -->
 <script type="text/javascript" src="/resources/jqgrid/jqgrid.custom.egovapi.js"></script>
 <script type="text/javascript">
+	let MainGridAjaxUrl = '';
 	$(document).ready(function() {
 		// 지점 JqGrid 정의
 		EgovJqGridApi.popGrid('centerGrid', [
@@ -79,13 +80,13 @@
             }
 		], 'centerPager').jqGrid('setGridParam', {
 			onSelectRow: function(rowId, status, e) {
-				if ($('#mainGrid').contents() > 0) {
+				if ($('#mainGrid').contents().length > 0) {
 					fnSearch(1);
 				}
 			},
 			gridComplete: function() {
 				$('div.tabs .tab').removeClass('active');
-				fnRightClear();
+				fnRightAreaClear();
 			}
 		});
 		// 하위 분류 탭 클릭 시
@@ -97,10 +98,11 @@
 			}
 			$('div.tabs .tab').removeClass('active');
 			$(this).addClass('active');
-			fnRightClear();
+			fnRightAreaClear();
 			let colModel = [];
 			switch ($(this).attr('id')) {
 				case 'preopen':
+					MainGridAjaxUrl = '/backoffice/bld/preOpenInfoListAjax.do';
 					EgovJqGridApi.mainGrid([
 						{ label: '사전예약입장시간코드', name: 'optm_cd', key: true, hidden:true },
 						{ label: '요일', name: 'open_day_text', align: 'center', sortable: false },
@@ -110,26 +112,51 @@
 						{ label: '비회원종료시간', name: 'close_guest_tm', align: 'center', sortable: false, editable: true },
 					], false, false, fnSearch, false).jqGrid('setGridParam', {
 						cellEdit: true,
-						
 					});
 					break;
 				case 'noshow':
-					colModel = [
-					];
+					MainGridAjaxUrl = '/backoffice/bld/noshowInfoListAjax.do';
+					EgovJqGridApi.mainGrid([
+						{ label: '노쇼코드', name: 'noshow_cd', key: true, hidden:true },
+						{ label: '요일', name: 'noshow_day_text', align: 'center', sortable: false },
+						{ label: '1차자동취소시간', name: 'noshow_pm_tm', align: 'center', sortable: false, editable: true },
+						{ label: '2차자동취소시간', name: 'noshow_all_tm', align: 'center', sortable: false, editable: true },
+					], false, false, fnSearch, false).jqGrid('setGridParam', {
+						cellEdit: true,
+					});
 					break;
 				case 'floor':
-					colModel = [
-					];
+					MainGridAjaxUrl = '/backoffice/bld/floorListAjax.do';
+					EgovJqGridApi.mainGrid([
+						{ label: '지점층코드', name: 'floor_cd', key: true, hidden: true },
+						{ label: '도면이미지', name: 'floor_map1', align: 'center', sortable: false, formatter: (c, o, row) =>
+							'<img src="'+ (row.floor_map1 === 'no_image.png' ? '/resources/img/no_image.png' : '/upload/'+ row.floor_map1) +'" style="width:120px;"/>'
+						},
+						{ label: '층이름', name: 'floor_nm', align: 'center' },
+						{ label: '좌석 현황', name:'floor_seat_cnt', align: 'center' },
+						{ label: '사용 유무', name:'use_yn', align: 'center' },
+						{ label: '구역사용구분', name:'floor_part_dvsn', hidden:true },
+						{ label: '수정', align:'center', width: 50, fixed: true, formatter: (c, o, row) =>
+							'<a href="javascript:void(0);" class="edt_icon"></a>'
+						}
+					], false, false, fnSearch, false);
 					break;
 				case 'holyday':
-					colModel = [
-					];
+					MainGridAjaxUrl = '/backoffice/bld/centerHolyInfoListAjax.do';
+					EgovJqGridApi.mainGrid([
+						{ label: '지점휴일시퀀스', name: 'center_holy_seq', key: true, hidden: true },
+						{ label: '휴일일자', name: 'holy_dt', align: 'center' },
+						{ label: '휴일명', name: 'holy_nm', align: 'center' },
+						{ label: '사용유무', name: 'use_yn', align: 'center' },
+						{ label: '수정', align:'center', width: 50, fixed: true, formatter: (c, o, row) =>
+							'<a href="javascript:void(0);" class="edt_icon"></a>'
+						}
+					], false, false, fnSearch, false);
 					break;
 				default:
 			}
-			
 		});
-		fnRightClear();
+		fnRightAreaClear();
 		setTimeout(function() {
 			fnCenterSearch(1);
 		}, _JqGridDelay);
@@ -144,7 +171,7 @@
 		EgovJqGridApi.popGridAjax('centerGrid', '/backoffice/bld/centerListAjax.do', params, fnCenterSearch);
 	}
 	// 하위 목록 영역 초기화
-	function fnRightClear() {
+	function fnRightAreaClear() {
 		$('#rightArea').empty().html(
 			'<table id="mainGrid" style="width:700px;"></table>'+
 			'<div id="pager"></div>'
@@ -157,7 +184,6 @@
 			pageUnit: '10',
 			centerCd: $('#centerGrid').jqGrid('getGridParam', 'selrow')
 		};
-		console.log(params);
-		EgovJqGridApi.mainGridAjax('/backoffice/bld/preOpenInfoListAjax.do', params, fnSearch);
+		EgovJqGridApi.mainGridAjax(MainGridAjaxUrl, params, fnSearch);
 	}
 </script>

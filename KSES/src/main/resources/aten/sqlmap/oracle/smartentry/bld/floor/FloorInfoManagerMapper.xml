@@ -33,11 +33,9 @@
 			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.floorCd)">
 				AND A.FLOOR_CD = #{params.floorCd}
 			</if>
-		) TB  
-	    <if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.firstIndex)">
-	    	WHERE RNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
-	    </if>
-        ORDER BY TO_NUMBER(REPLACE(TB.FLOOR_INFO, 'CENTER_FLOOR_', '')) ASC, TB.FLOOR_CD DESC	 	    
+		) TB
+	    WHERE RNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}
+        ORDER BY RNUM ASC
 	</select>
     
 	<select id="selectFloorInfoDetail" resultType="lmap">

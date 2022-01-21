@@ -2,18 +2,25 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kses.backoffice.bld.center.mapper.CenterHolyInfoManageMapper">
 	<select id="selectCenterHolyInfoList" resultType="lmap">
-		SELECT 
-			A.CENTER_HOLY_SEQ,
-			A.CENTER_CD,
-			A.HOLY_DT,
-			A.HOLY_NM,
-			A.USE_YN,
-			TO_CHAR(A.LAST_UPDT_DTM, 'yyyy-mm-dd') AS LAST_UPDT_DTM,
-			A.LAST_UPDUSR_ID,  
-			B.CENTER_NM
-		FROM TSEB_CENTERHOLY_INFO_I A, TSEB_CENTER_INFO_M B
-		WHERE A.CENTER_CD = #{centerCd}
-		AND A.CENTER_CD = B.CENTER_CD
+		SELECT TB.*
+		FROM (
+				 SELECT SUM(1) OVER (PARTITION BY NULL)            AS TOTAL_RECORD_COUNT,
+						ROW_NUMBER() OVER (ORDER BY A.HOLY_DT ASC) AS RNUM,
+						A.CENTER_HOLY_SEQ,
+						A.CENTER_CD,
+						A.HOLY_DT,
+						A.HOLY_NM,
+						A.USE_YN,
+						TO_CHAR(A.LAST_UPDT_DTM, 'yyyy-mm-dd')     AS LAST_UPDT_DTM,
+						A.LAST_UPDUSR_ID,
+						B.CENTER_NM
+				 FROM TSEB_CENTERHOLY_INFO_I A,
+					  TSEB_CENTER_INFO_M B
+				 WHERE A.CENTER_CD = B.CENTER_CD
+		    		AND A.CENTER_CD = #{params.centerCd}
+			 ) TB
+		WHERE RNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}
+		ORDER BY RNUM ASC
 	</select>
 	
 	<insert id="insertCenterHolyInfo">

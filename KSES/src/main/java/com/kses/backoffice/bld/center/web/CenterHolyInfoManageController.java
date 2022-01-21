@@ -6,13 +6,12 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.kses.backoffice.util.SmartUtil;
+import egovframework.rte.fdl.property.EgovPropertyService;
+import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kses.backoffice.bld.center.service.CenterHolyInfoManageService;
@@ -45,43 +44,45 @@ public class CenterHolyInfoManageController {
 	
 	@Autowired
 	private UniSelectInfoManageService uniService;
-    
-    @RequestMapping("centerHolyInfoListAjax.do")
-    public ModelAndView selectCenterHolyInfo(	@ModelAttribute("loginVO") LoginVO loginVO,
-    											@RequestParam("centerCd") String centerCd,
-    											HttpServletRequest request) {
-    	
-    	ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-		
-		if(!isAuthenticated) {
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-			model.setViewName("/backoffice/login");
-			return model;	
-		} else {
-			HttpSession httpSession = request.getSession(true);
-			loginVO = (LoginVO)httpSession.getAttribute("LoginVO");
-		}
-    	
-    	try {
-    		
-    		List<Map<String, Object>> centerHolyInfoList = centerHolyInfoService.selectCenterHolyInfoList(centerCd);
-    		//신규 추가 리스트 값 없을때 처리 
-    		String centerNm =   (centerHolyInfoList.size() > 0) ? 
-    			         centerHolyInfoList.get(0).get("center_nm").toString():
-    			         centerInfoManageService.selectCenterInfoDetail(centerCd).get("center_nm").toString();
-    		
-    		model.addObject(Globals.STATUS_REGINFO, centerHolyInfoList);
-    		//신규 추가 
-    		model.addObject(Globals.JSON_RETURN_RESULT, centerNm);
-    		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-    		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.select"));
-    	} catch (Exception e) {
-    		log.info("selectCenterHolyInfo ERROR : " + e.toString());
-    		model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-    		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
-		}
-    	
+
+	@Autowired
+	protected EgovPropertyService propertiesService;
+
+	/**
+	 * 지점 휴일 목록 조회
+	 * @param searchVO
+	 * @return
+	 * @throws Exception
+	 */
+    @RequestMapping(value = "centerHolyInfoListAjax.do", method = RequestMethod.POST)
+    public ModelAndView selectCenterHolyInfo(@RequestBody Map<String,Object> searchVO) throws Exception {
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+
+		String centerCd = (String) searchVO.get("centerCd");
+		int pageUnit = searchVO.get("pageUnit") == null ?  propertiesService.getInt("pageUnit")
+				: Integer.valueOf((String) searchVO.get("pageUnit"));
+
+		// 센터 값이 안들어 오면 에러 보내기
+		PaginationInfo paginationInfo = new PaginationInfo();
+		paginationInfo.setCurrentPageNo(Integer.parseInt(SmartUtil.NVL(searchVO.get("pageIndex"), "1")));
+		paginationInfo.setRecordCountPerPage(pageUnit);
+		paginationInfo.setPageSize(propertiesService.getInt("pageSize"));
+
+		searchVO.put("centerCd",  centerCd);
+		searchVO.put("firstIndex", paginationInfo.getFirstRecordIndex());
+		searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
+		searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
+
+		List<Map<String, Object>> centerHolyInfoList = centerHolyInfoService.selectCenterHolyInfoList(searchVO);
+		int totCnt = centerHolyInfoList.size() > 0 ?  Integer.valueOf(centerHolyInfoList.get(0).get("total_record_count").toString()) : 0;
+		paginationInfo.setTotalRecordCount(totCnt);
+
+		model.addObject(Globals.STATUS_REGINFO, searchVO);
+		model.addObject(Globals.JSON_RETURN_RESULTLISR, centerHolyInfoList);
+		model.addObject(Globals.PAGE_TOTALCNT, totCnt);
+		model.addObject(Globals.JSON_PAGEINFO, paginationInfo);
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+
     	return model;
     }
     
@@ -111,7 +112,7 @@ public class CenterHolyInfoManageController {
 			Map<String, Object> centerUpdateSelect = centerHolyInfoService.centerUpdateSelect(vo.getCenterHolySeq());
 			
 			int ret;
-			if (centerUpdateSelect.get("holy_dt").equals(vo.getHolyDt()) && centerUpdateSelect.get("center_holy_seq").toString().equals(vo.getCenterHolySeq().toString())) {
+			if (centerUpdateSelect.get("holy_dt").equals(vo.getHolyDt()) && centerUpdateSelect.get("center_holy_seq").toString().equals(vo.getCenterHolySeq())) {
 				ret = centerHolyInfoService.updateCenterHolyInfo(vo);
 			} else {
 				ret = (uniService.selectIdDoubleCheck("HOLY_DT", "TSEB_CENTERHOLY_INFO_I", "HOLY_DT = ["+ vo.getHolyDt() + "[ AND CENTER_CD = ["+ vo.getCenterCd() + "[" ) > 0) ? -1 : centerHolyInfoService.updateCenterHolyInfo(vo);
@@ -218,7 +219,7 @@ public class CenterHolyInfoManageController {
     		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
     		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.select"));
     	} catch (Exception e) {
-    		log.info("selectCenterHolyInfo ERROR : " + e.toString());
+    		log.info("selectCenterHolyInfo ERROR : " + e);
     		model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
     		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 		}

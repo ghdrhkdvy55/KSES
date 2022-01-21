@@ -11,12 +11,12 @@ public interface CenterHolyInfoManageService {
 
 	/**
 	 * SPDM 지점 휴일 정보 목록 조회
-	 * 
-	 * @param centerCd
+	 *
+	 * @param searchVO
 	 * @return
 	 * @throws Exception
 	 */
-	public List<Map<String, Object>> selectCenterHolyInfoList(@Param("centerHolySeq") String centerHolySeq) throws Exception;
+	List<Map<String, Object>> selectCenterHolyInfoList(Map<String, Object> params) throws Exception;
 	
 	/**
 	 * SPDM 지점 휴일 정보 갱신
@@ -25,7 +25,7 @@ public interface CenterHolyInfoManageService {
 	 * @return
 	 * @throws Exception
 	 */
-	public int updateCenterHolyInfo(CenterHolyInfo vo) throws Exception;
+	int updateCenterHolyInfo(CenterHolyInfo vo) throws Exception;
 	
 	/**
 	 * SPDM 지점 휴일 정보 복사
@@ -34,10 +34,10 @@ public interface CenterHolyInfoManageService {
 	 * @return
 	 * @throws Exception
 	 */
-	public int copyCenterHolyInfo(Map<String, Object> params) throws Exception;
+	int copyCenterHolyInfo(Map<String, Object> params) throws Exception;
 	
 	
-	public Map<String, Object>  centerUpdateSelect(String centerHolySeq) throws Exception;
+	Map<String, Object>  centerUpdateSelect(String centerHolySeq) throws Exception;
 	
-	public int deleteCenterHolyInfo(int centerHolySeq) throws Exception;
+	int deleteCenterHolyInfo(int centerHolySeq) throws Exception;
 }

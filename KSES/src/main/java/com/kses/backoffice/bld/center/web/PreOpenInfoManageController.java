@@ -56,7 +56,6 @@ public class PreOpenInfoManageController {
     	
 		//Paging
 		PaginationInfo paginationInfo = new PaginationInfo();
-		paginationInfo.setTotalRecordCount(7);
 		paginationInfo.setCurrentPageNo(1);
 		paginationInfo.setRecordCountPerPage(10);
 		paginationInfo.setPageSize(propertiesService.getInt("pageSize"));
@@ -67,17 +66,14 @@ public class PreOpenInfoManageController {
 		searchVO.put("pageSize", paginationInfo.getPageSize());
 		
 		List<Map<String, Object>> preOpenInfoList = preOpenInfoService.selectPreOpenInfoList(centerCd);
-		
-		String centerNm = (preOpenInfoList.size() > 0) 
-				? preOpenInfoList.get(0).get("center_nm").toString()
-				: centerInfoService.selectCenterInfoDetail(centerCd).get("center_nm").toString();
-		
+		paginationInfo.setTotalRecordCount(7);
+
+		model.addObject(Globals .STATUS_REGINFO, searchVO);
 		model.addObject(Globals.JSON_RETURN_RESULTLISR, preOpenInfoList);
 		model.addObject(Globals.PAGE_TOTALCNT, paginationInfo.getTotalRecordCount());
 	    model.addObject(Globals.JSON_PAGEINFO, paginationInfo);
 	    model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-		model.addObject(Globals .STATUS_REGINFO, centerNm);
-    	
+
     	return model;
     }
     
@@ -93,7 +89,7 @@ public class PreOpenInfoManageController {
     		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
     		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.update"));
 		} catch (Exception e) {
-    		log.info("updatePreOpenInfo ERROR : " + e.toString());
+    		log.info("updatePreOpenInfo ERROR : " + e);
     		model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
     		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 		}
@@ -113,7 +109,7 @@ public class PreOpenInfoManageController {
     		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
     		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.update"));
 		} catch (Exception e) {
-    		log.info("copyPreOpenInfo ERROR : " + e.toString());
+    		log.info("copyPreOpenInfo ERROR : " + e);
     		model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
     		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 		}
