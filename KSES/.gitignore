@@ -1,9 +1,9 @@
-/.idea/
-/.settings/
-/.gradle/
-/target/
-/build/
-/bin/
+.idea/
+.settings/
+.gradle/
+target/
+build/
+bin/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/

@@ -19,9 +19,12 @@
 					B.USER_NOSHOW_LAST_DT, A.BLKLST_DVSN
 				FROM TSER_BLKLST_INFO_I A, TSER_USER_INFO_I B
 				WHERE 1=1
-				AND B.USER_DVSN = 'USER_DVSN_1' 
 				AND A.USER_ID = B.USER_ID
+				AND B.USER_DVSN = 'USER_DVSN_1'
 				AND A.BLKLST_DVSN = #{params.searchBlklstDvsn, jdbcType=VARCHAR}
+				<if test="@org.apache.commons.lang3.StringUtils@equals(params.searchBlklstDvsn,'BLKLST_DVSN_3')">
+					AND B.USER_NOSHOW_CNT > 0
+				</if>
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
 					<choose>
 						<when test="@org.apache.commons.lang3.StringUtils@equals(params.searchCondition,'USER_ID')">

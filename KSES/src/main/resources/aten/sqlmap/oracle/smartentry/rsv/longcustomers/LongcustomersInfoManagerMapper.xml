@@ -56,8 +56,5 @@
 				AND A.LONG_RESV_SEQ = #{longResvSeq}
 			) TB
 			ORDER BY TB.RESV_SEQ DESC	
-
    	</select>
-	
-	
 </mapper>

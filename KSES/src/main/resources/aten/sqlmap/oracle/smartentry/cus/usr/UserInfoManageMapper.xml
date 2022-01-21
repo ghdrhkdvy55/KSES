@@ -180,11 +180,38 @@
    	</update>
    	
 	<update id="updateUserNoshowCount">
-		<!-- <se -->
+	{CALL
+		DECLARE
+		BEGIN
+              
+		<selectKey keyProperty="cnt" resultType="Integer" order="BEFORE">
+			SELECT NVL(COUNT(*),0)
+			FROM TSER_BLKLST_INFO_I
+			WHERE USER_ID = #{userId}
+			AND BLKLST_DVSN = 'BLKLST_DVSN_3'       
+		</selectKey>
 		
-		UPDATE TSER_USER_INFO_I SET 
-			USER_NOSHOW_CNT = USER_NOSHOW_CNT + 1 
-		WHERE USER_ID = #{userId}
+		<if test="cnt == 0">
+			INSERT INTO TSER_BLKLST_INFO_I 
+			(
+				BLKLST_SEQ, USER_ID, USER_DVSN, USER_CLPHN, BLKLST_DVSN, 
+				BLKLST_REASON, BLKLST_CANCEL_YN, FRST_REGTER_ID, FRST_REGIST_DTM, LAST_UPDUSR_ID, 
+				LAST_UPDT_DTM
+			)
+			VALUES
+			(
+				SEQ_SER_BLKLIST_INFO.NEXTVAL, #{userId}, 'USER_DVSN', (SELECT USER_PHONE FROM TSER_USER_INFO_I WHERE USER_ID = #{userId}), BLKLST_DVSN_3, 
+				'노쇼 패널티 고객', 'Y', 'BATCH', SYSDATE, BATCH' 
+				SYSDATE
+			);
+		</if>	
+			
+		UPDATE TSER_USER_INFO_I SET
+			USER_NOSHOW_CNT = USER_NOSHOW_CNT + 1
+		WHERE USER_ID = #{userId};
+		
+		END
+	}
    	</update>   	
 
    	<delete id="deleteUserInfo">
