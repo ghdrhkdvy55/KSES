@@ -124,22 +124,27 @@ function common_reloadPopup(message, alertGubun){
    $("#reloadPage").bPopup();
    
 }
-//공통 팝업 닫기
-function common_modelClose(modelId){
-    $("#"+ modelId).bPopup().close();
-    
+
+//공통 팝업 열기
+function common_modelOpen(){
+	$.each(arguments,function(index, item) {
+		$("#" + item).bPopup();
+	});    
 }
+
+//공통 팝업 닫기
+function common_modelClose(){
+	$.each(arguments,function(index, item) {
+		$("#" + item).bPopup().close();
+	});    
+}
+
 //공통 팝업 닫기 이전 메세지 창 보여 주기 
 function common_modelCloseM(message, modelId){
     $("#btn_ClickId").val('');
     $("#"+ modelId).bPopup().close();
     $("#savePage #sp_Message").html(message);
     $("#savePage").bPopup();
-}
-//팝업 닫기 후 신규 팝업 창 보여 주기 
-function common_modelOpen(_closeModel, _openModel){
-   $("#"+_closeModel).bPopup().close();  
-   $("#"+_openModel).bPopup();   
 }
 
 //공통 팝업 Close & Open
