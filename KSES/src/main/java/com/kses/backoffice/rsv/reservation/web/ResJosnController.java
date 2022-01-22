@@ -32,6 +32,7 @@ import com.kses.backoffice.sym.log.service.ParamToJson;
 import com.kses.backoffice.sym.log.vo.InterfaceInfo;
 import com.kses.backoffice.sym.log.vo.sendEnum;
 import com.kses.backoffice.util.SmartUtil;
+import com.kses.backoffice.util.service.UniSelectInfoManageService;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
@@ -72,6 +73,9 @@ public class ResJosnController {
 
 	@Autowired
 	private CashbillService cashbillService;
+	
+	@Autowired
+	private UniSelectInfoManageService uniService;
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "speedCheck.do", method = { RequestMethod.POST })
@@ -430,7 +434,6 @@ public class ResJosnController {
 					model.addObject("ERROR_MSG", ERROR_MSG);
 					model.addObject("IOGUBUN", IOGUBUN);
 					model.addObject("USER_NM", USER_NM);
-					model.addObject("CENTER_NM", USER_NM);
 					model.addObject("SEATNM", seatNm);
 					model.addObject("SEATCLASS", seatClassNm);
 					// 자리수 수정
@@ -589,41 +592,44 @@ public class ResJosnController {
 			searchVO.put("resvSeq", SmartUtil.NVL(jsonInfo.get("RES_NO"), "").toString());
 			String localTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 			searchVO.put("resvDate", localTime);
-			Map<String, Object> resInfo = resService.selectUserResvInfo(searchVO);		
-			
-			Map<String, Object> machineVO = new HashMap<String, Object>();
-			machineVO.put("ticketMchnSno", SmartUtil.NVL(jsonInfo.get("MACHINE_SERIAL"), "").toString());
-			machineVO.put("centerCd", SmartUtil.NVL(resInfo.get("center_cd"), "").toString());
-			Map<String, Object> machineSerial = resService.selectTicketMchnSnoCheck(machineVO);
-			
-			String recDate = SmartUtil.NVL(jsonInfo.get("RES_SEND_DATE"), "19700101").toString();
-			
-			if (resInfo != null && !SmartUtil.NVL(resInfo.get("resv_pay_dvsn"), "").toString().equals("RESV_PAY_DVSN_1")) {
-				LOGGER.info("RESV_PAY_DVSN123" +  SmartUtil.NVL(resInfo.get("resv_pay_dvsn"), "").toString());
-				returnCode = "ERROR_04";
-				returnMessage = "이미 결제가 완료 되었습니다.";
-			} else if (machineSerial.get("cnt").toString().equals("0")) {
-				returnCode = "ERROR_03";
-				returnMessage = "장소 오류.";
-			} else {
-				if (resInfo != null && SmartUtil.NVL(resInfo.get("resv_end_dt"), "").toString().equals(localTime)
-						&& recDate.substring(0, 8).equals(localTime)) {
-					LOGGER.info(localTime);
-					resName = SmartUtil.NVL(resInfo.get("user_nm"), "").toString();
-					resPrice = SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString();
-					resDay = SmartUtil.NVL(resInfo.get("resv_start_dt"), "").toString();
-					resTime = SmartUtil.NVL(resInfo.get("resv_start_tm"), "").toString();
-					seatName = SmartUtil.NVL(resInfo.get("seat_nm"), "").toString();
-					resPersonCnt = "1";
-					returnCode = "OK";
+			String checkResvSeq = uniService.selectIdDoubleCheck("RESV_SEQ", "TSER_RESV_INFO_I", "RESV_SEQ = ["+ SmartUtil.NVL(jsonInfo.get("RES_NO"), "").toString() + "[") > 0 ? "OK" : "FAIL";
+			if (checkResvSeq.equals("OK")) {
+				Map<String, Object> resInfo = resService.selectUserResvInfo(searchVO);
+				
+				Map<String, Object> machineVO = new HashMap<String, Object>();
+				machineVO.put("ticketMchnSno", SmartUtil.NVL(jsonInfo.get("MACHINE_SERIAL"), "").toString());
+				machineVO.put("centerCd", SmartUtil.NVL(resInfo.get("center_cd"), "").toString());
+				Map<String, Object> machineSerial = resService.selectTicketMchnSnoCheck(machineVO);
+				
+				String recDate = SmartUtil.NVL(jsonInfo.get("RES_SEND_DATE"), "19700101").toString();
+				
+				 if (machineSerial.get("cnt").toString().equals("0")) {
+					returnCode = "ERROR_03";
+					returnMessage = "해당 지점 예약이 아닙니다. 예약내역을 확인하여 주십시요.";
+				} else if (resInfo != null && !SmartUtil.NVL(resInfo.get("resv_pay_dvsn"), "").toString().equals("RESV_PAY_DVSN_1")) {
+					LOGGER.info("RESV_PAY_DVSN123" +  SmartUtil.NVL(resInfo.get("resv_pay_dvsn"), "").toString());
+					returnCode = "ERROR_04";
+					returnMessage = "이미 결제가 완료 되었습니다.";
 				} else {
-					returnCode = "ERROR_01";
-					returnMessage = "예약 정보 없음.";
+					if (resInfo != null && SmartUtil.NVL(resInfo.get("resv_end_dt"), "").toString().equals(localTime)
+							&& recDate.substring(0, 8).equals(localTime)) {
+						LOGGER.info(localTime);
+						resName = SmartUtil.NVL(resInfo.get("user_nm"), "").toString();
+						resPrice = SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString();
+						resDay = SmartUtil.NVL(resInfo.get("resv_start_dt"), "").toString();
+						resTime = SmartUtil.NVL(resInfo.get("resv_start_tm"), "").toString();
+						seatName = SmartUtil.NVL(resInfo.get("seat_nm"), "").toString();
+						resPersonCnt = "1";
+						returnCode = "OK";
+					}
 				}
+			} else {
+				returnCode = "ERROR_01";
+				returnMessage = "예약 정보 없음.";
 			}
 
 			info.setTrsmrcvSeCode(sendEnum.RPS.getCode());
-
+	
 			info.setRequstSysId(SmartUtil.NVL(jsonInfo.get("MACHINE_SERIAL").toString(), "").toString());
 			info.setRequstInsttId("MACHIN");
 			info.setRequstTrnsmitTm(SmartUtil.NVL(jsonInfo.get("RES_SEND_DATE"), "").toString());
@@ -631,7 +637,6 @@ public class ResJosnController {
 			info.setResultCode(returnCode);
 			info.setSendMessage(jsonObject.toString());
 			info.setRqesterId("admin");
-
 		} catch (Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();

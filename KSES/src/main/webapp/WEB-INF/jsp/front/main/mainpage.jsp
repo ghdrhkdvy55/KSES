@@ -729,7 +729,7 @@
 									mainService.fn_payment(resvInfo);	
 								});
 							} else {
-								fn_openPopup("종이 QR발권 상태입니다.", "red", "ERROR", "확인", "");
+								fn_openPopup("무인발권기 결제완료 상태입니다.", "red", "ERROR", "확인", "");
 							}
 						} else {
 							mainService.fn_resvCancel(resvInfo);
