@@ -378,6 +378,15 @@ public class FrontResvInfoManageController {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
+			HttpSession httpSession = request.getSession();
+			UserLoginInfo userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
+			if(userLoginInfo != null) {
+				params.put("userDvsn", "USER_DVSN_1");
+				params.put("userId", userLoginInfo.getUserId());
+			} else {
+				params.put("userDvsn", "USER_DVSN_2");
+			}
+			
 			resvService.resvValidCheck(params);
 			
 			model.addObject("validResult", params);
