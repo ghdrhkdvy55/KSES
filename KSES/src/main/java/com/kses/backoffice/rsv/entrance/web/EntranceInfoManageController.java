@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.kses.backoffice.bld.center.service.CenterInfoManageService;
 import com.kses.backoffice.rsv.entrance.service.EntranceInfoManageService;
 import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
 import com.kses.backoffice.rsv.reservation.vo.AttendInfo;
@@ -43,11 +44,18 @@ public class EntranceInfoManageController {
 	
     @Autowired
     private EntranceInfoManageService EntranceService;
+    
+	@Autowired
+	private CenterInfoManageService centerInfoManageService;
 	
 	@RequestMapping(value = "enterRegistList.do")
 	public ModelAndView selectLoginLogInf(@ModelAttribute("searchVO") LoginLog loginLog) throws Exception {
 		
 		ModelAndView model = new ModelAndView("/backoffice/rsv/enterRegistList");
+		
+		List<Map<String, Object>> centerInfoComboList =	centerInfoManageService.selectCenterInfoComboList();
+		
+		model.addObject("centerInfo", centerInfoComboList);
 		return model;
 	}
 

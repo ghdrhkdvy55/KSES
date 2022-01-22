@@ -65,7 +65,8 @@
 							(
 								A.RESV_SEQ LIKE '%' || #{params.searchKeyword} || '%' 
 								OR A.RESV_USER_NM LIKE '%' || #{params.searchKeyword} || '%'
-								OR A.USER_ID LIKE '%' || #{params.searchKeyword} || '%' 
+								OR A.USER_ID LIKE '%' || #{params.searchKeyword} || '%'
+								OR A.RESV_USER_CLPHN LIKE '%' || #{params.searchKeyword} || '%' 
 							)
 						</otherwise>
 					</choose>
