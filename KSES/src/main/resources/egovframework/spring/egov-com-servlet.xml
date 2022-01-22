@@ -78,7 +78,6 @@
 	</mvc:annotation-driven>
     <!-- xss 사이트 적용 -->
 
-    
     <mvc:interceptors>
     	<!-- BackOffice Interceptor -->
         <mvc:interceptor>
@@ -124,15 +123,12 @@
 	        </bean>
 	    </mvc:message-converters> 
     </mvc:annotation-driven> -->
-    
-    
 
-   
     <util:properties id="KCYCLE_CONFIG">
         <!-- 링크아이디 -->
         <prop key="LinkID">KCYCLE</prop>
         <!-- 비밀키 -->
-        <prop key="SecretKey">smN+pkH9NJHZhcSIIVKyYF9Et18E1/amWJBW+Pb6iJo= </prop>
+        <prop key="SecretKey">smN+pkH9NJHZhcSIIVKyYF9Et18E1/amWJBW+Pb6iJo=</prop>
         <!-- 연동환경 설정값 true(개발용), false(상업용) -->
         <prop key="IsTest">true</prop>
         <!-- 인증토큰 아이피 제한 기능 사용여부 권장(true) -->
@@ -143,7 +139,6 @@
         <prop key="UseLocalTimeYN">true</prop>
     </util:properties>
 
-
     <bean id="cashbillService" class="com.popbill.api.cashbill.CashbillServiceImp" >
         <property name="linkID" value="#{KCYCLE_CONFIG.LinkID}"/>
         <property name="secretKey" value="#{KCYCLE_CONFIG.SecretKey}" />
@@ -152,7 +147,6 @@
         <property name="useStaticIP" value="#{KCYCLE_CONFIG.UseStaticIP}"/>
         <property name="useLocalTimeYN" value="#{KCYCLE_CONFIG.UseLocalTimeYN}"></property>
     </bean>
-    
     
     <!-- 화면처리용 JSP 파일명의  prefix, suffix 처리에 대한 mvc 설정  -->
     <bean class="org.springframework.web.servlet.view.BeanNameViewResolver" p:order="0"/>    

@@ -25,8 +25,8 @@ public class CenterInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
     private CentertInfoManageMapper centerMapper;
 
 	@Override
-	public List<Map<String, Object>> selectCenterInfoList(Map<String, Object> SearchVO) throws Exception {
-		return centerMapper.selectCenterInfoList(SearchVO);
+	public List<Map<String, Object>> selectCenterInfoList(Map<String, Object> searchVO) throws Exception {
+		return centerMapper.selectCenterInfoList(searchVO);
 	}
 
 	@Override

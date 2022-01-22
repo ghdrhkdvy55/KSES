@@ -1559,7 +1559,7 @@ h2.guide_tit {
     width: 5%;
     vertical-align: middle;
 }
-.branch_list >li ul li:nth-child(2) {color: #8E8E8E; font-size: 0.9em; letter-spacing:-0.1em;}
+.branch_list >li ul li:nth-child(2) {color: #8E8E8E; font-size: 0.8em; letter-spacing:-0.1em;}
 
 .branch_list >li:hover ,
 .branch_list >li:active ,

@@ -1,6 +1,5 @@
 package com.kses.backoffice.bld.center.web;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +20,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.kses.backoffice.bld.center.service.CenterInfoManageService;
 import com.kses.backoffice.bld.center.service.CenterHolyInfoManageService;
 import com.kses.backoffice.bld.center.vo.CenterHolyInfo;
-import com.kses.backoffice.bld.center.vo.CenterInfo;
 import com.kses.backoffice.util.service.UniSelectInfoManageService;
 
 import egovframework.com.cmm.LoginVO;

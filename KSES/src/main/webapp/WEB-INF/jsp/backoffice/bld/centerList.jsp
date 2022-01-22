@@ -15,9 +15,10 @@
 }
 </style>
 <!-- //contents -->
-<input type="hidden" id="searchCenterCd" name="searchCenterCd">
 <input type="hidden" id="mode" name="mode">
+<input type="hidden" id="searchCenterCd" name="searchCenterCd">
 <input type="hidden" id="floorInfo" name="floorInfo">
+<input type="hidden" id="billSeq" name="billSeq">
 <input type="hidden" id="centerHolySeq" name="centerHolySeq">
 <input type="hidden" id="targetCenterHolySeq" name="targetCenterHolySeq">
 <div class="breadcrumb">
@@ -267,7 +268,7 @@
 	            		<th>휴일명</th>
 	            		<th>사용유무</th>
 	            		<th>최종수정자</th>
-	                    <th>추가 ｜ 삭제</th>
+	                    <th>수정/삭제</th>
 					</tr>
 	          	</thead>
 	          	<tbody class="inTxt">
@@ -281,7 +282,7 @@
 							</select>
 						</td>
 	              		<td><input type="text" id="lastUpdusrId" value="${sessionScope.LoginVO.adminId}" readonly></td>
-	              		<td><a href="javascript:jqGridFunc.fn_HolyCheckForm();" class="blueBtn">추가</a></td>
+	              		<td><a href="javascript:jqGridFunc.fn_holyCheckForm();" class="blueBtn">추가</a></td>
 	            	</tr>
 	          	</tbody>
 			</table>
@@ -289,6 +290,112 @@
 	</div>
 </div>
 <!-- 휴일관리 팝업 // -->
+
+<!-- 현금영수증   -->
+<div id="bld_bill_set" data-popup="bld_bill_set" class="popup">
+	<div class="pop_con">
+		<a class="button b-close">X</a>
+      	<h2 class="pop_tit">현금영수증 설정 <span>[장안지점]</span></h2>
+      	<div class="pop_wrap">
+			<div class="right_box" style="padding-bottom : 20px;">
+				<a href="javascript:jqGridFunc.fn_billInfo('Ins');" class="blueBtn">등록</a>
+			</div>
+	        <table class="whiteBox main_table">
+				<thead>
+					<tr>
+		            	<th>발급구분</th>
+		            	<th>사업자번호</th>
+		            	<th>법인명</th>
+		            	<th>주소</th>
+		            	<th>연락처</th>
+		            	<th>팝빌아이디</th>
+		            	<th>수정/삭제</th>
+	            	</tr>
+	          </thead>
+	          <tbody class="inTxt">
+	
+	          </tbody>
+	        </table>
+		</div>
+  </div>
+</div>
+
+<!-- 현금영수증 정보 추가 팝업 -->
+<div id="bld_bill_add" class="popup m_pop">
+    <div class="pop_con">
+        <a class="button b-close">X</a>
+        <h2 class="pop_tit">현금영수증 정보 등록</h2>
+        <div class="pop_wrap">
+            <table class="detail_table">
+                <tbody>
+                    <tr>
+                        <th>발급구분</th>
+                        <td>
+							<select id="billDvsn">
+								<option value="">선택</option>
+								<c:forEach items="${billDvsnInfoComboList}" var="billDvsn">
+									<option value="${billDvsn.code}"><c:out value='${billDvsn.codenm}'/></option>
+								</c:forEach>
+	            			</select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>사업자번호</th>
+                        <td><input type="number" id="billNum" name="billNum" style="width:400px;" placeholder="'-'제외 10자리"/></td>
+                    </tr>
+                    <tr>
+                        <th>법인명</th>
+                        <td><input type="text" id="billCorpName" name="billCorpName" style="width:400px;"/></td>
+                    </tr>
+					<tr>
+                        <th>주소</th>
+                        <td><input type="text" id="billAddr" name="billAddr" style="width:400px;"/></td>
+                    </tr>
+					<tr>
+                        <th>연락처</th>
+                        <td><input type="text" id="billTel" name="billTel" style="width:400px;"/></td>
+                    </tr>
+					<tr>
+                        <th>팝빌아이디</th>
+                        <td><input type="text" id="billUserId" name="billUserId" style="width:400px;"/></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="right_box">
+        	<a href="#" onClick="jqGridFunc.fn_billCheckForm();" class="blueBtn">저장</a>
+            <a href="#" onClick="common_modalOpenAndClose('bld_bill_set','bld_bill_add');" class="grayBtn b-close">취소</a>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+
+<!-- 현금영수증  발행요일 -->
+<div id="bld_billday_set" class="popup">
+	<div class="pop_con">
+		<a class="button b-close">X</a>
+      	<h2 class="pop_tit">현금영수증 발행요일 설정 <span>[장안지점]</span></h2>
+      	<div class="pop_wrap">
+        <table class="whiteBox main_table">
+			<thead>
+				<tr>
+	            	<th>요일</th>
+	            	<th>발급구분</th>
+	            	<th>최종 수정 일자</th>
+	            	<th>최종 수정자</th>
+            	</tr>
+          </thead>
+          <tbody class="inTxt">
+
+          </tbody>
+        </table>
+		<div class="center_box">
+          	<a href="javascript:jqGridFunc.fn_billDayCheckForm();" class="blueBtn">저장</a> 
+          	<a href="javascript:common_modelClose('bld_billday_set');" class="grayBtn">취소</a>
+        </div>
+		</div>
+  </div>
+</div>
 <!-- popup// -->
 <script type="text/javascript">
 	var isMultiSelect = true;
@@ -354,13 +461,14 @@
 					{label: '주소', name:'center_addr', index:'center_addr', align:'center', formatter:jqGridFunc.address},
 					{label: '사용유무', name:'use_yn', index:'use_yn', align:'center', sortable : false, formatter:jqGridFunc.useYn},
 					{label: '최대자유석수', name:'center_stand_max', index:'center_stand_max', align:'center'},
-					{label: '사전예약시간', name:'preOpenSetting', index:'preOpenSetting', align:'center', sortable : false, formatter:jqGridFunc.preOpenSettingButton},
-					{label: '자동취소', name: 'noshowSetting',  index:'noshowSetting', align:'center', sortable : false, formatter:jqGridFunc.noshowSettingButton},
-					{label: '층 관리', name: 'floorInfoSetting',  index:'floorInfoSetting', align:'center', sortable : false, formatter:jqGridFunc.floorInfoButton},
-					{label: '휴일 관리', name: 'center_holy_use_yn', index:'center_holy_use_yn', align:'center', sortable : false, formatter:jqGridFunc.holyDaySettingButton},
+					{label: '사전예약', name:'pre', index:'pre', align:'center', sortable : false, formatter:jqGridFunc.formSetting},
+					{label: '자동취소', name: 'noshow',  index:'noshow', align:'center', sortable : false, formatter:jqGridFunc.formSetting},
+					{label: '휴일관리', name: 'holy', index:'holy', align:'center', sortable : false, formatter:jqGridFunc.formSetting},
+					{label: '현금영수증', name: 'bill', index:'bill', align:'center', sortable : false, formatter:jqGridFunc.formSetting},
+					{label: '현금영수증(요일)', name: 'billDay', index:'billDay', align:'center', sortable : false, formatter:jqGridFunc.formSetting},
+					{label: '층 관리', name: 'floor',  index:'floor', align:'center', sortable : false, formatter:jqGridFunc.formSetting},
 					{label: '수정자', name:'last_updusr_id', index:'last_updusr_id', align:'center'},
 					{label: '수정일자', name:'last_updt_dtm', index:'last_updt_dtm', align:'center'},
-					//{label: '삭제', name: 'btn',  index:'btn', align:'center', sortable : false, formatter:jqGridFunc.rowBtn}
 				], 
 				rowNum : 10,  //레코드 수
 				rowList : [10,20,30,40,50,100],  // 페이징 수
@@ -457,48 +565,55 @@
 			return '<img src="' + centerImg + ' " style="width:120px">';
     	},
     	address : function(cellvalue, options, rowObject) {
-			/* return rowObject.center_zipcd + "<br>"+ CommonJsUtil.NVL(rowObject.center_addr1) +"  "+ CommonJsUtil.NVL( rowObject.center_addr2) */
 			return CommonJsUtil.NVL(rowObject.center_addr1) +"  "+ CommonJsUtil.NVL( rowObject.center_addr2)
 		},
     	useYn : function(cellvalue, options, rowObject) {
 			return (rowObject.use_yn ==  "Y") ? "사용" : "사용안함";
 		},
-		rowBtn : function (cellvalue, options, rowObject) {
-			return '<input type="button" onclick="jqGridFunc.delRow('+rowObject.center_cd+')" value="DEL"/>';
-		},
-		preOpenSettingButton : function (cellvalue, options, rowObject) {
-			return '<a href="javascript:jqGridFunc.fn_preOpenInfo(&#39;list&#39;,&#39;'+rowObject.center_cd+'&#39;);" class="detailBtn">설정</a>';
-		},			
-		noshowSettingButton : function (cellvalue, options, rowObject) {
-			return '<a href="javascript:jqGridFunc.fn_noshowInfo(&#39;list&#39;,&#39;'+rowObject.center_cd+'&#39;);" class="detailBtn">설정</a>';
-		},
-		floorInfoButton : function (cellvalue, options, rowObject) {
-			return '<a href="javascript:jqGridFunc.fn_centerFloorInfo(&#39;'+rowObject.center_cd+'&#39;);" class="orangeBtn">층 관리</a>';	
-		},
-		holyDaySettingButton : function (cellvalue, options, rowObject) {
-			return '<a href="javascript:jqGridFunc.fn_centerHolyInfo(&#39;list&#39;,&#39;'+rowObject.center_cd+'&#39;);" class="blueBtn">휴일 추가</a>';	
+		formSetting : function (cellvalue, options, rowObject) {
+			var index = options.colModel.index;
+			var item = rowObject;
+			var form = "";
+			
+			if(index == "pre") {
+				form = '<a href="javascript:jqGridFunc.fn_preOpenInfo(&#39;list&#39;,&#39;'+ rowObject.center_cd +'&#39;);" class="orangeBtn">설정</a>';
+			} else if(index == "noshow") {
+				form = '<a href="javascript:jqGridFunc.fn_noshowInfo(&#39;list&#39;,&#39;'+ rowObject.center_cd +'&#39;);" class="orangeBtn">설정</a>';
+			} else if(index == "floor") {
+				form = '<a href="javascript:jqGridFunc.fn_centerFloorInfo(&#39;'+ rowObject.center_cd +'&#39;);" class="blueBtn">층 관리</a>';
+			} else if(index == "holy") {
+				form = '<a href="javascript:jqGridFunc.fn_centerHolyInfo(&#39;list&#39;,&#39;' + rowObject.center_cd + '&#39;);" class="orangeBtn">설정</a>';
+			} else if(index == "bill") {
+				form = '<a href="javascript:jqGridFunc.fn_billInfoList(&#39;' + rowObject.center_cd + '&#39;);" class="orangeBtn">설정</a>';
+			} else if(index == "billDay") {
+				form = '<a href="javascript:jqGridFunc.fn_billDayInfoList(&#39;' + rowObject.center_cd + '&#39;);" class="orangeBtn">설정</a>';
+			}
+			
+			return form;
 		},
 		refreshGrid : function(){
 			$('#mainGrid').jqGrid().trigger("reloadGrid");
 		},
-		fn_delCheck  : function(){      
+		fn_delCheck  : function() {      
 			var menuArray = new Array();
- 			    getEquipArray("mainGrid", menuArray);
- 			    if (menuArray.length > 0){
- 				  $("#hid_DelCode").val(menuArray.join(","))
- 				  $("#id_ConfirmInfo").attr("href", "javascript:jqGridFunc.fn_del()");
- 				  menuArray = null;
-        		      fn_ConfirmPop("삭제 하시겠습니까?");
- 			    }else {
- 				  menuArray = null;
- 				  common_modelCloseM("체크된 값이 없습니다.", "savePage");
- 			    }
- 			    
+			getEquipArray("mainGrid", menuArray);
+			
+			if (menuArray.length > 0){
+				$("#hid_DelCode").val(menuArray.join(","))
+				$("#id_ConfirmInfo").attr("href", "javascript:jqGridFunc.fn_del()");
+				menuArray = null;
+				fn_ConfirmPop("삭제 하시겠습니까?");
+			} else {
+				menuArray = null;
+				common_modelCloseM("체크된 값이 없습니다.", "savePage");
+			}    
 	    },
 	    fn_del : function (){
-	    	var params = {'centerList':$("#hid_DelCode").val() };
-         	    fn_uniDelAction("/backoffice/bld/centerInfoDelete.do", "GET", params, false, "jqGridFunc.fn_search");
-         	},
+	    	var params = {
+				'centerList':$("#hid_DelCode").val() 
+			};
+			fn_uniDelAction("/backoffice/bld/centerInfoDelete.do", "GET", params, false, "jqGridFunc.fn_search");
+		},
 		clearGrid : function() {
 			$("#mainGrid").clearGridData();
 		},
@@ -547,7 +662,6 @@
 				$("#centerEntryPayCost").val("");
 				$("#centerRbmCd").val("");
 				$("input:radio[name='useYn']:radio[value='Y']").prop('checked', true);
-				
 				
 				$("#sp_floorInfo").empty();
 			} else {
@@ -653,7 +767,7 @@
 					}
 				},
 				function(request){
-					common_popup("Error:" + request.status,"");						
+					common_popup("ERROR : " + request.status, "");						
 				}    		
 			);
 			$("#bld_early_set").bPopup();
@@ -677,7 +791,6 @@
 					param['closeGuestTm'] = $("#" + optmCd + "_close_guest_tm").val().replace(/\:/g, "");	
 					params.push(param);
 			});
-			
 			
 			fn_Ajax
 			(
@@ -841,7 +954,7 @@
 					}
 				},
 				function(request){
-					common_modelCloseM("Error:" + request.status,"bld_noshow_set");
+					common_modelCloseM("ERROR : " + request.status, "bld_noshow_set");
 				}    		
 			);
 			
@@ -933,7 +1046,7 @@
 					}
 				},
 				function(request){
-					common_popup("Error:" + request.status,"");       						
+					common_popup("ERROR : " + request.status, "");       						
 				}    		
 			);
 			
@@ -945,15 +1058,15 @@
 				$("#bld_holiday_add").bPopup();
 			}
 		},
-			fn_updateSelect : function(mode, centerHolySeq){
+		fn_updateSelect : function(mode, centerHolySeq){
 			$("#centerHolySeq").val(centerHolySeq);
 			$("#mode").val(mode);
-			lastUpdusrId
+			
 			var url = "/backoffice/bld/centerHolyUpdateSelect.do";
 			var param = {
-							"centerHolySeq" : centerHolySeq,
-							"mode" : mode,
-						};
+				"centerHolySeq" : centerHolySeq,
+				"mode" : mode,
+			};
 			
 			fn_Ajax
 			(
@@ -966,7 +1079,6 @@
 						common_popup(result.meesage, "Y","");
 						location.href="/backoffice/login.do";
 				    } else if (result.status == "SUCCESS") {
-				    	console.log(result);
 						var obj = result.regist;
 						$("#centerHolySeq").val(obj.center_holy_seq);
 						$("#holyDt").val(obj.holy_dt);
@@ -975,57 +1087,15 @@
 					}
 				},
 				function(request){
-					    common_popup("Error:" + request.status,"");
+					common_popup("ERROR : " + request.status, "");
 				}    		
 			);
-		}, 
-		fn_centerHolyUpdate : function (){
-			//확인 
-			/* $("#confirmPage").bPopup().close(); */
-			var url = "/backoffice/bld/centerHolyInfoUpdate.do";
-			var params =
-			{ 	
-				'centerHolySeq' : $("#centerHolySeq").val(),
-				'centerCd' : $("#searchCenterCd").val(),
-				'holyDt' : $("#holyDt").val(),
-				'holyNm' : $("#holyNm").val(),
-				'useYn' : $("#useYn").val(),
-				'lastUpdusrId' : $("#lastUpdusrId").val(),
-				'mode' : $("#mode").val()
-			}; 
-			
-			fn_Ajax(url, "POST", params, true,
-	      			function(result) {
-	 				       if (result.status == "LOGIN FAIL"){
-	 				    	   common_popup(result.meesage, "Y","bld_holiday_add");
-	   						   location.href="/backoffice/login.do";
-	   					   }else if (result.status == "SUCCESS"){
-	   						   //총 게시물 정리 하기'								
-								common_popup("저장에 성공했습니다.", "Y", "bld_holiday_add");
-		 				    	jqGridFunc.fn_centerHolyInfo("list",$("#searchCenterCd").val(), true);
-	   					   }else if (result.status == "OVERLAP FAIL"){
-	   							common_popup("휴일 일자가 중복 발생 하였습니다.", "Y", "bld_holiday_add");
-	   							jqGridFunc.fn_holySearch();
-	   					   }else if (result.status == "FAIL"){
-	   						   common_modelCloseM("저장 도중 문제가 발생 하였습니다.", "Y", "bld_holiday_add");
-							   jqGridFunc.fn_holySearch();
-	   					   }
-	 				    },
-	 				    function(request){
-	 				    	common_modelCloseM("Error:" + request.status,"bld_holiday_add");
-	 				    }    		
-	        );
-			$("#centerHolySeq").val("");
-			$("#holyDt").val("");
-			$("#holyNm").val("");
-			$("#useYn").val("");
 		},
 		fn_centerHolyCopyModel : function(){
 			$("#id_ConfirmInfo").attr("href", "javascript:jqGridFunc.fn_centerHolyInfoCopy()");
 			fn_ConfirmPop("해당 지점의 사전예약정보를 복사 하시겠습니까?");
 		},
 		fn_centerHolyInfoCopy : function() {
-			
 			var url = "/backoffice/bld/centerHolyInfoCopy.do";
 			var copyCenterCd = $("#centerHolyList option:selected").val();
 			var targetCenterCd = $("#searchCenterCd").val();
@@ -1054,11 +1124,11 @@
 					}
 				},
 				function(request){ 
-					common_popup("Error:" + request.status,"");
+					common_popup("ERROR : " + request.status, "");
 				}    		
 			);
 		},		
-		fn_HolyCheckForm : function () {
+		fn_holyCheckForm : function () {
 			if (any_empt_line_span("bld_holiday_add", "holyDt",  "날짜를 선택해주세요.","sp_message", "savePage") == false) return;
 			if (any_empt_line_span("bld_holiday_add", "holyNm", "휴일명을 입력해주세요.","sp_message", "savePage") == false) return;
 			if (any_empt_line_span("bld_holiday_add", "useYn", "사용유무를 입력해주세요","sp_message", "savePage") == false) return;
@@ -1066,18 +1136,314 @@
 			var commentTxt = ($("#mode").val() == "Edt") ? "입력한 지점 휴일 정보를 수정 하시겠습니까?" : "신규 지점 휴일 정보를 등록 하시겠습니까?";
 			
 			javascript:jqGridFunc.fn_centerHolyUpdate();
-       		
+		},
+		fn_centerHolyUpdate : function (){
+			//확인 
+			/* $("#confirmPage").bPopup().close(); */
+			var url = "/backoffice/bld/centerHolyInfoUpdate.do";
+			var params =
+			{ 	
+				'centerHolySeq' : $("#centerHolySeq").val(),
+				'centerCd' : $("#searchCenterCd").val(),
+				'holyDt' : $("#holyDt").val(),
+				'holyNm' : $("#holyNm").val(),
+				'useYn' : $("#useYn").val(),
+				'lastUpdusrId' : $("#lastUpdusrId").val(),
+				'mode' : $("#mode").val()
+			}; 
+			
+			fn_Ajax
+			(
+				url, "POST", params, true,
+				function(result) {
+					if (result.status == "LOGIN FAIL"){
+	 	    	   		common_popup(result.meesage, "Y","bld_holiday_add");
+	   			   		location.href="/backoffice/login.do";
+	   		   		} else if (result.status == "SUCCESS"){
+	   			   		//총 게시물 정리 하기'								
+						common_popup("저장에 성공했습니다.", "Y", "bld_holiday_add");
+		 	    		jqGridFunc.fn_centerHolyInfo("list",$("#searchCenterCd").val(), true);
+		 				$("#centerHolySeq").val("");
+		 				$("#holyDt").val("");
+		 				$("#holyNm").val("");
+		 				$("#useYn").val("");
+	   		   		} else if (result.status == "OVERLAP FAIL"){
+	   					common_popup("휴일 일자가 중복 발생 하였습니다.", "Y", "bld_holiday_add");
+	   		   		} else if (result.status == "FAIL"){
+	   			   		common_modelCloseM("저장 도중 문제가 발생 하였습니다.", "Y", "bld_holiday_add");
+	   		   		}
+		 	    },
+		 	    function(request){
+		 	    	common_modelCloseM("ERROR : " + request.status, "bld_holiday_add");
+		 	    }    		
+	        );
 		},
 		fn_holyDel : function(centerHolySeq) {
 			var params = {'centerHolySeq': centerHolySeq};
 			fn_uniDelAction("/backoffice/bld/centerHolyInfoDelete.do", "GET", params, false, "jqGridFunc.fn_search");
 			jqGridFunc.fn_centerHolyInfo("list",$("#searchCenterCd").val(), true);
 		},
+		//지점 현금영수증 정보 Function
+		fn_billInfoList : function(centerCd) {			
+			var url = "/backoffice/bld/billInfoListAjax.do";
+			var params = {
+				"centerCd" : centerCd
+			};
+
+ 			$("#bld_bill_set .inTxt .cur_poin").remove();
+			
+			fn_Ajax
+			(
+				url, 
+				"GET",
+				params, 
+				false,
+				function(result) {
+					if (result.status == "LOGIN FAIL") {
+						location.href="/backoffice/login.do";
+					} else if (result.status == "SUCCESS") {
+						$("#bld_bill_set .pop_tit span").html("[" + result.centerNm + "]");
+						if(result.billInfoList.length != 0) {
+							var billInfoList = result.billInfoList;
+							var setHtml = "";
+							
+ 							for(var i=0; i < billInfoList.length; i++) {
+ 								var obj = billInfoList[i];
+ 								setHtml += "<tr id='" + obj.bill_seq + "' class='cur_poin'>";
+ 								setHtml += "<td>" + obj.bill_dvsn_text + "</td>";
+								setHtml += "<td>" + obj.bill_num + "</td>";
+								setHtml += "<td>" + obj.bill_corp_name + "</td>";
+								setHtml += "<td>" + obj.bill_addr + "</td>";
+								setHtml += "<td>" + obj.bill_tel + "</td>";
+								setHtml += "<td>" + obj.bill_user_id + "</td>";
+								setHtml += "<td>"
+								setHtml +=	   "<a onclick='jqGridFunc.fn_billInfo(\"Edt\", "+ obj.bill_seq +");' class='blueBtn'>수정</a>"
+								setHtml +=     "<a onclick='jqGridFunc.fn_billInfoDelCheck(" + obj.bill_seq + ");' class='grayBtn' style='margin-left: 5px;'>삭제</a>"
+								setHtml += "</td>";
+								setHtml += "</tr>";
+							}
+ 							
+ 							$("#bld_bill_set .inTxt").append(setHtml);
+						} else {
+							setHtml = "<tr class='cur_poin'><td colspan='7'>등록된 현금영수증 정보가 존재하지 않습니다.<td></tr>";
+							$("#bld_bill_set .inTxt").append(setHtml);
+							$("#bld_bill_set .inTxt .cur_poin td:eq(1)").remove();
+						}
+
+						$("#searchCenterCd").val(centerCd);
+						common_modelOpen('bld_bill_set');
+					}
+				},
+				function(request){
+					common_popup("ERROR : " + request.status, "");       						
+				}    		
+			);
+		},
+		fn_billInfo : function (mode, billSeq) {
+			$("#mode").val(mode);
+
+			if (mode == "Ins") {
+				$("#bld_bill_add .pop_tit").html("현금영수증 정보 등록");
+				$("#btnUpdate").text('등록');
+				
+				$("#billDvsn").val("");
+				$("#billNum").val("");
+				$("#billCorpName").val("");
+				$("#billAddr").val("");
+				$("#billTel").val("");
+				$("#billUserId").val("");
+			} else {
+				var url = "/backoffice/bld/billInfoDetail.do";
+				var param = {"billSeq" : billSeq};
+				
+				fn_Ajax
+				(
+				    url, 
+				    "GET",
+					param,
+					false,
+					function(result) {
+						if (result.status == "LOGIN FAIL") {
+							common_popup(result.meesage, "Y","");
+							location.href="/backoffice/login.do";
+					    } else if (result.status == "SUCCESS") {
+							var obj = result.regist;
+							$("#bld_bill_add .pop_tit").html("현금영수증 정보 수정");
+							$("#btnUpdate").text('저장');
+							
+							$("#billSeq").val(obj.bill_seq);
+							$("#billDvsn").val(obj.bill_dvsn);
+							$("#billNum").val(obj.bill_num);
+							$("#billCorpName").val(obj.bill_corp_name);
+							$("#billAddr").val(obj.bill_addr);
+							$("#billTel").val(obj.bill_tel);
+							$("#billUserId").val(obj.bill_user_id);
+						}
+					},
+					function(request){
+						common_popup("ERROR : " + request.status, "");
+					}    		
+				);
+			}
+			common_modalOpenAndClose('bld_bill_add','bld_bill_set');
+		},
+		fn_billCheckForm : function () {
+			if (any_empt_line_span("bld_bill_add", "billDvsn", "발급구분값 입력.", "sp_message", "savePage") == false) return;
+			if (any_empt_line_span("bld_bill_add", "billNum", "사업자번호입력.", "sp_message", "savePage") == false) return;
+			if (any_empt_line_span("bld_bill_add", "billCorpName", "법인명입력", "sp_message", "savePage") == false) return;
+			if (any_empt_line_span("bld_bill_add", "billAddr", "주소입력", "sp_message", "savePage") == false) return;
+			if (any_empt_line_span("bld_bill_add", "billTel", "전화입력", "sp_message", "savePage") == false) return;
+			if (any_empt_line_span("bld_bill_add", "billUserId", "팝빌아이디 입력", "sp_message", "savePage") == false) return;
+			var commentTxt = $("#mode").val() == "Edt" ? "입력한 현금영수증 정보를 수정 하시겠습니까?" : "신규 현금영수증 정보를 등록 하시겠습니까?";
+			
+			fn_ConfirmPop(commentTxt);
+			$("#id_ConfirmInfo").attr("href", "javascript:jqGridFunc.fn_billInfoUpdate();");
+		},
+		fn_billInfoUpdate : function (){
+			fn_ConfirmClose();
+			var url = "/backoffice/bld/billInfoUpdate.do";
+			var params =
+			{ 	
+				'mode' : $("#mode").val(),
+				'billSeq' : $("#billSeq").val(),
+				'billDvsn' : $("#billDvsn").val(),
+				'centerCd' : $("#searchCenterCd").val(),
+				'billNum' : $("#billNum").val(),
+				'billCorpName' : $("#billCorpName").val(),
+				'billAddr' : $("#billAddr").val(),
+				'billTel' : $("#billTel").val(),
+				'billUserId' : $("#billUserId").val()
+			};
+			
+			fn_Ajax
+			(
+				url, "POST", params, true,
+				function(result) {
+					if (result.status == "LOGIN FAIL") {
+	 	    	   		common_popup(result.meesage, "Y", "bld_bill_add");
+	   			   		location.href="/backoffice/login.do";
+	   		   		} else if (result.status == "SUCCESS") {					
+		 	    		jqGridFunc.fn_billInfoList($("#searchCenterCd").val());
+		 	    		common_popup("저장에 성공했습니다.", "Y", "bld_bill_set");
+	   		   		} else if (result.status == "OVERLAP FAIL") {
+	   					common_popup("발급구분값이 중복되었습니다.", "Y", "bld_bill_add");
+	   		   		} else if (result.status == "FAIL") {
+	   			   		common_modelCloseM("저장 도중 문제가 발생 하였습니다.", "Y", "bld_bill_add");
+	   		   		}
+		 	    },
+		 	    function(request) {
+		 	    	common_modelCloseM("ERROR : " + request.status, "bld_bill_add");
+		 	    }    		
+	        );
+		},
+		fn_billInfoDelCheck : function (billSeq) {
+			$("#id_ConfirmInfo").attr("href", "javascript:jqGridFunc.fn_billInfoDel('" + billSeq + "');");
+			fn_ConfirmPop("해당 현금영수증 발행정보를 삭제 하시겠습니까?");
+		},
+		fn_billInfoDel : function(billSeq) {
+			var params = {'billSeq' : billSeq};
+			fn_uniDelAction("/backoffice/bld/billInfoDelete.do", "GET", params, false, "");
+			jqGridFunc.fn_billInfoList($("#searchCenterCd").val());
+		},
+		//지점 현금영수증 발g행 요일 정보
+		fn_billDayInfoList : function(centerCd) {
+			var url = "/backoffice/bld/billDayInfoListAjax.do";
+			var param = {"centerCd" : centerCd};
+
+			$("#bld_billday_set .inTxt").html("");
+			
+			fn_Ajax
+			(
+				url, 
+				"GET",
+				param,
+				false,
+				function(result) {
+					if (result.status == "LOGIN FAIL") {
+						common_popup(result.meesage, "N","");
+						location.href="/backoffice/login.do";
+					} else if (result.status == "SUCCESS") {
+						//지점 자동취소 정보 세팅
+						var setHtml = "";
+						if(result.billDayInfoList.length > 0) {
+							var billDayInfoList = result.billDayInfoList;
+							var billInfoList = result.billInfoList;
+							
+							$("#bld_billday_set .pop_tit span").html("[" + result.centerNm + "]");
+							
+ 							for(var i=0; i < billDayInfoList.length; i++) {
+ 								var obj = billDayInfoList[i];
+ 								var color = 
+ 									obj.bill_day == "1" ? "red" : 
+ 									obj.bill_day == "7" ? "blue" : "black";
+ 								
+ 								var $tr = $("<tr></tr>").attr("id", obj.billday_cd);
+ 								$tr.append("<td style='color : " + color + ";'>" + obj.bill_day_text + "</td>");
+ 								var $select = $("<select></select>").append("<option value=''>사용안함</option>");
+ 								$.each(billInfoList, function (index, item) {
+ 									var $option = $("<option value='" + item.bill_seq + "'></option>").html(item.bill_dvsn_text);
+ 									$select.append($option);
+								});
+ 								
+ 								$select.val(obj.bill_seq).prop("selected", true);
+ 								$tr.append($("<td></td>").append($select));
+ 								$tr.append("<td>" + obj.last_updt_dtm + "</td>");
+ 								$tr.append("<td>" + obj.last_updusr_id + "</td>");
+ 								$("#bld_billday_set .inTxt").append($tr);
+							}
+						} else {
+							$("#bld_billday_set .inTxt").append("<tr><td colspan='5'>등록된 현금영수증 요일정보가 존재하지 않습니다.<td></tr>");	
+						}
+						$("#bld_billday_set .inTxt").append(setHtml);
+						$("#bld_billday_set").bPopup();
+					}
+				},
+				function(request){
+					common_popup("ERROR : " + request.status,"");
+				}    		
+			);
+		},
+		fn_billDayCheckForm : function (){
+			$("#bld_billday_set").bPopup().close();
+			$("#id_ConfirmInfo").attr("href", "javascript:jqGridFunc.fn_billDayInfoUpdate();");
+			fn_ConfirmPop("입력된 현금영수증 발급 요일정보를 저장하시겠습니까?");
+		},
+		fn_billDayInfoUpdate : function() {
+			fn_ConfirmClose();
+			var url = "/backoffice/bld/billDayInfoUpdate.do";
+			var params = new Array();
+			$("#bld_billday_set .inTxt tr").each(function(index, item) {
+				var billDayCd = $(item).attr('id');
+				var param = new Object();
+				
+				param['billdayCd'] = billDayCd;
+				param['billSeq'] = $("#" + billDayCd).find("select").val(); 
+				params.push(param);
+			});
+			
+			fn_Ajax
+			(
+				url, 
+				"POST",
+				params,
+				false,
+				function(result) {
+					if (result.status == "LOGIN FAIL") {
+						common_popup(result.message, "N", "");
+						location.href="/backoffice/login.do";
+					} else if (result.status == "SUCCESS") {
+						jqGridFunc.fn_billDayInfoList($("#searchCenterCd").val());
+						common_popup("저장에 성공했습니다.", "Y", "bld_billday_set");
+					}
+				},
+				function(request){
+					common_modelCloseM("ERROR : " + request.status, "bld_billday_set");
+				}    		
+			);
+		},
 		fn_centerFloorInfo : function(centerCd) {
 			$("#searchCenterCd").val(centerCd);
-			//location.href= "/backoffice/bld/floorList.do?centerCd=" + centerCd;
-			//$("form[name=regist]").attr("action", "/backoffice/bld/floorList.do").submit();
-			$('#contents').load('/backoffice/bld/floorList.do?searchCenterCd='+ centerCd);
+			$('#contents').load('/backoffice/bld/floorList.do?searchCenterCd=' + centerCd);
 		},
 		fn_CheckForm : function () {
 			if (any_empt_line_span("bld_branch_add", "centerNm",  "지점명을 입력해주세요.","sp_message", "savePage") == false) return;
@@ -1090,10 +1456,8 @@
        		fn_ConfirmPop(commentTxt);
 		},
 		fn_update : function(floorInfo){
-			
 			if(floorInfo == false) return;
 			
-			//체크 박스 체그 값 알아오기 
 			var formData = new FormData();
     			  
 			formData.append('centerImg', $('#centerImg')[0].files[0]);
@@ -1123,19 +1487,18 @@
 				"/backoffice/bld/centerInfoUpdate.do", 
 				formData, 
 				function(result) {
-					//결과값 추후 확인 하기 	
 					if (result.status == "SUCCESS"){
 						common_modelCloseM(result.message, "confirmPage");
-						    jqGridFunc.fn_search();
+						jqGridFunc.fn_search();
 					} else if (result.status == "LOGIN FAIL") {
 						common_modelClose("bld_branch_add");
-						    document.location.href="/backoffice/login.do";
+						document.location.href="/backoffice/login.do";
 					} else {
 						common_modelCloseM("저장 도중 문제가 발생 하였습니다.", "Y", "bld_branch_add");
 					}
 				},
 				function(request){
-					common_modelCloseM("Error:" +request.status, "N", "bld_branch_add");	
+					common_modelCloseM("ERROR : " + request.status, "N", "bld_branch_add");	
 				}    		
 			);
 		}

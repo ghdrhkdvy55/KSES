@@ -85,6 +85,7 @@ public class CenterInfoManageController {
 		
 		model.addObject("loginVO", loginVO);
 		model.addObject("centerInfoComboList", centerInfoComboList);
+		model.addObject("billDvsnInfoComboList", codeDetailService.selectCmmnDetailCombo("BILL_DVSN"));
 		model.addObject("floorInfo", codeDetailService.selectCmmnDetailCombo("CENTER_FLOOR"));
 		model.addObject(Globals.STATUS_REGINFO , searchVO);
 	    model.setViewName("/backoffice/bld/centerList");
@@ -92,9 +93,9 @@ public class CenterInfoManageController {
 	}
 	//combo box 신규 추가 
 	@RequestMapping(value="centerCombo.do")
-	public ModelAndView selectCenterComboInfoList(@ModelAttribute("loginVO") LoginVO loginVO, 
-												  HttpServletRequest request, 
-												  BindingResult bindingResult) throws Exception {
+	public ModelAndView selectCenterComboInfoList( @ModelAttribute("loginVO") LoginVO loginVO, 
+												   HttpServletRequest request, 
+												   BindingResult bindingResult) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
 		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
