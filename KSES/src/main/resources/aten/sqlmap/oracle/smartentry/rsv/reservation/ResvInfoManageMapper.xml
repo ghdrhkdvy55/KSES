@@ -30,6 +30,9 @@
 				AND A.PART_CD = E.PART_CD(+)
 				AND A.CENTER_CD = C.CENTER_CD
 				AND A.USER_ID = D.USER_ID
+				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchResvPayDvsn)">
+					AND A.RESV_PAY_DVSN = #{params.searchResvPayDvsn}
+				</if>
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchCenterCd)">
 					AND A.CENTER_CD = #{params.searchCenterCd}
 				</if>

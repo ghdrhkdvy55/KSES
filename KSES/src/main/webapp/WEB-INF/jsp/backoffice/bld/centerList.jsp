@@ -1053,7 +1053,7 @@
 			$("#holyDt").val("");
 			$("#holyNm").val("");
 			$("#useYn").val("Y");
-			
+			$("#mode").val("Ins");
 			if(!callbackYn){
 				$("#bld_holiday_add").bPopup();
 			}
@@ -1136,7 +1136,7 @@
 			var commentTxt = ($("#mode").val() == "Edt") ? "입력한 지점 휴일 정보를 수정 하시겠습니까?" : "신규 지점 휴일 정보를 등록 하시겠습니까?";
 			
 			javascript:jqGridFunc.fn_centerHolyUpdate();
-		},
+		}, 
 		fn_centerHolyUpdate : function (){
 			//확인 
 			/* $("#confirmPage").bPopup().close(); */
@@ -1152,30 +1152,31 @@
 				'mode' : $("#mode").val()
 			}; 
 			
-			fn_Ajax
-			(
-				url, "POST", params, true,
-				function(result) {
+			fn_Ajax(url, "POST", params, true,
+	      		function(result) {
 					if (result.status == "LOGIN FAIL"){
-	 	    	   		common_popup(result.meesage, "Y","bld_holiday_add");
-	   			   		location.href="/backoffice/login.do";
-	   		   		} else if (result.status == "SUCCESS"){
-	   			   		//총 게시물 정리 하기'								
-						common_popup("저장에 성공했습니다.", "Y", "bld_holiday_add");
-		 	    		jqGridFunc.fn_centerHolyInfo("list",$("#searchCenterCd").val(), true);
-		 				$("#centerHolySeq").val("");
-		 				$("#holyDt").val("");
-		 				$("#holyNm").val("");
-		 				$("#useYn").val("");
-	   		   		} else if (result.status == "OVERLAP FAIL"){
-	   					common_popup("휴일 일자가 중복 발생 하였습니다.", "Y", "bld_holiday_add");
-	   		   		} else if (result.status == "FAIL"){
-	   			   		common_modelCloseM("저장 도중 문제가 발생 하였습니다.", "Y", "bld_holiday_add");
-	   		   		}
-		 	    },
-		 	    function(request){
-		 	    	common_modelCloseM("ERROR : " + request.status, "bld_holiday_add");
-		 	    }    		
+						common_popup(result.meesage, "Y","bld_holiday_add");
+						location.href="/backoffice/login.do";
+					}else if (result.status == "SUCCESS"){
+						   //총 게시물 정리 하기'								
+							common_popup("저장에 성공했습니다.", "Y", "bld_holiday_add");
+					 	jqGridFunc.fn_centerHolyInfo("list",$("#searchCenterCd").val(), true);
+							$("#centerHolySeq").val("");
+							$("#holyDt").val("");
+							$("#holyNm").val("");
+							$("#useYn").val("");
+							$("#mode").val("Ins");
+					}else if (result.status == "OVERLAP FAIL"){
+							common_popup("휴일 일자가 중복 발생 하였습니다.", "Y", "bld_holiday_add");
+							jqGridFunc.fn_holySearch();
+					}else if (result.status == "FAIL"){
+						   common_modelCloseM("저장 도중 문제가 발생 하였습니다.", "Y", "bld_holiday_add");
+						   jqGridFunc.fn_holySearch();
+					}
+				},
+				function(request){
+					common_modelCloseM("Error:" + request.status,"bld_holiday_add");
+				}    		
 	        );
 		},
 		fn_holyDel : function(centerHolySeq) {
