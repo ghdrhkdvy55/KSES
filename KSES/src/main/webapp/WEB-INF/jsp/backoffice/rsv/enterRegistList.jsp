@@ -75,6 +75,11 @@
 <script type="text/javascript" src="/resources/js/temporary.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
+		if($("#loginAuthorCd").val() != "ROLE_ADMIN" && $("#loginAuthorCd").val() != "ROLE_SYSTEM") {
+			$("#searchCenterCd").val($("#loginCenterCd").val()).trigger('change');
+			$(".top > div > p").eq(0).hide();
+			$(".top > div > select").eq(0).hide();
+		}
 		EgovJqGridApi.mainGrid([
 			{label: 'resv_seq', key: true, name:'resv_seq', align:'center', hidden:true},
 			{label: '지점', name:'center_nm', align:'center'},

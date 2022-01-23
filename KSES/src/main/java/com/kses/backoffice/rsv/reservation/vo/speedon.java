@@ -20,7 +20,7 @@ public enum speedon {
 	TRADE_ERROR_002("TRADE_ERROR_002", "카드비밀번호가 불일치 합니다."), 
 	TRADE_ERROR_003("TRADE_ERROR_003", "알수없는 Div_Cd"), 
 	TRADE_ERROR_004("TRADE_ERROR_004", "알수없는 Trade_Cd"), 
-	TRADE_ERROR_005("TRADE_ERROR_005", "거래금액 오류"), 
+	TRADE_ERROR_005("TRADE_ERROR_005", "잔액이 부족합니다. <br>스피드온 계좌를 충전하거나 무인발권기를 이용해주세요."), 
 	TRADE_ERROR_006("TRADE_ERROR_006", "거래 상세내용 오류"), 
 	TRADE_ERROR_007("TRADE_ERROR_007", "존재하지 않는 회원 정보입니다."), 
 	TRADE_ERROR_008("TRADE_ERROR_008", "스피드온 앱에서 본인인증 및 이용정지 해제 바랍니다."), 
