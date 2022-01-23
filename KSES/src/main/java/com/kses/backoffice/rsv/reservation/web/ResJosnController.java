@@ -944,8 +944,8 @@ public class ResJosnController {
 			// 거래처 이메일
 			// 팝빌 개발환경에서 테스트하는 경우에도 안내 메일이 전송되므로,
 			// 실제 거래처의 메일주소가 기재되지 않도록 주의
-			//cashbill.setEmail(SmartUtil.NVL(resvInfo.get("user_email"), "").toString());
-			cashbill.setEmail("eogks196@naver.com");
+			cashbill.setEmail(SmartUtil.NVL(resvInfo.get("user_email"), "").toString());
+			//cashbill.setEmail("eogks196@naver.com");
 			// 거래처 휴대폰
 			cashbill.setHp(SmartUtil.NVL(resvInfo.get("user_phone"), "").toString());
 
