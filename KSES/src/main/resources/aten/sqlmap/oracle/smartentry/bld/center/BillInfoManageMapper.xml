@@ -3,8 +3,8 @@
 <mapper namespace="com.kses.backoffice.bld.center.mapper.BillInfoManageMapper">
 	<select id="selectBillInfoList" resultType="lmap">
 		SELECT 
-			A.BILL_SEQ, A.BILL_NUM, A.BILL_CORP_NAME, A.BILL_ADDR,
-			A.BILL_TEL, A.BILL_USER_ID, A.CENTER_CD, B.CENTER_NM,
+			A.BILL_SEQ, A.BILL_NUM, A.BILL_CORP_NAME, A.BILL_CEO_NAME, A.BILL_ADDR,
+			A.BILL_TEL, A.BILL_USER_ID, A.BILL_EMAIL, A.CENTER_CD, B.CENTER_NM,  
 			FN_DETAILCODENM(A.BILL_DVSN) AS BILL_DVSN_TEXT
 		FROM TSER_BILL_INFO_I A, TSEB_CENTER_INFO_M B
 		WHERE A.CENTER_CD = #{centerCd}
@@ -37,8 +37,8 @@
 	
 	<select id="selectBillInfoDetail" resultType="lmap">
 		SELECT 
-			A.BILL_SEQ, A.BILL_DVSN, A.BILL_NUM, A.BILL_CORP_NAME, A.BILL_ADDR,
-			A.BILL_TEL, A.BILL_USER_ID
+			A.BILL_SEQ, A.BILL_DVSN, A.BILL_NUM, A.BILL_CORP_NAME, A.BILL_CEO_NAME,
+			A.BILL_ADDR, A.BILL_TEL, A.BILL_EMAIL, A.BILL_USER_ID
 		FROM TSER_BILL_INFO_I A
 		WHERE A.BILL_SEQ = #{billSeq}
 	</select>
@@ -46,14 +46,14 @@
 	<insert id="insertBillInfo">
 		INSERT INTO TSER_BILL_INFO_I 
 		(
-			BILL_SEQ, BILL_DVSN, BILL_NUM, BILL_CORP_NAME, BILL_ADDR, 
-			BILL_TEL, BILL_USER_ID, CENTER_CD,
+			BILL_SEQ, BILL_DVSN, BILL_NUM, BILL_CORP_NAME, BILL_CEO_NAME,
+			BILL_ADDR, BILL_TEL, BILL_EMAIL, BILL_USER_ID, CENTER_CD,
 			FRST_REGIST_DTM, FRST_REGTER_ID, LAST_UPDT_DTM, LAST_UPDUSR_ID
 		)
 		VALUES 	
 		(
-			SEQ_SER_BILL.NEXTVAL, #{billDvsn}, #{billNum}, #{billCorpName}, #{billAddr},
-			#{billTel}, #{billUserId}, #{centerCd},
+			SEQ_SER_BILL.NEXTVAL, #{billDvsn}, #{billNum}, #{billCorpName}, #{billCeoName}, 
+			#{billAddr}, #{billTel}, #{billEmail} ,#{billUserId}, #{centerCd},
 			SYSDATE, #{frstRegterId, jdbcType=VARCHAR}, SYSDATE, #{lastUpdusrId, jdbcType=VARCHAR}
 		)
 	</insert>
@@ -62,8 +62,10 @@
 		UPDATE TSER_BILL_INFO_I SET 
 			BILL_NUM = #{billNum},
 			BILL_CORP_NAME = #{billCorpName},
+			BILL_CEO_NAME = #{billCeoName},
 			BILL_ADDR = #{billAddr},
 			BILL_TEL = #{billTel},
+			BILL_EMAIL = #{billEmail},
 			BILL_USER_ID = #{billUserId},
 			BILL_DVSN = #{billDvsn},
 			LAST_UPDT_DTM = SYSDATE,

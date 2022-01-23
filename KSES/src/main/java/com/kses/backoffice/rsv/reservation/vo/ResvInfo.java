@@ -96,11 +96,17 @@ public class ResvInfo {
 	// 환불 비용
 	private int resvCancelCost;
 
-	// 현금 영수증 발급 여부
+	// 현금 영수증 발행 여부
 	private String resvRcptYn = "";
 	
-	// 현금 영수증 발급 구분
+	// 현금 영수증 발행 구분
 	private String resvRcptDvsn = "";
+	
+	// 현금 영수증 발행 연락처
+	private String resvRcptTel = "";
+
+	// 현금 영수증 발행 상태
+	private String resvRcptState = "";
 	
 	// 현금 영수증 번호
 	private String resvRcptNumber = "";

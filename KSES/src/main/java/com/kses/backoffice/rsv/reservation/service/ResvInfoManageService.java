@@ -93,6 +93,15 @@ public interface ResvInfoManageService {
 	public Map<String, Object> selectInUserResvInfo(ResvInfo vo) throws Exception;
 	
 	/**
+	 * SPDM 현금영수증 발행정보 조회
+	 * 
+	 * @param resvSeq
+	 * @return
+	 * @throws Exception
+	 */
+	public Map<String, Object> selectResvBillInfo(String resvSeq) throws Exception;
+	
+	/**
 	 * SPDM 회원 현재 예약일자 예약정보 유무 확인
 	 * 
 	 * @param params
@@ -206,7 +215,7 @@ public interface ResvInfoManageService {
 	public int resPriceChange(ResvInfo vo) throws Exception;
 	
 	
-	public int resbillChange(ResvInfo vo) throws Exception;
+	public int resvBillChange(ResvInfo vo) throws Exception;
 	
 	/**
 	 * SPDM 예약정보 유효성 검사

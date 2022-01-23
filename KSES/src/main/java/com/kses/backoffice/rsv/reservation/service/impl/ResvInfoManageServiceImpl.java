@@ -112,6 +112,11 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	}
 	
 	@Override
+	public Map<String, Object> selectResvBillInfo(String resvSeq) throws Exception {
+		return resvMapper.selectResvBillInfo(resvSeq);
+	}
+	
+	@Override
 	public int resvInfoDuplicateCheck(Map<String, Object> params) throws Exception {
 		return resvMapper.resvInfoDuplicateCheck(params);
 	}
@@ -266,8 +271,8 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	}
 
 	@Override
-	public int resbillChange(ResvInfo vo) throws Exception {
-		return resvMapper.resbillChange(vo);
+	public int resvBillChange(ResvInfo vo) throws Exception {
+		return resvMapper.resvBillChange(vo);
 	}
 	
 	@Override

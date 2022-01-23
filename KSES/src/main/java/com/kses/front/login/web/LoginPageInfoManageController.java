@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.kses.backoffice.cus.usr.service.UserInfoManageService;
 import com.kses.backoffice.util.SmartUtil;
 import com.kses.front.annotation.LoginUncheck;
+import com.kses.front.annotation.ReferrerUncheck;
 import com.kses.front.login.service.UserLoginService;
 import com.kses.front.login.vo.UserLoginInfo;
 
@@ -59,7 +60,7 @@ public class LoginPageInfoManageController {
 			
 	@LoginUncheck
 	@RequestMapping (value="userSessionCreate.do")
-	public ModelAndView setUserSession(	@RequestBody UserLoginInfo userLoginInfo,
+	public ModelAndView createUserSession(	@RequestBody UserLoginInfo userLoginInfo,
 										HttpServletRequest request) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
@@ -86,7 +87,7 @@ public class LoginPageInfoManageController {
 			
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		} catch(Exception e) {
-			LOGGER.error("setUserSession : " + e.toString());
+			LOGGER.error("createUserSession : " + e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 		}
@@ -121,7 +122,7 @@ public class LoginPageInfoManageController {
 	public ModelAndView frontSSOLogin(	HttpServletRequest request,
 										@RequestParam Map<String, Object> params) throws Exception {
 		
-		ModelAndView model = new ModelAndView("/front/main/mainpage");
+		ModelAndView model = new ModelAndView("redirect:/front/main/mainpage");
 		try {
 			//외부 테스트 로그인
 			String envType = propertiesService.getString("Globals.envType");
@@ -150,6 +151,7 @@ public class LoginPageInfoManageController {
 	}
 	
 	@LoginUncheck
+	@ReferrerUncheck
 	@RequestMapping (value="qrEnter.do")
 	public ModelAndView viewFrontQrEnterpage(	HttpServletRequest request,
 												@RequestParam("resvSeq") String resvSeq,
@@ -157,15 +159,15 @@ public class LoginPageInfoManageController {
 		
 		ModelAndView model = new ModelAndView("/front/login/qrEnter");
 		try {		
-//          HttpSession httpSession = request.getSession();
-//			UserLoginInfo userLoginInfo = (UserLoginInfo)httpSession.getAttribute("userLoginInfo");
-			
-//			if(userLoginInfo == null && accessType.equals("WEB")) {
-//				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
-//				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));	
-//				model.setViewName("/front/main/mainpage");
-//				return model;
-//			}
+			String referer = request.getHeader("referer");
+			if(referer == null) {
+				if(!accessType.equals("BUTTON")) {
+					model.addObject(Globals.STATUS, Globals.STATUS_REFERRERFAIL);
+					model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.referrer"));
+					model.setViewName("/front/main/mainpage");
+					return model;
+				}
+			}
 			
 			model.addObject("accessType", accessType);
 			model.addObject("resvSeq", resvSeq);
