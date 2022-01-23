@@ -30,6 +30,9 @@
 				AND A.PART_CD = E.PART_CD(+)
 				AND A.CENTER_CD = C.CENTER_CD
 				AND A.USER_ID = D.USER_ID
+				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchResvPayDvsn)">
+					AND A.RESV_PAY_DVSN = #{params.searchResvPayDvsn}
+				</if>
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchCenterCd)">
 					AND A.CENTER_CD = #{params.searchCenterCd}
 				</if>
@@ -62,7 +65,8 @@
 							(
 								A.RESV_SEQ LIKE '%' || #{params.searchKeyword} || '%' 
 								OR A.RESV_USER_NM LIKE '%' || #{params.searchKeyword} || '%'
-								OR A.USER_ID LIKE '%' || #{params.searchKeyword} || '%' 
+								OR A.USER_ID LIKE '%' || #{params.searchKeyword} || '%'
+								OR A.RESV_USER_CLPHN LIKE '%' || #{params.searchKeyword} || '%' 
 							)
 						</otherwise>
 					</choose>
@@ -149,7 +153,7 @@
 	<select id="selectUserResvInfo" resultType="lmap">
 	<![CDATA[
 		SELECT  
-			A.RESV_SEQ,
+			A.RESV_SEQ, A.RESV_USER_DVSN,
 			A.CENTER_CD, A.PART_CD, A.FLOOR_CD, A.SEAT_CD, A.SEASON_CD, A.RESV_START_DT, A.RESV_END_DT, A.RESV_DVSN,
 			A.RESV_START_TM, A.RESV_END_TM, TO_CHAR(A.RESV_REQ_DATE,'YYYY-MM-DD HH24:MI') AS RESV_REQ_DATE, A.RESV_ENTRY_DVSN,
 			A.RESV_PAY_COST, A.RESV_USER_NM, A.RESV_USER_CLPHN, A.RESV_QR_COUNT, A.RESV_TICKET_DVSN,

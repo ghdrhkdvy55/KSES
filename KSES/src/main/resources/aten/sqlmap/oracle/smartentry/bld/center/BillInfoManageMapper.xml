@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kses.backoffice.bld.center.mapper.BillInfoManageMapper">
+	<select id="selectBillInfoList" resultType="lmap">
+		SELECT 
+			A.BILL_SEQ, A.BILL_NUM, A.BILL_CORP_NAME, A.BILL_ADDR,
+			A.BILL_TEL, A.BILL_USER_ID, A.CENTER_CD, B.CENTER_NM,
+			FN_DETAILCODENM(A.BILL_DVSN) AS BILL_DVSN_TEXT
+		FROM TSER_BILL_INFO_I A, TSEB_CENTER_INFO_M B
+		WHERE A.CENTER_CD = #{centerCd}
+		AND A.CENTER_CD = B.CENTER_CD
+	</select>
+	
+	<select id="selectBillDayInfoList" resultType="lmap">
+		SELECT 
+			A.BILLDAY_CD, A.BILL_DAY, A.BILL_SEQ,
+			CASE A.BILL_DAY
+				WHEN '2' THEN '월요일'
+				WHEN '3' THEN '화요일'
+				WHEN '4' THEN '수요일'
+				WHEN '5' THEN '목요일'
+				WHEN '6' THEN '금요일'
+				WHEN '7' THEN '토요일'
+				WHEN '1' THEN '일요일'
+			END BILL_DAY_TEXT,
+			B.BILL_DVSN,
+			FN_DETAILCODENM(B.BILL_DVSN) AS BILL_DVSN_TEXT, 
+ 			A.LAST_UPDUSR_ID,
+			TO_CHAR(A.LAST_UPDT_DTM, 'yyyy-mm-dd') AS LAST_UPDT_DTM, 
+			C.CENTER_NM
+		FROM TESR_BILLDAY_INFO_I A, TSER_BILL_INFO_I B, TSEB_CENTER_INFO_M C
+		WHERE A.CENTER_CD = #{centerCd}
+		AND A.CENTER_CD = C.CENTER_CD
+		AND A.BILL_SEQ = B.BILL_SEQ(+)
+		ORDER BY A.BILL_DAY ASC
+	</select>
+	
+	<select id="selectBillInfoDetail" resultType="lmap">
+		SELECT 
+			A.BILL_SEQ, A.BILL_DVSN, A.BILL_NUM, A.BILL_CORP_NAME, A.BILL_ADDR,
+			A.BILL_TEL, A.BILL_USER_ID
+		FROM TSER_BILL_INFO_I A
+		WHERE A.BILL_SEQ = #{billSeq}
+	</select>
+	
+	<insert id="insertBillInfo">
+		INSERT INTO TSER_BILL_INFO_I 
+		(
+			BILL_SEQ, BILL_DVSN, BILL_NUM, BILL_CORP_NAME, BILL_ADDR, 
+			BILL_TEL, BILL_USER_ID, CENTER_CD,
+			FRST_REGIST_DTM, FRST_REGTER_ID, LAST_UPDT_DTM, LAST_UPDUSR_ID
+		)
+		VALUES 	
+		(
+			SEQ_SER_BILL.NEXTVAL, #{billDvsn}, #{billNum}, #{billCorpName}, #{billAddr},
+			#{billTel}, #{billUserId}, #{centerCd},
+			SYSDATE, #{frstRegterId, jdbcType=VARCHAR}, SYSDATE, #{lastUpdusrId, jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<update id="updateBillInfo">
+		UPDATE TSER_BILL_INFO_I SET 
+			BILL_NUM = #{billNum},
+			BILL_CORP_NAME = #{billCorpName},
+			BILL_ADDR = #{billAddr},
+			BILL_TEL = #{billTel},
+			BILL_USER_ID = #{billUserId},
+			BILL_DVSN = #{billDvsn},
+			LAST_UPDT_DTM = SYSDATE,
+			LAST_UPDUSR_ID = #{lastUpdusrId, jdbcType=VARCHAR}
+		WHERE BILL_SEQ = #{billSeq}
+	</update>
+	
+	<update id="updateBillDayInfo">
+		<foreach collection="billDayInfoList" item="item" separator=";" open="DECLARE BEGIN" close="; END;">	
+			UPDATE TESR_BILLDAY_INFO_I SET 
+				BILL_SEQ = #{item.billSeq, jdbcType=VARCHAR}, 
+				LAST_UPDUSR_ID = #{item.lastUpdusrId, jdbcType=VARCHAR},
+				LAST_UPDT_DTM = SYSDATE
+			WHERE BILLDAY_CD = #{item.billdayCd}
+		</foreach>
+	</update>
+	
+	<select id="deleteBillInfo" resultType="lmap">
+		DELETE FROM TSER_BILL_INFO_I WHERE BILL_SEQ = #{billSeq}
+	</select>
+</mapper>

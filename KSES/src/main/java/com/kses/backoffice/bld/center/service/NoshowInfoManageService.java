@@ -3,8 +3,6 @@ package com.kses.backoffice.bld.center.service;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Param;
-
 import com.kses.backoffice.bld.center.vo.NoshowInfo;
 import com.kses.backoffice.rsv.reservation.vo.NoShowHisInfo;
 import com.kses.backoffice.rsv.reservation.vo.ResvInfo;
@@ -18,7 +16,7 @@ public interface NoshowInfoManageService {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<Map<String, Object>> selectNoshowInfoList(@Param("centerCd") String centerCd) throws Exception;
+	public List<Map<String, Object>> selectNoshowInfoList(String centerCd) throws Exception;
 	
 	/**
 	 * SPDM 1차 노쇼 예약정보 목록 조회
@@ -59,7 +57,7 @@ public interface NoshowInfoManageService {
 	 * @return
 	 * @throws Exception
 	 */
-	public int updateNoshowInfo(@Param("noshowInfoList") List<NoshowInfo> noshowInfoList) throws Exception;
+	public int updateNoshowInfo(List<NoshowInfo> noshowInfoList) throws Exception;
 	
 	/**
 	 * SPDM 지점 자동취소시간(노쇼) 정보 복사

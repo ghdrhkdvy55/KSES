@@ -144,7 +144,6 @@
 		if($("#loginAuthorCd").val() != "ROLE_ADMIN" && $("#loginAuthorCd").val() != "ROLE_SYSTEM") {
 			$("#searchCenterCd").val($("#loginCenterCd").val()).trigger('change');
 			$(".whiteBox").eq(0).hide();
-			
 		}
 		
 		EgovJqGridApi.mainGrid([
@@ -180,7 +179,12 @@
 		if (id === undefined || id === null) {
 			$popup.find('h2:first').text('구역 정보 등록');
 			$popup.find('select').prop('selectedIndex', 0);
-			$popup.find('select').prop('disabled', false);
+			if($("#loginAuthorCd").val() != "ROLE_ADMIN" && $("#loginAuthorCd").val() != "ROLE_SYSTEM") {
+				$form.find('select[name=centerCd]').val($("#loginCenterCd").val()).prop('disabled', true);
+				$popup.find('select[name=partClass]').prop('disabled', false);
+			} else {
+				$popup.find('select').prop('disabled', false);
+			}
 			$popup.find('button.blueBtn').off('click').click(fnPartClassInsert);
 			$form.find(':hidden[name=mode]').val('Ins');
 			$form.find(':hidden[name=partSeq]').val('');

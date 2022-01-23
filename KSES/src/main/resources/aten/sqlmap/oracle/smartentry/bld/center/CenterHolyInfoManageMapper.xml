@@ -63,8 +63,8 @@
 		FROM TSEB_CENTERHOLY_INFO_I
 		WHERE CENTER_HOLY_SEQ = #{centerHolySeq}
 	</select>
+	
 	<delete id="deleteCenterHolyInfo">
 		DELETE FROM TSEB_CENTERHOLY_INFO_I WHERE CENTER_HOLY_SEQ = #{centerHolySeq}
 	</delete>
-	
 </mapper>

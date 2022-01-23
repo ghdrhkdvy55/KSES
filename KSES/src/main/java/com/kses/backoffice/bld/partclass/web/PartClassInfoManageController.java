@@ -68,17 +68,17 @@ import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 
   
 	@RequestMapping(value = "partClassList.do", method = RequestMethod.GET)
-	public ModelAndView viewPartClassList() throws Exception {
-	
-	ModelAndView model = new ModelAndView("/backoffice/bld/partClassList");
-	
-	List<Map<String, Object>> centerInfoComboList =
-	centerInfoManageService.selectCenterInfoComboList();
-	
-	model.addObject("centerInfo", centerInfoComboList);
-	model.addObject("partClassInfo",
-	codeDetailService.selectCmmnDetailCombo("SEAT_CLASS"));
-	model.setViewName("/backoffice/bld/partClassList"); return model; }
+		public ModelAndView viewPartClassList() throws Exception {
+		
+		ModelAndView model = new ModelAndView("/backoffice/bld/partClassList");
+		
+		List<Map<String, Object>> centerInfoComboList =	centerInfoManageService.selectCenterInfoComboList();
+		
+		model.addObject("centerInfo", centerInfoComboList);
+		model.addObject("partClassInfo", codeDetailService.selectCmmnDetailCombo("SEAT_CLASS"));
+		model.setViewName("/backoffice/bld/partClassList"); 
+		return model; 
+	}
   
     /**
 	 * 구역 관리 목록 조회

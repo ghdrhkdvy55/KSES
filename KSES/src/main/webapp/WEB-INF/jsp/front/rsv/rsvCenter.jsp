@@ -129,7 +129,6 @@
 									
 									var params = {
 										"centerCd" : $("#centerCd").val(),
-										"userDvsn" : $("#userDvsn").val(),
 										"checkDvsn" : "CENTER"
 									}
 									centerService.fn_resvVaildCheck(params);

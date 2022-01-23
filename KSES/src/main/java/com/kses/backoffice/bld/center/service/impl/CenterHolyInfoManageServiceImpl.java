@@ -29,13 +29,17 @@ public class CenterHolyInfoManageServiceImpl extends EgovAbstractServiceImpl imp
 
 	@Override
 	public int updateCenterHolyInfo(CenterHolyInfo vo) throws Exception {
-		int ret = 0;
-		
-		if (vo.getMode().equals("Edt")){
-			ret = centerHolyMapper.updateCenterHolyInfo(vo);
-		} else {
+		int ret;
+		Map<String, Object> centerUpdateSelect = centerHolyMapper.centerUpdateSelect(vo.getCenterHolySeq());
+		if (vo.getMode().equals("Ins")) {
 			ret = (uniMapper.selectIdDoubleCheck("HOLY_DT", "TSEB_CENTERHOLY_INFO_I", "HOLY_DT = ["+ vo.getHolyDt() + "[ AND CENTER_CD = ["+ vo.getCenterCd() + "[" ) > 0) ? -1 : centerHolyMapper.insertCenterHolyInfo(vo);
-		}		
+		} else {
+			if (centerUpdateSelect.get("holy_dt").equals(vo.getHolyDt()) && centerUpdateSelect.get("center_holy_seq").toString().equals(vo.getCenterHolySeq().toString())) {
+				ret = centerHolyMapper.updateCenterHolyInfo(vo);
+			} else {
+				ret = (uniMapper.selectIdDoubleCheck("HOLY_DT", "TSEB_CENTERHOLY_INFO_I", "HOLY_DT = ["+ vo.getHolyDt() + "[ AND CENTER_CD = ["+ vo.getCenterCd() + "[" ) > 0) ? -1 : centerHolyMapper.updateCenterHolyInfo(vo);
+			}			
+		}
 		return ret;
 	}
 

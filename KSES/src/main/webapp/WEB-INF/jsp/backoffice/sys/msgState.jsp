@@ -544,7 +544,7 @@
 			
         }, fn_GroupMsgInfo : function (mode, groupCode){
         	$("#mode").val(mode);
-        	common_modelOpen("dv_messageGroupSearch","dv_messageGroup");
+        	common_modalOpenAndClose("dv_messageGroup","dv_messageGroupSearch");
         }, fn_MsgDel : function (groupCode){
         	 $("#hid_DelCode").val(groupCode)
 		     $("#id_ConfirmInfo").attr("href", "javascript:msgFunction.fn_Groupdel()");
@@ -553,7 +553,7 @@
         	var params = {'groupCode':$("#hid_DelCode").val() };
         	fn_uniDelAction("/backoffice/sys/msgGroupDelete.do", "GET", params, false, "msgFunction.fn_GroupSearch");
         }, fn_MsgUserInfo : function (){
-        	common_modelOpen("dv_messageGroupSearch","dv_messageGroup_user");
+        	common_modalOpenAndClose("dv_messageGroup_user", "dv_messageGroupSearch");
         	//우측 그룹 사용자 리스트 나오게 하기
         	var params = {"groupCode" : $("#groupCode").val()};
 			var returnval = uniAjaxReturn("/backoffice/sys/msgGroupUserList.do", "GET", false, params,  "lst");
@@ -572,15 +572,15 @@
         		$("#tb_groupT > tbody> tr> td> ul").append("<li>등록된 사용자가 없습니다.</li>");
         	}	
         }, fn_MsgUserCloseInfo : function (){
-        	common_modelOpen("dv_messageGroup_user","dv_messageGroupSearch");	
+        	common_modalOpenAndClose("dv_messageGroupSearch", "dv_messageGroup_user");	
         	msgFunction.fn_GroupSearch();
         }, fn_GroupUserDel : function (groupUserseq){
         	var params = {'groupUserseq': groupUserseq};
         	fn_uniDelAction("/backoffice/sys/msgGroupUserDelete.do", "GET", params, false, "msgFunction.fn_GroupState()");
-        	common_modelOpen("savePage","dv_messageGroup_user");
+        	common_modalOpenAndClose("dv_messageGroup_user", "savePage");
         }, fn_MsgUserPopInfo :  function (groupCode){
         	//검색창에서 그룹 등록 페이지로 이동  
-        	common_modelOpen("dv_messageGroupSearch","dv_messageGroup_user");
+        	common_modalOpenAndClose("dv_messageGroup_user", "dv_messageGroupSearch");
         	$("#groupCode").val(groupCode);
         	//초기화
         	$("#searchUserGubun").val('');

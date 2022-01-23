@@ -108,7 +108,7 @@ public class LongcustomersInfoManageController {
 			int totCnt = longcustomerResvInfo.size() > 0 ? longcustomerResvInfo.size()  : 0;
 			
 			model.addObject(Globals.JSON_RETURN_RESULTLISR, longcustomerResvInfo);
-			model.addObject( Globals.STATUS_REGINFO, longResvSeq);
+			model.addObject(Globals.STATUS_REGINFO, longResvSeq);
 			model.addObject(Globals.PAGE_TOTALCNT, totCnt);
 
 		return model;

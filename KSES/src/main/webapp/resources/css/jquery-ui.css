@@ -907,7 +907,8 @@ body .ui-tooltip {
 /*0105 테이블 삭제 아이콘 배경 삭제*/
 .blueBtn {
     color: #ffffff;
-    padding: 5px 12px;
+    /* 2022-01-22 JDH 관리자페이지 버튼 깨짐으로 인한 임시 주석처리 */
+    /* padding: 5px 12px; */
     border-radius: 5px;
     font-size: 13px;
     margin-right: 5px;
@@ -969,7 +970,7 @@ a:visited.ui-button,
 .ui-state-focus a:visited,
 a.ui-button:hover,
 a.ui-button:focus {
-	/*color: #ffffff !important; */
+	color: #ffffff !important;
 	color: #2b2b2b; 
 	text-decoration: none;
 }
