@@ -1,24 +1,5 @@
 package com.kses.backoffice.rsv.reservation.web;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.json.simple.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.kses.backoffice.cus.usr.service.UserInfoManageService;
 import com.kses.backoffice.cus.usr.vo.UserInfo;
@@ -33,20 +14,28 @@ import com.kses.backoffice.sym.log.vo.InterfaceInfo;
 import com.kses.backoffice.sym.log.vo.sendEnum;
 import com.kses.backoffice.util.SmartUtil;
 import com.kses.backoffice.util.service.UniSelectInfoManageService;
-
+import com.popbill.api.CBIssueResponse;
+import com.popbill.api.CashbillService;
+import com.popbill.api.PopbillException;
+import com.popbill.api.Response;
+import com.popbill.api.cashbill.Cashbill;
+import com.popbill.api.cashbill.CashbillInfo;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.Globals;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
-import com.popbill.api.CashbillService;
-import com.popbill.api.PopbillException;
-import com.popbill.api.Response;
-import com.popbill.api.CBIssueResponse;
-import com.popbill.api.cashbill.Cashbill;
-import com.popbill.api.cashbill.CashbillInfo;
+import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -111,12 +100,12 @@ public class ResJosnController {
 					encryptType = "SHA-512";
 					password = jsonObject.get("User_Pw").toString();
 					jsonObject.put("User_Pw", SmartUtil.encryptPassword(password, encryptType));
-					LOGGER.debug("1 : " + SmartUtil.encryptPassword(password, encryptType));
+					log.debug("1 : " + SmartUtil.encryptPassword(password, encryptType));
 				} else {
 					encryptType = "SHA-256";
 					password = jsonObject.get("Card_Pw").toString();
 					jsonObject.put("Card_Pw", SmartUtil.encryptPassword(password, encryptType));
-					LOGGER.debug("2 : " + SmartUtil.encryptPassword(password, encryptType));
+					log.debug("2 : " + SmartUtil.encryptPassword(password, encryptType));
 				}
 
 				node = SmartUtil.requestHttpJson(Url, jsonObject.toJSONString(), "SPEEDLOGIN", "SPEEDON", "KSES");
@@ -267,7 +256,7 @@ public class ResJosnController {
 		} catch (Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
-			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
+			log.info("e:" + e.toString() + ":" + lineNumber);
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 		}
@@ -607,13 +596,13 @@ public class ResJosnController {
 					returnCode = "ERROR_03";
 					returnMessage = "해당 지점 예약이 아닙니다. 예약내역을 확인하여 주십시요.";
 				} else if (resInfo != null && !SmartUtil.NVL(resInfo.get("resv_pay_dvsn"), "").toString().equals("RESV_PAY_DVSN_1")) {
-					LOGGER.info("RESV_PAY_DVSN123" +  SmartUtil.NVL(resInfo.get("resv_pay_dvsn"), "").toString());
+					 log.info("RESV_PAY_DVSN123" +  SmartUtil.NVL(resInfo.get("resv_pay_dvsn"), "").toString());
 					returnCode = "ERROR_04";
 					returnMessage = "이미 결제가 완료 되었습니다.";
 				} else {
 					if (resInfo != null && SmartUtil.NVL(resInfo.get("resv_end_dt"), "").toString().equals(localTime)
 							&& recDate.substring(0, 8).equals(localTime)) {
-						LOGGER.info(localTime);
+						log.info(localTime);
 						resName = SmartUtil.NVL(resInfo.get("user_nm"), "").toString();
 						resPrice = SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString();
 						resDay = SmartUtil.NVL(resInfo.get("resv_start_dt"), "").toString();
@@ -709,9 +698,9 @@ public class ResJosnController {
 			String localTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 			String recDate = SmartUtil.NVL(jsonInfo.get("RES_SEND_DATE"), "19700101").toString();
 			String qrTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-			
 
-			LOGGER.debug(Integer.valueOf(SmartUtil.NVL(jsonInfo.get("RES_PRICE"), "").toString()) + ":"
+
+			log.debug(Integer.valueOf(SmartUtil.NVL(jsonInfo.get("RES_PRICE"), "").toString()) + ":"
 					+ Integer.valueOf(SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString()));
 			if (resInfo == null || !recDate.substring(0, 8).equals(localTime)) {
 				returnCode = "ERROR_01";
@@ -955,17 +944,17 @@ public class ResJosnController {
 			if(resvRcptState.equals("RCPT_STATE_1")) {
 				CBIssueResponse response = cashbillService.registIssue(corpNum, cashbill, memo);
 				resvRcptNumber = response.getConfirmNum();
-				LOGGER.info(resvRcptNumber);
+				log.info(resvRcptNumber);
 				model.addObject("popBill", response);
 				model.addObject(Globals.STATUS_MESSAGE, "현금영수증 발행 완료");
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-				LOGGER.info("예약번호 : " + resvSeq + "현금영수증 발행  완료");
+				log.info("예약번호 : " + resvSeq + "현금영수증 발행  완료");
 			} else {
 				Response response =	cashbillService.cancelIssue(corpNum, delMgtKey, memo, userId);
 				model.addObject("popBill", response);
 				model.addObject(Globals.STATUS_MESSAGE, "현금영수증 발행 취소 완료");
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-				LOGGER.info("예약번호 : " + resvSeq + "현금영수증 발행 취소 완료");
+				log.info("예약번호 : " + resvSeq + "현금영수증 발행 취소 완료");
 			}
 			
 			// 현금 영수증 출력 번호
@@ -979,7 +968,7 @@ public class ResJosnController {
 			// 재발행 및 취소시 기존 문서번호 재활용을 위한 현금영수증 삭제
 			if(cashbillService.checkMgtKeyInUse(corpNum, delMgtKey)) {
 				cashbillService.delete(corpNum, delMgtKey);
-				LOGGER.info("현금영수증 문서 삭제 완료");
+				log.info("현금영수증 문서 삭제 완료");
 			}
 		} catch (PopbillException e) {
 			// 예외 발생 시, e.getCode() 로 오류 코드를 확인하고, e.getMessage()로 오류 메시지를 확인합니다.
@@ -1013,12 +1002,12 @@ public class ResJosnController {
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		} catch (PopbillException e) {
 			// 예외 발생 시, e.getCode() 로 오류 코드를 확인하고, e.getMessage()로 오류 메시지를 확인합니다.
-			LOGGER.error("오류 코드" + e.getCode());
-			LOGGER.error("오류 메시지" + e.getMessage());
+			log.error("오류 코드" + e.getCode());
+			log.error("오류 메시지" + e.getMessage());
 
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
-			LOGGER.error("selectPopBillInfo error:" + e.toString() + ":" + lineNumber);
+			log.error("selectPopBillInfo error:" + e.toString() + ":" + lineNumber);
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, e.getCode() + ":" + e.getMessage());
 		}
