@@ -52,8 +52,8 @@
 	              	<label for="resvDate"><input type="radio" name="searchRsvDay" id="resvDate" value="resvDate" checked>예약일</label>
 					<label for="resvReqDate"><input type="radio" name="searchRsvDay" id="resvReqDate" value="resvReqDate">신청일</label>
 	              	<p>
-						<input type="text" id="searchResvDateFrom" class="cal_icon" name="date_from" autocomplete=off><em>~</em>
-	                	<input type="text" id="searchResvDateTo" class="cal_icon" name="date_to" autocomplete=off>
+						<input type="text" id="searchResvDateFrom" class="cal_icon" name="date_from" autocomplete=off style="width:110px;"><em>~</em>
+	                	<input type="text" id="searchResvDateTo" class="cal_icon" name="date_to" autocomplete=off style="width:110px;">
 	              	</p>
 	              	<p>예약 상태</p>
 					<select id="searchResvState">
@@ -68,6 +68,12 @@
 						<c:forEach items="${resvPayDvsn}" var="resvPayDvsn">
 							<option value="${resvPayDvsn.code}"><c:out value='${resvPayDvsn.codenm}'/></option>
 						</c:forEach>
+	              	</select>
+					<p>현금영수증 발행</p>
+	              	<select id="searchResvRcptYn">
+	              		<option value="">선택</option>
+						<option value="Y">발행</option>
+						<option value="N">미발행</option>
 	              	</select>
 	              	<p>검색어</p>
 	              	<select id="searchCondition">
@@ -683,6 +689,7 @@
 							"searchTo" : $("#searchResvDateTo").val(),
 							"searchResvState" : $("#searchResvState").val(),
 							"searchResvPayDvsn" : $("#searchResvPayDvsn").val(),
+							"searchResvRcptYn" : $("#searchResvRcptYn").val(),
 							"searchCondition" : $("#searchCondition").val()
 						})
 					}).trigger("reloadGrid");
@@ -727,7 +734,13 @@
 			} else if(index == 'resv_pay_cost') {
 				form = item.resv_pay_cost + "원";
 			} else if(index == 'resv_rcpt_print' && item.resv_rcpt_yn == 'Y') {
-				var rcptState = item.resv_rcpt_state != "RCPT_STATE_2" ? "발행" : "취소";  
+				var rcptState = "발행";
+				if(item.resv_rcpt_state == "" || item.resv_rcpt_state == "RCPT_STATE_1") {
+					var rcptState = "취소";	
+				} else {
+					var rcptState = "발행";	
+				}
+				  
 				form = '<a href="javascript:jqGridFunc.fn_billPrint(&#39;' + item.resv_seq + '&#39;);" class="detailBtn">' + rcptState +'</a>';
 				form += '<a href="javascript:jqGridFunc.fn_billState(&#39;' + item.resv_seq + '&#39;);" class="detailBtn">조회</a>';
 			}
@@ -755,6 +768,7 @@
 					"searchTo" : $("#searchResvDateTo").val(),
 					"searchResvState" : $("#searchResvState").val(),
 					"searchResvPayDvsn" : $("#searchResvPayDvsn").val(),
+					"searchResvRcptYn" : $("#searchResvRcptYn").val(),
 					"searchCondition" : $("#searchCondition").val(),
 					"searchKeyword" : $("#searchKeyword").val(),
 					"pageUnit":$('#pager .ui-pg-selbox option:selected').val()
@@ -991,6 +1005,7 @@
 				function(result) {
 					if (result.status == "SUCCESS") {
 						console.log(result);
+						var cashBillInfo = result.cashBillInfo;
 						$("#confirmNum").html(cashBillInfo.confirmNum);
 						$("#issueDT").html(cashBillInfo.issueDT);
 						$("#mgtKey").html(cashBillInfo.mgtKey);
@@ -1005,7 +1020,6 @@
 						$("#customerName").html(cashBillInfo.customerName);
 						 
 						common_modelOpen('bill_state_pop');
-						common_popup(result.message, "Y", "");
 			    	} else if (result.status == "LOGIN FAIL") {
 			    		common_popup("로그인 정보가 올바르지않습니다 다시 로그인해주세요", "Y", "");
 			    	} else {
