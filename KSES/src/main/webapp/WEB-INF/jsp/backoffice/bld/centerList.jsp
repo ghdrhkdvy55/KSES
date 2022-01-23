@@ -348,12 +348,20 @@
                         <td><input type="text" id="billCorpName" name="billCorpName" style="width:400px;"/></td>
                     </tr>
 					<tr>
+                        <th>대표자명</th>
+                        <td><input type="text" id="billCeoName" name="billCeoName" style="width:400px;"/></td>
+                    </tr>
+					<tr>
                         <th>주소</th>
                         <td><input type="text" id="billAddr" name="billAddr" style="width:400px;"/></td>
                     </tr>
 					<tr>
                         <th>연락처</th>
                         <td><input type="text" id="billTel" name="billTel" style="width:400px;"/></td>
+                    </tr>
+					<tr>
+                        <th>이메일</th>
+                        <td><input type="text" id="billEmail" name="billEmail" style="width:400px;"/></td>
                     </tr>
 					<tr>
                         <th>팝빌아이디</th>
@@ -1213,8 +1221,10 @@
  								setHtml += "<td>" + obj.bill_dvsn_text + "</td>";
 								setHtml += "<td>" + obj.bill_num + "</td>";
 								setHtml += "<td>" + obj.bill_corp_name + "</td>";
+								setHtml += "<td>" + obj.bill_ceo_name + "</td>";
 								setHtml += "<td>" + obj.bill_addr + "</td>";
 								setHtml += "<td>" + obj.bill_tel + "</td>";
+								setHtml += "<td>" + obj.bill_email + "</td>";
 								setHtml += "<td>" + obj.bill_user_id + "</td>";
 								setHtml += "<td>"
 								setHtml +=	   "<a onclick='jqGridFunc.fn_billInfo(\"Edt\", "+ obj.bill_seq +");' class='blueBtn'>수정</a>"
@@ -1249,8 +1259,10 @@
 				$("#billDvsn").val("");
 				$("#billNum").val("");
 				$("#billCorpName").val("");
+				$("#billCeoName").val("");
 				$("#billAddr").val("");
 				$("#billTel").val("");
+				$("#billEmail").val("");
 				$("#billUserId").val("");
 			} else {
 				var url = "/backoffice/bld/billInfoDetail.do";
@@ -1275,8 +1287,10 @@
 							$("#billDvsn").val(obj.bill_dvsn);
 							$("#billNum").val(obj.bill_num);
 							$("#billCorpName").val(obj.bill_corp_name);
+							$("#billCeoName").val(obj.bill_ceo_name);
 							$("#billAddr").val(obj.bill_addr);
 							$("#billTel").val(obj.bill_tel);
+							$("#billEmail").val(obj.bill_email);
 							$("#billUserId").val(obj.bill_user_id);
 						}
 					},
@@ -1288,12 +1302,14 @@
 			common_modalOpenAndClose('bld_bill_add','bld_bill_set');
 		},
 		fn_billCheckForm : function () {
-			if (any_empt_line_span("bld_bill_add", "billDvsn", "발급구분값 입력.", "sp_message", "savePage") == false) return;
-			if (any_empt_line_span("bld_bill_add", "billNum", "사업자번호입력.", "sp_message", "savePage") == false) return;
-			if (any_empt_line_span("bld_bill_add", "billCorpName", "법인명입력", "sp_message", "savePage") == false) return;
-			if (any_empt_line_span("bld_bill_add", "billAddr", "주소입력", "sp_message", "savePage") == false) return;
-			if (any_empt_line_span("bld_bill_add", "billTel", "전화입력", "sp_message", "savePage") == false) return;
-			if (any_empt_line_span("bld_bill_add", "billUserId", "팝빌아이디 입력", "sp_message", "savePage") == false) return;
+			if (any_empt_line_span("bld_bill_add", "billDvsn", "발행 구분값을 선택해주세요", "sp_message", "savePage") == false) return;
+			if (any_empt_line_span("bld_bill_add", "billNum", "발행처 사업자번호를 입력해주세요", "sp_message", "savePage") == false) return;
+			if (any_empt_line_span("bld_bill_add", "billCorpName", "법인명을 입력해주세요", "sp_message", "savePage") == false) return;
+			if (any_empt_line_span("bld_bill_add", "billCeoName", "대표자명을 입력해주세요", "sp_message", "savePage") == false) return;
+			if (any_empt_line_span("bld_bill_add", "billAddr", "발행처 주소를 입력해주세요", "sp_message", "savePage") == false) return;
+			if (any_empt_line_span("bld_bill_add", "billTel", "발행처 전화번호를 입력해주세요", "sp_message", "savePage") == false) return;
+			if (any_empt_line_span("bld_bill_add", "billEmail", "담당자 이메일을 입력해주세요", "sp_message", "savePage") == false) return;
+			if (any_empt_line_span("bld_bill_add", "billUserId", "팝빌 아이디를 입력해주세요", "sp_message", "savePage") == false) return;
 			var commentTxt = $("#mode").val() == "Edt" ? "입력한 현금영수증 정보를 수정 하시겠습니까?" : "신규 현금영수증 정보를 등록 하시겠습니까?";
 			
 			fn_ConfirmPop(commentTxt);

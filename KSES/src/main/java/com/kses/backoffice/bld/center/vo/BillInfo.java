@@ -14,23 +14,29 @@ public class BillInfo {
 	 // 지점 정보 
 	 private String centerCd;
 	
+	 // 지점 현금영수증 발급 구분
+	 private String billDvsn;
+	 
 	 // 지점 현금영수증 발행처 사업자 번호
 	 private String billNum;
-
+	 
+	 // 지점 현금영수증 발행처 법인명
+	 private String billCorpName;
+	 
+	 // 지점 현금영수증 발행처 대표자명
+	 private String billCeoName;
+	 
 	 // 지점 현금영수증 발급 구분
 	 private String billAddr;
 	 
 	 // 지점 현금영수증 발행처 전화번호
 	 private String billTel;
-	
-	 // 지점 현금영수증 발행처 법인명
-	 private String billCorpName;
 	 
 	 // 지점 현금영수증 발행처 아이디
 	 private String billUserId;
-	
-	 // 지점 현금영수증 발급 구분
-	 private String billDvsn;
+	 
+	 // 지점 현금영수증 발행처 담당자 이메일
+	 private String billEmail;
 	
 	 // 최초 등록 일자
 	 private String frstRegistDtm;

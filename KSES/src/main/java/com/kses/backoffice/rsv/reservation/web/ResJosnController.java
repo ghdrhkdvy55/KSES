@@ -706,8 +706,6 @@ public class ResJosnController {
 			
 			Map<String, Object> resInfo = resService.selectUserResvInfo(searchVO);
 			
-
-			
 			String localTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 			String recDate = SmartUtil.NVL(jsonInfo.get("RES_SEND_DATE"), "19700101").toString();
 			String qrTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
@@ -814,22 +812,35 @@ public class ResJosnController {
 	}
 
 	// 현금 영수증
-	@RequestMapping(value = "billPrint.do")
-	public ModelAndView selectPopBillInfo(	@RequestParam("resvSeq") String resvSeq, 
-											@RequestParam("tranGubun") String tranGubun) throws Exception {
+	@RequestMapping(value="billPrint.do")
+	public ModelAndView selectPopBillInfo(	@RequestParam("resvSeq") String resvSeq) throws Exception {
+											
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-
 		try {
-			Map<String, Object> resInfo = resService.selectResvInfoDetail(resvSeq);
-			//Map<String, Object> centerBillInfo = centerbillService.selectResvBillInfo(resvSeq);
+			Map<String, Object> resvInfo = resService.selectResvInfoDetail(resvSeq);
+			Map<String, Object> billInfo = resService.selectResvBillInfo(resvSeq);
+			
+			
+			if(billInfo == null) {
+				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+				model.addObject(Globals.STATUS_MESSAGE, "등록된 현금영수증 발행 정보가 없습니다 .");
+				return model;
+			}
+			
+			String resvRcptState = SmartUtil.NVL(resvInfo.get("resv_rcpt_state"), "");
+			if(resvRcptState.equals("")) {
+				resvRcptState = "RCPT_STATE_1";
+			} else {
+				resvRcptState = resvRcptState.equals("RCPT_STATE_1") ? "RCPT_STATE_2" : "RCPT_STATE_1"; 
+			}
 			
 			// 지점 현금영수증 정보
-			String corpNum = "";
-			String tel = "";
-			String addr = "";
-			String corpName = "";
-			String ceoName = "";
-			String userId = "";
+			String corpNum = SmartUtil.NVL(billInfo.get("bill_num"), "");
+			String tel = SmartUtil.NVL(billInfo.get("bill_tel"), "");
+			String addr = SmartUtil.NVL(billInfo.get("bill_addr"), "");
+			String corpName = SmartUtil.NVL(billInfo.get("bill_corp_name"), "");
+			String ceoName = SmartUtil.NVL(billInfo.get("bill_ceo_name"), "");
+			String userId = SmartUtil.NVL(billInfo.get("bill_user_id"), "");
 			
 			// 팝빌 현금영수증 정보
 			String mgtKey = "";
@@ -839,7 +850,7 @@ public class ResJosnController {
 			String orgConfirmNum = "";
 			String orgTradeDate = "";
 			
-			if(tranGubun.equals("bill")) {
+			if(resvRcptState.equals("RCPT_STATE_1")) {
 				mgtKey = resvSeq + "_001";
 				delMgtKey = resvSeq + "_002";
 				tradeType = "승인거래";
@@ -849,8 +860,8 @@ public class ResJosnController {
 				delMgtKey = resvSeq + "_001";
 				tradeType = "취소거래";
 				memo = "현금영수증 즉시발행 메모";
-				orgConfirmNum = cashbillService.getInfo(corpNum, mgtKey).getOrgConfirmNum();
-				orgTradeDate = cashbillService.getInfo(corpNum, mgtKey).getOrgConfirmNum();
+				orgConfirmNum = cashbillService.getInfo(corpNum, delMgtKey).getOrgConfirmNum();
+				orgTradeDate = cashbillService.getInfo(corpNum, delMgtKey).getOrgConfirmNum();
 			}
 			
 			// 현금영수증 정보 객체
@@ -869,31 +880,35 @@ public class ResJosnController {
 			cashbill.setOrgTradeDate(orgTradeDate);
 
 			// 과세형태, {과세, 비과세} 중 기재
-			cashbill.setTaxationType("비과세");
+			cashbill.setTaxationType("과세");
 
 			// 거래처 식별번호, 거래유형에 따라 작성
 			// 소득공제용 - 주민등록/휴대폰/카드번호 기재가능
 			// 지출증빙용 - 사업자번호/주민등록/휴대폰/카드번호 기재가능
-			cashbill.setIdentityNum(SmartUtil.NVL(resInfo.get("user_phone"), "").toString());
+			cashbill.setIdentityNum(SmartUtil.NVL(resvInfo.get("resv_rcpt_tel"), "").toString());
 
 			// 거래구분, {소득공제용, 지출증빙용} 중 기재
-			cashbill.setTradeUsage(SmartUtil.NVL(resInfo.get("resv_rcpt_dvsn_nm"), "소득공제용").toString());
+			cashbill.setTradeUsage(SmartUtil.NVL(resvInfo.get("resv_rcpt_dvsn_text"), "소득공제용").toString());
 
 			// 거래유형, {일반, 도서공연, 대중교통} 중 기재
 			cashbill.setTradeOpt("일반");
 
-			int payAmt = Integer.valueOf(SmartUtil.NVL(resInfo.get("resv_pay_cost"), "0").toString());
+			int payAmt = Integer.valueOf(SmartUtil.NVL(resvInfo.get("resv_pay_cost"), "0").toString());
+			
 			int payCost = 0;
 			int payTxt = 0;
-
+            
+			//부가세
 			if (payAmt > 0) {
 				payCost = ((payAmt / 11) * 10);
 				payTxt = payAmt - payCost;
 			}
+			
 			// 공급가액, 숫자만 가능
 			cashbill.setSupplyCost(String.valueOf(payCost));
 			// 부가세, 숫자만 가능
 			cashbill.setTax(String.valueOf(payTxt));
+
 			// 합계금액, 숫자만 가능, 봉사료 + 공급가액 + 부가세
 			cashbill.setTotalAmount(String.valueOf(payAmt));
 			// 봉사료, 숫자만 가능
@@ -903,25 +918,25 @@ public class ResJosnController {
 			cashbill.setFranchiseCorpNum(corpNum);
 
 			// 발행자 상호
-			cashbill.setFranchiseCorpName("국민체육진흥공단");
+			cashbill.setFranchiseCorpName(corpName);
 
 			// 발행자 대표자명
-			cashbill.setFranchiseCEOName("발행자 대표자");
+			cashbill.setFranchiseCEOName(ceoName);
 
 			// 발행자 주소
-			cashbill.setFranchiseAddr("서울시 송파구 올림픽로 424 올림픽문화센터(올림픽컨벤션센터)");
+			cashbill.setFranchiseAddr(addr);
 
 			// 발행자 연락처
-			cashbill.setFranchiseTEL("07043042991");
+			cashbill.setFranchiseTEL(tel);
 
 			// 발행안내 문자 전송여부
 			cashbill.setSmssendYN(false);
 
 			// 거래처 고객명
-			cashbill.setCustomerName(SmartUtil.NVL(resInfo.get("user_nm"), "0").toString());
+			cashbill.setCustomerName(SmartUtil.NVL(resvInfo.get("user_nm"), "0").toString());
 
 			// 거래처 주문상품명
-			cashbill.setItemName(SmartUtil.NVL(resInfo.get("seat_nm"), "자유석").toString());
+			cashbill.setItemName(SmartUtil.NVL(resvInfo.get("seat_nm"), "자유석").toString());
 
 			// 거래처 주문번호
 			cashbill.setOrderNumber(resvSeq);
@@ -929,31 +944,73 @@ public class ResJosnController {
 			// 거래처 이메일
 			// 팝빌 개발환경에서 테스트하는 경우에도 안내 메일이 전송되므로,
 			// 실제 거래처의 메일주소가 기재되지 않도록 주의
-			cashbill.setEmail(SmartUtil.NVL(resInfo.get("user_email"), "").toString());
+			//cashbill.setEmail(SmartUtil.NVL(resvInfo.get("user_email"), "").toString());
+			cashbill.setEmail("eogks196@naver.com");
 			// 거래처 휴대폰
-			cashbill.setHp(SmartUtil.NVL(resInfo.get("user_phone"), "").toString());
+			cashbill.setHp(SmartUtil.NVL(resvInfo.get("user_phone"), "").toString());
 
-			if(tranGubun.equals("bill")) {
+			
+			ResvInfo info = new ResvInfo();
+			String resvRcptNumber = "";
+			if(resvRcptState.equals("RCPT_STATE_1")) {
 				CBIssueResponse response = cashbillService.registIssue(corpNum, cashbill, memo);
-				
-				// 현금 영수증 출력 번호
-				ResvInfo info = new ResvInfo();
-				info.setResvSeq(resvSeq);
-				info.setResvRcptNumber(response.getConfirmNum());
-				resService.resbillChange(info);
-				
+				resvRcptNumber = response.getConfirmNum();
+				LOGGER.info(resvRcptNumber);
 				model.addObject("popBill", response);
+				model.addObject(Globals.STATUS_MESSAGE, "현금영수증 발행 완료");
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+				LOGGER.info("예약번호 : " + resvSeq + "현금영수증 발행  완료");
 			} else {
-				Response response =	cashbillService.cancelIssue(corpNum, mgtKey, memo, userId);
+				Response response =	cashbillService.cancelIssue(corpNum, delMgtKey, memo, userId);
 				model.addObject("popBill", response);
+				model.addObject(Globals.STATUS_MESSAGE, "현금영수증 발행 취소 완료");
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+				LOGGER.info("예약번호 : " + resvSeq + "현금영수증 발행 취소 완료");
 			}
 			
-			// 최초 발행이 아닐 경우 기존 문서번호 재활용을 위한 현금영수증 삭제
-			if(!SmartUtil.NVL(resInfo.get("resv_rcpt_number"),"").equals("")) {
+			// 현금 영수증 출력 번호
+			info.setResvSeq(resvSeq);
+			info.setResvRcptState(resvRcptState);
+			info.setResvRcptNumber(resvRcptNumber);
+			resService.resvBillChange(info);
+			
+			// KSES프로젝트 현금영수증 문서번호
+			// 발행문서 : 예약번호 + _001 / 취소문서 : 예약번호 + _002 
+			// 재발행 및 취소시 기존 문서번호 재활용을 위한 현금영수증 삭제
+			if(cashbillService.checkMgtKeyInUse(corpNum, delMgtKey)) {
 				cashbillService.delete(corpNum, delMgtKey);
+				LOGGER.info("현금영수증 문서 삭제 완료");
 			}
+		} catch (PopbillException e) {
+			// 예외 발생 시, e.getCode() 로 오류 코드를 확인하고, e.getMessage()로 오류 메시지를 확인합니다.
+			LOGGER.error("오류 코드" + e.getCode());
+			LOGGER.error("오류 메시지" + e.getMessage());
+
+			StackTraceElement[] ste = e.getStackTrace();
+			int lineNumber = ste[0].getLineNumber();
+			LOGGER.error("selectPopBillInfo error:" + e.toString() + ":" + lineNumber);
+			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			model.addObject(Globals.STATUS_MESSAGE, e.getCode() + ":" + e.getMessage());
+		}
+
+		return model;
+	}
+	
+	// 현금 영수증
+	@RequestMapping(value="billState.do")
+	public ModelAndView selectPopBillStateInfo(	@RequestParam("resvSeq") String resvSeq) throws Exception {
+
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+		try {
+			Map<String, Object> resvInfo = resService.selectResvInfoDetail(resvSeq);
+			Map<String, Object> billInfo = resService.selectResvBillInfo(resvSeq);
+			
+			String corpNum = SmartUtil.NVL(billInfo.get("bill_num"), "");
+			String mgtKey = SmartUtil.NVL(resvInfo.get("resv_rcpt_state"), "").equals("RCPT_STATE_1") ? resvSeq + "_001" : resvSeq + "_002";
+			CashbillInfo cashBillInfo = cashbillService.getInfo(corpNum, mgtKey);
+			
+			model.addObject("cashBillInfo", cashBillInfo);
+			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		} catch (PopbillException e) {
 			// 예외 발생 시, e.getCode() 로 오류 코드를 확인하고, e.getMessage()로 오류 메시지를 확인합니다.
 			LOGGER.error("오류 코드" + e.getCode());
