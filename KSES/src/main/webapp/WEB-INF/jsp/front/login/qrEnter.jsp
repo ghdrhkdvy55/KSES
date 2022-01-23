@@ -190,7 +190,8 @@
 								var userCheck = resvInfo.resv_user_dvsn == "USER_DVSN_1" ? $(".pay_btn li:eq(0)").show() : $(".pay_btn li:eq(0)").hide();
 								$(".pay_noti p:eq(1)").html(payHtml);
 								$(".pay_noti").show();
-				    		}	    		
+				    		}
+				    		$("#accessType").val() == "BUTTON" ? $(".pay_btn li:eq(1)").hide() : $(".pay_btn li:eq(1)").show();
 						} else {
 							fn_openPopup(result.message, "red", "ERROR", "확인", "/front/main.do");
 						}

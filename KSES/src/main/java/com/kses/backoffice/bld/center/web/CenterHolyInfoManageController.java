@@ -110,15 +110,8 @@ public class CenterHolyInfoManageController {
 	    }
 		
 		try {	
-			Map<String, Object> centerUpdateSelect = centerHolyInfoService.centerUpdateSelect(vo.getCenterHolySeq());
+			int ret = centerHolyInfoService.updateCenterHolyInfo(vo);
 			
-			int ret;
-			if (centerUpdateSelect.get("holy_dt").equals(vo.getHolyDt()) && centerUpdateSelect.get("center_holy_seq").toString().equals(vo.getCenterHolySeq().toString())) {
-				ret = centerHolyInfoService.updateCenterHolyInfo(vo);
-			} else {
-				ret = (uniService.selectIdDoubleCheck("HOLY_DT", "TSEB_CENTERHOLY_INFO_I", "HOLY_DT = ["+ vo.getHolyDt() + "[ AND CENTER_CD = ["+ vo.getCenterCd() + "[" ) > 0) ? -1 : centerHolyInfoService.updateCenterHolyInfo(vo);
-			}
-	
 			meesage = (vo.getMode().equals("Edt")) ? "sucess.common.update" : "sucess.common.insert";
 			
 			if (ret > 0) {
