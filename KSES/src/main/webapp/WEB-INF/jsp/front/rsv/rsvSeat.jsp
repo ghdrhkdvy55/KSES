@@ -199,7 +199,7 @@
                             </ul>
 
                             <!--현금 영수증 발급-->
-<!--                             <h4>현금 영수증 발급</h4>
+                            <h4>현금 영수증 발급</h4>
                             <ul class="bill_confirm">
                                 <li class="check_impnt">
                                     <input class="magic-checkbox qna_check" type="checkbox" name="layout" id="ENTRY_DVSN_1_bill_confirm" value="Y" onclick="seatService.fn_billConfirmChange();">
@@ -216,7 +216,7 @@
                                     <label for="ENTRY_DVSN_1_rcpt_dvsn2"><span></span>지출 증빙용</label>
                                 </li>
                                 <li><input type="number" id="ENTRY_DVSN_1_cash_number" onkeypress="onlyNum(this);" placeholder="'-'없이 입력해 주세요."></li>
-                            </ul> -->
+                            </ul>
                             <ul class="rsv_btn">
                                 <li><a href="javascript:seatService.fn_checkForm();">예약하기</a></li>
                                 <li><a data-popup-open="rsv_cancel">취소</a></li>
@@ -371,7 +371,7 @@
                                     </ul>
 
 		                            <!--현금 영수증 발급-->
-<!-- 		                            <h4>현금 영수증 발급</h4>
+		                            <h4>현금 영수증 발급</h4>
 		                            <ul class="bill_confirm">
 		                                <li class="check_impnt">
 		                                    <input class="magic-checkbox qna_check" type="checkbox" name="layout" id="ENTRY_DVSN_2_bill_confirm" value="Y" onclick="seatService.fn_billConfirmChange();">
@@ -388,7 +388,7 @@
                                             <label for="ENTRY_DVSN_2_rcpt_dvsn2"><span></span>지출 증빙용</label>
                                         </li>
                                         <li><input type="number" id="ENTRY_DVSN_2_cash_number" onkeypress="onlyNum(this);" placeholder="'-'없이 입력해 주세요."></li>
-                                    </ul>      -->   
+                                    </ul>  
                                     <ul class="rsv_btn">
                                         <li><a href="javascript:seatService.fn_checkForm();">예약하기</a></li>
                                         <li><a data-popup-open="rsv_cancel">취소</a></li>
@@ -603,9 +603,9 @@
     	var resvUserNm = isMember ? "${sessionScope.userLoginInfo.userNm}" : "";
     	var resvUserClphn = isMember ? "${sessionScope.userLoginInfo.userPhone}" : "";
     	
-//    	var userRcptYn = isMember ? "${sessionScope.userLoginInfo.userRcptYn}" : "";
-//    	var userRcptDvsn = isMember ? "${sessionScope.userLoginInfo.userRcptDvsn}" : "";
-//    	var userRcptNumber = isMember ? "${sessionScope.userLoginInfo.userRcptNumber}" : "";
+    	var userRcptYn = isMember ? "${sessionScope.userLoginInfo.userRcptYn}" : "";
+    	var userRcptDvsn = isMember ? "${sessionScope.userLoginInfo.userRcptDvsn}" : "";
+    	var userRcptNumber = isMember ? "${sessionScope.userLoginInfo.userRcptNumber}" : "";
     	
     	var pinchzoom = "";
     	var pinchInit = true;
@@ -700,18 +700,18 @@
 					$("input:checkbox[id='" + entryDvsn + "_qna_check']").prop("checked", false);
 					$("input:checkbox[id='" + entryDvsn + "_person_agree']").prop("checked", false);
 					
-//					$("#" + entryDvsn + "_cash_area").hide();
-//					$("input:radio[name='" + entryDvsn + "_rcpt_dvsn']").eq(0).prop("checked", true);
-//					$("input:checkbox[id='" + entryDvsn + "_bill_confirm']").prop("checked", false);
-//					$("#" + entryDvsn + "_cash_number").val("");
-//					$("input:radio[name='" + entryDvsn + "_rcpt_dvsn']").eq(0).prop("checked", true);					
+					$("#" + entryDvsn + "_cash_area").hide();
+					$("input:radio[name='" + entryDvsn + "_rcpt_dvsn']").eq(0).prop("checked", true);
+					$("input:checkbox[id='" + entryDvsn + "_bill_confirm']").prop("checked", false);
+					$("#" + entryDvsn + "_cash_number").val("");
+					$("input:radio[name='" + entryDvsn + "_rcpt_dvsn']").eq(0).prop("checked", true);					
 					
 					if(isMember) {
-// 						if(userRcptYn == "Y") {
-//							$("input:checkbox[id='" + entryDvsn + "_bill_confirm']").trigger("click");
-//							$("input:radio[name='" + entryDvsn + "_rcpt_dvsn'][value='" + userRcptDvsn +"']").prop("checked", true);	  
-//							$("#" + entryDvsn + "_cash_number").val(userRcptNumber);							
-//						}
+ 						if(userRcptYn == "Y") {
+							$("input:checkbox[id='" + entryDvsn + "_bill_confirm']").trigger("click");
+							$("input:radio[name='" + entryDvsn + "_rcpt_dvsn'][value='" + userRcptDvsn +"']").prop("checked", true);	  
+							$("#" + entryDvsn + "_cash_number").val(userRcptNumber);							
+						}
 
 						$(".nonMemberArea").hide();
 					} else {
@@ -1125,21 +1125,22 @@
 				// 예약 요금 
 				params.resvSeatPayCost = entryDvsn == "ENTRY_DVSN_2" ? $("#" + $("#seatCd").val()).data("seat_paycost") : 0; 
 
-/* 				if($("input:checkbox[id='" + entryDvsn + "_bill_confirm']").is(":checked")) {
-					params.resvRcptYn == "Y"
+ 				if($("input:checkbox[id='" + entryDvsn + "_bill_confirm']").is(":checked")) {
+					params.resvRcptYn = "Y"
 					params.resvRcptDvsn = $("input[name='" + entryDvsn + "_rcpt_dvsn']:checked").val(); 
-					params.resvRcptNumber = $("#" + entryDvsn + "_cash_number").val();
+					params.resvRcptTel = $("#" + entryDvsn + "_cash_number").val();
 					
-					if(params.resvRcptNumber == "") {
-						fn_openPopup("현금 영수증 번호를 입력해주세요", "red", "ERROR", "확인", "");
+					
+					if(params.resvRcptTel == "") {
+						fn_openPopup("현금 영수증 발행 연락처를 입력해주세요", "red", "ERROR", "확인", "");
 						return;
 					}
 				} else {
-					params.resvRcptYn == "N"
+					params.resvRcptYn = "N"
 					params.resvRcptDvsn = "";
-					params.resvRcptNumber =  "";
-				} */
-
+					params.resvRcptTel =  "";
+				}
+ 				
 				fn_Ajax
 				(
 				    url,

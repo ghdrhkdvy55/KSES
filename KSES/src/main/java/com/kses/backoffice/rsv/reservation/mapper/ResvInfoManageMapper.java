@@ -26,6 +26,8 @@ public interface ResvInfoManageMapper {
 	
 	public Map<String, Object> selectInUserResvInfo(ResvInfo paramResvInfo);
 	
+	public Map<String, Object> selectResvBillInfo(@Param("resvSeq") String resvSeq) throws Exception;
+	
 	public List<Map<String, Object>> selectUserMyResvInfo(@Param("params") Map<String, Object> paramMap);
 	
 	public List<Map<String, Object>> selectGuestMyResvInfo(@Param("params") Map<String, Object> paramMap);
@@ -60,7 +62,7 @@ public interface ResvInfoManageMapper {
 	
 	public Map<String, Object> resvQrDoubleCheck(@Param("params") Map<String, Object> params);
 	
-	public int resbillChange(ResvInfo vo);
+	public int resvBillChange(ResvInfo vo);
 	
 	public int resPriceChange(ResvInfo vo);
 	

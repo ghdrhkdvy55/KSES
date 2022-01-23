@@ -479,7 +479,58 @@
 		</div>
 		
 		<div class="pint_a">
-			<a href="javascript:jqGridFunc.fn_print();">출력<img src="/resources/img/print_black_24dp.svg" alt="출력"></a>
+			<a href="javascript:jqGridFunc.fn_qrPrint();">출력<img src="/resources/img/print_black_24dp.svg" alt="출력"></a>
+		</div>
+      	<div class="clear"></div>
+  	</div>
+</div>
+
+<!--현금영수증 임시 팝업-->
+<div id="bill_state_pop" class="popup">
+	<div class="pop_con">
+		<a class="button b-close">X</a>
+      	<h2 class="pop_tit">현금영수증 발행 정보</h2>
+      	<div id="bill_state_pop" class="pop_wrap">
+			<table class="detail_table">
+				<tbody>
+					<tr>
+						<th>국세청 승인번호</th>
+                    	<td id="confirmNum"></td>
+						<th>발행일시</th>
+                    	<td id="issueDT"></td>
+                  	</tr>
+                  	<tr>
+						<th>문서번호</th>
+                      	<td id="mgtKey"></td>
+						<th>문서형태</th>
+                      	<td id="tradeType"></td>
+                  	</tr>
+                  	<tr>
+						<th>거래구분</th>
+                    	<td id="tradeUsage"></td>
+                    	<th>거래유형</th>
+                    	<td id="tradeOpt"></td>
+                  	</tr>
+					<tr>
+						<th>과세형태</th>
+                    	<td id="taxationType"></td>
+						<th>식별번호</th>
+                      	<td id="identityNum"></td>
+                  	</tr>
+                  	<tr>
+                  		<th>거래일자</th>
+                    	<td id="tradeDate"></td>
+						<th>거래금액</th>
+                      	<td id="totalAmount"></td>
+                  	</tr>
+                  	<tr>
+						<th>주문상품명</th>
+                    	<td id="itemName"></td>
+                    	<th>고객성명</th>
+                    	<td id="customerName"></td>
+                  	</tr>
+              	</tbody>
+			</table>
 		</div>
       	<div class="clear"></div>
   	</div>
@@ -542,23 +593,24 @@
 				//상단면
 				colModel :  
 				[
+					
 					{label: 'resv_seq', key: true, name:'resv_seq', index:'resv_seq', align:'center', hidden:true},
 					{label: 'NO', name:'rnum', index:'rnum', align:'center', width : "50px"},
+					{label: '예약일자', name:'resv_end_dt', index:'resv_end_dt', align:'center', formatter:jqGridFunc.formSetting},
+					{label: '예약번호', name:'resv_seq', index:'resv_seq', align:'center'},
 					{label: '지점', name:'center_nm', index:'center_nm', align:'center'},
 					{label: '좌석정보', name:'seat_nm', index:'seat_nm', align:'center'},
 					{label: '구역등급', name:'part_class', index:'part_class', align:'center'},					
-					{label: '예약번호', name:'resv_seq', index:'resv_seq', align:'center'},
 					{label: '아이디', name:'user_id', index:'user_id', align:'center'},
 					{label: '이름', name:'user_nm', index:'user_nm', align:'center'},
 					{label: '전화번호', name:'user_phone', index:'user_phone', align:'center'},
 					{label: '금액', name: 'resv_pay_cost', index:'resv_pay_cost', align:'center', formatter:jqGridFunc.formSetting},
-					{label: '신청일자', name:'resv_req_date', index:'resv_req_date', align:'center'},
-					{label: '예약일자', name:'resv_end_dt', index:'resv_end_dt', align:'center', formatter:jqGridFunc.formSetting},
 					{label: '예약상태', name:'resv_state_text', index:'resv_state_text', align:'center'},
 					{label: '결제상태', name:'resv_pay_dvsn_text', index:'resv_pay_dvsn_text', align:'center'},
 					{label: '결제구분', name: 'resv_ticket_dvsn_text',  index:'resv_ticket_dvsn_text', align:'center'},
 					{label: 'QR출력', name:'resv_qr_print', index:'resv_qr_print', align:'center', sortable : false, formatter:jqGridFunc.formSetting},
-					/* {label: '현금영수증출력', name:'resv_rcpt_print', index:'resv_rcpt_print', align:'center', sortable : false, formatter:jqGridFunc.formSetting}, */
+					{label: '현금영수증', name:'resv_rcpt_print', index:'resv_rcpt_print', align:'center', sortable : false, formatter:jqGridFunc.formSetting}
+					//{label: '신청일자', name:'resv_req_date', index:'resv_req_date', align:'center'},
 				], 
 				rowNum : 10,  //레코드 수
 				rowList : [10,20,30,40,50,100],  // 페이징 수
@@ -674,6 +726,10 @@
 				form = fn_resvDateFormat(item.resv_end_dt); 	
 			} else if(index == 'resv_pay_cost') {
 				form = item.resv_pay_cost + "원";
+			} else if(index == 'resv_rcpt_print' && item.resv_rcpt_yn == 'Y') {
+				var rcptState = item.resv_rcpt_state != "RCPT_STATE_2" ? "발행" : "취소";  
+				form = '<a href="javascript:jqGridFunc.fn_billPrint(&#39;' + item.resv_seq + '&#39;);" class="detailBtn">' + rcptState +'</a>';
+				form += '<a href="javascript:jqGridFunc.fn_billState(&#39;' + item.resv_seq + '&#39;);" class="detailBtn">조회</a>';
 			}
 			
 			return form;
@@ -894,8 +950,72 @@
 			
 			$("#qr_print").bPopup();
 		},
-		fn_print : function() {
+		fn_qrPrint : function() {
 			$("#qrWrap").print();
+		},
+		fn_billPrint : function(resvSeq) {
+			var url = "/backoffice/rsv/billPrint.do"
+			var params = {"resvSeq" : resvSeq};
+			
+			fn_Ajax
+			(
+			    url,
+			    "GET",
+				params,
+				false,
+				function(result) {
+					if (result.status == "SUCCESS") {
+						common_popup(result.message, "Y", "");
+						jqGridFunc.fn_search();
+			    	} else if (result.status == "LOGIN FAIL") {
+			    		common_popup("로그인 정보가 올바르지않습니다 다시 로그인해주세요", "Y", "");
+			    	} else {
+			    		common_popup(result.message, "Y", "");
+			    	}
+				},
+				function(request) {
+					common_popup("ERROR : " + request.status, "Y", "");	       						
+				}    		
+			);
+		},
+		fn_billState : function(resvSeq) {
+			var url = "/backoffice/rsv/billState.do"
+			var params = {"resvSeq" : resvSeq};
+			
+			fn_Ajax
+			(
+			    url,
+			    "GET",
+				params,
+				false,
+				function(result) {
+					if (result.status == "SUCCESS") {
+						console.log(result);
+						$("#confirmNum").html(cashBillInfo.confirmNum);
+						$("#issueDT").html(cashBillInfo.issueDT);
+						$("#mgtKey").html(cashBillInfo.mgtKey);
+						$("#tradeType").html(cashBillInfo.tradeType);
+						$("#tradeUsage").html(cashBillInfo.tradeUsage);
+						$("#tradeOpt").html(cashBillInfo.tradeOpt);
+						$("#taxationType").html(cashBillInfo.taxationType);
+						$("#identityNum").html(cashBillInfo.identityNum);
+						$("#tradeDate").html(cashBillInfo.tradeDate);
+						$("#totalAmount").html(cashBillInfo.totalAmount + "원");
+						$("#itemName").html(cashBillInfo.itemName);
+						$("#customerName").html(cashBillInfo.customerName);
+						 
+						common_modelOpen('bill_state_pop');
+						common_popup(result.message, "Y", "");
+			    	} else if (result.status == "LOGIN FAIL") {
+			    		common_popup("로그인 정보가 올바르지않습니다 다시 로그인해주세요", "Y", "");
+			    	} else {
+			    		common_popup(result.message, "Y", "");
+			    	}
+				},
+				function(request) {
+					common_popup("ERROR : " + request.status, "Y", "");	       						
+				}    		
+			);
 		},
 		fn_resvSeatInfo : function(division,resvInfo) {
 			if(division == "CHANGE") {

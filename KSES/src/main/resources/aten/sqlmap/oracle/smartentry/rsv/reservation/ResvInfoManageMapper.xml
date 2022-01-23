@@ -14,8 +14,8 @@
 				SELECT  
 					A.RESV_SEQ, A.SEAT_CD, A.SEASON_CD, A.RESV_START_DT, A.RESV_END_DT, A.RESV_DVSN,
 					A.RESV_START_TM, A.RESV_END_TM, TO_CHAR(A.RESV_REQ_DATE,'YYYY-MM-DD HH24:MI') AS RESV_REQ_DATE, A.USER_ID, A.RESV_USER_DVSN,
-					A.RESV_USER_ASK_YN, A.RESV_RCPT_YN, A.RESV_RCPT_NUMBER, A.RESV_PAY_COST, A.RESV_PAY_DVSN,
-					A.RESV_TICKET_DVSN, A.RESV_STATE,
+					A.RESV_USER_ASK_YN, A.RESV_RCPT_YN, A.RESV_RCPT_NUMBER, A.RESV_RCPT_STATE, A.RESV_PAY_COST, 
+					A.RESV_PAY_DVSN, A.RESV_TICKET_DVSN, A.RESV_STATE,
 					FN_DETAILCODENM(A.RESV_TICKET_DVSN) AS RESV_TICKET_DVSN_TEXT,
 					FN_DETAILCODENM(A.RESV_PAY_DVSN) AS RESV_PAY_DVSN_TEXT,
 					FN_DETAILCODENM(A.RESV_STATE) AS RESV_STATE_TEXT,
@@ -97,13 +97,14 @@
 			A.RESV_SEQ, A.SEAT_CD, A.SEASON_CD, A.RESV_START_DT, A.RESV_END_DT, A.RESV_DVSN,
 			A.RESV_START_TM, A.RESV_END_TM, TO_CHAR(A.RESV_REQ_DATE,'YYYY-MM-DD HH24:MI') AS RESV_REQ_DATE, A.USER_ID,
 			A.RESV_STATE, A.RESV_USER_ASK_YN, A.RESV_RCPT_YN, A.RESV_RCPT_NUMBER, A.RESV_PAY_COST, A.RESV_ENTRY_DVSN,
-			A.RESV_RCPT_DVSN, A.RESV_PAY_DVSN, A.RESV_USER_DVSN, A.RESV_USER_NM, REGEXP_REPLACE(A.RESV_USER_CLPHN, '(02|.{3})(.+)(.{4})', '\1-\2-\3') AS RESV_USER_CLPHN, 
+			A.RESV_RCPT_DVSN, A.RESV_RCPT_TEL, A.RESV_RCPT_STATE, A.RESV_PAY_DVSN, A.RESV_USER_DVSN, A.RESV_USER_NM, 
+			REGEXP_REPLACE(A.RESV_USER_CLPHN, '(02|.{3})(.+)(.{4})', '\1-\2-\3') AS RESV_USER_CLPHN, 
 			A.RESV_ENTRY_PAY_COST, A.RESV_SEAT_PAY_COST, A.RESV_TICKET_DVSN,
 			FN_DETAILCODENM(A.RESV_USER_DVSN) AS RESV_USER_DVSN_TEXT,
 			FN_DETAILCODENM(A.RESV_TICKET_DVSN) AS RESV_TICKET_DVSN_TEXT,
 			FN_DETAILCODENM(A.RESV_PAY_DVSN) AS RESV_PAY_DVSN_TEXT,
 			FN_DETAILCODENM(A.RESV_STATE) AS RESV_STATE_TEXT,
-			FN_DETAILCODENM(A.RESV_RCPT_DVSN) AS RESV_RCPT_DVSN_NM,
+			FN_DETAILCODENM(A.RESV_RCPT_DVSN) AS RESV_RCPT_DVSN_TEXT,
 			CASE  
 				WHEN A.RESV_ENTRY_DVSN = 'ENTRY_DVSN_1'  THEN '자유석' 
 				ELSE D.FLOOR_NM || ' ' || E.PART_NM || '구역 ' || F.SEAT_NM
@@ -267,6 +268,18 @@
 		AND A.SEAT_CD = F.SEAT_CD(+)  	
     </select>
     
+    <!-- 예약정보에 대한 현금영수증 발급정보 조회 -->
+    <select id="selectResvBillInfo" resultType="lmap">
+		SELECT 			
+    		C.BILL_DVSN, C.BILL_NUM, C.BILL_CORP_NAME, C.BILL_CEO_NAME, C.BILL_ADDR, 
+    		C.BILL_TEL, C.BILL_EMAIL, C.BILL_USER_ID
+    	FROM TSER_RESV_INFO_I A, TESR_BILLDAY_INFO_I B, TSER_BILL_INFO_I C
+    	WHERE A.RESV_SEQ = #{resvSeq}
+    	AND A.CENTER_CD = B.CENTER_CD
+    	AND B.BILL_DAY = TO_CHAR(TO_DATE(A.RESV_END_DT),'d')
+    	AND B.BILL_SEQ = C.BILL_SEQ(+)
+    </select>
+    
 	<!-- 회원 현재 예약일자에 대한 예약 유무 조회 -->
 	<select id="resvInfoDuplicateCheck" resultType="int">
 		SELECT NVL(COUNT(*),0) AS CNT
@@ -322,18 +335,19 @@
     
     	INSERT INTO TSER_RESV_INFO_I 
     	(
-			RESV_SEQ, SEASON_CD, CENTER_CD, FLOOR_CD, PART_CD, SEAT_CD,
-			RESV_START_DT, RESV_END_DT, RESV_DVSN, RESV_START_TM, RESV_END_TM, 
-			RESV_REQ_DATE, RESV_USER_DVSN, USER_ID, RESV_USER_NM, RESV_USER_CLPHN, RESV_USER_ASK_YN, RESV_TICKET_DVSN, 
-			RESV_STATE, RESV_RCPT_YN, RESV_INDVDLINFO_AGRE_YN, RESV_SEAT_CLASS,
-			RESV_ENTRY_DVSN, RESV_PAY_DVSN, RESV_ENTRY_PAY_COST, RESV_SEAT_PAY_COST, RESV_PAY_COST, FRST_REGIST_DTM, FRST_REGTER_ID, 
+			RESV_SEQ, SEASON_CD, CENTER_CD, FLOOR_CD, PART_CD, 
+			SEAT_CD, RESV_START_DT, RESV_END_DT, RESV_DVSN, RESV_START_TM, 
+			RESV_END_TM, RESV_REQ_DATE, RESV_USER_DVSN, USER_ID, RESV_USER_NM, 
+			RESV_USER_CLPHN, RESV_USER_ASK_YN, RESV_TICKET_DVSN, RESV_STATE, RESV_RCPT_YN, RESV_RCPT_DVSN,
+			RESV_RCPT_TEL, RESV_INDVDLINFO_AGRE_YN, RESV_SEAT_CLASS, RESV_ENTRY_DVSN, RESV_PAY_DVSN, 
+			RESV_ENTRY_PAY_COST, RESV_SEAT_PAY_COST, RESV_PAY_COST, FRST_REGIST_DTM, FRST_REGTER_ID, 
 			LAST_UPDT_DTM, LAST_UPDUSR_ID  
 		)
 		VALUES 
 		(
-			#{resvSeq}, #{seasonCd, jdbcType=VARCHAR}, #{centerCd, jdbcType=VARCHAR}, #{floorCd, jdbcType=VARCHAR}, #{partCd, jdbcType=VARCHAR}, #{seatCd, jdbcType=VARCHAR}, 
-			TO_CHAR(TO_DATE(#{resvDate, jdbcType=VARCHAR},'YYYYMMDD') - (INTERVAL '1' DAY),'YYYYMMDD'), #{resvDate, jdbcType=VARCHAR}, 'TEMP', '0000', '2359',
-			SYSDATE, #{resvUserDvsn, jdbcType=VARCHAR}, 
+			#{resvSeq}, #{seasonCd, jdbcType=VARCHAR}, #{centerCd, jdbcType=VARCHAR}, #{floorCd, jdbcType=VARCHAR}, #{partCd, jdbcType=VARCHAR}, 
+			#{seatCd, jdbcType=VARCHAR}, TO_CHAR(TO_DATE(#{resvDate, jdbcType=VARCHAR},'YYYYMMDD') - (INTERVAL '1' DAY),'YYYYMMDD'), #{resvDate, jdbcType=VARCHAR}, 'TEMP', '0000', 
+			'2359', SYSDATE, #{resvUserDvsn, jdbcType=VARCHAR}, 
 			<choose>
            		<when test='resvUserDvsn == "USER_DVSN_1"'>
            			#{userId, jdbcType=VARCHAR}, 
@@ -342,10 +356,10 @@
 					CONCAT('NOC',#{resvSeq}),
 				</otherwise>
 			</choose>
-			#{resvUserNm}, #{resvUserClphn}, #{resvUserAskYn, jdbcType=VARCHAR}, '',
-			'RESV_STATE_1', 'N', #{resvIndvdlinfoAgreYn, jdbcType=VARCHAR}, FN_PARTCLASS(#{partCd, jdbcType=VARCHAR}),
-			#{resvEntryDvsn, jdbcType=VARCHAR}, 'RESV_PAY_DVSN_1', FN_ENTRYPAYCOST(#{centerCd, jdbcType=VARCHAR}), #{resvSeatPayCost, jdbcType=VARCHAR}, 
-			FN_ENTRYPAYCOST(#{centerCd, jdbcType=VARCHAR}) + #{resvSeatPayCost, jdbcType=VARCHAR}, SYSDATE, 'admin', 
+			#{resvUserNm}, 
+			#{resvUserClphn}, #{resvUserAskYn, jdbcType=VARCHAR}, '', 'RESV_STATE_1', #{resvRcptYn, jdbcType=VARCHAR}, #{resvRcptDvsn, jdbcType=VARCHAR}, 
+			#{resvRcptTel, jdbcType=VARCHAR}, #{resvIndvdlinfoAgreYn, jdbcType=VARCHAR}, FN_PARTCLASS(#{partCd, jdbcType=VARCHAR}), #{resvEntryDvsn, jdbcType=VARCHAR}, 'RESV_PAY_DVSN_1', 
+			FN_ENTRYPAYCOST(#{centerCd, jdbcType=VARCHAR}), #{resvSeatPayCost, jdbcType=VARCHAR}, FN_ENTRYPAYCOST(#{centerCd, jdbcType=VARCHAR}) + #{resvSeatPayCost, jdbcType=VARCHAR}, SYSDATE, 'admin', 
 			SYSDATE, 'admin'  	
 		)
     </insert>
@@ -462,9 +476,12 @@
     </update>
     
     <!--  현금 영수증 출력  -->
-    <update id="resbillChange">
+    <update id="resvBillChange">
 		UPDATE TSER_RESV_INFO_I SET 
-			RESV_RCPT_NUMBER = #{resvRcptNumber}
+			<if test="resvRcptState == 'RCPT_STATE_1'">
+				RESV_RCPT_NUMBER = #{resvRcptNumber},
+			</if>
+			RESV_RCPT_STATE = #{resvRcptState}
         WHERE RESV_SEQ = #{resvSeq}
     </update>
     
