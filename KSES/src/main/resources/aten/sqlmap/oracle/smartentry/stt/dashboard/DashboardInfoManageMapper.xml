@@ -45,35 +45,38 @@
             (CLASS_4 + CLASS_3 + CLASS_2 + CLASS_1 + STAND)  AS ENTRY_NUMBER,
             (CLASS_CNT + CENTER_STAND_MAX) AS MAXIMUM_NUMBER
         FROM (
-            SELECT
-                 M.CENTER_CD, M.CENTER_NM, M.CENTER_ORDER,
-                 NVL(SUM(CLASS_4), 0) AS CLASS_4,
-                 NVL(SUM(CLASS_3), 0) AS CLASS_3,
-                 NVL(SUM(CLASS_2), 0) AS CLASS_2,
-                 NVL(SUM(CLASS_1), 0) AS CLASS_1,
-                 NVL(SUM(STAND), 0) AS STAND,
-                 (SELECT COUNT(*) FROM TSEB_PART_INFO_D P INNER JOIN TSEB_SEAT_INFO_D S ON S.CENTER_CD = P.CENTER_CD AND S.PART_CD = P.PART_CD
-                  WHERE P.CENTER_CD = M.CENTER_CD AND P.USE_YN = 'Y' AND P.PART_CLASS IS NOT NULL AND S.USE_YN = 'Y' ) AS CLASS_CNT,
-                 NVL((SELECT CENTER_STAND_MAX FROM TSEB_CENTER_INFO_M WHERE CENTER_CD = M.CENTER_CD AND CENTER_STAND_YN = 'Y'),0) AS CENTER_STAND_MAX
+            SELECT M.CENTER_CD,M.CENTER_NM, M.CENTER_ORDER,
+                NVL(SUM(CLASS_4), 0) AS CLASS_4,
+                NVL(SUM(CLASS_3), 0) AS CLASS_3,
+                NVL(SUM(CLASS_2), 0) AS CLASS_2,
+                NVL(SUM(CLASS_1), 0) AS CLASS_1,
+                NVL(SUM(STAND), 0) AS STAND,
+                (   SELECT COUNT(*)
+                    FROM TSEB_PART_INFO_D P
+                        INNER JOIN TSEB_SEAT_INFO_D S ON S.CENTER_CD = P.CENTER_CD AND S.PART_CD = P.PART_CD
+                    WHERE P.CENTER_CD = M.CENTER_CD
+                        AND P.USE_YN = 'Y'
+                        AND P.PART_CLASS IS NOT NULL
+                        AND S.USE_YN = 'Y'
+                ) AS CLASS_CNT,
+                NVL((SELECT CENTER_STAND_MAX FROM TSEB_CENTER_INFO_M WHERE CENTER_CD = M.CENTER_CD AND CENTER_STAND_YN = 'Y'), 0) AS CENTER_STAND_MAX
             FROM CTE_CENTER M
                 LEFT OUTER JOIN (
-                     SELECT
-                         CASE WHEN R.RESV_ENTRY_DVSN = 'ENTRY_DVSN_2' AND A.PART_CLASS = 'SEAT_CLASS_4' THEN 1 ELSE 0 END AS CLASS_4,
-                         CASE WHEN R.RESV_ENTRY_DVSN = 'ENTRY_DVSN_2' AND A.PART_CLASS = 'SEAT_CLASS_3' THEN 1 ELSE 0 END AS CLASS_3,
-                         CASE WHEN R.RESV_ENTRY_DVSN = 'ENTRY_DVSN_2' AND A.PART_CLASS = 'SEAT_CLASS_2' THEN 1 ELSE 0 END AS CLASS_2,
-                         CASE WHEN R.RESV_ENTRY_DVSN = 'ENTRY_DVSN_2' AND A.PART_CLASS = 'SEAT_CLASS_1' THEN 1 ELSE 0 END AS CLASS_1,
-                         CASE WHEN R.RESV_ENTRY_DVSN = 'ENTRY_DVSN_1' THEN 1 ELSE 0 END AS STAND,
-                         A.*
-                     FROM ( SELECT M.CENTER_CD, P.PART_CD, P.PART_CLASS
-                            FROM CTE_CENTER M
-                                INNER JOIN TSEB_PART_INFO_D P ON M.CENTER_CD = P.CENTER_CD
-                            WHERE P.USE_YN = 'Y'
-                          ) A LEFT OUTER JOIN TSER_RESV_INFO_I R ON A.CENTER_CD = R.CENTER_CD AND A.PART_CD = R.PART_CD
-                     WHERE TO_CHAR(SYSDATE,'YYYYMMDD') BETWEEN RESV_START_DT AND RESV_END_DT
+                    SELECT
+                        CASE WHEN R.RESV_ENTRY_DVSN = 'ENTRY_DVSN_2' AND P.PART_CLASS = 'SEAT_CLASS_4' THEN 1 ELSE 0 END AS CLASS_4,
+                        CASE WHEN R.RESV_ENTRY_DVSN = 'ENTRY_DVSN_2' AND P.PART_CLASS = 'SEAT_CLASS_3' THEN 1 ELSE 0 END AS CLASS_3,
+                        CASE WHEN R.RESV_ENTRY_DVSN = 'ENTRY_DVSN_2' AND P.PART_CLASS = 'SEAT_CLASS_2' THEN 1 ELSE 0 END AS CLASS_2,
+                        CASE WHEN R.RESV_ENTRY_DVSN = 'ENTRY_DVSN_2' AND P.PART_CLASS = 'SEAT_CLASS_1' THEN 1 ELSE 0 END AS CLASS_1,
+                        CASE WHEN R.RESV_ENTRY_DVSN = 'ENTRY_DVSN_1' THEN 1 ELSE 0 END AS STAND,
+                        M.CENTER_CD, P.PART_CD, P.PART_CLASS
+                    FROM TSER_RESV_INFO_I R
+                        INNER JOIN CTE_CENTER M ON R.CENTER_CD = M.CENTER_CD
+                        LEFT OUTER JOIN TSEB_PART_INFO_D P ON R.PART_CD = P.PART_CD
+                    WHERE TO_CHAR(SYSDATE,'YYYYMMDD') BETWEEN RESV_START_DT AND RESV_END_DT
                         AND R.RESV_STATE IN ('RESV_STATE_2', 'RESV_STATE_3')
                 ) A ON M.CENTER_CD = A.CENTER_CD
             GROUP BY M.CENTER_CD, M.CENTER_NM, M.CENTER_ORDER
-         ) TB
+        ) TB
         ORDER BY CENTER_ORDER
     </select>
 
