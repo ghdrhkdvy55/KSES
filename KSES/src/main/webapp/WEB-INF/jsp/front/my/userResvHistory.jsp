@@ -124,7 +124,7 @@
     </div>
     
 	<!-- // 결제인증 팝업 -->
-    <div id="pay_number" class="popup">
+<!--     <div id="pay_number" class="popup">
 		<div class="pop_con rsv_popup">
 			<a class="button b-close">X</a>
           	<div class="pop_wrap">
@@ -135,9 +135,36 @@
             	</ul>
           	</div>
       	</div>
-    </div>
+    </div> -->
     <!-- 결제인증 팝업 // -->
-      
+    
+    <!-- // 결제인증 팝업 -->
+	<div id="pay_number" class="popup">
+		<div class="pop_con rsv_popup">
+			<a class="button b-close">X</a>
+			<div class="pop_wrap">
+				<h4>결제 비밀번호를 입력해주세요.</h4>
+				<ul class="cost_list">
+					<li>
+						<ul class="costStat">
+							<li>환불 금액</li>
+							<li><span class="classCost"></span>원</li>
+						</ul>
+					</li>
+					<li>
+						<ul class="pay_passWord">
+	                        <li>결제</li>
+	                        <li><input type="password" id="Card_Pw" placeholder="결제 비밀번호를 입력하세요."></li>
+                    	</ul>
+                	</li>
+            	</ul>
+				<ul class="cost_btn">
+					<li class="okBtn"><a href="javascript:void(0);">확인</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+    <!-- 결제인증 팝업// -->
 	</form:form>
 	
 	<c:import url="/front/inc/popup_common.do" />
@@ -294,6 +321,8 @@
 							if(resvInfo.resv_ticket_dvsn != 'RESV_TICKET_DVSN_2') {
 								$("#Card_Pw").val("");
 								$("#pay_number").bPopup();
+								$(".classCost").html(resvInfo.resv_pay_cost);
+								$("#pay_number a:eq(1)").off().on('click', function() {});
 								$("#pay_number a:eq(1)").click(function(resvSeq) {
 									if(fn_payment(resvInfo)){
 										userResvService.fn_userResvInfo(true);
@@ -305,7 +334,7 @@
 							}
 						} else {
 							if(fn_resvCancel(resvInfo)){
-								userResvService.fn_userResvInfo(true);3
+								userResvService.fn_userResvInfo(true);
 							}
 						}
 					} else {
