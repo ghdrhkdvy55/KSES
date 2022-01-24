@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.json.simple.JSONObject;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.kses.backoffice.sym.log.vo.InterfaceInfo;
 
@@ -15,6 +14,8 @@ public interface InterfaceInfoManageService {
     Map<String, Object> selectInterfaceDetail (String requstId) throws Exception;
     
     Map<String, Object> SpeedOnCancelPayMent(JSONObject jsonObject) throws Exception;
+    
+    Map<String, Object> SpeedOnPayMent(JSONObject jsonObject) throws Exception;
 	
     int InterfaceInsertLoginLog(InterfaceInfo vo) throws Exception;
 	
