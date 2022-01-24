@@ -205,8 +205,7 @@ public class ResJosnController {
 				}
 			} else if (SmartUtil.NVL(sendInfo.get("gubun"), "").toString().equals("Inf")) {
 				Url = propertiesService.getString("sppeedUrl_T") + "trade/schTradeInfo";
-				node = SmartUtil.requestHttpJson(Url, jsonObject.toJSONString(), "SPEEDSCHTRADEINFO", "SPEEDON",
-						"KSES");
+				node = SmartUtil.requestHttpJson(Url, jsonObject.toJSONString(), "SPEEDSCHTRADEINFO", "SPEEDON","KSES");
 				if (node.get("Error_Cd").asText().equals("SUCCESS")) {
 					// 예약 테이블 취소 정보 처리 하기
 				} else {
@@ -220,6 +219,17 @@ public class ResJosnController {
 				// 취소 정보
 				Url = propertiesService.getString("sppeedUrl_T") + "trade/fepDeposit";
 				Map<String, Object> resvInfo = resService.selectUserResvInfo(jsonObject);
+				
+				if(!SmartUtil.NVL(resvInfo.get("resv_pay_dvsn"),"").equals("RESV_PAY_DVSN_2")) {
+					switch (SmartUtil.NVL(resvInfo.get("resv_pay_dvsn"),"")) {
+						case "RESV_PAY_DVSN_1" : Message = "미결제 예약정보 입니다.";  break;
+						case "RESV_PAY_DVSN_3" : Message = "이미 결제취소된 예약정보 입니다.";  break;
+						default: Message = "알수없는 예약정보 입니다."; break;
+					}
+					model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+					model.addObject(Globals.STATUS_MESSAGE, Message);
+					return model;
+				}
 
 				jsonObject.put("System_Type", "E");
 				jsonObject.put("External_Key", resvInfo.get("resv_seq"));

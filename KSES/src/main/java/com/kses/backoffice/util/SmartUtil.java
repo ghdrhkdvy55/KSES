@@ -548,7 +548,7 @@ public class SmartUtil {
             httpPost.setHeader("Connection", "keep-alive");
             httpPost.setHeader("Content-Type", "application/json");
 
-            httpPost.setEntity(new StringEntity(_jsonInfo)); //json 메시지 입력
+            httpPost.setEntity(new StringEntity(_jsonInfo, "UTF-8")); //json 메시지 입력
             LOGGER.debug(_jsonInfo.toString());
             HttpResponse response = client.execute(httpPost);
             
