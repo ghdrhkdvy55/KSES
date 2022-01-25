@@ -1,6 +1,5 @@
 package com.kses.backoffice.sym.log.service.impl;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.ModelMap;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
@@ -62,16 +62,15 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 	
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public Map<String, Object> SpeedOnPayMent(JSONObject jsonObject) throws Exception {
-		String Url = "";
-		JsonNode node = null;
+	public ModelMap SpeedOnPayMent(String resvSeq, boolean isPassword) throws Exception {
+		String Url = propertiesService.getString("sppeedUrl_T") + "trade/fepWithdraw";		
+		JSONObject jsonObject = new JSONObject();
+		ModelMap result = new ModelMap();
+		String message = "";
 		
-		Map<String, Object> result = new HashMap<String, Object>();
-		String message = ""; 
+		JsonNode node = null;
 
-		try {
-			
-			Url = propertiesService.getString("sppeedUrl_T") + "trade/fepWithdraw";			
+		try {	
 			Map<String, Object> resvInfo = resvService.selectUserResvInfo(jsonObject);
 			
 			if(!SmartUtil.NVL(resvInfo.get("resv_state"),"").equals("RESV_STATE_1")) {
@@ -81,12 +80,12 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 					case "RESV_STATE_4" : message = "이미 취소된 예약정보 입니다.";  break;
 					default: message = "알수없는 예약정보 입니다."; break;
 				}
-				result.put(Globals.STATUS, Globals.STATUS_FAIL);
-				result.put(Globals.STATUS_MESSAGE, message);
+				result.addAttribute(Globals.STATUS, Globals.STATUS_FAIL);
+				result.addAttribute(Globals.STATUS_MESSAGE, message);
 				return result;
 			} else if(SmartUtil.NVL(resvInfo.get("resv_pay_dvsn"),"").equals("RESV_PAY_DVSN_2")) {
-				result.put(Globals.STATUS, Globals.STATUS_FAIL);
-				result.put(Globals.STATUS_MESSAGE, "이미 결제처리된 예약정보 입니다.");
+				result.addAttribute(Globals.STATUS, Globals.STATUS_FAIL);
+				result.addAttribute(Globals.STATUS_MESSAGE, "이미 결제처리된 예약정보 입니다.");
 				return result;
 			}
 			
@@ -130,13 +129,13 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 			} else {
 				for (speedon direction : speedon.values()) {
 					if (direction.getCode().equals(node.get("Error_Cd").asText())) {
-						result.put(Globals.STATUS_MESSAGE, direction.getName());
+						result.addAttribute(Globals.STATUS_MESSAGE, direction.getName());
 					}
 				}
 			}
 			
-			result.put(Globals.STATUS, node.get("Error_Cd").asText());
-			result.put(Globals.STATUS_REGINFO, node);
+			result.addAttribute(Globals.STATUS, node.get("Error_Cd").asText());
+			result.addAttribute(Globals.STATUS_REGINFO, node);
 		} catch (Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
@@ -150,15 +149,16 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 	
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public Map<String, Object> SpeedOnCancelPayMent(JSONObject jsonObject) throws Exception {
-		
+	public ModelMap SpeedOnPayMentCancel(String resvSeq, boolean isPassword) throws Exception {
 		String Url = propertiesService.getString("sppeedUrl_T") + "trade/fepDeposit";
-		Map<String, Object> result = new HashMap<String, Object>();
+		JSONObject jsonObject = new JSONObject();
+		ModelMap result = new ModelMap();
 		String message = "";
 		
 		JsonNode node = null;
 
 		try {
+			jsonObject.put("resvSeq", resvSeq);
 			Map<String, Object> resvInfo = resvService.selectUserResvInfo(jsonObject);
 		
 			if(!SmartUtil.NVL(resvInfo.get("resv_pay_dvsn"),"").equals("RESV_PAY_DVSN_2")) {
@@ -167,8 +167,8 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 					case "RESV_PAY_DVSN_3" : message = "이미 결제취소된 예약정보 입니다.";  break;
 					default: message = "알수없는 예약정보 입니다."; break;
 				}
-				result.put(Globals.STATUS, Globals.STATUS_FAIL);
-				result.put(Globals.STATUS_MESSAGE, message);
+				result.addAttribute(Globals.STATUS, Globals.STATUS_FAIL);
+				result.addAttribute(Globals.STATUS_MESSAGE, message);
 				return result;
 			}
 			
@@ -176,12 +176,12 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 			jsonObject.put("External_Key", resvInfo.get("resv_seq"));
 			jsonObject.put("Card_Id", resvInfo.get("user_card_id"));
 			
-			if(SmartUtil.NVL(jsonObject.get("Pw_YN"),"").equals("N")) {
-				jsonObject.put("Card_Pw", "");
-				jsonObject.put("Pw_YN", "N");
-			} else {
+			if(isPassword) {
 				jsonObject.put("Card_Pw", SmartUtil.encryptPassword(jsonObject.get("Card_Pw").toString(), "SHA-256"));
 				jsonObject.put("Pw_YN", "Y");
+			} else {
+				jsonObject.put("Card_Pw", "");
+				jsonObject.put("Pw_YN", "N");
 			}
 			
 			jsonObject.put("Card_Seq", resvInfo.get("user_card_seq"));
@@ -211,23 +211,26 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 				resInfo.setResvTicketDvsn("RESV_TICKET_DVSN_1");
 				resInfo.setTradNo(node.get("Trade_No").asText());
 				resvService.resPriceChange(resInfo);
-				result.put(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.request.msg"));
+				
+				result.addAttribute(Globals.STATUS, Globals.STATUS_SUCCESS);
+				result.addAttribute(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.request.msg"));
 			} else {
 				for (speedon direction : speedon.values()) {
 					if (direction.getCode().equals(node.get("Error_Cd").asText())) {
-						result.put(Globals.STATUS_MESSAGE, direction.getName());
+						result.addAttribute(Globals.STATUS, Globals.STATUS_FAIL);
+						result.addAttribute(Globals.STATUS_MESSAGE, direction.getName());
 					}
 				}
 			}
 			
-			result.put(Globals.STATUS, node.get("Error_Cd").asText());
-			result.put(Globals.STATUS_REGINFO, node);
+			result.addAttribute(Globals.STATUS, node.get("Error_Cd").asText());
+			result.addAttribute(Globals.STATUS_REGINFO, node);
 		} catch (Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
 			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
-			result.put(Globals.STATUS, Globals.STATUS_FAIL);
-			result.put(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
+			result.addAttribute(Globals.STATUS, Globals.STATUS_FAIL);
+			result.addAttribute(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 		}
 		
 		return result;

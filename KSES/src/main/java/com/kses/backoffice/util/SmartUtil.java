@@ -489,13 +489,10 @@ public class SmartUtil {
 
 	//fomr  전송 응답
 	public JsonNode requestHttpForm(String _url, Map<String, String> _sendInfos) {
-
         HttpClient client = HttpClientBuilder.create().build();
-
         HttpPost httpPost = new HttpPost(_url);
 
         try {
-
             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
             /*
             for (Map.Entry<String, String> entry : _sendInfos.entrySet()) {

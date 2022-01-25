@@ -8,6 +8,7 @@ import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.ui.ModelMap;
 
 import com.kses.backoffice.bld.center.service.NoshowInfoManageService;
 import com.kses.backoffice.mng.employee.service.EmpInfoManageService;
@@ -45,7 +46,6 @@ public class Scheduler {
 	//@Transactional(rollbackFor=Exception.class)
 	public void resvNoshowScheduler() throws Exception {
 		List<Map<String, Object>> noshowResvList;
-		JSONObject jsonObject = new JSONObject();
 
 		try {
 			for(int i=1; i<=2; i++) {
@@ -64,10 +64,8 @@ public class Scheduler {
 							LOGGER.info("예약번호 : " + resvSeq + " " + i + "차 자동취소 시작" );
 							
 							if(i == 2 && resvPayDvsn.equals("RESV_PAY_DVSN_2") && resvTicketDvsn.equals("RESV_TICKET_DVSN_1")) {
-								jsonObject.put("Pw_YN", "N");
-								jsonObject.put("resvSeq", resvSeq);
-								Map<String, Object> result = interfaceService.SpeedOnCancelPayMent(jsonObject);
-								
+								ModelMap result = interfaceService.SpeedOnPayMentCancel(resvSeq, false);
+
 								if(!SmartUtil.NVL(result.get(Globals.STATUS), "").equals("SUCCESS")) {
 									LOGGER.info("예약번호 : " + resvSeq + " 결제취소실패");
 									LOGGER.info("에러코드 : " + result.get(Globals.STATUS));
@@ -109,14 +107,14 @@ public class Scheduler {
 	}
 	
 	@Scheduled(cron="0 0 23 * * ?")
-	public void ksesResvCompleteUse() throws Exception {		
+	public void ksesupdateResvUseComplete() throws Exception {		
 		try {
 			LOGGER.info("----------------------------KSES COMPLETE USE BATCH START----------------------------");
-			resvService.resvCompleteUse();
+			resvService.updateResvUseComplete();
 		} catch (RuntimeException re) {
-			LOGGER.error("ksesResvCompleteUse =>  Run Failed", re);
+			LOGGER.error("ksesupdateResvUseComplete =>  Run Failed", re);
 		} catch (Exception e) {
-			LOGGER.error("ksesResvCompleteUse => Failed", e);
+			LOGGER.error("ksesupdateResvUseComplete => Failed", e);
 		}
 		LOGGER.info("----------------------------KSES COMPLETE USE BATCH END----------------------------");
 	}
@@ -179,7 +177,7 @@ public class Scheduler {
 		try {
 			for(int i=1; i<2; i++) {
 				JSONObject jsonObject = new JSONObject();
-				Map<String, Object> result = interfaceService.SpeedOnCancelPayMent(jsonObject);
+				Map<String, Object> result = interfaceService.SpeedOnPayMentCancel(jsonObject);
 				
 				errorCount = i;
 				int noShowCount = i == 1 ? noshowService.insertNoshowResvInfo_R1() : noshowService.insertNoshowResvInfo_R2(); 

@@ -11,11 +11,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.ModelMap;
 
 import com.kses.backoffice.cus.kko.service.SureManageSevice;
 import com.kses.backoffice.rsv.reservation.mapper.ResvInfoManageMapper;
@@ -49,11 +49,7 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	private SureManageSevice sureService;
 	
 	@Override
-	public List<Map<String, Object>> selectResvInfoManageListByPagination(Map<String, Object> params) throws Exception {
-		params.forEach((key, value)
-			    -> System.out.println("key: " + key + ", value: " + value));
-		
-		
+	public List<Map<String, Object>> selectResvInfoManageListByPagination(Map<String, Object> params) throws Exception {		
 		return resvMapper.selectResvInfoManageListByPagination(params);
 	}
 	
@@ -127,11 +123,6 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	}
 	
 	@Override
-	public String selectResvEntryDvsn(String resvSeq) throws Exception {
-		return resvMapper.selectResvEntryDvsn(resvSeq);
-	}
-	
-	@Override
 	public List<Map<String, Object>> selectUserMyResvInfo(Map<String, Object> params) throws Exception {
 		return resvMapper.selectUserMyResvInfo(params);
 	}
@@ -142,8 +133,8 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	}
 	
 	@Override
-	public int resvStateChange(ResvInfo vo) throws Exception {
-		return resvMapper.resvStateChange(vo);
+	public int updateResvState(ResvInfo vo) throws Exception {
+		return resvMapper.updateResvState(vo);
 	}
 	
 	@Override
@@ -152,18 +143,53 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	}
 	
 	@Override
-	public int resvSeatChange(Map<String, Object> params) throws Exception {
-		return resvMapper.resvSeatChange(params);
+	public int updateResvSeatInfo(Map<String, Object> params) throws Exception {
+		return resvMapper.updateResvSeatInfo(params);
 	}
 	
 	@Override
-	public int resvCompleteUse() throws Exception {
-		return resvMapper.resvCompleteUse();
+	public ModelMap resvSeatChange(Map<String, Object> params) throws Exception {
+		ModelMap resultMap = new ModelMap();
+		String message = "처리중 오류가 발생하였습니다.";
+		
+		try {			
+			Map<String, Object> resvInfo = resvService.selectUserResvInfo(params);
+			int resvPayCost = Integer.parseInt(SmartUtil.NVL(resvInfo.get("resv_pay_cost"),""));
+			int changeResvPayCost = Integer.parseInt(SmartUtil.NVL(params.get("resvEntryPayCost"),"")) + Integer.parseInt(SmartUtil.NVL(params.get("resvEntryPayCost"),""));
+			
+			if(resvPayCost != changeResvPayCost) {
+				message = "금액정보 다름 에러발생";
+				throw new Exception();
+			} else {
+				int seatChangCount = resvMapper.updateResvSeatInfo(params);
+				if(seatChangCount > 0) { 
+					resultMap.addAttribute(Globals.STATUS, Globals.STATUS_SUCCESS);
+					resultMap.addAttribute(Globals.STATUS_MESSAGE, "변경 좌석과 금액정보가 동일하여 기존 예약정보에서 좌석정보만 변경되었습니다.");
+				} else {
+					message = "기존 예약정보 변경중 오류가 발생하였습니다.";
+					throw new Exception();
+				}
+				return resultMap;
+			}
+		} catch(Exception e) {
+			StackTraceElement[] ste = e.getStackTrace();
+			LOGGER.error(e.toString() + ":" + ste[0].getLineNumber());
+			resultMap.addAttribute(Globals.STATUS, Globals.STATUS_FAIL);
+			resultMap.addAttribute(Globals.STATUS_MESSAGE, message);	
+		}
+
+		
+		return resultMap;
 	}
 	
 	@Override
-	public int resvQrCountChange(String resvSeq) throws Exception {
-		return resvMapper.resvQrCountChange(resvSeq);
+	public int updateResvUseComplete() throws Exception {
+		return resvMapper.updateResvUseComplete();
+	}
+	
+	@Override
+	public int updateResvQrCount(String resvSeq) throws Exception {
+		return resvMapper.updateResvQrCount(resvSeq);
 	}
 	
 	@Override
@@ -177,12 +203,9 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	}
 		
 	@Override
-	@SuppressWarnings("unchecked")
-	public Map<String, String> resvInfoAdminCancel(String resvSeq) throws Exception {
-		Map<String, String> resultMap = new HashMap<String, String>();
-		
+	public ModelMap resvInfoAdminCancel(String resvSeq) throws Exception {
+		ModelMap resultMap = new ModelMap();
 		ResvInfo resInfo = new ResvInfo();
-		JSONObject jsonObject = new JSONObject();
 		String message = "처리중 오류가 발생하였습니다.";
 		
 		try {
@@ -197,13 +220,12 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 			String tradeNo = SmartUtil.NVL(resvInfo.get("trade_no"),"");
 			
 			if(!resvState.equals("RESV_STATE_3") && !resvState.equals("RESV_STATE_4")) {
+				
 				//결제 유무 확인
 				if(resvPayDvsn.equals("RESV_PAY_DVSN_2")) {
 					if(resvTicketDvsn.equals("RESV_TICKET_DVSN_1")) {
 						// 스피드온 결제(거래취소 인터페이스)
-						jsonObject.put("Pw_YN", "N");
-						jsonObject.put("resvSeq", resvSeq);
-						Map<String, Object> result = interfaceService.SpeedOnCancelPayMent(jsonObject);
+						ModelMap result = interfaceService.SpeedOnPayMentCancel(resvSeq, false);
 						if(!SmartUtil.NVL(result.get(Globals.STATUS), "").equals("SUCCESS")) {
 							LOGGER.info("예약번호 : " + resvSeq + " 결제취소실패");
 							LOGGER.info("에러코드 : " + result.get(Globals.STATUS));
@@ -248,7 +270,7 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	}
 	
 	@Override
-	public String resvValidCheck(Map<String, Object> params) throws Exception {
+	public void resvValidCheck(Map<String, Object> params) throws Exception {
 		params.put("resultCode", "");
 		params.put("resvDate", "");
 		
@@ -261,15 +283,8 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 				}
 			}
 		}
-		
-		return "";
 	}
 	
-	@Override
-	public String selectFindPassword(Map<String, Object> paramMap) throws Exception {
-		return resvMapper.selectFindPassword(paramMap);
-	}
-
 	@Override
 	public int resvBillChange(ResvInfo vo) throws Exception {
 		return resvMapper.resvBillChange(vo);

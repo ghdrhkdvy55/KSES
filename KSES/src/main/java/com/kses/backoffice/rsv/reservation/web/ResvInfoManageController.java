@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -102,7 +103,6 @@ public class ResvInfoManageController {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
 		try {
-			  
 	          Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
 				
 			  if(!isAuthenticated) {
@@ -130,10 +130,8 @@ public class ResvInfoManageController {
 			  
 			  loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
 			  
-			  
 			  searchVO.put("authorCd", loginVO.getAuthorCd());
 			  searchVO.put("centerCd", loginVO.getCenterCd());
-			  
 			  
 			  List<Map<String, Object>> list = resvService.selectResvInfoManageListByPagination(searchVO);
 			  LOGGER.debug("[-------------------------------------------list:" + list.size() + "------]");
@@ -159,31 +157,26 @@ public class ResvInfoManageController {
 	
 	@RequestMapping (value="rsvSeatChange.do")
 	public ModelAndView rsvSeatChange(	HttpServletRequest request, 
-										@RequestBody Map<String,Object> params, 
-										BindingResult result) throws Exception {
+										@RequestBody Map<String,Object> params) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-		
-		if(!isAuthenticated) {
-			model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-			return model;
-		}
-		
 		try {
+			Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+			if(!isAuthenticated) {
+				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
+				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
+				return model;
+			}
+		
 			LoginVO loginVO = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
 			params.put("userId", loginVO.getAdminId());
-			int ret = resvService.resvSeatChange(params);
 			
-			if(ret > 0) {
-				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("sucess.common.update"));
-			}
+			ModelMap resultMap = resvService.resvSeatChange(params);
+			model.addObject(resultMap);	
 		} catch (Exception e){
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
-			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
+			LOGGER.info("rsvSeatChange ERROR :" + e.toString() + " : " + lineNumber);
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.insert"));	
 		}	
@@ -193,19 +186,17 @@ public class ResvInfoManageController {
 	@RequestMapping (value="longResvInfoUpdate.do")
 	@Transactional(rollbackFor = Exception.class)
 	public ModelAndView rsvLongSeatUpdate(	HttpServletRequest request, 
-											@RequestBody ResvInfo vo, 
-											BindingResult result) throws Exception {
+											@RequestBody ResvInfo vo) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-		
-		if(!isAuthenticated) {
-			model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-			return model;
-		}
-		
 		try {
+			if(!isAuthenticated) {
+				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
+				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
+				return model;
+			}
+		
 			LoginVO loginVO = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
 			vo.setAdminId(loginVO.getAdminId());
 			
@@ -228,7 +219,7 @@ public class ResvInfoManageController {
 		} catch (Exception e){
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
-			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
+			LOGGER.info("rsvLongSeatUpdate : " + e.toString() + " : " + lineNumber);
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.insert"));	
 		}	
@@ -266,10 +257,8 @@ public class ResvInfoManageController {
 				return model;	
 		    }
 			
-			Map<String, String> resultMap = resvService.resvInfoAdminCancel(resvSeq);
-			
-			model.addObject(Globals.STATUS, resultMap.get(Globals.STATUS));
-			model.addObject(Globals.STATUS_MESSAGE, resultMap.get(Globals.STATUS_MESSAGE));
+			ModelMap modelMap = resvService.resvInfoAdminCancel(resvSeq);
+			model.addObject(modelMap);
 		} catch(Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			LOGGER.error(e.toString() + ":" + ste[0].getLineNumber());
@@ -281,13 +270,15 @@ public class ResvInfoManageController {
 	}
 	
 	@RequestMapping (value="resvInfoCancelAll.do")
-	public ModelAndView updateResvInfoCancelAll(	@RequestBody Map<String,Object> params, 
+	public ModelAndView updateResvInfoCancelAll( 	@RequestBody Map<String,Object> params, 
 													HttpServletRequest request) throws Exception {	
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-		List<Map<String, String>> resvCancelList = new LinkedList<Map<String, String>>();
+		List<Map<String, Object>> resvCancelList = new LinkedList<Map<String, Object>>();
+		
 		int failCount = 0;
 		int ticketCount = 0;
+		
 		try {
 		    Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
 			if(!isAuthenticated) {
@@ -308,9 +299,9 @@ public class ResvInfoManageController {
 			List<Map<String, Object>> resvList = resvService.selectResvInfoManageListByPagination(params);
 
 			for(Map<String,Object> resvInfo : resvList) {
-				if(!SmartUtil.NVL(resvInfo.get("resv_ticket_dvsn"),"").equals("RESV_TICKET_DVSN_2")) {
+				if(!SmartUtil.NVL(resvInfo.get("resv_ticket_dvsn"),"RESV_TICKET_DVSN_1").equals("RESV_TICKET_DVSN_2")) {
 					String resvSeq = resvInfo.get("resv_seq").toString();
-					Map<String, String> resultMap = resvService.resvInfoAdminCancel(resvSeq);
+					ModelMap resultMap = resvService.resvInfoAdminCancel(resvSeq);
 				
 					if(!resultMap.get(Globals.STATUS).equals("SUCCESS")) {
 						failCount ++;
@@ -331,7 +322,6 @@ public class ResvInfoManageController {
 			
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("request.success.msg"));
-
 		} catch(Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			LOGGER.error(e.toString() + ":" + ste[0].getLineNumber());
