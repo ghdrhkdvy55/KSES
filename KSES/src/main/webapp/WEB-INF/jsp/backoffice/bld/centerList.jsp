@@ -1327,7 +1327,9 @@
 				'centerCd' : $("#searchCenterCd").val(),
 				'billNum' : $("#billNum").val(),
 				'billCorpName' : $("#billCorpName").val(),
+				'billCeoName' : $("#billCeoName").val(),
 				'billAddr' : $("#billAddr").val(),
+				'billEmail' : $("#billEmail").val(),
 				'billTel' : $("#billTel").val(),
 				'billUserId' : $("#billUserId").val()
 			};
