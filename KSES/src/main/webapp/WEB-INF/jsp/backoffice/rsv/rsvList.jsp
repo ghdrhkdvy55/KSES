@@ -21,6 +21,7 @@
 <input type="hidden" id="mode" name="mode">
 <input type="hidden" id="resvSeq" name="resvSeq">
 <input type="hidden" id="resvDate" name="resvDate">
+<input type="hidden" id="resvEntryPayCost" name="resvEntryPayCost">
 <input type="hidden" id="seasonCd" name="seasonCd">
 <div class="breadcrumb">
 	<ol class="breadcrumb-item">
@@ -173,7 +174,7 @@
               	</tbody>
           	</table>
 			<br>
-			<p class="pop_tit">입/출입 내역 <span class="pBtn"><a href="javascript:$('#rsv_inout_add').bPopup();" class="blueBtn">입출입 수동 등록</a></span></p>
+			<p class="pop_tit">입장 내역 <span class="pBtn"><a href="javascript:$('#rsv_inout_add').bPopup();" class="blueBtn">입장 수동 등록</a></span></p>
 			<div id="inOutHis"> 
 	          	<table id="inOutHisTable" class="main_table">
 					
@@ -264,61 +265,6 @@
       	<div class="clear"></div>
   	</div>
 </div>
-<!-- // 환불처리 팝업 -->
-<div data-popup="view_refund" class="popup">
-	<div class="pop_con">
-		<a class="button b-close">X</a>
-      	<h2 class="pop_tit">환불 처리</h2>
-      	<div class="pop_wrap">
-			<table class="detail_table">
-				<tbody>
-					<tr>
-						<th>지점 </th>
-                      	<td>장안지점</td>
-                      	<th>구역 정보 </th>
-                      	<td>B001</td>
-                  	</tr>
-                  	<tr>
-                    	<th>좌석 정보</th>
-                    	<td>023</td>
-                    	<th>예약 번호</th>
-                    	<td>KSP7968</td>
-                  	</tr>
-                  	<tr>
-                    	<th>회원 구분 </th>
-                    	<td>일반 회원</td>
-                    	<th>아이디</th>
-                    	<td>id5678</td>
-                  	</tr>
-                  	<tr>
-                    	<th>이름 </th>
-                    	<td>홍길동</td>
-                    	<th>전화번호</th>
-                    	<td>010-1234-5678</td>
-                  	</tr>
-                  	<tr>
-                    	<th>환불 코드 </th>
-                    	<td colspan="3">
-	                      	<select name="" id="">
-                        		<option value="">선택</option>
-                      		</select>
-                    	</td>
-					</tr>
-					<tr>
-                    	<th>환불 상세 내역 </th>
-                    	<td colspan="3">
-                      		<textarea name="" id="" rows="3"></textarea>
-                    	</td>
-                  	</tr>
-              	</tbody>
-			</table>
-		</div>
-		<div class="right_box">
-          	<a href="" class="blueBtn">환불 처리 </a>
-      	</div>
-      	<div class="clear"></div>
-  	</div>
-</div>
 
 <!-- // 관리자 검색 팝업 -->
 <div id="search_result" class="popup">
@@ -333,6 +279,7 @@
   	</div>
 </div>
 <!-- 관리자 검색 팝업 // -->
+
 <!-- 입출입 추가 팝업 -->
 <div id="rsv_inout_add" class="popup s_pop">
     <div class="pop_con">
@@ -372,7 +319,7 @@
             		<select id="resvCenterCd" onChange="jqGridFunc.fn_centerChange()">
             			<option value="">선택</option>
 						<c:forEach items="${centerInfo}" var="centerInfo">
-							<option value="${centerInfo.center_cd}"><c:out value='${centerInfo.center_nm}'/></option>
+							<option value="${centerInfo.center_cd}" data-entrypaycost="${centerInfo.center_entry_pay_cost}"><c:out value='${centerInfo.center_nm}'/></option>
 						</c:forEach>
             		</select>
           		</p>
@@ -599,7 +546,6 @@
 				//상단면
 				colModel :  
 				[
-					
 					{label: 'resv_seq', key: true, name:'resv_seq', index:'resv_seq', align:'center', hidden:true},
 					{label: 'NO', name:'rnum', index:'rnum', align:'center', width : "50px"},
 					{label: '예약일자', name:'resv_end_dt', index:'resv_end_dt', align:'center', formatter:jqGridFunc.formSetting},
@@ -735,7 +681,7 @@
 				form = item.resv_pay_cost + "원";
 			} else if(index == 'resv_rcpt_print' && item.resv_rcpt_yn == 'Y') {
 				var rcptState = "발행";
-				if(item.resv_rcpt_state == "" || item.resv_rcpt_state == "RCPT_STATE_1") {
+				if(item.resv_rcpt_state == "" || item.resv_rcpt_state == "RESV_RCPT_STATE_1") {
 					var rcptState = "취소";	
 				} else {
 					var rcptState = "발행";	
@@ -811,7 +757,7 @@
 						$("#rsvPopResvState").html(obj.resv_state_text);
 						
 						if(obj.resv_entry_dvsn == "ENTRY_DVSN_2" && obj.resv_state == "RESV_STATE_1" && obj.resv_pay_dvsn == "RESV_PAY_DVSN_1") { 
-							$("#rsvPopSeatChange a").show().click(function (e) {
+							$("#rsvPopSeatChange a").off().on('click',function (e) {
 								jqGridFunc.fn_resvSeatInfo("CHANGE",obj);
 							});		
 						} else {
@@ -819,9 +765,8 @@
 						}
 						
 						if(obj.resv_state == "RESV_STATE_1" || obj.resv_state == "RESV_STATE_2") {
-							$("#resvCancelBtn").show();
-							$("#resvCancelBtn").click(function () {
-				        		$("#id_ConfirmInfo").attr("href", "javascript:void(0);").click(function () {
+							$("#resvCancelBtn").show().off().on('click', function () {
+				        		$("#id_ConfirmInfo").off().on('click',function () {
 				        			jqGridFunc.fn_resvInfoCancel(obj.resv_seq);
 								});
 				        		fn_ConfirmPop("해당 예약정보를 취소 하시겠습니까?");
@@ -1189,6 +1134,7 @@
 				"floorCd" : $("#resvFloorCd").val(),
 				"partCd" : $("#resvPartCd").val(),
 				"seatCd" : $(".pop_seat li.usable").attr("id"),
+				"resvEntryPayCost" : $("#resvEntryPayCost").val(),
 				"resvSeatPayCost" : $(".pop_seat li.usable").data("seat_paycost"),
 				"resvEntryDvsn" : "ENTRY_DVSN_2",
 				"checkDvsn" : division
@@ -1207,7 +1153,7 @@
 					false,
 					function(result) {
 				    	if(result.status == "SUCCESS") {
-							common_popup("좌석이 정상적으로 변경되었습니다.", "Y", "");
+							common_popup(result.message, "Y", "");
 							jqGridFunc.fn_resvInfo("Edt", $("#resvSeq").val());
 							$("#seat_change").bPopup().close();
 				    	} else if (result.status == "LOGIN FAIL") {
@@ -1254,6 +1200,9 @@
 		fn_centerChange : function() {
 	 		var url = "/backoffice/bld/floorComboInfo.do"
 	 		var params = {"centerCd" : $("#resvCenterCd").val()}
+	 		
+	 		//입장료
+	 		$("#resvEntryPayCost").val($("#resvCenterCd").find("option:selected").data("entrypaycost"));
 	 		var returnVal = uniAjaxReturn(url, "GET", false, params, "lst");
 	 		fn_comboListJson("resvFloorCd", returnVal, "jqGridFunc.fn_floorChange", "100px;", "");
 		},
@@ -1265,6 +1214,7 @@
 		},
 		fn_longSeatAdd : function() {
 			$("#seasonCd").val("");
+			$("#resvEntryPayCost").val("");
 			$("#longResvCenterCd").val("");
 			$("#longResvFloorCd ").val("");
 			$("#longResvPartCd").val("");
@@ -1324,6 +1274,7 @@
 				"partCd" : $("#longResvPartCd").val(),
 				"seatCd" : $("#longResvSeatCd").val(),
 				"userId" : $("#longResvUserId").val(),
+				"resvEntryPayCost" : $("#resvEntryPayCost").val(),
 				"resvSeatPayCost" : $("#longResvPayCost").val(),
 				"resvUserNm" : $("#longResvUserName").val(),
 				"longResvEmpNo" : $("#longResvEmpNo").val(),
@@ -1525,7 +1476,6 @@
 						{label: '체크인 시간', name:'qr_check_tm', index:'qr_check_tm', align:'center'},
 						{label: '통신시간 ', name:'rcv_dt', index:'rcv_dt', align:'center'},
 						{label: '통신결과', name:'rcv_cd', index:'rcv_cd', align:'center'}
-						/* {label: '현금영수증출력', name:'cash_receipts_print', index:'cash_receipts_print', align:'center', sortable : false, formatter:jqGridFunc.buttonSetting}, */
 					], 
 					rowNum : 5,  //레코드 수
 					rowList : [5,10,20,30,40,50],  // 페이징 수
@@ -1586,9 +1536,9 @@
 							page : gridPage,
 							rowNum : $('#inOutHisPager .ui-pg-selbox option:selected').val(),
 							postData : JSON.stringify({
-											"pageIndex": gridPage,
-											"pageUnit":$('#inOutHisPager .ui-pg-selbox option:selected').val()
-										})
+								"pageIndex": gridPage,
+								"pageUnit":$('#inOutHisPager .ui-pg-selbox option:selected').val()
+							})
 						}).trigger("reloadGrid");
 					},
 					onSelectRow : function(rowId) {
@@ -1627,7 +1577,7 @@
 				params,
 				false,
 				function(result) {
-					if (result.status == "SUCCESS") {
+					if(result.status == "SUCCESS") {
 						common_modelCloseM("입출입 정보가 정상적으로 등록되었습니다.", "rsv_inout_add");
 					} else {
 						common_modelCloseM("에러가 발생하였습니다.", "rsv_inout_add");

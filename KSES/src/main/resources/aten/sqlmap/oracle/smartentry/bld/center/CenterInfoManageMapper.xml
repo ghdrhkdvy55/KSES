@@ -70,7 +70,7 @@
     
 	<select id="selectCenterInfoComboList" resultType="lmap">
          SELECT  
-         	A.CENTER_CD, A.CENTER_NM 
+         	A.CENTER_CD, A.CENTER_NM, A.CENTER_ENTRY_PAY_COST 
          FROM TSEB_CENTER_INFO_M A
          WHERE A.USE_YN = 'Y'
          ORDER BY A.CENTER_ORDER  ASC
