@@ -65,11 +65,11 @@
                         <h4>발급 정보</h4>
                         <ul class="cash_refund">
                             <li>
-                                <input type="radio" checked name="userRcptDvsn" id="RCPT_DVSN_1" value="RCPT_DVSN_1">
+                                <input type="radio" checked name="userRcptDvsn" id="RCPT_DVSN_1" value="RESV_RCPT_DVSN_1">
                                 <label for="RCPT_DVSN_1"><span></span>소득 공제용</label>
                             </li>
                             <li>
-                                <input type="radio" name="userRcptDvsn" id="RCPT_DVSN_2" value="RCPT_DVSN_2">
+                                <input type="radio" name="userRcptDvsn" id="RCPT_DVSN_2" value="RESV_RCPT_DVSN_2">
                                 <label for="RCPT_DVSN_2"><span></span>지출 증빙용</label>
                             </li>
                             <li><input type="text" id="userRcptNumber" onkeypress="onlyNum(this);" placeholder="'-'없이 입력해 주세요."></li>

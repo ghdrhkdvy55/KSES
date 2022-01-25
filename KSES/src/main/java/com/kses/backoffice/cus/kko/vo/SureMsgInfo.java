@@ -14,16 +14,22 @@ public class SureMsgInfo {
 		String buttonNm = "";
 		String buttonUrl = "";
 		
-		String userDvsn = resvInfo.get("resv_user_dvsn").toString();
+//		String userDvsn = resvInfo.get("resv_user_dvsn").toString();
 		String userNm = resvInfo.get("resv_user_nm").toString();
 		String userPhNum = resvInfo.get("resv_user_clphn").toString();
 		
-		String centerPilotYn = resvInfo.get("center_pilot_yn").toString();
+//		String centerPilotYn = resvInfo.get("center_pilot_yn").toString();
 		String resvSeq = resvInfo.get("resv_seq").toString();
 		String resvDate = resvInfo.get("resv_end_dt").toString();
 		String centerNm = resvInfo.get("center_nm").toString();
 		String seatNm = resvInfo.get("seat_nm").toString();
 		
+		/**
+		 * [고객사 요청 사항] 
+		 * 알림톡 템플릿 기존 케이스별 발송에서 한가지로(KSES_003) 통일 요청
+		 * 오픈전 최종 테스트 후 메시지 템플릿 추가 요청이 있을수 있으니 임시 주석처리
+		 * 2022-01-24 JangDaeHan
+		 */
 		if(msgDvsn.equals("RESERVATION")) {
 //			if(centerPilotYn.equals("Y")) {
 //                if(userDvsn.equals("USER_DVSN_1")) {
