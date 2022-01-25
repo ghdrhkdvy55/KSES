@@ -147,6 +147,7 @@
 							'</tr>'
 						).data('item', item).appendTo($tbody);
 					}
+					$tbody.find('tr:last').addClass('tb_bottom');
 				}
 			},
 			function(request){
