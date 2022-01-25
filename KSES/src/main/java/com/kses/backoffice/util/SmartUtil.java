@@ -485,13 +485,10 @@ public class SmartUtil {
 
 	//fomr  전송 응답
 	public JsonNode requestHttpForm(String _url, Map<String, String> _sendInfos) {
-
         HttpClient client = HttpClientBuilder.create().build();
-
         HttpPost httpPost = new HttpPost(_url);
 
         try {
-
             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
             /*
             for (Map.Entry<String, String> entry : _sendInfos.entrySet()) {
@@ -544,7 +541,7 @@ public class SmartUtil {
             httpPost.setHeader("Connection", "keep-alive");
             httpPost.setHeader("Content-Type", "application/json");
 
-            httpPost.setEntity(new StringEntity(_jsonInfo)); //json 메시지 입력
+            httpPost.setEntity(new StringEntity(_jsonInfo, "UTF-8")); //json 메시지 입력
             LOGGER.debug(_jsonInfo.toString());
             HttpResponse response = client.execute(httpPost);
             

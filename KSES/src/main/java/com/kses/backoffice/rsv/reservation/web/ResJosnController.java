@@ -1,5 +1,24 @@
 package com.kses.backoffice.rsv.reservation.web;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.json.simple.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.kses.backoffice.cus.usr.service.UserInfoManageService;
 import com.kses.backoffice.cus.usr.vo.UserInfo;
@@ -14,10 +33,16 @@ import com.kses.backoffice.sym.log.vo.InterfaceInfo;
 import com.kses.backoffice.sym.log.vo.sendEnum;
 import com.kses.backoffice.util.SmartUtil;
 import com.kses.backoffice.util.service.UniSelectInfoManageService;
-import com.popbill.api.CBIssueResponse;
+
+import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.LoginVO;
+import egovframework.com.cmm.service.Globals;
+import egovframework.let.utl.sim.service.EgovFileScrty;
+import egovframework.rte.fdl.property.EgovPropertyService;
 import com.popbill.api.CashbillService;
 import com.popbill.api.PopbillException;
 import com.popbill.api.Response;
+import com.popbill.api.CBIssueResponse;
 import com.popbill.api.cashbill.Cashbill;
 import com.popbill.api.cashbill.CashbillInfo;
 import egovframework.com.cmm.EgovMessageSource;
@@ -42,6 +67,9 @@ import java.util.Map;
 @RequestMapping("/backoffice/rsv")
 public class ResJosnController {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(ResJosnController.class);
+	// 추후 front 로 이동
+
 	@Autowired
 	EgovMessageSource egovMessageSource;
 
@@ -62,7 +90,7 @@ public class ResJosnController {
 
 	@Autowired
 	private CashbillService cashbillService;
-
+	
 	@Autowired
 	private UniSelectInfoManageService uniService;
 
@@ -194,8 +222,7 @@ public class ResJosnController {
 				}
 			} else if (SmartUtil.NVL(sendInfo.get("gubun"), "").toString().equals("Inf")) {
 				Url = propertiesService.getString("sppeedUrl_T") + "trade/schTradeInfo";
-				node = SmartUtil.requestHttpJson(Url, jsonObject.toJSONString(), "SPEEDSCHTRADEINFO", "SPEEDON",
-						"KSES");
+				node = SmartUtil.requestHttpJson(Url, jsonObject.toJSONString(), "SPEEDSCHTRADEINFO", "SPEEDON","KSES");
 				if (node.get("Error_Cd").asText().equals("SUCCESS")) {
 					// 예약 테이블 취소 정보 처리 하기
 				} else {
@@ -209,6 +236,17 @@ public class ResJosnController {
 				// 취소 정보
 				Url = propertiesService.getString("sppeedUrl_T") + "trade/fepDeposit";
 				Map<String, Object> resvInfo = resService.selectUserResvInfo(jsonObject);
+
+				if(!SmartUtil.NVL(resvInfo.get("resv_pay_dvsn"),"").equals("RESV_PAY_DVSN_2")) {
+					switch (SmartUtil.NVL(resvInfo.get("resv_pay_dvsn"),"")) {
+						case "RESV_PAY_DVSN_1" : Message = "미결제 예약정보 입니다.";  break;
+						case "RESV_PAY_DVSN_3" : Message = "이미 결제취소된 예약정보 입니다.";  break;
+						default: Message = "알수없는 예약정보 입니다."; break;
+					}
+					model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+					model.addObject(Globals.STATUS_MESSAGE, Message);
+					return model;
+				}
 
 				jsonObject.put("System_Type", "E");
 				jsonObject.put("External_Key", resvInfo.get("resv_seq"));
@@ -439,7 +477,7 @@ public class ResJosnController {
 					ResvInfo resvInfo = new ResvInfo();
 					resvInfo.setResvSeq(resSeq);
 					resvInfo.setResvState("RESV_STATE_2");
-					resService.resvStateChange(resvInfo);
+					resService.updateResvState(resvInfo);
 
 					return model;
 				} else {
@@ -512,7 +550,7 @@ public class ResJosnController {
 				}
 				
 				//QR발급회차 업데이트
-				resService.resvQrCountChange(resvSeq);
+				resService.updateResvQrCount(resvSeq);
 
 				String gubun = tickPlace.equals("ONLINE") ? "INTERVAL" : "PAPER";
 				String qrCode = EgovFileScrty.encode(resvSeq + ":" + qrTime + ":" + inOt + ":" + gubun + ":"
@@ -584,14 +622,13 @@ public class ResJosnController {
 			String checkResvSeq = uniService.selectIdDoubleCheck("RESV_SEQ", "TSER_RESV_INFO_I", "RESV_SEQ = ["+ SmartUtil.NVL(jsonInfo.get("RES_NO"), "").toString() + "[") > 0 ? "OK" : "FAIL";
 			if (checkResvSeq.equals("OK")) {
 				Map<String, Object> resInfo = resService.selectUserResvInfo(searchVO);
-
 				Map<String, Object> machineVO = new HashMap<String, Object>();
 				machineVO.put("ticketMchnSno", SmartUtil.NVL(jsonInfo.get("MACHINE_SERIAL"), "").toString());
 				machineVO.put("centerCd", SmartUtil.NVL(resInfo.get("center_cd"), "").toString());
 				Map<String, Object> machineSerial = resService.selectTicketMchnSnoCheck(machineVO);
-
+				
 				String recDate = SmartUtil.NVL(jsonInfo.get("RES_SEND_DATE"), "19700101").toString();
-
+				
 				 if (machineSerial.get("cnt").toString().equals("0")) {
 					returnCode = "ERROR_03";
 					returnMessage = "해당 지점 예약이 아닙니다. 예약내역을 확인하여 주십시요.";
@@ -600,8 +637,7 @@ public class ResJosnController {
 					returnCode = "ERROR_04";
 					returnMessage = "이미 결제가 완료 되었습니다.";
 				} else {
-					if (resInfo != null && SmartUtil.NVL(resInfo.get("resv_end_dt"), "").toString().equals(localTime)
-							&& recDate.substring(0, 8).equals(localTime)) {
+					if (resInfo != null && SmartUtil.NVL(resInfo.get("resv_end_dt"), "").toString().equals(localTime) && recDate.substring(0, 8).equals(localTime)) {
 						log.info(localTime);
 						resName = SmartUtil.NVL(resInfo.get("user_nm"), "").toString();
 						resPrice = SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString();
@@ -618,7 +654,7 @@ public class ResJosnController {
 			}
 
 			info.setTrsmrcvSeCode(sendEnum.RPS.getCode());
-
+	
 			info.setRequstSysId(SmartUtil.NVL(jsonInfo.get("MACHINE_SERIAL").toString(), "").toString());
 			info.setRequstInsttId("MACHIN");
 			info.setRequstTrnsmitTm(SmartUtil.NVL(jsonInfo.get("RES_SEND_DATE"), "").toString());
@@ -661,7 +697,6 @@ public class ResJosnController {
 		model.addObject("IF_NO", jsonInfo.get("IF_NO"));
 		model.addObject("RES_NO", jsonInfo.get("RES_NO"));
 		model.addObject("RES_PRICE", jsonInfo.get("RES_PRICE"));
-
 		model.addObject("RETURN_DATE", SmartUtil.nowTime());
 		model.addObject("MACHINE_SERIAL", jsonInfo.get("MACHINE_SERIAL"));
 
@@ -698,10 +733,9 @@ public class ResJosnController {
 			String localTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 			String recDate = SmartUtil.NVL(jsonInfo.get("RES_SEND_DATE"), "19700101").toString();
 			String qrTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+			
+			log.debug(Integer.valueOf(SmartUtil.NVL(jsonInfo.get("RES_PRICE"), "").toString()) + ":" + Integer.valueOf(SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString()));
 
-
-			log.debug(Integer.valueOf(SmartUtil.NVL(jsonInfo.get("RES_PRICE"), "").toString()) + ":"
-					+ Integer.valueOf(SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString()));
 			if (resInfo == null || !recDate.substring(0, 8).equals(localTime)) {
 				returnCode = "ERROR_01";
 				returnMessage = "예약 정보 없음.";
@@ -723,7 +757,7 @@ public class ResJosnController {
 				// TO-DO 층/구역명 추가 예정
 				
 				//QR발급회차 업데이트
-				resService.resvQrCountChange(SmartUtil.NVL(jsonInfo.get("RES_NO"), "").toString());
+				resService.updateResvQrCount(SmartUtil.NVL(jsonInfo.get("RES_NO"), "").toString());
 				
 				String qrCode = EgovFileScrty.encode(resInfo.get("resv_seq") + ":" + qrTime
 						+ ":IN:PAPER:" + SmartUtil.NVL(resInfo.get("user_id"), "").toString() + ":"
@@ -812,15 +846,15 @@ public class ResJosnController {
 			
 			if(billInfo == null) {
 				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-				model.addObject(Globals.STATUS_MESSAGE, "등록된 현금영수증 발행 정보가 없습니다 .");
+				model.addObject(Globals.STATUS_MESSAGE, "예약 지점에 등록된 현금영수증 발행 정보가 없습니다 .");
 				return model;
 			}
 			
 			String resvRcptState = SmartUtil.NVL(resvInfo.get("resv_rcpt_state"), "");
 			if(resvRcptState.equals("")) {
-				resvRcptState = "RCPT_STATE_1";
+				resvRcptState = "RESV_RCPT_STATE_1";
 			} else {
-				resvRcptState = resvRcptState.equals("RCPT_STATE_1") ? "RCPT_STATE_2" : "RCPT_STATE_1"; 
+				resvRcptState = resvRcptState.equals("RESV_RCPT_STATE_1") ? "RESV_RCPT_STATE_2" : "RESV_RCPT_STATE_1";
 			}
 			
 			// 지점 현금영수증 정보
@@ -839,7 +873,7 @@ public class ResJosnController {
 			String orgConfirmNum = "";
 			String orgTradeDate = "";
 			
-			if(resvRcptState.equals("RCPT_STATE_1")) {
+			if(resvRcptState.equals("RESV_RCPT_STATE_1")) {
 				mgtKey = resvSeq + "_001";
 				delMgtKey = resvSeq + "_002";
 				tradeType = "승인거래";
@@ -883,7 +917,6 @@ public class ResJosnController {
 			cashbill.setTradeOpt("일반");
 
 			int payAmt = Integer.valueOf(SmartUtil.NVL(resvInfo.get("resv_pay_cost"), "0").toString());
-			
 			int payCost = 0;
 			int payTxt = 0;
             
@@ -895,6 +928,7 @@ public class ResJosnController {
 			
 			// 공급가액, 숫자만 가능
 			cashbill.setSupplyCost(String.valueOf(payCost));
+
 			// 부가세, 숫자만 가능
 			cashbill.setTax(String.valueOf(payTxt));
 
@@ -933,15 +967,13 @@ public class ResJosnController {
 			// 거래처 이메일
 			// 팝빌 개발환경에서 테스트하는 경우에도 안내 메일이 전송되므로,
 			// 실제 거래처의 메일주소가 기재되지 않도록 주의
-			cashbill.setEmail(SmartUtil.NVL(resvInfo.get("user_email"), "").toString());
-			//cashbill.setEmail("eogks196@naver.com");
+			cashbill.setEmail("");
 			// 거래처 휴대폰
 			cashbill.setHp(SmartUtil.NVL(resvInfo.get("user_phone"), "").toString());
 
-			
 			ResvInfo info = new ResvInfo();
 			String resvRcptNumber = "";
-			if(resvRcptState.equals("RCPT_STATE_1")) {
+			if(resvRcptState.equals("RESV_RCPT_STATE_1")) {
 				CBIssueResponse response = cashbillService.registIssue(corpNum, cashbill, memo);
 				resvRcptNumber = response.getConfirmNum();
 				log.info(resvRcptNumber);
@@ -994,8 +1026,18 @@ public class ResJosnController {
 			Map<String, Object> resvInfo = resService.selectResvInfoDetail(resvSeq);
 			Map<String, Object> billInfo = resService.selectResvBillInfo(resvSeq);
 			
+			if(SmartUtil.NVL(resvInfo.get("resv_rcpt_state"),"").equals("")) {
+				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+				model.addObject(Globals.STATUS_MESSAGE, "현금영수증 발행 기록이 없습니다 .");
+				return model;
+			} else if(billInfo == null) {
+				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+				model.addObject(Globals.STATUS_MESSAGE, "예약 지점에 등록된 현금영수증 발행 정보가 없습니다 .");
+				return model;
+			}
+
 			String corpNum = SmartUtil.NVL(billInfo.get("bill_num"), "");
-			String mgtKey = SmartUtil.NVL(resvInfo.get("resv_rcpt_state"), "").equals("RCPT_STATE_1") ? resvSeq + "_001" : resvSeq + "_002";
+			String mgtKey = SmartUtil.NVL(resvInfo.get("resv_rcpt_state"), "").equals("RESV_RCPT_STATE_1") ? resvSeq + "_001" : resvSeq + "_002";
 			CashbillInfo cashBillInfo = cashbillService.getInfo(corpNum, mgtKey);
 			
 			model.addObject("cashBillInfo", cashBillInfo);

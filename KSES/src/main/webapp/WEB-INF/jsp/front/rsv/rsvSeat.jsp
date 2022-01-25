@@ -208,11 +208,11 @@
                             </ul>
                             <ul id="ENTRY_DVSN_1_cash_area" class="cash_refund">
                                 <li>
-                                    <input class="cash_radio" type="radio" checked name="ENTRY_DVSN_1_rcpt_dvsn" id="ENTRY_DVSN_1_rcpt_dvsn1" value="RCPT_DVSN_1">
+                                    <input class="cash_radio" type="radio" checked name="ENTRY_DVSN_1_rcpt_dvsn" id="ENTRY_DVSN_1_rcpt_dvsn1" value="RESV_RCPT_DVSN_1">
                                     <label for="ENTRY_DVSN_1_rcpt_dvsn1"><span></span>소득 공제용</label>
                                 </li>
                                 <li>
-                                    <input class="cash_radio" type="radio" name="ENTRY_DVSN_1_rcpt_dvsn" id="ENTRY_DVSN_1_rcpt_dvsn2" value="RCPT_DVSN_2">
+                                    <input class="cash_radio" type="radio" name="ENTRY_DVSN_1_rcpt_dvsn" id="ENTRY_DVSN_1_rcpt_dvsn2" value="RESV_RCPT_DVSN_2">
                                     <label for="ENTRY_DVSN_1_rcpt_dvsn2"><span></span>지출 증빙용</label>
                                 </li>
                                 <li><input type="number" id="ENTRY_DVSN_1_cash_number" onkeypress="onlyNum(this);" placeholder="'-'없이 입력해 주세요."></li>
@@ -380,11 +380,11 @@
 		                            </ul>
                                     <ul id="ENTRY_DVSN_2_cash_area" class="cash_refund">
                                         <li>
-                                            <input class="cash_radio" type="radio" checked name="ENTRY_DVSN_2_rcpt_dvsn" id="ENTRY_DVSN_2_rcpt_dvsn1" value="RCPT_DVSN_1">
+                                            <input class="cash_radio" type="radio" checked name="ENTRY_DVSN_2_rcpt_dvsn" id="ENTRY_DVSN_2_rcpt_dvsn1" value="RESV_RCPT_DVSN_1">
                                             <label for="ENTRY_DVSN_2_rcpt_dvsn1"><span></span>소득 공제용</label>
                                         </li>
                                         <li>
-                                            <input class="cash_radio" type="radio" name="ENTRY_DVSN_2_rcpt_dvsn" id="ENTRY_DVSN_2_rcpt_dvsn2" value="RCPT_DVSN_2">
+                                            <input class="cash_radio" type="radio" name="ENTRY_DVSN_2_rcpt_dvsn" id="ENTRY_DVSN_2_rcpt_dvsn2" value="RESV_RCPT_DVSN_2">
                                             <label for="ENTRY_DVSN_2_rcpt_dvsn2"><span></span>지출 증빙용</label>
                                         </li>
                                         <li><input type="number" id="ENTRY_DVSN_2_cash_number" onkeypress="onlyNum(this);" placeholder="'-'없이 입력해 주세요."></li>
