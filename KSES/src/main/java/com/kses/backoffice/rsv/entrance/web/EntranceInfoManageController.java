@@ -71,7 +71,6 @@ public class EntranceInfoManageController {
 		searchVO.put("searchTo", nowDate);
 		searchVO.put("searchFrom", nowDate);
 		
-		LOGGER.info("현재 시간 : " + nowDate);
 		loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
 		searchVO.put("authorCd", loginVO.getAuthorCd());
 		searchVO.put("centerCd", loginVO.getCenterCd());
@@ -90,11 +89,11 @@ public class EntranceInfoManageController {
 		searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
 		
 		List<Map<String, Object>> list = resvService.selectResvInfoManageListByPagination(searchVO);
+
+		
 	    model.addObject(Globals.JSON_RETURN_RESULTLISR, list);
 	    model.addObject(Globals.STATUS_REGINFO, searchVO);
 	    int totCnt = list.size() > 0 ? Integer.valueOf( list.get(0).get("total_record_count").toString()) : 0;
-	    
-	    LOGGER.debug("totCnt:" + totCnt);
 	    
 	    paginationInfo.setTotalRecordCount(totCnt);
 	    model.addObject("paginationInfo", paginationInfo);
