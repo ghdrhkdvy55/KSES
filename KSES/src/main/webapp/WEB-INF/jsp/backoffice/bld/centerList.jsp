@@ -306,9 +306,11 @@
 		            	<th>발급구분</th>
 		            	<th>사업자번호</th>
 		            	<th>법인명</th>
+		            	<th>대표자</th>
 		            	<th>주소</th>
 		            	<th>연락처</th>
-		            	<th>팝빌아이디</th>
+		            	<th>Email</th>
+		            	<th>팝빌ID</th>
 		            	<th>수정/삭제</th>
 	            	</tr>
 	          </thead>
@@ -1451,7 +1453,7 @@
 						common_popup(result.message, "N", "");
 						location.href="/backoffice/login.do";
 					} else if (result.status == "SUCCESS") {
-						jqGridFunc.fn_billDayInfoList($("#searchCenterCd").val());
+						/* jqGridFunc.fn_billDayInfoList($("#searchCenterCd").val()); */
 						common_popup("저장에 성공했습니다.", "Y", "bld_billday_set");
 					}
 				},
