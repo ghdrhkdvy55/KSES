@@ -71,6 +71,7 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 		JsonNode node = null;
 
 		try {	
+			jsonObject.put("resvSeq", resvSeq);
 			Map<String, Object> resvInfo = resvService.selectUserResvInfo(jsonObject);
 			
 			if(!SmartUtil.NVL(resvInfo.get("resv_state"),"").equals("RESV_STATE_1")) {
@@ -93,12 +94,12 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 			jsonObject.put("External_Key", resvInfo.get("resv_seq"));
 			jsonObject.put("Card_Id", resvInfo.get("user_card_id"));
 
-			if(SmartUtil.NVL(jsonObject.get("Pw_YN"),"").equals("N")) {
-				jsonObject.put("Card_Pw", "");
-				jsonObject.put("Pw_YN", "N");
-			} else {
+			if(isPassword) {
 				jsonObject.put("Card_Pw", SmartUtil.encryptPassword(jsonObject.get("Card_Pw").toString(), "SHA-256"));
 				jsonObject.put("Pw_YN", "Y");
+			} else {
+				jsonObject.put("Card_Pw", "");
+				jsonObject.put("Pw_YN", "N");
 			}
 			
 			jsonObject.put("Card_Seq", resvInfo.get("user_card_seq"));

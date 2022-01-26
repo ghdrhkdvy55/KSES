@@ -96,10 +96,8 @@ public class ResvInfoManageController {
 	}
     
 	@RequestMapping(value="rsvListAjax.do")
-	public ModelAndView selectCenterAjaxInfo(	@ModelAttribute("loginVO") LoginVO loginVO, 
-												@RequestBody Map<String,Object> searchVO, 
-												HttpServletRequest request, 
-												BindingResult bindingResult	) throws Exception {
+	public ModelAndView selectCenterAjaxInfo(	@RequestBody Map<String,Object> searchVO, 
+												HttpServletRequest request) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
 		try {
@@ -113,12 +111,8 @@ public class ResvInfoManageController {
 			  } 
 			
 			  int pageUnit = searchVO.get("pageUnit") == null ? propertiesService.getInt("pageUnit") : Integer.valueOf((String) searchVO.get("pageUnit"));
-			  
 			  searchVO.put("pageSize", propertiesService.getInt("pageSize"));
-			  
-			  LOGGER.debug("------------------------pageUnit : " + pageUnit);
-			  
-			  //Paging
+
 		   	  PaginationInfo paginationInfo = new PaginationInfo();
 			  paginationInfo.setCurrentPageNo(Integer.parseInt(SmartUtil.NVL(searchVO.get("pageIndex"), "1")));
 			  paginationInfo.setRecordCountPerPage(pageUnit);
@@ -128,13 +122,12 @@ public class ResvInfoManageController {
 			  searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
 			  searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
 			  
-			  loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
+			  LoginVO loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
 			  
 			  searchVO.put("authorCd", loginVO.getAuthorCd());
 			  searchVO.put("centerCd", loginVO.getCenterCd());
 			  
 			  List<Map<String, Object>> list = resvService.selectResvInfoManageListByPagination(searchVO);
-			  LOGGER.debug("[-------------------------------------------list:" + list.size() + "------]");
 		      model.addObject(Globals.JSON_RETURN_RESULTLISR, list);
 		      model.addObject(Globals.STATUS_REGINFO, searchVO);
 		      int totCnt = list.size() > 0 ? Integer.valueOf( list.get(0).get("total_record_count").toString()) : 0;
@@ -146,7 +139,6 @@ public class ResvInfoManageController {
 		      model.addObject("totalCnt", totCnt);
 		      
 		} catch(Exception e) {
-			LOGGER.debug("---------------------------------------");
 			StackTraceElement[] ste = e.getStackTrace();
 			LOGGER.error(e.toString() + ":" + ste[0].getLineNumber());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
@@ -169,10 +161,9 @@ public class ResvInfoManageController {
 			}
 		
 			LoginVO loginVO = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
-			params.put("userId", loginVO.getAdminId());
+			params.put("adminId", loginVO.getAdminId());
 			
-			ModelMap resultMap = resvService.resvSeatChange(params);
-			model.addObject(resultMap);	
+			model.addObject(resvService.resvSeatChange(params));	
 		} catch (Exception e){
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
@@ -299,7 +290,7 @@ public class ResvInfoManageController {
 			List<Map<String, Object>> resvList = resvService.selectResvInfoManageListByPagination(params);
 
 			for(Map<String,Object> resvInfo : resvList) {
-				if(!SmartUtil.NVL(resvInfo.get("resv_ticket_dvsn"),"RESV_TICKET_DVSN_1").equals("RESV_TICKET_DVSN_2")) {
+				if(!SmartUtil.NVL(resvInfo.get("resv_ticket_dvsn"),"").equals("RESV_TICKET_DVSN_2")) {
 					String resvSeq = resvInfo.get("resv_seq").toString();
 					ModelMap resultMap = resvService.resvInfoAdminCancel(resvSeq);
 				
@@ -333,10 +324,8 @@ public class ResvInfoManageController {
 	}
 	
 	@RequestMapping(value="attendListAjax.do")
-	public ModelAndView selectAttendListAjax(	@ModelAttribute("loginVO") LoginVO loginVO, 
-												@RequestBody Map<String,Object> searchVO, 
-												HttpServletRequest request, 
-												BindingResult bindingResult	) throws Exception {
+	public ModelAndView selectAttendListAjax(	@RequestBody Map<String,Object> searchVO, 
+												HttpServletRequest request) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
 		try {
@@ -381,8 +370,7 @@ public class ResvInfoManageController {
 	
 	@RequestMapping (value="attendInfoUpdate.do")
 	public ModelAndView updateAttendInfo(	HttpServletRequest request,  
-											@RequestBody AttendInfo vo, 
-											BindingResult result) throws Exception {
+											@RequestBody AttendInfo vo) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
@@ -410,15 +398,13 @@ public class ResvInfoManageController {
 	}
 	
 	@RequestMapping (value="resvValidCheck.do")
-	public ModelAndView resvValidCheck(	@ModelAttribute("loginVO") LoginVO loginVO,
-										@RequestBody Map<String, Object> params,
-										HttpServletRequest request,
-										BindingResult result) throws Exception {
+	public ModelAndView resvValidCheck(	@RequestBody Map<String, Object> params,
+										HttpServletRequest request) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
 			HttpSession httpSession = request.getSession(true);
-			loginVO = (LoginVO)httpSession.getAttribute("LoginVO");
+			LoginVO loginVO = (LoginVO)httpSession.getAttribute("LoginVO");
 			
 			if(loginVO == null) {
 				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);

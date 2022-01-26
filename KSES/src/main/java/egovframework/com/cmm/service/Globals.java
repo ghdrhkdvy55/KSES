@@ -97,6 +97,6 @@ public class Globals {
 	public static final String PROCESS_STATE_NO = "NO_UPDATE";
 	
 	
-	
+	public static final String STEP = "step";
 	public static final String JSON_NO_KEY = "NO_KEY";
 }

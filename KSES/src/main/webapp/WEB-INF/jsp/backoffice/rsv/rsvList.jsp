@@ -551,9 +551,9 @@
 					{label: '예약일자', name:'resv_end_dt', index:'resv_end_dt', align:'center', formatter:jqGridFunc.formSetting},
 					{label: '예약번호', name:'resv_seq', index:'resv_seq', align:'center'},
 					{label: '지점', name:'center_nm', index:'center_nm', align:'center'},
+					{label: '좌석등급', name:'part_class', index:'part_class', align:'center'},
 					{label: '좌석정보', name:'seat_nm', index:'seat_nm', align:'center'},
-					{label: '구역등급', name:'part_class', index:'part_class', align:'center'},					
-					{label: '아이디', name:'user_id', index:'user_id', align:'center'},
+					//{label: '아이디', name:'user_id', index:'user_id', align:'center'},
 					{label: '이름', name:'user_nm', index:'user_nm', align:'center'},
 					{label: '전화번호', name:'user_phone', index:'user_phone', align:'center'},
 					{label: '금액', name: 'resv_pay_cost', index:'resv_pay_cost', align:'center', formatter:jqGridFunc.formSetting},
@@ -674,21 +674,21 @@
 			
 			item.resv_pay_dvsn = item.center_pilot_yn == "N" ? "RESV_PAY_DVSN_2" : item.resv_pay_dvsn;
 			if(index == 'resv_qr_print' && item.resv_pay_dvsn == 'RESV_PAY_DVSN_2' && (item.resv_state == 'RESV_STATE_1' || item.resv_state == 'RESV_STATE_2')) {
-				form = '<a href="javascript:jqGridFunc.fn_qrInfo(&#39;' + item.resv_seq + '&#39;);" class="detailBtn">QR출력</a>';	
+				form = '<a href="javascript:jqGridFunc.fn_qrInfo(&#39;' + item.resv_seq + '&#39;);" class="blueBtn">QR출력</a>';	
 			} else if(index == 'resv_end_dt') {
 				form = fn_resvDateFormat(item.resv_end_dt); 	
 			} else if(index == 'resv_pay_cost') {
 				form = item.resv_pay_cost + "원";
-			} else if(index == 'resv_rcpt_print' && item.resv_rcpt_yn == 'Y') {
+			} else if(index == 'resv_rcpt_print' && item.resv_rcpt_yn == 'Y' && item.resv_state != 'RESV_STATE_4') {
 				var rcptState = "발행";
 				if(item.resv_rcpt_state == "" || item.resv_rcpt_state == "RESV_RCPT_STATE_1") {
-					var rcptState = "취소";	
+					form =  '<a href="javascript:jqGridFunc.fn_billPrint(&#39;' + item.resv_seq + '&#39;);" class="blueBtn" style="padding: 5px 12px;">취소</a>';
+					form += '<a href="javascript:jqGridFunc.fn_billState(&#39;' + item.resv_seq + '&#39;);" class="blueBtn" style="padding: 5px 12px;">조회</a>';
 				} else {
-					var rcptState = "발행";	
+					form =  '<a href="javascript:jqGridFunc.fn_billPrint(&#39;' + item.resv_seq + '&#39;);" class="blueBtn" style="padding: 5px 12px;">발행</a>';
+					form += '<a href="javascript:void(0);" class="blueBtn" style="padding: 5px 12px;">조회</a>';
 				}
-				  
-				form = '<a href="javascript:jqGridFunc.fn_billPrint(&#39;' + item.resv_seq + '&#39;);" class="detailBtn">' + rcptState +'</a>';
-				form += '<a href="javascript:jqGridFunc.fn_billState(&#39;' + item.resv_seq + '&#39;);" class="detailBtn">조회</a>';
+
 			}
 			
 			return form;
@@ -755,16 +755,12 @@
 						$("#rsvPopResvEntryPayCost").html(obj.resv_entry_pay_cost + "원");
 						$("#rsvPopResvTicketDvsn").html(obj.resv_ticket_dvsn_text);
 						$("#rsvPopResvState").html(obj.resv_state_text);
-						
-						if(obj.resv_entry_dvsn == "ENTRY_DVSN_2" && obj.resv_state == "RESV_STATE_1" && obj.resv_pay_dvsn == "RESV_PAY_DVSN_1") { 
+
+						if(obj.resv_state == "RESV_STATE_1" || obj.resv_state == "RESV_STATE_2") {
 							$("#rsvPopSeatChange a").off().on('click',function (e) {
 								jqGridFunc.fn_resvSeatInfo("CHANGE",obj);
 							});		
-						} else {
-							$("#rsvPopSeatChange a").hide();
-						}
-						
-						if(obj.resv_state == "RESV_STATE_1" || obj.resv_state == "RESV_STATE_2") {
+							
 							$("#resvCancelBtn").show().off().on('click', function () {
 				        		$("#id_ConfirmInfo").off().on('click',function () {
 				        			jqGridFunc.fn_resvInfoCancel(obj.resv_seq);
@@ -772,6 +768,7 @@
 				        		fn_ConfirmPop("해당 예약정보를 취소 하시겠습니까?");
 							});
 						} else {
+							$("#rsvPopSeatChange a").hide();
 							$("#resvCancelBtn").hide();
 						}
 						
@@ -841,7 +838,7 @@
 					if (result.status == "SUCCESS") {
 						if(result.allCount > 0) {
 							result.message = 
-								"정상적으로 전체 예약취소 되었습니다." + "<br><br>" +
+								"전체 예약취소가 정상적으로 처리 되었습니다." + "<br><br>" +
 								"취소 예약정보 : "  + result.allCount + "건" + "<br>" +
 								"취소 성공 : "  + result.successCount + "건" + "<br>" + 
 								"취소 실패 : "  + result.failCount + "건" + "<br>" +
@@ -1159,11 +1156,11 @@
 				    	} else if (result.status == "LOGIN FAIL") {
 				    		common_popup("로그인 정보가 올바르지않습니다 다시 로그인해주세요", "Y", "");
 				    	} else {
-				    		common_popup("처리중 오류가 발생하였습니다.", "Y", "");
+				    		common_popup(result.step + "<br>" + result.message, "Y", "");
 				    	}
 					},
 					function(request) {
-						common_popup("ERROR : " +request.status, "N", "");	       						
+						common_popup("ERROR : " + request.status, "N", "");	       						
 					}    		
 				);	
 			}		
