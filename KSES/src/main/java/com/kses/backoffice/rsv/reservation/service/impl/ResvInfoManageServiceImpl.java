@@ -210,7 +210,7 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	@Override
 	public ModelMap updateResvInfoCopy(Map<String, Object> params) throws Exception {
 		ModelMap resultMap = new ModelMap();
-		String message = "신규 예약정보 등록중 오류가 발생하였습니다."; 
+		String message = "신규 예약정보 등록중 오류가 발생하였습니다.";
 		try {
 			
 			if(resvMapper.updateResvInfoCopy(params) > 0) {

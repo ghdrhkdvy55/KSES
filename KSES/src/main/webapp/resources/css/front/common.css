@@ -813,7 +813,7 @@ background-color: transparent;
   background-color: transparent
 }
 .mainBack #container {padding-top: 5rem;}
-.rsvBack #container {padding-top: 11rem;}
+.rsvBack #container {padding: 11rem 0;}
 .emer_notice div {
   white-space: nowrap;
   overflow: hidden;
@@ -2089,7 +2089,8 @@ ul.tabs li{
 
 .non_memBtn li {display: inline-block; width: 48%;}
 .non_memBtn li a {display: block;}
-.close_btn a{
+.close_btn {float:right;}
+.close_btn a {
     background: #393939;
     padding: 2rem 0;
     text-align: center;
