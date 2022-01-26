@@ -26,7 +26,7 @@
         <p class="pop_tit">메세지</p>
         <p class="pop_wrap"><span id="sp_MessageAlert"></span></p>
         <div class="right_box">
-          <a href="" id="id_ConfirmInfo" class="blueBtn">예</a>
+          <a href="#" id="id_ConfirmInfo" class="blueBtn">예</a>
           <a href="javascript:fn_ConfirmClose()" class="grayBtn">아니요</a>
       </div>
       </div>

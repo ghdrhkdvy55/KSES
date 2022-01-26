@@ -177,7 +177,7 @@
 					NVL(COUNT(*),0) FROM TSER_RESV_INFO_I
 				WHERE SEAT_CD = A.SEAT_CD
 				AND RESV_STATE NOT IN ('RESV_STATE_4') 
-				AND FN_RESVDATE(A.CENTER_CD) BETWEEN RESV_START_DT AND RESV_END_DT
+				AND FN_RESVDATE(A.CENTER_CD) = RESV_END_DT
 			) <= 0 THEN 'Y' 
 			ELSE 'N'
 			END AS RE_RESV_YN, A.RESV_PAY_DVSN, A.RESV_PAY_COST, F.USER_NM, A.RESV_STATE, A.USER_ID, B.CENTER_SPEED_CD, B.CENTER_RBM_CD,
@@ -307,15 +307,6 @@
     <select id="selectResvUserId" resultType="String">
     	SELECT USER_ID FROM TSER_RESV_INFO_I WHERE RESV_SEQ = #{resvSeq}
     </select>
-    
-	<!-- 자유석 좌석 구분값 조회 -->
-    <select id="selectResvEntryDvsn" resultType="String">
-    	SELECT RESV_ENTRY_DVSN AS resvEntryDvsn FROM TSER_RESV_INFO_I WHERE RESV_SEQ = #{resvSeq}
-    </select>
-	
-	<select id="selectFindPassword" resultType="String">
-	    SELECT FN_HASH (#{params.length}, #{params.password)) FROM DUAL
-	</select>
 	
 	<!-- 예약지점 휴일을 제외한 예약일자 조회 -->
 	<select id="selectResvDateList" resultType="String">
@@ -416,7 +407,7 @@
 		)
     </insert>
     
-	<update id="resvSeatChange">
+	<update id="updateResvSeatInfo">
     	UPDATE TSER_RESV_INFO_I SET
     		CENTER_CD = #{params.centerCd},
     		FLOOR_CD = #{params.floorCd},
@@ -439,20 +430,20 @@
     	WHERE RESV_SEQ = #{params.resv_seq}
     </update>
     
-	<update id="resvStateChange">
+	<update id="updateResvState">
 		UPDATE TSER_RESV_INFO_I SET 
 			RESV_STATE = #{resvState}
         WHERE RESV_SEQ = #{resvSeq}
     </update>
 
-	<update id="resvCompleteUse">
+	<update id="updateResvUseComplete">
 		UPDATE TSER_RESV_INFO_I SET 
 			RESV_STATE = 'RESV_STATE_3'
         WHERE RESV_END_DT = TO_CHAR(SYSDATE,'YYYYMMDD')
         AND RESV_STATE = 'RESV_STATE_2'
     </update>
     
-	<update id="resvQrCountChange">
+	<update id="updateResvQrCount">
 		UPDATE TSER_RESV_INFO_I SET 	
 			RESV_QR_COUNT = RESV_QR_COUNT + 1
         WHERE RESV_SEQ = #{resvSeq}
@@ -485,7 +476,7 @@
     <!--  현금 영수증 출력  -->
     <update id="resvBillChange">
 		UPDATE TSER_RESV_INFO_I SET 
-			<if test="resvRcptState == 'RCPT_STATE_1'">
+			<if test="resvRcptState == 'RESV_RCPT_STATE_1'">
 				RESV_RCPT_NUMBER = #{resvRcptNumber},
 			</if>
 			RESV_RCPT_STATE = #{resvRcptState}

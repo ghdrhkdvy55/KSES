@@ -80,7 +80,7 @@
 					LAST_UPDT_DTM = SYSDATE
 				WHERE BLKLST_SEQ = #{blklstSeq};
 	               
-				UPDATE TSER_USER_INFO_I SET USER_NOSHOW_LAST_DT = null, USER_NOSHOW_CNT = 0
+				UPDATE TSER_USER_INFO_I SET USER_NOSHOW_LAST_DT = NULL, USER_NOSHOW_CNT = 0
 				WHERE USER_ID = #{userId};
 			</when>
 			<otherwise>

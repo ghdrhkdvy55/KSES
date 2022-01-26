@@ -3,8 +3,7 @@ package com.kses.backoffice.sym.log.service;
 import java.util.List;
 import java.util.Map;
 
-import org.json.simple.JSONObject;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.ui.ModelMap;
 
 import com.kses.backoffice.sym.log.vo.InterfaceInfo;
 
@@ -14,7 +13,9 @@ public interface InterfaceInfoManageService {
     
     Map<String, Object> selectInterfaceDetail (String requstId) throws Exception;
     
-    Map<String, Object> SpeedOnCancelPayMent(JSONObject jsonObject) throws Exception;
+    ModelMap SpeedOnPayMent(String resvSeq, boolean isPassword) throws Exception;
+    
+    ModelMap SpeedOnPayMentCancel(String resvSeq, boolean isPassword) throws Exception;
 	
     int InterfaceInsertLoginLog(InterfaceInfo vo) throws Exception;
 	

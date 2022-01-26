@@ -323,19 +323,6 @@
     </div>
     <!-- 최근입장불가 팝업 // -->
     
-	<!-- // 결제인증 팝업 -->
-<!--     <div id="pay_number" class="popup">
-		<div class="pop_con rsv_popup">
-			<a class="button b-close">X</a>
-          	<div class="pop_wrap">
-            	<h4>결제 비밀번호를 입력해주세요.</h4>
-            	<ul class="pay_passWord">
-                	<li><input type="password" id="Card_Pw" placeholder="비밀번호를 입력하세요."></li>
-                	<li><a href="javascript:void(0);" class="mintBtn">확인</a></li>
-            	</ul>
-          	</div>
-      	</div>
-    </div> -->
     <!-- 결제인증 팝업 // -->
     <!-- // 결제인증 팝업 -->
 	<div id="pay_number" class="popup">
@@ -752,7 +739,7 @@
 								$("#Card_Pw").val("");
 								$("#pay_number").bPopup();
 								$(".classCost").html(resvInfo.resv_pay_cost);
-								$("#pay_number a:eq(1)").off().on('click', function() {});
+								//$("#pay_number a:eq(1)").off().on('click', function() {});
 								$("#pay_number a:eq(1)").click(function(resvSeq) {
 									mainService.fn_payment(resvInfo);	
 								});

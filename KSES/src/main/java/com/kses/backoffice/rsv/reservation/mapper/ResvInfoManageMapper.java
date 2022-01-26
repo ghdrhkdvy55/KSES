@@ -18,9 +18,7 @@ public interface ResvInfoManageMapper {
 	
 	public String selectResvUserId(@Param("resvSeq") String resvSeq) throws Exception;
 	
-	public String selectResvEntryDvsn(@Param("resvSeq") String paramString);
-	
-	public String selectFindPassword(@Param("params") Map<String, Object> paramMap );
+	public String selectResvPayCost(@Param("params") Map<String, Object> paramMap) ;
 	
 	public List<String> selectResvDateList(ResvInfo vo) throws Exception;
 	
@@ -32,7 +30,7 @@ public interface ResvInfoManageMapper {
 	
 	public List<Map<String, Object>> selectGuestMyResvInfo(@Param("params") Map<String, Object> paramMap);
 	
-	public int resvSeatChange(@Param("params") Map<String, Object> paramMap);
+	public int updateResvSeatInfo(@Param("params") Map<String, Object> paramMap);
 	
 	public int resvInfoCancel(@Param("params") Map<String, Object> paramMap);
 	
@@ -54,11 +52,11 @@ public interface ResvInfoManageMapper {
 	
 	public int updateUserLongResvInfo(ResvInfo vo);
 	
-	public int resvStateChange(ResvInfo vo);
+	public int updateResvState(ResvInfo vo);
 	
-	public int resvCompleteUse();
+	public int updateResvUseComplete();
 	
-	public int resvQrCountChange(@Param("resvSeq") String resvSeq);
+	public int updateResvQrCount(@Param("resvSeq") String resvSeq);
 	
 	public Map<String, Object> resvQrDoubleCheck(@Param("params") Map<String, Object> params);
 	

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.ui.ModelMap;
 
 import com.kses.backoffice.rsv.reservation.vo.ResvInfo;
 
@@ -25,9 +26,6 @@ public interface ResvInfoManageService {
 	 * @throws Exception
 	 */
 	public Map<String, Object> selectResvInfoDetail(String resvSeq) throws Exception;
-	
-	
-	String selectFindPassword(Map<String, Object> paramMap ) throws Exception;
 	
 	/**
 	 * SPDM 장기예약 지점 휴일을 제외한 예약가능일자 조회
@@ -120,15 +118,6 @@ public interface ResvInfoManageService {
 	public String selectResvUserId(String resvSeq) throws Exception;
 	
 	/**
-	 * SPDM 예약정보 자유석 좌석 정보 조회
-	 * 
-	 * @param resvSeq
-	 * @return
-	 * @throws Exception
-	 */
-	public String selectResvEntryDvsn(String resvSeq) throws Exception;
-	
-	/**
 	 * SPDM 회원 마이페이지 예약정보 조회
 	 * 
 	 * @param params
@@ -147,13 +136,22 @@ public interface ResvInfoManageService {
 	public List<Map<String, Object>> selectGuestMyResvInfo(Map<String, Object> params) throws Exception;
 	
 	/**
-	 * SPDM 예약 좌석 변경
+	 * SPDM 예약 좌석정보 변경
 	 * 
 	 * @param params
 	 * @return
 	 * @throws Exception
 	 */
-	public int resvSeatChange(Map<String, Object> params) throws Exception;
+	public int updateResvSeatInfo(Map<String, Object> params) throws Exception;
+	
+	/**
+	 * SPDM 좌석변경 프로세스
+	 * 
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 */
+	public ModelMap resvSeatChange(Map<String, Object> params) throws Exception;
 	
 	/**
 	 * SPDM 예약 정보 취소(제거예정)
@@ -171,7 +169,7 @@ public interface ResvInfoManageService {
 	 * @return
 	 * @throws Exception
 	 */
-	public Map<String, String> resvInfoAdminCancel(String resvSeq) throws Exception;
+	public ModelMap resvInfoAdminCancel(String resvSeq) throws Exception;
 	
 	/**
 	 * SPDM 최초 출입시 예약 상태값 변경 
@@ -180,7 +178,7 @@ public interface ResvInfoManageService {
 	 * @return
 	 * @throws Exception
 	 */
-	public int resvStateChange(ResvInfo vo) throws Exception;
+	public int updateResvState(ResvInfo vo) throws Exception;
 	
 	/**
 	 * SPDM 예약상태 이용완료 처리 
@@ -188,7 +186,7 @@ public interface ResvInfoManageService {
 	 * @return
 	 * @throws Exception
 	 */
-	public int resvCompleteUse() throws Exception;
+	public int updateResvUseComplete() throws Exception;
 	
 	/**
 	 * SPDM 예약정보 QR발급 횟수 변경
@@ -197,24 +195,33 @@ public interface ResvInfoManageService {
 	 * @return
 	 * @throws Exception
 	 */
-	public int resvQrCountChange(String resvSeq) throws Exception;	
-	
+	public int updateResvQrCount(String resvSeq) throws Exception;	
 	
 	/**
-	 * SPDM 모바일 큐알 체크인 시 같은 큐알 체크
-	 * @param resvSeq
+	 * SPDM QR코드 중복체크
+	 * 
+	 * @param params
 	 * @return
 	 * @throws Exception
 	 */
 	public Map<String, Object> resvQrDoubleCheck(@Param("params") Map<String, Object> params) throws Exception;	
 	
-	/*
-	 *  입금 또는 환불
+	/**
+	 * SPDM 입급 또는 환불시 예약정보 상태 변경
 	 * 
+	 * @param vo
+	 * @return
+	 * @throws Exception
 	 */
 	public int resPriceChange(ResvInfo vo) throws Exception;
 	
-	
+	/**
+	 * SPDM 현금영수증 발행시 예약정보 상태 변경
+	 * 
+	 * @param vo
+	 * @return
+	 * @throws Exception
+	 */
 	public int resvBillChange(ResvInfo vo) throws Exception;
 	
 	/**
@@ -224,10 +231,11 @@ public interface ResvInfoManageService {
 	 * @return
 	 * @throws Exception
 	 */
-	public String resvValidCheck(Map<String, Object> params) throws Exception;
+	public void resvValidCheck(Map<String, Object> params) throws Exception;
 	
 	/**
 	 * SPDM 무인발권기 조회 시 지점 체크
+	 * 
 	 * @param params
 	 * @return
 	 */
