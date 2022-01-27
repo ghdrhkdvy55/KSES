@@ -206,7 +206,7 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 			if(node.get("Error_Cd").asText().equals("SUCCESS")) {
 				//예약 테이블 취소 정보 처리 하기
 				ResvInfo resInfo = new ResvInfo();
-				resInfo.setResvSeq(SmartUtil.NVL(jsonObject.get("resvSeq"), "").toString());
+				resInfo.setResvSeq(resvSeq);
 				resInfo.setResvPayDvsn("RESV_PAY_DVSN_3");
 				resInfo.setResvState("RESV_STATE_4");
 				resInfo.setResvTicketDvsn("RESV_TICKET_DVSN_1");

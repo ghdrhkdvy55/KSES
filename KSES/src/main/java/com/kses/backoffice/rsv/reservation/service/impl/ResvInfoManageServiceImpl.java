@@ -165,6 +165,7 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 				// 1.이전 예약정보 취소
 				resultMap = resvService.resvInfoAdminCancel(resvSeq, cardPw, true);
 				if(!resultMap.get(Globals.STATUS).equals(Globals.STATUS_SUCCESS)) {
+					resultMap.addAttribute("resvSeq", resvSeq);
 					return resultMap;
 				}
 				
@@ -173,9 +174,8 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 				params.put("copyResvSeq", copyResvSeq);
 				resultMap = resvService.updateResvInfoCopy(params);
 				
-				LOGGER.info("original : " + resvSeq);
-				LOGGER.info("new : " + copyResvSeq);
 				if(!resultMap.get(Globals.STATUS).equals(Globals.STATUS_SUCCESS)) {
+					resultMap.addAttribute("resvSeq", resvSeq);
 					resultMap.addAttribute(Globals.STEP, "[예약등록]");
 					return resultMap;
 				}
@@ -183,13 +183,19 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 				// 3.신규 예약정보 출금거래
 				resultMap = interfaceService.SpeedOnPayMent(copyResvSeq, cardPw, true);
 				if(!resultMap.get(Globals.STATUS).equals(Globals.STATUS_SUCCESS)) {
+					resultMap.addAttribute("resvSeq", copyResvSeq);
 					resultMap.addAttribute(Globals.STEP, "[출금거래]");
 					return resultMap;
 				}
 			
+				message = "정상적으로 좌석변경 되었습니다.<br>예약번호 : " + resvSeq + " -> " + copyResvSeq;
+				resultMap.addAttribute("resvSeq", copyResvSeq);
+				resultMap.addAttribute(Globals.STATUS, Globals.STATUS_SUCCESS);
+				resultMap.addAttribute(Globals.STATUS_MESSAGE, message);	
 			} else {
 				int seatChangCount = resvMapper.updateResvSeatInfo(params);
-				if(seatChangCount > 0) { 
+				if(seatChangCount > 0) {
+					resultMap.addAttribute("resvSeq", resvSeq);
 					resultMap.addAttribute(Globals.STATUS, Globals.STATUS_SUCCESS);
 					resultMap.addAttribute(Globals.STATUS_MESSAGE, "비시범 지점 또는 변경 좌석과 금액정보가 동일하여 기존 예약정보에서 좌석정보만 변경되었습니다.");
 				} else {

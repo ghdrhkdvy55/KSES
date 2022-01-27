@@ -330,10 +330,7 @@ public class ResvInfoManageController {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
 		try {
 			  int pageUnit = searchVO.get("pageUnit") == null ? propertiesService.getInt("pageUnit") : Integer.valueOf((String) searchVO.get("pageUnit"));
-			  
 			  searchVO.put("pageSize", propertiesService.getInt("pageSize"));
-			  
-			  LOGGER.debug("------------------------pageUnit : " + pageUnit);
 			  
 			  //Paging
 		   	  PaginationInfo paginationInfo = new PaginationInfo();
@@ -345,21 +342,16 @@ public class ResvInfoManageController {
 			  searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
 			  searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
 			  
-			  LOGGER.debug("pageUnit End");
 			  List<Map<String, Object>> list = attendService.selectAttendInfoListPage(searchVO);
-			  LOGGER.debug("[-------------------------------------------list:" + list.size() + "------]");
 		      model.addObject(Globals.JSON_RETURN_RESULTLISR, list);
 		      model.addObject(Globals.STATUS_REGINFO, searchVO);
+		      
 		      int totCnt = list.size() > 0 ? Integer.valueOf( list.get(0).get("total_record_count").toString()) : 0;
-		      
-		      LOGGER.debug("totCnt:" + totCnt);
-		      
 		      paginationInfo.setTotalRecordCount(totCnt);
+		      
 		      model.addObject("paginationInfo", paginationInfo);
 		      model.addObject("totalCnt", totCnt);
-		      
 		} catch(Exception e) {
-			LOGGER.debug("---------------------------------------");
 			StackTraceElement[] ste = e.getStackTrace();
 			LOGGER.error(e.toString() + ":" + ste[0].getLineNumber());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);

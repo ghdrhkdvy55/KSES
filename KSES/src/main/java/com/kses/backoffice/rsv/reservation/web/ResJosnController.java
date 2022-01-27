@@ -612,7 +612,7 @@ public class ResJosnController {
 				
 				String recDate = SmartUtil.NVL(jsonInfo.get("RES_SEND_DATE"), "19700101").toString();
 				
-				 if (machineSerial.get("cnt").toString().equals("0")) {
+				if(machineSerial.get("cnt").toString().equals("0")) {
 					returnCode = "ERROR_03";
 					returnMessage = "해당 지점 예약이 아닙니다. \n예약내역을 확인하여 주십시요.";
 				} else if (resInfo != null && !SmartUtil.NVL(resInfo.get("resv_pay_dvsn"), "").toString().equals("RESV_PAY_DVSN_1")) {
@@ -770,7 +770,6 @@ public class ResJosnController {
 				int ret = resService.resPriceChange(resInfoU);
 				if (ret > 0) {
 					returnCode = "OK";
-
 				} else {
 					returnCode = "ERROR_02";
 					returnMessage = "시스템 에러 입니다.";
