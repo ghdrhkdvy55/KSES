@@ -185,7 +185,7 @@
 		BEGIN
               
 		<selectKey keyProperty="cnt" resultType="Integer" order="BEFORE">
-			SELECT NVL(COUNT(*),0)
+			SELECT NVL(COUNT(*),0) AS cnt
 			FROM TSER_BLKLST_INFO_I
 			WHERE USER_ID = #{userId}
 			AND BLKLST_DVSN = 'BLKLST_DVSN_3'       
@@ -200,8 +200,8 @@
 			)
 			VALUES
 			(
-				SEQ_SER_BLKLIST_INFO.NEXTVAL, #{userId}, 'USER_DVSN', (SELECT USER_PHONE FROM TSER_USER_INFO_I WHERE USER_ID = #{userId}), BLKLST_DVSN_3, 
-				'노쇼 패널티 고객', 'Y', 'BATCH', SYSDATE, BATCH' 
+				SEQ_SER_BLKLIST_INFO.NEXTVAL, #{userId}, 'USER_DVSN_1', (SELECT USER_PHONE FROM TSER_USER_INFO_I WHERE USER_ID = #{userId}), 'BLKLST_DVSN_3', 
+				'노쇼 패널티 고객', 'Y', 'BATCH', SYSDATE, 'BATCH', 
 				SYSDATE
 			);
 		</if>	
