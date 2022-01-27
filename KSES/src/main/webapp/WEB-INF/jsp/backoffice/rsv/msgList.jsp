@@ -130,7 +130,7 @@
     			var grid = $('#'+gridOption);
     		    var postData = {};
     		    grid.jqGrid({
-    		    	url : '/backoffice/sys/msgListAjax.do' ,
+    		    	url : '/backoffice/rsv/msgListAjax.do' ,
     		        mtype :  'POST',
     		        datatype :'json',
     		        pager: $('#pager'),  

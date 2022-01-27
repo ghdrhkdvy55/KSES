@@ -442,7 +442,7 @@
  	       	   fn_ConfirmPop(commentTxt);
  		 }, fn_update : function(){
  			  $("#confirmPage").bPopup().close();
- 			  var url = "/backoffice/sys/msgGroupUpdate.do";
+ 			  var url = "/backoffice/rsv/msgGroupUpdate.do";
  		      var params = {    'groupCode' : $("#groupCode").val(),
  		    		            'groupTitle' : $("#groupTitle").val(),
  		    		            'groupDc' : $("#groupDc").val(),
@@ -479,7 +479,7 @@
 			  	$("#btnUpdate").text("수정");
 			  	var params = {"groupCode" : groupCode};
 			  	
-			  	var url = "/backoffice/sys/msgGroupDetail.do";
+			  	var url = "/backoffice/rsv/msgGroupDetail.do";
 			  	fn_Ajax(url, "GET", params, false,
 			     	function(result) {
 			  		       if (result.status == "LOGIN FAIL"){
@@ -516,7 +516,7 @@
         	if (any_empt_line_span("dv_messageGroupSearch", "searchGroupTxt", "검색어를  입력해주세요.","sp_message", "savePage") == false) return;
         	$("#dv_messageGroupSearch").bPopup().close();  
         	var params = {"searchKeyword" : $("#searchGroupTxt").val()};
-			var returnval = uniAjaxReturn("/backoffice/sys/msgGroupList.do", "POST", false, params,  "lst");
+			var returnval = uniAjaxReturn("/backoffice/rsv/msgGroupList.do", "POST", false, params,  "lst");
 			var html = "";
 			if (returnval != ""){
 				  
@@ -551,12 +551,12 @@
 			 fn_ConfirmPop("삭제 하시겠습니까?");
         }, fn_Groupdel : function (){
         	var params = {'groupCode':$("#hid_DelCode").val() };
-        	fn_uniDelAction("/backoffice/sys/msgGroupDelete.do", "GET", params, false, "msgFunction.fn_GroupSearch");
+        	fn_uniDelAction("/backoffice/rsv/msgGroupDelete.do", "GET", params, false, "msgFunction.fn_GroupSearch");
         }, fn_MsgUserInfo : function (){
         	common_modalOpenAndClose("dv_messageGroup_user", "dv_messageGroupSearch");
         	//우측 그룹 사용자 리스트 나오게 하기
         	var params = {"groupCode" : $("#groupCode").val()};
-			var returnval = uniAjaxReturn("/backoffice/sys/msgGroupUserList.do", "GET", false, params,  "lst");
+			var returnval = uniAjaxReturn("/backoffice/rsv/msgGroupUserList.do", "GET", false, params,  "lst");
 			$("#tb_groupT > tbody> tr> td> ul").empty();
         	if (returnval.length > 0){
         		var sHtml = "";
@@ -576,7 +576,7 @@
         	msgFunction.fn_GroupSearch();
         }, fn_GroupUserDel : function (groupUserseq){
         	var params = {'groupUserseq': groupUserseq};
-        	fn_uniDelAction("/backoffice/sys/msgGroupUserDelete.do", "GET", params, false, "msgFunction.fn_GroupState()");
+        	fn_uniDelAction("/backoffice/rsv/msgGroupUserDelete.do", "GET", params, false, "msgFunction.fn_GroupState()");
         	common_modalOpenAndClose("dv_messageGroup_user", "savePage");
         }, fn_MsgUserPopInfo :  function (groupCode){
         	//검색창에서 그룹 등록 페이지로 이동  
@@ -602,7 +602,7 @@
         			      "searchUserKeyworkd" : $("#searchUserKeyworkd").val(),
         			      };
         	
-			var returnval = uniAjaxReturn("/backoffice/sys/msgGroupUserSearchList.do", "POST", false, params,  "lst");
+			var returnval = uniAjaxReturn("/backoffice/rsv/msgGroupUserSearchList.do", "POST", false, params,  "lst");
 			$("#tb_searchT > tbody> tr> td> ul").empty();
         	if (returnval.length > 0){
         		var sHtml = "";
@@ -632,7 +632,7 @@
         	
         }, fn_GroupUserUpdate : function (userId, userNm, userCellp){
        
-			var url = "/backoffice/sys/msgGroupUserUpdate.do";
+			var url = "/backoffice/rsv/msgGroupUserUpdate.do";
 		    var params = {  'groupUserid' : userId,
 		    	            'groupUsername' : userNm,
 		    	            'groupUserCellphone' : userCellp,
@@ -681,7 +681,7 @@
         			      "searchUserKeyworkd" : $("#searchUserKeyworkd_In").val()
         			      };
         	
-			var returnval = uniAjaxReturn("/backoffice/sys/msgGroupUserSearchList.do", "POST", false, params,  "lst");
+			var returnval = uniAjaxReturn("/backoffice/rsv/msgGroupUserSearchList.do", "POST", false, params,  "lst");
 			$("#tb_searchT_User > tbody").empty();
         	if (returnval.length > 0){
         		var sHtml = "";
@@ -808,7 +808,7 @@
         }, fn_megPop : function(page){
         	$("#pageIndex").val(page);
         	var params = {'pageIndex': page};
-        	var url = "/backoffice/sys/msgTemplateList.do"
+        	var url = "/backoffice/rsv/msgTemplateList.do"
         	fn_Ajax(url, "POST", params, false,
 		    			function(result) {
 		                   if (result.status == "LOGIN FAIL"){
@@ -849,7 +849,7 @@
         	
         }, msgTelDel : function(tempSeq){
         	//삭제
-        	fn_uniDelAction("/backoffice/sys/msgTemplatepDelete.do", "GET", {"delCd" : tempSeq}, false, "");
+        	fn_uniDelAction("/backoffice/rsv/msgTemplatepDelete.do", "GET", {"delCd" : tempSeq}, false, "");
         	msgFunction.fn_megPop($("#pageIndex").val());
         },msgTelPlay :function (tempSeq){
         	$("#textMessage").val( $("#tx_"+ tempSeq).val());
@@ -859,7 +859,7 @@
             //수정 
             $("#save_mms_list").bPopup().close();
             
-        	var url = "/backoffice/sys/msgTemplateUpdate.do";
+        	var url = "/backoffice/rsv/msgTemplateUpdate.do";
         	var byteArray = updateInputCount("tx_"+ tempSeq, "") ;
 		    var params = {  'tempMessage' : $("#tx_"+ tempSeq).val(),
 		    	            'tempMessageByte' : byteArray,
@@ -886,7 +886,7 @@
         }, fn_megSave : function (){
         	if (any_empt_line_span_noPop("textMessage", "저장할 메세지를 입력해 주세요.") == false) return;
         	
-        	var url = "/backoffice/sys/msgTemplateUpdate.do";
+        	var url = "/backoffice/rsv/msgTemplateUpdate.do";
         	var byteArray = $("#sp_msgByte").html().split("/");
 		    var params = {  'tempMessage' : $("#textMessage").val(),
 		    	            'tempMessageByte' : byteArray[0] ,
@@ -972,7 +972,7 @@
     				      "sendDate" : $("#sendDate").val(), "send_hour" : $("#send_hour").val(), 
     				      "send_minute" : $("#send_minute").val()  
     				      };
-    		var url = "/backoffice/sys/msgUpdate.do"
+    		var url = "/backoffice/rsv/msgUpdate.do"
     		fn_Ajax(url, "POST", params, false,
 	    			function(result) {
 	                   if (result.status == "LOGIN FAIL"){
