@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kses.backoffice.bas.code.service.EgovCcmCmmnDetailCodeManageService;
-import com.kses.backoffice.bas.holy.vo.HolyInfo;
 import com.kses.backoffice.rsv.userInfo.service.UserInfoService;
 import com.kses.backoffice.rsv.userInfo.vo.User;
 import com.kses.backoffice.util.SmartUtil;

@@ -166,8 +166,7 @@ public class ResvInfoManageController {
 			model.addObject(resvService.resvSeatChange(params));	
 		} catch (Exception e){
 			StackTraceElement[] ste = e.getStackTrace();
-			int lineNumber = ste[0].getLineNumber();
-			LOGGER.info("rsvSeatChange ERROR :" + e.toString() + " : " + lineNumber);
+			LOGGER.info("rsvSeatChange ERROR :" + e.toString() + " : " + ste[0].getLineNumber());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.insert"));	
 		}	
@@ -209,8 +208,7 @@ public class ResvInfoManageController {
 			}
 		} catch (Exception e){
 			StackTraceElement[] ste = e.getStackTrace();
-			int lineNumber = ste[0].getLineNumber();
-			LOGGER.info("rsvLongSeatUpdate : " + e.toString() + " : " + lineNumber);
+			LOGGER.info("rsvLongSeatUpdate : " + e.toString() + " : " + ste[0].getLineNumber());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.insert"));	
 		}	

@@ -825,7 +825,7 @@ public class ResJosnController {
 			
 			if(billInfo == null) {
 				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-				model.addObject(Globals.STATUS_MESSAGE, "예약 지점에 등록된 현금영수증 발행 정보가 없습니다 .");
+				model.addObject(Globals.STATUS_MESSAGE, "해당 지점(요일)에 등록된 현금영수증 발행 정보가 없습니다.");
 				return model;
 			}
 			
@@ -953,7 +953,7 @@ public class ResJosnController {
 			ResvInfo info = new ResvInfo();
 			String resvRcptNumber = "";
 			if(resvRcptState.equals("RESV_RCPT_STATE_1")) {
-				CBIssueResponse response = cashbillService.registIssue(corpNum, cashbill, memo);
+				CBIssueResponse response = cashbillService.registIssue(corpNum, cashbill, memo, userId);
 				resvRcptNumber = response.getConfirmNum();
 				LOGGER.info(resvRcptNumber);
 				model.addObject("popBill", response);
