@@ -1,6 +1,5 @@
 package com.kses.backoffice.sym.log.service;
 
-import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;

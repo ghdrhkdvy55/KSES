@@ -2,10 +2,6 @@ package com.kses.backoffice.bas.code.vo;
 
 import java.io.Serializable;
 
-
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,9 +21,4 @@ public class CmmnCode implements Serializable {
     private String lastUpdusrId   = "";
     private String mode = "";
 	private String menuGubun;
-	
-	
-    
-    
 }
-

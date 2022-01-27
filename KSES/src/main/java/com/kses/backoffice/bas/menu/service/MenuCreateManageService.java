@@ -3,7 +3,6 @@ package com.kses.backoffice.bas.menu.service;
 import java.util.List;
 import java.util.Map;
 
-import egovframework.com.cmm.ComDefaultVO;
 import com.kses.backoffice.bas.menu.vo.MenuCreatInfo;
 
 public interface MenuCreateManageService {

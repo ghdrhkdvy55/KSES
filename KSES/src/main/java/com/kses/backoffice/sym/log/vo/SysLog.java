@@ -2,11 +2,7 @@ package com.kses.backoffice.sym.log.vo;
 
 import java.io.Serializable;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-
 public class SysLog implements Serializable {
-
-	
 
 		/**
 		 * 에러횟수
@@ -537,9 +533,4 @@ public class SysLog implements Serializable {
 					+ ", getSearchEndday()=" + getSearchEndday()
 					+ ", getSearchKeyword()=" + getSearchKeyword() + "]";
 		}
-
-		
-		
-		
-		
 }

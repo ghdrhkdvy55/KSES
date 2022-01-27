@@ -20,7 +20,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.kses.backoffice.bld.center.service.CenterInfoManageService;
 import com.kses.backoffice.bld.center.service.CenterHolyInfoManageService;
 import com.kses.backoffice.bld.center.vo.CenterHolyInfo;
-import com.kses.backoffice.util.service.UniSelectInfoManageService;
 
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.EgovMessageSource;
@@ -41,9 +40,6 @@ public class CenterHolyInfoManageController {
     
     @Autowired
     CenterInfoManageService centerInfoService;
-    
-	@Autowired
-	private UniSelectInfoManageService uniService;
 	
 	@Autowired
 	private CenterInfoManageService centerInfoManageService;
@@ -132,37 +128,6 @@ public class CenterHolyInfoManageController {
 		return model;
 	}
 	
-//	@RequestMapping (value="centerHolyInfoDelete.do")
-//	public ModelAndView deleteCenterHolyInfoManage(	@ModelAttribute("loginVO") LoginVO loginVO,
-//			                                   		@RequestParam("centerHolySeq") String centerHolySeq) throws Exception {
-//		
-//		
-//		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
-//	    Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-//	    
-//	    if(!isAuthenticated) {
-//	    	model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-//	    	model.setViewName("/backoffice/login");
-//	    	return model;	
-//	    }	
-//	    
-//	    try {	 
-//	    	int ret = uniService.deleteUniStatement("", "TSEB_CENTERHOLY_INFO_I", "CENTER_HOLY_SEQ = [" + centerHolySeq + "[");		      
-//	    	
-//	    	if(ret < 0) {
-//	    		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-//	    		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.delete"));
-//	    	} else {
-//	    		throw new Exception();
-//	    	}
-//		} catch (Exception e) {
-//			LOGGER.info(e.toString());
-//			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-//			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.delete"));			
-//		}		
-//		return model;
-//	}
-	
 	@RequestMapping (value="centerHolyInfoDelete.do")
 	public ModelAndView deleteholyInfoManage(	@ModelAttribute("loginVO") LoginVO loginVO, 
 												@RequestParam("centerHolySeq") int centerHolySeq, 
@@ -221,4 +186,3 @@ public class CenterHolyInfoManageController {
     	return model;
     }
 }
-

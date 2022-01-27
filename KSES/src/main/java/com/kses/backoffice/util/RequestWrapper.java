@@ -10,90 +10,57 @@ import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
-import org.apache.commons.io.IOUtils;
 import com.nhncorp.lucy.security.xss.XssFilter;
-
-
 
 public class RequestWrapper extends HttpServletRequestWrapper {
 
 	private byte[] b;
 
 	public RequestWrapper(HttpServletRequest request) throws IOException {
-
 		super(request);
 
  		XssFilter filter = XssFilter.getInstance("lucy-xss-sax.xml");
 
  		b = new String(filter.doFilter(getBody(request))).getBytes();
-
 	}
 
 	public ServletInputStream getInputStream() throws IOException {
-
  		final ByteArrayInputStream bis = new ByteArrayInputStream(b);
 
- 		
-
  		return new ServletInputStreamImpl(bis);
-
  	}
-
- 	
 
  	class ServletInputStreamImpl extends ServletInputStream{
 
  		private InputStream is;
 
- 		
-
  		public ServletInputStreamImpl(InputStream bis){
-
  			is = bis;
-
  		}
-
- 		
 
  		public int read() throws IOException {
-
  			return is.read();
-
  		}
-
- 		
 
  		public int read(byte[] b) throws IOException {
-
  			return is.read(b);
-
  		}
-
-
 
 		@Override
 		public boolean isFinished() {
 			return false;
 		}
 
-
-
 		@Override
 		public boolean isReady() {
 			return false;
 		}
 
-
-
 		@Override
 		public void setReadListener(ReadListener readListener) {
+		
 		}
-
  	}
-
-
-
- 	
 
  	public static String getBody(HttpServletRequest request) throws IOException {
 
@@ -128,5 +95,4 @@ public class RequestWrapper extends HttpServletRequestWrapper {
  	    return body;
 
  	}
-
 }

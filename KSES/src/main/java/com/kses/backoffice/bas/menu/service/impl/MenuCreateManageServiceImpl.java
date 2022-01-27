@@ -12,7 +12,6 @@ import com.kses.backoffice.bas.menu.service.MenuCreateManageService;
 import com.kses.backoffice.bas.menu.vo.MenuCreatInfo;
 import com.kses.backoffice.util.SmartUtil;
 
-import egovframework.com.cmm.ComDefaultVO;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service

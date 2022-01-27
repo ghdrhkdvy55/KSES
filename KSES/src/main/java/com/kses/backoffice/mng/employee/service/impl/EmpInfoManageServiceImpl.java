@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.kses.backoffice.mng.employee.mapper.EmpInfoManageMapper;
@@ -14,8 +12,6 @@ import com.kses.backoffice.mng.employee.vo.EmpInfo;
 import com.kses.backoffice.util.SmartUtil;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
-
-
 
 @Service
 public class EmpInfoManageServiceImpl extends EgovAbstractServiceImpl implements EmpInfoManageService {

@@ -1,14 +1,10 @@
 package egovframework.com.cmm.annotation;
 
-
-
 import java.util.Locale;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.DataAccessException;
 import org.springframework.util.AntPathMatcher;
@@ -22,9 +18,6 @@ import egovframework.rte.fdl.cmmn.exception.manager.ExceptionHandlerService;
 public class CustomerExceptionTransfer  extends ExceptionTransfer{
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ExceptionTransfer.class);
-	
-	@Autowired
-	private MessageSource messageSource;
 
 	private ExceptionHandlerService[] exceptionHandlerServices;
 	

@@ -1,12 +1,9 @@
 package com.kses.backoffice.sys.board.web;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,7 +14,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,7 +29,6 @@ import com.kses.backoffice.sys.board.vo.BoardInfo;
 import com.kses.backoffice.sys.board.vo.BoardSetInfo;
 import com.kses.backoffice.util.SmartUtil;
 import com.kses.backoffice.util.service.UniSelectInfoManageService;
-import com.kses.backoffice.util.service.fileService;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.EgovFileMngService;
@@ -41,7 +36,6 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.com.cmm.service.FileVO;
 import egovframework.com.cmm.service.Globals;
 import egovframework.com.cmm.util.EgovUserDetailsHelper;
-import egovframework.let.utl.fcc.service.EgovStringUtil;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 
@@ -50,10 +44,6 @@ import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 public class BoardInfoManageController {
 
 	    private static final Logger LOGGER = LoggerFactory.getLogger(BoardInfoManageController.class);
-		
-		//파일 업로드	
-	    @Autowired
-	    private fileService uploadFile;
 		
 		@Autowired
 	    protected EgovCcmCmmnDetailCodeManageService egovCodeDetailService;
@@ -64,7 +54,6 @@ public class BoardInfoManageController {
 		@Autowired
 	    protected BoardSetInfoManageService boardSetService;
 		
-	
 		@Autowired
 		private UniSelectInfoManageService uniService;
 		
@@ -85,8 +74,6 @@ public class BoardInfoManageController {
 		
 		@Autowired
 		private EgovFileMngService egocFileService;
-		
-		
 		
 		@RequestMapping(value="boardSetList.do")
 		public ModelAndView  selectBoardSetInfoManageList(@ModelAttribute("loginVO") LoginVO loginVO

@@ -221,20 +221,18 @@ public class FloorInfoManageController {
 	    }
 	    return model;
 	}
+	
 	//combo box 구역 떄문에 수정 
 	@RequestMapping (value="floorComboInfo.do")
-	public ModelAndView selectFloorComboInfo(	@ModelAttribute("LoginVO") LoginVO loginVO, 
-												@RequestParam("centerCd") String centerCd, 
-												HttpServletRequest request, 
-												BindingResult result) throws Exception{
+	public ModelAndView selectFloorComboInfo(	@RequestParam("centerCd") String centerCd, 
+												HttpServletRequest request) throws Exception{
+		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		
-		try{
+		try {
 			model.addObject(Globals.STATUS  , Globals.STATUS_SUCCESS);
-			List<Map<String, Object>> floorCombo =  floorService.selectFloorInfoComboList(centerCd);
 			model.addObject(Globals.JSON_RETURN_RESULTLISR, floorService.selectFloorInfoComboList(centerCd));
-			
-		}catch (Exception e){
+		} catch (Exception e){
 			LOGGER.error("floorComboInfo ERROR : " + e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));	

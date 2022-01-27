@@ -3,8 +3,6 @@ package com.kses.backoffice.mng.admin.service;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Param;
-
 import com.kses.backoffice.mng.admin.vo.AdminInfo;
 
 public interface AdminInfoService {

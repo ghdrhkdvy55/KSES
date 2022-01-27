@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.kses.backoffice.bas.authority.service.AuthInfoService;
-import com.kses.backoffice.bas.authority.vo.AuthInfo;
 import com.kses.backoffice.bas.authority.web.AuthInfoManageController;
 import com.kses.backoffice.bas.progrm.service.ProgrmInfoService;
 import com.kses.backoffice.bas.progrm.vo.ProgrmInfo;

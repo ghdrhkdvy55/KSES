@@ -3,7 +3,6 @@ package com.kses.backoffice.sym.log.service;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +13,6 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
 import org.mybatis.spring.MyBatisSystemException;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.slf4j.Logger;
@@ -32,29 +30,24 @@ import com.kses.backoffice.sym.log.vo.SysLog;
 
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.exception.CustomerExcetion;
 import egovframework.com.cmm.service.Globals;
 import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import egovframework.let.utl.sim.service.EgovClntInfo;
 
-
-
-
 @Aspect
 @Component
 @ControllerAdvice
-public class SysLogAspect    {
+public class SysLogAspect {
 	
 	@Autowired
 	private EgovSysLogService sysLogService;
  
-    
 	private static final Logger LOGGER = LoggerFactory.getLogger(SysLogAspect.class);
+	
 	public static final String KEY_ECODE = "ecode";
 	
 	@Autowired
 	protected EgovMessageSource egovMessageSource;
-	
 	
 	public Object logSql(ProceedingJoinPoint joinPoint) throws Throwable {
 		LOGGER.debug("SqlSession----------------------------------------------------------------------------------------------------------");

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.kses.backoffice.bas.kiosk.mapper.KioskInfoManageMapper;
 import com.kses.backoffice.bas.kiosk.vo.KioskInfo;
-import com.kses.backoffice.bld.center.vo.CenterInfo;
 import com.kses.backoffice.bas.kiosk.service.KioskInfoService;
 import com.kses.backoffice.util.mapper.UniSelectInfoManageMapper;
 

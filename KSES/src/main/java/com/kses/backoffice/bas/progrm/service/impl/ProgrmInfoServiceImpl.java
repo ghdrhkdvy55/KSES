@@ -23,9 +23,6 @@ public class ProgrmInfoServiceImpl extends EgovAbstractServiceImpl implements Pr
 	@Autowired
 	private UniSelectInfoManageMapper uniMapper;
 	
-	@Autowired
-	private SmartUtil util;
-	
 	@Override
 	public List<Map<String, Object>> selectProgrmInfoList(Map<String, Object> params) throws Exception {
 		return progrmMapper.selectProgrmInfoList(params);
@@ -55,7 +52,7 @@ public class ProgrmInfoServiceImpl extends EgovAbstractServiceImpl implements Pr
 
 	@Override
 	public int deleteProgrmManageList(String checkedProgrmFileNmForDel) throws Exception {
-		List<String> programFiles = util.dotToList(checkedProgrmFileNmForDel);
+		List<String> programFiles = SmartUtil.dotToList(checkedProgrmFileNmForDel);
 		return progrmMapper.deleteProgrmManageList(programFiles);
 	}
 

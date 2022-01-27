@@ -3,11 +3,9 @@ package com.kses.backoffice.sts.error.web;
 import java.io.StringWriter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 
-import com.kses.backoffice.sym.log.service.EgovSysLogService;
 import com.kses.backoffice.sym.log.vo.SysLog;
 
 import org.slf4j.Logger;
@@ -16,11 +14,6 @@ import org.slf4j.LoggerFactory;
 public class CustomExceptionResolver extends SimpleMappingExceptionResolver {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CustomExceptionResolver.class);	 
-	
-	private Integer defaultStatusCode;
-
-	@Autowired
-	private EgovSysLogService sysLogService;
 	
 	private String exceptionAttribute = DEFAULT_EXCEPTION_ATTRIBUTE;
 	

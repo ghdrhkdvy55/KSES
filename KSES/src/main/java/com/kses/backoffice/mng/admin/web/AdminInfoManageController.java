@@ -13,10 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.servlet.ModelAndView;
 import com.kses.backoffice.bas.authority.service.AuthInfoService;
-import com.kses.backoffice.bas.code.service.EgovCcmCmmnDetailCodeManageService;
 import com.kses.backoffice.bld.center.service.CenterInfoManageService;
 import com.kses.backoffice.mng.admin.service.AdminInfoService;
 import com.kses.backoffice.mng.admin.vo.AdminInfo;
@@ -48,9 +46,6 @@ public class AdminInfoManageController {
 	
 	@Autowired
 	protected DeptInfoManageService deptService;
-	
-	@Autowired
-    private EgovCcmCmmnDetailCodeManageService cmmnDetailService;
 		
 	@Autowired
 	private UniSelectInfoManageService uniService;

@@ -1,13 +1,9 @@
 package egovframework.com.cmm.mapper;
 
-
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
-
-import com.kses.backoffice.sys.msg.vo.MessageInfo;
 
 import egovframework.com.cmm.service.FileVO;
 import egovframework.rte.psl.dataaccess.mapper.Mapper;

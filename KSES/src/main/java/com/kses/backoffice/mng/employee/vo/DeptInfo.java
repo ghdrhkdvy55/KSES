@@ -1,7 +1,5 @@
 package com.kses.backoffice.mng.employee.vo;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.Setter;
 

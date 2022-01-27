@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import com.kses.backoffice.bas.holy.mapper.HolyInfoManageMapper;
 import com.kses.backoffice.bas.holy.service.HolyInfoService;
 import com.kses.backoffice.bas.holy.vo.HolyInfo;
-import com.kses.backoffice.util.mapper.UniSelectInfoManageMapper;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
@@ -22,9 +21,6 @@ public class HolyInfoServiceImpl extends EgovAbstractServiceImpl implements Holy
 			
 	@Autowired
 	private HolyInfoManageMapper holyMapper;
-	
-	@Autowired
-	private UniSelectInfoManageMapper uniMapper;
 
 	@Override
 	public List<Map<String, Object>> selectHolyInfoList(Map<String, Object> params) throws Exception {

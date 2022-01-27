@@ -12,7 +12,6 @@ import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -53,9 +51,6 @@ public class EgovCcmCmmnCodeManageController {
 
 	@Autowired
 	private UniSelectInfoManageService  uniService;
-	
-	@Autowired
-	private SmartUtil util;
 	
 	/**
 	 * 공통분류코드 목록 조회
@@ -122,11 +117,11 @@ public class EgovCcmCmmnCodeManageController {
 		  
 	              
 	   	    PaginationInfo paginationInfo = new PaginationInfo();
-		    paginationInfo.setCurrentPageNo( Integer.parseInt( util.NVL(searchVO.get("pageIndex"), "1") ) );
+		    paginationInfo.setCurrentPageNo( Integer.parseInt( SmartUtil.NVL(searchVO.get("pageIndex"), "1") ) );
 		    paginationInfo.setRecordCountPerPage(pageUnit);
 		    paginationInfo.setPageSize(propertiesService.getInt("pageSize"));
 		    
-		    searchVO.put("searchKeyword", util.NVL(searchVO.get("searchKeyword"), ""));
+		    searchVO.put("searchKeyword", SmartUtil.NVL(searchVO.get("searchKeyword"), ""));
 
 		    searchVO.put("firstIndex", paginationInfo.getFirstRecordIndex());
 		    searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
@@ -240,7 +235,7 @@ public class EgovCcmCmmnCodeManageController {
     	ModelAndView model = new ModelAndView(Globals.JSONVIEW);
     	try {
     		
-    		int ret = cmmnCodeManageService.deleteCmmnCode(cmmnCode.get("codeId").toString());
+    		cmmnCodeManageService.deleteCmmnCode(cmmnCode.get("codeId").toString());
     		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.delete"));    		
     	} catch(Exception e) {
