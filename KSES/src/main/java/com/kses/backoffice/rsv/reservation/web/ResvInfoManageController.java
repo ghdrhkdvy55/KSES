@@ -248,7 +248,7 @@ public class ResvInfoManageController {
 				return model;	
 		    }
 			
-			ModelMap modelMap = resvService.resvInfoAdminCancel(resvSeq);
+			ModelMap modelMap = resvService.resvInfoAdminCancel(resvSeq, "", false);
 			model.addObject(modelMap);
 		} catch(Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
@@ -292,7 +292,7 @@ public class ResvInfoManageController {
 			for(Map<String,Object> resvInfo : resvList) {
 				if(!SmartUtil.NVL(resvInfo.get("resv_ticket_dvsn"),"").equals("RESV_TICKET_DVSN_2")) {
 					String resvSeq = resvInfo.get("resv_seq").toString();
-					ModelMap resultMap = resvService.resvInfoAdminCancel(resvSeq);
+					ModelMap resultMap = resvService.resvInfoAdminCancel(resvSeq, "", false);
 				
 					if(!resultMap.get(Globals.STATUS).equals("SUCCESS")) {
 						failCount ++;

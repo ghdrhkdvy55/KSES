@@ -62,7 +62,7 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 	
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public ModelMap SpeedOnPayMent(String resvSeq, boolean isPassword) throws Exception {
+	public ModelMap SpeedOnPayMent(String resvSeq, String cardPw, boolean isPassword) throws Exception {
 		String Url = propertiesService.getString("sppeedUrl_T") + "trade/fepWithdraw";		
 		JSONObject jsonObject = new JSONObject();
 		ModelMap result = new ModelMap();
@@ -95,7 +95,7 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 			jsonObject.put("Card_Id", resvInfo.get("user_card_id"));
 
 			if(isPassword) {
-				jsonObject.put("Card_Pw", SmartUtil.encryptPassword(jsonObject.get("Card_Pw").toString(), "SHA-256"));
+				jsonObject.put("Card_Pw", SmartUtil.encryptPassword(cardPw, "SHA-256"));
 				jsonObject.put("Pw_YN", "Y");
 			} else {
 				jsonObject.put("Card_Pw", "");
@@ -150,7 +150,7 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 	
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public ModelMap SpeedOnPayMentCancel(String resvSeq, boolean isPassword) throws Exception {
+	public ModelMap SpeedOnPayMentCancel(String resvSeq, String cardPw, boolean isPassword) throws Exception {
 		String Url = propertiesService.getString("sppeedUrl_T") + "trade/fepDeposit";
 		JSONObject jsonObject = new JSONObject();
 		ModelMap result = new ModelMap();
@@ -178,7 +178,7 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 			jsonObject.put("Card_Id", resvInfo.get("user_card_id"));
 			
 			if(isPassword) {
-				jsonObject.put("Card_Pw", SmartUtil.encryptPassword(jsonObject.get("Card_Pw").toString(), "SHA-256"));
+				jsonObject.put("Card_Pw", SmartUtil.encryptPassword(cardPw, "SHA-256"));
 				jsonObject.put("Pw_YN", "Y");
 			} else {
 				jsonObject.put("Card_Pw", "");

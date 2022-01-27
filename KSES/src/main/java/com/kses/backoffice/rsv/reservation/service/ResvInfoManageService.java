@@ -174,11 +174,13 @@ public interface ResvInfoManageService {
 	/**
 	 * SPDM 예약 정보 취소
 	 * 
-	 * @param params
+	 * @param resvSeq
+	 * @param cardPw
+	 * @param isPassword
 	 * @return
 	 * @throws Exception
 	 */
-	public ModelMap resvInfoAdminCancel(String resvSeq) throws Exception;
+	public ModelMap resvInfoAdminCancel(String resvSeq, String cardPw, boolean isPassword) throws Exception;
 	
 	/**
 	 * SPDM 최초 출입시 예약 상태값 변경 

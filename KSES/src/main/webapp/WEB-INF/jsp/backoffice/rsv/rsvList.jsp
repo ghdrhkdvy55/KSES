@@ -489,6 +489,27 @@
   	</div>
 </div>
 
+<!-- 좌석변경 대상 고객 결제 비밀빈호 -->
+<div id="pay_number" class="popup">
+	<div class="pop_con rsv_popup">
+		<a class="button b-close">X</a>
+		<div class="pop_wrap">
+			<h4>결제 비밀번호를 입력해주세요.</h4>
+			<ul class="cost_list">
+				<li>
+					<ul class="pay_passWord">
+                        <li>결제</li>
+                        <li><input type="password" id="cardPw" placeholder="결제 비밀번호를 입력하세요."></li>
+                	</ul>
+            	</li>
+        	</ul>
+			<ul class="cost_btn">
+				<li class="okBtn"><a href="javascript:jqGridFunc.fn_resvSeatUpdate();">확인</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
 <!-- popup// -->
 <script type="text/javascript">
 	var seatSearchInfo = {};
@@ -553,7 +574,6 @@
 					{label: '지점', name:'center_nm', index:'center_nm', align:'center'},
 					{label: '좌석등급', name:'part_class', index:'part_class', align:'center'},
 					{label: '좌석정보', name:'seat_nm', index:'seat_nm', align:'center'},
-					//{label: '아이디', name:'user_id', index:'user_id', align:'center'},
 					{label: '이름', name:'user_nm', index:'user_nm', align:'center'},
 					{label: '전화번호', name:'user_phone', index:'user_phone', align:'center'},
 					{label: '금액', name: 'resv_pay_cost', index:'resv_pay_cost', align:'center', formatter:jqGridFunc.formSetting},
@@ -562,7 +582,6 @@
 					{label: '결제구분', name: 'resv_ticket_dvsn_text',  index:'resv_ticket_dvsn_text', align:'center'},
 					{label: 'QR출력', name:'resv_qr_print', index:'resv_qr_print', align:'center', sortable : false, formatter:jqGridFunc.formSetting},
 					{label: '현금영수증', name:'resv_rcpt_print', index:'resv_rcpt_print', align:'center', sortable : false, formatter:jqGridFunc.formSetting}
-					//{label: '신청일자', name:'resv_req_date', index:'resv_req_date', align:'center'},
 				], 
 				rowNum : 10,  //레코드 수
 				rowList : [10,20,30,40,50,100],  // 페이징 수
@@ -946,7 +965,7 @@
 				false,
 				function(result) {
 					if (result.status == "SUCCESS") {
-						console.log(result);
+						
 						var cashBillInfo = result.cashBillInfo;
 						$("#confirmNum").html(cashBillInfo.confirmNum);
 						$("#issueDT").html(cashBillInfo.issueDT);
@@ -982,7 +1001,10 @@
 				$("#resvPartCd").val(resvInfo.part_cd);
 				$("#seat_change p:eq(3)").hide();
 				$("#seat_change a:eq(1)").attr("href","javascript:jqGridFunc.fn_resvSeatSearch('CHANGE');");
-				$("#seat_change a:eq(2)").html("변경").attr("href","javascript:jqGridFunc.fn_resvSeatUpdate('CHANGE')");;
+				//$("#seat_change a:eq(2)").html("변경").attr("href","javascript:jqGridFunc.fn_resvSeatUpdate('CHANGE')");
+				$("#seat_change a:eq(2)").html("변경").attr("href","javascript:common_modelOpen('pay_number');").click(function () {
+					$("#cardPw").val("");
+				});
 				jqGridFunc.fn_resvSeatSearch("CHANGE");
 			} else if(division = "LONG") {				
 				if($("#loginAuthorCd").val() != "ROLE_ADMIN" && $("#loginAuthorCd").val() != "ROLE_SYSTEM") {
@@ -1000,7 +1022,6 @@
 				$("#seat_change p:eq(3)").show();
 				$("#seat_change a:eq(1)").attr("href","javascript:jqGridFunc.fn_resvSeatSearch('LONG');");
 				$("#seat_change a:eq(2)").html("좌석선택").attr("href","javascript:jqGridFunc.fn_setLongSeatInfo()");
-				/* $("#seat_change a:eq(2)").html("좌석선택").attr("href","javascript:jqGridFunc.fn_resvSeatUpdate('LONG')"); */
 				$("#seat_change .pop_tit").html("사용자 좌석 선택");
 				$(".pop_mapArea").css("background","");
 				$(".pop_seat").html("");
@@ -1133,7 +1154,7 @@
 				"seatCd" : $(".pop_seat li.usable").attr("id"),
 				"resvEntryPayCost" : $("#resvEntryPayCost").val(),
 				"resvSeatPayCost" : $(".pop_seat li.usable").data("seat_paycost"),
-				"resvEntryDvsn" : "ENTRY_DVSN_2",
+				"cardPw" : $("#cardPw").val(),
 				"checkDvsn" : division
 			}
 			
@@ -1263,8 +1284,6 @@
 				"checkDvsn" : "LONG",
 				"resvDateFrom" : $("#longResvDateFrom").val(),
 				"resvDateTo" : $("#longResvDateTo").val(),
-				"resvUserDvsn" : "USER_DVSN_1",
-				"resvEntryDvsn" : "ENTRY_DVSN_2",
 				"seasonCd" : $("#seasonCd").val(),
 				"centerCd" : $("#longResvCenterCd").val(),
 				"floorCd" : $("#longResvFloorCd").val(),
@@ -1276,8 +1295,6 @@
 				"resvUserNm" : $("#longResvUserName").val(),
 				"longResvEmpNo" : $("#longResvEmpNo").val(),
 				"resvUserClphn" : $("#longResvUserPhone").val(),
-				"resvUserAskYn" : "Y",
-				"resvIndvdlinfoAgreYn" : "Y"
 			}
 			
 			var validResult = jqGridFunc.fn_resvVaildCheck(params);

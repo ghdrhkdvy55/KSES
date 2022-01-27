@@ -152,6 +152,7 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 		ModelMap resultMap = new ModelMap();
 		String message = "처리중 오류가 발생하였습니다.";
 		String resvSeq = SmartUtil.NVL(params.get("resvSeq"),"");
+		String cardPw = SmartUtil.NVL(params.get("cardPw"),"");
 		
 		try {			
 			Map<String, Object> resvInfo = resvService.selectUserResvInfo(params);
@@ -162,7 +163,7 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 			int changeResvPayCost = Integer.parseInt(SmartUtil.NVL(params.get("resvEntryPayCost"),"")) + Integer.parseInt(SmartUtil.NVL(params.get("resvSeatPayCost"),""));
 			if(cancelResvCenterPilotYn.equals("Y") && cancelResvPayCost != changeResvPayCost && cancelResvPayDvsn.equals("RESV_PAY_DVSN_2")) {
 				// 1.이전 예약정보 취소
-				resultMap = resvService.resvInfoAdminCancel(resvSeq);
+				resultMap = resvService.resvInfoAdminCancel(resvSeq, cardPw, true);
 				if(!resultMap.get(Globals.STATUS).equals(Globals.STATUS_SUCCESS)) {
 					return resultMap;
 				}
@@ -180,7 +181,7 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 				}
 				
 				// 3.신규 예약정보 출금거래
-				resultMap = interfaceService.SpeedOnPayMent(copyResvSeq, false);
+				resultMap = interfaceService.SpeedOnPayMent(copyResvSeq, cardPw, true);
 				if(!resultMap.get(Globals.STATUS).equals(Globals.STATUS_SUCCESS)) {
 					resultMap.addAttribute(Globals.STEP, "[출금거래]");
 					return resultMap;
@@ -250,7 +251,7 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	}
 		
 	@Override
-	public ModelMap resvInfoAdminCancel(String resvSeq) throws Exception {
+	public ModelMap resvInfoAdminCancel(String resvSeq, String cardPw, boolean isPassword) throws Exception {
 		ModelMap resultMap = new ModelMap();
 		ResvInfo resInfo = new ResvInfo();
 		String message = "처리중 오류가 발생하였습니다.";
@@ -272,7 +273,7 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 				if(resvPayDvsn.equals("RESV_PAY_DVSN_2")) {
 					if(resvTicketDvsn.equals("RESV_TICKET_DVSN_1")) {
 						// 스피드온 결제(거래취소 인터페이스)
-						ModelMap result = interfaceService.SpeedOnPayMentCancel(resvSeq, false);
+						ModelMap result = interfaceService.SpeedOnPayMentCancel(resvSeq, cardPw, isPassword);
 						if(!SmartUtil.NVL(result.get(Globals.STATUS), "").equals("SUCCESS")) {
 							LOGGER.info("예약번호 : " + resvSeq + " 결제취소실패");
 							LOGGER.info("에러코드 : " + result.get(Globals.STATUS));
