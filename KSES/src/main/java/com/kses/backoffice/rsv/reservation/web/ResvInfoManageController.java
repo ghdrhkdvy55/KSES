@@ -128,15 +128,17 @@ public class ResvInfoManageController {
 			  searchVO.put("centerCd", loginVO.getCenterCd());
 			  
 			  List<Map<String, Object>> list = resvService.selectResvInfoManageListByPagination(searchVO);
-		      model.addObject(Globals.JSON_RETURN_RESULTLISR, list);
-		      model.addObject(Globals.STATUS_REGINFO, searchVO);
+		  
 		      int totCnt = list.size() > 0 ? Integer.valueOf( list.get(0).get("total_record_count").toString()) : 0;
 		      
 		      LOGGER.debug("totCnt:" + totCnt);
 		      
+		      model.addObject(Globals.JSON_RETURN_RESULTLISR, list);
+		      model.addObject(Globals.STATUS_REGINFO, searchVO);		      
+		      model.addObject(Globals.PAGE_TOTALCNT, totCnt);
 		      paginationInfo.setTotalRecordCount(totCnt);
-		      model.addObject("paginationInfo", paginationInfo);
-		      model.addObject("totalCnt", totCnt);
+		      model.addObject(Globals.JSON_PAGEINFO, paginationInfo);
+			  model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);	    
 		      
 		} catch(Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();

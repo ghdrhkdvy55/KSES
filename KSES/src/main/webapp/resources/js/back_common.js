@@ -768,6 +768,27 @@ function ajaxPaging(currentPageNo, firstPageNo, recordCountPerPage, firstPageNoO
     return pageHtml;
 }
 
+// 날짜 체크
+function endday_early_check(close_modal, start_day, end_day, alert_message, spanTxt, bPopup){
+     $("#"+ close_modal).bPopup().close();
+     $("#btn_ClickId").val(close_modal);
+     $("#a_closePop").hide();
+     $("#db_closePop").show();
+     
+	 var start_day = eval("document.getElementById('"+start_day+"')");
+	 var end_day = eval("document.getElementById('"+end_day+"')");
+	 $("#sp_errorMessage").html("");
+	 
+	 if (start_day.value > end_day.value){
+		  $("#savePage #sp_Message").html(alert_message);
+		  $("#savePage #sp_Message").attr("style", "color:red");
+		  $("#"+bPopup).bPopup()
+		  return false;
+	 } else{
+        return true;
+	 }
+}
+
 Date.prototype.format = function (f) {
     if (!this.valueOf()) return " ";
     var weekKorName = ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"];
