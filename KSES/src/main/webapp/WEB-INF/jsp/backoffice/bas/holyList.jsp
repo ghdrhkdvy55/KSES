@@ -17,6 +17,8 @@
 <!-- Xlsx -->
 <script type="text/javascript" src="/resources/js/xlsx.js"></script>
 <script type="text/javascript" src="/resources/js/xlsx.full.min.js"></script>
+<!-- FileSaver -->
+<script type="text/javascript" src="/resources/js/FileSaver.min.js"></script>
 <!-- jszip -->
 <script type="text/javascript" src="/resources/js/jszip.min.js"></script>
 <!-- //contents -->
@@ -117,6 +119,7 @@
 	</div>
 </div>
 <!-- popup// -->
+<script type="text/javascript" src="/resources/js/temporary.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() { 
 		jqGridFunc.setGrid("mainGrid");
@@ -468,13 +471,52 @@
 	        ); 
 		},
 		fn_excelDown : function (){
-			$("#mainGrid").jqGrid("exportToExcel",{
-				includeLabels : true,
-				includeGroupHeader : true,
-				includeFooter: true,
-				fileName : "jqGridExport.xlsx",
-				maxlength : 40 // maxlength for visible string data 
-			})
+			if ($("#mainGrid").getGridParam("reccount") === 0) {
+				alert('다운받으실 데이터가 없습니다.');
+				return;
+			}
+			let params = {
+				pageIndex: '1',
+				pageUnit: '1000',
+				searchKeyword: $('#searchKeyword').val(),
+				searchFrom: $('#searchFrom').val(),
+				searchTo: $('#searchTo').val()
+			};
+			EgovIndexApi.apiExecuteJson(
+				'POST',
+				'/backoffice/bas/holyListAjax.do', 
+				params,
+				null,
+				function(json) {
+					let ret = json.resultlist;
+					if (ret.length <= 0) {
+						return;
+					}
+					if (ret.length >= 1000) {
+						alert('해당 조회 건수가 1000건이 넘습니다. 엑셀 다운로드 시 1000건에 대한 데이터만 저장됩니다.');
+					}
+					let excelData = new Array();
+					excelData.push(['NO', '휴일일자', '휴일명', '사용유무', '지점적용', '수정자', '수정일자']);
+					for (let idx in ret) {
+						let arr = new Array();
+						arr.push(Number(idx)+1);
+						arr.push(ret[idx].holy_dt);
+						arr.push(ret[idx].holy_nm);
+						arr.push(ret[idx].use_yn);
+						arr.push(ret[idx].holy_center_spread);
+						arr.push(ret[idx].last_updusr_id);
+						arr.push(ret[idx].last_updt_dtm);
+						excelData.push(arr);
+					}
+					let wb = XLSX.utils.book_new();
+					XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(excelData), 'sheet1');
+					var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+					saveAs(new Blob([EgovIndexApi.s2ab(wbout)],{ type: 'application/octet-stream' }), '휴일관리.xlsx');
+				},
+				function(json) {
+					alert(json.message);
+				}
+			);
 		}
    	}
 </script>

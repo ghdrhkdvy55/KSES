@@ -526,7 +526,7 @@ public class ResJosnController {
 				String inotMsg = "";
 				if (attend == null) {
 					inOt = "IN";
-					inotMsg = "입장기록 없음";
+					inotMsg = "최초입장";
 				} else {
 					inOt = "IN";
 					inotMsg = "입장";

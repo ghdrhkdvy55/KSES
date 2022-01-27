@@ -17,6 +17,8 @@
 <!-- Xlsx -->
 <script type="text/javascript" src="/resources/js/xlsx.js"></script>
 <script type="text/javascript" src="/resources/js/xlsx.full.min.js"></script>
+<!-- FileSaver -->
+<script type="text/javascript" src="/resources/js/FileSaver.min.js"></script>
 <!-- jszip -->
 <script type="text/javascript" src="/resources/js/jszip.min.js"></script>
 <!-- //contents -->
@@ -98,6 +100,7 @@
     </div>
 </div>
 <!-- popup// -->
+<script type="text/javascript" src="/resources/js/temporary.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() { 
 		   jqGridFunc.setGrid("mainGrid");
@@ -309,23 +312,47 @@
 		 				    	common_modelCloseM("Error:" + request.status,"bas_program_add");
 		 				    }    		
 		        );
-		}, fn_excelDown : function (cnt){
+		}, fn_excelDown : function (){
 			
-			$(".ui-pg-selbox").val(100).trigger('change');		
- 			$("#mainGrid").jqGrid('setGridParam',{loadonce:true}).trigger('reloadGrid');
-				
- 			$("#mainGrid").jqGrid('exportToExcel',{
-				includeLabels : true,
-				includeGroupHeader : true,
-				includeFooter: true,
-				fileName : "jqGridExport.xlsx",
-				maxlength : 40 // maxlength for visible string data 
-			});
-				
- 				
-//			$("#mainGrid").jqGrid('setGridParam',{loadonce:false}).trigger('reloadGrid'); 
-
-			
+			if ($("#mainGrid").getGridParam("reccount") === 0) {
+				alert('다운받으실 데이터가 없습니다.');
+				return;
+			}
+			let params = {
+				pageIndex: '1',
+				pageUnit: '1000',
+				searchKeyword: $('#searchKeyword').val()
+			};
+			EgovIndexApi.apiExecuteJson(
+				'POST',
+				'/backoffice/bas/progrmListAjax.do', 
+				params,
+				null,
+				function(json) {
+					let ret = json.resultlist;
+					if (ret.length <= 0) {
+						return;
+					}
+					let excelData = new Array();
+					excelData.push(['NO', '파일명', '한글명', 'URL', '설명']);
+					for (let idx in ret) {
+						let arr = new Array();
+						arr.push(Number(idx)+1);
+						arr.push(ret[idx].progrm_file_nm);
+						arr.push(ret[idx].progrm_koreannm);
+						arr.push(ret[idx].url);
+						arr.push(ret[idx].progrm_dc);
+						excelData.push(arr);
+					}
+					let wb = XLSX.utils.book_new();
+					XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(excelData), 'sheet1');
+					var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+					saveAs(new Blob([EgovIndexApi.s2ab(wbout)],{ type: 'application/octet-stream' }), '프로그램관리.xlsx');
+				},
+				function(json) {
+					alert(json.message);
+				}
+			);	
     	}
     }
 </script>

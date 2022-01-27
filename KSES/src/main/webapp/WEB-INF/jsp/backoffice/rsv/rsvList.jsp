@@ -17,6 +17,13 @@
 		height: 30px;
 	}
 </style>
+<!-- Xlsx -->
+<script type="text/javascript" src="/resources/js/xlsx.js"></script>
+<script type="text/javascript" src="/resources/js/xlsx.full.min.js"></script>
+<!-- FileSaver -->
+<script type="text/javascript" src="/resources/js/FileSaver.min.js"></script>
+<!-- jszip -->
+<script type="text/javascript" src="/resources/js/jszip.min.js"></script>
 <!-- //contents -->
 <input type="hidden" id="mode" name="mode">
 <input type="hidden" id="resvSeq" name="resvSeq">
@@ -96,7 +103,7 @@
 		<div class="right_box">
 			<a href="javascript:common_modelOpen('all_cancel_pop');" class="blueBtn">전체 예약취소</a>
 			<a href="javascript:jqGridFunc.fn_longSeatAdd();" class="blueBtn">장기 예매</a>
-			<a href=""  class="blueBtn">엑셀 다운로드</a>
+			<a id="export" onClick="jqGridFunc.fn_excelDown()" class="blueBtn">엑셀 다운로드</a>
 		</div>
 		<div class="clear"></div>
 		
@@ -510,6 +517,7 @@
 </div>
 
 <!-- popup// -->
+<script type="text/javascript" src="/resources/js/temporary.js"></script>
 <script type="text/javascript">
 	var seatSearchInfo = {};
 
@@ -820,6 +828,66 @@
 				function(request) {
 					common_popup("ERROR : " + request.status, "Y", "");	       						
 				}    		
+			);
+		},
+		fn_excelDown : function (){
+			if ($("#mainGrid").getGridParam("reccount") === 0) {
+				alert('다운받으실 데이터가 없습니다.');
+				return;
+			}
+			let params = {
+				pageIndex: '1',
+				pageUnit: '1000',
+				searchKeyword: $('#searchKeyword').val(),
+				searchCenterCd : $("#searchCenterCd").val(),
+				searchDayCondition : $('input[name=searchRsvDay]:checked').val(),
+				searchFrom : $("#searchResvDateFrom").val(),
+				searchTo : $("#searchResvDateTo").val(),
+				searchResvState : $("#searchResvState").val(),
+				searchResvPayDvsn : $("#searchResvPayDvsn").val(),
+				searchResvRcptYn : $("#searchResvRcptYn").val(),
+				searchCondition : $("#searchCondition").val(),
+				searchKeyword : $("#searchKeyword").val(),
+			};
+			EgovIndexApi.apiExecuteJson(
+				'POST',
+				'/backoffice/rsv/rsvListAjax.do', 
+				params,
+				null,
+				function(json) {
+					let ret = json.resultlist;
+					if (ret.length <= 0) {
+						return;
+					}
+					if (ret.length >= 1000) {
+						alert('해당 조회 건수가 1000건이 넘습니다. 엑셀 다운로드 시 1000건에 대한 데이터만 저장됩니다.');
+					}
+					let excelData = new Array();
+					excelData.push(['NO', '예약일자', '예약번호', '지점', '좌석등급', '좌석정보', '이름', '전화번호', '금액', '예약상태', '결제상태', '결제구분']);
+					for (let idx in ret) {
+						let arr = new Array();
+						arr.push(Number(idx)+1);
+						arr.push(ret[idx].resv_end_dt);
+						arr.push(ret[idx].resv_seq);
+						arr.push(ret[idx].center_nm);
+						arr.push(ret[idx].part_class);
+						arr.push(ret[idx].seat_nm);
+						arr.push(ret[idx].user_nm);
+						arr.push(ret[idx].user_phone);
+						arr.push(ret[idx].resv_pay_cost);
+						arr.push(ret[idx].resv_state_text);
+						arr.push(ret[idx].resv_pay_dvsn_text);
+						arr.push(ret[idx].resv_ticket_dvsn_text);
+						excelData.push(arr);
+					}
+					let wb = XLSX.utils.book_new();
+					XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(excelData), 'sheet1');
+					var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+					saveAs(new Blob([EgovIndexApi.s2ab(wbout)],{ type: 'application/octet-stream' }), '예약 현황.xlsx');
+				},
+				function(json) {
+					alert(json.message);
+				}
 			);
 		},
 		fn_resvInfoCancelAll : function() {
