@@ -6,15 +6,19 @@
 		( 
 			SELECT 	
 				SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT, 
-				ROW_NUMBER() OVER (ORDER BY ROWNUM DESC) AS RNUM, 
+				ROW_NUMBER() OVER (ORDER BY ROWNUM ASC) AS RNUM, 
 				TB.* 
 			FROM 	
 			(	
-				SELECT USER_ID, USER_NM, USER_PHONE, USER_SEX_MF, USER_BIRTH_DY, 
-				       TO_CHAR( LAST_UPDT_DTM , 'yyyy-MM-dd') LAST_UPDT_DTM, LAST_UPDUSR_ID
+				SELECT A.USER_ID, A.USER_NM,
+				A.USER_PHONE, A.USER_EMAIL,
+				CASE A.USER_SEX_MF 
+					WHEN 'M' THEN '남성' 
+					ELSE '여성' 
+				END AS USER_SEX_MF,
+				TO_CHAR(TO_DATE(A.USER_BIRTH_DY, 'yyyy-mm-dd'), 'yyyy-mm-dd') AS USER_BIRTH_DY
 				FROM TSER_USER_INFO_I A
-				WHERE 1=1
-				AND USER_DVSN = 'USER_DVSN_1'
+				WHERE A.USER_DVSN = 'USER_DVSN_1'
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
 					 <choose>
 					    <when test="params.searchCondition == 'user_id'">
@@ -40,11 +44,11 @@
 						</otherwise>
 					 </choose>
 				</if>
-				ORDER BY A.LAST_UPDT_DTM DESC
+				ORDER BY A.USER_NM ASC
 			) TB 
 		) TA
-		WHERE ROWNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
-		ORDER BY TA.RNUM DESC 
+		WHERE RNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
+		ORDER BY TA.RNUM ASC 
    	</select>
    	
    	<select id="selectUserInfoDetail" resultType="lmap">
@@ -219,4 +223,33 @@
    	         DELETE FROM TSER_USER_INFO_I WHERE USER_ID= #{item}
 	    </foreach>		
    	</delete>
+   	
+   	<select id="selectUserListDetail" resultType="lmap">
+		SELECT 
+			A.USER_ID, A.USER_NM, A.USER_PHONE, A.USER_EMAIL, 
+			CASE A.USER_SEX_MF 
+				WHEN 'M' THEN '남성' 
+				ELSE '여성' 
+			END AS USER_SEX_MF, 
+			TO_CHAR(TO_DATE(A.USER_BIRTH_DY, 'yyyy-mm-dd'), 'yyyy-mm-dd') AS USER_BIRTH_DY,
+			CASE A.INDVDLINFO_AGRE_YN 
+				WHEN 'Y' THEN '동의' 
+				ELSE '동의 안함'
+			END AS INDVDLINFO_AGRE_YN, 
+			CASE A.INDVDLINFO_AGRE_DT
+				WHEN NULL THEN '동의 안함'
+				ELSE TO_CHAR(A.INDVDLINFO_AGRE_DT, 'yyyy-mm-dd')
+			END AS INDVDLINFO_AGRE_DT,
+			A.VACNTN_DVSN, A.VACNTN_DT, A.VACNTN_ROUND
+		FROM TSER_USER_INFO_I A
+		WHERE A.USER_ID = #{userId}
+   	</select>
+   	
+	<update id="updateUserListInfo">
+		UPDATE TSER_USER_INFO_I SET 
+			VACNTN_DVSN = #{vacntnDvsn, jdbcType=VARCHAR}, 
+			VACNTN_DT = #{vacntnDt, jdbcType=VARCHAR}, 
+			VACNTN_ROUND = #{vacntnRound, jdbcType=VARCHAR} 
+       	WHERE USER_ID = #{userId, jdbcType=VARCHAR}
+   	</update>
 </mapper>

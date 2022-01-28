@@ -27,4 +27,8 @@ public interface UserInfoManageService {
     int updateUserNoshowCount(String userId) throws Exception;
     
     boolean deleteUserInfo(String delCds) throws Exception;
+    
+    public Map<String, Object> selectUserListDetail(String userId) throws Exception;
+    
+    int updateUserListInfo(UserInfo vo) throws Exception;
 }

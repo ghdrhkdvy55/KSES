@@ -177,7 +177,7 @@
    			
                var postData = {};
    		    grid.jqGrid({
-   		    	url : '/backoffice/rsv/userListAjax.do' ,
+   		    	url : '/backoffice/cus/userListInfoAjax.do' ,
    		        mtype :  'POST',
    		        datatype :'json',
    		        pager: $('#pager'),  
@@ -313,7 +313,7 @@
         fn_userInfo : function (userId) {
 	        $("#userId").val(userId);
 			var params = {"userId" : userId};
-			var url = "/backoffice/rsv/userInfoDetail.do";
+			var url = "/backoffice/cus/selectUserListInfoDetail.do";
 			fn_Ajax
 			(
 				url, 
@@ -363,7 +363,7 @@
 		}, fn_update : function (){
 			//확인 
 			$("#confirmPage").bPopup().close();
-			var url = "/backoffice/rsv/userUpdate.do";
+			var url = "/backoffice/cus/updateUserListInfo.do";
 			var params = 
 			{ 	
 				'userId' : $("#sp_userId").html(),
@@ -404,10 +404,8 @@
     	    	loadComplete : function(data) {
     	    		$("#sp_totcnt").text(data.paginationInfo.totalRecordCount);
     	    	}
-    	  }).trigger("reloadGrid");
+			}).trigger("reloadGrid");
 		},
-
-
    	}
 </script>
 <c:import url="/backoffice/inc/popup_common.do" />

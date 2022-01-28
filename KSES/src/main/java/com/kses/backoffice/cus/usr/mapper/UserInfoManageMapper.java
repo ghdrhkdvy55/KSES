@@ -32,4 +32,8 @@ public interface UserInfoManageMapper {
     public int updateUserNoshowCount(@Param("userId") String userId);
     
     public void deleteUserInfo(@Param("delCds") List<String> delCds);
+    
+    public Map<String, Object> selectUserListDetail(String userId);
+    
+	public int updateUserListInfo(UserInfo vo);
 }
