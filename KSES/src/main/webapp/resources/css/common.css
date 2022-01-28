@@ -305,3 +305,18 @@ padding: 0 !important;
 	line-height: 36px;
 	font-size: 22px;
 }
+
+/*0128*/
+.noti_pw {
+    width: 300px;
+    padding-bottom: 10px;
+}
+.noti_pwBtn {
+    padding: 1rem 0 !important;
+}
+.noti_pwBtn input {
+    width: 95%;
+    display: block;
+    margin: auto;
+    margin-top: 5px;
+}
