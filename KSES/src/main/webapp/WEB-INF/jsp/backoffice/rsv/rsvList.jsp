@@ -497,7 +497,7 @@
 
 <!-- 좌석변경 대상 고객 결제 비밀빈호 -->
 <div id="pay_number" class="popup">
-	<div class="pop_con rsv_popup">
+	<div class="pop_con rsv_popup noti_pw">
 		<a class="button b-close">X</a>
 		<div class="pop_wrap">
 			<h4>결제 비밀번호를 입력해주세요.</h4>
@@ -509,7 +509,7 @@
                 	</ul>
             	</li>
         	</ul>
-			<ul class="cost_btn">
+			<ul class="cost_btn noti_pwBtn">
 				<li class="okBtn"><a href="javascript:jqGridFunc.fn_resvSeatUpdate();">확인</a></li>
 			</ul>
 		</div>
