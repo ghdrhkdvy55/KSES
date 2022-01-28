@@ -71,16 +71,11 @@
 	        END
 	     }
 	</insert>
-	
-	
-   	
+
    	<delete id="deleteMessageGroupUserInfo">
    	    <foreach collection="delCds" item="item" separator=";" open="DECLARE BEGIN" close="; END;">  
    	            UPDATE TSES_MESSAGGROUP set GROUP_CNT = GROUP_CNT - 1 WHERE GROUP_CODE = (SELECT GROUP_CODE FROM TSES_MESSAGGROUP_USER WHERE GROUP_USERSEQ= #{item}); 
    	            DELETE FROM TSES_MESSAGGROUP_USER  WHERE GROUP_USERSEQ= #{item}
 	    </foreach>		
    	</delete>
-
-
-
 </mapper>
