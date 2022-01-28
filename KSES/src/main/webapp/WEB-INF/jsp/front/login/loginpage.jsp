@@ -326,11 +326,8 @@
 					return;
 				}
 				
-				userInfo.indvdlinfoAgreYn = $("#person_agree_yn").val();
-				loginService.createUserSession(userInfo);
-			},
-			mktginfoAgre : function(userInfo) {
-				userInfo.mktginfoAgreYn = $("#person_agree_yn").val();
+				userInfo.indvdlinfoAgreYn = "Y";
+				userInfo.mktginfoAgreYn = $("input:checkbox[id='mkt_agree_yn']").is(":checked") ? "Y" : "N";
 				loginService.createUserSession(userInfo);
 			}
 		}	
