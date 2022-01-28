@@ -166,27 +166,7 @@
 											</li>
 										</ol>
 									</p>
-								</li> 
-								
-								<!--홍보마케팅동의-->
-<!-- 								<li class="person_check nonMemberArea">
-									<p>									
-										<span>&lt;홍보 및 마케팅 활용 동의 &gt;(선택)</span>																															
-
-						                
-										<p class="prsn_agree"><a data-popup-open="mktg_agree">자세히 &gt;</a></p>
-										<ul>									
-						                   	<li class="agreeBtn">스마트 입장 시스템에서 보내는 본장 및 지점별 마케팅 문자 수신에 동의 하시겠습니까?</li>
-						                   	<li class="check_impnt">
-												<input class="cash_radio" type="radio" checked name="ENTRY_DVSN_1_person_agree" id="ENTRY_DVSN_1_person_agree" value="person_agreeN_1">
-                                    			<label for="ENTRY_DVSN_1_person_agree"><span></span>동의함</label>
-                                    				
-                                    			<input class="cash_radio" type="radio" name="ENTRY_DVSN_2_person_agree" id="ENTRY_DVSN_2_person_agree" value="person_agreeN_2">
-                                    			<label for="ENTRY_DVSN_2_person_agree"><span></span>동의안함</label>                                    
-											</li>											
-										</ul>																			
-									</p>
-								</li>   -->
+								</li>
 								
 								<!--기타고지사항-->
 								<li class="person_check nonMemberArea">
