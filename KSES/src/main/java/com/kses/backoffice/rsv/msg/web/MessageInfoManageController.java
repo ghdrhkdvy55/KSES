@@ -200,7 +200,6 @@ public class MessageInfoManageController {
 					return model;	
 		    }
 			LoginVO loginVO = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
-	    	String userNm = loginVO.getEmpNm();
 			
 			if (!SmartUtil.NVL(vo.get("msgArray"), "").toString().equals("")) {
 				//지점 담당자 메세지 보내기
@@ -210,11 +209,7 @@ public class MessageInfoManageController {
 						                .stream()
 						                .map(s -> s.split(":"))
 						                .collect(Collectors.toMap(e -> e[0], e -> e[1]));
-				
-				
-				
-				
-				
+
 				/*
 				String[] pairs = step.split(",");
 				for (int i=0;i<pairs.length;i++) {

@@ -104,11 +104,14 @@
 								$(".branch_list").empty();
 								$.each(result.resultlist, function(index, item) {
 									var setHtml = "";
-									setHtml += "<li><ul id='" + item.center_cd + "'><li><span>" 
-									+ item.center_nm 
-									+ "</span></li><li>지정석 <em>" 
-									+ (item.center_seat_max_count - item.center_seat_use_count) + " / " + item.center_seat_max_count
-									+ "</em>석";
+									
+									if(item.center_pilot_yn == "Y") {
+										setHtml += "<li><ul id='" + item.center_cd + "'><li><span>" 
+										+ item.center_nm 
+										+ "</span></li><li>지정석 <em>" 
+										+ (item.center_seat_max_count - item.center_seat_use_count) + " / " + item.center_seat_max_count
+										+ "</em>석";
+									}
 									
 									if(item.center_stand_yn == "Y") {
 										setHtml += "<br>"
