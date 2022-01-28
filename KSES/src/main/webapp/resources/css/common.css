@@ -320,3 +320,9 @@ padding: 0 !important;
     margin: auto;
     margin-top: 5px;
 }
+
+.ok_agree {text-align:left!important;}
+.okdone {
+    position:initial ;
+    display: inline-block!important;
+}
