@@ -126,6 +126,10 @@
 				INDVDLINFO_AGRE_DT = SYSDATE,
 				VACNTN_DT = #{vacntnDt, jdbcType=VARCHAR},
 			</if>
+			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(mktginfoAgreYn)">
+				MARKETING_AGRE_YN = #{mktginfoAgreYn, jdbcType=VARCHAR},
+				MARKETING_AGRE_DT = SYSDATE,
+			</if>
 			USER_CARD_ID = #{userCardId, jdbcType=VARCHAR}, 
             USER_CARD_NO = #{userCardNo, jdbcType=VARCHAR},
             USER_CARD_SEQ = #{userCardSeq, jdbcType=VARCHAR},
