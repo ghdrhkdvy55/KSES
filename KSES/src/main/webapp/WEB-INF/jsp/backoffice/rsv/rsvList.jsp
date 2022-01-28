@@ -501,7 +501,7 @@
 		<a class="button b-close">X</a>
 		<div class="pop_wrap">
 			<h4>결제 비밀번호를 입력해주세요.</h4>
-			<ul class="cost_list">
+			<ul class="cost_list noti_pwBtn">
 				<li>
 					<ul class="pay_passWord">
                         <li>결제</li>
@@ -509,8 +509,8 @@
                 	</ul>
             	</li>
         	</ul>
-			<ul class="cost_btn noti_pwBtn">
-				<li class="okBtn"><a href="javascript:jqGridFunc.fn_resvSeatUpdate();">확인</a></li>
+			<ul class="cost_btn ">
+				<li class="okBtn ok_pwBtn"><a href="javascript:jqGridFunc.fn_resvSeatUpdate();">확인</a></li>
 			</ul>
 		</div>
 	</div>

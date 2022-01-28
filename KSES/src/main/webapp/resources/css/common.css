@@ -311,7 +311,7 @@ padding: 0 !important;
     width: 300px;
     padding-bottom: 10px;
 }
-.noti_pwBtn {
+.ok_pwBtn a{
     padding: 1rem 0 !important;
 }
 .noti_pwBtn input {
