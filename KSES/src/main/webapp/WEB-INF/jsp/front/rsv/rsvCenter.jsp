@@ -104,15 +104,20 @@
 								$(".branch_list").empty();
 								$.each(result.resultlist, function(index, item) {
 									var setHtml = "";
+									
 									setHtml += "<li><ul id='" + item.center_cd + "'><li><span>" 
 									+ item.center_nm 
-									+ "</span></li><li>지정석 <em>" 
-									+ (item.center_seat_max_count - item.center_seat_use_count) + " / " + item.center_seat_max_count
-									+ "</em>석";
+									+ "</span></li><li>";
+									
+									if(item.center_pilot_yn == "Y") {
+										setHtml += "지정석 <em>" 
+										+ (item.center_seat_max_count - item.center_seat_use_count) + " / " + item.center_seat_max_count
+										+ "</em>석"
+										+ "<br>";
+									}
 									
 									if(item.center_stand_yn == "Y") {
-										setHtml += "<br>"
-										+ "자유석 <em>"
+										setHtml += "자유석 <em>"
 										+ (item.center_stand_max - item.center_standing_use_count) + " / " + item.center_stand_max
 										+ "</em>석";
 									}

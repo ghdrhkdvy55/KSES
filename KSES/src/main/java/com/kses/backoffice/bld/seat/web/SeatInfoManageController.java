@@ -68,16 +68,7 @@ public class SeatInfoManageController {
 	
 	@Autowired
 	private CenterInfoManageService centerInfoManageService;
-	
-	@Autowired
-	private DeptInfoManageService deptService;
-	
-//	@Autowired
-//	private MessageInfoManageService msgService;
-	
-	@Autowired
-	private QrcpdeInfoManageServie qrService;
-	
+
 	@Autowired
     ServletContext servletContext;
 	
@@ -90,7 +81,7 @@ public class SeatInfoManageController {
 	@RequestMapping(value="seatList.do", method = RequestMethod.GET)
 	public ModelAndView viwSeatList() throws Exception {
 		ModelAndView model = new ModelAndView("/backoffice/bld/seatList");
-		model.addObject("centerList", centerInfoManageService.selectCenterInfoComboList()); 
+		model.addObject("centerList", centerInfoManageService.selectCenterInfoComboList());
         model.addObject("seatClass", cmmnDetailService.selectCmmnDetailCombo("SEAT_CLASS"));
         model.addObject("seatDvsn", cmmnDetailService.selectCmmnDetailCombo("SEAT_DVSN"));
         model.addObject("payDvsn", cmmnDetailService.selectCmmnDetailCombo("PAY_DVSN"));	      
@@ -148,7 +139,7 @@ public class SeatInfoManageController {
 		    model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 
 		} catch(Exception e) {
-			log.info(e.toString());
+			LOGGER.info(e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));	
 		}
@@ -261,71 +252,7 @@ public class SeatInfoManageController {
 		}		
 		return model;
 	}
-	
-	/*
-	 *  qr 이미지 생성 
-	 * 
-	 * 
-	 */
-	@RequestMapping (value="officeSpaceQrCreate.do")
-	public ModelAndView selectFloorInfoManage(@ModelAttribute("LoginVO") LoginVO loginVO
-									          , @RequestBody Map<String, Object> params	) throws Exception{
-		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
-	    Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-	    if(!isAuthenticated) {
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-				model.setViewName("/backoffice/login");
-				return model;	
-	    }
-	    try {
-	    	//qr 생성 (좌석/회의실) 사용유무 할지는 나중에 정리 
-	    	Map<String, Object> search = new HashMap<String, Object>();
-	    	search.put("searchQrplay", "Y");
-	    	
-	    	//추후 겁색 값으로 대처 필요 
-	    	search.put("firstIndex", 0);
-	    	search.put("lastRecordIndex", 1000);
-	    	search.put("recordCountPerPage", 1000);
-				  
-	    	String qr_code = "";
-	        String path = "";
-	        //path = servletContext.getRealPath("/") + propertiesService.getString("qrCodePath") + "/";
-	        path =  propertiesService.getString("Globals.qrPath");
-	         
-	    	List<Map<String, Object>> qrLists = seatService.selectSeatInfoList(search);
-	    	
-	    	int ret = 0;
-	    	
-	    	for (Map<String, Object> qrList : qrLists) {
-	    		//추후 변경 예정
-	    		qr_code = qrList.get("seat_id").toString()+"_" + UUID.randomUUID().toString().replace("-", "").substring(0, 8);
-	    		String result =  SmartUtil.getQrCode(path, qr_code, 200, 300, qrList.get("seat_id").toString()); // qr코드 생성 및 이미지 생성
-	    		
-	    		if (!result.equals("FAIL")) {
-	    			QrcodeInfo info = new QrcodeInfo();
-	    			info.setItemId(qrList.get("seat_id").toString());
-	    			info.setMode(Globals.SAVE_MODE_INSERT);
-	    			info.setQrGubun("ITEM_GUBUN_2");
-	    			info.setQrCode(qr_code);
-	    			info.setQrFullPath(path + "/" + qrList.get("seat_id").toString() + ".png");
-	    			info.setQrPath("/" + propertiesService.getString("qrCodePath") + "/" + qrList.get("seat_id").toString() + ".png");
-	    			ret = qrService.updateQrcodeManage(info);
-	    		} 	
-	    	}
-	    	
-	    	log.info("QR CreatCount : " + ret);
-	    	model.addObject(Globals.STATUS_MESSAGE, "QR 코드가 정상적으로 생성 되었습니다.");
-	    	model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-			
-	    } catch(Exception e) {
-	    	log.info(e.toString());
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
-	    }
-	    return model;
-	}
-	
-	
+
 	//수정 구문 
 	@RequestMapping(value="seatGuiUpdate.do", method=RequestMethod.POST)
 	public ModelAndView updateSeatGuiPosition (	@RequestBody Map<String, Object> params, 
@@ -394,130 +321,6 @@ public class SeatInfoManageController {
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.insert"));
 	    }
 	    return model;
-		
-	}
-	
-		
-		
-	@RequestMapping(value="officeMeetingList.do")
-	public ModelAndView  selectMeetingInfoManageListByPagination(@ModelAttribute("loginVO") LoginVO loginVO
-															, HttpServletRequest request
-															, BindingResult bindingResult	) throws Exception {
-		
-		
-		  ModelAndView model = new ModelAndView(); 
-		  try {
-			  Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-			  if(!isAuthenticated) {
-					model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-					model.setViewName("/backoffice/login");
-					return model;	
-			  }else {
-		    	   HttpSession httpSession = request.getSession(true);
-		    	   loginVO = (LoginVO)httpSession.getAttribute("LoginVO");
-			  }
-			  model.addObject("centerInfo", centerInfoManageService.selectCenterInfoComboList());
-			  model.addObject("DeptInfo", deptService.selectDeptInfoComboList());
-			  model.addObject("payGubun", cmmnDetailService.selectCmmnDetailCombo("PAY_CLASSIFICATION"));
-			  //model.addObject("selectSwcGubun", cmmnDetailService.selectCmmnDetailCombo("SWC_GUBUN"));
 
-			  
-			  
-			  HashMap<String, Object> params = new HashMap<String, Object>();
-			  params.put("code", "SWC_GUBUN");
-			  params.put("notIn", "List");
-			  params.put("notlist",  SmartUtil.dotToList("SWC_GUBUN_4"));
-			  model.addObject("selectSwcGubun", cmmnDetailService.selectCmmnDetailComboEtc(params));
-		      
-			  
-		  }catch(Exception e) {
-			  StackTraceElement[] ste = e.getStackTrace();
-			  log.info(e.toString() + ':' + ste[0].getLineNumber());
-			  model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			  model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));	
-		  }
-		  model.setViewName("/backoffice/bas/officeMeetingList");
-		  return model;	
-	}
-	
-	//구역 리스트 보여 주기 
-	@RequestMapping(value="officeMeetingListAjax.do")
-	public ModelAndView  selectOfficeMeetingAjaxInfoManageListByPagination(@ModelAttribute("loginVO") LoginVO loginVO
-																			, @RequestBody Map<String,Object>  searchVO
-																			, HttpServletRequest request
-																			, BindingResult bindingResult	) throws Exception {
-		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
-
-		return model;
-	}
-	
-	/*
-	 * 회의실 정보 상세 조회 
-	 * 
-	 */
-	@RequestMapping (value="officeMeetingDetail.do")
-	public ModelAndView selectMeetingInfoManage(@ModelAttribute("LoginVO") LoginVO loginVO
-									           , @RequestParam("meetingId") String meetingId) throws Exception{
-		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
-
-	    return model;
-	}
-	
-//	@NoLogging
-//	@RequestMapping (value="officeMeetingUpdate.do")
-//	public ModelAndView updateMeetingInfoManage(HttpServletRequest request
-//			                                    , MultipartRequest mRequest
-//				                                , @ModelAttribute("LoginVO") LoginVO loginVO
-//
-//												, BindingResult result) throws Exception{
-//		
-//		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-//		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-//		
-//		if(!isAuthenticated) {
-//				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-//				model.setViewName("/backoffice/login");
-//		}else {
-//	    	 HttpSession httpSession = request.getSession(true);
-//	    	 loginVO = (LoginVO)httpSession.getAttribute("LoginVO");
-//	    	 vo.setUserId(EgovUserDetailsHelper.getAuthenticatedUser().toString());
-//	    }
-//		
-//		try{
-//			
-//			vo.setMeetingImg1( uploadFile.uploadFileNm(mRequest.getFiles("meetingImg1"), propertiesService.getString("Globals.filePath")));
-//			vo.setMeetingImg2( uploadFile.uploadFileNm(mRequest.getFiles("meetingImg2"), propertiesService.getString("Globals.filePath")));
-//			vo.setMeetingImg3( uploadFile.uploadFileNm(mRequest.getFiles("meetingImg3"), propertiesService.getString("Globals.filePath")));
-//			vo.setMeetingFile01( uploadFile.uploadFileNm(mRequest.getFiles("meetingFile1"), propertiesService.getString("Globals.filePath")));
-//			vo.setMeetingFile02( uploadFile.uploadFileNm(mRequest.getFiles("meetingFile2"), propertiesService.getString("Globals.filePath")));
-//			
-//			model.addObject(Globals.STATUS_REGINFO , vo);
-//			String meesage = vo.getMode().equals(Globals.SAVE_MODE_INSERT) ? "sucess.common.insert" : "sucess.common.update" ;
-//			int ret = meetingService.updateMeetingRoomManage(vo);
-//			if (ret >0){
-//				model.addObject(Globals.STATUS  , Globals.STATUS_SUCCESS);
-//				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
-//			}else {
-//				throw new Exception();
-//			}
-//		}catch (Exception e){
-//			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-//			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.insert"));	
-//		}	
-//		LOGGER.debug("model:" + model.toString());
-//		return model;
-//	}
-	
-	/*
-	 * 좌석 삭제 
-	 * 
-	 */
-	@RequestMapping (value="officeMeetingDelete.do")
-	public ModelAndView deleteOfficeMeetingInfoManage(@ModelAttribute("loginVO") LoginVO loginVO,
-			                                          @RequestParam("meetingId") String meetingId)throws Exception{
-		
-		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
-
-		return model;
 	}
 }

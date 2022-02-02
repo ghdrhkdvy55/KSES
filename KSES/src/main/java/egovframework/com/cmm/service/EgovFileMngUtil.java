@@ -156,13 +156,9 @@ public class EgovFileMngUtil {
     	    saveFolder.mkdirs();
     	}
     	
-    	
-    	
-    	MultipartFile file;
     	String filePath = "";
     	List<FileVO> result  = new ArrayList<FileVO>();
     	FileVO fvo;
-    	
     	
     	while (itr.hasNext()) {
     	    List<MultipartFile> file_list = mRequest.getFiles( (String) itr.next()); 

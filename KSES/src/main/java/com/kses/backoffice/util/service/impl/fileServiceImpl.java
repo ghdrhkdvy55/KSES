@@ -86,15 +86,14 @@ public class fileServiceImpl extends EgovAbstractServiceImpl implements fileServ
 	}
 	//파일 업로드 확인 
 	public  String uploadFileNm(List<MultipartFile> mpf, String filePath){
-		
 		String fileNm = "";
 		String ext = "";
-		
-      try {
-    	
-      	for (MultipartFile mFile : mpf) {
-      	    String originalFilename = mFile.getOriginalFilename(); //파일명	   
-	            if (!originalFilename.equals("")){
+		try {
+			for (MultipartFile mFile : mpf) {
+				
+				String originalFilename = mFile.getOriginalFilename(); //파일명	   
+	            
+				if (!originalFilename.equals("")){
 	            	String fileFullPath = filePath + "/" + originalFilename;
 		        	File file_s =  new File(fileFullPath);	        	
 		        	 
@@ -109,7 +108,7 @@ public class fileServiceImpl extends EgovAbstractServiceImpl implements fileServ
 		        	mFile.transferTo(file_s);
 					fileNm = file_s.getName();	
 	            }
-      	}
+			}
 		} catch (IllegalStateException e) {
 			LOGGER.error("uploadFileNm IllegalStateException :" + e.toString());
 		} catch (IOException e) {
@@ -119,9 +118,9 @@ public class fileServiceImpl extends EgovAbstractServiceImpl implements fileServ
 		}        
 		return fileNm;
 	}
-	public File rename(File f, String fileNm, String filedir) {             //File f는 원본 파일
-			 
-		
+	
+	//File f는 원본 파일
+	public File rename(File f, String fileNm, String filedir) {             
 	    String name = f.getName();
 	    String body = null;
 	    String ext = null;
@@ -144,79 +143,86 @@ public class fileServiceImpl extends EgovAbstractServiceImpl implements fileServ
 	    	  String newName = body + ext;
 		      f = new File(f.getParent(), newName);
 		      LOGGER.debug("파일이 없을때  filenm:"+ newName);
-	    }else {	    
+	    } else {	    
 		    while (!createNewFile(f) && count < 9999) {  
-		      count++;
-		      String newName = body+ "_" + count + ext;
-		      LOGGER.debug("파일이 있을때  filenm:"+ newName);
-		      f = new File(f.getParent(), newName);
+		    	count++;
+		    	String newName = body+ "_" + count + ext;
+		    	LOGGER.debug("파일이 있을때  filenm:"+ newName);
+		    	f = new File(f.getParent(), newName);
 		    }
 	    }
 	    return f;
 	}
-	//파일 생성 
+ 
+	//존재하는 파일이 아니면 파일 생성
 	private boolean createNewFile(File f) { 
 	    try {
-	      return f.createNewFile();                        //존재하는 파일이 아니면
-	    }catch (IOException ignored) {
+	      return f.createNewFile();                        
+	    } catch (IOException ignored) {
 	      return false;
 	    }
 	}	
+	
 	private boolean fileExites( String fileNm, String path){
-			try{
-				pathExist(path);
+		try {
+			pathExist(path);
 				
-				File f = new File (path+"/"+fileNm);
-				if (f.exists()){
-					return false;
-				}else {
-					return true;
-				}
-			}catch (Exception e){
-				LOGGER.debug("fileExites Error:" + e.toString());
-				return false;
-			}
+			File f = new File (path+"/"+fileNm);
 			
+			if (f.exists()){
+				return false;
+			} else {
+				return true;
+			}
+		} catch (Exception e) {
+			LOGGER.debug("fileExites Error:" + e.toString());
+			return false;
+		}
 	}
+	
 	public boolean pathExist(String path){
-		try{
+		try {
 			File dir = new File(path);
 		    if(!dir.isDirectory())
 			   dir.mkdir(); //폴더 생성합니다.
 			
 		    return true; 
-		}catch(Exception e){
+		} catch(Exception e) {
 			LOGGER.error("pathExist Error:" + e.toString());
 			return false;
 		}
 	}
+	
 	//파일 삭제 
 	public  boolean deleteFile (String fileNm ) {
-	  	try{        	
+	  	try {        	
 	  		File delFile = new File ( fileNm);
 	  		delFile.delete();
 	  		return true;    		
-	  	}catch(Exception e){
+	  	} catch(Exception e) {
 	  		LOGGER.debug("file Delete error{0}", e.toString());
 	  		return false;
 	  	}    	
 	}
-	public  boolean deleteFile (String fileNm, String path ) {
-	  	try{        	
+	
+	public boolean deleteFile (String fileNm, String path ) {
+	  	try {        	
 	  		pathExist(path);
 	  		//path 먼저 확인 
 	  		File delFile = new File ( fileNm);
 	  		delFile.delete();
 	  		return true;    		
-	  	}catch(Exception e){
+	  	} catch(Exception e) {
 	  		LOGGER.debug("file Delete error{0}", e.toString());
 	  		return false;
 	  	}    	
 	}
+	
 	//시분초 변환 
 	public String changeTime (String hour, String min, String sec){
 		return (Integer.parseInt(hour)*3600 + Integer.parseInt(min)*60 + sec);
 	}
+	
 	public String changeTime (String secound){
 		int h =0, m =0, s=0;
 		int sec = Integer.parseInt(secound);

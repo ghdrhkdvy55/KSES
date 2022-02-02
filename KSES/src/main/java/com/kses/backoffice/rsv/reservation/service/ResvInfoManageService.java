@@ -37,6 +37,15 @@ public interface ResvInfoManageService {
 	public List<String> selectResvDateList(ResvInfo vo) throws Exception;
 	
 	/**
+	 * SPDM 예약번호 시퀀스 조회
+	 * 
+	 * @param vo
+	 * @return
+	 * @throws Exception
+	 */
+	public String selectResvSeqNext() throws Exception;
+	
+	/**
 	 * SPDM 회원 마지막 예약 정보 조회
 	 * 
 	 * @param userId
@@ -109,15 +118,6 @@ public interface ResvInfoManageService {
 	public int resvInfoDuplicateCheck(Map<String, Object> params) throws Exception;
 	
 	/**
-	 * SPDM 예약자 아이디 조회
-	 * 
-	 * @param resvSeq
-	 * @return
-	 * @throws Exception
-	 */
-	public String selectResvUserId(String resvSeq) throws Exception;
-	
-	/**
 	 * SPDM 회원 마이페이지 예약정보 조회
 	 * 
 	 * @param params
@@ -154,6 +154,15 @@ public interface ResvInfoManageService {
 	public ModelMap resvSeatChange(Map<String, Object> params) throws Exception;
 	
 	/**
+	 * SPDM 좌석변경으로 인한 신규 예약정보 생성
+	 * 
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 */
+	public ModelMap updateResvInfoCopy(Map<String, Object> params) throws Exception;
+	
+	/**
 	 * SPDM 예약 정보 취소(제거예정)
 	 * 
 	 * @param params
@@ -165,11 +174,13 @@ public interface ResvInfoManageService {
 	/**
 	 * SPDM 예약 정보 취소
 	 * 
-	 * @param params
+	 * @param resvSeq
+	 * @param cardPw
+	 * @param isPassword
 	 * @return
 	 * @throws Exception
 	 */
-	public ModelMap resvInfoAdminCancel(String resvSeq) throws Exception;
+	public ModelMap resvInfoAdminCancel(String resvSeq, String cardPw, boolean isPassword) throws Exception;
 	
 	/**
 	 * SPDM 최초 출입시 예약 상태값 변경 

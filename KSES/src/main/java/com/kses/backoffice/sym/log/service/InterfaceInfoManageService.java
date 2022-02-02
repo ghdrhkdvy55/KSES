@@ -13,9 +13,9 @@ public interface InterfaceInfoManageService {
     
     Map<String, Object> selectInterfaceDetail (String requstId) throws Exception;
     
-    ModelMap SpeedOnPayMent(String resvSeq, boolean isPassword) throws Exception;
+    ModelMap SpeedOnPayMent(String resvSeq, String cardPw, boolean isPassword) throws Exception;
     
-    ModelMap SpeedOnPayMentCancel(String resvSeq, boolean isPassword) throws Exception;
+    ModelMap SpeedOnPayMentCancel(String resvSeq, String cardPw, boolean isPassword) throws Exception;
 	
     int InterfaceInsertLoginLog(InterfaceInfo vo) throws Exception;
 	

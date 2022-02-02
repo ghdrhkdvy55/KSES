@@ -34,6 +34,9 @@ public class UserInfo {
 	// 개인정보 동의일자
 	private String indvdlinfoAgreDt = "";
 	
+	// 마케팅 동의여부
+	private String mktginfoAgreYn = "";
+	
 	// 현금영수증 발급여부
 	private String userRcptYn = "";
 	

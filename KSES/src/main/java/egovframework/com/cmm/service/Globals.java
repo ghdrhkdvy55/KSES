@@ -106,5 +106,6 @@ public class Globals {
 	public static final String SYSLOG_PROCESS_SE_CODE_DELETE = "D";
 	public static final String SYSLOG_PROCESS_SE_CODE_SELECT = "S";
 	
+	public static final String STEP = "step";
 	public static final String JSON_NO_KEY = "NO_KEY";
 }

@@ -72,6 +72,11 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	public List<String> selectResvDateList(ResvInfo vo) throws Exception {
 		return resvMapper.selectResvDateList(vo);
 	}
+	
+	@Override
+	public String selectResvSeqNext() throws Exception {
+		return resvMapper.selectResvSeqNext();
+	}
 
 	@Override
 	public int updateUserResvInfo(ResvInfo vo) throws Exception {
@@ -118,11 +123,6 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	}
 	
 	@Override
-	public String selectResvUserId(String resvSeq) throws Exception {
-		return resvMapper.selectResvUserId(resvSeq);
-	}
-	
-	@Override
 	public List<Map<String, Object>> selectUserMyResvInfo(Map<String, Object> params) throws Exception {
 		return resvMapper.selectUserMyResvInfo(params);
 	}
@@ -151,20 +151,53 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	public ModelMap resvSeatChange(Map<String, Object> params) throws Exception {
 		ModelMap resultMap = new ModelMap();
 		String message = "처리중 오류가 발생하였습니다.";
+		String resvSeq = SmartUtil.NVL(params.get("resvSeq"),"");
+		String cardPw = SmartUtil.NVL(params.get("cardPw"),"");
 		
 		try {			
 			Map<String, Object> resvInfo = resvService.selectUserResvInfo(params);
-			int resvPayCost = Integer.parseInt(SmartUtil.NVL(resvInfo.get("resv_pay_cost"),""));
-			int changeResvPayCost = Integer.parseInt(SmartUtil.NVL(params.get("resvEntryPayCost"),"")) + Integer.parseInt(SmartUtil.NVL(params.get("resvEntryPayCost"),""));
+			int cancelResvPayCost = Integer.parseInt(SmartUtil.NVL(resvInfo.get("resv_pay_cost"),""));
+			String cancelResvPayDvsn = SmartUtil.NVL(resvInfo.get("resv_pay_dvsn"),"");
+			String cancelResvCenterPilotYn = SmartUtil.NVL(resvInfo.get("center_pilot_yn"),"Y");
 			
-			if(resvPayCost != changeResvPayCost) {
-				message = "금액정보 다름 에러발생";
-				throw new Exception();
+			int changeResvPayCost = Integer.parseInt(SmartUtil.NVL(params.get("resvEntryPayCost"),"")) + Integer.parseInt(SmartUtil.NVL(params.get("resvSeatPayCost"),""));
+			if(cancelResvCenterPilotYn.equals("Y") && cancelResvPayCost != changeResvPayCost && cancelResvPayDvsn.equals("RESV_PAY_DVSN_2")) {
+				// 1.이전 예약정보 취소
+				resultMap = resvService.resvInfoAdminCancel(resvSeq, cardPw, true);
+				if(!resultMap.get(Globals.STATUS).equals(Globals.STATUS_SUCCESS)) {
+					resultMap.addAttribute("resvSeq", resvSeq);
+					return resultMap;
+				}
+				
+				// 2.신규 예약정보 생성
+				String copyResvSeq = resvService.selectResvSeqNext();
+				params.put("copyResvSeq", copyResvSeq);
+				resultMap = resvService.updateResvInfoCopy(params);
+				
+				if(!resultMap.get(Globals.STATUS).equals(Globals.STATUS_SUCCESS)) {
+					resultMap.addAttribute("resvSeq", resvSeq);
+					resultMap.addAttribute(Globals.STEP, "[예약등록]");
+					return resultMap;
+				}
+				
+				// 3.신규 예약정보 출금거래
+				resultMap = interfaceService.SpeedOnPayMent(copyResvSeq, cardPw, true);
+				if(!resultMap.get(Globals.STATUS).equals(Globals.STATUS_SUCCESS)) {
+					resultMap.addAttribute("resvSeq", copyResvSeq);
+					resultMap.addAttribute(Globals.STEP, "[출금거래]");
+					return resultMap;
+				}
+			
+				message = "정상적으로 좌석변경 되었습니다.<br>예약번호 : " + resvSeq + " -> " + copyResvSeq;
+				resultMap.addAttribute("resvSeq", copyResvSeq);
+				resultMap.addAttribute(Globals.STATUS, Globals.STATUS_SUCCESS);
+				resultMap.addAttribute(Globals.STATUS_MESSAGE, message);	
 			} else {
 				int seatChangCount = resvMapper.updateResvSeatInfo(params);
-				if(seatChangCount > 0) { 
+				if(seatChangCount > 0) {
+					resultMap.addAttribute("resvSeq", resvSeq);
 					resultMap.addAttribute(Globals.STATUS, Globals.STATUS_SUCCESS);
-					resultMap.addAttribute(Globals.STATUS_MESSAGE, "변경 좌석과 금액정보가 동일하여 기존 예약정보에서 좌석정보만 변경되었습니다.");
+					resultMap.addAttribute(Globals.STATUS_MESSAGE, "비시범 지점 또는 변경 좌석과 금액정보가 동일하여 기존 예약정보에서 좌석정보만 변경되었습니다.");
 				} else {
 					message = "기존 예약정보 변경중 오류가 발생하였습니다.";
 					throw new Exception();
@@ -178,9 +211,30 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 			resultMap.addAttribute(Globals.STATUS_MESSAGE, message);	
 		}
 
-		
 		return resultMap;
 	}
+	
+	@Override
+	public ModelMap updateResvInfoCopy(Map<String, Object> params) throws Exception {
+		ModelMap resultMap = new ModelMap();
+		String message = "신규 예약정보 등록중 오류가 발생하였습니다.";
+		try {
+			
+			if(resvMapper.updateResvInfoCopy(params) > 0) {
+				resultMap.addAttribute(Globals.STATUS, Globals.STATUS_SUCCESS);
+				resultMap.addAttribute(Globals.STATUS_MESSAGE, "신규 예약정보 등록 완료");
+				sureService.insertResvSureData("RESERVATION", params.get("copyResvSeq").toString());
+			} else {
+				throw new Exception();
+			}	
+		} catch(Exception e) {
+			StackTraceElement[] ste = e.getStackTrace();
+			LOGGER.error(e.toString() + ":" + ste[0].getLineNumber());
+			resultMap.addAttribute(Globals.STATUS, Globals.STATUS_FAIL);
+			resultMap.addAttribute(Globals.STATUS_MESSAGE, message);	
+		}
+		return resultMap;
+	}	
 	
 	@Override
 	public int updateResvUseComplete() throws Exception {
@@ -203,10 +257,11 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	}
 		
 	@Override
-	public ModelMap resvInfoAdminCancel(String resvSeq) throws Exception {
+	public ModelMap resvInfoAdminCancel(String resvSeq, String cardPw, boolean isPassword) throws Exception {
 		ModelMap resultMap = new ModelMap();
 		ResvInfo resInfo = new ResvInfo();
 		String message = "처리중 오류가 발생하였습니다.";
+		String step = "";
 		
 		try {
 			LoginVO loginVO = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
@@ -220,16 +275,17 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 			String tradeNo = SmartUtil.NVL(resvInfo.get("trade_no"),"");
 			
 			if(!resvState.equals("RESV_STATE_3") && !resvState.equals("RESV_STATE_4")) {
-				
 				//결제 유무 확인
 				if(resvPayDvsn.equals("RESV_PAY_DVSN_2")) {
 					if(resvTicketDvsn.equals("RESV_TICKET_DVSN_1")) {
 						// 스피드온 결제(거래취소 인터페이스)
-						ModelMap result = interfaceService.SpeedOnPayMentCancel(resvSeq, false);
+						ModelMap result = interfaceService.SpeedOnPayMentCancel(resvSeq, cardPw, isPassword);
 						if(!SmartUtil.NVL(result.get(Globals.STATUS), "").equals("SUCCESS")) {
 							LOGGER.info("예약번호 : " + resvSeq + " 결제취소실패");
 							LOGGER.info("에러코드 : " + result.get(Globals.STATUS));
 							LOGGER.info("에러메세지 : " + result.get(Globals.STATUS_MESSAGE));
+							
+							step = "[거래취소]";
 							message = SmartUtil.NVL(result.get(Globals.STATUS_MESSAGE),"");
 							throw new Exception();
 						} 
@@ -252,16 +308,19 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 					
 					sureService.insertResvSureData("CANCEL", resvSeq);
 				} else {
+					step = "[예약취소]";
 					message = "예약취소중 오류가 발생하였습니다.";
 					throw new Exception();
 				}
 			} else {
+				step = "[예약취소]";
 				message = resvState.equals("RESV_STATE_3") ? "이미 이용완료 처리된 예약 정보입니다." : "이미 취소된 예약 정보입니다.";
 				throw new Exception();
 			}
 		} catch(Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			LOGGER.error(e.toString() + ":" + ste[0].getLineNumber());
+			resultMap.put(Globals.STEP, step);
 			resultMap.put(Globals.STATUS, Globals.STATUS_FAIL);
 			resultMap.put(Globals.STATUS_MESSAGE, message);	
 		}

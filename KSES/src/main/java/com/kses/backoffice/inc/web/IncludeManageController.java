@@ -14,7 +14,6 @@ import org.springframework.web.servlet.ModelAndView;
 import com.kses.backoffice.sym.log.annotation.NoLogging;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.Globals;
 import egovframework.com.cmm.util.EgovUserDetailsHelper;
 

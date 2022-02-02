@@ -1,10 +1,7 @@
 package egovframework.com.cmm.service;
 
-
 import java.util.List;
 import java.util.Map;
-
-import org.apache.ibatis.annotations.Param;
 
 /**
  * @Class Name : EgovFileMngService.java

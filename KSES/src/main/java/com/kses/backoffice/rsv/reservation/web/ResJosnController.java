@@ -543,7 +543,7 @@ public class ResJosnController {
 				String inotMsg = "";
 				if (attend == null) {
 					inOt = "IN";
-					inotMsg = "입장기록 없음";
+					inotMsg = "최초입장";
 				} else {
 					inOt = "IN";
 					inotMsg = "입장";
@@ -629,9 +629,9 @@ public class ResJosnController {
 				
 				String recDate = SmartUtil.NVL(jsonInfo.get("RES_SEND_DATE"), "19700101").toString();
 				
-				 if (machineSerial.get("cnt").toString().equals("0")) {
+				if(machineSerial.get("cnt").toString().equals("0")) {
 					returnCode = "ERROR_03";
-					returnMessage = "해당 지점 예약이 아닙니다. 예약내역을 확인하여 주십시요.";
+					returnMessage = "해당 지점 예약이 아닙니다. \n예약내역을 확인하여 주십시요.";
 				} else if (resInfo != null && !SmartUtil.NVL(resInfo.get("resv_pay_dvsn"), "").toString().equals("RESV_PAY_DVSN_1")) {
 					 log.info("RESV_PAY_DVSN123" +  SmartUtil.NVL(resInfo.get("resv_pay_dvsn"), "").toString());
 					returnCode = "ERROR_04";
@@ -788,7 +788,6 @@ public class ResJosnController {
 				int ret = resService.resPriceChange(resInfoU);
 				if (ret > 0) {
 					returnCode = "OK";
-
 				} else {
 					returnCode = "ERROR_02";
 					returnMessage = "시스템 에러 입니다.";
@@ -846,7 +845,7 @@ public class ResJosnController {
 			
 			if(billInfo == null) {
 				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-				model.addObject(Globals.STATUS_MESSAGE, "예약 지점에 등록된 현금영수증 발행 정보가 없습니다 .");
+				model.addObject(Globals.STATUS_MESSAGE, "해당 지점(요일)에 등록된 현금영수증 발행 정보가 없습니다.");
 				return model;
 			}
 			
@@ -974,7 +973,7 @@ public class ResJosnController {
 			ResvInfo info = new ResvInfo();
 			String resvRcptNumber = "";
 			if(resvRcptState.equals("RESV_RCPT_STATE_1")) {
-				CBIssueResponse response = cashbillService.registIssue(corpNum, cashbill, memo);
+				CBIssueResponse response = cashbillService.registIssue(corpNum, cashbill, memo, userId);
 				resvRcptNumber = response.getConfirmNum();
 				log.info(resvRcptNumber);
 				model.addObject("popBill", response);

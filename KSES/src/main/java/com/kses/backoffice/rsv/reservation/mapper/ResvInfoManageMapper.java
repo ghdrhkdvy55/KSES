@@ -16,11 +16,11 @@ public interface ResvInfoManageMapper {
 	
 	public Map<String, Object> selectResvInfoDetail(String resvSeq);
 	
-	public String selectResvUserId(@Param("resvSeq") String resvSeq) throws Exception;
-	
 	public String selectResvPayCost(@Param("params") Map<String, Object> paramMap) ;
 	
 	public List<String> selectResvDateList(ResvInfo vo) throws Exception;
+	
+	public String selectResvSeqNext() throws Exception;
 	
 	public Map<String, Object> selectInUserResvInfo(ResvInfo paramResvInfo);
 	
@@ -31,6 +31,8 @@ public interface ResvInfoManageMapper {
 	public List<Map<String, Object>> selectGuestMyResvInfo(@Param("params") Map<String, Object> paramMap);
 	
 	public int updateResvSeatInfo(@Param("params") Map<String, Object> paramMap);
+	
+	public int updateResvInfoCopy(@Param("params") Map<String, Object> paramMap) throws Exception; 
 	
 	public int resvInfoCancel(@Param("params") Map<String, Object> paramMap);
 	

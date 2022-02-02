@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -20,7 +19,6 @@ import egovframework.com.cmm.service.Globals;
 
 //spring 배치 서비스 정리 
 @Component
-@SuppressWarnings("unchecked")
 public class Scheduler {
 
 	private static final Logger LOGGER = Logger.getLogger(Scheduler.class);
@@ -64,7 +62,7 @@ public class Scheduler {
 							LOGGER.info("예약번호 : " + resvSeq + " " + i + "차 자동취소 시작" );
 							
 							if(i == 2 && resvPayDvsn.equals("RESV_PAY_DVSN_2") && resvTicketDvsn.equals("RESV_TICKET_DVSN_1")) {
-								ModelMap result = interfaceService.SpeedOnPayMentCancel(resvSeq, false);
+								ModelMap result = interfaceService.SpeedOnPayMentCancel(resvSeq, "", false);
 
 								if(!SmartUtil.NVL(result.get(Globals.STATUS), "").equals("SUCCESS")) {
 									LOGGER.info("예약번호 : " + resvSeq + " 결제취소실패");

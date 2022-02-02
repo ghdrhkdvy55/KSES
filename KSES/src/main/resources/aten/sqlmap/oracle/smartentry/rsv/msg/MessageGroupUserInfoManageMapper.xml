@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kses.backoffice.rsv.msg.mapper.MessageGroupUserInfoManageMapper">
+
+    <select id="selectMessageGroupUserInfoList" resultType="lmap">     	      
+		SELECT * FROM 
+		( 
+			SELECT 	
+				SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT, 
+				ROW_NUMBER() OVER (ORDER BY ROWNUM DESC) AS RNUM, 
+				TB.* 
+			FROM 	
+			(	
+				SELECT A.GROUP_CODE, A.GROUP_TITLE,
+				       B.GROUP_USERSEQ, B.GROUP_USERID, B.GROUP_USER_GUBUN, B.GROUP_USER_CELLPHONE,
+					   B.LAST_UPDUSR_ID, B.LAST_UPDT_DTM, B.GROUP_USERNAME
+				FROM TSES_MESSAGGROUP A, TSES_MESSAGGROUP_USER B
+				WHERE A.GROUP_CODE = B.GROUP_CODE 
+				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
+					AND #{params.searchCondition} LIKE '%'||#{params.searchKeyword} ||'%'
+				</if>
+				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchGroupCode)">
+					AND A.GROUP_CODE = #{params.searchGroupCode} 
+				</if>
+				ORDER BY A.LAST_UPDT_DTM DESC
+			) TB 
+		) TA
+		WHERE ROWNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
+		ORDER BY TA.RNUM DESC 
+   	</select>
+   	<select id="selectMessageGroupUserDetail" resultType="lmap">
+		SELECT A.GROUP_USERSEQ, A.GROUP_USERID, A.GROUP_USERNAME, A.GROUP_USER_GUBUN, A.GROUP_USER_CELLPHONE
+			   A.LAST_UPDUSR_ID, A.LAST_UPDT_DTM
+		FROM TSES_MESSAGGROUP_USER 
+		WHERE GROUP_USERSEQ = #{groupUserseq}
+   	</select>
+	
+	<insert id="insertMessageGroupUserInfo">
+	    <foreach collection="userInfo" item="item" separator=";" open="DECLARE BEGIN" close="; END;"> 
+			INSERT INTO TSES_MESSAGGROUP_USER	
+			(
+				GROUP_USERSEQ, GROUP_USERID, GROUP_USERNAME, GROUP_CODE, 
+				GROUP_USER_GUBUN, GROUP_USER_CELLPHONE,
+                LAST_UPDUSR_ID,LAST_UPDT_DTM
+			)
+			VALUES 
+			(
+				GROUP_USERSEQ_SEQ.NEXTVAL , #{userInfo.groupUserid}, #{userInfo.groupUsername,jdbcType=VARCHAR}, #{userInfo.groupCode}, 
+				#{userInfo.groupUserGubun}, #{userInfo.groupUserCellphone}, #{userInfo.userId,jdbcType=VARCHAR}, SYSDATE
+			);
+			UPDATE TSES_MESSAGGROUP set GROUP_CNT = GROUP_CNT + 1 WHERE GROUP_CODE = #{groupCode}
+	    </foreach>
+	</insert>
+	
+	<insert id="insertMessageGroupUser">
+	    {CALL 
+	        DECLARE
+	        BEGIN
+		        INSERT INTO TSES_MESSAGGROUP_USER	
+				(
+					GROUP_USERSEQ, GROUP_USERID, GROUP_USERNAME, GROUP_CODE,
+					GROUP_USER_GUBUN, GROUP_USER_CELLPHONE,
+	                LAST_UPDUSR_ID,LAST_UPDT_DTM
+				)
+				VALUES 
+				(
+					GROUP_USERSEQ_SEQ.NEXTVAL , #{groupUserid}, #{groupUsername,jdbcType=VARCHAR}, #{groupCode}, 
+					#{groupUserGubun}, #{groupUserCellphone}, #{lastUpdusrId,jdbcType=VARCHAR}, SYSDATE
+				);
+				UPDATE TSES_MESSAGGROUP set GROUP_CNT = GROUP_CNT + 1 WHERE GROUP_CODE = #{groupCode};
+	        END
+	     }
+	</insert>
+
+   	<delete id="deleteMessageGroupUserInfo">
+   	    <foreach collection="delCds" item="item" separator=";" open="DECLARE BEGIN" close="; END;">  
+   	            UPDATE TSES_MESSAGGROUP set GROUP_CNT = GROUP_CNT - 1 WHERE GROUP_CODE = (SELECT GROUP_CODE FROM TSES_MESSAGGROUP_USER WHERE GROUP_USERSEQ= #{item}); 
+   	            DELETE FROM TSES_MESSAGGROUP_USER  WHERE GROUP_USERSEQ= #{item}
+	    </foreach>		
+   	</delete>
+</mapper>

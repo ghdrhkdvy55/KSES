@@ -17,6 +17,13 @@
 		height: 30px;
 	}
 </style>
+<!-- Xlsx -->
+<script type="text/javascript" src="/resources/js/xlsx.js"></script>
+<script type="text/javascript" src="/resources/js/xlsx.full.min.js"></script>
+<!-- FileSaver -->
+<script type="text/javascript" src="/resources/js/FileSaver.min.js"></script>
+<!-- jszip -->
+<script type="text/javascript" src="/resources/js/jszip.min.js"></script>
 <!-- //contents -->
 <input type="hidden" id="mode" name="mode">
 <input type="hidden" id="resvSeq" name="resvSeq">
@@ -94,9 +101,9 @@
 		</div>
 	
 		<div class="right_box">
-			<a href="javascript:$('#all_cancel_pop').bPopup();" class="blueBtn">전체 예약취소</a>
+			<a href="javascript:common_modelOpen('all_cancel_pop');" class="blueBtn">전체 예약취소</a>
 			<a href="javascript:jqGridFunc.fn_longSeatAdd();" class="blueBtn">장기 예매</a>
-			<a href=""  class="blueBtn">엑셀 다운로드</a>
+			<a id="export" onClick="jqGridFunc.fn_excelDown()" class="blueBtn">엑셀 다운로드</a>
 		</div>
 		<div class="clear"></div>
 		
@@ -174,7 +181,7 @@
               	</tbody>
           	</table>
 			<br>
-			<p class="pop_tit">입장 내역 <span class="pBtn"><a href="javascript:$('#rsv_inout_add').bPopup();" class="blueBtn">입장 수동 등록</a></span></p>
+			<p class="pop_tit">입장 내역 <span class="pBtn"><a href="javascript:common_modelOpen('rsv_inout_add');" class="blueBtn">입장 수동 등록</a></span></p>
 			<div id="inOutHis"> 
 	          	<table id="inOutHisTable" class="main_table">
 					
@@ -185,7 +192,7 @@
 			</div>
       	</div>
       	<div class="right_box">
-          	<a href="javascript:jqGridFunc.fn_detailClose()" class="grayBtn">닫기</a>
+          	<a href="javascript:common_modelClose('rsv_detail');" class="grayBtn">닫기</a>
       	</div>
       	<div class="clear"></div>
   	</div>
@@ -260,7 +267,7 @@
       	</div>
       	<div class="right_box">
       		<a href="javascript:jqGridFunc.fn_longSeatUpdate();" class="blueBtn">등록</a>
-			<a href="javascript:$('#long_seat_add').bPopup().close();" class="grayBtn">닫기</a>
+			<a href="javascript:common_modelClose('long_seat_add');" class="grayBtn">닫기</a>
       	</div>
       	<div class="clear"></div>
   	</div>
@@ -269,7 +276,7 @@
 <!-- // 관리자 검색 팝업 -->
 <div id="search_result" class="popup">
 	<div class="pop_con">
-		<a href="javascript:$('#long_seat_add').bPopup(); $('#search_result').bPopup().close();" class="button bCloseT"></a>
+		<a href="javascript:common_modalOpenAndClose('long_seat_add','search_result');" class="button bCloseT"></a>
 		<h2 class="pop_tit">검색 결과</h2>
       	<div id="searchResultWrap" class="pop_wrap">
         	<table id="searchResultTable" class="whiteBox main_table">
@@ -293,7 +300,6 @@
                         <td>
                             <select id="inoutDvsn">
                             	<option value="IN">입장</option>
-                            	<option value="OUT">퇴장</option>
                             </select>
                         </td>
                     </tr>
@@ -301,7 +307,7 @@
         </div>
         <div class="center_box">
         	<a href="javascript:attendService.fn_setInoutHistory();" id="inOutUpdateBtn" class="blueBtn">저장</a>
-            <a href="javascript:$('#rsv_inout_add').bPopup().close();" class="grayBtn">취소</a>
+            <a href="javascript:common_modelClose('rsv_inout_add');" class="grayBtn">취소</a>
         </div>
         <div class="clear"></div>
     </div>
@@ -489,7 +495,29 @@
   	</div>
 </div>
 
+<!-- 좌석변경 대상 고객 결제 비밀빈호 -->
+<div id="pay_number" class="popup">
+	<div class="pop_con rsv_popup noti_pw">
+		<a class="button b-close">X</a>
+		<div class="pop_wrap">
+			<h4>결제 비밀번호를 입력해주세요.</h4>
+			<ul class="cost_list noti_pwBtn">
+				<li>
+					<ul class="pay_passWord">
+                        <li>결제</li>
+                        <li><input type="password" id="cardPw" placeholder="결제 비밀번호를 입력하세요."></li>
+                	</ul>
+            	</li>
+        	</ul>
+			<ul class="cost_btn ">
+				<li class="okBtn ok_pwBtn"><a href="javascript:jqGridFunc.fn_resvSeatUpdate();">확인</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
 <!-- popup// -->
+<script type="text/javascript" src="/resources/js/temporary.js"></script>
 <script type="text/javascript">
 	var seatSearchInfo = {};
 
@@ -551,9 +579,8 @@
 					{label: '예약일자', name:'resv_end_dt', index:'resv_end_dt', align:'center', formatter:jqGridFunc.formSetting},
 					{label: '예약번호', name:'resv_seq', index:'resv_seq', align:'center'},
 					{label: '지점', name:'center_nm', index:'center_nm', align:'center'},
+					{label: '좌석등급', name:'part_class', index:'part_class', align:'center'},
 					{label: '좌석정보', name:'seat_nm', index:'seat_nm', align:'center'},
-					{label: '구역등급', name:'part_class', index:'part_class', align:'center'},					
-					{label: '아이디', name:'user_id', index:'user_id', align:'center'},
 					{label: '이름', name:'user_nm', index:'user_nm', align:'center'},
 					{label: '전화번호', name:'user_phone', index:'user_phone', align:'center'},
 					{label: '금액', name: 'resv_pay_cost', index:'resv_pay_cost', align:'center', formatter:jqGridFunc.formSetting},
@@ -562,7 +589,6 @@
 					{label: '결제구분', name: 'resv_ticket_dvsn_text',  index:'resv_ticket_dvsn_text', align:'center'},
 					{label: 'QR출력', name:'resv_qr_print', index:'resv_qr_print', align:'center', sortable : false, formatter:jqGridFunc.formSetting},
 					{label: '현금영수증', name:'resv_rcpt_print', index:'resv_rcpt_print', align:'center', sortable : false, formatter:jqGridFunc.formSetting}
-					//{label: '신청일자', name:'resv_req_date', index:'resv_req_date', align:'center'},
 				], 
 				rowNum : 10,  //레코드 수
 				rowList : [10,20,30,40,50,100],  // 페이징 수
@@ -674,21 +700,21 @@
 			
 			item.resv_pay_dvsn = item.center_pilot_yn == "N" ? "RESV_PAY_DVSN_2" : item.resv_pay_dvsn;
 			if(index == 'resv_qr_print' && item.resv_pay_dvsn == 'RESV_PAY_DVSN_2' && (item.resv_state == 'RESV_STATE_1' || item.resv_state == 'RESV_STATE_2')) {
-				form = '<a href="javascript:jqGridFunc.fn_qrInfo(&#39;' + item.resv_seq + '&#39;);" class="detailBtn">QR출력</a>';	
+				form = '<a href="javascript:jqGridFunc.fn_qrInfo(&#39;' + item.resv_seq + '&#39;);" class="blueBtn">QR출력</a>';	
 			} else if(index == 'resv_end_dt') {
 				form = fn_resvDateFormat(item.resv_end_dt); 	
 			} else if(index == 'resv_pay_cost') {
 				form = item.resv_pay_cost + "원";
-			} else if(index == 'resv_rcpt_print' && item.resv_rcpt_yn == 'Y') {
+			} else if(index == 'resv_rcpt_print' && item.resv_rcpt_yn == 'Y' && item.resv_state != 'RESV_STATE_4') {
 				var rcptState = "발행";
 				if(item.resv_rcpt_state == "" || item.resv_rcpt_state == "RESV_RCPT_STATE_1") {
-					var rcptState = "취소";	
+					form =  '<a href="javascript:jqGridFunc.fn_billPrint(&#39;' + item.resv_seq + '&#39;);" class="blueBtn" style="padding: 5px 12px;">취소</a>';
+					form += '<a href="javascript:jqGridFunc.fn_billState(&#39;' + item.resv_seq + '&#39;);" class="blueBtn" style="padding: 5px 12px;">조회</a>';
 				} else {
-					var rcptState = "발행";	
+					form =  '<a href="javascript:jqGridFunc.fn_billPrint(&#39;' + item.resv_seq + '&#39;);" class="blueBtn" style="padding: 5px 12px;">발행</a>';
+					form += '<a href="javascript:void(0);" class="blueBtn" style="padding: 5px 12px;">조회</a>';
 				}
-				  
-				form = '<a href="javascript:jqGridFunc.fn_billPrint(&#39;' + item.resv_seq + '&#39;);" class="detailBtn">' + rcptState +'</a>';
-				form += '<a href="javascript:jqGridFunc.fn_billState(&#39;' + item.resv_seq + '&#39;);" class="detailBtn">조회</a>';
+
 			}
 			
 			return form;
@@ -698,10 +724,6 @@
 		},
 		clearGrid : function() {
 			$("#mainGrid").clearGridData();
-		},
-		fn_detailClose : function(){
-			$('#rsv_detail').bPopup().close();
-			jqGridFunc.fn_search();
 		},
 		fn_search: function(){
 			$("#mainGrid").setGridParam({
@@ -755,16 +777,12 @@
 						$("#rsvPopResvEntryPayCost").html(obj.resv_entry_pay_cost + "원");
 						$("#rsvPopResvTicketDvsn").html(obj.resv_ticket_dvsn_text);
 						$("#rsvPopResvState").html(obj.resv_state_text);
-						
-						if(obj.resv_entry_dvsn == "ENTRY_DVSN_2" && obj.resv_state == "RESV_STATE_1" && obj.resv_pay_dvsn == "RESV_PAY_DVSN_1") { 
+
+						if(obj.resv_state == "RESV_STATE_1" || obj.resv_state == "RESV_STATE_2") {
 							$("#rsvPopSeatChange a").off().on('click',function (e) {
 								jqGridFunc.fn_resvSeatInfo("CHANGE",obj);
 							});		
-						} else {
-							$("#rsvPopSeatChange a").hide();
-						}
-						
-						if(obj.resv_state == "RESV_STATE_1" || obj.resv_state == "RESV_STATE_2") {
+							
 							$("#resvCancelBtn").show().off().on('click', function () {
 				        		$("#id_ConfirmInfo").off().on('click',function () {
 				        			jqGridFunc.fn_resvInfoCancel(obj.resv_seq);
@@ -772,6 +790,7 @@
 				        		fn_ConfirmPop("해당 예약정보를 취소 하시겠습니까?");
 							});
 						} else {
+							$("#rsvPopSeatChange a").hide();
 							$("#resvCancelBtn").hide();
 						}
 						
@@ -780,12 +799,12 @@
 					}
 				},
 				function(request){
-					common_popup("Error:" + request.status,"");
+					common_popup("ERROR : " + request.status, "");
 				}    		
 			);
 		},
 		fn_resvInfoCancel : function(resvSeq) {
-			$("#confirmPage").bPopup().close();
+			common_modelClose("confirmPage");
 			var url = "/backoffice/rsv/resvInfoCancel.do";
 			var params = {"resvSeq" : resvSeq};
 			
@@ -809,6 +828,66 @@
 				function(request) {
 					common_popup("ERROR : " + request.status, "Y", "");	       						
 				}    		
+			);
+		},
+		fn_excelDown : function (){
+			if ($("#mainGrid").getGridParam("reccount") === 0) {
+				alert('다운받으실 데이터가 없습니다.');
+				return;
+			}
+			let params = {
+				pageIndex: '1',
+				pageUnit: '1000',
+				searchKeyword: $('#searchKeyword').val(),
+				searchCenterCd : $("#searchCenterCd").val(),
+				searchDayCondition : $('input[name=searchRsvDay]:checked').val(),
+				searchFrom : $("#searchResvDateFrom").val(),
+				searchTo : $("#searchResvDateTo").val(),
+				searchResvState : $("#searchResvState").val(),
+				searchResvPayDvsn : $("#searchResvPayDvsn").val(),
+				searchResvRcptYn : $("#searchResvRcptYn").val(),
+				searchCondition : $("#searchCondition").val(),
+				searchKeyword : $("#searchKeyword").val(),
+			};
+			EgovIndexApi.apiExecuteJson(
+				'POST',
+				'/backoffice/rsv/rsvListAjax.do', 
+				params,
+				null,
+				function(json) {
+					let ret = json.resultlist;
+					if (ret.length <= 0) {
+						return;
+					}
+					if (ret.length >= 1000) {
+						alert('해당 조회 건수가 1000건이 넘습니다. 엑셀 다운로드 시 1000건에 대한 데이터만 저장됩니다.');
+					}
+					let excelData = new Array();
+					excelData.push(['NO', '예약일자', '예약번호', '지점', '좌석등급', '좌석정보', '이름', '전화번호', '금액', '예약상태', '결제상태', '결제구분']);
+					for (let idx in ret) {
+						let arr = new Array();
+						arr.push(Number(idx)+1);
+						arr.push(ret[idx].resv_end_dt);
+						arr.push(ret[idx].resv_seq);
+						arr.push(ret[idx].center_nm);
+						arr.push(ret[idx].part_class);
+						arr.push(ret[idx].seat_nm);
+						arr.push(ret[idx].user_nm);
+						arr.push(ret[idx].user_phone);
+						arr.push(ret[idx].resv_pay_cost);
+						arr.push(ret[idx].resv_state_text);
+						arr.push(ret[idx].resv_pay_dvsn_text);
+						arr.push(ret[idx].resv_ticket_dvsn_text);
+						excelData.push(arr);
+					}
+					let wb = XLSX.utils.book_new();
+					XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(excelData), 'sheet1');
+					var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+					saveAs(new Blob([EgovIndexApi.s2ab(wbout)],{ type: 'application/octet-stream' }), '예약 현황.xlsx');
+				},
+				function(json) {
+					alert(json.message);
+				}
 			);
 		},
 		fn_resvInfoCancelAll : function() {
@@ -837,11 +916,10 @@
 				params,
 				false,
 				function(result) {
-			    	console.log(result);
 					if (result.status == "SUCCESS") {
 						if(result.allCount > 0) {
 							result.message = 
-								"정상적으로 전체 예약취소 되었습니다." + "<br><br>" +
+								"전체 예약취소가 정상적으로 처리 되었습니다." + "<br><br>" +
 								"취소 예약정보 : "  + result.allCount + "건" + "<br>" +
 								"취소 성공 : "  + result.successCount + "건" + "<br>" + 
 								"취소 실패 : "  + result.failCount + "건" + "<br>" +
@@ -862,7 +940,7 @@
 				}    		
 			);
 			
-			$('#all_cancel_pop').bPopup().close();
+			common_modelClose('all_cancel_pop');
 		},
 		fn_qrInfo : function(resvSeq) {
 			var url = "/backoffice/rsv/qrSend.do";
@@ -907,7 +985,7 @@
 				}    		
 			);	
 			
-			$("#qr_print").bPopup();
+			common_modelOpen("qr_print");
 		},
 		fn_qrPrint : function() {
 			$("#qrWrap").print();
@@ -949,7 +1027,6 @@
 				false,
 				function(result) {
 					if (result.status == "SUCCESS") {
-						console.log(result);
 						var cashBillInfo = result.cashBillInfo;
 						$("#confirmNum").html(cashBillInfo.confirmNum);
 						$("#issueDT").html(cashBillInfo.issueDT);
@@ -976,6 +1053,21 @@
 				}    		
 			);
 		},
+		fn_centerChange : function() {
+	 		var url = "/backoffice/bld/floorComboInfo.do"
+	 		var params = {"centerCd" : $("#resvCenterCd").val()}
+	 		
+	 		//입장료
+	 		$("#resvEntryPayCost").val($("#resvCenterCd").find("option:selected").data("entrypaycost"));
+	 		var returnVal = uniAjaxReturn(url, "GET", false, params, "lst");
+	 		fn_comboListJson("resvFloorCd", returnVal, "jqGridFunc.fn_floorChange", "100px;", "");
+		},
+		fn_floorChange : function() {
+			var url = "/backoffice/bld/partInfoComboList.do"
+		    var params = {"floorCd" : $("#resvFloorCd").val()}
+		 	var returnVal = uniAjaxReturn(url, "GET", false, params, "lst");
+			fn_comboListJson("resvPartCd", returnVal, "", "100px;", "");
+		},
 		fn_resvSeatInfo : function(division,resvInfo) {
 			if(division == "CHANGE") {
 				$("#resvSeq").val(resvInfo.resv_seq);
@@ -985,7 +1077,9 @@
 				$("#resvPartCd").val(resvInfo.part_cd);
 				$("#seat_change p:eq(3)").hide();
 				$("#seat_change a:eq(1)").attr("href","javascript:jqGridFunc.fn_resvSeatSearch('CHANGE');");
-				$("#seat_change a:eq(2)").html("변경").attr("href","javascript:jqGridFunc.fn_resvSeatUpdate('CHANGE')");;
+				$("#seat_change a:eq(2)").html("변경").attr("href","javascript:common_modelOpen('pay_number');").click(function () {
+					$("#cardPw").val("");
+				});
 				jqGridFunc.fn_resvSeatSearch("CHANGE");
 			} else if(division = "LONG") {				
 				if($("#loginAuthorCd").val() != "ROLE_ADMIN" && $("#loginAuthorCd").val() != "ROLE_SYSTEM") {
@@ -1003,7 +1097,6 @@
 				$("#seat_change p:eq(3)").show();
 				$("#seat_change a:eq(1)").attr("href","javascript:jqGridFunc.fn_resvSeatSearch('LONG');");
 				$("#seat_change a:eq(2)").html("좌석선택").attr("href","javascript:jqGridFunc.fn_setLongSeatInfo()");
-				/* $("#seat_change a:eq(2)").html("좌석선택").attr("href","javascript:jqGridFunc.fn_resvSeatUpdate('LONG')"); */
 				$("#seat_change .pop_tit").html("사용자 좌석 선택");
 				$(".pop_mapArea").css("background","");
 				$(".pop_seat").html("");
@@ -1011,7 +1104,7 @@
 			
 			seatSearchInfo = {};
 			$("#seasonCd").val("");
-			$("#seat_change").bPopup();
+			common_modelOpen("seat_change");
 		},
 		fn_resvSeatSearch : function(division) {
 			var url = "/front/rsvSeatListAjax.do";
@@ -1124,7 +1217,12 @@
 			if($(".pop_seat li.usable").length <= 0) {
 				common_popup("변경할 좌석을 선택하세요.", "N", "");
 				return;	
+			} else if($("#cardPw").val() == "") {
+				common_popup("결제 비밀번호를 입력하세요.", "N", "");
+				return;				
 			}
+			
+			common_modelClose('pay_number');
 			
 			var params = {
 				"resvSeq" : $("#resvSeq").val(),
@@ -1136,7 +1234,7 @@
 				"seatCd" : $(".pop_seat li.usable").attr("id"),
 				"resvEntryPayCost" : $("#resvEntryPayCost").val(),
 				"resvSeatPayCost" : $(".pop_seat li.usable").data("seat_paycost"),
-				"resvEntryDvsn" : "ENTRY_DVSN_2",
+				"cardPw" : $("#cardPw").val(),
 				"checkDvsn" : division
 			}
 			
@@ -1153,17 +1251,21 @@
 					false,
 					function(result) {
 				    	if(result.status == "SUCCESS") {
-							common_popup(result.message, "Y", "");
-							jqGridFunc.fn_resvInfo("Edt", $("#resvSeq").val());
-							$("#seat_change").bPopup().close();
+				    		common_modelClose("seat_change");
+				    		common_popup(result.message, "Y", "");
+							jqGridFunc.fn_search();
+							jqGridFunc.fn_resvInfo("Edt", result.resvSeq);
 				    	} else if (result.status == "LOGIN FAIL") {
 				    		common_popup("로그인 정보가 올바르지않습니다 다시 로그인해주세요", "Y", "");
 				    	} else {
-				    		common_popup("처리중 오류가 발생하였습니다.", "Y", "");
+				    		common_modelClose("seat_change");
+				    		jqGridFunc.fn_search();
+				    		jqGridFunc.fn_resvInfo("Edt", result.resvSeq);
+				    		common_popup(result.step + "<br>" + result.message, "Y", "");
 				    	}
 					},
 					function(request) {
-						common_popup("ERROR : " +request.status, "N", "");	       						
+						common_popup("ERROR : " + request.status, "N", "");	       						
 					}    		
 				);	
 			}		
@@ -1186,7 +1288,7 @@
 						} else {
 							validResult = result.validResult;
 						}
-					} else if (result.status == "LOGIN FAIL"){
+					} else if (result.status == "LOGIN FAIL") {
 						location.href = "/backoffice/login.do";
 					}
 				},
@@ -1196,21 +1298,6 @@
 			);
 			
 			return validResult;
-		},
-		fn_centerChange : function() {
-	 		var url = "/backoffice/bld/floorComboInfo.do"
-	 		var params = {"centerCd" : $("#resvCenterCd").val()}
-	 		
-	 		//입장료
-	 		$("#resvEntryPayCost").val($("#resvCenterCd").find("option:selected").data("entrypaycost"));
-	 		var returnVal = uniAjaxReturn(url, "GET", false, params, "lst");
-	 		fn_comboListJson("resvFloorCd", returnVal, "jqGridFunc.fn_floorChange", "100px;", "");
-		},
-		fn_floorChange : function() {
-			var url = "/backoffice/bld/partInfoComboList.do"
-		    var params = {"floorCd" : $("#resvFloorCd").val()}
-		 	var returnVal = uniAjaxReturn(url, "GET", false, params, "lst");
-			fn_comboListJson("resvPartCd", returnVal, "", "100px;", "");
 		},
 		fn_longSeatAdd : function() {
 			$("#seasonCd").val("");
@@ -1231,7 +1318,7 @@
 			$("#empSearchKeyword").val("");
 			$("#longResvEmpNo").val("");
 			
-			$("#long_seat_add").bPopup();
+			common_modelOpen("long_seat_add");
 		},
 		fn_setLongSeatInfo : function() {
 			if($(".pop_seat li.usable").length <= 0) {
@@ -1253,7 +1340,7 @@
 			$("#longResvPayCost").val($(".pop_seat li.usable").data("seat_paycost")); 
 			$("#longResvDateFrom").val($("#resvDateFrom").val());
 			$("#longResvDateTo").val($("#resvDateTo").val());
-			$("#seat_change").bPopup().close();
+			common_modelClose("seat_change");
 		},
 		fn_longSeatUpdate : function() {
 			if (any_empt_line_span("long_seat_add", "longResvSeatCd", "예약할 좌석을 선택하세요","sp_message", "savePage") == false) return;
@@ -1266,8 +1353,6 @@
 				"checkDvsn" : "LONG",
 				"resvDateFrom" : $("#longResvDateFrom").val(),
 				"resvDateTo" : $("#longResvDateTo").val(),
-				"resvUserDvsn" : "USER_DVSN_1",
-				"resvEntryDvsn" : "ENTRY_DVSN_2",
 				"seasonCd" : $("#seasonCd").val(),
 				"centerCd" : $("#longResvCenterCd").val(),
 				"floorCd" : $("#longResvFloorCd").val(),
@@ -1279,8 +1364,6 @@
 				"resvUserNm" : $("#longResvUserName").val(),
 				"longResvEmpNo" : $("#longResvEmpNo").val(),
 				"resvUserClphn" : $("#longResvUserPhone").val(),
-				"resvUserAskYn" : "Y",
-				"resvIndvdlinfoAgreYn" : "Y"
 			}
 			
 			var validResult = jqGridFunc.fn_resvVaildCheck(params);
@@ -1349,7 +1432,7 @@
 
 			if (any_empt_line_span("long_seat_add", checkTag, "검색어를 입력해 주세요.","sp_message", "savePage") == false) return;	
 
-			$("#search_result").bPopup();
+			common_modelOpen("search_result");
 			
 			gridEmp.jqGrid({
 				url : url,
@@ -1423,8 +1506,7 @@
 				$("#longResvEmpNo").val(id);
 			}
 			
-			$("#search_result").bPopup().close();
-			$("#long_seat_add").bPopup();
+			common_modalOpenAndClose('long_seat_add','search_result');
 		}
 	}
 	
@@ -1433,7 +1515,7 @@
 	var attendService = {
 		fn_attendInfo : function(resvSeq) {
 			$("#resvSeq").val(resvSeq);
-			$("#rsv_detail").bPopup();
+			common_modelOpen("rsv_detail");
 			
 			var grid = $("#inOutHisTable");
 			var postData = {"pageIndex": "1", "searchCondition" : "RES_SEQ", "searchKeyword" : resvSeq};
@@ -1586,7 +1668,7 @@
 					attendService.fn_attendInfo($("#resvSeq").val());
 				},
 				function(request) {
-					common_popup("ERROR : " +request.status, "N", "");	       						
+					common_popup("ERROR : " + request.status, "N", "");	       						
 				}    		
 			);	
 		}

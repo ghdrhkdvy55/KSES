@@ -78,34 +78,72 @@
         <div id="loading" class="loading"></div>
     </div>
     
-	<!-- //1214 개인정보동의 팝업 -->
+
+    	<!-- //1214 개인정보동의 팝업 -->
 	<div id="agreeCheck" class="popup">
-		<div class="pop_con rsv_popup">
+		<div class="pop_con rsv_popup agree_pop">
 			<a class="button b-close">X</a>
           	<div class="pop_wrap">
 				<h4>&lt;개인정보 수집 이용 동의 안내&gt;</h4>
               	<!--개인정보동의-->
-				<div class="person_check nonMemberArea">
-					<p>										
-						<ol>
-							<li>코로나 19 확산 방지를 위하여 다음과 같이 개인정보 수집 이용 및 제 3자 제공에 대한 동의를 얻고자 합니다.</li>
-							<li class="prsn_agree"><a data-popup-open="person_agree">자세히 ></a></li>
-							<br>
-							<li class="check_impnt">
-								<input class="magic-checkbox qna_check" type="checkbox" name="layout" id="person_agree_yn" value="Y">
-								<label for="person_agree_yn">동의합니다.</label>     
-							</li>
-						</ol>
-					</p>
+				<div class="person_check nonMemberArea agree_done">
+					<ol>
+						<li class="check_impnt ok_agree">
+							<input class="magic-checkbox qna_check ok_done" type="checkbox" name="layout" id="person_agree_yn" value="Y">
+							<label for="person_agree_yn">(필수)서비스 이용약관 동의</label>  
+						</li>
+						<li class="prsn_agree viewBtn"><a data-popup-open="person_agree">보기</a></li>
+					</ol>
 				</div>
+				<div class="person_check nonMemberArea agree_done">					
+					<ol>
+						<li class="check_impnt ok_agree">
+							<input class="magic-checkbox qna_check ok_done" type="checkbox" name="layout" id="mktg_agree_yn" value="Y">
+							<label for="mktg_agree_yn">(선택)홍보 및 마케팅 활용 동의</label>
+						</li>
+						<li class="prsn_agree viewBtn"><a data-popup-open="mktg_agree">보기</a></li>
+					</ol>
+				</div>
+                	<p></p>
+                    <p class="font13 mg_l20">※ 코로나 방역, 천재지변 등으로 인한 긴급알림 문자는 동의가 없어도 해당 영업장 입장신청자들을 대상으로 발송됩니다. </p><br>
+                </div> 
 			</div>
 			<div class="cancel_btn">
               	<a href="javascript:void(0);" class="grayBtn">확인</a>
           	</div>
 			<div class="clear"></div>
+		</div>	
+    
+	<!-- // 홍보 및 마케팅 활용 동의 팝업-->
+    <div id="mktg_agree" data-popup="mktg_agree" class="popup">
+    	<div class="pop_con rsv_popup">
+          	<div class="pop_wrap">
+            	<div class="text privacy_text">
+                	<p class="font14 mg_l20">홍보 및 마케팅 활용 동의</p><br>                
+                	<p class="font13 mg_l20">코로나19 확산방지를 위하여 경주사업총괄본부에서는 다음과 같이 개인정보 수집·이용 및 제 3자 제공에 대한 동의를 얻고자 합니다.</p>
+                
+                	<div class="tablet_wrap">
+						<ol class="person_cont">
+							<li>1. 활용 목적 : 본장 및 지점별 마케팅 문자 발송</li>
+						    <li>2. 활용 항목 : 휴대전화번호</li>
+						    <li>3. 활용 및 보관기간 : 개인정보 동의일로부터 3년</li>
+						    <li>4. 동의를 거부할 권리 및 거부 시 불이익 : 이용자는 해당 개인정보의 마케팅 활용 동의를 거부할 권리가 있으며, 거부 시 불이익은 없습니다.</li>						                   			
+						</ol>
+                   	</div>
+                	<br>
+                    <p class="font13 mg_l20">※ 코로나 방역, 천재지변 등으로 인한 긴급알림 문자는 동의가 없어도 해당 영업장 입장신청자들을 대상으로 발송됩니다. </p><br>
+                </div>                
+            </div>
 		</div>
-    </div>	
-    				
+		<div class="cancel_btn">
+			<a href="javascript:bPopupClose('mktg_agree');" class="grayBtn">닫기</a>
+		</div>
+		<div class="clear"></div>
+	</div>
+    <!-- 홍보 및 마케팅 활용 동의 팝업 // -->  
+    
+    
+        				
 	<!-- // 개인정보 수집이용 약관 팝업-->
     <div id="person_agree" data-popup="person_agree" class="popup">
     	<div class="pop_con rsv_popup">
@@ -145,33 +183,6 @@
 	</div>
     <!-- 개인정보 수집이용 약관 팝업 // -->
     
-	<!-- // 홍보 및 마케팅 활용 동의 팝업-->
-    <div id="mktg_agree" data-popup="mktg_agree" class="popup">
-    	<div class="pop_con rsv_popup">
-          	<div class="pop_wrap">
-            	<div class="text privacy_text">
-                	<p class="font14 mg_l20">개인정보 수집·이용 및  제 3자 제공 동의서</p><br>                
-                	<p class="font13 mg_l20">코로나19 확산방지를 위하여 경주사업총괄본부에서는 다음과 같이 개인정보 수집·이용 및 제 3자 제공에 대한 동의를 얻고자 합니다.</p>
-                
-                	<div class="tablet_wrap">
-						<ol class="person_cont">
-							<li>1. 활용 목적 : 본장 및 지점별 마케팅 문자 발송</li>
-						    <li>2. 활용 항목 : 휴대전화번호</li>
-						    <li>3. 활용 및 보관기간 : 개인정보 동의일로부터 3년</li>
-						    <li>4. 동의를 거부할 권리 및 거부 시 불이익 : 이용자는 해당 개인정보의 마케팅 활용 동의를 거부할 권리가 있으며, 거부 시 불이익은 없습니다.</li>						                   			
-						</ol>
-                   	</div>
-                
-                    <p class="font13 mg_l20">※ 코로나 방역, 천재지변 등으로 인한 긴급알림 문자는 동의가 없어도 해당 영업장 입장신청자들을 대상으로 발송됩니다. </p><br>
-                </div>                
-            </div>
-		</div>
-		<div class="cancel_btn">
-			<a href="javascript:bPopupClose('mktg_agree');" class="grayBtn">닫기</a>
-		</div>
-		<div class="clear"></div>
-	</div>
-    <!-- 홍보 및 마케팅 활용 동의 팝업 // -->  
     				
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -276,7 +287,7 @@
 									result.userInfo.indvdlinfoAgreYn = "";
 									loginService.createUserSession(result.userInfo);									
 								} else {
-									$("#agreeCheck .cancel_btn a:eq(0)").click(function () {
+									$("#agreeCheck .cancel_btn a:eq(0)").off().on('click',function () {
 										loginService.indvdlinfoAgre(result.userInfo);	
 									});
 									
@@ -326,11 +337,8 @@
 					return;
 				}
 				
-				userInfo.indvdlinfoAgreYn = $("#person_agree_yn").val();
-				loginService.createUserSession(userInfo);
-			},
-			mktginfoAgre : function(userInfo) {
-				userInfo.mktginfoAgreYn = $("#person_agree_yn").val();
+				userInfo.indvdlinfoAgreYn = "Y";
+				userInfo.mktginfoAgreYn = $("input:checkbox[id='mktg_agree_yn']").is(":checked") ? "Y" : "N";
 				loginService.createUserSession(userInfo);
 			}
 		}	

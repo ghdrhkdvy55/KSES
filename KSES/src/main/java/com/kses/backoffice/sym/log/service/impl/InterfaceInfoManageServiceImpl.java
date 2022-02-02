@@ -62,7 +62,7 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 	
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public ModelMap SpeedOnPayMent(String resvSeq, boolean isPassword) throws Exception {
+	public ModelMap SpeedOnPayMent(String resvSeq, String cardPw, boolean isPassword) throws Exception {
 		String Url = propertiesService.getString("sppeedUrl_T") + "trade/fepWithdraw";		
 		JSONObject jsonObject = new JSONObject();
 		ModelMap result = new ModelMap();
@@ -71,6 +71,7 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 		JsonNode node = null;
 
 		try {	
+			jsonObject.put("resvSeq", resvSeq);
 			Map<String, Object> resvInfo = resvService.selectUserResvInfo(jsonObject);
 			
 			if(!SmartUtil.NVL(resvInfo.get("resv_state"),"").equals("RESV_STATE_1")) {
@@ -93,12 +94,12 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 			jsonObject.put("External_Key", resvInfo.get("resv_seq"));
 			jsonObject.put("Card_Id", resvInfo.get("user_card_id"));
 
-			if(SmartUtil.NVL(jsonObject.get("Pw_YN"),"").equals("N")) {
+			if(isPassword) {
+				jsonObject.put("Card_Pw", SmartUtil.encryptPassword(cardPw, "SHA-256"));
+				jsonObject.put("Pw_YN", "Y");
+			} else {
 				jsonObject.put("Card_Pw", "");
 				jsonObject.put("Pw_YN", "N");
-			} else {
-				jsonObject.put("Card_Pw", SmartUtil.encryptPassword(jsonObject.get("Card_Pw").toString(), "SHA-256"));
-				jsonObject.put("Pw_YN", "Y");
 			}
 			
 			jsonObject.put("Card_Seq", resvInfo.get("user_card_seq"));
@@ -149,7 +150,7 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 	
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public ModelMap SpeedOnPayMentCancel(String resvSeq, boolean isPassword) throws Exception {
+	public ModelMap SpeedOnPayMentCancel(String resvSeq, String cardPw, boolean isPassword) throws Exception {
 		String Url = propertiesService.getString("sppeedUrl_T") + "trade/fepDeposit";
 		JSONObject jsonObject = new JSONObject();
 		ModelMap result = new ModelMap();
@@ -177,7 +178,7 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 			jsonObject.put("Card_Id", resvInfo.get("user_card_id"));
 			
 			if(isPassword) {
-				jsonObject.put("Card_Pw", SmartUtil.encryptPassword(jsonObject.get("Card_Pw").toString(), "SHA-256"));
+				jsonObject.put("Card_Pw", SmartUtil.encryptPassword(cardPw, "SHA-256"));
 				jsonObject.put("Pw_YN", "Y");
 			} else {
 				jsonObject.put("Card_Pw", "");
@@ -205,7 +206,7 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 			if(node.get("Error_Cd").asText().equals("SUCCESS")) {
 				//예약 테이블 취소 정보 처리 하기
 				ResvInfo resInfo = new ResvInfo();
-				resInfo.setResvSeq(SmartUtil.NVL(jsonObject.get("resvSeq"), "").toString());
+				resInfo.setResvSeq(resvSeq);
 				resInfo.setResvPayDvsn("RESV_PAY_DVSN_3");
 				resInfo.setResvState("RESV_STATE_4");
 				resInfo.setResvTicketDvsn("RESV_TICKET_DVSN_1");

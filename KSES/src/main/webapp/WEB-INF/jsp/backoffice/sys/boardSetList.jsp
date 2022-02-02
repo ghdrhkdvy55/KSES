@@ -55,7 +55,7 @@
                   <tr>
                       <th>게시판 아이디</th>
                       <td>
-                          <input type="text" id="boardCd" name=""boardCd"" >
+                          <input type="text" id="boardCd" name="boardCd" >
                           <span id="sp_Unqi">
                           <a href="javascript:jqGridFunc.fn_idCheck()" class="blueBtn">중복확인</a>
                           <input type="hidden" id="idCheck">

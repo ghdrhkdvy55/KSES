@@ -87,8 +87,8 @@
 			{label: '구역등급', name:'part_class', align:'center'},					
 			{label: '예약번호', name:'resv_seq', align:'center'},
 			{label: '아이디', name:'user_id', align:'center'},
-			{label: '이름', name:'user_nm', align:'center'},
-			{label: '전화번호', name:'user_phone', align:'center'},
+			{label: '이름', name:'user_nm', align:'center', formatter:fnMasking},
+			{label: '전화번호', name:'user_phone', align:'center', formatter:fnMasking},
 			{label: '금액', name: 'resv_pay_cost', align:'center'},
 			{label: '신청일자', name:'resv_req_date', align:'center'},
 			{label: '예약일자', name:'resv_end_dt', align:'center'},
@@ -172,5 +172,22 @@
 		$popup.bPopup();
 	}
 	
+	function fnMasking(cellvalue, options, rowObject) {
+		let name = options.colModel.name;
+		let item = rowObject;
+		let result = ''; 
+
+		if(name === 'user_nm') {
+			result = item.user_nm.replace(/(?<=.{1})./gi, "*");
+		} else if(name === 'user_phone') {
+			if(item.user_phone.length == 13){
+				result = item.user_phone.replace(/-[0-9]{4}-/g, "-****-");
+			}else {
+				result = item.user_phone.replace(/-[0-9]{3}-/g, "-***-");
+			}
+		}
+		
+		return result;
+	}
 </script>
 <c:import url="/backoffice/inc/popup_common.do" />

@@ -4,10 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.kses.backoffice.sym.log.annotation.NoLogging;
 import com.kses.backoffice.sym.log.mapper.SysLogManageMapper;
@@ -16,7 +14,6 @@ import com.kses.backoffice.sym.log.vo.SysLog;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.fdl.idgnr.EgovIdGnrService;
-import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 
 @Service
 public class EgovSysLogServiceImpl extends EgovAbstractServiceImpl implements EgovSysLogService {

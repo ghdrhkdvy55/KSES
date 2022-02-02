@@ -443,6 +443,7 @@ var jqGridFunc  = {
  	   if (any_empt_line_span("bld_season_add", "seasonNm", "시즌명를 입력해 주세요.","sp_message", "savePage") == false) return;
  	   if (any_empt_line_span("bld_season_add", "seasonStartDay", "시즌 시작일를 선택해 주세요.","sp_message", "savePage") == false) return;
  	   if (any_empt_line_span("bld_season_add", "seasonEndDay", "시즌 시작일를 선택해 주세요.","sp_message", "savePage") == false) return;
+ 	   if (endday_early_check("bld_season_add", "seasonStartDay", "seasonEndDay", "종료일이 시작일 보다 빠릅니다.","sp_message", "savePage") == false) return;
  	   var choiceCenter = ckeckboxValue("시즌을 사용할 지점을 선택 하지 않았습니다.", "seasonCenterinfo", "bld_season_add");
  	 
  	   

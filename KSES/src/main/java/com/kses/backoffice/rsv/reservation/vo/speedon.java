@@ -1,10 +1,5 @@
 package com.kses.backoffice.rsv.reservation.vo;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 public enum speedon {
 	
 	USER_ERROR_000("USER_ERROR_000", "FEP 오류"), 

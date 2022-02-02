@@ -3,7 +3,6 @@ package com.kses.backoffice.sym.log.service;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.web.servlet.ModelAndView;
 import com.kses.backoffice.sym.log.vo.LoginLog;
 
 public interface LoginLogService {

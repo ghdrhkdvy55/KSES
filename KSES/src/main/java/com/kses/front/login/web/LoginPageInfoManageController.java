@@ -122,7 +122,7 @@ public class LoginPageInfoManageController {
 	public ModelAndView frontSSOLogin(	HttpServletRequest request,
 										@RequestParam Map<String, Object> params) throws Exception {
 		
-		ModelAndView model = new ModelAndView("redirect:/front/main/mainpage");
+		ModelAndView model = new ModelAndView("redirect:/front/main.do");
 		try {
 			//외부 테스트 로그인
 			String envType = propertiesService.getString("Globals.envType");

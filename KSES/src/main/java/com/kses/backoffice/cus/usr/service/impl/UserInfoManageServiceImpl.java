@@ -82,4 +82,15 @@ public class UserInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 			return false;
 		}
 	}
+	
+	@Override
+	public Map<String, Object> selectUserListDetail(String userId) throws Exception{
+		
+		return userMapper.selectUserListDetail(userId);
+	}
+	
+	@Override
+	public int updateUserListInfo(UserInfo vo) throws Exception {
+		return userMapper.updateUserListInfo(vo) ;
+	}
 }

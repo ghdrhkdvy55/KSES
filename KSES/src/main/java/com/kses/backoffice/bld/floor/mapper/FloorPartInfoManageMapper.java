@@ -6,7 +6,6 @@ import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.kses.backoffice.bld.floor.vo.FloorPartInfo;
-import com.kses.backoffice.bld.season.vo.SeasonSeatInfo;;
 
 @Mapper
 public interface FloorPartInfoManageMapper {

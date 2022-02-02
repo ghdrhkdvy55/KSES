@@ -74,6 +74,7 @@ public class NoshowInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
 	public boolean updateNoshowResvInfoTran(Map<String, Object> params) throws Exception {
 		int resultCount = 0;
 		String userId = SmartUtil.NVL(params.get("user_id"),"");
+		String userDvsn = SmartUtil.NVL(params.get("resv_user_dvsn"), "");
 		String resvSeq = SmartUtil.NVL(params.get("resv_seq"),"");
 		String noshowCd = SmartUtil.NVL(params.get("noshow_cd"),"");
 		
@@ -84,7 +85,10 @@ public class NoshowInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
 			noshowHisInfo.setNoshowCd(noshowCd);
 			noshowHisInfo.setResvSeq(resvSeq);
 			resultCount = noshowMapper.insertNoshowResvInfo(noshowHisInfo);
-			userService.updateUserNoshowCount(userId);
+			
+			if(userDvsn.equals("USER_DVSN_1")) {
+				userService.updateUserNoshowCount(userId);
+			}
 			
 			if(resultCount > 0) {
 				LOGGER.info("예약번호 : " + resvSeq + " 노쇼 정보 등록성공");

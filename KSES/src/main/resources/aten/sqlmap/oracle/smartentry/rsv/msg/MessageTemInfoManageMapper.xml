@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kses.backoffice.rsv.msg.mapper.MessageTemInfoManageMapper">
+
+    <select id="selectMessageTemplateInfoList" resultType="lmap">     	      
+		SELECT * FROM 
+		( 
+			SELECT 	
+				SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT, 
+				ROW_NUMBER() OVER (ORDER BY ROWNUM DESC) AS RNUM, 
+				TB.* 
+			FROM 	
+			(	
+				SELECT TEMP_SEQ, TEMP_MESSAGE, TEMP_MESSAGE_BYTE, LAST_UPDUSR_ID, 
+				       TO_CHAR( LAST_UPDT_DTM , 'yyyy-MM-dd') LAST_UPDT_DTM
+				FROM TSES_MESSAGTEMPLATE A
+				WHERE 1=1
+				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
+					AND 
+					( 
+						A.GROUP_TITLE LIKE '%'|| #{params.searchKeyword}||'%' 
+						OR
+						A.GROUP_DC LIKE '%'||#{params.searchKeyword}||'%'
+					) 
+				</if>
+				ORDER BY A.LAST_UPDT_DTM DESC
+			) TB 
+		) TA
+		WHERE ROWNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
+		ORDER BY TA.RNUM DESC 
+   	</select>
+   	<select id="selectMessageTemplateDetail" resultType="lmap">
+		SELECT TEMP_SEQ, TEMP_MESSAGE, TEMP_MESSAGE_BYTE, LAST_UPDUSR_ID, LAST_UPDT_DTM 
+		FROM TSES_MESSAGTEMPLATE 
+		WHERE TEMP_SEQ = #{tempSeq}
+   	</select>
+	
+	<insert id="insertMessageTemplateInfo">
+			INSERT INTO TSES_MESSAGTEMPLATE	
+			(
+				TEMP_SEQ, TEMP_MESSAGE, TEMP_MESSAGE_BYTE, LAST_UPDUSR_ID, LAST_UPDT_DTM 
+			)
+			VALUES 
+			(
+				MSG_TEMPLATE_SEQ.NEXTVAL , #{tempMessage}, #{tempMessageByte,jdbcType=VARCHAR}, #{lastUpdusrId,jdbcType=VARCHAR}, SYSDATE
+			)
+	</insert>
+
+	<update id="updateMessageTemplateInfo">
+			UPDATE TSES_MESSAGTEMPLATE SET TEMP_MESSAGE = #{tempMessage, jdbcType=VARCHAR}
+		                                , TEMP_MESSAGE_BYTE = #{tempMessageByte, jdbcType=VARCHAR} 
+		                                , LAST_UPDUSR_ID = #{lastUpdusrId}   
+		                                , LAST_UPDT_DTM = sysdate                     
+	       	WHERE TEMP_SEQ = #{tempSeq}
+   	</update>
+   	
+   	<delete id="deleteMessageTemplateInfo">
+   	    <foreach collection="delCds" item="item" separator=";" open="DECLARE BEGIN" close="; END;">  
+   	            DELETE FROM TSES_MESSAGTEMPLATE  WHERE TEMP_SEQ= #{item}
+	    </foreach>		
+   	</delete>
+
+</mapper>
