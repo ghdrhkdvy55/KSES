@@ -473,7 +473,7 @@ public class ResJosnController {
 				}
 			} else {
 				ERROR_CD = "ERROR_03";
-				ERROR_MSG = "시스템 에러.";
+				ERROR_MSG = "잘못된 QR코드";
 				model.addObject("ERROR_CD", ERROR_CD);
 				model.addObject("ERROR_MSG", ERROR_MSG);
 				return model;

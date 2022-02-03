@@ -45,9 +45,11 @@
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchCenterCd)">
 					AND #{params.searchCenterCd} IN (SELECT COLUMN_VALUE FROM TABLE(UF_SPLICT(a.BOARD_CENTER_ID, ',')) )  
 				</if>
+				<!-- 				
 				<if test="!@org.apache.commons.lang3.StringUtils@equals(params.searchCondition,'ALL')">
 					AND BOARD_ALL_NOTICE = 'Y'
 				</if>
+				 -->
 				START WITH BOARD_REFNO = 0
 				CONNECT BY PRIOR BOARD_SEQ = BOARD_REFNO
 				ORDER SIBLINGS BY BOARD_GROUP DESC
@@ -191,4 +193,16 @@
 	<delete id="deleteBoardManage">
 		DELETE FROM TSES_BOARD_INFO_I WHERE BOARD_SEQ = #{boardSeq}
 	</delete>
+	
+	<select id="selectBoardUploadFileName">
+		SELECT STRE_FILE_NM
+		FROM COMTNFILEDTAIL
+		WHERE FILE_SEQ = #{boardSeq}
+	</select>
+	
+	<select id="selectBoardoriginalFileName">
+		SELECT ORIGNL_FILE_NM 
+		FROM COMTNFILEDTAIL
+		WHERE STRE_FILE_NM = #{boardSeq}
+	</select>
 </mapper>
