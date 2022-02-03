@@ -108,7 +108,7 @@
                     <p class="font13 mg_l20">※ 코로나 방역, 천재지변 등으로 인한 긴급알림 문자는 동의가 없어도 해당 영업장 입장신청자들을 대상으로 발송됩니다. </p><br>
                 </div> 
 			</div>
-			<div class="cancel_btn">
+			<div class="cancel_btn other_btn">
               	<a href="javascript:void(0);" class="grayBtn">확인</a>
           	</div>
 			<div class="clear"></div>
@@ -135,7 +135,7 @@
                 </div>                
             </div>
 		</div>
-		<div class="cancel_btn">
+		<div class="cancel_btn other_btn">
 			<a href="javascript:bPopupClose('mktg_agree');" class="grayBtn">닫기</a>
 		</div>
 		<div class="clear"></div>
@@ -176,7 +176,7 @@
                 </div>                
             </div>
 		</div>
-		<div class="cancel_btn">
+		<div class="cancel_btn other_btn">
 			<a href="javascript:bPopupClose('person_agree');" class="grayBtn">닫기</a>
 		</div>
 		<div class="clear"></div>
