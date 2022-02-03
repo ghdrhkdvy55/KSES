@@ -632,7 +632,7 @@
 		    	 fn_CheckboxAllChange("fileInfo", checked);
 		     }, fn_FileDown : function(streFileNm){
 		    	 //파일 다운 확인 하기 
-		    	 
+		    	 location.href = "/upload/" + streFileNm;
 		     }, fn_FileDel : function (){
 		    	 var url = "/backoffice/sys/boardFileDelete.do"
 		    	 var files = ckeckboxValue("체크된 값이 없습니다.", "fileInfo", "bas_board_add");

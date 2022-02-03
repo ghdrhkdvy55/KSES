@@ -167,7 +167,7 @@
           WHERE BOARD_SEQ = #{boardSeq} 
      </update>
      
-     <update id="updateBoardManage" >
+     <update id="updateBoardManage">
      <![CDATA[
 		UPDATE TSES_BOARD_INFO_I SET 
 			BOARD_TITLE = #{boardTitle},
