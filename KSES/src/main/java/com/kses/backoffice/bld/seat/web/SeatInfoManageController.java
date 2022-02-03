@@ -1,9 +1,7 @@
 package com.kses.backoffice.bld.seat.web;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -26,11 +24,8 @@ import com.kses.backoffice.bas.code.service.EgovCcmCmmnDetailCodeManageService;
 import com.kses.backoffice.bld.center.service.CenterInfoManageService;
 import com.kses.backoffice.bld.floor.service.FloorInfoManageService;
 import com.kses.backoffice.bld.floor.service.FloorPartInfoManageService;
-import com.kses.backoffice.bld.seat.service.QrcpdeInfoManageServie;
 import com.kses.backoffice.bld.seat.service.SeatInfoManageService;
-import com.kses.backoffice.bld.seat.vo.QrcodeInfo;
 import com.kses.backoffice.bld.seat.vo.SeatInfo;
-import com.kses.backoffice.mng.employee.service.DeptInfoManageService;
 //import com.kses.backoffice.rsv.msg.service.MessageInfoManageService;
 import com.kses.backoffice.sym.log.annotation.NoLogging;
 import com.kses.backoffice.util.SmartUtil;
@@ -139,7 +134,7 @@ public class SeatInfoManageController {
 		    model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 
 		} catch(Exception e) {
-			LOGGER.info(e.toString());
+			log.info(e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));	
 		}

@@ -1,6 +1,7 @@
 package egovframework.com.cmm.annotation;
 
 import java.util.Locale;
+
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
 import org.slf4j.Logger;
@@ -9,7 +10,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.DataAccessException;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.PathMatcher;
-import egovframework.com.cmm.exception.CustomerExcetion;
+
 import egovframework.rte.fdl.cmmn.aspect.ExceptionTransfer;
 import egovframework.rte.fdl.cmmn.exception.EgovBizException;
 import egovframework.rte.fdl.cmmn.exception.FdlException;
@@ -82,13 +83,7 @@ public class CustomerExceptionTransfer  extends ExceptionTransfer{
 
 			throw fe;
 
-		} else if (  exception instanceof  CustomerExcetion ){
-			LOGGER.debug("CustomerExcetion case :: CustomerExcetion ");
-			// 여기 부분 처리를 해야 정리됨
-			
-			throw processException(clazz, "fail.common.msg", new String[] {}, exception, locale);
-			
-		}else {
+		} else {
 			//그외에 발생한 Exception 을  BaseException (메세지: fail.common.msg) 로  만들어 변경 던진다.
 			//:: 후처리로직 실행하지 않음.
 			LOGGER.debug("case :: Exception ");
