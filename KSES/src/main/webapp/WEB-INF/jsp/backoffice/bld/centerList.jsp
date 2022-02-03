@@ -53,7 +53,7 @@
 				<div id="holyday" class="tab">휴일관리</div>
 			</div>
 			<div class="clear"></div>
-			<div id="rightArea" class="whiteBox" style="margin-top:28px;"></div>
+			<div id="rightArea" style="margin-top:28px;"></div>
 		</div>
 	</div>
 </div>
@@ -73,6 +73,7 @@
 			},
 			{ label: '지점명', name: 'center_nm', align: 'center' },
 			{ label: '연락처', name: 'center_tel',  align: 'center', sortable: false },
+			{ label: '현금영수증', name: 'bill_yn', align: 'center' },
 			{ label: '사용유무', name: 'use_yn', align: 'center' },
 			{ label: '최대자유석수', name: 'center_stand_max', align:'center' },
 			{ label: '수정', align:'center', width: 50, fixed: true, formatter: (c, o, row) =>
@@ -87,6 +88,7 @@
 			gridComplete: function() {
 				$('div.tabs .tab').removeClass('active');
 				fnRightAreaClear();
+				$('#rightArea').html('<b>지점 선택 후 상위 메뉴 탭을 클릭 시 목록이 조회됩니다.</b>');
 			}
 		});
 		// 하위 분류 탭 클릭 시
@@ -156,7 +158,6 @@
 				default:
 			}
 		});
-		fnRightAreaClear();
 		setTimeout(function() {
 			fnCenterSearch(1);
 		}, _JqGridDelay);

@@ -79,36 +79,6 @@ public class CenterInfoManageController {
 		return model;	
 	}
 	
-	//combo box 신규 추가 
-	@RequestMapping(value="centerCombo.do")
-	public ModelAndView selectCenterComboInfoList( @ModelAttribute("loginVO") LoginVO loginVO, 
-												   HttpServletRequest request, 
-												   BindingResult bindingResult) throws Exception {
-		
-		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
-		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-		
-		if(!isAuthenticated) {
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-			model.setViewName("/backoffice/login");
-			return model;	
-		}
-		try {
-			List<Map<String, Object>> centerInfoComboList = centerInfoManageService.selectCenterInfoComboList();
-			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-			model.addObject(Globals.JSON_RETURN_RESULTLISR, centerInfoComboList);
-			
-		}catch(Exception e) {
-			log.debug("---------------------------------------");
-			StackTraceElement[] ste = e.getStackTrace();
-			log.error(e.toString() + ":" + ste[0].getLineNumber());
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));	
-		}
-		
-		return model;	
-	}
-	
 	/**
 	 * 지점 목록 조회
 	 * @param searchVO
@@ -121,12 +91,8 @@ public class CenterInfoManageController {
 	public ModelAndView selectCenterAjaxInfo(@RequestBody Map<String,Object> searchVO) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		
-		int pageUnit = searchVO.get("pageUnit") == null ? propertiesService.getInt("pageUnit") : Integer.valueOf((String) searchVO.get("pageUnit"));
-		  
-		searchVO.put("pageSize", propertiesService.getInt("pageSize"));
-		
-		log.debug("------------------------pageUnit : " + pageUnit);
 		LoginVO loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
+		int pageUnit = searchVO.get("pageUnit") == null ? propertiesService.getInt("pageUnit") : Integer.valueOf((String) searchVO.get("pageUnit"));
 		
 		//Paging
 		PaginationInfo paginationInfo = new PaginationInfo();
@@ -141,16 +107,14 @@ public class CenterInfoManageController {
 		searchVO.put("centerCd", loginVO.getCenterCd());
 		
 		List<Map<String, Object>> list = centerInfoManageService.selectCenterInfoList(searchVO);
-		log.debug("[-------------------------------------------list:" + list.size() + "------]");
-		model.addObject(Globals.JSON_RETURN_RESULTLISR, list);
-		model.addObject(Globals.STATUS_REGINFO, searchVO);
-		int totCnt = list.size() > 0 ? Integer.valueOf( list.get(0).get("total_record_count").toString()) :0;
-		
-		log.debug("totCnt:" + totCnt);
-		
+		int totCnt = list.size() > 0 ? Integer.valueOf( list.get(0).get("total_record_count").toString()) : 0;
 		paginationInfo.setTotalRecordCount(totCnt);
-		model.addObject("paginationInfo", paginationInfo);
-		model.addObject("totalCnt", totCnt);
+		
+		model.addObject(Globals.STATUS_REGINFO, searchVO);
+		model.addObject(Globals.JSON_RETURN_RESULTLISR, list);
+		model.addObject(Globals.PAGE_TOTALCNT, totCnt);
+		model.addObject(Globals.JSON_PAGEINFO, paginationInfo);
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		
 		return model;
 	}
@@ -325,5 +289,35 @@ public class CenterInfoManageController {
 		}	
 		log.debug("model : " + model.toString());
 		return model;
+	}
+	
+	//combo box 신규 추가 
+	@RequestMapping(value="centerCombo.do")
+	public ModelAndView selectCenterComboInfoList( @ModelAttribute("loginVO") LoginVO loginVO, 
+												   HttpServletRequest request, 
+												   BindingResult bindingResult) throws Exception {
+		
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
+		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+		
+		if(!isAuthenticated) {
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
+			model.setViewName("/backoffice/login");
+			return model;	
+		}
+		try {
+			List<Map<String, Object>> centerInfoComboList = centerInfoManageService.selectCenterInfoComboList();
+			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+			model.addObject(Globals.JSON_RETURN_RESULTLISR, centerInfoComboList);
+			
+		}catch(Exception e) {
+			log.debug("---------------------------------------");
+			StackTraceElement[] ste = e.getStackTrace();
+			log.error(e.toString() + ":" + ste[0].getLineNumber());
+			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));	
+		}
+		
+		return model;	
 	}
 }
