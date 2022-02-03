@@ -644,13 +644,13 @@ public class ResJosnController {
 			info.setRspnsRecptnTm(SmartUtil.nowTime());
 			info.setResultCode(returnCode);
 			info.setSendMessage(jsonObject.toString());
-			info.setRqesterId("admin");
+			info.setRqesterId("SYSTEM");
 		} catch (Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
 			LOGGER.error("selectTickMachinRes error:" + e.toString() + ":" + lineNumber);
 			returnCode = "ERROR_02";
-			info.setRqesterId("admin");
+			info.setRqesterId("SYSTEM");
 			info.setResultCode(returnCode);
 			returnMessage = "시스템 에러 입니다.";
 			info.setTrsmrcvSeCode(sendEnum.RPF.getCode());
@@ -703,7 +703,7 @@ public class ResJosnController {
 
 		// 제품 시리얼 정보 추가
 		info.setRequstSysId(SmartUtil.NVL(jsonInfo.get("MACHINE_SERIAL").toString(), "").toString());
-		info.setRqesterId("admin");
+		info.setRqesterId("SYSTEM");
 
 		try {
 			Map<String, Object> searchVO = new HashMap<String, Object>();
