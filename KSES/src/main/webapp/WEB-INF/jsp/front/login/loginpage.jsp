@@ -79,7 +79,7 @@
     </div>
     
 
-    	<!-- //1214 개인정보동의 팝업 -->
+    <!-- //1214 개인정보동의 팝업 -->
 	<div id="agreeCheck" class="popup">
 		<div class="pop_con rsv_popup agree_pop">
 			<a class="button b-close">X</a>

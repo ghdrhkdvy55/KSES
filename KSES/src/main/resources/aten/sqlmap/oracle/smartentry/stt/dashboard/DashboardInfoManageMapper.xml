@@ -29,7 +29,7 @@
     <select id="selectTodayResvNumber" resultType="int">
         SELECT COUNT(*)
         FROM TSER_RESV_INFO_I
-        WHERE TO_CHAR(SYSDATE,'YYYYMMDD') BETWEEN RESV_START_DT AND RESV_END_DT
+        WHERE RESV_END_DT = TO_CHAR(SYSDATE,'YYYYMMDD')
             AND RESV_STATE IN
         <foreach collection="resvStates" item="item" separator="," open="(" close=")">
             #{item}
@@ -72,7 +72,7 @@
                     FROM TSER_RESV_INFO_I R
                         INNER JOIN CTE_CENTER M ON R.CENTER_CD = M.CENTER_CD
                         LEFT OUTER JOIN TSEB_PART_INFO_D P ON R.PART_CD = P.PART_CD
-                    WHERE TO_CHAR(SYSDATE,'YYYYMMDD') BETWEEN RESV_START_DT AND RESV_END_DT
+                    WHERE RESV_END_DT = TO_CHAR(SYSDATE,'YYYYMMDD')
                         AND R.RESV_STATE IN ('RESV_STATE_2', 'RESV_STATE_3')
                 ) A ON M.CENTER_CD = A.CENTER_CD
             GROUP BY M.CENTER_CD, M.CENTER_NM, M.CENTER_ORDER
