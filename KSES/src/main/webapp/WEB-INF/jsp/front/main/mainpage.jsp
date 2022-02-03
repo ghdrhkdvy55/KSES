@@ -608,10 +608,27 @@
 	   	    								false,
 	   	    								function(result) {
 	   	    									if (result.status == "SUCCESS") {
-	   	    										var obj = result.result;
-	   	    		    	    					$("#c_"+ id.replace("n_", "") ).html(obj.board_cn);
-	   	    		    	    					if (result.resultlist != undefined){
-	   	    		    	    						//파일 리스트 표출 
+	   	    				    	    			console.log(result);
+	   	    										var obj = result.resultlist;
+	   	    										var boardContent = $("#c_"+ id.replace("n_", ""));
+	   	    										boardContent.html(obj.board_cn);
+	   	    		    	    					if (result.fileList != undefined){
+	   	    		    	    						var fileContent = $("<div></div>").css("margin-bottom","5px");
+	   	    		    	    						var fileSpan = $("<span></span>").html("첨부파일 : ").css("font-weight","bold");
+	   	    		    	    						fileContent.append(fileSpan);
+	   	    		    	    						//파일 리스트 표출
+	   	    		    	    						$.each(result.fileList, function(index, item) {
+	   	    		    	    							var file = 
+	   	    		    	    								$("<a></a>")
+	   	    		    	    								.css({
+	   	    		    	    									"color" : "black",
+	   	    		    	    									"margin-right" : "5px"
+	   	    		    	    								})
+	   	    		    	    								.attr("href","javascript:fn_fileDownload('" + item.stre_file_nm +"');")
+	   	    		    	    								.append("<img src='/resources/img/front/ic_title_file.svg' style='vertical-align : middle;'>" + item.orignl_file_nm);
+	   	    		    	    							fileContent.append(file);
+	   	    		    	    						});
+	   	    		    	    						boardContent.prepend(fileContent);
 	   	    		    	    					}
 	   	    						            }
 	   	    						         },

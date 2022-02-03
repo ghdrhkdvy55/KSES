@@ -1,11 +1,13 @@
 package com.kses.backoffice.sys.board.web;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -540,7 +542,7 @@ public class BoardInfoManageController {
 			
 			return "/backoffice/boardManage/boardPreview";
 		}
-		/*
+		
 		@RequestMapping(value="fileDownload.do")
 		public ModelAndView callDownload(HttpServletRequest request, HttpServletResponse response) throws Exception {
 			
@@ -550,6 +552,7 @@ public class BoardInfoManageController {
 			String boardSeq = request.getParameter("boardSeq");
 			String uploadFileName = boardInfoService.selectBoardUploadFileName(boardSeq);
 			String originalFileName = boardInfoService.selectBoardoriginalFileName(boardSeq);
+			 
 			downloadFile = new File(filePath+uploadFileName);
 
 			try{
@@ -569,5 +572,5 @@ public class BoardInfoManageController {
 
 		    return new ModelAndView("FileDownloadView", "allData",allData);
 		}
-		*/
+		
 }

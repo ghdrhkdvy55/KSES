@@ -717,6 +717,10 @@ function fn_moveQrPage(resvSeq) {
 	location.href = "/front/qrEnter.do?resvSeq=" + resvSeq + "&accessType=WEB";
 }
 
+function fn_fileDownload(fileNm) {
+	alert(fileNm);
+}
+
 Date.prototype.format = function (f) {
     if (!this.valueOf()) return " ";
     var weekKorName = ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"];

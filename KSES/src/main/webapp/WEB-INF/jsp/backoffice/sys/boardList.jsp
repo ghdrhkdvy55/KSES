@@ -514,7 +514,7 @@
 				  						    		
 				  						    		sHtml += "<tr>"
 				  						    		      +  " <td><input type=\"checkbox\" id=\"fileInfo"+obj.stre_file_nm+"\" name=\"fileInfo\" value=\""+obj.stre_file_nm+"\" style='"+fileViewCss+"'></td>"
-				  						    		      +  " <td colspan=\"2\"><a href=\"#\" onClick=\"boardinfo.fn_FileDown('"+obj.stre_file_nm+"')\">"
+				  						    		      +  " <td colspan=\"2\"><a href=\"#\" onClick=\"boardinfo.fn_FileDown('" + obj.atch_fild_id + "')\">"
 				  						    		      +  " "+obj.orignl_file_nm +" </a></td>"
 				  						    		      +  "</tr>";
 				  						    		
@@ -632,7 +632,27 @@
 		    	 fn_CheckboxAllChange("fileInfo", checked);
 		     }, fn_FileDown : function(streFileNm){
 		    	 //파일 다운 확인 하기 
-		    	 
+	 			apiExecute(
+		   				"POST", 
+		   				"/backoffice/sys/fileDownload.do",
+		    				{
+		  					boardSeq : $("#boardSeq").val()
+		    				},
+		    				null,				
+		    				function(result) {							
+		      				if (result != null) {	         							
+		     					if (result == "O"){
+		     						alert("정상");
+		     						document.location.reload();
+		     					}else {
+		     						alert("오류");
+		     						document.location.reload();
+		     					}
+		     				} 
+		     			},
+		    				null,
+		    				null
+		  		); 		
 		     }, fn_FileDel : function (){
 		    	 var url = "/backoffice/sys/boardFileDelete.do"
 		    	 var files = ckeckboxValue("체크된 값이 없습니다.", "fileInfo", "bas_board_add");
@@ -716,9 +736,11 @@
 	  						    	var sHtml = "";
 	  						    	$("#tb_fileInfo > tbody").empty();
 	  						    	for (var i in result.resultlist){
+	  						    		console.log("test : " + obj.atch_file_id);
+	  						    		return;
 	  						    		var obj = result.resultlist[i];
 	  						    		sHtml += "<tr>"
-	  						    		      +  " <td colspan=\"2\"><a href=\"#\" onClick=\"boardinfo.fn_FileDown('"+obj.stre_file_nm+"')\">"
+	  						    		      +  " <td colspan=\"2\"><a href=\"#\" onClick=\"boardinfo.fn_FileDown('"+obj.atch_file_id+"')\">"
 	  						    		      +  " "+obj.orignl_file_nm +" </a></td>"
 	  						    		      +  "</tr>";
 	  						    		 $("#tb_fileInfo > tbody:last").append(sHtml);

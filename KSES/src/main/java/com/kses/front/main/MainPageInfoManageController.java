@@ -104,21 +104,20 @@ public class MainPageInfoManageController {
 	
 	@LoginUncheck
 	@RequestMapping (value="boardInfoDetail.do")
-	public ModelAndView selectFrontDetailBoardLst (@RequestParam("boardSeq") String boardSeq) throws Exception{
+	public ModelAndView selectFrontDetailBoardLst (@RequestParam("boardSeq") String boardSeq) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
-			
 			Map<String, Object> search = new HashMap<String, Object>();
 		    search.put("fileGubun", "BBS");
 		    search.put("fileSeq",boardSeq);
 			List<Map<String, Object>> fileList = egocFileService.selectFileInfs(search);
 			
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS); 
-			model.addObject(Globals.JSON_RETURN_RESULT, boardInfoService.selectBoardManageDetail(boardSeq));
+			model.addObject(Globals.JSON_RETURN_RESULTLISR, boardInfoService.selectBoardManageDetail(boardSeq));
 			if (fileList.size() > 0)
-				model.addObject(Globals.JSON_RETURN_RESULTLISR, fileList);
-		}catch (Exception e) {
+				model.addObject("fileList", fileList);
+		} catch (Exception e) {
 			LOGGER.error("selectUserInfo : " + e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
