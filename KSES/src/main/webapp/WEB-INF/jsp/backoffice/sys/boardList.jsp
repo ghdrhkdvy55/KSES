@@ -511,8 +511,7 @@
 				  						    	$("#tb_fileInfoList > tbody").empty();
 				  						    	for (var i in result.resultlist){
 				  						    		var obj = result.resultlist[i];
-													console.log(obj.atch_file_id);
-				  						    		return;
+				  						    		
 				  						    		sHtml += "<tr>"
 				  						    		      +  " <td><input type=\"checkbox\" id=\"fileInfo"+obj.stre_file_nm+"\" name=\"fileInfo\" value=\""+obj.stre_file_nm+"\" style='"+fileViewCss+"'></td>"
 				  						    		      +  " <td colspan=\"2\"><a href=\"#\" onClick=\"boardinfo.fn_FileDown('" + obj.atch_fild_id + "')\">"
