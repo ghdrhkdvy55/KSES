@@ -555,7 +555,8 @@
 					"firstIndex" : "0",
 					"pageSize" : "5",
 					"pageUnit" : "5",
-					"searchCenterCd" : centerCd
+					"searchCenterCd" : centerCd,
+					"searchCondition" : "ALL"
     	    	}
     	    	
     	    	fn_Ajax 

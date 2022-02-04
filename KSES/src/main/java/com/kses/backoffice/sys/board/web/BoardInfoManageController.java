@@ -461,16 +461,18 @@ public class BoardInfoManageController {
 			try{
 				Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
 				if(!isAuthenticated) {
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-				model.setViewName("/backoffice/login");
-				return model;
+					model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
+					model.setViewName("/backoffice/login");
+					return model;
 				}
 				List<String> streFiles = SmartUtil.dotToList(fileSeqs);
 				
 				for (String strFile : streFiles) {
 					uniService.deleteUniStatement("STRE_FILE_NM", "COMTNFILEDETAIL", "STRE_FILE_NM=["+strFile+"[");
 				}
+				
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.delete"));
 			}catch (Exception e){
 				LOGGER.info(e.toString());
 				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);	

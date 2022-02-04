@@ -86,7 +86,6 @@ public class MainPageInfoManageController {
 		    searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
 		    searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
 		    searchVO.put("boardCd", "Not");
-		    searchVO.put("searchCondition", "ALL");
 			searchVO.put("adminYn", "user");
 			
 			List<Map<String, Object>> list =  boardInfoService.selectBoardManageListByPagination(searchVO) ;

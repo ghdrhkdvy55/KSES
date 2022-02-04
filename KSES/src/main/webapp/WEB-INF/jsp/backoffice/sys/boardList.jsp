@@ -385,7 +385,6 @@
 			    		          	  postData : JSON.stringify(  {
 								    		          			"pageIndex": gridPage,
 								    		          			"boardGubun" : $("#boardGubun").val(),
-								    		    	    		"searchCondition" : $("#searchCondition").val(),
 								    		    	    		"searchKeyword" : $("#searchKeyword").val(),
 								    		          			"pageUnit":$('.ui-pg-selbox option:selected').val()
 								    		          		})
@@ -646,7 +645,8 @@
 		    	 location.href = "/backoffice/sys/fileDownload.do?atchFileId=" + atchFileId	
 		     }, fn_FileDel : function (){
 		    	 var url = "/backoffice/sys/boardFileDelete.do"
-		    	 var files = ckeckboxValue("체크된 값이 없습니다.", "fileInfo", "bas_board_add");
+		    	 var files = ckeckboxValue("체크된 값이 없습니다.", "fileInfo", "");
+		    	 if (files == false) retrun;
 		    	 var params = {'fileSeqs' : files  };
 		    	 fn_Ajax(url, "GET", params, false,
 			      			function(result) {
@@ -655,7 +655,11 @@
 			   						   location.href="/backoffice/login.do";
 			   					   }else if (result.status == "SUCCESS"){
 			   						   //총 게시물 정리 하기'
-			   						 	common_modelCloseM(result.message, "bas_board_add");
+			   						   common_modelCloseM(result.message, "bas_board_add");	
+			   						   $("#btn_Comfirm").click(function(){
+			   							boardinfo.fn_boardInfo("Edt",$("#boardSeq").val());
+			   						   });
+			   						   /* common_popup(result.message, "Y","bas_board_add"); */
 			   					   }else if (result.status == "FAIL"){
 			   						   common_popup("삭제 도중 문제가 발생 하였습니다.", "Y", "bas_board_add");
 			   					   }
