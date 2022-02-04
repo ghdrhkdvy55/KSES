@@ -98,7 +98,7 @@ $.EgovJqGridApi.prototype.mainGrid = function(colModel, multiselect, subGrid, se
 		$(window).bind('resize', function() {
 			// 그리드의 width를 div 에 맞춰서 적용 
 			$(_MainGridSelector).setGridWidth($(_MainGridSelector).closest('div.boardlist').width() , true);
-		}).trigger('resize');		
+		}).trigger('resize');
 	}
 	if (searchFunc) {
 		setTimeout(function() { searchFunc(1) }, _JqGridDelay);
@@ -134,11 +134,11 @@ $.EgovJqGridApi.prototype.mainGridAjax = function(url, params, searchFunc, subFu
 	$(_MainGridSelector).jqGrid('setGridParam', jqGridParams).trigger('reloadGrid');
 };
 /** JqGrid 서브 그리드 정의 및 출력 */
-$.EgovJqGridApi.prototype.subGrid = function(id, colModel, url, params) {
+$.EgovJqGridApi.prototype.subGrid = function(id, colModel, method, url, params) {
 	this._formatter(colModel);
-	this._init('GET', colModel, false, false, true);
+	this._init(method, colModel, false, false, true);
 	this._jqGridParams['url'] = url;
-	this._jqGridParams['postData'] = params;
+	this._jqGridParams['postData'] = method === 'POST' ? JSON.stringify(params) : params;
 	this._jqGridParams['jsonReader'] = { root: 'resultlist' };
 	$('#'+id).jqGrid(this._jqGridParams);
 	$('th#'+id+'_rn').children('div:first').append('NO');
@@ -174,12 +174,12 @@ $.EgovJqGridApi.prototype.subGridReload = function(rowId, subFunc) {
 	}, _JqGridDelay);
 };
 
-$.EgovJqGridApi.prototype.popGrid = function(id, colModel, pagerId) {
+$.EgovJqGridApi.prototype.popGrid = function(id, colModel, pagerId, rowList) {
 	this._formatter(colModel);
 	this._init('POST', colModel, false, false, false);
 	this._jqGridParams['url'] = null;
 	this._jqGridParams['pager'] = $('#'+ pagerId);
-	this._jqGridParams['rowList'] = [];
+	this._jqGridParams['rowList'] = rowList === undefined ? [] : rowList;
 	let retGrid = $('#'+id).jqGrid(this._jqGridParams);
 	$('th#'+id+'_rn').children('div:first').append('NO');
 	return retGrid;
@@ -202,7 +202,9 @@ $.EgovJqGridApi.prototype.popGridAjax = function(id, url, params, searchFunc) {
 			searchFunc(EgovJqGridApi.getPage(id, pgButton, page, lastpage));
 		},
 	};
-	$('#'+id).jqGrid('setGridParam', jqGridParams).trigger('reloadGrid');
+	setTimeout(function() {
+		$('#'+id).jqGrid('setGridParam', jqGridParams).trigger('reloadGrid');
+	}, _JqGridDelay);
 };
 
 const EgovJqGridApi = new $.EgovJqGridApi();
