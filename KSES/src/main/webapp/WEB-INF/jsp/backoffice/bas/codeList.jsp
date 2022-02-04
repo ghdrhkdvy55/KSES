@@ -185,7 +185,7 @@
             { label: '삭제', align: 'center', width: 50, fixed: true, sortable: false, formatter: (c, o, row) => 
             	'<a href="javascript:fnCmmnDetailCodeDelete(\''+ row.code +'\',\''+ row.code_id +'\');" class="del_icon"></a>'
            	}
-		], '/backoffice/bas/CmmnDetailCodeList.do', {
+		], 'GET', '/backoffice/bas/CmmnDetailCodeList.do', {
 			codeId: codeId
 		});
 		EgovJqGridApi.subGridDetail(subGridId, fnCmmnDetailCodeInfo);
