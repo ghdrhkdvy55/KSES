@@ -1,11 +1,13 @@
 package com.kses.backoffice.sys.board.web;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -540,34 +542,42 @@ public class BoardInfoManageController {
 			
 			return "/backoffice/boardManage/boardPreview";
 		}
-		/*
+		
 		@RequestMapping(value="fileDownload.do")
 		public ModelAndView callDownload(HttpServletRequest request, HttpServletResponse response) throws Exception {
+			ModelAndView model = new ModelAndView();
+			
+			Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+		    if(!isAuthenticated) {
+		    	model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
+				model.setViewName("/backoffice/login");
+				return model;
+		    }
 			
 			File downloadFile;
 			Map<String, Object> allData = new HashMap<String, Object>();
-			String filePath = propertiesService.getString("Globals.fileStorePath");
-			String boardSeq = request.getParameter("boardSeq");
-			String uploadFileName = boardInfoService.selectBoardUploadFileName(boardSeq);
-			String originalFileName = boardInfoService.selectBoardoriginalFileName(boardSeq);
-			downloadFile = new File(filePath+uploadFileName);
+			String filePath = propertiesService.getString("Globals.filePath");
+			String atchFileId = request.getParameter("atchFileId");
+			String uploadFileName = boardInfoService.selectBoardUploadFileName(atchFileId);
+			String originalFileName = boardInfoService.selectBoardoriginalFileName(atchFileId);
+			 
+			downloadFile = new File(filePath + "/" + uploadFileName);
 
 			try{
 			    if(!downloadFile.canRead()){
 			    	LOGGER.info("FILE DOWNLOAD IN CHECK ERROR!!!");
 			        throw new Exception("File can't read(파일을 찾을 수 없습니다)");
-			    }else{
+			    } else {
 			    	downloadFile = new File(downloadFile.getParent(), uploadFileName);
 			    	
 			    	allData.put("downloadFile", downloadFile);
 			    	allData.put("originalName", originalFileName);
 			    }
-			}catch(Exception e){
+			} catch(Exception e) {
 				LOGGER.info(e.toString());
 				e.printStackTrace();
 			}
-
+			
 		    return new ModelAndView("FileDownloadView", "allData",allData);
 		}
-		*/
 }

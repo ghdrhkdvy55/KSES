@@ -28,5 +28,9 @@ public interface BoardInfoManageMapper {
     public int deleteBoardManage(String  boardSeq) throws Exception;
 
 	public int updateBoardTopSeq() throws Exception;
+	
+	public String selectBoardUploadFileName(String atchFileId);
+	
+	public String selectBoardoriginalFileName(String atchFileId);
 
 }
