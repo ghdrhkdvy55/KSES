@@ -318,8 +318,10 @@
 					    colModel :  [
 					    	    	{ label: 'board_seq', key: true, name:'board_seq',       index:'board_seq',      align:'center', hidden:true},
 					            	{ label: '제목', name:'board_title',       index:'board_title',  align:'left',  width:'20%'},
+					            	/* 미리보기 주석처리
 					            	{ label: '미리보기', name:'board_title',    index:'board_title',  align:'center', width:'10%'
 					            	  , formatter:jqGridFunc.boardPreviewBtn	},
+					            	   */
 					            	{ label: '공지기간', name:'board_notice_startday', index:'board_notice_startday',   align:'center', width:'10%'
 					            	  , formatter:jqGridFunc.boardNoticeDay	},
 					            	{ label: '조회수', name:'board_visit_cnt',      index:'board_visit_cnt',      align:'center', width:'10%'},
