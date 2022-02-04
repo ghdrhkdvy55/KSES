@@ -127,95 +127,112 @@
         });
         
         var notice = {
-        		fn_boardInfo  : function (emptyGubun){
-        			var url = "/front/boardInfo.do";
-        	    	var params = {
-           	    			"boardCd" : "Not",
-           	    			"pageIndex" : $("#pageIndex").val(),
-           	    			"pageSize" : $("#pageSize").val(),
-           	    			"searchCenterCd" : $("#centerCd").val()
-           	    	}
-           	    	fn_Ajax 
-           	    	(
-           	    			url,
-           	    			"POST",
-           	    			params,
-           	    			false,
-           	    			function(result){
-           	    				if (result.status == "SUCCESS") {
-           	    					$("#totalPageCount").val(result.paginationInfo.totalPageCount);
+			fn_boardInfo  : function (emptyGubun){
+				var url = "/front/boardInfo.do";
+				var params = {
+					"boardCd" : "Not",
+					"pageIndex" : $("#pageIndex").val(),
+					"pageSize" : $("#pageSize").val(),
+					"searchCenterCd" : $("#centerCd").val()
+				}
+           	    
+				fn_Ajax 
+				(
+					url,
+					"POST",
+					params,
+					false,
+					function(result){
+						if (result.status == "SUCCESS") {
+							$("#totalPageCount").val(result.paginationInfo.totalPageCount);
            	    					
-           	    					if (result.resultlist.length>0){
-           	    						var sHTML = "";
-           	    						if (emptyGubun == "New"){
-           	    							$("#container > div> div").empty();
-           	    						}
-           	    						
-           	    						for (var i in result.resultlist){
-           	    							var obj = result.resultlist[i];
-           	    							sHTML += "<div>"
-           	    		                          +  "  <div class='notice_con' id='n_"+obj.board_seq+"'> "                           
-           	    		                          +  "     <p class='notice_date'>'"+obj.last_updt_dtm+"'</p>"
-           	    		                          +  "     <p class='notice_tit'><span>'"+obj.board_title+"'</span></p>"
-           	    		                          +  "	</div>"
-           	    		                          +  "	<div class='notice_inner' id='c_"+obj.board_seq+"'>1231313121</div>"
-           	    		                          +  "</div>"; 
-           	    							$("#container > div> div:last").append(sHTML);
-           	    							console.log(sHTML);
-           	    							sHTML = "";
-           	    						}
-           	    						
-           	    						 $('.notice_con').click(function(e) {
-           	    					         e.preventDefault();
-           	    					         var $this = $(this);
-           	    					         var id = $(this).attr("id");
-           	    					         
-           	    					         if ($this.next().hasClass('show')) {
-           	    					        	 $("#c_"+ id.replace("n_", "") ).html("");
-           	    					             $this.next().removeClass('show');
-           	    					             $this.next().slideUp(350);
-           	    					         } else {
+							if (result.resultlist.length>0){
+	           	    			var sHTML = "";
+	           	    			
+	           	    			if (emptyGubun == "New"){
+	           	    				$("#container > div> div").empty();
+	           	    			}
+	           	    			
+	           	    			for (var i in result.resultlist){
+	           	   					var obj = result.resultlist[i];
+	           	   					sHTML += "<div>"
+	           	                             +  "  <div class='notice_con' id='n_"+obj.board_seq+"'> "                           
+	           	                             +  "     <p class='notice_date'>'"+obj.last_updt_dtm+"'</p>"
+	           	                             +  "     <p class='notice_tit'><span>'"+obj.board_title+"'</span></p>"
+	           	                             +  "	</div>"
+	           	                             +  "	<div class='notice_inner' id='c_"+obj.board_seq+"'>1231313121</div>"
+	           	                             +  "</div>"; 
+	           	   					$("#container > div> div:last").append(sHTML);
+	           	   					console.log(sHTML);
+	           	   					sHTML = "";
+	           	   				}
+	           	   				
+								$('.notice_con').click(function(e) {
+	           	   			         e.preventDefault();
+	           	   			         var $this = $(this);
+	           	   			         var id = $(this).attr("id");
+	           	   			         
+	           	   			         if ($this.next().hasClass('show')) {
+	           	   			        	 $("#c_"+ id.replace("n_", "") ).html("");
+	           	   			             $this.next().removeClass('show');
+	           	   			             $this.next().slideUp(350);
+	           	   			         } else {
            	    					        	
-           	    					        	 $this.parent().parent().find('.notice_inner').removeClass('show');
-           	    					             $this.parent().parent().find('.notice_inner').slideUp(350);
-           	    					             $this.next().toggleClass('show');
-           	    					             $this.next().slideToggle(350);
-           	    					            
-           	    					        	 fn_Ajax
-          	    									 (
-          	    										"/front/boardInfoDetail.do",
-          	    										"GET",
-          	    										{boardSeq : id.replace("n_", "")},
-          	    										false,
-          	    										function(result) {
-          	    											if (result.status == "SUCCESS") {
-          	    												var obj = result.result;
-          	    				    	    					$("#c_"+ id.replace("n_", "") ).html(obj.board_cn);
-          	    				    	    					if (result.resultlist != undefined){
-          	    				    	    						//파일 리스트 표출 
-          	    				    	    					}
-          	    								            }
-          	    								         },
-          	    								         function(request) {
-          	    								        	 fn_openPopup("ERROR : " + request.status, "red", "ERROR", "확인", "");	
-          	    								         }
-          	    								     );
-           	    					         }
-           	    					     });
-           	    					}	
-           	    				}else{
-           	    					fn_openPopup("ERROR : " + request.status, "red", "ERROR", "확인", "");	
-           	    				} 
-           	    				
-           	    			}
-           	    	)
-        		}, 
-        		fn_boardCng : function(centerCd){
-        			$("#centerCd").val(centerCd);
-        			console.log(centerCd);
-        			$("#pageIndex").val("1");
-        			notice.fn_boardInfo("New");
-        		}
+	           	    		    	 	$this.parent().parent().find('.notice_inner').removeClass('show');
+	           	    		         	$this.parent().parent().find('.notice_inner').slideUp(350);
+	           	    		         	$this.next().toggleClass('show');
+	           	    		         	$this.next().slideToggle(350);
+	           	    		        
+	           	    		    	 	fn_Ajax
+										(
+											"/front/boardInfoDetail.do",
+	          	    						"GET",
+	          	    						{boardSeq : id.replace("n_", "")},
+	          	    						false,
+	          	    						function(result) {
+	          	    							if (result.status == "SUCCESS") {
+	          		   	    						var obj = result.resultlist;
+	          		   	    						var boardContent = $("#c_"+ id.replace("n_", ""));
+	          		   	    						boardContent.html(obj.board_cn);
+	          		   	        					
+	          		   	    						if (result.fileList != undefined){
+														var fileContent = $("<div></div>").css("margin-bottom","5px");
+          		   	    		    	   				var fileSpan = $("<span></span>").html("첨부파일 : ").css("font-weight","bold");
+          		   	    		    	   				fileContent.append(fileSpan);
+          		   	    		    	   				//파일 리스트 표출
+          		   	    		    	   				$.each(result.fileList, function(index, item) {
+          		   	    		    	   					var file = 
+          		   	    		    	   						$("<a></a>")
+          		   	    		    	   						.css({
+          		   	    		    	   							"color" : "black",
+          		   	    		    	   							"margin-right" : "5px"
+          		   	    		    	   						})
+          		   	    		    	   						.attr("href","javascript:fn_fileDownload('" + item.atch_file_id + "');")
+          		   	    		    	   						.append("<img src='/resources/img/front/ic_title_file.svg' style='vertical-align : middle;'>" + item.orignl_file_nm);
+          		   	    		    	   					fileContent.append(file);
+          		   	    		    	   				});
+          		   	    		    	   				boardContent.prepend(fileContent);
+													}
+												}
+											},
+											function(request) {
+												fn_openPopup("ERROR : " + request.status, "red", "ERROR", "확인", "");	
+											}
+										);
+									}
+								});
+							}	
+						} else {
+							fn_openPopup("ERROR : " + request.status, "red", "ERROR", "확인", "");	
+						} 
+           	    	}
+				);
+			}, 
+			fn_boardCng : function(centerCd){
+				$("#centerCd").val(centerCd);
+				$("#pageIndex").val("1");
+				notice.fn_boardInfo("New");
+			}
         }
     </script>
 </body>

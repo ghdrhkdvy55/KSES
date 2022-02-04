@@ -56,6 +56,8 @@ public interface ResvInfoManageMapper {
 	
 	public int updateResvState(ResvInfo vo);
 	
+	public int updateResvRcptInfo(ResvInfo vo);
+	
 	public int updateResvUseComplete();
 	
 	public int updateResvQrCount(@Param("resvSeq") String resvSeq);

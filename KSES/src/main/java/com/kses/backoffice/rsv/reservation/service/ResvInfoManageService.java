@@ -192,6 +192,15 @@ public interface ResvInfoManageService {
 	public int updateResvState(ResvInfo vo) throws Exception;
 	
 	/**
+	 * SPDM 예약 현금영수증 발행 관련 정보 갱신
+	 * 
+	 * @param vo
+	 * @return
+	 * @throws Exception
+	 */
+	public int updateResvRcptInfo(ResvInfo vo) throws Exception;
+	
+	/**
 	 * SPDM 예약상태 이용완료 처리 
 	 * 
 	 * @return

@@ -717,8 +717,8 @@ function fn_moveQrPage(resvSeq) {
 	location.href = "/front/qrEnter.do?resvSeq=" + resvSeq + "&accessType=WEB";
 }
 
-function fn_fileDownload(fileNm) {
-	alert(fileNm);
+function fn_fileDownload(atchFileId) {
+	location.href = "/front/fileDownload.do?atchFileId=" + atchFileId	
 }
 
 Date.prototype.format = function (f) {

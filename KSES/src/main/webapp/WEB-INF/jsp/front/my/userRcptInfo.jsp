@@ -72,7 +72,7 @@
                                 <input type="radio" name="userRcptDvsn" id="RCPT_DVSN_2" value="RESV_RCPT_DVSN_2">
                                 <label for="RCPT_DVSN_2"><span></span>지출 증빙용</label>
                             </li>
-                            <li><input type="text" id="userRcptNumber" onkeypress="onlyNum(this);" placeholder="'-'없이 입력해 주세요."></li>
+                            <li><input type="text" id="userRcptNumber" onkeyup="onlyNum(this);" placeholder="'-'없이 입력해 주세요."></li>
                         </ul>                      
                     </div>
 
@@ -134,14 +134,14 @@
 								
 								$("#userRcptNumber").val(userRcptInfo.user_rcpt_number);
 							} else {
-								alert("예약된 정보가 존재하지 않습니다.");
+								fn_openPopup("예약된 정보가 존재하지 않습니다.");
 							}
 						} else if(result.status == "LOGIN FAIL") {
 							
 						}
 					},
 					function(request) {
-						alert("ERROR : " + request.status);	       						
+						fn_openPopup("ERROR : " + request.status);	       						
 					}    		
 				);
 			},
@@ -154,8 +154,6 @@
 					"userRcptDvsn" : $('input[name="userRcptDvsn"]:checked').val(),
 					"userRcptNumber" : $("#userRcptNumber").val()
 				}
-				
-				console.log(params);
 				
 				fn_Ajax
 				(

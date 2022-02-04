@@ -19,6 +19,7 @@ import com.kses.backoffice.bld.center.service.CenterInfoManageService;
 import com.kses.backoffice.cus.usr.service.UserInfoManageService;
 import com.kses.backoffice.cus.usr.vo.UserInfo;
 import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
+import com.kses.backoffice.rsv.reservation.vo.ResvInfo;
 import com.kses.front.annotation.LoginUncheck;
 import com.kses.front.login.vo.UserLoginInfo;
 
@@ -132,6 +133,28 @@ public class MyPageInfoManageController {
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		} catch(Exception e) {
 			LOGGER.error("selectFrontUserMyResvInfo : " + e.toString());
+			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg")); 
+		}
+		return model;
+	}
+	
+	@RequestMapping (value="updateResvRcptInfo.do")
+	public ModelAndView updateResvRcptInfo(	HttpServletRequest request,
+											@RequestBody ResvInfo resvInfo) throws Exception {
+		
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+		try {
+			int ret = resvService.updateResvRcptInfo(resvInfo);
+			
+			if(ret > 0) {
+				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.insert"));
+			} else {
+				throw new Exception();
+			}
+		} catch(Exception e) {
+			LOGGER.error("updateResvRcptInfo : " + e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg")); 
 		}

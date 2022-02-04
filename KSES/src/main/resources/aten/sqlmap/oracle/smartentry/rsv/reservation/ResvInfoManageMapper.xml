@@ -211,7 +211,7 @@
     		A.RESV_STATE,
     		FN_DETAILCODENM(A.RESV_STATE) AS RESV_STATE_TEXT,
     		TO_CHAR(A.RESV_REQ_DATE,'YYYY-MM-DD HH24:MI') AS RESV_REQ_DATE,
-    		A.RESV_PAY_DVSN
+    		A.RESV_PAY_DVSN, A.RESV_RCPT_YN
 		FROM TSER_RESV_INFO_I A, TSEB_CENTER_INFO_M B 
 		WHERE A.CENTER_CD = B.CENTER_CD
 		AND A.USER_ID = #{params.userId}
@@ -466,6 +466,14 @@
 			RESV_STATE = #{resvState}
         WHERE RESV_SEQ = #{resvSeq}
     </update>
+    
+	<update id="updateResvRcptInfo">
+		UPDATE TSER_RESV_INFO_I SET 
+			RESV_RCPT_YN = 'Y', 
+			RESV_RCPT_DVSN = #{resvRcptDvsn}, 
+			RESV_RCPT_TEL = #{resvRcptTel}                    
+		WHERE RESV_SEQ = #{resvSeq}
+   	</update>
 
 	<update id="updateResvUseComplete">
 		UPDATE TSER_RESV_INFO_I SET 

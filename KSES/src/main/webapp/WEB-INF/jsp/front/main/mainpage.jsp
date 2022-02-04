@@ -608,7 +608,6 @@
 	   	    								false,
 	   	    								function(result) {
 	   	    									if (result.status == "SUCCESS") {
-	   	    				    	    			console.log(result);
 	   	    										var obj = result.resultlist;
 	   	    										var boardContent = $("#c_"+ id.replace("n_", ""));
 	   	    										boardContent.html(obj.board_cn);
@@ -624,7 +623,7 @@
 	   	    		    	    									"color" : "black",
 	   	    		    	    									"margin-right" : "5px"
 	   	    		    	    								})
-	   	    		    	    								.attr("href","javascript:fn_fileDownload('" + item.stre_file_nm +"');")
+	   	    		    	    								.attr("href","javascript:fn_fileDownload('" + item.atch_file_id + "');")
 	   	    		    	    								.append("<img src='/resources/img/front/ic_title_file.svg' style='vertical-align : middle;'>" + item.orignl_file_nm);
 	   	    		    	    							fileContent.append(file);
 	   	    		    	    						});

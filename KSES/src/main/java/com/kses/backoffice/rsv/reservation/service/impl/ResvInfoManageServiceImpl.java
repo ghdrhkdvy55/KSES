@@ -138,6 +138,11 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	}
 	
 	@Override
+	public int updateResvRcptInfo(ResvInfo vo) throws Exception {
+		return resvMapper.updateResvRcptInfo(vo);
+	}
+	
+	@Override
 	public int resPriceChange(ResvInfo vo) throws Exception {
 		return resvMapper.resPriceChange(vo);
 	}

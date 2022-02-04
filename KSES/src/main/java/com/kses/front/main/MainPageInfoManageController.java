@@ -1,10 +1,12 @@
 package com.kses.front.main;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngService;
@@ -123,6 +125,36 @@ public class MainPageInfoManageController {
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 		}
 		return model;
+	}
+	
+	@LoginUncheck
+	@RequestMapping(value="fileDownload.do")
+	public ModelAndView callDownload(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		File downloadFile;
+		Map<String, Object> allData = new HashMap<String, Object>();
+		String filePath = propertiesService.getString("Globals.filePath");
+		String atchFileId = request.getParameter("atchFileId");
+		String uploadFileName = boardInfoService.selectBoardUploadFileName(atchFileId);
+		String originalFileName = boardInfoService.selectBoardoriginalFileName(atchFileId);
+		 
+		downloadFile = new File(filePath + "/" + uploadFileName);
+
+		try{
+		    if(!downloadFile.canRead()){
+		    	LOGGER.info("FILE DOWNLOAD IN CHECK ERROR!!!");
+		        throw new Exception("File can't read(파일을 찾을 수 없습니다)");
+		    } else {
+		    	downloadFile = new File(downloadFile.getParent(), uploadFileName);
+		    	
+		    	allData.put("downloadFile", downloadFile);
+		    	allData.put("originalName", originalFileName);
+		    }
+		} catch(Exception e) {
+			LOGGER.info(e.toString());
+			e.printStackTrace();
+		}
+		
+	    return new ModelAndView("FileDownloadView", "allData",allData);
 	}
 	
 	@RequestMapping (value="mainResvInfo.do")
