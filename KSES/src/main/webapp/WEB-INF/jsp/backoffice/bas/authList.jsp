@@ -411,7 +411,11 @@
 		
 		for (var i in returnval){
 			  var node = returnval[i].menu_no;
+			  var parent = ( $("#jstree").jstree(true).get_node(node)).parent;
+			  var grandparent = ( $("#jstree").jstree(true).get_node(parent)).parent;
 			  $('#jstree').jstree('select_node', node);
+			  $('#jstree').jstree("select_node", parent);
+			  $('#jstree').jstree("select_node", grandparent);
 		}
 	}
 	$(function () {
@@ -439,12 +443,12 @@
 			 }
 			 $("#jstree").append($("#sp_tree").html());
 		}
-		 
 	    $("#jstree").jstree({
 	    	"checkbox" : {
-	            "keep_selected_style": false
+	            "keep_selected_style": false,
+	            "three_state": false
 		    },
-		    'plugins' : ["checkbox","dnd","contextmenu"]
+		    'plugins' : ["checkbox"]
 		});
 	    $("#jstree").jstree('open_all');
 		
