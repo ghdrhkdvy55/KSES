@@ -98,12 +98,12 @@ public class BoardInfoManageServiceImpl extends EgovAbstractServiceImpl implemen
 	}
 
 	@Override
-	public String selectBoardoriginalFileName(String boardSeq) {
-		return boardMapper.selectBoardoriginalFileName(boardSeq);
+	public String selectBoardoriginalFileName(String atchFileId) {
+		return boardMapper.selectBoardoriginalFileName(atchFileId);
 	}
 	
 	@Override
-	public String selectBoardUploadFileName(String boardSeq) {
-		return boardMapper.selectBoardUploadFileName(boardSeq);
+	public String selectBoardUploadFileName(String atchFileId) {
+		return boardMapper.selectBoardUploadFileName(atchFileId);
 	}
 }

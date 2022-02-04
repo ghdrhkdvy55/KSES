@@ -194,15 +194,15 @@
 		DELETE FROM TSES_BOARD_INFO_I WHERE BOARD_SEQ = #{boardSeq}
 	</delete>
 	
-	<select id="selectBoardUploadFileName">
+	<select id="selectBoardUploadFileName" resultType="String">
 		SELECT STRE_FILE_NM
-		FROM COMTNFILEDTAIL
-		WHERE FILE_SEQ = #{boardSeq}
+		FROM COMTNFILEDETAIL 
+		WHERE ATCH_FILE_ID = #{atchFileId}
 	</select>
 	
-	<select id="selectBoardoriginalFileName">
+	<select id="selectBoardoriginalFileName" resultType="String">
 		SELECT ORIGNL_FILE_NM 
-		FROM COMTNFILEDTAIL
-		WHERE STRE_FILE_NM = #{boardSeq}
+		FROM COMTNFILEDETAIL
+		WHERE ATCH_FILE_ID = #{atchFileId}
 	</select>
 </mapper>
