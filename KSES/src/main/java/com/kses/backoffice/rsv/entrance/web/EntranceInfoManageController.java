@@ -34,7 +34,7 @@ import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 @RequestMapping("/backoffice/rsv")
 public class EntranceInfoManageController {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(ResvInfoManageController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(EntranceInfoManageController.class);
 	
 	@Autowired
 	protected EgovPropertyService propertiesService;
@@ -90,7 +90,6 @@ public class EntranceInfoManageController {
 		
 		List<Map<String, Object>> list = resvService.selectResvInfoManageListByPagination(searchVO);
 
-		
 	    model.addObject(Globals.JSON_RETURN_RESULTLISR, list);
 	    model.addObject(Globals.STATUS_REGINFO, searchVO);
 	    int totCnt = list.size() > 0 ? Integer.valueOf( list.get(0).get("total_record_count").toString()) : 0;
@@ -118,4 +117,3 @@ public class EntranceInfoManageController {
 		return model;
 	}
 }
-

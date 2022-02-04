@@ -2151,7 +2151,7 @@ ul.tabs li{
 .cancel_btn a.dbBtn {background:#cdcdcd}
 .cancel_btn li .dislBtn  {background: #c0c0c0;}
 .summit_btn {
-	margin-top:4rem;
+	margin-top: 2rem;
     text-align: center;
 }
 .summit_btn a {
@@ -2755,3 +2755,17 @@ ul.tabs li{
 }
 .agree_pop {padding: 40px 20px; padding-bottom:0}
 .other_btn {font-size:1.5em}
+
+/* 현금영수증 */
+.rsv_stat_btn li {display: inline-block; width: 48%;}
+.rsv_stat_btn li:first-child a{background:#47D6BE; color:#fff ;}
+.rsv_stat_btn li a {
+color: #000;
+font-weight: 600;
+display: inline-block;
+padding: 1.7rem 0;
+border-radius: 8px;
+width: 100%;
+text-align: center;
+background: #eee;
+}.rsv_stat_btn li:last-child {float: inherit;}
