@@ -769,6 +769,7 @@
 	$(document).ready(function() {
 		$("#input_file").bind('change', function() {
 			selectFile(this.files);
+			this.value=null;
 		});
 	});
 
