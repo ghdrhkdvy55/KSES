@@ -970,7 +970,7 @@ a:visited.ui-button,
 .ui-state-focus a:visited,
 a.ui-button:hover,
 a.ui-button:focus {
-	color: #2b2b2b; 
+	/* color: #2b2b2b; */ 
 	text-decoration: none;
 }
 

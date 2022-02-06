@@ -158,29 +158,24 @@
    		        ajaxSelectOptions: { contentType: "application/json; charset=UTF-8", dataType: "JSON" }, 
    		        postData :  JSON.stringify( postData ),
    		        jsonReader : {
-   		             root : 'resultlist',
-   		             "page":"paginationInfo.currentPageNo",
-   		             "total":"paginationInfo.totalPageCount",
-   		             "records":"paginationInfo.totalRecordCount",
-   		             repeatitems:false
-  		            },
+					root : 'resultlist',
+					"page":"paginationInfo.currentPageNo",
+					"total":"paginationInfo.totalPageCount",
+					"records":"paginationInfo.totalRecordCount",
+					repeatitems:false
+				},
    		        colModel :  [
-    		 	                { label: '게시 아이디', key: true,  name:'board_cd', index:'board_cd', align:'left'},
-    		 	                { label: '게시판 타이틀',  name:'board_title', index:'board_title', align:'left'},
-    		 	                { label: '권한 설정',  name:'board_author', index:'board_author', align:'left'},
-    		 	                { label: '관련지점', name:'board_center_id', index:'board_center_id', align:'center'},
-      			                { label: '파일업로드', name:'board_file_upload_yn', index:'board_file_upload_yn', align:'center',
-      			                  formatter:jqGridFunc.fileUp},
-	      			            { label: '댓글사용', name:'board_cmnt_use', index:'board_cmnt_use', align:'center', 
-      			                  formatter:jqGridFunc.comment},
-		      			        { label: '사용유무', name:'use_yn', index:'use_yn', align:'center', 
-      			                  formatter:jqGridFunc.useYn},
-      			                { label: '페이지사이즈',  name:'board_size',         index:'board_size',        align:'left'},
-      			                { label: '최종수정일자',  name:'last_updt_dtm',         index:'last_updt_dtm',        align:'left'
-
-      			                	, sortable: 'date' ,formatter: "date", formatoptions: { newformat: "Y-m-d"}},
-      			                { label: '수정자', name: 'last_updusr_id',  index:'last_updusr_id', align:'center', fixed:true}
-   			                ],  //상단면 
+					{ label: '게시 아이디', key: true,  name:'board_cd', index:'board_cd', align:'left'},
+					{ label: '게시판 타이틀',  name:'board_title', index:'board_title', align:'left'},
+					{ label: '권한 설정',  name:'board_author_nm', index:'board_author_nm', align:'left'},
+	                { label: '관련지점', name:'board_center_id', index:'board_center_id', align:'center'},
+					{ label: '파일업로드', name:'board_file_upload_yn', index:'board_file_upload_yn', align:'center', formatter:jqGridFunc.fileUp},
+		            { label: '댓글사용', name:'board_cmnt_use', index:'board_cmnt_use', align:'center', formatter:jqGridFunc.comment},
+			        { label: '사용유무', name:'use_yn', index:'use_yn', align:'center', formatter:jqGridFunc.useYn},
+					{ label: '페이지사이즈',  name:'board_size', index:'board_size', align:'left'},
+					{ label: '최종수정일자',  name:'last_updt_dtm', index:'last_updt_dtm', align:'left' ,sortable: 'date', formatter: "date", formatoptions: { newformat: "Y-m-d"}},
+					{ label: '수정자', name: 'last_updusr_id',  index:'last_updusr_id', align:'center', fixed:true}
+				], 
    		        rowNum : 10,  //레코드 수
    		        rowList : [10,20,30,40,50,100],  // 페이징 수
    		        pager : pager,
@@ -201,9 +196,11 @@
                    footerrow: false,
                    loadComplete : function (data){
    		        	 $("#sp_totcnt").text(data.paginationInfo.totalRecordCount);
-   		        }, loadError:function(xhr, status, error) {
+   		        }, 
+   		        loadError:function(xhr, status, error) {
    		            alert(error); 
-   		        }, onPaging: function(pgButton){
+   		        }, 
+   		        onPaging: function(pgButton){
    		        	  var gridPage = grid.getGridParam('page'); //get current  page
    		        	  var lastPage = grid.getGridParam("lastpage"); //get last page 
    		        	  var totalPage = grid.getGridParam("total");
@@ -219,48 +216,53 @@
    		            	  }else{
    		            		  gridPage = gridPage;
    		            	  }
-   		              }else if (pgButton == "first"){
+   		              } else if (pgButton == "first") {
    		            	  gridPage = 1;
-   		              }else if  ( pgButton == "last"){
+   		              } else if  ( pgButton == "last") {
    		            	  gridPage = lastPage;
-   		              } else if (pgButton == "user"){
+   		              } else if (pgButton == "user") {
    		            	  var nowPage = Number($("#pager .ui-pg-input").val());
    		            	  
-   		            	  if (totalPage >= nowPage && nowPage > 0 ){
+   		            	  if (totalPage >= nowPage && nowPage > 0 ) {
    		            		  gridPage = nowPage;
    		            	  }else {
    		            		  $("#pager .ui-pg-input").val(nowPage);
    		            		  gridPage = nowPage;
    		            	  }
-   		              }else if (pgButton == "records"){
+   		              } else if (pgButton == "records") {
    		            	  gridPage = 1;
    		              }
    		              grid.setGridParam({
-	    		          	  page : gridPage,
-	    		          	  rowNum : $('.ui-pg-selbox option:selected').val(),
-	    		          	  postData : JSON.stringify(  {
-						    		          			"pageIndex": gridPage,
-						    		          			"searchKeyword" : $("#searchKeyword").val(),
-						    		          			"pageUnit":$('.ui-pg-selbox option:selected').val()
-						    		          		})
-   		          		}).trigger("reloadGrid");
-   		        },onSelectRow: function(rowId){
+						page : gridPage,
+						rowNum : $('.ui-pg-selbox option:selected').val(),
+						postData : JSON.stringify({
+							"pageIndex": gridPage,
+							"searchKeyword" : $("#searchKeyword").val(),
+							"pageUnit":$('.ui-pg-selbox option:selected').val()
+						})
+					}).trigger("reloadGrid");
+   		        },
+   		        onSelectRow: function(rowId){
    	                if(rowId != null) {  }// 체크 할떄
-   	            },ondblClickRow : function(rowid, iRow, iCol, e){
+   	            },
+   	            ondblClickRow : function(rowid, iRow, iCol, e){
    	            	grid.jqGrid('editRow', rowid, {keys: true});
-   	            },onCellSelect : function (rowid, index, contents, action){
+   	            },
+   	            onCellSelect : function (rowid, index, contents, action){
    	            	var cm = $(this).jqGrid('getGridParam', 'colModel');
    	                if (cm[index].name != 'cb'){
    	                	jqGridFunc.fn_BoardSetInfo("Edt", $(this).jqGrid('getCell', rowid, 'board_cd'));
            		    }
-   	            }, beforeSelectRow: function (rowid, e) {
+   	            }, 
+   	            beforeSelectRow: function (rowid, e) {
    		            var $myGrid = $(this);
    		            var i = $.jgrid.getCellIndex($(e.target).closest('td')[0]);
    		            var cm = $myGrid.jqGrid('getGridParam', 'colModel');
    		            return (cm[i].name == 'cb'); // 선택된 컬럼이 cb가 아닌 경우 false를 리턴하여 체크선택을 방지
    		        }	            
-   		    });
-   		}, fileUp : function(cellvalue, options, rowObject){
+			});
+		}, 
+		fileUp : function(cellvalue, options, rowObject){
    			return rowObject.board_file_upload_yn == "Y" ? "사용" : "사용 안함";
    		}, comment : function(cellvalue, options, rowObject){
    			return rowObject.board_cmnt_use == "Y" ? "사용" : "사용 안함";

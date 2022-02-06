@@ -300,9 +300,8 @@
  		   	                       $("#sp_Error").html(obj.error_se);
  		   	                       $("#sp_ErrorCd").html(obj.error_code);
  		   	        			   $("#bas_sys_add").bPopup();
- 		   					   }else if (result.status == "FAIL"){
+ 		   					   } else if (result.status == "FAIL") {
  		   						   common_modelCloseM(result.message, "");
- 		   						   
  		   					   }
  		 				    },
  		 				    function(request){

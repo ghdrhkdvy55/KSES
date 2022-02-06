@@ -180,13 +180,13 @@
 			                       <span class="slider round"></span> 
 			                    </label> 
 		                    </td>
-		                    <th><span class="redText">*</span>팝업 여부</th>
+<!-- 		                <th><span class="redText">*</span>팝업 여부</th>
 	                        <td style="text-align:left">
 		                        <label class="switch">                                               
 			                   	   <input type="checkbox" id="boardPopup" onclick="toggleValue(this);" value="Y">
 			                       <span class="slider round"></span> 
 			                    </label> 
-		                    </td>
+		                    </td> -->
 	                    </tr>
 	                    <c:choose>
 	                       <c:when test="${loginVO.authorCd ne 'ROLE_ADMIN' && loginVO.authorCd ne 'ROLE_SYSTEM' }">
@@ -512,7 +512,7 @@
 						 	                       </c:otherwise>
 							 	            </c:choose>
 							 	            toggleClick("useYn", obj.use_yn);
-								    		toggleClick("boardPopup", obj.board_popup);
+								    		//toggleClick("boardPopup", obj.board_popup);
 								    		
 								    		
 								    		if (result.resultlist.length > 0){
@@ -569,7 +569,7 @@
 						
 					    /* oEditors.getById["ir1"].exec("SET_IR", [""]); */						
 						toggleDefault("useYn");
-			        	toggleDefault("boardPopup");
+			        	//toggleDefault("boardPopup");
 			        	
 			        	
 			        }
@@ -614,7 +614,7 @@
 				    formData.append('boardCn' , $("#boardCn").val());
 				    formData.append('boardCd' , $("#boardCd").val());
 				    formData.append('useYn' , fn_emptyReplace($("#useYn").val(),"N"));
-				    formData.append('boardPopup' , fn_emptyReplace($("#boardPopup").val(),"N"));
+				    //formData.append('boardPopup' , fn_emptyReplace($("#boardPopup").val(),"N"));
 				    formData.append('boardCenterId' , boardCenterId);
 				    formData.append('boardAllNotice' , boardAllCk);
 				    
@@ -695,7 +695,7 @@
 		       			    	    $("#btnUpdate").text("답글");
 		       			            $("#h2_txt").text("답글");
 		       			            toggleDefault("useYn");
-		    			        	toggleDefault("boardPopup");
+		    			        	//toggleDefault("boardPopup");
 		    			        	$("#bas_board_add").bPopup();
 						       }
 	    				    },
