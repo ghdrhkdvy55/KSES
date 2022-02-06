@@ -1,29 +1,21 @@
 package com.kses.backoffice.bld.center.web;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.kses.backoffice.bld.center.service.CenterInfoManageService;
 import com.kses.backoffice.bld.center.service.PreOpenInfoManageService;
 import com.kses.backoffice.bld.center.vo.PreOpenInfo;
-import com.kses.backoffice.util.SmartUtil;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -43,7 +35,7 @@ public class PreOpenInfoManageController {
     protected EgovPropertyService propertiesService;
     
     /**
-     * 사전예약시간 목록 조회
+     * 지점 사전예약시간 목록 조회
      * @param searchVO
      * @return
      * @throws Exception
@@ -76,24 +68,21 @@ public class PreOpenInfoManageController {
 
     	return model;
     }
-    
-    @RequestMapping("preOpenInfoUpdate.do")
-    public ModelAndView updatePreOpenInfo(	@ModelAttribute("loginVO") LoginVO loginVO,
-    										@RequestBody List<PreOpenInfo> preOpenInfoList,
-											HttpServletRequest request) {
+
+	/**
+	 * 지점 사전예약시간 수정
+	 * @param preOpenInfoList
+	 * @return
+	 * @throws Exception
+	 */
+    @RequestMapping(value = "preOpenInfoUpdate.do", method = RequestMethod.POST)
+    public ModelAndView updatePreOpenInfo(@RequestBody List<PreOpenInfo> preOpenInfoList) throws Exception {
     	ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-    	
-    	try {
-			preOpenInfoService.updatePreOpenInfo(preOpenInfoList);
-			
-    		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-    		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.update"));
-		} catch (Exception e) {
-    		log.info("updatePreOpenInfo ERROR : " + e);
-    		model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-    		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
-		}
-    	
+
+		preOpenInfoService.updatePreOpenInfo(preOpenInfoList);
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("sucess.common.update"));
+
     	return model;
     }
     

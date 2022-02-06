@@ -1,26 +1,21 @@
 package com.kses.backoffice.bld.center.web;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
+import com.kses.backoffice.bld.center.service.CenterInfoManageService;
+import com.kses.backoffice.bld.center.service.NoshowInfoManageService;
+import com.kses.backoffice.bld.center.vo.NoshowInfo;
+import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.LoginVO;
+import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.kses.backoffice.bld.center.service.CenterInfoManageService;
-import com.kses.backoffice.bld.center.service.NoshowInfoManageService;
-import com.kses.backoffice.bld.center.vo.NoshowInfo;
-
-import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.LoginVO;
-import egovframework.com.cmm.service.Globals;
-import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
-import lombok.extern.slf4j.Slf4j;
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -73,24 +68,21 @@ public class NoshowInfoManageController {
 
     	return model;
     }
-    
-    @RequestMapping("noshowInfoUpdate.do")
-    public ModelAndView updateNoshownfo(	@ModelAttribute("loginVO") LoginVO loginVO,
-    										@RequestBody List<NoshowInfo> noshowInfoList,
-											HttpServletRequest request) {
+
+	/**
+	 * 자동 취소 수정
+	 * @param noshowInfoList
+	 * @return
+	 * @throws Exception
+	 */
+    @RequestMapping(value = "noshowInfoUpdate.do", method = RequestMethod.POST)
+    public ModelAndView updateNoshownfo(@RequestBody List<NoshowInfo> noshowInfoList) throws Exception {
     	ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-    	
-    	try {
-			noshowInfoService.updateNoshowInfo(noshowInfoList);
-			
-    		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-    		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.update"));
-		} catch (Exception e) {
-			log.info("updateNoshownfo ERROR : " + e);
-    		model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-    		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
-		}
-    	
+
+		noshowInfoService.updateNoshowInfo(noshowInfoList);
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.update"));
+
     	return model;
     }
     

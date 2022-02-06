@@ -1,27 +1,10 @@
 package com.kses.backoffice.bld.center.web;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.kses.backoffice.bld.center.service.CenterHolyInfoManageService;
 import com.kses.backoffice.bld.center.service.CenterInfoManageService;
 import com.kses.backoffice.bld.center.vo.CenterHolyInfo;
 import com.kses.backoffice.util.SmartUtil;
 import com.kses.backoffice.util.service.UniSelectInfoManageService;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.Globals;
@@ -29,6 +12,15 @@ import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -90,6 +82,26 @@ public class CenterHolyInfoManageController {
 
     	return model;
     }
+
+	/**
+	 * 지점 휴일 업데이트
+	 * @param centerHolyInfo
+	 * @return
+	 * @throws Exception
+	 */
+//	@RequestMapping (value = "centerHolyInfoUpdate.do", method = RequestMethod.POST)
+//	public ModelAndView updateCenterHolyInfo(@RequestBody CenterHolyInfo centerHolyInfo) throws Exception {
+//		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+//
+//		int ret = 0;
+//		switch (centerHolyInfo.getMode()) {
+//			case Globals.SAVE_MODE_INSERT:
+//				break;
+//			case Globals.SAVE_MODE_UPDATE:
+//				break;
+//			default:
+//		}
+//	}
     
 	@RequestMapping (value="centerHolyInfoUpdate.do")
 	public ModelAndView updateCenterInfo(	HttpServletRequest request,  

@@ -1,29 +1,25 @@
 package com.kses.backoffice.bld.center.web;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
-
+import com.kses.backoffice.bld.center.service.BillInfoManageService;
 import com.kses.backoffice.bld.center.service.CenterInfoManageService;
 import com.kses.backoffice.bld.center.vo.BillDayInfo;
 import com.kses.backoffice.bld.center.vo.BillInfo;
-import com.kses.backoffice.bld.center.service.BillInfoManageService;
-
-import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.Globals;
+import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
+import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/backoffice/bld")
@@ -39,69 +35,66 @@ public class BillInfoManageController {
     
     @Autowired
     CenterInfoManageService centerInfoService;
-    
-    @RequestMapping("billInfoListAjax.do")
-    public ModelAndView selectBillInfoList(	@RequestParam("centerCd") String centerCd,
-    										HttpServletRequest request) {
-    	
+
+	@Autowired
+	protected EgovPropertyService propertiesService;
+
+	/**
+	 * 지점별 영수증 목록 조회
+	 * @param searchVO
+	 * @return
+	 * @throws Exception
+	 */
+    @RequestMapping(value = "billInfoListAjax.do", method = RequestMethod.POST)
+    public ModelAndView selectBillInfoList(@RequestBody Map<String,Object> searchVO) throws Exception {
     	ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-		try {
-			Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-			if(!isAuthenticated) {
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-				model.setViewName("/backoffice/login");
-				return model;	
-			}
-    	
-    		List<Map<String, Object>> billInfoList = billService.selectBillInfoList(centerCd);
-    		
-    		String centerNm =  	billInfoList.size() > 0 ? 
-    							billInfoList.get(0).get("center_nm").toString():
-    			         		centerInfoService.selectCenterInfoDetail(centerCd).get("center_nm").toString();
-    			         
-    		model.addObject("centerNm", centerNm);
-    		model.addObject("billInfoList", billInfoList);
-    		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-    		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.select"));
-    	} catch (Exception e) {
-    		LOGGER.info("selectBillInfoList ERROR : " + e.toString());
-    		model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-    		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
-		}
-    	
+
+		String centerCd = (String) searchVO.get("centerCd");
+
+		List<Map<String, Object>> billInfoList = billService.selectBillInfoList(centerCd);
+
+		model.addObject(Globals.JSON_RETURN_RESULTLISR, billInfoList);
+		model.addObject(Globals.PAGE_TOTALCNT, billInfoList.size());
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+
     	return model;
     }
-    
-    @RequestMapping("billDayInfoListAjax.do")
-    public ModelAndView selectBillDayInfoList(	@RequestParam("centerCd") String centerCd,
-    											HttpServletRequest request) {
-    	
+
+	/**
+	 * 지점별 현금영수증(요일) 목록 조회
+	 * @param searchVO
+	 * @return
+	 * @throws Exception
+	 */
+    @RequestMapping(value = "billDayInfoListAjax.do", method = RequestMethod.POST)
+    public ModelAndView selectBillDayInfoList(@RequestBody Map<String,Object> searchVO) throws Exception {
     	ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-		try {
-			Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-			if(!isAuthenticated) {
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-				model.setViewName("/backoffice/login");
-				return model;	
-			}
-    	
-    		List<Map<String, Object>> billInfoList = billService.selectBillInfoList(centerCd);
-    		List<Map<String, Object>> billDayInfoList = billService.selectBillDayInfoList(centerCd);
-    		
-    		String centerNm =  	billDayInfoList.size() > 0 ? 
-    							billDayInfoList.get(0).get("center_nm").toString():
-    			         		centerInfoService.selectCenterInfoDetail(centerCd).get("center_nm").toString();
-    			         
-    		model.addObject("centerNm", centerNm);
-    		model.addObject("billDayInfoList", billDayInfoList);
-    		model.addObject("billInfoList", billInfoList);
-    		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-    		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.select"));
-    	} catch (Exception e) {
-    		LOGGER.info("selectBillInfoList ERROR : " + e.toString());
-    		model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-    		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
-		}
+
+		String centerCd = (String) searchVO.get("centerCd");
+
+		//Paging
+		PaginationInfo paginationInfo = new PaginationInfo();
+		paginationInfo.setCurrentPageNo(1);
+		paginationInfo.setRecordCountPerPage(10);
+		paginationInfo.setPageSize(propertiesService.getInt("pageSize"));
+
+		searchVO.put("firstIndex", paginationInfo.getFirstRecordIndex());
+		searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
+		searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
+		searchVO.put("pageSize", paginationInfo.getPageSize());
+
+		List<Map<String, Object>> billInfoList = billService.selectBillInfoList(centerCd);
+		List<Map<String, Object>> billDayInfoList = billService.selectBillDayInfoList(centerCd);
+		paginationInfo.setTotalRecordCount(7);
+		billDayInfoList.stream().forEach(x ->
+			x.put("bill_info_list", billInfoList)
+		);
+
+		model.addObject(Globals.STATUS_REGINFO, searchVO);
+		model.addObject(Globals.JSON_RETURN_RESULTLISR, billDayInfoList);
+		model.addObject(Globals.PAGE_TOTALCNT, paginationInfo.getTotalRecordCount());
+		model.addObject(Globals.JSON_PAGEINFO, paginationInfo);
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
     	
     	return model;
     }

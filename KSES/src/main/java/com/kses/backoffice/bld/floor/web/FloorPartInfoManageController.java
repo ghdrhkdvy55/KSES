@@ -1,36 +1,30 @@
 package com.kses.backoffice.bld.floor.web;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartRequest;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.kses.backoffice.bld.floor.service.FloorPartInfoManageService;
 import com.kses.backoffice.bld.floor.vo.FloorPartInfo;
+import com.kses.backoffice.util.SmartUtil;
 import com.kses.backoffice.util.service.UniSelectInfoManageService;
 import com.kses.backoffice.util.service.fileService;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
+import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartRequest;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -51,27 +45,39 @@ public class FloorPartInfoManageController {
 	
 	@Autowired
 	private UniSelectInfoManageService uniService;
-	
-	//구역 리스트 보여 주기 
-	@RequestMapping(value="partListAjax.do")
-	public ModelAndView selectPartInfoListAjax(	@ModelAttribute("loginVO") LoginVO loginVO, 
-												@RequestBody Map<String,Object> searchVO, 
-												HttpServletRequest request, 
-												BindingResult bindingResult	) throws Exception {
-		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
-		try {
-			searchVO.put("firstIndex", "0");
-			searchVO.put("recordCountPerPage", "100");
-			List<Map<String, Object>> partList = partService.selectFloorPartInfoList(searchVO);
-			int totCnt = partList.size() > 0 ?  Integer.valueOf( partList.get(0).get("total_record_count").toString()) :0;
-			model.addObject(Globals.JSON_RETURN_RESULTLISR, partList);
-		    model.addObject(Globals.PAGE_TOTALCNT, totCnt);
-		    model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-		} catch(Exception e) {
-			log.info(e.toString());
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.delete"));	
-		}
+
+	/**
+	 * 구역 목록 조회
+	 * @param searchVO
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "partListAjax.do", method = RequestMethod.POST)
+	public ModelAndView selectPartInfoListAjax(@RequestBody Map<String,Object> searchVO) throws Exception {
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+
+		int pageUnit = searchVO.get("pageUnit") == null ? propertiesService.getInt("pageUnit")
+				: Integer.valueOf((String) searchVO.get("pageUnit"));
+
+		PaginationInfo paginationInfo = new PaginationInfo();
+		paginationInfo.setCurrentPageNo(Integer.parseInt(SmartUtil.NVL(searchVO.get("pageIndex"), "1").toString()));
+		paginationInfo.setRecordCountPerPage(pageUnit);
+		paginationInfo.setPageSize(propertiesService.getInt("pageSize"));
+
+		searchVO.put("firstIndex", paginationInfo.getFirstRecordIndex());
+		searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
+		searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
+
+		List<Map<String, Object>> partList = partService.selectFloorPartInfoList(searchVO);
+		int totCnt = partList.size() > 0 ? Integer.valueOf( partList.get(0).get("total_record_count").toString()) : 0;
+		paginationInfo.setTotalRecordCount(totCnt);
+
+		model.addObject(Globals.STATUS_REGINFO, searchVO);
+		model.addObject(Globals.JSON_RETURN_RESULTLISR, partList);
+		model.addObject(Globals.PAGE_TOTALCNT, totCnt);
+		model.addObject(Globals.JSON_PAGEINFO, paginationInfo);
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+
 		return model;
 	}
 	
