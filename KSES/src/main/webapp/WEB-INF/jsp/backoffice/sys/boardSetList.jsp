@@ -198,7 +198,7 @@
    		        multiselect: true,
    		        loadonce: true,
    				viewrecords: true,
-                   footerrow: true,
+                   footerrow: false,
                    loadComplete : function (data){
    		        	 $("#sp_totcnt").text(data.paginationInfo.totalRecordCount);
    		        }, loadError:function(xhr, status, error) {

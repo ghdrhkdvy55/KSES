@@ -226,7 +226,7 @@
    		        refresh : true,
    		        multiselect: false,
    				viewrecords: true,
-                   footerrow: true,
+                   footerrow: false,
    		        userDataOnFooter: true, // use the userData parameter of the JSON response to display data on footer
    		        
    		        loadComplete : function (data){
