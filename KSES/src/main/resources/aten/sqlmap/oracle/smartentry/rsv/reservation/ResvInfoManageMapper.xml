@@ -86,9 +86,6 @@
 						</otherwise>
 					</choose>	
 				</if>
-				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchResvPayDvsn)">
-					AND A.RESV_PAY_DVSN = #{params.searchResvPayDvsn}
-				</if>
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchResvRcptYn)">
 					AND A.RESV_RCPT_YN = #{params.searchResvRcptYn}
 				</if>

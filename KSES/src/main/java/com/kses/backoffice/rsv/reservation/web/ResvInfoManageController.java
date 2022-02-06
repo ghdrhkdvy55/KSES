@@ -374,6 +374,9 @@ public class ResvInfoManageController {
 		}
 		
 		try {
+			LoginVO loginVO = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
+			vo.setEnterAdminId(loginVO.getAdminId());
+			
 			vo = attendService.insertAttendInfo(vo);
 			
 			if(vo.getRet() > 0) {

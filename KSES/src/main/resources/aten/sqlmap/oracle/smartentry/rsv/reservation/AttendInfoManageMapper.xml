@@ -68,14 +68,14 @@
 	    INSERT INTO TSER_QR_CHECK_H
 	    (
 	    	QR_CHECK_SEQ, RESV_SEQ, USER_ID, QR_CHECK_TM, INOUT_DVSN, 
-	    	RCV_DT, RCV_CD, QR_CODE 
+	    	RCV_DT, RCV_CD, QR_CODE, ENTER_ADMIN_ID
 	    )
 	    VALUES
 		<choose>
 			<when test="@org.apache.commons.lang3.StringUtils@equals(mode,'Manual')">
 				( 
 	    			QR_CK_SEQ.NEXTVAL, #{resvSeq}, #{userId}, SYSDATE, #{inoutDvsn}, 
-	    			TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS'), 'MANUAL', #{qrCode, jdbcType=VARCHAR}
+	    			TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS'), 'MANUAL', #{qrCode, jdbcType=VARCHAR}, #{enterAdminId, jdbcType=VARCHAR}
 				)
 			</when>
 			<otherwise>

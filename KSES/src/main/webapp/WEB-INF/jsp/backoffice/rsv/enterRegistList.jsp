@@ -103,8 +103,7 @@
 			pageIndex: pageNo,
 			pageUnit: $('.ui-pg-selbox option:selected').val(),
 			searchKeyword: $('#searchKeyword').val(),
-			searchCenterCd: $('#searchCenterCd').val(),
-			searchResvPayDvsn: "RESV_PAY_DVSN_2"
+			searchCenterCd: $('#searchCenterCd').val()
 		};
 		EgovJqGridApi.mainGridAjax('/backoffice/rsv/enterRegistAjax.do', params, fnSearch, fnSubGrid);
 	}
@@ -114,11 +113,12 @@
 		$('#'+id).empty().append('<table id="'+ subGridId + '" class="scroll"></table>');
 		EgovJqGridApi.subGrid(subGridId, 
 		[
-			{label: 'qr_check_seq', key: true, name:'qr_check_seq', index:'qr_check_seq', align:'center', hidden:true},
-			{label: '체크 구분', name:'inout_dvsn_text', index:'inout_dvsn_text', align:'center'},
-			{label: '체크인 시간', name:'qr_check_tm', index:'qr_check_tm', align:'center'},
-			{label: '통신시간 ', name:'rcv_dt', index:'rcv_dt', align:'center'},
-			{label: '통신결과', name:'rcv_cd', index:'rcv_cd', align:'center'}
+			{label: 'qr_check_seq', key: true, name:'qr_check_seq', align:'center', hidden:true},
+			{label: '체크 구분', name:'inout_dvsn_text', align:'center'},
+			{label: '체크인 시간', name:'qr_check_tm', align:'center'},
+			{label: '입장 관리자', name:'enter_admin_id', align:'center'},		
+			{label: '통신시간 ', name:'rcv_dt', align:'center'},
+			{label: '통신결과', name:'rcv_cd', align:'center'}
 		], '/backoffice/rsv/enterRegistListAjax.do', {
 			resvSeq: resvSeq
 		});
