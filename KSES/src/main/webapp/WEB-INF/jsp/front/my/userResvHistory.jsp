@@ -388,6 +388,7 @@
 					false,
 					function(result) {
 						if(result.status == "SUCCESS") {
+							bPopupClose("cash_receipt");
 							fn_openPopup("현금영수증 신청이 정상적으로 이뤄졌습니다.", "blue", "SUCCESS", "확인", "");
 							userResvService.fn_userResvInfo(true);
 						} else if(result.status == "LOGIN FAIL") {

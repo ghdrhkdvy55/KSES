@@ -567,7 +567,7 @@
 					false,
 	    	    	function(result){
 	    	    		if (result.status == "SUCCESS") {
-	    	    			if (result.resultlist.length>0){
+	    	    			if (result.resultlist.length > 0) {
 	    	    				$(".null_cont").hide();
 	    	    				var sHTML = "";
 	    	    				
@@ -575,11 +575,12 @@
 	    	    					var cssClass = (i == 0) ? "class='main_noti_list'":"";
 	    	    					var obj = result.resultlist[i];
 	    	    					sHTML += "<div "+cssClass+">"
-	    	                              +  "  <div class='notice_con' id='n_"+obj.board_seq+"'> "                           
-	    	                              +  "     <p class='notice_date'>'"+obj.last_updt_dtm+"'</p>"
-	    	                              +  "     <p class='notice_tit'><span>'"+obj.board_title+"'</span></p>"
+	    	                              +  "  <div class='notice_con' id='n_"+obj.board_seq+"'>"
+	    	                              +  "     <p class='notice_cat'>" + obj.board_dvsn + "</p>"
+	    	                              +  "     <p class='notice_date'>" + obj.last_updt_dtm + "</p>"
+	    	                              +  "     <p class='notice_tit'><span>" + obj.board_title + "</span></p>"
 	    	                              +  "	</div>"
-	    	                              +  "	<div class='notice_inner' id='c_"+obj.board_seq+"'>1231313121</div>"
+	    	                              +  "	<div class='notice_inner' id='c_"+obj.board_seq+"'></div>"
 	    	                              +  "</div>"; 
 	    	    					$("#main_notice:last").append(sHTML);
 	    	    					sHTML = "";

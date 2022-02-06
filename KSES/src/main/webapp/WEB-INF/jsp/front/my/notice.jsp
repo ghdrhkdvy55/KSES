@@ -45,7 +45,7 @@
                     <a href="/front/main.do" class="before_close"></a>
                 </div>
                 <h1>공지사항<a href="" class="close"><img src="/resources/img/front/x_box.svg" alt="닫기"></a></h1>
-                <button class="noti_h_icon ui-dropper" data-drop="notice_view_de"">필터</button>              
+                <button class="noti_h_icon ui-dropper" data-drop="notice_view_de">필터</button>              
                 <div class="clear"></div>
             </div>           
         </div>
@@ -57,16 +57,15 @@
                 <!-- 공지사항 데이터 -->
                 <div>
                     <div class="notice_con">
-                        <p class="notice_cat">전체공지</p>
-                        <p class="notice_date">11.30 수</p>
-                        <p class="notice_tit"><span>코로나 19 방역에 따라 경기 일정이 변경 되었습니다.</span></p>
+                        <p class="notice_cat"></p>
+                        <p class="notice_date"></p>
+                        <p class="notice_tit"><span></span></p>
                     </div>
                     <!--공지사항 내용 -->
-                    <div class="notice_inner">코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나코로나 19 방역 수칙에 따른 이용자 명부 작성 필수 코로나
-                    </div>
-                </div>
-                                 
+                    <div class="notice_inner"></div>
+                </div>        
             </div>
+            <div class="null_cont"><p>등록된 공지사항이 없습니다.</p></div> 
         </div>
         <!--contents //-->
     </div>  
@@ -99,7 +98,7 @@
                 // position the dropdown to the right, so it works on all buttons
                 // buttons at far right of screen will have menus flipped inward to avoid viewport collision
                 menu.toggle().position({
-                    my: " top bottom",
+                    my: "top bottom",
                     at: "top bottom",
                     of: this
                 });
@@ -146,7 +145,9 @@
 						if (result.status == "SUCCESS") {
 							$("#totalPageCount").val(result.paginationInfo.totalPageCount);
            	    					
-							if (result.resultlist.length>0){
+							if (result.resultlist.length > 0) {
+								$(".cotents_wrap").show();
+								$(".null_cont").hide();
 	           	    			var sHTML = "";
 	           	    			
 	           	    			if (emptyGubun == "New"){
@@ -156,14 +157,14 @@
 	           	    			for (var i in result.resultlist){
 	           	   					var obj = result.resultlist[i];
 	           	   					sHTML += "<div>"
-	           	                             +  "  <div class='notice_con' id='n_"+obj.board_seq+"'> "                           
-	           	                             +  "     <p class='notice_date'>'"+obj.last_updt_dtm+"'</p>"
-	           	                             +  "     <p class='notice_tit'><span>'"+obj.board_title+"'</span></p>"
+	           	                             +  "  <div class='notice_con' id='n_" + obj.board_seq + "'>"
+	           	                          	 +  "     <p class='notice_cat'>" + obj.board_dvsn + "</p>"
+	           	                             +  "     <p class='notice_date'>" + obj.last_updt_dtm + "</p>"
+	           	                             +  "     <p class='notice_tit'><span>" + obj.board_title + "</span></p>"
 	           	                             +  "	</div>"
-	           	                             +  "	<div class='notice_inner' id='c_"+obj.board_seq+"'>1231313121</div>"
+	           	                             +  "	<div class='notice_inner' id='c_" + obj.board_seq + "'></div>"
 	           	                             +  "</div>"; 
 	           	   					$("#container > div> div:last").append(sHTML);
-	           	   					console.log(sHTML);
 	           	   					sHTML = "";
 	           	   				}
 	           	   				
@@ -221,6 +222,9 @@
 										);
 									}
 								});
+							} else {
+								$(".cotents_wrap").hide();
+								$(".null_cont").show();
 							}	
 						} else {
 							fn_openPopup("ERROR : " + request.status, "red", "ERROR", "확인", "");	

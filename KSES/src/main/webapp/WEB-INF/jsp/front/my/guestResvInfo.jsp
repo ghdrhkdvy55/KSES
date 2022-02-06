@@ -52,7 +52,7 @@
                     </ul>
 
                     <div class="inquiry_btn">
-                        <a href="javascript:guestResvService.fn_getGuestResvInfo();">인증번호 요청</a>
+                        <a href="javascript:guestResvService.fn_getGuestResvInfo(false);">인증번호 요청</a>
                     </div>
                     
                     <div class="ok_sumit">
@@ -72,60 +72,7 @@
                 <div class="contents resv_contents"> 
                     <!--지점선택-->                 
                     <h3>예약 정보 조회</h3>
-<!--                     <ul class="my_rsv">                        
-                        <li>
-                            <ol>
-                                <li>예약번호</li>
-                                <li><span id="rsv_num" class="rsv_num"></span></li>
-                            </ol>
-                        </li>
-						<li>
-                    		<ol>
-                        		<li>경주일</li>
-                        		<li><span id="rsv_date"></span></li>
-                    		</ol>
-                		</li>
-                        <li>
-                            <ol>
-                                <li>이름</li>
-                                <li><span id="rsv_name"></span></li>
-                            </ol>
-                        </li>
-                        <li>
-                            <ol>
-                                <li>지점</li>
-                                <li><span id="rsv_center"></span></li>
-                              </ol>
-                        </li>
-						<li>
-                            <ol>
-                                <li>층</li>
-                                <li><span id="rsv_floor"></span></li>
-                            </ol>
-                        </li>
-						<li>
-                            <ol>
-                                <li>구역</li>
-                                <li><span id="rsv_part"></span></li>
-                            </ol>
-                        </li>
-                        <li>
-                            <ol>
-                                <li>좌석</li>
-                                <li><span id="rsv_seat"></span></li>
-                            </ol>
-                        </li>
-                        <li>
-                            <ol>
-                                <li>신청일</li>
-                                <li><span id="rsv_req_date"></span></li>
-                            </ol>
-                        </li>
-                    </ul>
-                    <ul class="non_memBtn">
-                        <li class="cancelBtn"><a href="javascript:$('#cancel_rsv_info').bPopup();">예약취소</a></li>
-                        <li class="close_btn"><a href="javascript:location.reload();">닫기</a></li>
-                    </ul> -->
+
                 </div>
             </div>
         </div>
@@ -194,6 +141,33 @@
           	<div class="clear"></div>
       	</div>
 	</div>
+	
+	<!-- // 현금영수증 팝업 -->
+	<div id="cash_receipt" class="popup">
+	  <div class="pop_con">
+	      <a class="button b-close">X</a>
+	      
+	      <div class="pop_wrap">                                                
+	            <h4>현금영수증 발급 신청</h4>
+	            <ul class="cash_refund">
+	                <li>
+	                    <input type="radio" name="refund" id="refund1" value="RESV_RCPT_DVSN_1">
+	                    <label for="refund1"><span></span>소득 공제용</label>
+	                </li>
+	                <li>
+	                    <input type="radio" name="refund" id="refund2" value="RESV_RCPT_DVSN_2">
+	                    <label for="refund2"><span></span>지출 증빙용</label>
+	                </li>
+	                <li><input type="text" onkeyup="onlyNum(this);" placeholder="'-'없이 입력해 주세요."></li>
+	            </ul>                      
+	        </div>
+	        <div class="summit_btn">
+	            <a href="" class="mintBtn">신청</a>
+	            <a href="javascript:bPopupClose('cash_receipt');">취소</a>
+	        </div>
+	      <div class="clear"></div>
+	  </div>
+	</div>
 
     <!--메뉴버튼 속성-->
     <script>
@@ -204,7 +178,7 @@
 		var resvInfoList = new Object();
     
 		var guestResvService = {
-			fn_getGuestResvInfo : function() {
+			fn_getGuestResvInfo : function(isRefresh) {
 				if($("#resvUserNm").val() == "") {
 					fn_openPopup("이름을 입력해주세요.", "red", "ERROR", "확인", ""); return;
 				} else if ($("#resvUserClphn").val() == "") {
@@ -229,7 +203,12 @@
 						if(result.status == "SUCCESS") {
 							if(result.guestResvInfo.length > 0) {
 								resvInfoList = result.guestResvInfo;
-								guestResvService.fn_SmsCertifi();
+								if(isRefresh) {
+									$(".resv_contents > .my_rsv, .non_memBtn").remove();
+									guestResvService.fn_checkform(resvInfoList);
+								} else {
+									guestResvService.fn_SmsCertifi();
+								}
 							} else {
 								fn_openPopup("해당 정보로 예약된 정보가 존재하지 않습니다.", "red", "ERROR", "확인", "");
 							}
@@ -335,7 +314,7 @@
  						
  						$btnUl.append($cancelBtnLi);
 					}
- 					$btnUl.append('<li class="close_btn"><a href="javascript:location.reload();">닫기</a></li>');
+ 					$btnUl.append("<li class='close_btn'><a href='javascript:guestResvService.fn_openRcptPopup(\"" + resvInfo.resv_seq +"\",\"" +  resvInfo.resv_rcpt_yn +"\")'>현금 영수증</a></li>");
  					
 					$(".resv_contents").append($resvInfoUl);
 					$(".resv_contents").append($btnUl);
@@ -343,6 +322,52 @@
 				
 				$(".search").hide();
 				$(".result").show();
+			},
+			fn_openRcptPopup : function(resvSeq,resvRcptYn) {
+				if(resvRcptYn != "N") {
+					fn_openPopup("이미 현금영수증 신청 완료된 <br>예약정보 입니다.", "red", "ERROR", "확인", "");
+					return;
+				}
+				
+				$("input:radio[name='refund']").eq(0).prop("checked", true);
+				$("#cash_receipt .summit_btn a").eq(0).attr("href","javascript:guestResvService.fn_setRcptInfo('" + resvSeq + "');");
+				$("#cash_receipt input[type='text']").val("");
+				bPopupOpen('cash_receipt');
+			},
+			fn_setRcptInfo : function(resvSeq) {
+				if($("#cash_receipt input[type='text']").val() == "") {
+					fn_openPopup("현금영수증 발행번호를 입력해주세요", "red", "ERROR", "확인", "");
+					return;
+				}
+				
+				var url = "/front/updateResvRcptInfo.do";
+				var params = {
+					"resvSeq" : resvSeq,
+					"resvRcptTel" : $("#cash_receipt input[type='text']").val(),
+					"resvRcptDvsn" : $("input[name='refund']:checked").val()
+				}
+				
+				fn_Ajax
+				(
+				    url,
+				    "POST",
+					params,
+					false,
+					function(result) {
+						if(result.status == "SUCCESS") {
+							bPopupClose("cash_receipt");
+							fn_openPopup("현금영수증 신청이 정상적으로 이뤄졌습니다.", "blue", "SUCCESS", "확인", "");
+							guestResvService.fn_getGuestResvInfo(true);
+						} else if(result.status == "LOGIN FAIL") {
+							fn_openPopup("세션 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");	
+						} else {
+							fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "/front/main.do");
+						}
+					},
+					function(request) {
+						fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "/front/main.do");	       						
+					}    		
+				);
 			},
 			fn_resvCancelPop : function(resvSeq) {
 				$('#cancel_rsv_num').html($('#' + resvSeq + ' .resv_seq').html());

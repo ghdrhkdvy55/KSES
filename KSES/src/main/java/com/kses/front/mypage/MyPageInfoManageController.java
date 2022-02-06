@@ -139,6 +139,7 @@ public class MyPageInfoManageController {
 		return model;
 	}
 	
+	@LoginUncheck
 	@RequestMapping (value="updateResvRcptInfo.do")
 	public ModelAndView updateResvRcptInfo(	HttpServletRequest request,
 											@RequestBody ResvInfo resvInfo) throws Exception {
