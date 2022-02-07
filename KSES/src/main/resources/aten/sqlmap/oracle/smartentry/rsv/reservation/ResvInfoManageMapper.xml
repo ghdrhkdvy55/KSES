@@ -35,7 +35,6 @@
 				</if>
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchCenterCd)">
 					AND A.CENTER_CD = #{params.searchCenterCd}
-<<<<<<< HEAD
 				</if>
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchResvRcptYn)">
 					AND A.RESV_RCPT_YN = #{params.searchResvRcptYn}
@@ -58,9 +57,6 @@
 						</otherwise>
 					</choose>	
 				</if>
-=======
-				</if>	
->>>>>>> branch 'master' of https://github.com/ghdrhkdvy55/KSES.git
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchFrom) and !@org.apache.commons.lang3.StringUtils@isEmpty(params.searchTo)">
 					<choose>
 						<when test="@org.apache.commons.lang3.StringUtils@equals(params.searchDayCondition,'resvDate')">
@@ -96,30 +92,9 @@
 						</otherwise>
 					</choose>
 				</if>
-<<<<<<< HEAD
-=======
-				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.authorCd)">
-					<if test="params.authorCd != 'ROLE_ADMIN' and params.authorCd != 'ROLE_SYSTEM'">
-					   AND A.CENTER_CD = #{params.centerCd}
-					</if>
-				</if>
-				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchResvState)">
-					<choose>
-						<when test="@org.apache.commons.lang3.StringUtils@equals(params.searchStateCondition,'cancel')">
-							AND A.RESV_STATE != #{params.searchResvState}
-						</when>
-						<otherwise>
-							AND A.RESV_STATE = #{params.searchResvState}
-						</otherwise>
-					</choose>	
-				</if>
-				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchResvRcptYn)">
-					AND A.RESV_RCPT_YN = #{params.searchResvRcptYn}
-				</if>
 				<if test="@org.apache.commons.lang3.StringUtils@equals(params.centerRegistSelect,'centerRegistSelect')">
 					AND A.RESV_STATE != 'RESV_STATE_4'
 				</if>
->>>>>>> branch 'master' of https://github.com/ghdrhkdvy55/KSES.git
 			) TB
 			ORDER BY TB.RESV_SEQ DESC	
 		) TA
