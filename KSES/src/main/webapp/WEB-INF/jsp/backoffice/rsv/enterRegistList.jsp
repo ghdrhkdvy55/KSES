@@ -92,7 +92,9 @@
 			{label: '금액', name: 'resv_pay_cost', align:'center'},
 			{label: '신청일자', name:'resv_req_date', align:'center'},
 			{label: '예약일자', name:'resv_end_dt', align:'center'},
-			{label: '결제구분', name: 'resv_ticket_dvsn_text', align:'center'},
+			{label: '결제구분', name: 'resv_pay_dvsn_text', align:'center'},
+			{label: '예약상태', name:'resv_state_text', align:'center', hidden:true},
+			{label: '시범구분', name: 'center_pilot_yn', align:'center', hidden:true},
 			{label: '등록', name: 'enter_regist', align:'center', formatter:fnEnterRegistButton}
 		], false, true, fnSearch);
 		
@@ -103,7 +105,8 @@
 			pageIndex: pageNo,
 			pageUnit: $('.ui-pg-selbox option:selected').val(),
 			searchKeyword: $('#searchKeyword').val(),
-			searchCenterCd: $('#searchCenterCd').val()
+			searchCenterCd: $('#searchCenterCd').val(),
+			centerRegistSelect: "centerRegistSelect"
 		};
 		EgovJqGridApi.mainGridAjax('/backoffice/rsv/enterRegistAjax.do', params, fnSearch, fnSubGrid);
 	}
@@ -125,13 +128,17 @@
 	}
 	
 	function fnEnterRegistButton(cellvalue, options, rowObject) {
-		return '<a href="javascript:fnEnterRegist(&#39;'+rowObject.resv_seq+'&#39;);" class="blueBtn">입장 등록</a>';	
+		return '<a href="javascript:fnEnterRegist(&#39;'+rowObject.resv_seq+'&#39;,&#39;'+rowObject.resv_pay_dvsn_text+'&#39;,&#39;'+rowObject.center_pilot_yn+'&#39;);" class="blueBtn">입장 등록</a>';	
 	}
 	
 	
- 	function fnEnterRegist(resvSeq){
- 		bPopupConfirm('수동 입장 등록', '입장 등록하시겠습니까?', function() {
- 			
+ 	function fnEnterRegist(resvSeq,resvPayDvsn,centerPilotYn){	
+		if (resvPayDvsn != '결제' && centerPilotYn == 'Y') { 		 	
+ 			//toastr.warning('정렬 순서를 입력해 주세요.');
+ 			common_popup('미결제 상태의 예약정보입니다.', 'N', '');
+ 			return;
+ 		}
+ 		bPopupConfirm('수동 입장 등록', '입장 등록하시겠습니까?', function() {					
  			var url = "/backoffice/rsv/attendInfoUpdate.do";
  			var params = {
  				"mode" : "Manual",

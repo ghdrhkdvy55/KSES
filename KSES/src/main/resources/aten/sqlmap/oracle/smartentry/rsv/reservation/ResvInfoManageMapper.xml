@@ -35,7 +35,7 @@
 				</if>
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchCenterCd)">
 					AND A.CENTER_CD = #{params.searchCenterCd}
-				</if>
+				</if>	
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchFrom) and !@org.apache.commons.lang3.StringUtils@isEmpty(params.searchTo)">
 					<choose>
 						<when test="@org.apache.commons.lang3.StringUtils@equals(params.searchDayCondition,'resvDate')">
@@ -88,6 +88,9 @@
 				</if>
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchResvRcptYn)">
 					AND A.RESV_RCPT_YN = #{params.searchResvRcptYn}
+				</if>
+				<if test="@org.apache.commons.lang3.StringUtils@equals(params.centerRegistSelect,'centerRegistSelect')">
+					AND A.RESV_STATE != 'RESV_STATE_4'
 				</if>
 			) TB
 			ORDER BY TB.RESV_SEQ DESC	
