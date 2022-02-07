@@ -16,7 +16,7 @@
 <div class="dashboard">
 	<div class="boardlist">
    		<div class="whiteBox">
-        	<table class="main_table">
+        	<table class="main_table system_info_table">
 				<tbody class="setTxt">
 					<tr>
                         <th>사이트 명</th>
@@ -86,7 +86,54 @@
 						<th>블랙리스트 해제일</th>
                         <td><input type="number" id="blklstRlsdt" name="blklstRlsdt" value="${regist.blklstRlsdt}"></td>
                     </tr>
-                    <tr>
+					<tr>
+						<th>1차 자동취소 사용여부</th>
+	                  	<td style="text-align:left;">	                  	
+							<input 
+								style="width:0; left:0;"
+								id="autoCancelR1UseYn_Y" 
+								type="radio" 
+								name="autoCancelR1UseYn" 
+								value="Y" 
+								<c:if test="${regist.autoCancelR1UseYn == 'Y' }"> checked </c:if>
+							>
+                            <label for="autoCancelR1UseYn_Y">Y</label>
+                    		
+                    		<input 
+								style="width:0; left:0;"
+								id="autoCancelR1UseYn_N" 
+								type="radio" 
+								name="autoCancelR1UseYn" 
+								value="N" 
+								<c:if test="${regist.autoCancelR1UseYn == 'N' }"> checked </c:if>
+							>
+                            <label for="autoCancelR1UseYn_N">N</label>
+	                  	</td>
+						<th>2차 자동취소 사용여부</th>
+	                  	<td style="text-align:left;">	                  	
+							<input 
+								style="width:0; left:0;"
+								id="autoCancelR2UseYn_Y" 
+								type="radio" 
+								name="autoCancelR2UseYn" 
+								value="Y" 
+								<c:if test="${regist.autoCancelR2UseYn == 'Y' }"> checked </c:if>
+							>
+                            <label for="autoCancelR2UseYn_Y">Y</label>
+                    		
+                    		<input 
+								style="width:0; left:0;"
+								id="autoCancelR2UseYn_N" 
+								type="radio" 
+								name="autoCancelR2UseYn" 
+								value="N" 
+								<c:if test="${regist.autoCancelR2UseYn == 'N' }"> checked </c:if>
+							>
+                            <label for="autoCancelR2UseYn_N">N</label>
+                    		
+	                  	</td>
+                    </tr>
+					<tr>
 						<th>비회원 예약 여부</th>
 	                  	<td style="text-align:left;">	                  	
 							<input 
@@ -122,6 +169,10 @@
 <!-- contents//-->
 <script type="text/javascript">
 	$(document).ready(function () {
+		$(".system_info_table th").css({
+			"background" : "#4195e3",
+			"color" : "#fff"
+		});
 		timepicker();
     });
 
@@ -145,6 +196,8 @@
 			'centerAutoCanclePmtm' : $.trim($("#centerAutoCanclePmtm").val()).replace(":",""),
 			'centerAutoCancleAlltm' :  $.trim($("#centerAutoCancleAlltm").val()).replace(":",""),
 			'guestResvPossibleYn' : $('input[name=guestResvPossibleYn]:checked').val(),
+			'autoCancelR1UseYn' : $('input[name=autoCancelR1UseYn]:checked').val(),
+			'autoCancelR2UseYn' : $('input[name=autoCancelR2UseYn]:checked').val(),
 			'blklstRlsdt' :  $.trim($("#blklstRlsdt").val())
 		}; 
     	

@@ -53,6 +53,7 @@
 	<input type="hidden" name="centerEntryPayCost" id="centerEntryPayCost" value="${resvInfo.center_entry_pay_cost}">
 	<input type="hidden" name="centerStandYn" id="centerStandYn" value="${resvInfo.center_stand_yn}">
 	<input type="hidden" name="centerPilotYn" id="centerPilotYn" value="${resvInfo.center_pilot_yn}">
+	<input type="hidden" name="centerAutoPaymentYn" id="centerAutoPaymentYn" value="${resvInfo.center_auto_payment_yn}">
 		
 	<!-- 예약정보 sessionStorage검토 -->
 	<input type="hidden" name="seasonCd" id="seasonCd">
@@ -81,7 +82,7 @@
                 	<span class="sel_seat_nm"></span>
 				</li>	
                 <li class="rsv_state"><span class="date"></span> 좌석 예약 중 입니다.</li>
-                <li class="rsv_paycost">[결제금액 : <span><fmt:formatNumber value="${resvInfo.center_entry_pay_cost}" pattern="#,###" />원</span>]</li>
+                <li class="rsv_paycost">[총 금액 : <span><fmt:formatNumber value="${resvInfo.center_entry_pay_cost}" pattern="#,###" />원</span>]</li>
             </ul>             
         </div>
         <!-- header //-->
@@ -121,7 +122,7 @@
                         <section>
                         <!--예약 정보 입력-->
                             <h4>예약 정보 입력</h4>
-                            <ul id="standing_resv_area">
+                            <ul id="ENTRY_DVSN_1_resv_area">
                                 <li><input type="text" id="ENTRY_DVSN_1_resvUserNm" class="nonMemberArea" placeholder="이름을 입력해주세요."></li>
                                 <li><input type="text" id="ENTRY_DVSN_1_resvUserClphn" class="nonMemberArea" onkeypress="onlyNum(this);" placeholder="전화번호를 '-'없이 입력해주세요."></li>
                                 <li class="certify nonMemberArea" onclick="javascript:seatService.fn_SmsCertifi();">
@@ -152,6 +153,24 @@
                                     </p>
                                 </li>
                                 
+								<!-- 사전결제동의 -->
+								<li class="auto_payment_check">
+									<p>
+										<span>&lt;사전결제동의&gt;</span>
+										<ol>
+                                             <li>해당 예약은 오전10시30분에 입장료 및 좌석이용료가 스피드온에서 자동결제됩니다.</li>
+                                             <li>스피드온 잔액부족 시 결제는 이루어지지 않습니다 <span style="color:red;">잔액충전 후 수동결제 바랍니다.</span></li>
+                                             <li>사전결제된 예약은 미입장시 수목 오후8시, 금토일 오후7시 일괄환불됩니다.</li>
+                                             <li class="check_impnt">
+                                                 <input class="magic-checkbox qna_check" type="checkbox" name="layout" id="ENTRY_DVSN_1_auto_payment_check" value="Y">
+                                                 <label for="ENTRY_DVSN_1_auto_payment_check">
+                                                 	스피드온 사전결제에 동의합니다.
+                                                 </label>     
+                                             </li>
+										</ol>
+									</p>
+								</li>
+                                
 								<!--개인정보동의-->
 								<li class="person_check nonMemberArea">
 									<p>
@@ -178,25 +197,6 @@
 								</li>    
                             </ul>
 
-                            <!--현금 영수증 발급-->
-<!--                        <h4>현금 영수증 발급</h4>
-                            <ul class="bill_confirm">
-                                <li class="check_impnt">
-                                    <input class="magic-checkbox qna_check" type="checkbox" name="layout" id="ENTRY_DVSN_1_bill_confirm" value="Y" onclick="seatService.fn_billConfirmChange();">
-                                    <label for="ENTRY_DVSN_1_bill_confirm">현금 영수증 발급</label>     
-                                </li>
-                            </ul>
-                            <ul id="ENTRY_DVSN_1_cash_area" class="cash_refund">
-                                <li>
-                                    <input class="cash_radio" type="radio" checked name="ENTRY_DVSN_1_rcpt_dvsn" id="ENTRY_DVSN_1_rcpt_dvsn1" value="RESV_RCPT_DVSN_1">
-                                    <label for="ENTRY_DVSN_1_rcpt_dvsn1"><span></span>소득 공제용</label>
-                                </li>
-                                <li>
-                                    <input class="cash_radio" type="radio" name="ENTRY_DVSN_1_rcpt_dvsn" id="ENTRY_DVSN_1_rcpt_dvsn2" value="RESV_RCPT_DVSN_2">
-                                    <label for="ENTRY_DVSN_1_rcpt_dvsn2"><span></span>지출 증빙용</label>
-                                </li>
-                                <li><input type="number" id="ENTRY_DVSN_1_cash_number" onkeypress="onlyNum(this);" placeholder="'-'없이 입력해 주세요."></li>
-                            </ul> -->
                             <ul class="rsv_btn">
                                 <li><a href="javascript:seatService.fn_checkForm();">예약하기</a></li>
                                 <li><a data-popup-open="rsv_cancel">취소</a></li>
@@ -304,6 +304,25 @@
                                                 </ol>
                                             </p>
                                         </li>
+                                        
+										<!-- 사전결제동의 -->
+										<li class="auto_payment_check">
+                                            <p>
+                                                <span>&lt;사전결제동의&gt;</span>
+                                                <ol>
+                                                    <li>해당 예약은 오전10시30분에 입장료 및 좌석이용료가 스피드온에서 자동결제됩니다.</li>
+                                                    <li>스피드온 잔액부족 시 결제는 이루어지지 않습니다 <span style="color:red;">잔액충전 후 수동결제 바랍니다.</span></li>
+                                                    <li>사전결제된 예약은 미입장시 수목 오후8시, 금토일 오후7시 일괄환불됩니다.</li>
+                                                    <li class="check_impnt">
+                                                        <input class="magic-checkbox qna_check" type="checkbox" name="layout" id="ENTRY_DVSN_2_auto_payment_check" value="Y">
+                                                        <label for="ENTRY_DVSN_2_auto_payment_check">
+                                                        	스피드온 사전결제에 동의합니다.
+                                                        </label>     
+                                                    </li>
+                                                </ol>
+                                            </p>
+                                        </li>
+										
 										<!--개인정보동의-->
 										<li class="person_check nonMemberArea">
 											<p>
@@ -330,25 +349,6 @@
 										</li>                                               
                                     </ul>
 
-		                            <!--현금 영수증 발급-->
-<!-- 		                        <h4>현금 영수증 발급</h4>
-		                            <ul class="bill_confirm">
-		                                <li class="check_impnt">
-		                                    <input class="magic-checkbox qna_check" type="checkbox" name="layout" id="ENTRY_DVSN_2_bill_confirm" value="Y" onclick="seatService.fn_billConfirmChange();">
-		                                    <label for="ENTRY_DVSN_2_bill_confirm">현금 영수증 발급</label>     
-		                                </li>
-		                            </ul>
-                                    <ul id="ENTRY_DVSN_2_cash_area" class="cash_refund">
-                                        <li>
-                                            <input class="cash_radio" type="radio" checked name="ENTRY_DVSN_2_rcpt_dvsn" id="ENTRY_DVSN_2_rcpt_dvsn1" value="RESV_RCPT_DVSN_1">
-                                            <label for="ENTRY_DVSN_2_rcpt_dvsn1"><span></span>소득 공제용</label>
-                                        </li>
-                                        <li>
-                                            <input class="cash_radio" type="radio" name="ENTRY_DVSN_2_rcpt_dvsn" id="ENTRY_DVSN_2_rcpt_dvsn2" value="RESV_RCPT_DVSN_2">
-                                            <label for="ENTRY_DVSN_2_rcpt_dvsn2"><span></span>지출 증빙용</label>
-                                        </li>
-                                        <li><input type="number" id="ENTRY_DVSN_2_cash_number" onkeypress="onlyNum(this);" placeholder="'-'없이 입력해 주세요."></li>
-                                    </ul> -->  
                                     <ul class="rsv_btn">
                                         <li><a href="javascript:seatService.fn_checkForm();">예약하기</a></li>
                                         <li><a data-popup-open="rsv_cancel">취소</a></li>
@@ -377,7 +377,6 @@
     <!-- // 예약완료 팝업 -->
     <div id="rsv_done" class="popup">
       <div class="pop_con rsv_popup">
-          <!-- <a class="button b-close">X</a> -->
           <div class="pop_wrap">
               <h4><img src="/resources/img/front/done.svg" alt="예약확인">해당 정보로 예약하시겠습니까?</h4>
                <ul class="rsv_list">
@@ -557,7 +556,7 @@
     <!--층 선택 시 show/hide-->
     <script>
     	var isMember = "${sessionScope.userLoginInfo.userDvsn}" == "USER_DVSN_1" ? true : false;
-
+    	
     	var certifiYn = false;
     	var certifiCode = "";
     	var resvUserNm = isMember ? "${sessionScope.userLoginInfo.userNm}" : "";
@@ -572,14 +571,6 @@
     	var center ="";
     	
 		$(document).ready(function() {
- 			if(sessionStorage.getItem("accessCheck") != "1") {
-				//location.href = "/front/main.do";
-			}
-			
-		    $(window).on("beforeunload", function(){
-		    	sessionStorage.removeItem("accessCheck");
-		    });
-
 			//자유석 좌석 버튼 이벤트 정의
 			$(function(){
 				var sBtn = $(".section_menu ul > li, .enter_type ul > li");   //  ul > li 이를 sBtn으로 칭한다. (클릭이벤트는 li에 적용 된다.)
@@ -659,20 +650,14 @@
 					
 					$("input:checkbox[id='" + entryDvsn + "_qna_check']").prop("checked", false);
 					$("input:checkbox[id='" + entryDvsn + "_person_agree']").prop("checked", false);
-					
-					$("#" + entryDvsn + "_cash_area").hide();
-					$("input:radio[name='" + entryDvsn + "_rcpt_dvsn']").eq(0).prop("checked", true);
-					$("input:checkbox[id='" + entryDvsn + "_bill_confirm']").prop("checked", false);
-					$("#" + entryDvsn + "_cash_number").val("");
-					$("input:radio[name='" + entryDvsn + "_rcpt_dvsn']").eq(0).prop("checked", true);					
+					$("input:checkbox[id='" + entryDvsn + "_auto_payment_check']").prop("checked", false);
 					
 					if(isMember) {
-//	  					if(userRcptYn == "Y") {
-//							$("input:checkbox[id='" + entryDvsn + "_bill_confirm']").trigger("click");
-//							$("input:radio[name='" + entryDvsn + "_rcpt_dvsn'][value='" + userRcptDvsn +"']").prop("checked", true);	  
-//							$("#" + entryDvsn + "_cash_number").val(userRcptNumber);							
-//						}
-
+						if($("#centerAutoPaymentYn").val() == "Y") {
+							$("#" + entryDvsn + "_resv_area .auto_payment_check").show();
+						} else {
+							$("#" + entryDvsn + "_resv_area .auto_payment_check").hide();
+						}
 						$(".nonMemberArea").hide();
 					} else {
 						certifiYn = false;
@@ -1001,7 +986,7 @@
 							    	resvUserNm = certifiNm;
 							    	resvUserClphn = certifiNum;
 						    	} else if(result.status == "LOGIN FAIL") {
-						    		fn_openPopup("세션 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
+						    		fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
 						    	} else {
 						    		fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
 						    	}
@@ -1027,9 +1012,13 @@
 				var entryDvsn = $("#entryDvsn").val();
 				
 				if(entryDvsn != "ENTRY_DVSN_1" && $("#seatCd").val() == "") {fn_openPopup("좌석을 선택해주세요", "red", "ERROR", "확인", ""); return;}
-				if(!isMember && !certifiYn) {fn_openPopup("본인인증을 진행해주세요", "red", "ERROR", "확인", ""); return;}					
+				if(!isMember && !certifiYn) {fn_openPopup("본인인증을 진행해주세요", "red", "ERROR", "확인", ""); return;}
 				if(!$("input:checkbox[id='" + entryDvsn + "_qna_check']").is(":checked")) {fn_openPopup("전자문진표 작성여부에 동의해주세요", "red", "ERROR", "확인", ""); return;}
 				if(!$("input:checkbox[id='" + entryDvsn + "_person_agree']").is(":checked") && !isMember) {fn_openPopup("개인정보 수집 이용여부에 대하여 동의해주세요", "red", "ERROR", "확인", ""); return;}
+				if(!$("input:checkbox[id='" + entryDvsn + "_auto_payment_check']").is(":checked") && isMember && $("#centerAutoPaymentYn").val() == "Y") {
+					fn_openPopup("사전결제동의 항목에 체크해주세요", "red", "ERROR", "확인", ""); 
+					return;
+				}
 				
 				var resvDate = $("#resvDate").val().substring(0,4) + "-" + $("#resvDate").val().substring(4,6) + "-" + $("#resvDate").val().substring(6,8);
 				$("#rsv_date").html(resvDate);
@@ -1087,22 +1076,6 @@
 				params.resvRcptYn = "N"
 				params.resvRcptDvsn = "";
 				params.resvRcptTel =  "";
-
-// 				if($("input:checkbox[id='" + entryDvsn + "_bill_confirm']").is(":checked")) {
-//					params.resvRcptYn = "Y"
-//					params.resvRcptDvsn = $("input[name='" + entryDvsn + "_rcpt_dvsn']:checked").val(); 
-//					params.resvRcptTel = $("#" + entryDvsn + "_cash_number").val();
-//					
-//					
-//					if(params.resvRcptTel == "") {
-//						fn_openPopup("현금 영수증 발행 연락처를 입력해주세요", "red", "ERROR", "확인", "");
-//						return;
-//					}
-//				} else {
-//					params.resvRcptYn = "N"
-//					params.resvRcptDvsn = "";
-//					params.resvRcptTel =  "";
-//				}
  				
 				fn_Ajax
 				(
@@ -1118,7 +1091,7 @@
 				    			setTimeout("location.replace('/front/main.do')", 5000);
 				    		}
 				    	} else if(result.status == "LOGIN FAIL") {
-				    		fn_openPopup("세션 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
+				    		fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
 				    	} else {
 				    		fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "/front/main.do");
 				    	}
@@ -1127,16 +1100,6 @@
 						fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "/front/main.do");
 					}
 				);	
-			},
-			fn_billConfirmChange : function() {
-				var entryDvsn = $("#entryDvsn").val();
-				if($("input:checkbox[id='" + entryDvsn + "_bill_confirm']").is(":checked")) {
-					$("#" + entryDvsn  + "_cash_area").show();
-					$("input:radio[name='" + entryDvsn + "_rcpt_dvsn']").eq(0).prop("checked", true);
-					$("#" + entryDvsn + "_cash_number").val("");
-				} else {
-					$("#" + entryDvsn  + "_cash_area").hide();
-				}
 			},
 			fn_initializing : function(division) {
 				if(division == "ALL") {

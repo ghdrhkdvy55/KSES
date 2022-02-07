@@ -302,7 +302,7 @@
 								$(".null_list").show();
 							}
 						} else if(result.status == "LOGINFAIL"){
-							fn_openPopup("세션 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
+							fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
 						}
 					},
 					function(request) {
@@ -392,7 +392,7 @@
 							fn_openPopup("현금영수증 신청이 정상적으로 이뤄졌습니다.", "blue", "SUCCESS", "확인", "");
 							userResvService.fn_userResvInfo(true);
 						} else if(result.status == "LOGIN FAIL") {
-							fn_openPopup("세션 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");	
+							fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");	
 						} else {
 							fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "/front/main.do");
 						}
