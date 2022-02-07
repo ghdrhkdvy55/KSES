@@ -614,7 +614,7 @@
 				    formData.append('boardCn' , $("#boardCn").val());
 				    formData.append('boardCd' , $("#boardCd").val());
 				    formData.append('useYn' , fn_emptyReplace($("#useYn").val(),"N"));
-				    //formData.append('boardPopup' , fn_emptyReplace($("#boardPopup").val(),"N"));
+				    formData.append('boardPopup' , fn_emptyReplace($("#boardPopup").val(),"N"));
 				    formData.append('boardCenterId' , boardCenterId);
 				    formData.append('boardAllNotice' , boardAllCk);
 				    

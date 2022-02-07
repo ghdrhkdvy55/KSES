@@ -81,7 +81,7 @@
 			<otherwise>
 				( 
 	    			QR_CK_SEQ.NEXTVAL, #{resvSeq}, #{userId}, SYSDATE, #{inoutDvsn}, 
-	    			#{rcvDt}, #{rcvCd}, #{qrCode}
+	    			#{rcvDt}, #{rcvCd}, #{qrCode, jdbcType=VARCHAR}, 'SYSTEM'
 				)
 			</otherwise>
 		</choose>

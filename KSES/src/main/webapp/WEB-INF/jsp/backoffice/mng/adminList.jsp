@@ -327,7 +327,7 @@
 		   						   location.href="/backoffice/login.do";
 	       					   }else if (result.status == "SUCCESS"){
        						       var obj  = result.regist;
-       						       $("#empNo").val(obj.emp_no);
+       						       $("#empNo").val(obj.emp_no).prop('readonly', true);
        						       $("#sp_empNm").html(obj.emp_nm);
        						       $("#sp_empDeptNm").html(obj.dept_nm);
 		       					   $("#sp_empClphn").html(obj.emp_clphn);
@@ -354,7 +354,7 @@
 		               );
 		        }else{
 		        	$("#adminId").val('').prop('readonly', false);
-		        	$("#empNo").val('');
+		        	$("#empNo").prop('readonly', false);
 					$("#selectAuthorCd").val('');
 					$("#centerCd").val('');
 					$("#centerCd").prop('style','display:none');

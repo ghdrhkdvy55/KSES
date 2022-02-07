@@ -417,9 +417,10 @@
 	   						   //총 게시물 정리 하기'
 	   						   common_modelCloseM(result.message, "bas_holiday_add");
 	   						   jqGridFunc.fn_search();
+	   					   }else if (result.status == "OVERLAP FAIL"){
+	   						   common_modelCloseM(result.message, "bas_holiday_add");
 	   					   }else if (result.status == "FAIL"){
 	   						   common_modelCloseM("저장 도중 문제가 발생 하였습니다.", "bas_holiday_add");
-	   						   jqGridFunc.fn_search();
 	   					   }
 	 				    },
 	 				    function(request){
