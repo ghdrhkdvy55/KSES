@@ -131,33 +131,32 @@
 	
  	function fnEnterRegist(resvSeq){
  		bPopupConfirm('수동 입장 등록', '입장 등록하시겠습니까?', function() {
- 			
- 			var url = "/backoffice/rsv/attendInfoUpdate.do";
- 			var params = {
- 				"mode" : "Manual",
- 				"resvSeq" : resvSeq,
- 				"inoutDvsn" : "IN"
- 			}
- 			
- 			fn_Ajax
- 			(
- 			    url,
- 			    "POST",
- 				params,
- 				false,
- 				function(result) {
- 					if (result.status == "SUCCESS") {
- 						common_popup("입장 정보가 정상적으로 등록되었습니다.", "Y" , "");
- 						fnSearch(1);
- 					} else {
- 						common_popup("에러가 발생하였습니다.", "" ,"");
- 					}
- 				},
- 				function(request) {
- 					common_popup("ERROR : " +request.status, "N", "");	       						
- 				}    		
- 			);			
- 		});
+			var url = "/backoffice/rsv/attendInfoUpdate.do";
+			var params = {
+				"mode" : "Manual",
+				"resvSeq" : resvSeq,
+				"inoutDvsn" : "IN"
+			}
+	 			
+			fn_Ajax
+			(
+				url,
+				"POST",
+				params,
+				false,
+				function(result) {
+					if (result.status == "SUCCESS") {
+						common_popup("입장 정보가 정상적으로 등록되었습니다.", "Y" , "");
+						fnSearch(1);
+					} else {
+						common_popup("에러가 발생하였습니다.", "" ,"");
+					}
+				},
+				function(request) {
+					common_popup("ERROR : " +request.status, "N", "");	       						
+				}    		
+			);			
+		});
  	}
 		
 
