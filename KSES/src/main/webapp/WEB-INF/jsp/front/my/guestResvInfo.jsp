@@ -243,7 +243,7 @@
 							$(".rsvInfo").hide();
 							$(".inquiry_btn a").attr("href","javascript:guestResvService.fn_reSmsCertfi();").html("인증번호 재요청");
 				    	} else if(result.status == "LOGIN FAIL") {
-				    		fn_openPopup("세션 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
+				    		fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
 				    	} else {
 				    		fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
 				    	}
@@ -359,7 +359,7 @@
 							fn_openPopup("현금영수증 신청이 정상적으로 이뤄졌습니다.", "blue", "SUCCESS", "확인", "");
 							guestResvService.fn_getGuestResvInfo(true);
 						} else if(result.status == "LOGIN FAIL") {
-							fn_openPopup("세션 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");	
+							fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");	
 						} else {
 							fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "/front/main.do");
 						}

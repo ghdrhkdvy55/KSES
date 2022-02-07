@@ -139,7 +139,6 @@ public class ResvInfoManageController {
 		      paginationInfo.setTotalRecordCount(totCnt);
 		      model.addObject(Globals.JSON_PAGEINFO, paginationInfo);
 			  model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);	    
-		      
 		} catch(Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			LOGGER.error(e.toString() + ":" + ste[0].getLineNumber());
@@ -166,6 +165,38 @@ public class ResvInfoManageController {
 			params.put("adminId", loginVO.getAdminId());
 			
 			model.addObject(resvService.resvSeatChange(params));	
+		} catch (Exception e){
+			StackTraceElement[] ste = e.getStackTrace();
+			LOGGER.info("rsvSeatChange ERROR :" + e.toString() + " : " + ste[0].getLineNumber());
+			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.insert"));	
+		}	
+		return model;
+	}
+	
+	@RequestMapping (value="rsvStateChange.do")
+	public ModelAndView rsvStateChange(	HttpServletRequest request, 
+										@RequestBody ResvInfo vo) throws Exception {
+		
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+		try {
+			Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+			if(!isAuthenticated) {
+				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
+				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
+				return model;
+			}
+		
+			LoginVO loginVO = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
+			vo.setLastUpdusrId(loginVO.getAdminId());
+			
+			int ret = resvService.updateResvState(vo);
+			if(ret > 0) {
+				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("sucess.common.update"));
+			} else {
+				throw new Exception();
+			}
 		} catch (Exception e){
 			StackTraceElement[] ste = e.getStackTrace();
 			LOGGER.info("rsvSeatChange ERROR :" + e.toString() + " : " + ste[0].getLineNumber());

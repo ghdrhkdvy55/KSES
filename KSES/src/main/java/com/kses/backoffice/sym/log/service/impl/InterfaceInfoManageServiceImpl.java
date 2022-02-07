@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -61,7 +60,6 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 	}
 	
 	@Override
-	@Transactional(rollbackFor = Exception.class)
 	public ModelMap SpeedOnPayMent(String resvSeq, String cardPw, boolean isPassword) throws Exception {
 		String Url = propertiesService.getString("sppeedUrl_T") + "trade/fepWithdraw";		
 		JSONObject jsonObject = new JSONObject();
@@ -149,7 +147,6 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 	}
 	
 	@Override
-	@Transactional(rollbackFor = Exception.class)
 	public ModelMap SpeedOnPayMentCancel(String resvSeq, String cardPw, boolean isPassword) throws Exception {
 		String Url = propertiesService.getString("sppeedUrl_T") + "trade/fepDeposit";
 		JSONObject jsonObject = new JSONObject();

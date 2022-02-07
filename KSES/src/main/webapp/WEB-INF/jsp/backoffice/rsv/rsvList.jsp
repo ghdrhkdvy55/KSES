@@ -70,7 +70,7 @@
 							<option value="${resvState.code}"><c:out value='${resvState.codenm}'/></option>
 						</c:forEach>
 	              	</select>
-	              	<p>결재 상태</p>
+	              	<p>결제 상태</p>
 	              	<select id="searchResvPayDvsn">
 	              		<option value="">선택</option>
 						<c:forEach items="${resvPayDvsn}" var="resvPayDvsn">
@@ -131,7 +131,10 @@
                     	<td id="rsvPopSeatChange">
                       		<a class="blueBtn">좌석변경</a>
                     	</td>
-                    	<td colspan="3"></td>
+						<th>상태 변경</th>
+                    	<td id="rsvPopStateChange">
+                      		<a href="javascript:common_modelOpen('state_change_pop');"class="blueBtn">상태변경</a>
+                    	</td>                    	
                   	</tr>
                   	<tr>
                       <th>지점 </th>
@@ -303,6 +306,7 @@
                             </select>
                         </td>
                     </tr>
+				</tbody>
             </table>
         </div>
         <div class="center_box">
@@ -363,7 +367,6 @@
   	</div>
 </div>
 
-<!-- //popup -->
 <!-- 전체 취소 팝업 -->
 <div id='all_cancel_pop' class="popup m_pop">
 	<div class="pop_con">
@@ -400,6 +403,48 @@
 	</div>
 </div>
 <!-- 전체 취소 팝업 -->
+
+<!-- 상태 변경 팝업 -->
+<div id='state_change_pop' class="popup m_pop">
+	<div class="pop_con">
+		<a class="button b-close">X</a>
+    	<h2 class="pop_tit">예약정보 상태변경</h2>
+    	<div class="pop_wrap">
+    		<table class="detail_table">
+           		<tbody>
+					<tr>
+						<th>예약 상태</th>
+	                    <td>
+            				<select id="changeResvState">
+								<option value="">선택</option>
+								<c:forEach items="${resvState}" var="resvState">
+									<option value="${resvState.code}"><c:out value='${resvState.codenm}'/></option>
+								</c:forEach>
+            				</select>
+	                    </td>
+					</tr>
+               		<tr>
+						<th>결제 상태</th>
+	                    <td>
+            				<select id="changeResvPayDvsn">
+			              		<option value="">선택</option>
+								<c:forEach items="${resvPayDvsn}" var="resvPayDvsn">
+									<option value="${resvPayDvsn.code}"><c:out value='${resvPayDvsn.codenm}'/></option>
+								</c:forEach>
+            				</select>
+	                    </td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	    <div class="right_box">
+	    	<a href="#" id="btnUpdate" class="blueBtn">변경</a>
+        	<a href="#" onClick="common_modelClose('state_change_pop')" id="btnUpdate" class="grayBtn b-close">취소</a>
+		</div>
+		<div class="clear"></div>
+	</div>
+</div>
+<!-- 상태 변경 팝업 -->
 
 <!--1214 QR출력 팝업-->
 <div id="qr_print" class="popup">
@@ -558,12 +603,10 @@
 				mtype : 'POST',
 				datatype : 'json',
 				pager: $('#pager'),  
-				ajaxGridOptions: { contentType: "application/json; charset=UTF-8" },
-				ajaxRowOptions: { contentType: "application/json; charset=UTF-8", async: true },
-				ajaxSelectOptions: { contentType: "application/json; charset=UTF-8", dataType: "JSON" }, 
-				
+				ajaxGridOptions: {contentType: "application/json; charset=UTF-8"},
+				ajaxRowOptions: {contentType: "application/json; charset=UTF-8", async: true},
+				ajaxSelectOptions: {contentType: "application/json; charset=UTF-8", dataType: "JSON"}, 
 				postData : JSON.stringify(postData),
-				
 				jsonReader : {
 					root : 'resultlist',
 					"page":"paginationInfo.currentPageNo",
@@ -619,7 +662,7 @@
 					var lastPage = grid.getGridParam("lastpage"); //get last page 
 					var totalPage = grid.getGridParam("total");
     		              
-					if (pgButton == "next"){
+					if (pgButton == "next") {
 						if (gridPage < lastPage ){
 							gridPage += 1;
 						} else {
@@ -668,7 +711,7 @@
 				},
 				onSelectRow : function(rowId) {
 					// 체크 할떄
-					if(rowId != null) {  
+					if(rowId != null) {
 						
 					}
 				},
@@ -714,7 +757,6 @@
 					form =  '<a href="javascript:jqGridFunc.fn_billPrint(&#39;' + item.resv_seq + '&#39;);" class="blueBtn" style="padding: 5px 12px;">발행</a>';
 					form += '<a href="javascript:void(0);" class="blueBtn" style="padding: 5px 12px;">조회</a>';
 				}
-
 			}
 			
 			return form;
@@ -777,7 +819,16 @@
 						$("#rsvPopResvEntryPayCost").html(obj.resv_entry_pay_cost + "원");
 						$("#rsvPopResvTicketDvsn").html(obj.resv_ticket_dvsn_text);
 						$("#rsvPopResvState").html(obj.resv_state_text);
-
+						
+						$("#state_change_pop .right_box a:eq(0)").off().on("click", function() {
+							jqGridFunc.fn_resvStateChange(obj.resv_seq);
+						});
+						
+						$("#rsvPopStateChange").off().on("click", function() {
+							$("#changeResvState").val(obj.resv_state);
+							$("#changeResvPayDvsn").val(obj.resv_pay_dvsn);			
+						});
+						
 						if(obj.resv_state == "RESV_STATE_1" || obj.resv_state == "RESV_STATE_2") {
 							$("#rsvPopSeatChange a").off().on('click',function (e) {
 								jqGridFunc.fn_resvSeatInfo("CHANGE",obj);
@@ -800,6 +851,37 @@
 				},
 				function(request){
 					common_popup("ERROR : " + request.status, "");
+				}    		
+			);
+		},
+		fn_resvStateChange : function(resvSeq) {
+			var url = "/backoffice/rsv/rsvStateChange.do";
+			var params = {
+				"resvSeq" : resvSeq,
+				"resvState" : $("#changeResvState").val(),
+				"resvPayDvsn" : $("#changeResvPayDvsn").val()
+			};
+			
+			fn_Ajax
+			(
+			    url,
+			    "POST",
+				params,
+				false,
+				function(result) {
+					if (result.status == "SUCCESS") {
+						common_modelClose('state_change_pop');
+						common_popup("예약정보가 정상적으로 변경되었습니다.", "Y", "");
+						jqGridFunc.fn_resvInfo("Edt", resvSeq);
+						jqGridFunc.fn_search();
+			    	} else if (result.status == "LOGIN FAIL") {
+			    		common_popup("로그인 정보가 올바르지않습니다 다시 로그인해주세요", "Y", "");
+			    	} else {
+			    		common_popup(result.message, "Y", "");
+			    	}
+				},
+				function(request) {
+					common_popup("ERROR : " + request.status, "Y", "");	       						
 				}    		
 			);
 		},
@@ -956,7 +1038,6 @@
 				params,
 				false,
 				function(result) {
-			    	console.log(result);
 			    	if (result.status == "SUCCESS") {
 			    		$("#qrPrint > img").remove();
 						var qrcode = new QRCode("qrPrint", {
@@ -977,7 +1058,7 @@
 						$("#qrName").html(result.resvInfo.user_nm);
 						$("#qrPhone").html(result.resvInfo.user_phone);
 					} else {
-						
+						common_popup(result.message, "Y", "");
 					}
 				},
 				function(request) {
@@ -1017,7 +1098,9 @@
 		},
 		fn_billState : function(resvSeq) {
 			var url = "/backoffice/rsv/billState.do"
-			var params = {"resvSeq" : resvSeq};
+			var params = {
+				"resvSeq" : resvSeq
+			};
 			
 			fn_Ajax
 			(
@@ -1054,8 +1137,10 @@
 			);
 		},
 		fn_centerChange : function() {
-	 		var url = "/backoffice/bld/floorComboInfo.do"
-	 		var params = {"centerCd" : $("#resvCenterCd").val()}
+	 		var url = "/backoffice/bld/floorComboInfo.do";
+	 		var params = {
+	 			"centerCd" : $("#resvCenterCd").val()
+	 		};
 	 		
 	 		//입장료
 	 		$("#resvEntryPayCost").val($("#resvCenterCd").find("option:selected").data("entrypaycost"));
@@ -1063,8 +1148,10 @@
 	 		fn_comboListJson("resvFloorCd", returnVal, "jqGridFunc.fn_floorChange", "100px;", "");
 		},
 		fn_floorChange : function() {
-			var url = "/backoffice/bld/partInfoComboList.do"
-		    var params = {"floorCd" : $("#resvFloorCd").val()}
+			var url = "/backoffice/bld/partInfoComboList.do";
+		    var params = {
+				"floorCd" : $("#resvFloorCd").val()
+			};
 		 	var returnVal = uniAjaxReturn(url, "GET", false, params, "lst");
 			fn_comboListJson("resvPartCd", returnVal, "", "100px;", "");
 		},
@@ -1209,7 +1296,7 @@
 			    	}
 				},
 				function(request) {	 
-					common_popup("ERROR : " +request.status, "N", "");
+					common_popup("ERROR : " + request.status, "N", "");
 				}    		
 			);	
 		},
@@ -1253,8 +1340,8 @@
 				    	if(result.status == "SUCCESS") {
 				    		common_modelClose("seat_change");
 				    		common_popup(result.message, "Y", "");
+				    		jqGridFunc.fn_resvInfo("Edt", result.resvSeq);
 							jqGridFunc.fn_search();
-							jqGridFunc.fn_resvInfo("Edt", result.resvSeq);
 				    	} else if (result.status == "LOGIN FAIL") {
 				    		common_popup("로그인 정보가 올바르지않습니다 다시 로그인해주세요", "Y", "");
 				    	} else {
@@ -1347,7 +1434,6 @@
 			if (any_empt_line_span("long_seat_add", "longResvUserId", "에약 회원을 선택하세요","sp_message", "savePage") == false) return;
 			if (any_empt_line_span("long_seat_add", "longResvEmpNo", "예약 담당자를 선택하세요","sp_message", "savePage") == false) return;
 			
-			
 			var params = {
 				"mode" : "Ins",
 				"checkDvsn" : "LONG",
@@ -1394,7 +1480,7 @@
 				);
 			}
 		},
-		fn_searchResult : function (searchDvsn){
+		fn_searchResult : function (searchDvsn) {
 			var setHtml = "<table id='searchResultTable' class='whiteBox main_table'>";
 			$("#searchResultWrap").empty();
 			$("#searchResultWrap").append(setHtml);
@@ -1438,10 +1524,10 @@
 				url : url,
 				mtype :  'POST',
 				datatype :'json',
-				ajaxGridOptions: { contentType: "application/json; charset=UTF-8" },
-				ajaxRowOptions: { contentType: "application/json; charset=UTF-8", async: true },
-				ajaxSelectOptions: { contentType: "application/json; charset=UTF-8", dataType: "JSON" }, 
-				postData : JSON.stringify( postData ),
+				ajaxGridOptions: { contentType: "application/json; charset=UTF-8"},
+				ajaxRowOptions: { contentType: "application/json; charset=UTF-8", async: true} ,
+				ajaxSelectOptions: { contentType: "application/json; charset=UTF-8", dataType: "JSON"}, 
+				postData : JSON.stringify(postData),
 				jsonReader : {
 					root : 'resultlist',
 					"page":"paginationInfo.currentPageNo",
@@ -1468,7 +1554,7 @@
 			    	//완료 표시 
 			    }, 
 			    loadError:function(xhr, status, error) {
-			    	loadtext:'시스템 장애... '
+			    	loadtext:'시스템 장애...'
 			    }, 
 				onSelectRow: function(rowId){
 					if(rowId != null) {  }// 체크 할떄
@@ -1487,9 +1573,8 @@
 							$(this).jqGrid('getCell', rowid, phone)
 						);
 					}
-				}
+				},
 			});
-		
 			//추후 변경 예정 
 			$("#searchResultTable").setGridParam({
 				datatype : "json",

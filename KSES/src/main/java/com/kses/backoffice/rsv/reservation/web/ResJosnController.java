@@ -460,6 +460,7 @@ public class ResJosnController {
 					ResvInfo resvInfo = new ResvInfo();
 					resvInfo.setResvSeq(resSeq);
 					resvInfo.setResvState("RESV_STATE_2");
+					resvInfo.setLastUpdusrId("SYSTEM");
 					resService.updateResvState(resvInfo);
 
 					return model;

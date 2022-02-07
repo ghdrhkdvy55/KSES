@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!-- JQuery Grid -->
 <link rel="stylesheet" href="/resources/jqgrid/src/css/ui.jqgrid.css">
+<script src="/resources/js/jquery.timepicker.js"></script>
 <script type="text/javascript" src="/resources/jqgrid/src/i18n/grid.locale-kr.js"></script>
 <script type="text/javascript" src="/resources/jqgrid/js/jquery.jqGrid.min.js"></script>
 <style type="text/css">
@@ -39,7 +40,7 @@
 			
 			<div class="top">
 				<p>지점명</p>
-				<input type="text" id="searchKeyword" name="searchKeyword"placeholder="검색어를 입력하세요.">
+				<input type="text" id="searchKeyword" name="searchKeyword" placeholder="검색어를 입력하세요.">
 			</div>
 			
 			<div class="inlineBtn">
@@ -771,7 +772,6 @@
 						} else {
 							$("#bld_early_set .inTxt").append("<tr colspan='4'>등록된 정보가 존재하지 않습니다.<tr>");	
 						}
-						
 						
 						$("#preOpenCenterList").val(centerCd);
 					}

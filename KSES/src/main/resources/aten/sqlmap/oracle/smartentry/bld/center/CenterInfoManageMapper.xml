@@ -23,6 +23,7 @@
     	<result property="center_stand_max" column="CENTER_STAND_MAX" jdbcType="VARCHAR" javaType="java.lang.String"/>
     	<result property="center_entry_pay_cost" column="CENTER_ENTRY_PAY_COST" jdbcType="VARCHAR" javaType="java.lang.String"/>
     	<result property="center_rbm_cd" column="CENTER_RBM_CD" jdbcType="VARCHAR" javaType="java.lang.String"/>
+    	<result property="center_auto_payment_yn" column="CENTER_AUTO_PAYMENT_YN" jdbcType="VARCHAR" javaType="java.lang.String"/>
 	</resultMap>
 	
 	<select id="selectCenterInfoList" resultType="lmap">
@@ -63,9 +64,18 @@
 			CENTER_TEL, CENTER_FAX, CENTER_IMG, CENTER_MAP, CENTER_URL,
 			CENTER_INFO, USE_YN, START_FLOOR, END_FLOOR, FLOOR_INFO, 
 			CENTER_PILOT_YN, CENTER_SPEED_CD, CENTER_STAND_YN, CENTER_STAND_MAX, CENTER_ENTRY_PAY_COST,
-			CENTER_RBM_CD
+			CENTER_RBM_CD,
+			CASE 
+				WHEN 
+					CENTER_PILOT_YN = 'Y' AND 
+					TO_CHAR(SYSDATE,'YYYYMMDDHH24MI') BETWEEN 
+					CONCAT(TO_CHAR(TO_DATE(FN_RESVDATE(CENTER_CD),'YYYYMMDD') - (INTERVAL '1' DAY),'YYYYMMDD'),'2100') 
+					AND
+					CONCAT(FN_RESVDATE(CENTER_CD),'1030') THEN 'Y'
+ 				ELSE 'N'
+ 			END AS CENTER_AUTO_PAYMENT_YN
 		 FROM TSEB_CENTER_INFO_M
-		 WHERE CENTER_CD = #{centerCd}		  
+		 WHERE CENTER_CD = #{centerCd}	  
     </select>
     
 	<select id="selectCenterInfoComboList" resultType="lmap">

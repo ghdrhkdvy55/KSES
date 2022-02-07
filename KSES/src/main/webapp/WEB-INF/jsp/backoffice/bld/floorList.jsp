@@ -71,11 +71,7 @@
 		font-size: 1.1em;
 		font-weight: 300;
 	}
-/*
-	.cbp-spmenu a:hover {
-			background: #258ecd;
-	} 
-*/
+
 	.cbp-spmenu a:active {
 		background: #afdefa;
 		color: #47a3da;
