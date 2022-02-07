@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kses.backoffice.rsv.reservation.mapper.ResvInfoManageMapper">
-	<!-- backoffice -->
+	<!-- 예약정보 목록 조회 -->
 	<select id="selectResvInfoManageListByPagination" resultType="lmap">
 		SELECT * FROM 
 		( 
@@ -35,6 +35,27 @@
 				</if>
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchCenterCd)">
 					AND A.CENTER_CD = #{params.searchCenterCd}
+				</if>
+				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchResvRcptYn)">
+					AND A.RESV_RCPT_YN = #{params.searchResvRcptYn}
+				</if>
+				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchCenterPilotYn)">
+					AND C.CENTER_PILOT_YN = #{params.searchCenterPilotYn}
+				</if>
+				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.authorCd)">
+					<if test="params.authorCd != 'ROLE_ADMIN' and params.authorCd != 'ROLE_SYSTEM'">
+					   AND A.CENTER_CD = #{params.centerCd}
+					</if>
+				</if>
+				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchResvState)">
+					<choose>
+						<when test="@org.apache.commons.lang3.StringUtils@equals(params.searchStateCondition,'cancel')">
+							AND A.RESV_STATE != #{params.searchResvState}
+						</when>
+						<otherwise>
+							AND A.RESV_STATE = #{params.searchResvState}
+						</otherwise>
+					</choose>	
 				</if>
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchFrom) and !@org.apache.commons.lang3.StringUtils@isEmpty(params.searchTo)">
 					<choose>
@@ -71,24 +92,6 @@
 						</otherwise>
 					</choose>
 				</if>
-				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.authorCd)">
-					<if test="params.authorCd != 'ROLE_ADMIN' and params.authorCd != 'ROLE_SYSTEM'">
-					   AND A.CENTER_CD = #{params.centerCd}
-					</if>
-				</if>
-				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchResvState)">
-					<choose>
-						<when test="@org.apache.commons.lang3.StringUtils@equals(params.searchStateCondition,'cancel')">
-							AND A.RESV_STATE != #{params.searchResvState}
-						</when>
-						<otherwise>
-							AND A.RESV_STATE = #{params.searchResvState}
-						</otherwise>
-					</choose>	
-				</if>
-				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchResvRcptYn)">
-					AND A.RESV_RCPT_YN = #{params.searchResvRcptYn}
-				</if>
 			) TB
 			ORDER BY TB.RESV_SEQ DESC	
 		) TA
@@ -96,6 +99,7 @@
 		ORDER BY TA.RESV_SEQ DESC
     </select>
     
+    <!-- 예약상세정보 조회 -->
 	<select id="selectResvInfoDetail" resultType="lmap">
 		SELECT
 			A.RESV_SEQ, A.SEAT_CD, A.SEASON_CD, A.RESV_START_DT, A.RESV_END_DT, A.RESV_DVSN,
@@ -124,7 +128,6 @@
 		AND A.SEAT_CD = F.SEAT_CD(+)
 	</select>
 	
-	<!-- Front -->
 	<!-- 회원 마지막 에약정보 조회 -->
 	<select id="selectUserLastResvInfo" resultType="lmap">
 	<![CDATA[
@@ -459,8 +462,14 @@
     </update>
     
 	<update id="updateResvState">
-		UPDATE TSER_RESV_INFO_I SET 
-			RESV_STATE = #{resvState}
+		UPDATE TSER_RESV_INFO_I SET
+			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(resvState)"> 
+				RESV_STATE = #{resvState},
+			</if>
+			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(resvPayDvsn)">
+				RESV_PAY_DVSN = #{resvPayDvsn},
+			</if>
+			LAST_UPDUSR_ID = #{lastUpdusrId}
         WHERE RESV_SEQ = #{resvSeq}
     </update>
     
@@ -476,7 +485,7 @@
 		UPDATE TSER_RESV_INFO_I SET 
 			RESV_STATE = 'RESV_STATE_3'
         WHERE RESV_END_DT = TO_CHAR(SYSDATE,'YYYYMMDD')
-        AND RESV_STATE = 'RESV_STATE_2'
+        AND RESV_STATE != 'RESV_STATE_4'
     </update>
     
 	<update id="updateResvQrCount">
