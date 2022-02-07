@@ -1495,6 +1495,7 @@
 			if(searchDvsn == "user") {
 				url ="/backoffice/cus/userListInfoAjax.do";
 				checkTag = "userSearchKeyword";
+				if (any_empt_line_span("long_seat_add", checkTag, "검색어를 입력해 주세요.","sp_message", "savePage") == false) return;	
 				colModel =
 				[
 					{ label: '아이디', name:'user_id', index:'user_id', align:'left', width:'150px'},
@@ -1505,6 +1506,7 @@
 			} else {
 				url = "/backoffice/mng/empListAjax.do";
 				checkTag = "empSearchKeyword";
+				if (any_empt_line_span("long_seat_add", checkTag, "검색어를 입력해 주세요.","sp_message", "savePage") == false) return;	
 				colModel =
 				[
 					{ label: '부서', name:'dept_nm', index:'dept_nm', align:'left', width:'150px'},
@@ -1515,8 +1517,6 @@
 				];
 				postData = {"pageIndex": "1", "mode": "search", "searchCondition" : $("#empSearchCondition").val(), "searchKeyword" : $("#empSearchKeyword").val()};
 			}
-
-			if (any_empt_line_span("long_seat_add", checkTag, "검색어를 입력해 주세요.","sp_message", "savePage") == false) return;	
 
 			common_modelOpen("search_result");
 			
