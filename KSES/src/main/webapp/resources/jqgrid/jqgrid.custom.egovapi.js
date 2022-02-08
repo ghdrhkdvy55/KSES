@@ -202,9 +202,7 @@ $.EgovJqGridApi.prototype.popGridAjax = function(id, url, params, searchFunc) {
 			searchFunc(EgovJqGridApi.getPage(id, pgButton, page, lastpage));
 		},
 	};
-	setTimeout(function() {
-		$('#'+id).jqGrid('setGridParam', jqGridParams).trigger('reloadGrid');
-	}, _JqGridDelay);
+	$('#'+id).jqGrid('setGridParam', jqGridParams).trigger('reloadGrid');
 };
 
 const EgovJqGridApi = new $.EgovJqGridApi();
