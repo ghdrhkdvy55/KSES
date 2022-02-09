@@ -100,7 +100,7 @@ public class ResJosnController {
 			}
 
 			if (SmartUtil.NVL(sendInfo.get("gubun"), "").toString().equals("login")) {
-				Url = propertiesService.getString("sppeedUrl_T") + "user/userChk";
+				Url = propertiesService.getString("speedOnUrl") + "user/userChk";
 
 				// 스피드온 패스워드 암호화(임시)
 				// Login_Type -> 1 = SHA-512 + Base64 : 2 = SHA-256 + Base64
@@ -147,7 +147,7 @@ public class ResJosnController {
 				}
 			} else if (SmartUtil.NVL(sendInfo.get("gubun"), "").toString().equals("fep")) {
 				// 출금 정보
-				Url = propertiesService.getString("sppeedUrl_T") + "trade/fepWithdraw";
+				Url = propertiesService.getString("speedOnUrl") + "trade/fepWithdraw";
 
 				Map<String, Object> resvInfo = resService.selectUserResvInfo(jsonObject);
 				if(!SmartUtil.NVL(resvInfo.get("resv_state"),"").equals("RESV_STATE_1")) {
@@ -206,7 +206,7 @@ public class ResJosnController {
 					}
 				}
 			} else if (SmartUtil.NVL(sendInfo.get("gubun"), "").toString().equals("Inf")) {
-				Url = propertiesService.getString("sppeedUrl_T") + "trade/schTradeInfo";
+				Url = propertiesService.getString("speedOnUrl") + "trade/schTradeInfo";
 				node = SmartUtil.requestHttpJson(Url, jsonObject.toJSONString(), "SPEEDSCHTRADEINFO", "SPEEDON","KSES");
 				if (node.get("Error_Cd").asText().equals("SUCCESS")) {
 					// 예약 테이블 취소 정보 처리 하기
@@ -219,7 +219,7 @@ public class ResJosnController {
 				}
 			} else if (SmartUtil.NVL(sendInfo.get("gubun"), "").toString().equals("dep")) {
 				// 취소 정보
-				Url = propertiesService.getString("sppeedUrl_T") + "trade/fepDeposit";
+				Url = propertiesService.getString("speedOnUrl") + "trade/fepDeposit";
 				Map<String, Object> resvInfo = resService.selectUserResvInfo(jsonObject);
 				
 				if(!SmartUtil.NVL(resvInfo.get("resv_pay_dvsn"),"").equals("RESV_PAY_DVSN_2")) {

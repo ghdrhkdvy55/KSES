@@ -61,7 +61,7 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 	
 	@Override
 	public ModelMap SpeedOnPayMent(String resvSeq, String cardPw, boolean isPassword) throws Exception {
-		String Url = propertiesService.getString("sppeedUrl_T") + "trade/fepWithdraw";		
+		String Url = propertiesService.getString("speedOnUrl") + "trade/fepWithdraw";		
 		JSONObject jsonObject = new JSONObject();
 		ModelMap result = new ModelMap();
 		String message = "";
@@ -148,7 +148,7 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 	
 	@Override
 	public ModelMap SpeedOnPayMentCancel(String resvSeq, String cardPw, boolean isPassword) throws Exception {
-		String Url = propertiesService.getString("sppeedUrl_T") + "trade/fepDeposit";
+		String Url = propertiesService.getString("speedOnUrl") + "trade/fepDeposit";
 		JSONObject jsonObject = new JSONObject();
 		ModelMap result = new ModelMap();
 		String message = "";
