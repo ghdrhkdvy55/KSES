@@ -932,7 +932,7 @@
 		fn_noshow : function (){
 			$("#bld_noshow_set").bPopup().close();
 			$("#id_ConfirmInfo").attr("href", "javascript:jqGridFunc.fn_noshowInfoUpdate()");
-			fn_ConfirmPop("입력된 지점 사전예약정보를 저장하시겠습니까?");
+			fn_ConfirmPop("입력된 지점 자동취소 정보를 저장하시겠습니까?");
 		},
 		fn_noshowInfoUpdate : function() {
 			$("#confirmPage").bPopup().close();

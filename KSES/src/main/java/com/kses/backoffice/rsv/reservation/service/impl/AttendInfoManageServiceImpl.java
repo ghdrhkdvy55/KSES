@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kses.backoffice.rsv.reservation.mapper.AttendInfoManageMapper;
+import com.kses.backoffice.rsv.reservation.mapper.ResvInfoManageMapper;
 import com.kses.backoffice.rsv.reservation.service.AttendInfoManageService;
 import com.kses.backoffice.rsv.reservation.vo.AttendInfo;
+import com.kses.backoffice.rsv.reservation.vo.ResvInfo;
 import com.kses.backoffice.util.SmartUtil;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -22,6 +24,9 @@ public class AttendInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
 	
 	@Autowired
 	private AttendInfoManageMapper attendMapper;
+	
+	@Autowired
+	private ResvInfoManageMapper resvMpaaer;
 
 	@Override
 	public List<Map<String, Object>> selectAttendInfoListPage(Map<String, Object> params) {
@@ -59,6 +64,11 @@ public class AttendInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
 			}
 		} else {
 			ret = attendMapper.insertAttendInfo(vo);
+			ResvInfo resvInfo = new ResvInfo();
+			resvInfo.setResvSeq(vo.getResvSeq());
+			resvInfo.setResvState("RESV_STATE_2");
+			resvInfo.setLastUpdusrId("SYSTEM");
+			resvMpaaer.updateResvState(resvInfo);
 			vo.setRet(ret);
 		}
 		return vo;
