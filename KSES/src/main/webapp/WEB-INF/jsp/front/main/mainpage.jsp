@@ -757,8 +757,7 @@
 								$("#Card_Pw").val("");
 								$("#pay_number").bPopup();
 								$(".classCost").html(resvInfo.resv_pay_cost);
-								//$("#pay_number a:eq(1)").off().on('click', function() {});
-								$("#pay_number a:eq(1)").click(function(resvSeq) {
+								$("#pay_number a:eq(1)").off().on('click', function(resvSeq) {
 									mainService.fn_payment(resvInfo);	
 								});
 							} else {
