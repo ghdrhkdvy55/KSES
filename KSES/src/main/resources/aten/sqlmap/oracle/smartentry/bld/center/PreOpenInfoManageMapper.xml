@@ -31,6 +31,7 @@
 				OPEN_GUEST_TM = #{item.openGuestTm, jdbcType=VARCHAR},
 				CLOSE_MEMBER_TM = #{item.closeMemberTm, jdbcType=VARCHAR},
 				CLOSE_GUEST_TM = #{item.closeGuestTm, jdbcType=VARCHAR},
+				LAST_UPDUSR_ID = #{item.lastUpdusrId, jdbcType=VARCHAR},
 				LAST_UPDT_DTM = SYSDATE
 			WHERE OPTM_CD = #{item.optmCd}
 		</foreach>

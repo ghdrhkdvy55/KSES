@@ -3,9 +3,11 @@ package com.kses.backoffice.bld.center.web;
 import com.kses.backoffice.bld.center.service.CenterInfoManageService;
 import com.kses.backoffice.bld.center.service.PreOpenInfoManageService;
 import com.kses.backoffice.bld.center.vo.PreOpenInfo;
+import com.kses.backoffice.sym.log.annotation.NoLogging;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.Globals;
+import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import lombok.extern.slf4j.Slf4j;
@@ -75,10 +77,13 @@ public class PreOpenInfoManageController {
 	 * @return
 	 * @throws Exception
 	 */
+	@NoLogging
     @RequestMapping(value = "preOpenInfoUpdate.do", method = RequestMethod.POST)
     public ModelAndView updatePreOpenInfo(@RequestBody List<PreOpenInfo> preOpenInfoList) throws Exception {
     	ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 
+		String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
+		preOpenInfoList.stream().forEach(x -> x.setLastUpdusrId(userId));
 		preOpenInfoService.updatePreOpenInfo(preOpenInfoList);
 		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("sucess.common.update"));

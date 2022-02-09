@@ -59,7 +59,7 @@
 		AND A.CENTER_CD = #{centerCd}
 		ORDER BY TO_NUMBER(B.CODE_DC) ASC
     </select>
-    
+
     <update id="updateFloorInfo">
 		UPDATE TSEB_FLOOR_INFO_M SET  
 			FLOOR_NM = #{floorNm, jdbcType=VARCHAR}, 
@@ -75,5 +75,17 @@
 			,LAST_UPDT_DTM = SYSDATE
 			,LAST_UPDUSR_ID = #{lastUpdusrId, jdbcType=VARCHAR}
 		WHERE FLOOR_CD = #{floorCd}           
-    </update>    
+    </update>
+
+	<update id="updateFloorInfoList">
+		<foreach collection="floorInfoList" item="item" separator=";" open="DECLARE BEGIN" close="; END;">
+			UPDATE TSEB_FLOOR_INFO_M SET
+				FLOOR_NM = #{item.floorNm, jdbcType=VARCHAR},
+				USE_YN = #{item.useYn, jdbcType=VARCHAR},
+				LAST_UPDUSR_ID = #{item.lastUpdusrId, jdbcType=VARCHAR},
+				LAST_UPDT_DTM = SYSDATE
+			WHERE FLOOR_CD = #{item.floorCd}
+		</foreach>
+	</update>
+
 </mapper>

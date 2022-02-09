@@ -3,6 +3,7 @@ package com.kses.backoffice.bld.center.web;
 import com.kses.backoffice.bld.center.service.CenterInfoManageService;
 import com.kses.backoffice.bld.center.service.NoshowInfoManageService;
 import com.kses.backoffice.bld.center.vo.NoshowInfo;
+import com.kses.backoffice.sym.log.annotation.NoLogging;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.Globals;
@@ -75,8 +76,9 @@ public class NoshowInfoManageController {
 	 * @return
 	 * @throws Exception
 	 */
+	@NoLogging
     @RequestMapping(value = "noshowInfoUpdate.do", method = RequestMethod.POST)
-    public ModelAndView updateNoshownfo(@RequestBody List<NoshowInfo> noshowInfoList) throws Exception {
+    public ModelAndView updateNoshowInfo(@RequestBody List<NoshowInfo> noshowInfoList) throws Exception {
     	ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 
 		noshowInfoService.updateNoshowInfo(noshowInfoList);

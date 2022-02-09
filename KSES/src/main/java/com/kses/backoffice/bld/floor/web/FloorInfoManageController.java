@@ -219,7 +219,27 @@ public class FloorInfoManageController {
 		log.debug("model:" + model);
 		return model;
 	}
-	
+
+	/**
+	 * 복수 층정보 수정
+	 * @param floorInfoList
+	 * @return
+	 * @throws Exception
+	 */
+	@NoLogging
+	@RequestMapping (value="floorInfoListUpdate.do", method = RequestMethod.POST)
+	public ModelAndView updateFloorInfoList(@RequestBody List<FloorInfo> floorInfoList) throws Exception {
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+
+		String userId = egovframework.com.cmm.util.EgovUserDetailsHelper.getAuthenticatedUserId();
+		floorInfoList.stream().forEach(x -> x.setLastUpdusrId(userId));
+		floorService.updateFloorInfoList(floorInfoList);
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.update"));
+
+		return model;
+	}
+
 	@NoLogging
 	@RequestMapping (value="floorInfoUpdate.do")
 	public ModelAndView updateFloorInfo(HttpServletRequest request

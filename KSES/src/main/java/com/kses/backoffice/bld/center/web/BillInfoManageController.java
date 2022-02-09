@@ -4,11 +4,12 @@ import com.kses.backoffice.bld.center.service.BillInfoManageService;
 import com.kses.backoffice.bld.center.service.CenterInfoManageService;
 import com.kses.backoffice.bld.center.vo.BillDayInfo;
 import com.kses.backoffice.bld.center.vo.BillInfo;
+import com.kses.backoffice.sym.log.annotation.NoLogging;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.Globals;
+import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import egovframework.rte.fdl.property.EgovPropertyService;
-import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -157,37 +158,24 @@ public class BillInfoManageController {
 		}	
 		return model;
 	}
-	
-    @RequestMapping("billDayInfoUpdate.do")
-    public ModelAndView updateBillDayInfo(	@RequestBody List<BillDayInfo> billDayInfoList,
-											HttpServletRequest request) {
+
+	/**
+	 * 지점별 현금영수증(요일) 수정
+	 * @param billDayInfoList
+	 * @return
+	 * @throws Exception
+	 */
+	@NoLogging
+    @RequestMapping(value = "billDayInfoUpdate.do", method = RequestMethod.POST)
+    public ModelAndView updateBillDayInfo(@RequestBody List<BillDayInfo> billDayInfoList) throws Exception {
     	ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-    	
-    	try {
-			Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-			if(!isAuthenticated) {
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-				model.setViewName("/backoffice/login");
-				return model;
-			}
-			
-			HttpSession httpSession = request.getSession();
-			LoginVO loginVO = (LoginVO)httpSession.getAttribute("LoginVO");
-			
-			for(BillDayInfo billDayInfo : billDayInfoList) {
-				billDayInfo.setLastUpdusrId(loginVO.getAdminId());
-			}
-    		
-			billService.updateBillDayInfo(billDayInfoList);
-			
-    		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-    		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.update"));
-		} catch (Exception e) {
-    		LOGGER.error("updateBillDayInfo ERROR : " + e.toString());
-    		model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-    		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
-		}
-    	
+
+		String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
+		billDayInfoList.stream().forEach(x -> x.setLastUpdusrId(userId));
+		billService.updateBillDayInfo(billDayInfoList);
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("sucess.common.update"));
+
     	return model;
     }
 	

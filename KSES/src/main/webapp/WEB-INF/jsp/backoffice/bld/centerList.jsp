@@ -55,7 +55,7 @@
 				<div id="noshow" class="tab">자동취소</div>
 				<div id="holyday" class="tab">휴일관리</div>
 				<div id="billday" class="tab">현금영수증(요일)</div>
-				<div id="floor" class="tab">층관리</div>
+				<div id="floor" class="tab">층정보</div>
 			</div>
 			<div class="clear"></div>
 			<div id="rightArea" style="margin-top:28px;"></div>
@@ -83,7 +83,7 @@
 			{ label: '지점명', name: 'center_nm', align: 'center', width: 100, fixed: true },
 			{ label: '연락처', name: 'center_tel',  align: 'center', sortable: false },
 			{ label: '현금영수증', name: 'bill_yn', align: 'center', width: 70, fixed: true },
-			{ label: '사용유무', name: 'use_yn', align: 'center', width: 70, fixed: true },
+			{ label: '사용여부', name: 'use_yn', align: 'center', width: 70, fixed: true },
 			{ label: '최대자유석수', name: 'center_stand_max', align:'center', width: 80, fixed: true },
 			{ label: '수정', align:'center', width: 50, fixed: true, formatter: (c, o, row) =>
             	'<a href="javascript:void(0);" class="edt_icon"></a>'
@@ -112,99 +112,28 @@
 			$('div.tabs .tab').removeClass('active');
 			$(this).addClass('active');
 			fnRightAreaClear();
-			let colModel = [];
 			switch ($(this).attr('id')) {
 				case 'preopen':
-					MainGridAjaxUrl = '/backoffice/bld/preOpenInfoListAjax.do';
-					EgovJqGridApi.mainGrid([
-						{ label: '사전예약입장시간코드', name: 'optm_cd', key: true, hidden:true },
-						{ label: '요일', name: 'open_day_text', align: 'center', sortable: false },
-						{ label: '회원오픈시간', name: 'open_member_tm', align: 'center', sortable: false, editable: true, editoptions: { size: 5, maxlength: 5 } },
-						{ label: '회원종료시간', name: 'close_member_tm', align: 'center', sortable: false, editable: true, editoptions: { size: 5, maxlength: 5 } },
-						{ label: '비회원오픈시간', name: 'open_guest_tm', align: 'center', sortable: false, editable: true, editoptions: { size: 5, maxlength: 5 } },
-						{ label: '비회원종료시간', name: 'close_guest_tm', align: 'center', sortable: false, editable: true, editoptions: { size: 5, maxlength: 5 } },
-					], false, false, fnSearch, false).jqGrid('setGridParam', {
-						cellEdit: true,
-						cellsubmit: 'clientArray'
-					});
-					$('#rightAreaUqBtn').html(
-						'<a href="javascript:void(0);" class="orangeBtn">복사</a>'
-					).show();
-					$('#rightAreaBtn').show();
+					Preopen.mainGridSettings();
 					break;
 				case 'noshow':
-					MainGridAjaxUrl = '/backoffice/bld/noshowInfoListAjax.do';
-					EgovJqGridApi.mainGrid([
-						{ label: '노쇼코드', name: 'noshow_cd', key: true, hidden:true },
-						{ label: '요일', name: 'noshow_day_text', align: 'center', sortable: false },
-						{ label: '1차자동취소시간', name: 'noshow_pm_tm', align: 'center', sortable: false, editable: true, editoptions: { size: 5, maxlength: 5 } },
-						{ label: '2차자동취소시간', name: 'noshow_all_tm', align: 'center', sortable: false, editable: true, editoptions: { size: 5, maxlength: 5 } },
-					], false, false, fnSearch, false).jqGrid('setGridParam', {
-						cellEdit: true,
-						cellsubmit: 'clientArray'
-					});
-					$('#rightAreaBtn').show();
-					break;
-				case 'floor':
-					MainGridAjaxUrl = '/backoffice/bld/floorListAjax.do';
-					EgovJqGridApi.mainGrid([
-						{ label: '지점층코드', name: 'floor_cd', key: true, hidden: true },
-						{ label: '도면이미지', name: 'floor_map1', align: 'center', sortable: false, formatter: (c, o, row) =>
-							'<img src="'+ (row.floor_map1 === 'no_image.png' ? '/resources/img/no_image.png' : '/upload/'+ row.floor_map1) +'" style="width:120px;"/>'
-						},
-						{ label: '층이름', name: 'floor_nm', align: 'center', sortable: false },
-						{ label: '좌석 현황', name:'floor_seat_cnt', align: 'center', sortable: false },
-						{ label: '사용 유무', name:'use_yn', align: 'center', sortable: false },
-						{ label: '구역사용구분', name:'floor_part_dvsn', hidden: true },
-						{ label: '수정', align:'center', sortable: false, width: 50, fixed: true, formatter: (c, o, row) =>
-							'<a href="javascript:void(0);" class="edt_icon"></a>'
-						}
-					], false, true, fnSearch, false);
+					Noshow.mainGridSettings();
 					break;
 				case 'holyday':
-					MainGridAjaxUrl = '/backoffice/bld/centerHolyInfoListAjax.do';
-					EgovJqGridApi.mainGrid([
-						{ label: '지점휴일시퀀스', name: 'center_holy_seq', key: true, hidden: true },
-						{ label: '휴일일자', name: 'holy_dt', align: 'center', sortable: false },
-						{ label: '휴일명', name: 'holy_nm', align: 'center', sortable: false, editable: true },
-						{ label: '사용유무', name: 'use_yn', align: 'center', sortable: false, formatter: 'select',
-							editable: true, edittype: 'select', editoptions: {
-								value: 'Y:사용;N:사용안함'
-							}
-						},
-					], false, false, fnSearch, false).jqGrid('setGridParam', {
-						cellEdit: true,
-						cellsubmit: 'clientArray'
-					});
-					$('#rightAreaBtn').show();
+					Holyday.mainGridSettings();
 					break;
 				case 'billday':
-					MainGridAjaxUrl = '/backoffice/bld/billDayInfoListAjax.do';
-					EgovJqGridApi.mainGrid([
-						{ label: '요일코드', name: 'billday_cd', key: true, hidden: true },
-						{ label: '요일', name: 'bill_day_text', align: 'center', sortable: false },
-						{ label: '발급구분', name: 'bill_seq', align: 'center', sortable: false, formatter: (cellvalue, o, row) => {
-								let html = '<select data-rowId="'+ row.billday_cd +'">';
-								html += '<option value="">사용안함</option>';
-								for (let item of row.bill_info_list) {
-									html += (item.bill_seq === cellvalue)
-										? '<option value="'+ item.bill_seq + '" selected>'+ item.bill_dvsn_text +'</option>'
-										: '<option value="'+ item.bill_seq + '">'+ item.bill_dvsn_text +'</option>';
-								}
-								html += '</select>';
-								return html;
-							}
-						},
-						{ label: '법인명', name: 'bill_corp_name', align: 'center', sortable: false },
-						{ label: '사업자번호', name: 'bill_num', align: 'center', sortable: false },
-					], false, false, fnSearch, false).jqGrid('setGridParam', {
-						cellEdit: true,
-						cellsubmit: 'clientArray'
-					});
-					$('#rightAreaBtn').show();
+					Billday.mainGridSettings();
+					break;
+				case 'floor':
+					Floor.mainGridSettings();
 					break;
 				default:
 			}
+			// jqGrid EditCell 관련 버그 패치 추가
+			$(document).on('focusout', '[role=gridcell] select', function(e) {
+				$('#mainGrid').editCell(0, 0, false);
+			});
 		});
 		setTimeout(function() {
 			fnCenterSearch(1);
@@ -237,67 +166,46 @@
 			centerCd: $('#centerGrid').jqGrid('getGridParam', 'selrow')
 		};
 		if ($('div.tabs .tab.active').attr('id') === 'floor') {
-			EgovJqGridApi.mainGridAjax(MainGridAjaxUrl, params, fnSearch, fnSubGrid);
+			EgovJqGridApi.mainGridAjax(MainGridAjaxUrl, params, fnSearch, Floor.subFloorPartGrid);
 		} else {
 			EgovJqGridApi.mainGridAjax(MainGridAjaxUrl, params, fnSearch);
 		}
 	}
 
-	function fnSubGrid(id, parentId) {
-		let subGridId = id + '_t';
-		$('#'+id).empty().append('<table id="'+ subGridId + '" class="scroll"></table>');
-		EgovJqGridApi.subGrid(subGridId, [
-			{ label: '구역코드', name:'part_cd', key: true, hidden: true },
-			{ label: '도면이미지', name: 'part_map1', align: 'center', sortable: false, formatter: (c, o, row) =>
-				'<img src="'+ (row.part_map1 === 'no_image.png' || row.part_map1 === undefined ? '/resources/img/no_image.png'
-						: '/upload/'+ row.part_map1) +'" style="width:120px;"/>'
-			},
-			{ label: '구역명', name: 'part_nm', align: 'center' },
-			{ label: '사용여부', name: 'use_yn', align: 'center' },
-		], 'POST', '/backoffice/bld/partListAjax.do', {
-			floorCd: parentId
-		});
-	}
-
 	function fnRightAreaSave() {
-		let changedArr = $('#mainGrid').jqGrid('getChangedCells');
+		let tabMenu = $('div.tabs .tab.active').attr('id');
+		let changedArr = $('#mainGrid').jqGrid('getChangedCells', 'all');
+		if (tabMenu === 'billday') {
+			changedArr = Billday.changedArray();
+		}
 		if (changedArr.length === 0) {
 			toastr.info('수정된 목록이 없습니다.');
 			return;
 		}
-		let title = '';
-		let ajaxUrl = '';
-		let params = [];
-		for (let item of changedArr) {
-			switch ($('div.tabs .tab.active').attr('id')) {
-				case 'preopen':
-					title = '사전예약 수정';
-					ajaxUrl = '/backoffice/bld/preOpenInfoUpdate.do';
-					params.push({
-						optmCd: item.optm_cd,
-						openMemberTm: item.open_member_tm.replace(/\:/g,''),
-						openGuestTm: item.open_guest_tm.replace(/\:/g,''),
-						closeMemberTm: item.close_member_tm.replace(/\:/g,''),
-						closeGuestTm: item.close_guest_tm.replace(/\:/g,'')
-					});
-					break;
-				case 'noshow':
-					title = '자동취소 수정';
-					ajaxUrl = '/backoffice/bld/noshowInfoUpdate.do';
-					params.push({
-						noshowCd: item.noshow_cd.replace(/\:/g,''),
-						noshowPmTm: item.noshow_pm_tm.replace(/\:/g,''),
-						noshowAllTm: item.noshow_all_tm.replace(/\:/g,'')
-					});
-					break;
-				default:
-			}
+		let ajaxUpdate = { title: '', url: '', params: [] };
+		switch (tabMenu) {
+			case 'preopen':
+				Preopen.updateSettings(ajaxUpdate, changedArr);
+				break;
+			case 'noshow':
+				Noshow.updateSettings(ajaxUpdate, changedArr);
+				break;
+			case 'holyday':
+				Holyday.updateSettings(ajaxUpdate, changedArr);
+				break;
+			case 'billday':
+				Billday.updateSettings(ajaxUpdate, changedArr);
+				break;
+			case 'floor':
+				Floor.updateSettings(ajaxUpdate, changedArr);
+				break;
+			default:
 		}
-		bPopupConfirm(title, changedArr.length +'건에 대해 수정 하시겠습니까?', function() {
+		bPopupConfirm(ajaxUpdate.title, changedArr.length +'건에 대해 수정 하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(
 				'POST',
-				ajaxUrl,
-				params,
+				ajaxUpdate.url,
+				ajaxUpdate.params,
 				null,
 				function(json) {
 					toastr.success(json.message);
@@ -310,3 +218,8 @@
 		});
 	}
 </script>
+<script type="text/javascript" src="/resources/js/backoffice/bld/centerList.preopen.js"></script>
+<script type="text/javascript" src="/resources/js/backoffice/bld/centerList.noshow.js"></script>
+<script type="text/javascript" src="/resources/js/backoffice/bld/centerList.holyday.js"></script>
+<script type="text/javascript" src="/resources/js/backoffice/bld/centerList.billday.js"></script>
+<script type="text/javascript" src="/resources/js/backoffice/bld/centerList.floor.js"></script>

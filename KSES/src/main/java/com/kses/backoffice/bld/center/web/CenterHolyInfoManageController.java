@@ -3,17 +3,17 @@ package com.kses.backoffice.bld.center.web;
 import com.kses.backoffice.bld.center.service.CenterHolyInfoManageService;
 import com.kses.backoffice.bld.center.service.CenterInfoManageService;
 import com.kses.backoffice.bld.center.vo.CenterHolyInfo;
+import com.kses.backoffice.sym.log.annotation.NoLogging;
 import com.kses.backoffice.util.SmartUtil;
 import com.kses.backoffice.util.service.UniSelectInfoManageService;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.Globals;
+import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import egovframework.rte.fdl.property.EgovPropertyService;
-import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -84,59 +84,49 @@ public class CenterHolyInfoManageController {
     }
 
 	/**
-	 * 지점 휴일 업데이트
+	 * 지점 복수 휴일 수정
+	 * @param centerHolyInfoList
+	 * @return
+	 * @throws Exception
+	 */
+	@NoLogging
+	@RequestMapping (value = "centerHolyInfoListUpdate.do", method = RequestMethod.POST)
+	public ModelAndView updateCenterHolyInfoList(@RequestBody List<CenterHolyInfo> centerHolyInfoList) throws Exception {
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+
+		String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
+		centerHolyInfoList.stream().forEach(x -> x.setLastUpdusrId(userId));
+		centerHolyInfoService.updateCenterHolyInfoList(centerHolyInfoList);
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.update"));
+
+		return model;
+	}
+
+	/**
+	 * 지점 단건 휴일 업데이트
 	 * @param centerHolyInfo
 	 * @return
 	 * @throws Exception
 	 */
-//	@RequestMapping (value = "centerHolyInfoUpdate.do", method = RequestMethod.POST)
-//	public ModelAndView updateCenterHolyInfo(@RequestBody CenterHolyInfo centerHolyInfo) throws Exception {
-//		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-//
-//		int ret = 0;
-//		switch (centerHolyInfo.getMode()) {
-//			case Globals.SAVE_MODE_INSERT:
-//				break;
-//			case Globals.SAVE_MODE_UPDATE:
-//				break;
-//			default:
-//		}
-//	}
-    
-	@RequestMapping (value="centerHolyInfoUpdate.do")
-	public ModelAndView updateCenterInfo(	HttpServletRequest request,  
-											@ModelAttribute("LoginVO") LoginVO loginVO, 
-											@RequestBody CenterHolyInfo vo, 
-											BindingResult result) throws Exception {
-		
+	@RequestMapping (value="centerHolyInfoUpdate.do", method = RequestMethod.POST)
+	public ModelAndView updateCenterHolyInfo(@RequestBody CenterHolyInfo centerHolyInfo) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		String meesage = "";
 		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-		
-		if(!isAuthenticated) {
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-			model.setViewName("/backoffice/login");
-			
-			return model;
-		} else {
-			HttpSession httpSession = request.getSession(true);
-			loginVO = (LoginVO)httpSession.getAttribute("LoginVO");
-			vo.setFrstRegterId(loginVO.getAdminId());
-			vo.setLastUpdusrId(loginVO.getAdminId());
-	    }
-		
-		try {	
-			Map<String, Object> centerUpdateSelect = centerHolyInfoService.centerUpdateSelect(vo.getCenterHolySeq());
-			
+
+		try {
+			Map<String, Object> centerUpdateSelect = centerHolyInfoService.centerUpdateSelect(centerHolyInfo.getCenterHolySeq());
+
 			int ret;
-			if (centerUpdateSelect.get("holy_dt").equals(vo.getHolyDt()) && centerUpdateSelect.get("center_holy_seq").toString().equals(vo.getCenterHolySeq())) {
-				ret = centerHolyInfoService.updateCenterHolyInfo(vo);
+			if (centerUpdateSelect.get("holy_dt").equals(centerHolyInfo.getHolyDt()) && centerUpdateSelect.get("center_holy_seq").toString().equals(centerHolyInfo.getCenterHolySeq())) {
+				ret = centerHolyInfoService.updateCenterHolyInfo(centerHolyInfo);
 			} else {
-				ret = (uniService.selectIdDoubleCheck("HOLY_DT", "TSEB_CENTERHOLY_INFO_I", "HOLY_DT = ["+ vo.getHolyDt() + "[ AND CENTER_CD = ["+ vo.getCenterCd() + "[" ) > 0) ? -1 : centerHolyInfoService.updateCenterHolyInfo(vo);
+				ret = (uniService.selectIdDoubleCheck("HOLY_DT", "TSEB_CENTERHOLY_INFO_I", "HOLY_DT = ["+ centerHolyInfo.getHolyDt() + "[ AND CENTER_CD = ["+ centerHolyInfo.getCenterCd() + "[" ) > 0) ? -1 : centerHolyInfoService.updateCenterHolyInfo(centerHolyInfo);
 			}
-	
-			meesage = (vo.getMode().equals("Edt")) ? "sucess.common.update" : "sucess.common.insert";
-			
+
+			meesage = (centerHolyInfo.getMode().equals("Edt")) ? "sucess.common.update" : "sucess.common.insert";
+
 			if (ret > 0) {
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
@@ -146,12 +136,12 @@ public class CenterHolyInfoManageController {
 				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
 			} else {
 				throw new Exception();
-			}		
+			}
 		} catch (Exception e){
-			meesage = (vo.getMode().equals(Globals.SAVE_MODE_INSERT)) ? "fail.common.insert" : "fail.common.update";
+			meesage = (centerHolyInfo.getMode().equals(Globals.SAVE_MODE_INSERT)) ? "fail.common.insert" : "fail.common.update";
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));	
-		}	
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
+		}
 		return model;
 	}
 	

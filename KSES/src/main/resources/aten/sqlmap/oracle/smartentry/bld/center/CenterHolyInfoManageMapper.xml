@@ -45,6 +45,17 @@
 			LAST_UPDT_DTM = SYSDATE				
 		WHERE CENTER_HOLY_SEQ = #{centerHolySeq}
 	</update>
+
+	<update id="updateCenterHolyInfoList">
+		<foreach collection="centerHolyInfoList" item="item" separator=";" open="DECLARE BEGIN" close="; END;">
+			UPDATE TSEB_CENTERHOLY_INFO_I SET
+				HOLY_NM = #{item.holyNm, jdbcType=VARCHAR},
+				USE_YN = #{item.useYn, jdbcType=VARCHAR},
+				LAST_UPDUSR_ID = #{item.lastUpdusrId, jdbcType=VARCHAR},
+				LAST_UPDT_DTM = SYSDATE
+			WHERE CENTER_HOLY_SEQ = #{item.centerHolySeq}
+		</foreach>
+	</update>
 	
 	<update id="copyCenterHolyInfo">
 		UPDATE TSEB_CENTERHOLY_INFO_I A

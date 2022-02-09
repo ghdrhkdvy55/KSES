@@ -26,6 +26,8 @@ public interface CenterHolyInfoManageService {
 	 * @throws Exception
 	 */
 	int updateCenterHolyInfo(CenterHolyInfo vo) throws Exception;
+
+	int updateCenterHolyInfoList(List<CenterHolyInfo> centerHolyInfoList) throws Exception;
 	
 	/**
 	 * SPDM 지점 휴일 정보 복사

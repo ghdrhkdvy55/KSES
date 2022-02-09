@@ -15,6 +15,8 @@ public interface CenterHolyInfoManageMapper {
 	List<Map<String, Object>> selectCenterHolyInfoList(@Param("params") Map<String, Object> params) throws Exception;
 	
 	int updateCenterHolyInfo(CenterHolyInfo vo) throws Exception;
+
+	int updateCenterHolyInfoList(@Param("centerHolyInfoList") List<CenterHolyInfo> centerHolyInfoList);
 	
 	int insertCenterHolyInfo(CenterHolyInfo vo) throws Exception;
 	

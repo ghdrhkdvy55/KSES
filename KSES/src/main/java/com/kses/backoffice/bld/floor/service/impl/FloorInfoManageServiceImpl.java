@@ -43,7 +43,13 @@ public class FloorInfoManageServiceImpl extends EgovAbstractServiceImpl implemen
 	}
 
 	@Override
+	public int updateFloorInfoList(List<FloorInfo> floorInfoList) throws Exception {
+		return floorMapper.updateFloorInfoList(floorInfoList);
+	}
+
+	@Override
 	public int insertFloorSeatUpdate(Map<String, Object> params) throws Exception {
 		return seatMapper.insertFloorSeatInfo(params);
 	}
+
 }
