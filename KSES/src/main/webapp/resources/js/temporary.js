@@ -247,7 +247,7 @@ $.EgovJqGridApi.prototype.subGrid = function(id, colModel, url, params) {
 $.EgovJqGridApi.prototype.mainGridDetail = function(detailFunc) {
 	setTimeout(function() {
 		$(_MainGridSelector).jqGrid('setGridParam', { 
-			ondblClickRow: function(rowId, iRow, iCol, e) {
+			onSelectRow: function(rowId, iRow, iCol, e) {
 				if (!$(_MainGridSelector).jqGrid('getInd', rowId)) {
 					return false;
 				} else {

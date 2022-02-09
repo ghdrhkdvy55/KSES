@@ -101,36 +101,36 @@
     </select>
 
     <update id="updateSeasonSeatInfo" >
-		UPDATE TSEB_SEASON_STINFO_D SET CENTER_CD = #{centerCd}, 
-										FLOOR_CD = #{floorCd, jdbcType=VARCHAR}, 
-										PART_CD = #{partCd, jdbcType=VARCHAR}, 
-										SEASON_SEAT_LABEL = #{seasonSeatLabel}, 
-										USE_YN = #{useYn, jdbcType=VARCHAR},
-										SEASON_CLASS = #{seasonClass, jdbcType=VARCHAR},  
-										SEAT_DVSN = #{seatDvsn, jdbcType=VARCHAR}, 
-										PAY_DVSN = #{payDvsn, jdbcType=VARCHAR}, 
-										SEASON_COST = #{seasonCost, jdbcType=VARCHAR},
-										SEASON_SEAT_LABEL = #{seasonSeatLabel, jdbcType=VARCHAR},
-										SEASON_SEAT_ORDER = #{seasonSeatOrder, jdbcType=VARCHAR},
-										SEASON_SEAT_TOP = #{seasonSeatTop, jdbcType=VARCHAR},
-										SEASON_SEAT_LEFT = #{seasonSeatLeft, jdbcType=VARCHAR},
-										SEASON_AM_COST = 0,
-										SEASON_PM_COST = 0,   
-										LAST_UPDUSR_ID = #{lastUpdusrId, jdbcType=VARCHAR},   
-										LAST_UPDT_DTM = SYSDATE
+		UPDATE TSEB_SEASON_STINFO_D SET 
+			CENTER_CD = #{centerCd}, 
+			FLOOR_CD = #{floorCd, jdbcType=VARCHAR}, 
+			PART_CD = #{partCd, jdbcType=VARCHAR}, 
+			SEASON_SEAT_LABEL = #{seasonSeatLabel}, 
+			USE_YN = #{useYn, jdbcType=VARCHAR},
+			SEASON_CLASS = #{seasonClass, jdbcType=VARCHAR},  
+			SEAT_DVSN = #{seatDvsn, jdbcType=VARCHAR}, 
+			PAY_DVSN = #{payDvsn, jdbcType=VARCHAR}, 
+			SEASON_COST = #{seasonCost, jdbcType=VARCHAR},
+			SEASON_SEAT_LABEL = #{seasonSeatLabel, jdbcType=VARCHAR},
+			SEASON_SEAT_ORDER = #{seasonSeatOrder, jdbcType=VARCHAR},
+			SEASON_SEAT_TOP = #{seasonSeatTop, jdbcType=VARCHAR},
+			SEASON_SEAT_LEFT = #{seasonSeatLeft, jdbcType=VARCHAR},
+			SEASON_AM_COST = 0,
+			SEASON_PM_COST = 0,   
+			LAST_UPDUSR_ID = #{lastUpdusrId, jdbcType=VARCHAR},   
+			LAST_UPDT_DTM = SYSDATE
 	    WHERE SEASON_SEAT_CD = #{seasonSeatCd}           
     </update>
     
     <update id="updateSeasonSeatPositionInfo" parameterType="java.util.List">
 		<foreach collection="seasonSeatInfoList" item="item" separator=";" open="DECLARE BEGIN" close="; END;">
-			UPDATE TSEB_SEASON_STINFO_D SET SEASON_COST = #{item.seasonCost, jdbcType=VARCHAR},
-											SEASON_SEAT_LABEL = #{item.seasonSeatLabel, jdbcType=VARCHAR},
-											<!-- SEASON_SEAT_ORDER = #{item.seasonSeatOrder, jdbcType=VARCHAR}, -->
-											SEASON_SEAT_TOP = #{item.seasonSeatTop, jdbcType=VARCHAR},
-											SEASON_SEAT_LEFT = #{item.seasonSeatLeft, jdbcType=VARCHAR},
-											USE_YN = #{item.useYn, jdbcType=VARCHAR},
-				                            LAST_UPDT_DTM = SYSDATE, 
-				                            LAST_UPDUSR_ID = #{item.lastUpdusrId, jdbcType=VARCHAR}
+			UPDATE TSEB_SEASON_STINFO_D SET 
+				SEASON_SEAT_LABEL = #{item.seasonSeatLabel, jdbcType=VARCHAR},
+				SEASON_SEAT_TOP = #{item.seasonSeatTop, jdbcType=VARCHAR},
+				SEASON_SEAT_LEFT = #{item.seasonSeatLeft, jdbcType=VARCHAR},
+				USE_YN = #{item.useYn, jdbcType=VARCHAR},
+				LAST_UPDT_DTM = SYSDATE, 
+				LAST_UPDUSR_ID = #{item.lastUpdusrId, jdbcType=VARCHAR}
 			WHERE SEASON_SEAT_CD = #{item.seasonSeatCd} 
 		</foreach> 
     </update> 
@@ -147,7 +147,4 @@
 		END
 	}
     </delete>
-    
-
-
 </mapper>

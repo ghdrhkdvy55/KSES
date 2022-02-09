@@ -14,13 +14,17 @@
 				SELECT 
 					LPAD(' ', 2*(LEVEL-1)) || BOARD_TITLE AS BOARD_TITLE, BOARD_SEQ, BOARD_CD, BOARD_REFNO, BOARD_CLEVEL, 
 					BOARD_NOTICE_START_DAY, BOARD_NOTICE_END_DAY, BOARD_POPUP, BOARD_TOP_SEQ, BOARD_VISIT_CNT, 
-					USE_YN, LAST_UPDUSR_ID, BOARD_GROUP, TO_CHAR(LAST_UPDT_DTM, 'yyyy-MM-dd') LAST_UPDT_DTM, BOARD_ALL_NOTICE
-				FROM  TSES_BOARD_INFO_I a
-				WHERE a.BOARD_CD = #{params.boardCd}
+					USE_YN, LAST_UPDUSR_ID, BOARD_GROUP, TO_CHAR(LAST_UPDT_DTM, 'yyyy-MM-dd') LAST_UPDT_DTM, BOARD_ALL_NOTICE,
+					CASE BOARD_ALL_NOTICE 
+						WHEN 'Y' THEN '전체공지'
+						ELSE (SELECT LISTAGG(CENTER_NM,',') WITHIN GROUP (ORDER BY CENTER_NM) FROM TSEB_CENTER_INFO_M WHERE CENTER_CD IN (SELECT COLUMN_VALUE  FROM TABLE(UF_SPLICT(A.BOARD_CENTER_ID, ','))))
+					END AS BOARD_DVSN
+				FROM  TSES_BOARD_INFO_I A
+				WHERE A.BOARD_CD = #{params.boardCd}
 				<if test="params.boardCd == 'Not'">
 					<choose>
 						<when test="params.adminYn == 'user'">
-							AND TO_CHAR(SYSDATE, 'yyyyMMdd') BETWEEN NVL(a.BOARD_NOTICE_START_DAY, '20211201') AND  NVL(a.BOARD_NOTICE_END_DAY , '20991231')
+							AND TO_CHAR(SYSDATE, 'yyyyMMdd') BETWEEN NVL(A.BOARD_NOTICE_START_DAY, '20211201') AND NVL(A.BOARD_NOTICE_END_DAY, '20991231')
 						</when>
 						<otherwise>
 						
@@ -39,23 +43,23 @@
 				</if>
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.authorCd)">
 					<if test="params.authorCd != 'ROLE_ADMIN' and params.authorCd != 'ROLE_SYSTEM'">
-						AND #{params.centerCd} IN (SELECT COLUMN_VALUE FROM TABLE(UF_SPLICT(a.BOARD_CENTER_ID, ',')) )  
+						AND #{params.centerCd} IN (SELECT COLUMN_VALUE FROM TABLE(UF_SPLICT(A.BOARD_CENTER_ID, ',')) )  
 					</if>		
 				</if>
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchCenterCd)">
-					AND #{params.searchCenterCd} IN (SELECT COLUMN_VALUE FROM TABLE(UF_SPLICT(a.BOARD_CENTER_ID, ',')) )  
+					AND #{params.searchCenterCd} IN (SELECT COLUMN_VALUE FROM TABLE(UF_SPLICT(A.BOARD_CENTER_ID, ',')) )
+					AND BOARD_ALL_NOTICE = 'N'
 				</if>
-				<!-- 				
-				<if test="!@org.apache.commons.lang3.StringUtils@equals(params.searchCondition,'ALL')">
+
+				<if test="@org.apache.commons.lang3.StringUtils@equals(params.searchCondition,'ALL')">
 					AND BOARD_ALL_NOTICE = 'Y'
 				</if>
-				 -->
 				START WITH BOARD_REFNO = 0
 				CONNECT BY PRIOR BOARD_SEQ = BOARD_REFNO
 				ORDER SIBLINGS BY BOARD_GROUP DESC
 			) TB 
 		)TA 
-		WHERE RNUM  BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
+		WHERE RNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
 	</select> 
      
 	<select id="selectBoardMainManageListByPagination" resultType="lmap">
@@ -194,15 +198,15 @@
 		DELETE FROM TSES_BOARD_INFO_I WHERE BOARD_SEQ = #{boardSeq}
 	</delete>
 	
-	<select id="selectBoardUploadFileName">
+	<select id="selectBoardUploadFileName" resultType="String">
 		SELECT STRE_FILE_NM
-		FROM COMTNFILEDTAIL
-		WHERE FILE_SEQ = #{boardSeq}
+		FROM COMTNFILEDETAIL 
+		WHERE ATCH_FILE_ID = #{atchFileId}
 	</select>
 	
-	<select id="selectBoardoriginalFileName">
+	<select id="selectBoardoriginalFileName" resultType="String">
 		SELECT ORIGNL_FILE_NM 
-		FROM COMTNFILEDTAIL
-		WHERE STRE_FILE_NM = #{boardSeq}
+		FROM COMTNFILEDETAIL
+		WHERE ATCH_FILE_ID = #{atchFileId}
 	</select>
 </mapper>

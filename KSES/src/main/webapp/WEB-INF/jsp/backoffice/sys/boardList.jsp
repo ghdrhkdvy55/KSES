@@ -16,36 +16,43 @@
 </style>
 <script type="text/javascript" src="/resources/SE/js/HuskyEZCreator.js" ></script>
 <style type="text/css">
-	.upload-btn-wrapper {
-			position: relative;
-			overflow: hidden;
-			display: inline-block;
+	.upload-btn-wrapper, .delete-btn-wrapper {
+		position: relative;
+		overflow: hidden;
+		display: inline-block;
 	}
-	.upload-btn {
-			border: 2px solid gray;
-			color: gray;
-			background-color: white;
-			padding: 8px 20px;
-			border-radius: 8px;
-			font-size: 20px;
-			font-weight: bold;
+	
+	.delete-btn-wrapper {
+		float : right;
 	}
+	
+	.upload-btn, .delete-btn {
+		border: 2px solid gray;
+		color: gray;
+		background-color: white;
+		padding: 8px 20px;
+		border-radius: 8px;
+		font-weight: bold;
+		cursor: pointer;
+	}
+	
 	.upload-btn-wrapper input[type=file] {
-			font-size: 100px;
-			position: absolute;
-			left: 0;
-			top: 0;
-			opacity: 0;
+		font-size: 100px;
+		position: absolute;
+		left: 0;
+		top: 0;
+		opacity: 0;
 	}
+	
 	#fileDragDesc {
-			width: 100%; 
-			height: 100%; 
-			margin-left: auto; 
-			margin-right: auto; 
-			padding: 5px; 
-			text-align: center; 
-			line-height: 300px; 
-			vertical-align:middle;
+		width: 100%; 
+		height: 100%; 
+		margin-left: auto; 
+		margin-right: auto; 
+		padding: 5px; 
+		text-align: center; 
+		line-height: 300px; 
+		vertical-align:middle;
 	}
 </style>
 <!-- //contents -->
@@ -173,13 +180,13 @@
 			                       <span class="slider round"></span> 
 			                    </label> 
 		                    </td>
-		                    <th><span class="redText">*</span>팝업 여부</th>
+<!-- 		                <th><span class="redText">*</span>팝업 여부</th>
 	                        <td style="text-align:left">
 		                        <label class="switch">                                               
 			                   	   <input type="checkbox" id="boardPopup" onclick="toggleValue(this);" value="Y">
 			                       <span class="slider round"></span> 
 			                    </label> 
-		                    </td>
+		                    </td> -->
 	                    </tr>
 	                    <c:choose>
 	                       <c:when test="${loginVO.authorCd ne 'ROLE_ADMIN' && loginVO.authorCd ne 'ROLE_SYSTEM' }">
@@ -201,24 +208,28 @@
 	                   
 	                    <tr id="tr_fileUpload">
 	                       <th><span class="redText" id="sp_returntxt">파일 업로드</span></th>
-	                       <td colspan="3">
+	                       <td colspan="4">
+								<div class="upload-btn-wrapper">
+									<input type="file" id="input_file" multiple="multiple" style="height: 100%;" />
+									<button class="upload-btn">파일선택</button>
+								</div>
+								
+								<div class="delete-btn-wrapper">
+									<button class="delete-btn" onClick="boardinfo.fn_FileDel()" >삭제</button>
+								</div>
 	                       
 	                            <table class="detail_table" id="tb_fileInfoList">
 						            <thead>
 						            	<tr>
 						                	<th><input type="checkbox" id="allCheck" name="allCheck" onClick="boardinfo.fn_FileCheck()"></th>
 						                	<th>파일명</th>
-						                	<th><a href="#" onClick="boardinfo.fn_FileDel()" id="btn_FileDel" class="grayBtn">삭제</a></th>
 						                </tr>
 						            </thead>
 						            <tbody>
 						            </tbody>
 						        </table>
 						          
-		                        <div class="upload-btn-wrapper">
-									<input type="file" id="input_file" multiple="multiple" style="height: 100%;" />
-									<button class="upload-btn">파일선택</button>
-								</div>
+
 								<div id="dropZone" style="width: 700px; height: 100px; border-style: solid; border-color: black; ">
 									<div id="fileDragDesc"> 파일을 드래그 해주세요. </div>
 									
@@ -307,8 +318,10 @@
 					    colModel :  [
 					    	    	{ label: 'board_seq', key: true, name:'board_seq',       index:'board_seq',      align:'center', hidden:true},
 					            	{ label: '제목', name:'board_title',       index:'board_title',  align:'left',  width:'20%'},
+					            	/* 미리보기 주석처리
 					            	{ label: '미리보기', name:'board_title',    index:'board_title',  align:'center', width:'10%'
 					            	  , formatter:jqGridFunc.boardPreviewBtn	},
+					            	   */
 					            	{ label: '공지기간', name:'board_notice_startday', index:'board_notice_startday',   align:'center', width:'10%'
 					            	  , formatter:jqGridFunc.boardNoticeDay	},
 					            	{ label: '조회수', name:'board_visit_cnt',      index:'board_visit_cnt',      align:'center', width:'10%'},
@@ -374,7 +387,6 @@
 			    		          	  postData : JSON.stringify(  {
 								    		          			"pageIndex": gridPage,
 								    		          			"boardGubun" : $("#boardGubun").val(),
-								    		    	    		"searchCondition" : $("#searchCondition").val(),
 								    		    	    		"searchKeyword" : $("#searchKeyword").val(),
 								    		          			"pageUnit":$('.ui-pg-selbox option:selected').val()
 								    		          		})
@@ -500,7 +512,7 @@
 						 	                       </c:otherwise>
 							 	            </c:choose>
 							 	            toggleClick("useYn", obj.use_yn);
-								    		toggleClick("boardPopup", obj.board_popup);
+								    		//toggleClick("boardPopup", obj.board_popup);
 								    		
 								    		
 								    		if (result.resultlist.length > 0){
@@ -511,10 +523,10 @@
 				  						    	$("#tb_fileInfoList > tbody").empty();
 				  						    	for (var i in result.resultlist){
 				  						    		var obj = result.resultlist[i];
-				  						    		
+
 				  						    		sHtml += "<tr>"
 				  						    		      +  " <td><input type=\"checkbox\" id=\"fileInfo"+obj.stre_file_nm+"\" name=\"fileInfo\" value=\""+obj.stre_file_nm+"\" style='"+fileViewCss+"'></td>"
-				  						    		      +  " <td colspan=\"2\"><a href=\"#\" onClick=\"boardinfo.fn_FileDown('" + obj.atch_fild_id + "')\">"
+				  						    		      +  " <td colspan=\"2\"><a href=\"#\" onClick=\"boardinfo.fn_FileDown('" + obj.atch_file_id + "')\">"
 				  						    		      +  " "+obj.orignl_file_nm +" </a></td>"
 				  						    		      +  "</tr>";
 				  						    		
@@ -557,7 +569,7 @@
 						
 					    /* oEditors.getById["ir1"].exec("SET_IR", [""]); */						
 						toggleDefault("useYn");
-			        	toggleDefault("boardPopup");
+			        	//toggleDefault("boardPopup");
 			        	
 			        	
 			        }
@@ -630,32 +642,13 @@
 		    	 //파일 전체 선택
 		    	 var checked = $("input:checkbox[name=allCheck]").is(":checked");
 		    	 fn_CheckboxAllChange("fileInfo", checked);
-		     }, fn_FileDown : function(streFileNm){
-		    	 //파일 다운 확인 하기 
-	 			apiExecute(
-		   				"POST", 
-		   				"/backoffice/sys/fileDownload.do",
-		    				{
-		  					boardSeq : $("#boardSeq").val()
-		    				},
-		    				null,				
-		    				function(result) {							
-		      				if (result != null) {	         							
-		     					if (result == "O"){
-		     						alert("정상");
-		     						document.location.reload();
-		     					}else {
-		     						alert("오류");
-		     						document.location.reload();
-		     					}
-		     				} 
-		     			},
-		    				null,
-		    				null
-		  		); 		
+		     }, 
+		     fn_FileDown : function(atchFileId) {
+		    	 location.href = "/backoffice/sys/fileDownload.do?atchFileId=" + atchFileId	
 		     }, fn_FileDel : function (){
 		    	 var url = "/backoffice/sys/boardFileDelete.do"
-		    	 var files = ckeckboxValue("체크된 값이 없습니다.", "fileInfo", "bas_board_add");
+		    	 var files = ckeckboxValue("체크된 값이 없습니다.", "fileInfo", "");
+		    	 if (files == false) retrun;
 		    	 var params = {'fileSeqs' : files  };
 		    	 fn_Ajax(url, "GET", params, false,
 			      			function(result) {
@@ -664,7 +657,11 @@
 			   						   location.href="/backoffice/login.do";
 			   					   }else if (result.status == "SUCCESS"){
 			   						   //총 게시물 정리 하기'
-			   						 	common_modelCloseM(result.message, "bas_board_add");
+			   						   common_modelCloseM(result.message, "bas_board_add");	
+			   						   $("#btn_Comfirm").click(function(){
+			   							boardinfo.fn_boardInfo("Edt",$("#boardSeq").val());
+			   						   });
+			   						   /* common_popup(result.message, "Y","bas_board_add"); */
 			   					   }else if (result.status == "FAIL"){
 			   						   common_popup("삭제 도중 문제가 발생 하였습니다.", "Y", "bas_board_add");
 			   					   }
@@ -698,7 +695,7 @@
 		       			    	    $("#btnUpdate").text("답글");
 		       			            $("#h2_txt").text("답글");
 		       			            toggleDefault("useYn");
-		    			        	toggleDefault("boardPopup");
+		    			        	//toggleDefault("boardPopup");
 		    			        	$("#bas_board_add").bPopup();
 						       }
 	    				    },
@@ -774,6 +771,7 @@
 	$(document).ready(function() {
 		$("#input_file").bind('change', function() {
 			selectFile(this.files);
+			this.value=null;
 		});
 	});
 

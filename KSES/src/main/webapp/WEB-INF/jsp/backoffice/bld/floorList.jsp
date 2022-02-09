@@ -71,11 +71,7 @@
 		font-size: 1.1em;
 		font-weight: 300;
 	}
-/*
-	.cbp-spmenu a:hover {
-			background: #258ecd;
-	} 
-*/
+
 	.cbp-spmenu a:active {
 		background: #afdefa;
 		color: #47a3da;
@@ -1283,6 +1279,7 @@
 		fn_checkForm : function() {
 		    //구역 업데이트
 		    if (any_empt_line_span("bld_section_add", "partNm", "구역명을 입력해주세요.","sp_message", "savePage") == false) return;
+		    if (any_empt_line_span("bld_section_add", "partClass", "구역 등급을 선택해주세요.","sp_message", "savePage") == false) return;
 		    
 			var commentTxt = ($("#mode").val() == "Ins") ? "신규 구역 정보를 등록 하시겠습니까?" : "입력한 구역 정보를 저장 하시겠습니까?";
 			

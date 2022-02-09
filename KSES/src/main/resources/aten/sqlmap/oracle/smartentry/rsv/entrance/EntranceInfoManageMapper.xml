@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kses.backoffice.rsv.entrance.mapper.EntranceInfoManageMapper">
-
     <select id="selectEnterRegistList" resultType="lmap">     	      
 		SELECT * FROM 
 		( 
@@ -13,7 +12,7 @@
 			(	
 				SELECT A.QR_CHECK_SEQ, A.RESV_SEQ, A.USER_ID, TO_CHAR(A.QR_CHECK_TM,'YYYY-MM-DD HH24:MI:SS') AS QR_CHECK_TM, 
                        A.INOUT_DVSN, TO_CHAR(TO_DATE(A.RCV_DT,'YYYY-MM-DD HH24:MI:SS'),'YYYY-MM-DD HH24:MI:SS') AS RCV_DT, A.RCV_CD,
-                       B.RESV_USER_NM,
+                       B.RESV_USER_NM, A.ENTER_ADMIN_ID,
                        CASE INOUT_DVSN WHEN 'IN' THEN '입장'
                        ELSE '퇴장'
                        END AS INOUT_DVSN_TEXT

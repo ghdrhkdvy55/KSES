@@ -123,20 +123,32 @@
         <!--contents //
     </div>
     
-	<!-- // 결제인증 팝업 -->
-<!--     <div id="pay_number" class="popup">
-		<div class="pop_con rsv_popup">
-			<a class="button b-close">X</a>
-          	<div class="pop_wrap">
-            	<h4>결제 비밀번호를 입력해주세요.</h4>
-            	<ul class="pay_passWord">
-                	<li><input type="password" id="Card_Pw" placeholder="비밀번호를 입력하세요."></li>
-                	<li><a href="javascript:void(0);" class="mintBtn">확인</a></li>
-            	</ul>
-          	</div>
-      	</div>
-    </div> -->
-    <!-- 결제인증 팝업 // -->
+	<!-- // 현금영수증 팝업 -->
+	<div id="cash_receipt" class="popup">
+	  <div class="pop_con">
+	      <a class="button b-close">X</a>
+	      
+	      <div class="pop_wrap">                                                
+	            <h4>현금영수증 발급 신청</h4>
+	            <ul class="cash_refund">
+	                <li>
+	                    <input type="radio" name="refund" id="refund1" value="RESV_RCPT_DVSN_1">
+	                    <label for="refund1"><span></span>소득 공제용</label>
+	                </li>
+	                <li>
+	                    <input type="radio" name="refund" id="refund2" value="RESV_RCPT_DVSN_2">
+	                    <label for="refund2"><span></span>지출 증빙용</label>
+	                </li>
+	                <li><input type="text" onkeyup="onlyNum(this);" placeholder="'-'없이 입력해 주세요."></li>
+	            </ul>                      
+	        </div>
+	        <div class="summit_btn">
+	            <a href="" class="mintBtn">신청</a>
+	            <a href="javascript:bPopupClose('cash_receipt');">취소</a>
+	        </div>
+	      <div class="clear"></div>
+	  </div>
+	</div>
     
     <!-- // 결제인증 팝업 -->
 	<div id="pay_number" class="popup">
@@ -268,11 +280,15 @@
 				                        setHtml += "</ul>";
 				                        
 				                        setHtml += "<ul class='rsv_stat_btn'>";
+				                        
+				                        if(item.resv_pay_dvsn == "RESV_PAY_DVSN_2") {
+				                        	setHtml += "<li><a href='javascript:userResvService.fn_openRcptPopup(\"" + item.resv_seq +"\",\"" +  item.resv_rcpt_yn +"\")'>현금 영수증</a></li>";
+				                        }
 				                        if(item.resv_state == "RESV_STATE_1") {
 			                            	setHtml += "<li><a href='javascript:userResvService.fn_resvCancelCheck(&#39;" + item.resv_seq +"&#39;)'>예약 취소</a></li>";
 				                        }
 			                            setHtml += "</ul>";
-				                        
+
 			                            $("#my_rsv_stat").append(setHtml);
 									} else {
 										var setHtml = "";
@@ -288,7 +304,7 @@
 								$(".null_list").show();
 							}
 						} else if(result.status == "LOGINFAIL"){
-							fn_openPopup("세션 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
+							fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
 						}
 					},
 					function(request) {
@@ -341,6 +357,52 @@
 						fn_openPopup("이미 취소된 예약정보 입니다.", "red", "ERROR", "확인", "");
 					}
 				}
+			},
+			fn_openRcptPopup : function(resvSeq,resvRcptYn) {
+				if(resvRcptYn != "N") {
+					fn_openPopup("이미 현금영수증 신청 완료된 <br>예약정보 입니다.", "red", "ERROR", "확인", "");
+					return;
+				}
+				
+				$("input:radio[name='refund']").eq(0).prop("checked", true);
+				$("#cash_receipt .summit_btn a").eq(0).attr("href","javascript:userResvService.fn_setRcptInfo('" + resvSeq + "');");
+				$("#cash_receipt input[type='text']").val("");
+				bPopupOpen('cash_receipt');
+			},
+			fn_setRcptInfo : function(resvSeq) {
+				if($("#cash_receipt input[type='text']").val() == "") {
+					fn_openPopup("현금영수증 발행번호를 입력해주세요", "red", "ERROR", "확인", "");
+					return;
+				}
+				
+				var url = "/front/updateResvRcptInfo.do";
+				var params = {
+					"resvSeq" : resvSeq,
+					"resvRcptTel" : $("#cash_receipt input[type='text']").val(),
+					"resvRcptDvsn" : $("input[name='refund']:checked").val()
+				}
+				
+				fn_Ajax
+				(
+				    url,
+				    "POST",
+					params,
+					false,
+					function(result) {
+						if(result.status == "SUCCESS") {
+							bPopupClose("cash_receipt");
+							fn_openPopup("현금영수증 신청이 정상적으로 이뤄졌습니다.", "blue", "SUCCESS", "확인", "");
+							userResvService.fn_userResvInfo(true);
+						} else if(result.status == "LOGIN FAIL") {
+							fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");	
+						} else {
+							fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "/front/main.do");
+						}
+					},
+					function(request) {
+						fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "/front/main.do");	       						
+					}    		
+				);
 			}
 		}
     </script>

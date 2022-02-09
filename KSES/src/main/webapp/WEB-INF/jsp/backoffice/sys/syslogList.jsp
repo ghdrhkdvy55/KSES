@@ -174,7 +174,7 @@
     		        refresh : true,
     	            rownumbers : false, // 리스트 순번
     		        viewrecord : true,    // 하단 레코드 수 표기 유무
-    		        //loadonce : false,     // true 데이터 한번만 받아옴 
+    		        loadonce : false,     // true 데이터 한번만 받아옴 
     		        loadui : "enable",
     		        loadtext:'데이터를 가져오는 중...',
     		        emptyrecords : "조회된 데이터가 없습니다", //빈값일때 표시 
@@ -182,9 +182,8 @@
     		        autowidth:true,
     		        shrinkToFit : true,
     		        refresh : true,
-    		        loadonce: true,
     				viewrecords: true,
-                    footerrow: true,
+                    footerrow: false,
                     loadComplete : function (data){
     		        	 $("#sp_totcnt").text(data.paginationInfo.totalRecordCount);
     		        }, loadError:function(xhr, status, error) {
@@ -300,9 +299,8 @@
  		   	                       $("#sp_Error").html(obj.error_se);
  		   	                       $("#sp_ErrorCd").html(obj.error_code);
  		   	        			   $("#bas_sys_add").bPopup();
- 		   					   }else if (result.status == "FAIL"){
+ 		   					   } else if (result.status == "FAIL") {
  		   						   common_modelCloseM(result.message, "");
- 		   						   
  		   					   }
  		 				    },
  		 				    function(request){

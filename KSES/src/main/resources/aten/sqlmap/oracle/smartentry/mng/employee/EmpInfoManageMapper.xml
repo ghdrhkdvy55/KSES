@@ -147,11 +147,11 @@
                       WHERE EMP_NO = #{empNo}
                 </when>
                 <otherwise>
-                        INSERT INTO TSEH_EMP_INFO_M(EMP_ID, EMP_NO, EMP_NM, DEPT_CD, DEPT_NM, GRAD_CD, GRAD_NM, 
+                        INSERT INTO TSEH_EMP_INFO_M(EMP_ID, EMP_NO, EMP_NM, EMP_PASSWORD, DEPT_CD, DEPT_NM, GRAD_CD, GRAD_NM, 
                                                     PSIT_CD, PSIT_NM, USE_YN, EMP_CLPHN, 
                                                     EMP_TLPHN, EMP_EMAIL, ADMIN_DVSN, EMP_STATE, EMP_PIC, 
                                                     LAST_UPDT_DTM, LAST_UPDUSR_ID) 
-                        VALUES(#{empId,jdbcType=VARCHAR}, #{empNo}, #{empNm}, #{deptCd, jdbcType=VARCHAR}, #{deptNm ,jdbcType=VARCHAR}, #{gradCd ,jdbcType=VARCHAR}, #{gradNm ,jdbcType=VARCHAR},
+                        VALUES(#{empId,jdbcType=VARCHAR}, #{empNo}, #{empNm}, #{empPassword}, #{deptCd, jdbcType=VARCHAR}, #{deptNm ,jdbcType=VARCHAR}, #{gradCd ,jdbcType=VARCHAR}, #{gradNm ,jdbcType=VARCHAR},
                                #{psitCd ,jdbcType=VARCHAR},#{psitNm ,jdbcType=VARCHAR}, #{useYn,jdbcType=VARCHAR}, #{empClphn ,jdbcType=VARCHAR}, 
                                #{empTlphn ,jdbcType=VARCHAR} , #{empEmail ,jdbcType=VARCHAR}, 'N', #{empState ,jdbcType=VARCHAR}, #{empPic ,jdbcType=VARCHAR},
                                SYSDATE, #{userId ,jdbcType=VARCHAR}

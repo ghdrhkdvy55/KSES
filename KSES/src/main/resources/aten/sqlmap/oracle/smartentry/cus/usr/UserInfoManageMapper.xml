@@ -62,14 +62,21 @@
 	<select id="selectSSOUserInfo" resultType="UserLoginInfo">
 		SELECT 
 			USER_ID, 'USER_DVSN_1' AS USER_DVSN, USER_NM, USER_PHONE, USER_SEX_MF, USER_BIRTH_DY, LAST_UPDUSR_ID, LAST_UPDT_DTM,
-			USER_RCPT_YN, USER_RCPT_DVSN, USER_RCPT_NUMBER
+			USER_RCPT_YN, USER_RCPT_DVSN, USER_RCPT_NUMBER,
+			<![CDATA[
+			CASE 
+				WHEN INDVDLINFO_AGRE_DT IS NULL THEN 'Y'
+				WHEN INDVDLINFO_AGRE_DT < TO_CHAR(TO_DATE(SYSDATE - (INTERVAL '3' YEAR)),'YYYYMMDD') THEN 'Y'
+			ELSE 'N'
+			]]>
+			END AS indvdlinfoAgreYn
 		FROM TSER_USER_INFO_I
 		<choose>
 		<when test="@org.apache.commons.lang3.StringUtils@equals(params.envType,'CLOUD')">
 			WHERE USER_CARD_ID = #{params.cardId, jdbcType=VARCHAR}
 		</when>
 		<otherwise>
-			WHERE USER_CARD_ID = FC_DEC(#{params.cardId, jdbcType=VARCHAR})
+			WHERE USER_CARD_ID = (SELECT FC_DEC(#{params.cardId, jdbcType=VARCHAR}) FROM DUAL)
 			AND USER_CARD_SEQ = #{params.cardSeq, jdbcType=VARCHAR}
 		</otherwise>
 		</choose>
@@ -97,12 +104,12 @@
    	<select id="selectSpeedOnVacntnInfo" resultType="lmap">
    		SELECT USER_ID, COVID_DY FROM
    		<choose>
-   			<when test="@org.apache.commons.lang3.StringUtils@equals(envType,'DEV')">
+			<when test="@org.apache.commons.lang3.StringUtils@equals(envType,'DEV')">
    				VW_KRACEWEB@SMARTDEVLINK
    			</when>
-   			<otherwise>
-   				VW_KRACEWEB@SMARTDEVLINK
-   			</otherwise>
+   			<when test="@org.apache.commons.lang3.StringUtils@equals(envType,'PROD')">
+   				VW_KRACEWEB@SMARTENTRLINK
+   			</when>
    		</choose>
    		WHERE USER_ID = #{userId}
    	</select>

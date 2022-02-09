@@ -517,7 +517,7 @@
 									}	
 								}
 							} else if(result.status == "LOGINFAIL"){
-								fn_openPopup("세션 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
+								fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/main.do");
 							}
 						},
 						function(request) {
@@ -555,7 +555,8 @@
 					"firstIndex" : "0",
 					"pageSize" : "5",
 					"pageUnit" : "5",
-					"searchCenterCd" : centerCd
+					"searchCenterCd" : centerCd,
+					"searchCondition" : "ALL"
     	    	}
     	    	
     	    	fn_Ajax 
@@ -566,7 +567,7 @@
 					false,
 	    	    	function(result){
 	    	    		if (result.status == "SUCCESS") {
-	    	    			if (result.resultlist.length>0){
+	    	    			if (result.resultlist.length > 0) {
 	    	    				$(".null_cont").hide();
 	    	    				var sHTML = "";
 	    	    				
@@ -574,11 +575,12 @@
 	    	    					var cssClass = (i == 0) ? "class='main_noti_list'":"";
 	    	    					var obj = result.resultlist[i];
 	    	    					sHTML += "<div "+cssClass+">"
-	    	                              +  "  <div class='notice_con' id='n_"+obj.board_seq+"'> "                           
-	    	                              +  "     <p class='notice_date'>'"+obj.last_updt_dtm+"'</p>"
-	    	                              +  "     <p class='notice_tit'><span>'"+obj.board_title+"'</span></p>"
+	    	                              +  "  <div class='notice_con' id='n_"+obj.board_seq+"'>"
+	    	                              +  "     <p class='notice_cat'>" + obj.board_dvsn + "</p>"
+	    	                              +  "     <p class='notice_date'>" + obj.last_updt_dtm + "</p>"
+	    	                              +  "     <p class='notice_tit'><span>" + obj.board_title + "</span></p>"
 	    	                              +  "	</div>"
-	    	                              +  "	<div class='notice_inner' id='c_"+obj.board_seq+"'>1231313121</div>"
+	    	                              +  "	<div class='notice_inner' id='c_"+obj.board_seq+"'></div>"
 	    	                              +  "</div>"; 
 	    	    					$("#main_notice:last").append(sHTML);
 	    	    					sHTML = "";
@@ -608,7 +610,6 @@
 	   	    								false,
 	   	    								function(result) {
 	   	    									if (result.status == "SUCCESS") {
-	   	    				    	    			console.log(result);
 	   	    										var obj = result.resultlist;
 	   	    										var boardContent = $("#c_"+ id.replace("n_", ""));
 	   	    										boardContent.html(obj.board_cn);
@@ -624,7 +625,7 @@
 	   	    		    	    									"color" : "black",
 	   	    		    	    									"margin-right" : "5px"
 	   	    		    	    								})
-	   	    		    	    								.attr("href","javascript:fn_fileDownload('" + item.stre_file_nm +"');")
+	   	    		    	    								.attr("href","javascript:fn_fileDownload('" + item.atch_file_id + "');")
 	   	    		    	    								.append("<img src='/resources/img/front/ic_title_file.svg' style='vertical-align : middle;'>" + item.orignl_file_nm);
 	   	    		    	    							fileContent.append(file);
 	   	    		    	    						});
@@ -756,8 +757,7 @@
 								$("#Card_Pw").val("");
 								$("#pay_number").bPopup();
 								$(".classCost").html(resvInfo.resv_pay_cost);
-								//$("#pay_number a:eq(1)").off().on('click', function() {});
-								$("#pay_number a:eq(1)").click(function(resvSeq) {
+								$("#pay_number a:eq(1)").off().on('click', function(resvSeq) {
 									mainService.fn_payment(resvInfo);	
 								});
 							} else {
@@ -827,7 +827,7 @@
 								fn_openPopup(result.regist.Error_Msg, "red", "ERROR", "확인", "javascript:location.reload();");
 							}
 				    	} else {
-				    		fn_openPopup("세션 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "");
+				    		fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "");
 				    	}
 					},
 					function(request) {
@@ -878,7 +878,7 @@
 								validResult = result.validResult;
 							}
 						} else if (result.status == "LOGIN FAIL"){
-							fn_openPopup("세션 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/login.do'");
+							fn_openPopup("로그인 정보가 올바르지 않습니다.", "red", "ERROR", "확인", "/front/login.do'");
 						}
 					},
 					function(request) {

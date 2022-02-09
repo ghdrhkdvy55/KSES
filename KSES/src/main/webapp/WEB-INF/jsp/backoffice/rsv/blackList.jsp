@@ -492,7 +492,7 @@
 			gridEmp.jqGrid('clearGridData',true);
 			
 			if(searchDvsn == "user") {
-				url ="/backoffice/cus/userListAjax.do";
+				url ="/backoffice/cus/userListInfoAjax.do";
 				checkTag = "userSearchKeyword";
 				colModel =
 				[

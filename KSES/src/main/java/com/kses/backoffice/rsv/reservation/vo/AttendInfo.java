@@ -18,6 +18,7 @@ public class AttendInfo {
 	private String rcvCd = "";
 	private String qrCode = "";
 	private String userNm = "";
+	private String enterAdminId = "";
 	private String mode = "";
 	private int ret = 0;
 	

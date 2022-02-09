@@ -119,8 +119,7 @@
     <div class="whiteBox">
       <table id="mainGrid">
       </table>
-	  <div id="pager" class="scroll" style="text-align:center;"></div>     
-	  <br/>
+	  <div id="pager" class="scroll" style="text-align:center;"></div>
 	  <div id="paginate"></div>
     </div>
   </div>
@@ -257,11 +256,10 @@
 							<table class="total_tab gui_table" id="seat_resultList">
 								<thead>
 									<tr>
+										<th style="float: left; width:80px;">사용유무</th>
 										<th style="float: left;">레이블</th>
-										<th style="float: left;">사용유무</th>
-										<th style="float: left;">금액</th>
-										<th style="left: 14%; float: left;">Top</th>
-										<th style="right: 19.6%; float: right;">Left</th>
+										<th style="float: left;">Top</th>
+										<th style="float: left;">Left</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -616,21 +614,20 @@ var jqGridFunc  = {
 	                        		//동적 클릭 하는 부분 처리 나중에 확인 하기 
 	                        		
 	                        	}
-	                        	thtml += "<tr id='tr_"+obj[i].season_seat_cd+"'>" +
-                               "   <td><input type='text' id='label_"+obj[i].season_seat_cd+"' value='"+ obj[i].season_seat_label +"' style='width:80px;' />"+
-                               "   <input type='hidden' name='season_seat_cd' value='" + obj[i].season_seat_cd + "'></td>" +
-                               "   <td><input type='checkbox' id='check_"+obj[i].season_seat_cd+"' "+check+">" +
-                               "   <td><input type='text' id='cost_"+obj[i].season_seat_cd+"' value='"+ obj[i].season_cost +"'  style='width:80px;'/></td>"+
-                               "   <td><a href='javascript:top_up(&#34;" + obj[i].season_seat_cd + "&#34;)' class='up'></a>" +
-                               "   <input type='text' id='top_" + obj[i].season_seat_cd + "' name='top_" + obj[i].season_seat_cd + "' value='" + obj[i].season_seat_top + "' onchange='top_chage(&#34;" + obj[i].season_seat_cd + "&#34;, this.value)'  style='width:70px;'>" +
-                               "   <a href='javascript:top_down(&#34;" + obj[i].season_seat_cd + "&#34;)' class='down'></a></td>" +
-                               "   <td><a href='javascript:left_up(&#34;" + obj[i].season_seat_cd + "&#34;)' class='leftB'></a>" +
-                               "   <input type='text' id='left_" + obj[i].season_seat_cd + "' name='left_" + obj[i].season_seat_cd + "' value='" + obj[i].season_seat_left + "' onchange='left_chage(&#34;" + obj[i].season_seat_cd + "&#34, this.value)'  style='width:70px;'>" +
-                               "   <a href='javascript:left_down(&#34;" + obj[i].season_seat_cd + "&#34;)' class='rightB'></a></td>" +
-                               "</tr>";
-                               $("#seat_resultList > tbody").append(thtml);
-                               thtml = "";
 	                        	
+	                        	thtml += "<tr id='tr_"+obj[i].season_seat_cd+"'>" +
+								"   <input type='hidden' name='season_seat_cd' value='" + obj[i].season_seat_cd + "'></td>" +
+								"   <td style='width:80px;'><input type='checkbox' id='check_"+obj[i].season_seat_cd+"' "+check+">" +
+                               	"   <td><input type='text' id='label_"+obj[i].season_seat_cd+"' value='"+ obj[i].season_seat_label +"' style='width:80px;' />"+
+                               	"   <td><a href='javascript:top_up(&#34;" + obj[i].season_seat_cd + "&#34;)' class='up'></a>" +
+                               	"   <input type='text' id='top_" + obj[i].season_seat_cd + "' name='top_" + obj[i].season_seat_cd + "' value='" + obj[i].season_seat_top + "' onchange='top_chage(&#34;" + obj[i].season_seat_cd + "&#34;, this.value)'  style='width:70px;'>" +
+                               	"   <a href='javascript:top_down(&#34;" + obj[i].season_seat_cd + "&#34;)' class='down'></a></td>" +
+                               	"   <td><a href='javascript:left_up(&#34;" + obj[i].season_seat_cd + "&#34;)' class='leftB'></a>" +
+                               	"   <input type='text' id='left_" + obj[i].season_seat_cd + "' name='left_" + obj[i].season_seat_cd + "' value='" + obj[i].season_seat_left + "' onchange='left_chage(&#34;" + obj[i].season_seat_cd + "&#34, this.value)'  style='width:70px;'>" +
+                               	"   <a href='javascript:left_down(&#34;" + obj[i].season_seat_cd + "&#34;)' class='rightB'></a></td>" +
+                               	"</tr>";
+                               	$("#seat_resultList > tbody").append(thtml);
+                               	thtml = "";
 	                        }
  	                    //여기 부분 확인 하기
 	                        for (var i in result.resultlist) {
@@ -705,7 +702,6 @@ var jqGridFunc  = {
 	            var SeasonSeatInfo = new Object();
 	            SeasonSeatInfo.seasonSeatCd = $(this).val();
 	            SeasonSeatInfo.seasonSeatLabel = $("#label_" + SeasonSeatInfo.seasonSeatCd).val();
-	            SeasonSeatInfo.seasonCost = $("#cost_" + SeasonSeatInfo.seasonSeatCd).val();
 	            SeasonSeatInfo.useYn =  $("#check_" + SeasonSeatInfo.seasonSeatCd).is(":checked") == true ? "Y" : "N";
 	            SeasonSeatInfo.seasonSeatTop = $("#top_" + SeasonSeatInfo.seasonSeatCd).val(); // $(this).css('top').replace('px', '');
 	            SeasonSeatInfo.seasonSeatLeft = $("#left_" + SeasonSeatInfo.seasonSeatCd).val(); //$(this).css('left').replace('px', '');

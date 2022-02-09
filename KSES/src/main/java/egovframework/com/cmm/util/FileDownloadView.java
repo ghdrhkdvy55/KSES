@@ -18,8 +18,8 @@ public class FileDownloadView extends AbstractView {
 	private static final Logger LOGGER = LoggerFactory.getLogger(FileDownloadView.class);
 	
 	public FileDownloadView(){
-        //content type을 지정. 
-        setContentType("apllication/download; charset=utf-8");
+        //content type을 지정.
+        setContentType("apllication/download; charset=UTF-8");
     }
     @Override
     protected void renderMergedOutputModel(Map<String, Object> model,
@@ -28,16 +28,15 @@ public class FileDownloadView extends AbstractView {
     	Map<String, Object> allData = (Map) model.get("allData");
     	File file = (File) allData.get("downloadFile");
     	String originalFileName = (String) allData.get("originalName");
-    	
-        //File file = (File) model.get("downloadFile");
-        
+
     	res.setContentType(getContentType());
         res.setContentLength((int) file.length());
-        res.setHeader("Content-Disposition", "attachment; filename=\"" + 
-                java.net.URLEncoder.encode(originalFileName, "utf-8") + "\";");
+        res.setHeader("Content-Disposition", "attachment; filename=\"" + java.net.URLEncoder.encode(originalFileName, "UTF-8") + "\";");
         res.setHeader("Content-Transfer-Encoding", "binary");
+        
         OutputStream out = res.getOutputStream();
         FileInputStream fis = null;
+        
         try {
             fis = new FileInputStream(file);
             FileCopyUtils.copy(fis, out);
@@ -46,7 +45,7 @@ public class FileDownloadView extends AbstractView {
         } finally {
             if(fis != null) {
                 try { 
-                    fis.close(); 
+                    fis.close();
                 } catch (IOException e) {
                 	LOGGER.error("FileDownloadView ERROR : " + e.toString());
                 }

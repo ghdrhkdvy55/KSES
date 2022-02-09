@@ -1734,18 +1734,20 @@ h2.guide_tit {
 }
 .certify a {color:#000}
 .certify img {vertical-align: sub; margin-right: 1rem;}
-.covid19_qna {padding: 1rem; border: 1px solid #e0e0e0; margin-top: 2rem; font-size: .9em; color: #878787;}
-.covid19_qna p {color: #000; margin-bottom: 1rem; text-align: center;}
-.covid19_qna ol {margin-top: 2rem;}
-.covid19_qna ol li {list-style: circle; margin-left: 2rem; line-height:1.6em ;}
+.auto_payment_check {display:none;}
+.covid19_qna, .auto_payment_check {padding: 1rem; border: 1px solid #e0e0e0; margin-top: 2rem; font-size: .9em; color: #878787;}
+.covid19_qna p, .auto_payment_check p {color: #000; margin-bottom: 1rem; text-align: center;}
+.covid19_qna ol, .auto_payment_check ol {margin-top: 2rem;}
+.covid19_qna ol li, .auto_payment_check ol li {list-style: circle; margin-left: 2rem; line-height:1.6em ;}
 .covid19_qna ol li:last-child {list-style: none;}
-.covid19_qna .check_impnt {color: red;}
-.qna_check+label:before {left: -20px !important} 
-.qna_check+label {padding-left: 0 !important ;}
-.qna_check+label:after {left: -14px !important}
+.auto_payment_check ol li:last-child {list-style: none;}
+.covid19_qna .check_impnt, .auto_payment_check .check_impnt {color: red;}
+.qna_check+label:before, .auto_payment_check+label:before {left: -20px !important} 
+.qna_check+label, .auto_payment_check+label {padding-left: 0 !important ;}
+.qna_check+label:after, .auto_payment_check+label:after {left: -14px !important}
 
 .cash_radio+label {font-size: 0.9em;}
-.cash_refund li {display: inline-block; }
+.cash_refund li {display: inline-block;}
 .cash_refund li:last-child {display: block;}
 .cash_refund {margin-top: 1rem;}
 
@@ -2151,7 +2153,7 @@ ul.tabs li{
 .cancel_btn a.dbBtn {background:#cdcdcd}
 .cancel_btn li .dislBtn  {background: #c0c0c0;}
 .summit_btn {
-	margin-top:4rem;
+	margin-top: 2rem;
     text-align: center;
 }
 .summit_btn a {
@@ -2335,7 +2337,7 @@ ul.tabs li{
 .person_check ol {margin-top: 2rem; }
 
 .person_check ol li:last-child {list-style: none; }
-.person_check .check_impnt {color: #3197ff; text-align:center}
+.person_check .check_impnt {color: red; text-align:center}
 
 /*.cal_icon {background: #fff url(../../img/cal_icon.png) no-repeat center right 3px;}*/
 
@@ -2755,3 +2757,17 @@ ul.tabs li{
 }
 .agree_pop {padding: 40px 20px; padding-bottom:0}
 .other_btn {font-size:1.5em}
+
+/* 현금영수증 */
+.rsv_stat_btn li {display: inline-block; width: 48%;}
+.rsv_stat_btn li:first-child a{background:#47D6BE; color:#fff ;}
+.rsv_stat_btn li a {
+color: #000;
+font-weight: 600;
+display: inline-block;
+padding: 1.7rem 0;
+border-radius: 8px;
+width: 100%;
+text-align: center;
+background: #eee;
+}.rsv_stat_btn li:last-child {float: inherit;}

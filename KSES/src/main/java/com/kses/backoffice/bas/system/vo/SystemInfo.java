@@ -32,7 +32,12 @@ public class SystemInfo {
 	// 블랙리스트 해제일
 	private String blklstRlsdt;
 	
-	//비회원 예약 가능 여부
+	// 비회원 예약 가능 여부
 	private String guestResvPossibleYn;
+	
+	// 1차 자동취소 사용여부 
+	private String autoCancelR1UseYn;
+	
+	// 2차 자동취소 사용여부 
+	private String autoCancelR2UseYn;
 }
-

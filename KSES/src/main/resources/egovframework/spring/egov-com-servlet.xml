@@ -152,6 +152,9 @@
 	    p:viewClass="org.springframework.web.servlet.view.JstlView"
 	    p:prefix="/WEB-INF/jsp/" p:suffix=".jsp"/>
 
+	<!-- BeanNameViewResolver관련 파일 다운로드를 위한 Bean등록-->
+	<bean id="FileDownloadView" class="egovframework.com.cmm.util.FileDownloadView" />
+
 	<!-- JSON View -->
 	<bean id="jsonView" class="org.springframework.web.servlet.view.json.MappingJackson2JsonView">
 	    <property name="contentType" value="application/json;charset=UTF-8"/>

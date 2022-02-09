@@ -117,7 +117,7 @@ public class ResJosnController {
 			}
 
 			if (SmartUtil.NVL(sendInfo.get("gubun"), "").toString().equals("login")) {
-				Url = propertiesService.getString("sppeedUrl_T") + "user/userChk";
+				Url = propertiesService.getString("speedOnUrl") + "user/userChk";
 
 				// 스피드온 패스워드 암호화(임시)
 				// Login_Type -> 1 = SHA-512 + Base64 : 2 = SHA-256 + Base64
@@ -146,8 +146,8 @@ public class ResJosnController {
 					user.setUserNm(node.get("User_Nm").asText());
 					user.setUserId(node.get("User_Id").asText());
 					user.setUserDvsn("USER_DVSN_1");
-					user.setUserCardNo(node.get("Card_Id").asText());
-					user.setUserCardId(node.get("Card_No").asText());
+					user.setUserCardNo(node.get("Card_No").asText());
+					user.setUserCardId(node.get("Card_Id").asText());
 					user.setUserCardSeq(node.get("Card_Seq").asText());
 
 					user.setMode("Ins");
@@ -164,7 +164,7 @@ public class ResJosnController {
 				}
 			} else if (SmartUtil.NVL(sendInfo.get("gubun"), "").toString().equals("fep")) {
 				// 출금 정보
-				Url = propertiesService.getString("sppeedUrl_T") + "trade/fepWithdraw";
+				Url = propertiesService.getString("speedOnUrl") + "trade/fepWithdraw";
 
 				Map<String, Object> resvInfo = resService.selectUserResvInfo(jsonObject);
 				if(!SmartUtil.NVL(resvInfo.get("resv_state"),"").equals("RESV_STATE_1")) {
@@ -177,7 +177,9 @@ public class ResJosnController {
 					model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 					model.addObject(Globals.STATUS_MESSAGE, Message);
 					return model;
-				} else if(SmartUtil.NVL(resvInfo.get("resv_pay_dvsn"),"").equals("RESV_PAY_DVSN_2")) {
+				}
+				
+				if(SmartUtil.NVL(resvInfo.get("resv_pay_dvsn"),"").equals("RESV_PAY_DVSN_2")) {
 					model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 					model.addObject(Globals.STATUS_MESSAGE, "이미 결제처리된 예약정보 입니다.");
 					return model;
@@ -221,7 +223,7 @@ public class ResJosnController {
 					}
 				}
 			} else if (SmartUtil.NVL(sendInfo.get("gubun"), "").toString().equals("Inf")) {
-				Url = propertiesService.getString("sppeedUrl_T") + "trade/schTradeInfo";
+				Url = propertiesService.getString("speedOnUrl") + "trade/schTradeInfo";
 				node = SmartUtil.requestHttpJson(Url, jsonObject.toJSONString(), "SPEEDSCHTRADEINFO", "SPEEDON","KSES");
 				if (node.get("Error_Cd").asText().equals("SUCCESS")) {
 					// 예약 테이블 취소 정보 처리 하기
@@ -234,7 +236,7 @@ public class ResJosnController {
 				}
 			} else if (SmartUtil.NVL(sendInfo.get("gubun"), "").toString().equals("dep")) {
 				// 취소 정보
-				Url = propertiesService.getString("sppeedUrl_T") + "trade/fepDeposit";
+				Url = propertiesService.getString("speedOnUrl") + "trade/fepDeposit";
 				Map<String, Object> resvInfo = resService.selectUserResvInfo(jsonObject);
 
 				if(!SmartUtil.NVL(resvInfo.get("resv_pay_dvsn"),"").equals("RESV_PAY_DVSN_2")) {
@@ -477,6 +479,7 @@ public class ResJosnController {
 					ResvInfo resvInfo = new ResvInfo();
 					resvInfo.setResvSeq(resSeq);
 					resvInfo.setResvState("RESV_STATE_2");
+					resvInfo.setLastUpdusrId("SYSTEM");
 					resService.updateResvState(resvInfo);
 
 					return model;

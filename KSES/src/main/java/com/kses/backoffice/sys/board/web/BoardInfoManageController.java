@@ -461,16 +461,18 @@ public class BoardInfoManageController {
 			try{
 				Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
 				if(!isAuthenticated) {
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-				model.setViewName("/backoffice/login");
-				return model;
+					model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
+					model.setViewName("/backoffice/login");
+					return model;
 				}
 				List<String> streFiles = SmartUtil.dotToList(fileSeqs);
 				
 				for (String strFile : streFiles) {
 					uniService.deleteUniStatement("STRE_FILE_NM", "COMTNFILEDETAIL", "STRE_FILE_NM=["+strFile+"[");
 				}
+				
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.delete"));
 			}catch (Exception e){
 				LOGGER.info(e.toString());
 				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);	
@@ -545,32 +547,39 @@ public class BoardInfoManageController {
 		
 		@RequestMapping(value="fileDownload.do")
 		public ModelAndView callDownload(HttpServletRequest request, HttpServletResponse response) throws Exception {
+			ModelAndView model = new ModelAndView();
+			
+			Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+		    if(!isAuthenticated) {
+		    	model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
+				model.setViewName("/backoffice/login");
+				return model;
+		    }
 			
 			File downloadFile;
 			Map<String, Object> allData = new HashMap<String, Object>();
-			String filePath = propertiesService.getString("Globals.fileStorePath");
-			String boardSeq = request.getParameter("boardSeq");
-			String uploadFileName = boardInfoService.selectBoardUploadFileName(boardSeq);
-			String originalFileName = boardInfoService.selectBoardoriginalFileName(boardSeq);
+			String filePath = propertiesService.getString("Globals.filePath");
+			String atchFileId = request.getParameter("atchFileId");
+			String uploadFileName = boardInfoService.selectBoardUploadFileName(atchFileId);
+			String originalFileName = boardInfoService.selectBoardoriginalFileName(atchFileId);
 			 
-			downloadFile = new File(filePath+uploadFileName);
+			downloadFile = new File(filePath + "/" + uploadFileName);
 
 			try{
 			    if(!downloadFile.canRead()){
 			    	LOGGER.info("FILE DOWNLOAD IN CHECK ERROR!!!");
 			        throw new Exception("File can't read(파일을 찾을 수 없습니다)");
-			    }else{
+			    } else {
 			    	downloadFile = new File(downloadFile.getParent(), uploadFileName);
 			    	
 			    	allData.put("downloadFile", downloadFile);
 			    	allData.put("originalName", originalFileName);
 			    }
-			}catch(Exception e){
+			} catch(Exception e) {
 				LOGGER.info(e.toString());
 				e.printStackTrace();
 			}
-
+			
 		    return new ModelAndView("FileDownloadView", "allData",allData);
 		}
-		
 }
