@@ -160,7 +160,9 @@ public class ResJosnController {
 					model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 					model.addObject(Globals.STATUS_MESSAGE, Message);
 					return model;
-				} else if(SmartUtil.NVL(resvInfo.get("resv_pay_dvsn"),"").equals("RESV_PAY_DVSN_2")) {
+				}
+				
+				if(SmartUtil.NVL(resvInfo.get("resv_pay_dvsn"),"").equals("RESV_PAY_DVSN_2")) {
 					model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 					model.addObject(Globals.STATUS_MESSAGE, "이미 결제처리된 예약정보 입니다.");
 					return model;
