@@ -177,7 +177,8 @@
 			pageUnit: $('.ui-pg-selbox option:selected').val(),
 			searchKeyword: $('#searchKeyword').val(),
 			searchCondition: $('#searchCondition').val(),
-			searchDepth: $('#searchDepth').val()
+			searchDepth: $('#searchDepth').val(),
+			mode: 'list'
 		};
 		EgovJqGridApi.mainGridAjax('/backoffice/mng/empListAjax.do', params, fnSearch);
 	}
