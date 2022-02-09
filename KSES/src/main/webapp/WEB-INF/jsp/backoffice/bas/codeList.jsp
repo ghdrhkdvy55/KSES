@@ -155,10 +155,19 @@
 			{ label: '사용유무', name:'use_at', align:'center', fixed: true },
             { label: '수정자', name:'last_updusr_id', align:'center', fixed: true },
             { label: '수정일자', name:'last_updt_pnttm', align:'center', fixed: true, formatter: 'date' },
+            { label: '상세코드수', name:'child_cnt', hidden: true },
             { label: '수정', align:'center', width: 50, fixed: true, formatter: (c, o, row) =>
             	'<a href="javascript:fnCmmnCodeInfo(\''+ row.code_id +'\');" class="edt_icon"></a>'
             }
-		], false, true, fnSearch);
+		], false, true, fnSearch).jqGrid('setGridParam', {
+            isHasSubGrid: function(rowId) {
+                let rowData = $('#mainGrid').jqGrid('getRowData', rowId);
+                if (rowData.child_cnt === '0') {
+                    return false;
+                }
+                return true;
+            }
+        });
 	});
 	// 메인 목록 검색
 	function fnSearch(pageNo) {
