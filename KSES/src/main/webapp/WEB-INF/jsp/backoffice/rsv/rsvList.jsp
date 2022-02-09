@@ -748,14 +748,16 @@
 				form = fn_resvDateFormat(item.resv_end_dt); 	
 			} else if(index == 'resv_pay_cost') {
 				form = item.resv_pay_cost + "원";
-			} else if(index == 'resv_rcpt_print' && item.resv_rcpt_yn == 'Y' && item.resv_state != 'RESV_STATE_4') {
-				var rcptState = "발행";
-				if(item.resv_rcpt_state == "" || item.resv_rcpt_state == "RESV_RCPT_STATE_1") {
-					form =  '<a href="javascript:jqGridFunc.fn_billPrint(&#39;' + item.resv_seq + '&#39;);" class="blueBtn" style="padding: 5px 12px;">취소</a>';
-					form += '<a href="javascript:jqGridFunc.fn_billState(&#39;' + item.resv_seq + '&#39;);" class="blueBtn" style="padding: 5px 12px;">조회</a>';
-				} else {
-					form =  '<a href="javascript:jqGridFunc.fn_billPrint(&#39;' + item.resv_seq + '&#39;);" class="blueBtn" style="padding: 5px 12px;">발행</a>';
-					form += '<a href="javascript:void(0);" class="blueBtn" style="padding: 5px 12px;">조회</a>';
+			} else if(index == 'resv_rcpt_print') {
+				if(item.resv_rcpt_yn == 'Y' && item.resv_pay_dvsn == "RESV_PAY_DVSN_2") {
+					var rcptState = "발행";
+					if(item.resv_rcpt_state == "" || item.resv_rcpt_state == "RESV_RCPT_STATE_1") {
+						form =  '<a href="javascript:jqGridFunc.fn_billPrint(&#39;' + item.resv_seq + '&#39;);" class="blueBtn" style="padding: 5px 12px;">취소</a>';
+						form += '<a href="javascript:jqGridFunc.fn_billState(&#39;' + item.resv_seq + '&#39;);" class="blueBtn" style="padding: 5px 12px;">조회</a>';
+					} else {
+						form =  '<a href="javascript:jqGridFunc.fn_billPrint(&#39;' + item.resv_seq + '&#39;);" class="blueBtn" style="padding: 5px 12px;">발행</a>';
+						form += '<a href="javascript:void(0);" class="blueBtn" style="padding: 5px 12px;">조회</a>';
+					}
 				}
 			}
 			

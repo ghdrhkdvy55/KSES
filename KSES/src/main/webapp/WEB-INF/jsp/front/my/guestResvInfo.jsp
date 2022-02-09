@@ -314,7 +314,10 @@
  						
  						$btnUl.append($cancelBtnLi);
 					}
- 					$btnUl.append("<li class='close_btn'><a href='javascript:guestResvService.fn_openRcptPopup(\"" + resvInfo.resv_seq +"\",\"" +  resvInfo.resv_rcpt_yn +"\")'>현금 영수증</a></li>");
+ 					
+ 					if(resvInfo.resv_pay_dvsn == "RESV_PAY_DVSN_2") {
+ 						$btnUl.append("<li class='close_btn'><a href='javascript:guestResvService.fn_openRcptPopup(\"" + resvInfo.resv_seq +"\",\"" +  resvInfo.resv_rcpt_yn +"\")'>현금 영수증</a></li>");
+ 					}
  					
 					$(".resv_contents").append($resvInfoUl);
 					$(".resv_contents").append($btnUl);

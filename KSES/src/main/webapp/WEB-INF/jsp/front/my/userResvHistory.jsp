@@ -281,7 +281,9 @@
 				                        
 				                        setHtml += "<ul class='rsv_stat_btn'>";
 				                        
-				                        setHtml += "<li><a href='javascript:userResvService.fn_openRcptPopup(\"" + item.resv_seq +"\",\"" +  item.resv_rcpt_yn +"\")'>현금 영수증</a></li>";
+				                        if(item.resv_pay_dvsn == "RESV_PAY_DVSN_2") {
+				                        	setHtml += "<li><a href='javascript:userResvService.fn_openRcptPopup(\"" + item.resv_seq +"\",\"" +  item.resv_rcpt_yn +"\")'>현금 영수증</a></li>";
+				                        }
 				                        if(item.resv_state == "RESV_STATE_1") {
 			                            	setHtml += "<li><a href='javascript:userResvService.fn_resvCancelCheck(&#39;" + item.resv_seq +"&#39;)'>예약 취소</a></li>";
 				                        }

@@ -159,8 +159,8 @@
 										<span>&lt;사전결제동의&gt;</span>
 										<ol>
                                              <li>해당 예약은 오전10시30분에 입장료 및 좌석이용료가 스피드온에서 자동결제됩니다.</li>
-                                             <li>스피드온 잔액부족 시 결제는 이루어지지 않습니다 <span style="color:red;">잔액충전 후 수동결제 바랍니다.</span></li>
-                                             <li>사전결제된 예약은 미입장시 수목 오후8시, 금토일 오후7시 일괄환불됩니다.</li>
+                                             <li>스피드온 잔액부족 시 결제는 이루어지지 않습니다 잔액충전 후 수동결제 바랍니다.</li>
+                                             <li>사전결제된 예약은 미입장시 수목 오후6시, 금토일 오후7시 일괄환불됩니다.</li>
                                              <li class="check_impnt">
                                                  <input class="magic-checkbox qna_check" type="checkbox" name="layout" id="ENTRY_DVSN_1_auto_payment_check" value="Y">
                                                  <label for="ENTRY_DVSN_1_auto_payment_check">
@@ -311,8 +311,8 @@
                                                 <span>&lt;사전결제동의&gt;</span>
                                                 <ol>
                                                     <li>해당 예약은 오전10시30분에 입장료 및 좌석이용료가 스피드온에서 자동결제됩니다.</li>
-                                                    <li>스피드온 잔액부족 시 결제는 이루어지지 않습니다 <span style="color:red;">잔액충전 후 수동결제 바랍니다.</span></li>
-                                                    <li>사전결제된 예약은 미입장시 수목 오후8시, 금토일 오후7시 일괄환불됩니다.</li>
+                                                    <li>스피드온 잔액부족 시 결제는 이루어지지 않습니다 잔액충전 후 수동결제 바랍니다.</li>
+                                                    <li>사전결제된 예약은 미입장시 수목 오후6시, 금토일 오후7시 일괄환불됩니다.</li>
                                                     <li class="check_impnt">
                                                         <input class="magic-checkbox qna_check" type="checkbox" name="layout" id="ENTRY_DVSN_2_auto_payment_check" value="Y">
                                                         <label for="ENTRY_DVSN_2_auto_payment_check">
