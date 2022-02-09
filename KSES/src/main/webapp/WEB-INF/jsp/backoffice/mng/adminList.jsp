@@ -347,7 +347,8 @@
 		let params = {
 			pageIndex: pageNo,
 			pageUnit: '5',
-			searchKeyword: $('#pSearchKeyword').val()
+			searchKeyword: $('#pSearchKeyword').val(),
+			mode: 'list'
 		};
 		EgovJqGridApi.popGridAjax('popGrid', '/backoffice/mng/empListAjax.do', params, fnEmpInfoSearch);
 	}
