@@ -77,21 +77,21 @@
 						</td>
 					</tr>
 					<tr>
-						<th>저정경로</th>
+						<th>한글명</th>
 						<td>
-						    <input type="text" name="progrmStrePath">
+							<input type="text" name="progrmKoreannm">
 						</td>
 					</tr>
 					<tr>
-						<th>한글명</th>
+						<th>저장경로</th>
 						<td>
-						    <input type="text" name="progrmKoreannm">
+						    <input type="text" name="progrmStrePath" style="width:100%;">
 						</td>
 					</tr>
 					<tr>
 						<th>URL</th>
 						<td>
-						    <input type="text" name="url">
+						    <input type="text" name="url" style="width:100%;">
 						</td>
 					</tr>
 					<tr>

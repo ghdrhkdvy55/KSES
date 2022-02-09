@@ -84,7 +84,7 @@
                     <tr>
                         <th>상세설명</th>
                         <td>
-                            <input type="text" name="authorDc">
+                            <input type="text" name="authorDc" style="width:100%;">
                         </td>
                     </tr>
                 </tbody>

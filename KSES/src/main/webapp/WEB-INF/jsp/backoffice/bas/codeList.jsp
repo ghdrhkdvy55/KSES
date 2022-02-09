@@ -77,7 +77,7 @@
 	                </tr>
 	                <tr>
 	                    <th>분류코드설명</th>
-	                    <td><input type="text" name="codeIdDc"></td>
+	                    <td><input type="text" name="codeIdDc" style="width:100%;"></td>
 	                </tr>
 	                <tr>
 	                    <th>사용유무</th>
@@ -118,13 +118,13 @@
                     <tr>
                         <th>상세코드설명</th>
                         <td>
-                            <input type="text" name="codeDc" />
+                            <input type="text" name="codeDc" style="width:100%;">
                         </td>
                     </tr>
                     <tr>
                         <th>기타</th>
                         <td>
-                            <input type="text" name="codeEtc1" />
+                            <input type="text" name="codeEtc1" style="width:100%;">
                         </td>
                     </tr>
                     <tr>
