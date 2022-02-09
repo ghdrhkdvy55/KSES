@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.kses.backoffice.bas.holy.mapper.HolyInfoManageMapper;
 import com.kses.backoffice.bas.holy.service.HolyInfoService;
 import com.kses.backoffice.bas.holy.vo.HolyInfo;
+import com.kses.backoffice.util.mapper.UniSelectInfoManageMapper;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
@@ -21,6 +22,9 @@ public class HolyInfoServiceImpl extends EgovAbstractServiceImpl implements Holy
 			
 	@Autowired
 	private HolyInfoManageMapper holyMapper;
+	
+	@Autowired
+	private UniSelectInfoManageMapper uniMapper;
 
 	@Override
 	public List<Map<String, Object>> selectHolyInfoList(Map<String, Object> params) throws Exception {
@@ -34,7 +38,18 @@ public class HolyInfoServiceImpl extends EgovAbstractServiceImpl implements Holy
 	
 	@Override
 	public int updateHolyInfo(HolyInfo vo) throws Exception {
-		return vo.getMode().equals("Ins") ? holyMapper.insertHolyInfo(vo) : holyMapper.updateHolyInfo(vo) ;
+		int ret;
+		Map<String, Object> doubleCheckHolySeq = holyMapper.selectHolyInfoDetail(vo.getHolySeq());
+		if (vo.getMode().equals("Ins")) {
+			ret = (uniMapper.selectIdDoubleCheck("HOLY_DT", "TSEC_HOLY_INFO_M", "HOLY_DT = ["+ vo.getHolyDt() + "[" ) > 0) ? -1 : holyMapper.insertHolyInfo(vo);
+		} else {
+			if (doubleCheckHolySeq.get("holy_dt").equals(vo.getHolyDt()) && doubleCheckHolySeq.get("holy_seq").toString().equals(vo.getHolySeq().toString())) {
+				ret = holyMapper.updateHolyInfo(vo);
+			} else {
+				ret = (uniMapper.selectIdDoubleCheck("HOLY_DT", "TSEC_HOLY_INFO_M", "HOLY_DT = ["+ vo.getHolyDt() + "[" ) > 0) ? -1 : holyMapper.updateHolyInfo(vo);
+			}			
+		}
+		return ret;
 	}
 	
 	@Override

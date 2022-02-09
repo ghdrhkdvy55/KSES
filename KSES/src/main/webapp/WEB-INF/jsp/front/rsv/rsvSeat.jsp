@@ -188,7 +188,7 @@
 								</li>
 								
 								<!--기타고지사항-->
-								<li class="person_check nonMemberArea">
+								<li class="person_check">
 									<p><span>&lt;기타 고지 사항 &gt;</span></p>
 									<ol>
 										<li class="notiCon">개인정보 보호법 제15조 제1항 제2호에 따라 정보주체의 동의 없이 개인정보를 수집·이용합니다.</li>
@@ -340,7 +340,7 @@
 										</li>
 										
 										<!--기타고지사항-->
-										<li class="person_check nonMemberArea">
+										<li class="person_check">
 											<p><span>&lt;기타 고지 사항 &gt;</span>	</p>
 											<ol>
 												<li class="notiCon">개인정보 보호법 제15조 제1항 제2호에 따라 정보주체의 동의 없이 개인정보를 수집·이용합니다.</li>

@@ -457,7 +457,7 @@ var jqGridFunc  = {
         			            	  var message = result.result == "OK" ? '<spring:message code="common.codeOk.msg" />' : '<spring:message code="common.codeFail.msg" />';
       			        		      var alertIcon =  result.result == "OK" ? "Y" : "N";
         			                if (result.status == "SUCCESS"){    			        		    
-        			        		    common_popup(message ,alertIcon, "bas_code_add");
+        			        		    common_popup(message ,alertIcon, "");
        			        		    	$("#idCheck").val(alertIcon);
 									}else {
 										common_popup(message, alertIcon, "bas_code_add");

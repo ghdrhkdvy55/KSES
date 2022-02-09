@@ -218,13 +218,13 @@
 		
 		<!-- 지점 현금영수증 정보 생성 -->
 		<![CDATA[
-		INSERT INTO TESR_CENTER_BILLDAY_INFO_I 
+		INSERT INTO TESR_BILLDAY_INFO_I 
 		(
-			BILLDAY_CD, CENTER_CD, BILL_DAY, BILL_DVSN, FRST_REGIST_DTM, 
+			BILLDAY_CD, CENTER_CD, BILL_DAY, BILL_SEQ, FRST_REGIST_DTM, 
 			FRST_REGTER_ID, LAST_UPDT_DTM, LAST_UPDUSR_ID
 		)
 		SELECT 
-			#{centerCd} || '_' || LPAD(LEVEL,2,0), #{centerCd}, '', SYSDATE, 
+			#{centerCd} || '_' || LPAD(LEVEL,2,0), #{centerCd}, LEVEL, '', SYSDATE, 
 			#{userId, jdbcType=VARCHAR}, SYSDATE, #{userId, jdbcType=VARCHAR}
 		FROM DUAL CONNECT BY LEVEL <= 7;
 		]]>

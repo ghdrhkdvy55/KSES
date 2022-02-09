@@ -174,7 +174,7 @@
     		        refresh : true,
     	            rownumbers : false, // 리스트 순번
     		        viewrecord : true,    // 하단 레코드 수 표기 유무
-    		        //loadonce : false,     // true 데이터 한번만 받아옴 
+    		        loadonce : false,     // true 데이터 한번만 받아옴 
     		        loadui : "enable",
     		        loadtext:'데이터를 가져오는 중...',
     		        emptyrecords : "조회된 데이터가 없습니다", //빈값일때 표시 
@@ -182,7 +182,6 @@
     		        autowidth:true,
     		        shrinkToFit : true,
     		        refresh : true,
-    		        loadonce: true,
     				viewrecords: true,
                     footerrow: false,
                     loadComplete : function (data){
