@@ -45,7 +45,7 @@ public class Scheduler {
 	 * 
 	 * @throws Exception
 	 */
-	@Scheduled(cron = "0 0/1 * * * * ")
+	@Scheduled(cron = "0 0/30 * * * * ")
 	public void resvNoshowScheduler() throws Exception {
 		List<Map<String, Object>> noshowResvList;
 		SystemInfo systemInfo = systemService.selectSystemInfo();

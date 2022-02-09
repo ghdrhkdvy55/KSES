@@ -55,7 +55,7 @@ public class SureMsgInfo {
 				
 				msg += SmartUtil.getSmsName(resvInfo) + "님 " + resvDate.substring(4,6) + "월 " + resvDate.substring(6,8) + "일 ";
                 msg += centerNm + "지점 " + seatNm + "에 예약 완료되었습니다. ";
-                msg += "(예약번호 : " + resvSeq.replaceAll("\\B(?=(\\d{4})+(?!\\d))", "-") + ")";
+                msg += "(예약번호 : " + resvSeq.replaceAll("^0+", "") + ")";
                 
                 buttonType = "WL";
             	buttonNm = "QR링크";
