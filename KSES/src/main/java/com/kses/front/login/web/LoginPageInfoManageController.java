@@ -129,7 +129,7 @@ public class LoginPageInfoManageController {
 			params.put("envType", envType);
 			UserLoginInfo userLoginInfo = userService.selectSSOUserInfo(params);
 			
-			if(userLoginInfo != null && userLoginInfo.getIndvdlinfoAgreYn().equals("Y")) {
+			if(userLoginInfo != null && userLoginInfo.getIndvdlinfoAgreYn().equals("N")) {
 				HttpSession httpSession = request.getSession();
 				userLoginInfo.setSecretKey(EgovFileScrty.encryptPassword(userLoginInfo.getUserId(),httpSession.getId().getBytes()));
 				httpSession.setAttribute("userLoginInfo",userLoginInfo);

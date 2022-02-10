@@ -64,12 +64,14 @@
 			USER_ID, 'USER_DVSN_1' AS USER_DVSN, USER_NM, USER_PHONE, USER_SEX_MF, USER_BIRTH_DY, LAST_UPDUSR_ID, LAST_UPDT_DTM,
 			USER_RCPT_YN, USER_RCPT_DVSN, USER_RCPT_NUMBER,
 			<![CDATA[
-			CASE 
+			CASE
+				WHEN INDVDLINFO_AGRE_YN = 'N' THEN 'Y'
+				WHEN INDVDLINFO_AGRE_YN IS NULL THEN 'Y' 
 				WHEN INDVDLINFO_AGRE_DT IS NULL THEN 'Y'
 				WHEN INDVDLINFO_AGRE_DT < TO_CHAR(TO_DATE(SYSDATE - (INTERVAL '3' YEAR)),'YYYYMMDD') THEN 'Y'
 			ELSE 'N'
-			]]>
 			END AS indvdlinfoAgreYn
+			]]>
 		FROM TSER_USER_INFO_I
 		<choose>
 		<when test="@org.apache.commons.lang3.StringUtils@equals(params.envType,'CLOUD')">
@@ -160,7 +162,9 @@
 		<selectKey resultType="UserLoginInfo" keyProperty="indvdlinfoAgreYn,userRcptYn,userRcptDvsn,userRcptNumber" order="AFTER">
         	SELECT
         		<![CDATA[
-        		CASE 
+        		CASE
+        			WHEN INDVDLINFO_AGRE_YN = 'N' THEN 'Y'
+        			WHEN INDVDLINFO_AGRE_YN IS NULL THEN 'Y' 
         			WHEN INDVDLINFO_AGRE_DT IS NULL THEN 'Y'
 	        		WHEN INDVDLINFO_AGRE_DT < TO_CHAR(TO_DATE(SYSDATE - (INTERVAL '3' YEAR)),'YYYYMMDD') THEN 'Y'
         		ELSE 'N'
