@@ -83,8 +83,10 @@ public class ResvInfoManageController {
 			List<Map<String, Object>> centerInfoComboList = centerService.selectCenterInfoComboList();
 			
 			model.addObject("centerInfo", centerInfoComboList);
-			model.addObject("resvPayDvsn", codeDetailService.selectCmmnDetailCombo("RESV_PAY_DVSN"));
+			model.addObject("resvUserDvsn", codeDetailService.selectCmmnDetailCombo("USER_DVSN"));
 			model.addObject("resvState", codeDetailService.selectCmmnDetailCombo("RESV_STATE"));
+			model.addObject("resvPayDvsn", codeDetailService.selectCmmnDetailCombo("RESV_PAY_DVSN"));
+			model.addObject("resvTicketDvsn", codeDetailService.selectCmmnDetailCombo("RESV_TICKET_DVSN"));
 			model.addObject("loginVO" , loginVO);
 		    model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		} catch(Exception e) {
