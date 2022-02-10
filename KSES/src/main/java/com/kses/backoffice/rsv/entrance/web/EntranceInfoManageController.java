@@ -20,7 +20,6 @@ import com.kses.backoffice.bld.center.service.CenterInfoManageService;
 import com.kses.backoffice.rsv.entrance.service.EntranceInfoManageService;
 import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
 import com.kses.backoffice.rsv.reservation.vo.AttendInfo;
-import com.kses.backoffice.rsv.reservation.web.ResvInfoManageController;
 import com.kses.backoffice.sym.log.vo.LoginLog;
 import com.kses.backoffice.util.SmartUtil;
 

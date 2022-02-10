@@ -200,7 +200,9 @@
 					{ label: '아이디',  name:'user_id', index:'user_id', align:'center', key:true, width:'20%'},
 					{ label: '이름',  name:'user_nm', index:'user_nm', align:'center', width:'20%'},
 					{ label: '전화번호', name:'user_phone', index:'user_phone', align:'center', width:'20%'},
-					{ label: '이메일', name:'user_email', index:'user_email', align:'center', width:'20%'},
+					{ label: '백신 차수', name:'vacntn_round_text', index:'vacntn_round_text', align:'center', width:'20%'},
+					{ label: '백신 종류', name:'vacntn_dvsn_text', index:'vacntn_dvsn_text', align:'center', width:'20%'},
+					{ label: '접종 일자', name:'vacntn_dt', index:'vacntn_dt', align:'center', width:'20%'},
 					{ label: '성별', name:'user_sex_mf', index:'user_sex_mf', align:'center', width:'20%'},
 					{ label: '생년 월일', name: 'user_birth_dy',  index:'user_birth_dy', align:'center', width: '20%'}
 				],
@@ -354,9 +356,6 @@
 			$("#rsv_user_add").bPopup();
         },
 		fn_CheckForm  : function () {
-			if (any_empt_line_id("vacntnRound", "접종 차수를 선택해주세요.") == false) return;
-			if (any_empt_line_id("vacntnDvsn", "백신 종류를 선택해주세요.") == false) return;
-			if (any_empt_line_id("vacntnDt", "접종 일자를 선택해주세요.") == false) return;
 			var commentTxt = "수정 하시겠습니까?";
 		    $("#id_ConfirmInfo").attr("href", "javascript:jqGridFunc.fn_update()");
        		fn_ConfirmPop(commentTxt);
