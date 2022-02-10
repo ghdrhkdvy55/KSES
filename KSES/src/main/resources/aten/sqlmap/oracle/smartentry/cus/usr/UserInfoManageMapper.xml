@@ -23,24 +23,28 @@
 					 <choose>
 					    <when test="params.searchCondition == 'user_id'">
 						    <![CDATA[
-						      AND  a.USER_ID LIKE '%'|| #{params.searchKeyword}|| '%' 
+						      AND  A.USER_ID LIKE '%'|| #{params.searchKeyword}|| '%' 
 						     ]]> 
 						</when>	
 						<when test="params.searchCondition == 'user_nm'">
 						    <![CDATA[
-						      AND  a.USER_NM LIKE '%'|| #{params.searchKeyword}|| '%' 
+						      AND  A.USER_NM LIKE '%'|| #{params.searchKeyword}|| '%' 
 						     ]]> 
 						</when>	
 						<when test="params.searchCondition == 'user_phone'">
 						    <![CDATA[
-						      AND  a.USER_PHONE LIKE '%'|| #{params.searchKeyword}|| '%' 
+						      AND  A.USER_PHONE LIKE '%'|| #{params.searchKeyword}|| '%' 
 						     ]]> 
 						</when>	
 						<otherwise>
-						      AND (a.USER_ID LIKE '%'|| #{params.searchKeyword}|| '%'
-						           OR a.USER_NM LIKE '%'|| #{params.searchKeyword}|| '%' 
-						           OR a.USER_PHONE LIKE '%'|| #{params.searchKeyword}|| '%' 
-						           )
+							AND 
+							(
+						      	A.USER_ID LIKE '%'|| #{params.searchKeyword}|| '%'
+								OR 
+								A.USER_NM LIKE '%'|| #{params.searchKeyword}|| '%' 
+						        OR 
+						        A.USER_PHONE LIKE '%'|| #{params.searchKeyword}|| '%' 
+							)
 						</otherwise>
 					 </choose>
 				</if>

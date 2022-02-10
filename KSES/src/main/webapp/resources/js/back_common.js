@@ -8,39 +8,22 @@
 
 /*이미지 썸네일*/
 $(document).ready(function() {
-var xOffset = 10;
-var yOffset = 30;
+	var xOffset = 10;
+	var yOffset = 30;
 
+	$(document).on("mouseover", ".jqgrow >td >img", function(e) { //마우스 오버시
+		$("body").append("<p id='preview'><img src='" + $(this).attr("src") + "' width='300px' /></p>"); //보여줄 이미지를 선언
+		$("#preview").css("top", (e.pageY - xOffset) + "px").css("left", (e.pageX + yOffset) + "px").fadeIn("fast"); //미리보기 화면 설정 셋팅
+	});
 
+	$(document).on("mousemove", ".jqgrow >td >img", function(e) { //마우스 이동시
+		$("#preview").css("top", (e.pageY - xOffset) + "px").css("left", (e.pageX + yOffset) + "px");
+	});
 
-$(document).on("mouseover", ".jqgrow >td >img", function(e) { //마우스 오버시
-
-$("body").append("<p id='preview'><img src='" + $(this).attr("src") + "' width='300px' /></p>"); //보여줄 이미지를 선언
-$("#preview")
-.css("top", (e.pageY - xOffset) + "px")
-.css("left", (e.pageX + yOffset) + "px")
-.fadeIn("fast"); //미리보기 화면 설정 셋팅
+	$(document).on("mouseout", ".jqgrow >td >img", function() { //마우스 아웃시
+		$("#preview").remove();
+	});
 });
-
-
-
-$(document).on("mousemove", ".jqgrow >td >img", function(e) { //마우스 이동시
-$("#preview")
-.css("top", (e.pageY - xOffset) + "px")
-.css("left", (e.pageX + yOffset) + "px");
-});
-
-
-
-$(document).on("mouseout", ".jqgrow >td >img", function() { //마우스 아웃시
-$("#preview").remove();
-});
-
-
-
-});
-
-
 
 /* menu */
 function toggleNav() {
@@ -378,7 +361,7 @@ function verifyEmail(_field, mng_user_add){
 
 }
 //전화번호 정규식
-function fn_autoHyphen (obj){
+function fn_autoHyphen(obj){
    return obj.value.replace(/[^0-9]/, '').replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`);
 }
 
