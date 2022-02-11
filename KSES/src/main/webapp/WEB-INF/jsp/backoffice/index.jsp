@@ -53,7 +53,7 @@
 		<p class="pop_wrap">
 			<span></span>
 		</p>
-		<popup-right-button />
+		<popup-right-button okText="예" noText="아니오" />
 	</div>
 </div>
 <script type="text/javascript" src="/resources/js/common.js"></script>
