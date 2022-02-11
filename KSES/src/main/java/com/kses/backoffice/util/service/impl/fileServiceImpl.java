@@ -118,7 +118,30 @@ public class fileServiceImpl extends EgovAbstractServiceImpl implements fileServ
 		}        
 		return fileNm;
 	}
-	
+
+	public String uploadFileNm(MultipartFile multipartFile, String filePath) {
+		String ret = "";
+
+		try {
+			String originalFilename = multipartFile.getOriginalFilename(); //파일명
+			if (!originalFilename.equals("")){
+				String fileFullPath = filePath + "/" + originalFilename;
+				File file =  new File(fileFullPath);
+
+				int dot = originalFilename.lastIndexOf(".");
+				String ext = (dot != -1) ? originalFilename.substring(dot+1) : "";
+				//fileNm = UUID.randomUUID().toString().replace("-", "") +"."+ ext;
+				file = rename(file, originalFilename, filePath);
+				multipartFile.transferTo(file);
+				ret = file.getName();
+			}
+		} catch (IOException e) {
+			LOGGER.error("uploadFileNm IOException :" + e.toString());
+		}
+
+		return ret;
+	}
+
 	//File f는 원본 파일
 	public File rename(File f, String fileNm, String filedir) {             
 	    String name = f.getName();

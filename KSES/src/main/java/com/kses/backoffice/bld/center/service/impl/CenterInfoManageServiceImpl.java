@@ -45,19 +45,15 @@ public class CenterInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
 	public List<Map<String, Object>> selectResvCenterList(String resvDate)throws Exception {
 		return centerMapper.selectResvCenterList(resvDate);
 	}
-	
+
 	@Override
-	@Transactional
-	public int updateCenterInfoManage(CenterInfo vo) throws Exception {
-		int ret = 0;
-		if (vo.getMode().equals(Globals.SAVE_MODE_INSERT)){
-			List<?> floorList =  vo.getFloorInfo().equals("") ? null : SmartUtil.dotToList(vo.getFloorInfo());
-			vo.setFloorList(floorList);
-			ret =  centerMapper.insertCenterInfoManage(vo);
-		}else{
-			ret =  centerMapper.updateCenterInfoManage(vo);
-		}
-		return ret;
+	public int insertCenterInfoManage(CenterInfo centerInfo) throws Exception {
+		return centerMapper.insertCenterInfoManage(centerInfo);
+	}
+
+	@Override
+	public int updateCenterInfoManage(CenterInfo centerInfo) throws Exception {
+		return centerMapper.updateCenterInfoManage(centerInfo);
 	}
 
 	@Override

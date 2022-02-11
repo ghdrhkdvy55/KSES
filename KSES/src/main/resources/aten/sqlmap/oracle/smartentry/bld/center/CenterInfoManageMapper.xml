@@ -24,6 +24,7 @@
     	<result property="center_entry_pay_cost" column="CENTER_ENTRY_PAY_COST" jdbcType="VARCHAR" javaType="java.lang.String"/>
     	<result property="center_rbm_cd" column="CENTER_RBM_CD" jdbcType="VARCHAR" javaType="java.lang.String"/>
     	<result property="center_auto_payment_yn" column="CENTER_AUTO_PAYMENT_YN" jdbcType="VARCHAR" javaType="java.lang.String"/>
+		<result property="center_order" column="CENTER_ORDER" jdbcType="VARCHAR" javaType="java.lang.String"/>
 	</resultMap>
 	
 	<select id="selectCenterInfoList" resultType="lmap">
@@ -65,7 +66,7 @@
 			CENTER_TEL, CENTER_FAX, CENTER_IMG, CENTER_MAP, CENTER_URL,
 			CENTER_INFO, USE_YN, START_FLOOR, END_FLOOR, FLOOR_INFO, 
 			CENTER_PILOT_YN, CENTER_SPEED_CD, CENTER_STAND_YN, CENTER_STAND_MAX, CENTER_ENTRY_PAY_COST,
-			CENTER_RBM_CD,
+			CENTER_RBM_CD, CENTER_ORDER,
 			CASE
 				WHEN
 					CENTER_PILOT_YN = 'Y' AND
@@ -163,15 +164,17 @@
 			CENTER_TEL, CENTER_FAX, FRST_REGTER_ID, FRST_REGIST_DTM, LAST_UPDUSR_ID, 
 			LAST_UPDT_DTM, CENTER_IMG, CENTER_URL, CENTER_MAP, USE_YN, 
 			CENTER_INFO, FLOOR_INFO, START_FLOOR, END_FLOOR, CENTER_STDM_DVSN, 
-			CENTER_PILOT_YN, CENTER_SPEED_CD, CENTER_STAND_YN, CENTER_STAND_MAX, CENTER_ENTRY_PAY_COST
+			CENTER_PILOT_YN, CENTER_SPEED_CD, CENTER_STAND_YN, CENTER_STAND_MAX, CENTER_ENTRY_PAY_COST,
+			CENTER_RBM_CD, CENTER_ORDER
 		)
 		VALUES 
 		(
 			#{centerCd}, #{centerNm}, #{centerZipcd, jdbcType=VARCHAR}, #{centerAddr1, jdbcType=VARCHAR}, #{centerAddr2, jdbcType=VARCHAR}, 
-			#{centerTel, jdbcType=VARCHAR}, #{centerFax, jdbcType=VARCHAR}, #{userId, jdbcType=VARCHAR}, SYSDATE, #{userId, jdbcType=VARCHAR}, 
+			#{centerTel, jdbcType=VARCHAR}, #{centerFax, jdbcType=VARCHAR}, #{frstRegterId, jdbcType=VARCHAR}, SYSDATE, #{lastUpdusrId, jdbcType=VARCHAR},
 			SYSDATE, #{centerImg, jdbcType=VARCHAR}, #{centerUrl ,jdbcType=VARCHAR}, #{centerMap, jdbcType=VARCHAR}, 'Y', 
 			#{centerInfo, jdbcType=VARCHAR}, #{floorInfo, jdbcType=VARCHAR}, #{startFloor, jdbcType=VARCHAR}, #{endFloor, jdbcType=VARCHAR}, '',
-		    #{centerPilotYn , jdbcType=VARCHAR}, #{centerSpeedCd , jdbcType=VARCHAR}, #{centerStandYn, jdbcType=VARCHAR}, #{centerStandMax, jdbcType=VARCHAR}, #{centerEntryPayCost, jdbcType=VARCHAR}
+		    #{centerPilotYn , jdbcType=VARCHAR}, #{centerSpeedCd , jdbcType=VARCHAR}, #{centerStandYn, jdbcType=VARCHAR}, #{centerStandMax, jdbcType=VARCHAR}, #{centerEntryPayCost, jdbcType=VARCHAR},
+			#{centerRbmCd , jdbcType=VARCHAR}, #{centerOrder , jdbcType=VARCHAR}
 		);
     	
 		<if test="floorInfo != null">
@@ -265,7 +268,9 @@
 			,CENTER_SPEED_CD = #{centerSpeedCd, jdbcType=VARCHAR}
 			,CENTER_STAND_YN = #{centerStandYn, jdbcType=VARCHAR}
 			,CENTER_STAND_MAX = #{centerStandMax, jdbcType=VARCHAR}
-			,CENTER_ENTRY_PAY_COST = #{centerEntryPayCost, jdbcType=VARCHAR}                
+			,CENTER_ENTRY_PAY_COST = #{centerEntryPayCost, jdbcType=VARCHAR}
+			,CENTER_RBM_CD = #{centerRbmCd, jdbcType=VARCHAR}
+			,CENTER_ORDER = #{centerOrder, jdbcType=VARCHAR}
 		WHERE CENTER_CD = #{centerCd};
 		
 		<if test="floorInfo != null">

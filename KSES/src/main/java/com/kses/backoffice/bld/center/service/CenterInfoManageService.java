@@ -14,8 +14,10 @@ public interface CenterInfoManageService {
 	Map<String, Object> selectCenterInfoDetail(String centerCd) throws Exception;
 	
 	List<Map<String, Object>> selectResvCenterList(String resvDate) throws Exception;
-	
-	int updateCenterInfoManage(CenterInfo vo) throws Exception;
+
+	int insertCenterInfoManage(CenterInfo centerInfo) throws Exception;
+
+	int updateCenterInfoManage(CenterInfo centerInfo) throws Exception;
 	
 	int updateCenterFloorInfoManage (String floorInfo, String centerCode) throws Exception;
 }

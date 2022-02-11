@@ -17,6 +17,9 @@ $.Floor.prototype.mainGridSettings = function() {
         { label: '구역사용구분', name:'floor_part_dvsn', hidden: true },
         { label: '첨부', align:'center', sortable: false, width: 50, fixed: true, formatter: (c, o, row) =>
             '<a href="javascript:void(0);" class="atc_icon"></a>'
+        },
+        { label: 'GUI', align:'center', sortable: false, width: 50, fixed: true, formatter: (c, o, row) =>
+                '<a href="javascript:void(0);" class="gui_icon"></a>'
         }
     ], false, true, fnSearch, false).jqGrid('setGridParam', {
         cellEdit: true,

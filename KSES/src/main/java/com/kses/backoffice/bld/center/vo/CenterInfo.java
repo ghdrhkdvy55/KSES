@@ -2,8 +2,10 @@ package com.kses.backoffice.bld.center.vo;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 //지점 정보 
 @Getter
@@ -36,9 +38,15 @@ public class CenterInfo {
 	
 	 // 전경 사진 
 	 private String centerImg;
+
+	 @JsonIgnore
+	 private MultipartFile centerImgFile;
 	
 	 // 지도 
 	 private String centerMap;
+
+	 @JsonIgnore
+	 private MultipartFile centerMapFile;
 	
 	 // 사용유무 
 	 private String useYn;
@@ -108,4 +116,6 @@ public class CenterInfo {
 	 
 	 // SPDM 지점코드
 	 private String centerRbmCd = "";
+
+	 private String centerOrder;
 }
