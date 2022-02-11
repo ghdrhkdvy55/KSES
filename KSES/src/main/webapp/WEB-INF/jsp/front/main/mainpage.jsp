@@ -31,7 +31,6 @@
 	<form:form name="regist" commandName="regist" method="post" action="/front/main.do">
 	<input type="hidden" id="secretKey" name="secretKey" value="${sessionScope.userLoginInfo.secretKey}">
 	<input type="hidden" id="userDvsn" name="userDvsn" value="${sessionScope.userLoginInfo.userDvsn}">
-	<input type="hidden" id="userId" name="userId"  value="${sessionScope.userLoginInfo.userId}">
 	<input type="hidden" id="resvSeq" name="resvSeq" value="">
 
 	<div class="wrapper mainBack">
@@ -99,10 +98,8 @@
                     <div class="null_cont"><p>등록된 공지사항이 없습니다.</p></div>
                     <!-- 내용 없을때 표출--//>
                     
-                    <!-- 공지사항 데이터 -->
-                                                            
+                    <!-- 공지사항 데이터 -->                                      
                 </div>
-                
             </div>
             <c:import url="/front/inc/footer.do" />
         </div>
@@ -401,12 +398,14 @@
     		
 			// 메인영역생성
     		var userId = $("#userId").val();
-    		mainService.fn_makeUserInfoArea(userId, mainService.fn_makeNoticeArea);
+    		mainService.fn_makeUserInfoArea();
     	});
     	
     	var mainService =
 		{ 
-			fn_makeUserInfoArea : function(userId, callback) {
+			fn_makeUserInfoArea : function() {
+				var userId = "${sessionScope.userLoginInfo.userId}";
+				
 				var userInfoTopArea = $("#user_info_top_area");
 				var userInfoBottomArea = $("#user_info_bottom_area");
 				var qrEnterArea = $("#qr_enter_area");
@@ -474,18 +473,12 @@
 										var setHtml = "";
 										setHtml += "<li class='vacStat'><em class='user_name'>" + userNm + "</em>님 예약내역이 없습니다. <span class=''></span></li>";
 										setHtml += "<li><span class='today_date'>" + today + "</span></li>";  
-										
 										userInfoTopArea.append(setHtml);
 										
 										// 유저정보하단 HTML생성
 										setHtml = "";
 										setHtml += "<li><span><a href='javascript:mainService.fn_userResvInfo(&#39;PRE&#39;, &#39;" + obj.resv_seq + "&#39;,&#39;re_rsv_info&#39;);' >최근좌석 다시앉기<img src='/resources/img/front/arrow.png' alt='예약하기'></a></span></li>";
-
 										userInfoBottomArea.append(setHtml);
-										
-										// 다시앉기 팝업창 정보 입력
-										// TODO 추후 제거
-										$("#re_rsv_info .name").html(userNm);
 										
 										// 처음부터 예약하기 영역 활성화
 										$("#rsv_reset_area").show();
@@ -644,8 +637,7 @@
 	    	    			}
 	    	    		} else {
 							fn_openPopup("처리중 오류가 발생하였습니다.", "red", "ERROR", "확인", "");
-	    	    		} 
-	    	    		
+	    	    		}
 	    	    	}
     	    	)
     	    },

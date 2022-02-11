@@ -864,19 +864,24 @@
 							$("#changeResvPayDvsn").val(obj.resv_pay_dvsn);			
 						});
 						
-						if(obj.resv_state == "RESV_STATE_1" || obj.resv_state == "RESV_STATE_2") {
+						//좌석변경 버튼표출 -> 스피드온 결제상태 + 예약 또는 이용중 상태
+						if(obj.resvTicketDvsn == "RESV_TICKET_DVSN_1" &&(obj.resv_state == "RESV_STATE_1" || obj.resv_state == "RESV_STATE_2")) {
 							$("#rsvPopSeatChange a").off().on('click',function (e) {
 								jqGridFunc.fn_resvSeatInfo("CHANGE",obj);
-							});		
-							
+							});
+						} else {
+							$("#rsvPopSeatChange a").hide();
+						}
+						
+						//예약취소버튼 표출 -> 예약 또는 이용중 상태일 경우
+						if(obj.resv_state == "RESV_STATE_1" || obj.resv_state == "RESV_STATE_2") {
 							$("#resvCancelBtn").show().off().on('click', function () {
 				        		$("#id_ConfirmInfo").off().on('click',function () {
 				        			jqGridFunc.fn_resvInfoCancel(obj.resv_seq);
 								});
 				        		fn_ConfirmPop("해당 예약정보를 취소 하시겠습니까?");
-							});
+							});							
 						} else {
-							$("#rsvPopSeatChange a").hide();
 							$("#resvCancelBtn").hide();
 						}
 						

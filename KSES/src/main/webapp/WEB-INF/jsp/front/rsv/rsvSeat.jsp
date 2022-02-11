@@ -559,12 +559,14 @@
     	
     	var certifiYn = false;
     	var certifiCode = "";
+    	
+		var setIntervalId = "";
+		var reCertifiTime = 180;
+		var reCertifiEndTime = 0;
+		var reCertifiYn = true;
+    	
     	var resvUserNm = isMember ? "${sessionScope.userLoginInfo.userNm}" : "";
     	var resvUserClphn = isMember ? "${sessionScope.userLoginInfo.userPhone}" : "";
-    	
-    	var userRcptYn = isMember ? "${sessionScope.userLoginInfo.userRcptYn}" : "";
-    	var userRcptDvsn = isMember ? "${sessionScope.userLoginInfo.userRcptDvsn}" : "";
-    	var userRcptNumber = isMember ? "${sessionScope.userLoginInfo.userRcptNumber}" : "";
     	
     	var pinchzoom = "";
     	var pinchInit = true;
@@ -956,8 +958,9 @@
 				
 				if(!fn_resvDuplicateCheck(duplicateParams)) {
 					if(certifiYn) {
-						fn_openPopup("이미 인증을 진행하였습니다.", "red", "ERROR", "확인", "");
-						return;
+						fn_openPopup("이미 인증을 진행하였습니다.", "red", "ERROR", "확인", ""); return;
+					} else if (!reCertifiYn) {
+						fn_openPopup("이미 인증번호가 발송되었습니다.<br>" + reCertfiEndTime + "초 후 다시 시도해주세요.", "red", "ERROR", "확인", ""); return;
 					} else {
 						if(certifiNm == "") {
 							fn_openPopup("이름을 입력해주세요.", "red", "ERROR", "확인", ""); return;
@@ -981,7 +984,19 @@
 							false,
 							function(result) {
 						    	if(result.status == "SUCCESS") {
-						    		fn_openPopup("인증번호가 발송 되었습니다.(" +  result.certifiCode + ")", "blue", "SUCCESS", "확인", "");
+						    		// 인증요청 3분 인터벌 적용
+						    		reCertifiYn = false;
+						    		reCertfiEndTime = reCertifiTime;
+									setIntervalId = setInterval(function () {
+										if (reCertfiEndTime == 0) {
+											reCertifiYn = true;
+											clearInterval(setIntervalId);
+										} else {
+											reCertfiEndTime --;	
+										}
+									},1000);
+						    		
+						    		fn_openPopup("인증번호가 발송 되었습니다.", "blue", "SUCCESS", "확인", "");
 									certifiCode = result.certifiCode;
 							    	resvUserNm = certifiNm;
 							    	resvUserClphn = certifiNum;
