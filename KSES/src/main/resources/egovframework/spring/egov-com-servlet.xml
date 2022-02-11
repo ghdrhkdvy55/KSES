@@ -130,11 +130,11 @@
         <!-- 비밀키 -->
         <prop key="SecretKey">smN+pkH9NJHZhcSIIVKyYF9Et18E1/amWJBW+Pb6iJo=</prop>
         <!-- 연동환경 설정값 true(개발용), false(상업용) -->
-        <prop key="IsTest">true</prop>
+        <prop key="IsTest">false</prop>
         <!-- 인증토큰 아이피 제한 기능 사용여부 권장(true) -->
         <prop key="IsIPRestrictOnOff">true</prop>
         <!-- 팝빌 API 서비스 고정 IP 사용여부, true-사용, false-미사용, 기본값(false) -->
-        <prop key="UseStaticIP">false</prop>
+        <prop key="UseStaticIP">true</prop>
         <!-- 로컬시스템 시간 사용여부 true-사용(기본값-권장), false-미사용 -->
         <prop key="UseLocalTimeYN">true</prop>
     </util:properties>

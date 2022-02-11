@@ -132,8 +132,8 @@ public class ResJosnController {
 					user.setUserCardNo(node.get("Card_No").asText());
 					user.setUserCardId(node.get("Card_Id").asText());
 					user.setUserCardSeq(node.get("Card_Seq").asText());
-
 					user.setMode("Ins");
+					
 					userService.updateUserInfo(user);
 
 					// 최초 로그인시 개인정보 동의를 위한 고객정보 전송
@@ -504,7 +504,6 @@ public class ResJosnController {
 			searchVO.put("resvDate", nowDate);
 
 			Map<String, Object> resInfo = resService.selectUserResvInfo(searchVO);
-//			String resvTicketDvsn = SmartUtil.NVL(resInfo.get("resv_ticket_dvsn"), "");
 			String resvState = SmartUtil.NVL(resInfo.get("resv_state"), "");
 			
 			if(resInfo == null || Integer.valueOf(resInfo.get("resv_end_dt").toString()) < Integer.valueOf(nowDate)) {
@@ -515,10 +514,6 @@ public class ResJosnController {
 				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 				model.addObject(Globals.STATUS_MESSAGE, "예약 취소된 예약정보 입니다.");
 				return model;
-//			} else if(resvTicketDvsn.toString().equals("RESV_TICKET_DVSN_2")) { 
-//				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-//				model.addObject(Globals.STATUS_MESSAGE, "종이QR발급된  예약정보입니다.");
-//				return model;
 			} else {
 				AttendInfo vo = new AttendInfo();
 				vo.setResvSeq(resvSeq);
@@ -619,7 +614,6 @@ public class ResJosnController {
 					returnCode = "ERROR_03";
 					returnMessage = "해당 지점 예약이 아닙니다. \n예약내역을 확인하여 주십시요.";
 				} else if (resInfo != null && !SmartUtil.NVL(resInfo.get("resv_pay_dvsn"), "").toString().equals("RESV_PAY_DVSN_1")) {
-					LOGGER.info("RESV_PAY_DVSN123" +  SmartUtil.NVL(resInfo.get("resv_pay_dvsn"), "").toString());
 					returnCode = "ERROR_04";
 					returnMessage = "이미 결제가 완료 되었습니다.";
 				} else {
