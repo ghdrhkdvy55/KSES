@@ -133,7 +133,6 @@ public class LoginPageInfoManageController {
 				HttpSession httpSession = request.getSession();
 				userLoginInfo.setSecretKey(EgovFileScrty.encryptPassword(userLoginInfo.getUserId(),httpSession.getId().getBytes()));
 				httpSession.setAttribute("userLoginInfo",userLoginInfo);
-				httpSession.setMaxInactiveInterval(600);
 			} else {
 				String decodeCardId = envType.equals("CLOUD") ? SmartUtil.NVL(params.get("cardId"),"") : userService.selectDecodeCardId(SmartUtil.NVL(params.get("cardId"),""));
 				model.addObject("decodeCardId", decodeCardId);
