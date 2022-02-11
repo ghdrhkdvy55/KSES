@@ -2398,7 +2398,7 @@ ul.tabs li{
 }
 .common_pop_btn  {
     position: relative;
-    top: 4rem;
+    top: 2.5rem;
     text-align: center;
 }
 .common_pop_btn a {
@@ -2566,7 +2566,7 @@ ul.tabs li{
 	
 	.error > .logo em{
 		display: block;
-		text-align: right;
+		text-align: center;
 	}
 }
 	
@@ -2699,7 +2699,7 @@ ul.tabs li{
 /* 공통 에러페이지 CSS */
 .error {
 	text-align: center;
-	width: 55%;
+	width: 80%;
 	margin: 225px auto;
 }
 

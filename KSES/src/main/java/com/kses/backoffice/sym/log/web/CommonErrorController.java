@@ -33,7 +33,7 @@ public class CommonErrorController extends HttpServlet  {
 		LOGGER.info("throwable");
 		pageErrorLog(request);
 		model.addObject("msg", "예외가 발생하였습니다");
-		model.setViewName("/cmm/error/ErrorPage");
+		model.setViewName("/common/error.jsp");
 		return model;
 		
 	}
@@ -43,7 +43,7 @@ public class CommonErrorController extends HttpServlet  {
 		
 		pageErrorLog(request);
 		model.addObject("msg", "예외가 발생하였습니다");
-		model.setViewName("/cmm/error/ErrorPage");
+		model.setViewName("/common/error.jsp");
 		return model;
 	}
 	
@@ -52,7 +52,7 @@ public class CommonErrorController extends HttpServlet  {
 		ModelAndView model = new ModelAndView();
 		pageErrorLog(request);
 		model.addObject("msg", "예외가 발생하였습니다");
-		model.setViewName("/cmm/error/ErrorPage");
+		model.setViewName("/common/error.jsp");
 		return model;
 	}
 	
@@ -62,7 +62,7 @@ public class CommonErrorController extends HttpServlet  {
 		
 		pageErrorLog(request);
 		model.addObject("msg", "잘못된 요청 입니다.");
-		model.setViewName("/cmm/error/ErrorPage");
+		model.setViewName("/common/error.jsp");
 		return model;
 	}
 	
@@ -72,7 +72,7 @@ public class CommonErrorController extends HttpServlet  {
 		
 		pageErrorLog(request);
 		model.addObject("msg", "접근이 금지되었습니다.");
-		model.setViewName("/cmm/error/ErrorPage");
+		model.setViewName("/common/error.jsp");
 		return model;
 	}
 	
@@ -82,7 +82,7 @@ public class CommonErrorController extends HttpServlet  {
 		ModelAndView model = new ModelAndView();
 		//pageErrorLog(request);
 		model.addObject("msg", "예외가 발생하였습니다.");
-		model.setViewName("/cmm/error/ErrorPage");
+		model.setViewName("/common/error.jsp");
 		 
 		return model;
 		
@@ -123,7 +123,7 @@ public class CommonErrorController extends HttpServlet  {
 
 			//goView로 이동 
 			mav.addObject("msg", "요청하신 페이지 또는 파일이 존재하지 않습니다.");
-			mav.setViewName("/cmm/error/egovError");
+			mav.setViewName("/common/error.jsp");
 			 
 			return mav;
 		 }
@@ -136,7 +136,7 @@ public class CommonErrorController extends HttpServlet  {
 		ModelAndView model = new ModelAndView();
 		pageErrorLog(request);
 		model.addObject("msg", "서버스를 사용할 수 없습니다.");
-		model.setViewName("/cmm/error/ErrorPage");
+		model.setViewName("/common/error.jsp");
 		return model;
 	}
 	
