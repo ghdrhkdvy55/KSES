@@ -22,7 +22,7 @@
     <div class="mms_select whiteBox">
       <div class="mms_select_check">
         <div class="mms_title">
-          <label for="user_select01"><input type="checkbox" name="user_select01" id="user_select01">수신자 선택</label>
+          <label for="user_select01"><input type="checkbox" name="user_select" id="user_select01">수신자 선택</label>
         </div>
         <table class="detail_table">
           <tbody>
@@ -74,7 +74,7 @@
       </div>
       <div class="mms_select_input">
         <div class="mms_title">
-          <label for="user_select02"><input type="checkbox" name="user_select02" id="user_select02">수신자 입력</label>
+          <label for="user_select02"><input type="checkbox" name="user_select" id="user_select02">수신자 입력</label>
           <a href="#" onClick="msgFunction.fn_userSerach()" class="grayBtn">사용자 검색</a>
         </div>
         <div class="search">
@@ -89,7 +89,7 @@
       </div>
       <div class="mms_select_group">
         <div class="mms_title">
-          <label for="user_select03"><input type="checkbox" name="user_select03" id="user_select03">수신 그룹</label>
+          <label for="user_select03"><input type="checkbox" name="user_select" id="user_select03">수신 그룹</label>
           <a href="#" onClick="msgFunction.fn_GroupPop()" class="grayBtn">그룹 검색</a>
           <a href="#" onClick="msgFunction.fn_MsgInfo('Ins', '')" class="grayBtn">그룹 등록</a>
         </div>
@@ -550,7 +550,7 @@
 		     $("#id_ConfirmInfo").attr("href", "javascript:msgFunction.fn_Groupdel()");
 			 fn_ConfirmPop("삭제 하시겠습니까?");
         }, fn_Groupdel : function (){
-        	var params = {'groupCode':$("#hid_DelCode").val() };
+        	var params = {'delCd':$("#hid_DelCode").val() };
         	fn_uniDelAction("/backoffice/rsv/msgGroupDelete.do", "GET", params, false, "msgFunction.fn_GroupSearch");
         }, fn_MsgUserInfo : function (){
         	common_modalOpenAndClose("dv_messageGroup_user", "dv_messageGroupSearch");
@@ -912,8 +912,9 @@
         	$("#btn_ClickId").val('');
         	if (any_empt_line_span_noPop("sendTel", "발신자 전화 번호를 입력해 주세요.") == false) return;
         	if (any_empt_line_span_noPop("textMessage", "메세지를 입력해 주세요.") == false) return;
-        	
-        	
+        	var userSelect = ckeckboxValue("수신 방법을 선택해 주세요.", "user_select", "");
+        	console.log("userSelect : " + userSelect)
+        	if (userSelect == false) return;
         	
         	if (gubun == "D"){
         		$("#result").val("O");
@@ -927,14 +928,14 @@
     		if ($('#user_select01').is(':checked') == true){
         		//db 확인 후 가저오기 
         		if ($('input:radio[name=user_SendGubn]').is(':checked') == false){
-        			if (any_empt_line_span_noPop("textMessage", "수신자를 선택해 주세요.") == false) return;
-        		}
-        		
+        			console.log("TEST1");
+        			common_popup("수신자를 선택해 주세요.", "N", "");
+        			return;
+        		}        		
         		if ($('input[name="user_SendGubn"]:checked').val() == "U"){
         			if (any_empt_line_span_noPop("search_from", "기간을 선택해 주세요.") == false) return;
         			if (any_empt_line_span_noPop("search_to", "기간을 선택해 주세요.") == false) return;
-        			msgArray = {"step": "U", "sendCnt":  $("#send_U").val(), "from" :  $("#search_from").val(), "to" :  $("#search_to").val()};
-        			
+        			msgArray = {"step": "U", "sendCnt":  $("#send_U").val(), "from" :  $("#search_from").val(), "to" :  $("#search_to").val()};	
         		}else {
         			msgArray = {"step": "E", "sendCnt":  $("#send_G").val()};
         		}
@@ -958,10 +959,11 @@
             			sendArray.push(messageInfo);	
             		}
             	});
-            	if (sendArray.length < 1){
-            		  $("#sp_Message").html("수신한 전화번호가 없습니다.");
-               		  $("#sp_Message").attr("style", "color:red");
-               		  $("#savePage").bPopup();
+				if (sendArray.length < 1){
+					$("#savePage #sp_Message").html("수신자 입력, 수신 그룹 선택 시 수신 목록에 추가는 필수 사항 입니다.");
+					$("#savePage #sp_Message").attr("style", "color:red");
+					$("#savePage").bPopup();
+               		 
                		  return;
             	}
     		}
