@@ -68,11 +68,11 @@ $.EgovIndexApi.prototype._apiResponseException = function(xhr) {
 			break;
 		default:
 			console.log('exception status code: '+ xhr.status);
-			if (xhr.responseText === '') {
+			// if (xhr.responseText === '') {
 				toastr.error('시스템에 오류가 발생하였습니다. 관리자에게 문의하세요.');
-			} else {
-				toastr.error(xhr.responseText);
-			}
+			// } else {
+			// 	toastr.error(xhr.responseText);
+			// }
 	}
 };
 
@@ -89,6 +89,38 @@ $.EgovIndexApi.prototype.apiExecuteJson = function(method, url, params, beforeFu
 $.EgovIndexApi.prototype.apiExecuteForm = function(url, params, beforeFunc, doneFunc, failFunc) {
 	this._apiExecute('application/x-www-form-urlencoded; charset=UTF-8', 'POST', url, params, beforeFunc, doneFunc, failFunc);
 };
+
+$.EgovIndexApi.prototype.apiExcuteMultipart = function(url, formData, beforeFunc, doneFunc, failFunc) {
+	this.jqXhr =
+		$.ajax({
+			enctype: 'multipart/form-data',
+			contentType: false,
+			processData: false,
+			type: 'POST',
+			url: url,
+			data: formData,
+			cache: false,
+			timeout: 600000,
+			headers: { 'AJAX': true },
+			beforeSend: function(xhr) {
+				if (beforeFunc !== undefined && beforeFunc !== null) {
+					beforeFunc(xhr);
+				}
+			}
+		}).always(function (xhr, status, err) {
+			if (status === 'success') {
+				let json = xhr;
+				if (json.status === 'SUCCESS') {
+					doneFunc(json);
+				} else {
+					failFunc(json);
+				}
+			}
+			else {
+				EgovIndexApi._apiResponseException(xhr);
+			}
+		});
+}
 
 $.EgovIndexApi.prototype.s2ab = function(s) {
 	var buf = new ArrayBuffer(s.length);
@@ -170,13 +202,14 @@ class PopupRightButton extends HTMLElement {
 		let html = [];
 		html.push('<div class="right_box">');
 		
-		let successText = this.getAttribute('successText') === null ? '저장' : this.getAttribute('successText');
+		let okText = this.getAttribute('okText') === null ? '저장' : this.getAttribute('okText');
 		if (this.getAttribute('clickFunc') === null) {
-			html.push('<button type="button" class="blueBtn">'+ successText +'</button>');
+			html.push('<button type="button" class="blueBtn">'+ okText +'</button>');
 		} else {
-			html.push('<button type="button" onclick="'+ this.getAttribute('clickFunc') +'" class="blueBtn">'+ successText +'</button>');
+			html.push('<button type="button" onclick="'+ this.getAttribute('clickFunc') +'" class="blueBtn">'+ okText +'</button>');
 		}
-			html.push('<button type="button" class="grayBtn b-close">취소</button>');
+		let noText = this.getAttribute('noText') === null ? '취소' : this.getAttribute('noText');
+		html.push('<button type="button" class="grayBtn b-close">'+ noText +'</button>');
 		html.push('</div>');
 		html.push('<div class="clear"></div>');
 		$(this).html(html.join(''));		
