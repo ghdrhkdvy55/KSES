@@ -38,7 +38,7 @@
             <ul class="rsv_info">
                 <li class="backImg"></li>
                 <li class="rsv_branch hidden"></li>
-                <li class="rsv_state"><span class="date"></span> 좌석 예약 중 입니다.</li>
+                <li class="rsv_state">좌석 예약 중 입니다.</li>
                 <li></li>
             </ul>             
         </div>
@@ -78,9 +78,9 @@
     <!--메뉴버튼 속성-->
     <script>
 		$(document).ready(function() {			
-			var date = new Date();
-			var today = date.format("yyyy-MM-dd");
-			$(".date").html(today);
+//			var date = new Date();
+//			var today = date.format("yyyy-MM-dd");
+//			$(".date").html(today);
 			
     		centerService.fn_makeCenterInfoArea(sessionStorage.getItem("resvDate"));
     	});

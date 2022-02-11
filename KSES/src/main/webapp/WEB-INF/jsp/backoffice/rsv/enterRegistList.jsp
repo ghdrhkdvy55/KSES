@@ -98,6 +98,11 @@
 			{label: '등록', name: 'enter_regist', align:'center', formatter:fnEnterRegistButton}
 		], false, true, fnSearch);
 		
+    	$("body").keydown(function (key) {
+        	if(key.keyCode == 13){
+        		fnSearch();
+        	}
+    	});
 	});
 	
 	function fnSearch(pageNo) {

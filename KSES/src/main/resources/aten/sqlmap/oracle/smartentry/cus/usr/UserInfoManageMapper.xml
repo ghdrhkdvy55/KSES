@@ -12,6 +12,18 @@
 			(	
 				SELECT A.USER_ID, A.USER_NM,
 				A.USER_PHONE, A.USER_EMAIL,
+				CASE 
+					WHEN A.VACNTN_ROUND IS NULL THEN '입력정보 없음'
+					ELSE FN_DETAILCODENM(A.VACNTN_ROUND)
+				END AS VACNTN_ROUND_TEXT,
+				CASE 
+					WHEN A.VACNTN_DVSN IS NULL THEN '입력정보 없음'
+					ELSE FN_DETAILCODENM(A.VACNTN_DVSN)
+				END AS VACNTN_DVSN_TEXT,
+				CASE 
+					WHEN A.VACNTN_DT IS NULL THEN '입력정보 없음'
+					ELSE TO_CHAR(TO_DATE(A.VACNTN_DT,'YYYY-MM-DD'),'YYYY-MM-DD')
+				END AS VACNTN_DT,
 				CASE A.USER_SEX_MF 
 					WHEN 'M' THEN '남성' 
 					ELSE '여성' 
@@ -23,24 +35,28 @@
 					 <choose>
 					    <when test="params.searchCondition == 'user_id'">
 						    <![CDATA[
-						      AND  a.USER_ID LIKE '%'|| #{params.searchKeyword}|| '%' 
+						      AND  A.USER_ID LIKE '%'|| #{params.searchKeyword}|| '%' 
 						     ]]> 
 						</when>	
 						<when test="params.searchCondition == 'user_nm'">
 						    <![CDATA[
-						      AND  a.USER_NM LIKE '%'|| #{params.searchKeyword}|| '%' 
+						      AND  A.USER_NM LIKE '%'|| #{params.searchKeyword}|| '%' 
 						     ]]> 
 						</when>	
 						<when test="params.searchCondition == 'user_phone'">
 						    <![CDATA[
-						      AND  a.USER_PHONE LIKE '%'|| #{params.searchKeyword}|| '%' 
+						      AND  A.USER_PHONE LIKE '%'|| #{params.searchKeyword}|| '%' 
 						     ]]> 
 						</when>	
 						<otherwise>
-						      AND (a.USER_ID LIKE '%'|| #{params.searchKeyword}|| '%'
-						           OR a.USER_NM LIKE '%'|| #{params.searchKeyword}|| '%' 
-						           OR a.USER_PHONE LIKE '%'|| #{params.searchKeyword}|| '%' 
-						           )
+							AND 
+							(
+						      	A.USER_ID LIKE '%'|| #{params.searchKeyword}|| '%'
+								OR 
+								A.USER_NM LIKE '%'|| #{params.searchKeyword}|| '%' 
+						        OR 
+						        A.USER_PHONE LIKE '%'|| #{params.searchKeyword}|| '%' 
+							)
 						</otherwise>
 					 </choose>
 				</if>
@@ -64,12 +80,14 @@
 			USER_ID, 'USER_DVSN_1' AS USER_DVSN, USER_NM, USER_PHONE, USER_SEX_MF, USER_BIRTH_DY, LAST_UPDUSR_ID, LAST_UPDT_DTM,
 			USER_RCPT_YN, USER_RCPT_DVSN, USER_RCPT_NUMBER,
 			<![CDATA[
-			CASE 
+			CASE
+				WHEN INDVDLINFO_AGRE_YN = 'N' THEN 'Y'
+				WHEN INDVDLINFO_AGRE_YN IS NULL THEN 'Y' 
 				WHEN INDVDLINFO_AGRE_DT IS NULL THEN 'Y'
 				WHEN INDVDLINFO_AGRE_DT < TO_CHAR(TO_DATE(SYSDATE - (INTERVAL '3' YEAR)),'YYYYMMDD') THEN 'Y'
 			ELSE 'N'
-			]]>
 			END AS indvdlinfoAgreYn
+			]]>
 		FROM TSER_USER_INFO_I
 		<choose>
 		<when test="@org.apache.commons.lang3.StringUtils@equals(params.envType,'CLOUD')">
@@ -160,7 +178,9 @@
 		<selectKey resultType="UserLoginInfo" keyProperty="indvdlinfoAgreYn,userRcptYn,userRcptDvsn,userRcptNumber" order="AFTER">
         	SELECT
         		<![CDATA[
-        		CASE 
+        		CASE
+        			WHEN INDVDLINFO_AGRE_YN = 'N' THEN 'Y'
+        			WHEN INDVDLINFO_AGRE_YN IS NULL THEN 'Y' 
         			WHEN INDVDLINFO_AGRE_DT IS NULL THEN 'Y'
 	        		WHEN INDVDLINFO_AGRE_DT < TO_CHAR(TO_DATE(SYSDATE - (INTERVAL '3' YEAR)),'YYYYMMDD') THEN 'Y'
         		ELSE 'N'

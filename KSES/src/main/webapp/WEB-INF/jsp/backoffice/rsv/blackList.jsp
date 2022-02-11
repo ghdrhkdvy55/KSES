@@ -111,8 +111,6 @@
                           <option value="BLKLST_DVSN_3">패널티 고객</option>
                         </select>
                     </td>
-<!--                     <th>회원 구분</th> -->
-<!--                     <td><input type="text" id=""></td> -->
                   </tr>
                   <tr>
                     <th>상세 내역</th>
@@ -193,13 +191,13 @@
 					{label: '이름', name:'user_nm', index:'user_nm', align:'center', hidden:true},
 					{label: '이름', name:'blklst_dvsn', index:'user_nm', align:'center', hidden:true},
 					{label: '아이디', name:'user_id', index:'user_id', align:'center'},
-					{label: '전화번호', name:'user_phone', index:'user_phone', align:'center'},
+					{label: '전화번호', name:'user_phone', index:'user_phone', align:'center', formatter:jqGridFunc.formSetting},
 					{label: '유형', name:'blklst_dvsn_txt', index:'blklst_dvsn_txt', align:'center'},
-					{label: '상세내용', name:'blklst_reason', index:'blklst_reason', align:'center'},
-					{label: '노쇼카운트', name:'user_noshow_cnt', index:'user_noshow_cnt', align:'center',
-						    formatter:jqGridFunc.fn_NoShowInfo},
-					{label: '변경일자', name:'user_noshow_last_dt', index:'user_noshow_last_dt', align:'center'},
-					{label: '해제', name:'blklst_cancel_yn', index:'blklst_cancel_yn', align:'center', sortable : false, formatter:jqGridFunc.buttonSetting},
+					//{label: '상세내용', name:'blklst_reason', index:'blklst_reason', align:'center'},
+					{label: '노쇼카운트', name:'user_noshow_cnt', index:'user_noshow_cnt', align:'center'},
+					{label: '최종 수정자', name:'last_updusr_id', index:'last_updusr_id', align:'center'},
+					{label: '최종 수정일', name:'last_updt_dtm', index:'last_updt_dtm', align:'center'},
+					{label: '등록/해제', name:'blklst_cancel_yn', index:'blklst_cancel_yn', align:'center', sortable : false, formatter:jqGridFunc.formSetting},
 				], 
 				rowNum : 10,  //레코드 수
 				rowList : [10,20,30,40,50,100],  // 페이징 수
@@ -231,14 +229,14 @@
 					var lastPage = grid.getGridParam("lastpage"); //get last page 
 					var totalPage = grid.getGridParam("total");
     		              
-					if (pgButton == "next"){
+					if (pgButton == "next") {
 						if (gridPage < lastPage ){
 							gridPage += 1;
 						} else {
 							gridPage = gridPage;
 						}
 					} else if (pgButton == "prev") {
-						if (gridPage > 1 ){
+						if (gridPage > 1 ) {
 							gridPage -= 1;
 						} else {
 							gridPage = gridPage;
@@ -250,7 +248,7 @@
 					} else if (pgButton == "user") {
 						var nowPage = Number($("#pager .ui-pg-input").val());
 						
-						if (totalPage >= nowPage && nowPage > 0 ) {
+						if (totalPage >= nowPage && nowPage > 0) {
 							gridPage = nowPage;
 						} else {
 							$("#pager .ui-pg-input").val(nowPage);
@@ -264,10 +262,12 @@
 						page : gridPage,
 						rowNum : $('.ui-pg-selbox option:selected').val(),
 						postData : JSON.stringify({
-										"pageIndex": gridPage,
-										"searchKeyword" : $("#searchKeyword").val(),
-										"pageUnit":$('.ui-pg-selbox option:selected').val()
-									})
+							"pageIndex": gridPage,
+							"searchBlklstDvsn" : $("#searchBlklstDvsn").val(),
+							"searchKeyword" : $("#searchKeyword").val(),
+							"searchCondition" : $("#searchCondition").val(),
+							"pageUnit":$('.ui-pg-selbox option:selected').val()
+						})
 					}).trigger("reloadGrid");
 				},
 				onSelectRow : function(rowId) {
@@ -280,13 +280,12 @@
 					grid.jqGrid('editRow', rowid, {keys: true});
 				},
 				onCellSelect : function (rowid, index, contents, action){
-/* 					var cm = $(this).jqGrid('getGridParam', 'colModel');
-					
-					if (cm[index].name !='btn'){
-						jqGridFunc.fn_resvInfo("Edt", $(this).jqGrid('getCell', rowid, 'resv_seq'));
-					} */
+// 					var cm = $(this).jqGrid('getGridParam', 'colModel');
+//					
+//					if (cm[index].name !='btn'){
+//						jqGridFunc.fn_resvInfo("Edt", $(this).jqGrid('getCell', rowid, 'resv_seq'));
+//					}
 				},
-				//체크박스 선택시에만 체크박스 체크 적용
 				beforeSelectRow: function (rowid, e) { 
 					var $myGrid = $(this), i = $.jgrid.getCellIndex($(e.target).closest('td')[0]), 
 					cm = $myGrid.jqGrid('getGridParam', 'colModel'); 
@@ -294,12 +293,8 @@
 				}
 				
 			});
-		}, fn_NoShowInfo : function(cellvalue, options, rowObject) {
-			return (rowObject.blklst_dvsn_txt != "없음") ?  rowObject.user_noshow_cnt + "" : 
-				    rowObject.user_noshow_cnt + "<a href='#' onClick='jqGridFunc.fn_NoShowInsert(&#39;" + rowObject.user_id + "&#39;,&#39;" + rowObject.user_nm + "&#39;,&#39;" + rowObject.user_phone + "&#39;)' class='blueBtn'> 패널티 고객 등록</a>";
-		}, fn_NoShowInsert : function(userId, userNm, userPhone){
-			
-			
+		}, 
+		fn_NoShowInsert : function(userId, userNm, userPhone){
 			var url = "/backoffice/rsv/updateBlackUserInfo.do";
 			var params = {
 				"mode" : "Ins", 
@@ -308,10 +303,10 @@
 				"userId" : userId,
 				"userNm" :userNm,
 				"userClphn" :userPhone,
-				"blklstReason" : "페털티 고객이 등록되었습니다."
+				"blklstReason" : "페널티 고객이 등록되었습니다."
 			};
 			
-			var resultTxt = "페털티 고객이 등록되었습니다.";
+			var resultTxt = "페널티 고객이 등록되었습니다.";
 			
 			fn_Ajax
 			(
@@ -329,30 +324,37 @@
 					}
 				},
 				function(request){
-					common_popup("Error:" + request.status,"");
+					common_popup("ERROR : " + request.status,"");
 				}    		
 			);
-			
-			
-			
-			
-			
 		},
     	useYn : function(cellvalue, options, rowObject) {
 			return (rowObject.use_yn ==  "Y") ? "사용" : "사용안함";
 		},
-		buttonSetting : function (cellvalue, options, rowObject) {
-			var cancelYn = "";
-			var mode = "";
-			if(rowObject.blklst_cancel_yn == "Y") {
-				cancelYn = "재등록";
-				mode = "N";
-			} else {
-				cancelYn = "해제";
-				mode = "Y";				
-			}
-
-			return '<a href="javascript:blackUserService.fn_cancelBlklst(&#39;' + mode + '&#39;,&#39;' + rowObject.blklst_seq + '&#39;,&#39;' + rowObject.blklst_dvsn + '&#39,&#39;' + rowObject.user_id + '&#39;);" class="blueBtn">' + cancelYn + '</a>';	
+		formSetting : function (cellvalue, options, rowObject) {
+			var index = options.colModel.index;
+			var item = rowObject;
+			var form = "";
+			
+			if(index == 'blklst_cancel_yn') {
+				var cancelYn = "";
+				var mode = "";
+				if(item.blklst_cancel_yn == "Y") {
+					cancelYn = "등록";
+					mode = "N";
+				} else {
+					cancelYn = "해제";
+					mode = "Y";				
+				}
+				form = 
+					'<a href="javascript:blackUserService.fn_cancelBlklst(&#39;' 
+					+ mode + '&#39;,&#39;' + item.blklst_seq + '&#39;,&#39;' + item.blklst_dvsn + '&#39,&#39;' + item.user_id + '&#39;);"' 
+					+ 'class="blueBtn">' + cancelYn + '</a>';
+			} else if(index == 'user_phone') {
+				form = item.user_phone.replace(/(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/,"$1-$2-$3");
+			} 	
+			
+			return form;
 		},			
 		refreshGrid : function(){
 			$('#mainGrid').jqGrid().trigger("reloadGrid");
@@ -448,7 +450,7 @@
 					}
 				},
 				function(request){
-					common_popup("Error:" + request.status,"");
+					common_popup("ERROR : " + request.status, "");
 				}    		
 			);
 		},
@@ -457,7 +459,7 @@
 			
 			var url = "/backoffice/rsv/updateBlackUserInfo.do";
 			var params = {"mode" : $("#mode").val(), "blklstSeq" : blklstSeq,"blklstCancelYn" : blklstCancelYn, "blklstDvsn" : blklst_dvsn, "userId" : userId};
-			var resultTxt = blklstCancelYn == "Y" ? "출입통제가 정상적으로 해제되었습니다." : "출입통제가 정상적으로 재등록 되었습니다.";
+			var resultTxt = blklstCancelYn == "Y" ? "출입통제 정보가 정상적으로 해제되었습니다." : "출입통제 정보가 정상적으로 등록 되었습니다.";
 			
 			fn_Ajax
 			(

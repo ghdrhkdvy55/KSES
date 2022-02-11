@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!-- JQuery Grid -->
 <link rel="stylesheet" href="/resources/css/paragraph_new.css">
 <link rel="stylesheet" href="/resources/jqgrid/src/css/ui.jqgrid.css">
@@ -30,6 +31,7 @@
 <input type="hidden" id="resvDate" name="resvDate">
 <input type="hidden" id="resvEntryPayCost" name="resvEntryPayCost">
 <input type="hidden" id="seasonCd" name="seasonCd">
+<jsp:useBean id="toDay" class="java.util.Date" />
 <div class="breadcrumb">
 	<ol class="breadcrumb-item">
 		<li>고객 관리&nbsp;&gt;&nbsp;</li>
@@ -54,15 +56,21 @@
 							<option value="${centerInfo.center_cd}"><c:out value='${centerInfo.center_nm}'/></option>
 						</c:forEach>
               		</select>
-
 	              	<p>기간</p>
 	              	<!-- search //-->
 	              	<label for="resvDate"><input type="radio" name="searchRsvDay" id="resvDate" value="resvDate" checked>예약일</label>
 					<label for="resvReqDate"><input type="radio" name="searchRsvDay" id="resvReqDate" value="resvReqDate">신청일</label>
 	              	<p>
-						<input type="text" id="searchResvDateFrom" class="cal_icon" name="date_from" autocomplete=off style="width:110px;"><em>~</em>
-	                	<input type="text" id="searchResvDateTo" class="cal_icon" name="date_to" autocomplete=off style="width:110px;">
+						<input type="text" id="searchResvDateFrom" class="cal_icon" name="date_from" value=<fmt:formatDate value="${toDay}" pattern="yyyyMMdd" /> autocomplete=off style="width:110px;"><em>~</em>
+	                	<input type="text" id="searchResvDateTo" class="cal_icon" name="date_to" value=<fmt:formatDate value="${toDay}" pattern="yyyyMMdd" /> autocomplete=off style="width:110px;">
 	              	</p>
+					<p>회원 구분</p>
+					<select id="searchResvUserDvsn">
+						<option value="">선택</option>
+						<c:forEach items="${resvUserDvsn}" var="resvUserDvsn">
+							<option value="${resvUserDvsn.code}"><c:out value='${resvUserDvsn.codenm}'/></option>
+						</c:forEach>
+	              	</select>
 	              	<p>예약 상태</p>
 					<select id="searchResvState">
 						<option value="">선택</option>
@@ -77,26 +85,36 @@
 							<option value="${resvPayDvsn.code}"><c:out value='${resvPayDvsn.codenm}'/></option>
 						</c:forEach>
 	              	</select>
+					<p>결제 구분</p>
+	              	<select id="searchResvTicketDvsn">
+	              		<option value="">선택</option>
+						<c:forEach items="${resvTicketDvsn}" var="resvTicketDvsn">
+							<option value="${resvTicketDvsn.code}"><c:out value='${resvTicketDvsn.codenm}'/></option>
+						</c:forEach>
+	              	</select>
 					<p>현금영수증 발행</p>
 	              	<select id="searchResvRcptYn">
 	              		<option value="">선택</option>
 						<option value="Y">발행</option>
 						<option value="N">미발행</option>
 	              	</select>
-	              	<p>검색어</p>
-	              	<select id="searchCondition">
-						<option value="">선택</option>
-						<option value="resvSeq">예약번호</option>
-						<option value="resvId">아이디</option>
-						<option value="resvName">이름</option>
-						<option value="resvPhone">전화번호</option>
-	              	</select>
-	              	<input type="text" id="searchKeyword" placeholder="검색어를 입력하세요.">
 				</div>
 			</div>
-	
-			<div class="inlineBtn">
-				<a href="javascript:jqGridFunc.fn_search();"class="grayBtn">검색</a>
+		</div>
+		<div class="whiteBox searchBox">
+			<div class="top">
+				<p>검색어</p>
+				<select id="searchCondition">
+					<option value="">선택</option>
+					<option value="resvSeq">예약번호</option>
+					<option value="resvId">아이디</option>
+					<option value="resvName">이름</option>
+					<option value="resvPhone">전화번호</option>
+				</select>
+				<input type="text" id="searchKeyword" placeholder="검색어를 입력하세요.">		
+				<div class="inlineBtn">
+					<a href="javascript:jqGridFunc.fn_search();"class="grayBtn">검색</a>
+				</div>
 			</div>
 		</div>
 	
@@ -589,6 +607,12 @@
 	   
 		$("img.ui-datepicker-trigger").attr("style", "margin-left:3px; vertical-align:middle; cursor:pointer;"); //이미지버튼 style적용
 		$("#ui-datepicker-div").hide(); //자동으로 생성되는 div객체 숨김
+		
+    	$("body").keydown(function (key) {
+        	if(key.keyCode == 13){
+        		jqGridFunc.fn_search();
+        	}
+    	});
 	});
 
 	var jqGridFunc = {
@@ -596,7 +620,12 @@
 			var grid = $('#'+gridOption);
 			
 			//ajax 관련 내용 정리 하기 
-			var postData = {"pageIndex": "1"};
+			var postData = {
+				"pageIndex": "1", 
+				"searchDayCondition" : $('input[name=searchRsvDay]:checked').val(), 
+				"searchFrom" : $("#searchResvDateFrom").val(), 
+				"searchTo" : $("#searchResvDateTo").val()
+			};
 			
 			grid.jqGrid({
 				url : '/backoffice/rsv/rsvListAjax.do',
@@ -697,14 +726,16 @@
 						postData : JSON.stringify({
 							"pageIndex": gridPage,
 							"pageUnit":$('#pager .ui-pg-selbox option:selected').val(),
-							"searchKeyword" : $("#searchKeyword").val(),
 							"searchCenterCd" : $("#searchCenterCd").val(),
 							"searchDayCondition" : $('input[name=searchRsvDay]:checked').val(),
 							"searchFrom" : $("#searchResvDateFrom").val(),
 							"searchTo" : $("#searchResvDateTo").val(),
+							"searchResvUserDvsn" : $("#searchResvUserDvsn").val(),
 							"searchResvState" : $("#searchResvState").val(),
 							"searchResvPayDvsn" : $("#searchResvPayDvsn").val(),
+							"searchResvTicketDvsn" : $("#searchResvTicketDvsn").val(),
 							"searchResvRcptYn" : $("#searchResvRcptYn").val(),
+							"searchKeyword" : $("#searchKeyword").val(),
 							"searchCondition" : $("#searchCondition").val()
 						})
 					}).trigger("reloadGrid");
@@ -778,8 +809,10 @@
 					"searchDayCondition" : $('input[name=searchRsvDay]:checked').val(),
 					"searchFrom" : $("#searchResvDateFrom").val(),
 					"searchTo" : $("#searchResvDateTo").val(),
+					"searchResvUserDvsn" : $("#searchResvUserDvsn").val(),
 					"searchResvState" : $("#searchResvState").val(),
 					"searchResvPayDvsn" : $("#searchResvPayDvsn").val(),
+					"searchResvTicketDvsn" : $("#searchResvTicketDvsn").val(),
 					"searchResvRcptYn" : $("#searchResvRcptYn").val(),
 					"searchCondition" : $("#searchCondition").val(),
 					"searchKeyword" : $("#searchKeyword").val(),
