@@ -14,6 +14,7 @@
 		FROM TSEB_CENTERHOLY_INFO_I A, TSEB_CENTER_INFO_M B
 		WHERE A.CENTER_CD = #{centerCd}
 		AND A.CENTER_CD = B.CENTER_CD
+		ORDER BY A.HOLY_DT DESC
 	</select>
 	
 	<insert id="insertCenterHolyInfo">

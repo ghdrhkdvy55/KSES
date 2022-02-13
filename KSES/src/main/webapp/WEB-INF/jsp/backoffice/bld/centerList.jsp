@@ -749,7 +749,9 @@
 						//지점 자동취소 정보 세팅
 						var setHtml = "";
 						if(result.regist != null) {
-							$("#bld_early_set .pop_tit span").html("[" + result.result + "]");
+							if(division == 'list'){
+								$("#bld_early_set .pop_tit span").html("[" + result.result + "]");
+							}
  							for(var i in result.regist) {
  								setHtml = "";
  								var obj = result.regist[i];
@@ -897,8 +899,10 @@
 						var setHtml = "";
 						if(result.regist != null) {
 							var noshowInfoList = result.regist;
-							$("#bld_noshow_set .pop_tit span").html("[" + result.result + "]");
-							
+							if(division == "list") {
+								$("#bld_noshow_set .pop_tit span").html("[" + result.result + "]");								
+							}
+						
  							for(var i=0; i < noshowInfoList.length; i++) {
  								var obj = noshowInfoList[i];
  								var color = 
@@ -1034,8 +1038,9 @@
 						if(result.regist.length != 0) {
 							var centerHolyInfoList = result.regist;
 							var setHtml = "";
-							
-							$("#bld_holiday_add .pop_tit span").html("[" + result.result + "]");
+							if(division == "list") {
+								$("#bld_holiday_add .pop_tit span").html("[" + result.result + "]");	
+							}
 							
  							for(var i=0; i < centerHolyInfoList.length; i++) {
  								var obj = centerHolyInfoList[i];
