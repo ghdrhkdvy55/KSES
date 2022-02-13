@@ -14,43 +14,28 @@ public class SureMsgInfo {
 		String buttonNm = "";
 		String buttonUrl = "";
 		
-//		String userDvsn = resvInfo.get("resv_user_dvsn").toString();
+		String userDvsn = resvInfo.get("resv_user_dvsn").toString();
 		String userNm = resvInfo.get("resv_user_nm").toString();
 		String userPhNum = resvInfo.get("resv_user_clphn").toString();
 		
-//		String centerPilotYn = resvInfo.get("center_pilot_yn").toString();
 		String resvSeq = resvInfo.get("resv_seq").toString();
 		String resvDate = resvInfo.get("resv_end_dt").toString();
 		String centerNm = resvInfo.get("center_nm").toString();
 		String seatNm = resvInfo.get("seat_nm").toString();
 		
-		/**
-		 * [고객사 요청 사항] 
-		 * 알림톡 템플릿 기존 케이스별 발송에서 한가지로(KSES_003) 통일 요청
-		 * 오픈전 최종 테스트 후 메시지 템플릿 추가 요청이 있을수 있으니 임시 주석처리
-		 * 2022-01-24 JangDaeHan
-		 */
 		if(msgDvsn.equals("RESERVATION")) {
-//			if(centerPilotYn.equals("Y")) {
-//                if(userDvsn.equals("USER_DVSN_1")) {
-//                	templateCode = "KSES_001";
-//                	
-//                	msg += "[ 회원 입장 신청 안내 ]\n";
-//                	
-//                	buttonType = "WL";
-//                	buttonNm = "QR링크";
-//                    buttonUrl = domain + "resvSeq=" + resvSeq + "&" + "accessType=BUTTON";
-//                } else {
-//                	templateCode = "KSES_002";
-//                	msg += "[ 비회원 입장 신청 안내 ]\n";
-//                }
-//				
-//                msg += SmartUtil.getSmsName(resvInfo) + "님 " + resvDate.substring(4,6) + "월 " + resvDate.substring(6,8) + "일 ";
-//                msg += centerNm + "지점 " + seatNm + "에 예약 완료되었습니다. ";
-//                msg += "(예약번호 : " + resvSeq.replaceAll("\\B(?=(\\d{4})+(?!\\d))", "-") + ")";
-//                
-//                msg += userDvsn.equals("USER_DVSN_1") ? "" : "\n예약한 영업장의 무인발권기에서 현금결제를 통해 종이QR입장권을 발급해주시기 바랍니다.";           
-//			} else {
+			if(userDvsn.equals("USER_DVSN_1")) {
+				templateCode = "KSES_001";
+                	
+				msg += "[ 회원 입장 신청 안내 ]\n";
+                buttonType = "WL";
+                buttonNm = "QR링크";
+                buttonUrl = domain + "resvSeq=" + resvSeq + "&" + "accessType=BUTTON";
+
+                msg += SmartUtil.getSmsName(resvInfo) + "님 " + resvDate.substring(4,6) + "월 " + resvDate.substring(6,8) + "일 ";
+                msg += centerNm + "지점 " + seatNm + "에 예약 완료되었습니다. ";
+                msg += "(예약번호 : " + resvSeq.replaceAll("^0+", "") + ")";
+			} else {
 				templateCode = "KSES_003";
 				
 				msg += SmartUtil.getSmsName(resvInfo) + "님 " + resvDate.substring(4,6) + "월 " + resvDate.substring(6,8) + "일 ";
@@ -58,9 +43,9 @@ public class SureMsgInfo {
                 msg += "(예약번호 : " + resvSeq.replaceAll("^0+", "") + ")";
                 
                 buttonType = "WL";
-            	buttonNm = "QR링크";
-			    buttonUrl = domain + "resvSeq=" + resvSeq + "&" + "accessType=BUTTON";
-//			}
+                buttonNm = "QR링크";
+                buttonUrl = domain + "resvSeq=" + resvSeq + "&" + "accessType=BUTTON";
+			}
 		} else if(msgDvsn.equals("CANCEL")) {
 			templateCode = "KSES_004";
 			msg += resvDate.substring(4,6) + "월 " + resvDate.substring(6,8) + "일  " + "입장취소 완료되었습니다.";
