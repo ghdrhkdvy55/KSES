@@ -154,7 +154,7 @@
 				<div id="popPager"></div>
 			</div>
 		</div>
-		<popup-right-button successText="선택" clickFunc="fnAdminIdCheck();" />
+		<popup-right-button okText="선택" clickFunc="fnAdminIdCheck();" />
 	</div>
 </div>
 <!-- popup// -->

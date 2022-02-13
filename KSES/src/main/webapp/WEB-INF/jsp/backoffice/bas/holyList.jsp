@@ -119,7 +119,7 @@
         <div style="float:left;margin-top:5px;">
         	<a href="/backoffice/bas/holyInfoUploadSampleDownload.do" class="orangeBtn">샘플</a>
         </div>
-        <popup-right-button successText="업로드" />
+        <popup-right-button okText="업로드" />
 	</div>
 </div>
 <!-- popup// -->
