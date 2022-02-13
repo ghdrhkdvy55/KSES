@@ -123,13 +123,13 @@
                         <!--예약 정보 입력-->
                             <h4>예약 정보 입력</h4>
                             <ul id="ENTRY_DVSN_1_resv_area">
-                                <li><input type="text" id="ENTRY_DVSN_1_resvUserNm" class="nonMemberArea" placeholder="이름을 입력해주세요."></li>
-                                <li><input type="text" id="ENTRY_DVSN_1_resvUserClphn" class="nonMemberArea" onkeypress="onlyNum(this);" placeholder="전화번호를 '-'없이 입력해주세요."></li>
+                                <li><input type="text" id="ENTRY_DVSN_1_resvUserNm" class="nonMemberArea" placeholder="이름을 입력해주세요." autocomplete="off"></li>
+                                <li><input type="number" id="ENTRY_DVSN_1_resvUserClphn" class="nonMemberArea" onkeypress="onlyNum(this);" placeholder="전화번호를 '-'없이 입력해주세요." autocomplete="off"></li>
                                 <li class="certify nonMemberArea" onclick="javascript:seatService.fn_SmsCertifi();">
                                 	<a href="javascript:void(0);"><img src="/resources/img/front/certify.svg" alt="">인증번호 받기</a>
                                 </li>
 								
-								<li class="nonMemberArea"><input type="text" id="ENTRY_DVSN_1_resvCertifiCode" placeholder="인증번호를 입력하세요."></li>
+								<li class="nonMemberArea"><input type="number" id="ENTRY_DVSN_1_resvCertifiCode" placeholder="인증번호를 입력하세요." autocomplete="off"></li>
 								<li class="certify nonMemberArea" onclick="javascript:seatService.fn_checkCertifiCode();">
 									<a href="javascript:void(0);"><img src="/resources/img/front/certify.svg" alt="">인증 하기</a>
 								</li>
@@ -275,13 +275,13 @@
                                     <!--예약 정보 입력-->
                                     <h4>예약 정보 입력</h4>
                                     <ul id="ENTRY_DVSN_2_resv_area">
-                                        <li class="nonMemberArea"><input type="text" id="ENTRY_DVSN_2_resvUserNm" placeholder="이름을 입력해주세요."></li>
-                                        <li class="nonMemberArea"><input type="text" id="ENTRY_DVSN_2_resvUserClphn" onkeyup="onlyNum(this);" placeholder="전화번호를 '-'없이 입력해주세요."></li>
+                                        <li class="nonMemberArea"><input type="text" id="ENTRY_DVSN_2_resvUserNm" placeholder="이름을 입력해주세요." autocomplete="off"></li>
+                                        <li class="nonMemberArea"><input type="number" id="ENTRY_DVSN_2_resvUserClphn" onkeyup="onlyNum(this);" placeholder="전화번호를 '-'없이 입력해주세요." autocomplete="off"></li>
 										<li class="certify nonMemberArea" onclick="javascript:seatService.fn_SmsCertifi();">
 											<a href="javascript:void(0);"><img src="/resources/img/front/certify.svg" alt="">인증번호 받기</a>
 										</li>
 										
-                                		<li class="nonMemberArea"><input type="text" id="ENTRY_DVSN_2_resvCertifiCode" placeholder="인증번호를 입력하세요."></li>
+                                		<li class="nonMemberArea"><input type="number" id="ENTRY_DVSN_2_resvCertifiCode" placeholder="인증번호를 입력하세요." autocomplete="off"></li>
                                         <li class="certify nonMemberArea" onclick="javascript:seatService.fn_checkCertifiCode();">
                                         	<a href="javascript:void(0);"><img src="/resources/img/front/certify.svg" alt="">인증 하기</a>
                                         </li>

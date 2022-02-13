@@ -47,8 +47,8 @@
                     <!--지점선택-->                 
                     <h4>예약 정보 조회</h4>
                     <ul class="rsvInfo">
-                        <li><input id="resvUserNm" name="resvUserNm" type="text" placeholder="이름"></li>
-                        <li><input id="resvUserClphn" name="resvUserClphn" type="text" onkeyup="onlyNum(this);" placeholder="휴대폰 번호('-'없이 숫자만 입력"></li>
+                        <li><input id="resvUserNm" name="resvUserNm" type="text" placeholder="이름" autocomplete="off"></li>
+                        <li><input id="resvUserClphn" name="resvUserClphn" type="number" onkeyup="onlyNum(this);" placeholder="휴대폰 번호('-'없이 숫자만 입력" autocomplete="off"></li>
                     </ul>
 
                     <div class="inquiry_btn">
@@ -57,8 +57,8 @@
                     
                     <div class="ok_sumit">
                     	<ul>
-                    		<li>인증번호</li>
-                    		<li class="ok_input"><input type="text" id="resvCertifiCode" placeholder="인증번호를 입력하세요."></li>
+                    		<li></li>
+                    		<li class="ok_input"><input type="number" id="resvCertifiCode" placeholder="인증번호를 입력하세요." autocomplete="off"></li>
                     		<li><a href="javascript:guestResvService.fn_checkform();">확인</a></li>
                     	</ul>
                     </div>

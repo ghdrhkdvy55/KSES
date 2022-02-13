@@ -104,7 +104,7 @@ input[type=password]::-ms-input-placeholder { /* Microsoft Edge */
 
 .login_num_info li{
     display: inline-block;
-    width: 15rem;
+    width: 14.5rem;
     box-sizing: border-box;
     margin: 0;
     font-size: 1.4em;
@@ -1463,7 +1463,7 @@ h2.guide_tit {
     float: right;
     position: relative;
     top: -2.1rem;
-    right: 1rem;
+    /* right: 1rem; */
 }
 .rsv_cancel a{padding: 10px 20px; background: #545454; color: #fff;}
 .closeBtn
@@ -1692,7 +1692,7 @@ h2.guide_tit {
 #showHide h4 {margin-top: 2rem; font-size:1.1em;}
 #showHide section {text-align: left; padding-bottom: 30rem;}
 #showHide section li:first-child input[type=text] {margin-bottom: 0;}
-#showHide section input[type=text] {
+#showHide section input[type=text], #showHide section input[type=number] {
   height: 3rem; 
   border: 1px solid #e0e0e0; 
   margin: 1rem 0; 
@@ -1707,7 +1707,7 @@ h2.guide_tit {
 #showHide_seat { width:100%;  display: none; }
 #showHide_seat h4 {margin-top: 2.5rem; font-size:1.1em;}
 #showHide_seat section {text-align: left; padding-bottom: 25rem;}
-#showHide_seat section input[type=text] {
+#showHide_seat section input[type=text], #showHide_seat section input[type=number] {
   height: 3rem; 
   width: 95%; 
   border: 1px solid #e0e0e0; 
@@ -1716,14 +1716,13 @@ h2.guide_tit {
   padding: 1rem;
   width: -webkit-fill-available;
 }
+
 #ENTRY_DVSN_2_resvUserClphn {
   margin-top: 0!important;
 }
 #showHide_seat section input::placeholder{
     color: #dbdbdb;
 }
-
-
 
 .certify {
   width: 100%; 
@@ -2059,7 +2058,7 @@ ul.tabs li{
 .check_use {margin-left: 2rem;}
 .check_use span {font-size: 0.9em; margin-left: 1rem; color: #808080;}
 
-.rsvInfo input[type=text] {
+.rsvInfo input[type=text], .rsvInfo input[type=number] {
     height: 3rem;
     border: 1px solid #e0e0e0;
     margin: 1rem 0;
@@ -2231,7 +2230,7 @@ ul.tabs li{
 .ok_sumit {border-top:1px solid #eee; margin-top:2rem; text-align:center;}
 .ok_sumit ul {padding-top:1rem;}
 .ok_sumit li{display:inline-block}
-.ok_sumit li input[type=text] {
+.ok_sumit li input[type=text], .ok_sumit li input[type=number] {
     height: 3rem;
     border: 1px solid #e0e0e0;
     margin: 1rem 0;
@@ -2247,7 +2246,7 @@ ul.tabs li{
     font-size: 1.1em;
     color: #fff;
 }
-.ok_input {width:45%;}
+.ok_input {width:65%;}
 
 .seat li.none {
     background: #848484;
@@ -2264,7 +2263,7 @@ ul.tabs li{
 .qr_enter_code {
 	display : none;
 	margin:auto; 
-	width:256px;
+	width:200px;
 	border: 8px solid #cfcfcf;
 	padding: 4px;
 }
@@ -2367,7 +2366,7 @@ ul.tabs li{
 .main_user_rsv li:nth-child(2) {
     float: right;
     position: relative;
-    top: -3.2rem;
+    top: 0.6rem;
 }
 .main_user_rsv li:nth-child(3) em img {vertical-align: middle;}
 .main_user_rsv li:last-child {
@@ -2412,8 +2411,8 @@ ul.tabs li{
 #mask_qr {
     z-index: 9;
     background-color: #2e2e2e;
-    height: 256px;
-    width: 256px;
+    height: 200px;
+    width: 200px;
     opacity: 0.9;
     position: absolute;
     display : none;
@@ -2771,3 +2770,10 @@ width: 100%;
 text-align: center;
 background: #eee;
 }.rsv_stat_btn li:last-child {float: inherit;}
+
+/* 전화번호 & 인증번호 입력란 + - 버튼 없애기 */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
