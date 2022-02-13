@@ -195,7 +195,7 @@
 			$popup.find('h2:first').text('구역 정보 수정');
 			$popup.find('button.blueBtn').off('click').click(fnPartClassUpdate);
 			$form.find(':hidden[name=mode]').val('Edt');
-			$form.find(':hidden[name=partClassSeq]').val(rowData.part_seq);
+			$form.find(':hidden[name=partClassSeq]').val(rowData.part_class_seq);
 			$form.find(':hidden[name=centerNm]').val(rowData.center_nm);
 			$form.find('select[name=centerCd]').val(rowData.center_cd).prop('disabled', true);
 			$form.find('select[name=partClass]').val(rowData.part_class).prop('disabled', true);
