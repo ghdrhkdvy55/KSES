@@ -18,6 +18,7 @@ import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartRequest;
@@ -61,7 +62,6 @@ public class CenterInfoManageController {
 	 * @return
 	 * @throws Exception
 	 */
-	@NoLogging
 	@RequestMapping(value="centerList.do", method = RequestMethod.GET)
 	public ModelAndView viewCenterList(@ModelAttribute("searchVO") CenterInfo searchVO) throws Exception {
 		ModelAndView model = new ModelAndView("/backoffice/bld/centerList"); 
@@ -70,6 +70,18 @@ public class CenterInfoManageController {
 		model.addObject("floorInfo", codeDetailService.selectCmmnDetailCombo("CENTER_FLOOR"));
 		model.addObject(Globals.STATUS_REGINFO , searchVO);
 		return model;	
+	}
+
+	/**
+	 * 지점 상세 팝업 화면
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="centerInfoPopup.do", method = RequestMethod.GET)
+	public ModelAndView popupCenterInfo() throws Exception {
+		ModelMap model = new ModelMap();
+		model.addAttribute("floorInfo", codeDetailService.selectCmmnDetailCombo("CENTER_FLOOR"));
+		return new ModelAndView("/backoffice/bld/sub/centerInfo", model);
 	}
 
 	/**
