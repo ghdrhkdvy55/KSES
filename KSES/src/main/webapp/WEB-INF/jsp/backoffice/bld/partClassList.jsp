@@ -65,7 +65,7 @@
         <div class="pop_wrap">
         	<form>
         	<input type="hidden" name="mode" value="Ins">
-        	<input type="hidden" name="partSeq">
+        	<input type="hidden" name="partClassSeq">
         	<input type="hidden" name="centerNm">
             <table class="detail_table">
 	            <tbody>
@@ -147,7 +147,7 @@
 		}
 		
 		EgovJqGridApi.mainGrid([
-            { label: '구역 시퀀스', name:'part_seq', align:'center', key: true, hidden:true},
+            { label: '구역 시퀀스', name:'part_class_seq', align:'center', key: true, hidden:true},
             { label: '지점 코드', name:'center_cd', align:'center', hidden:true},
             { label: '구역', name:'part_icon', align:'center', formatter: imageFomatter},
 			{ label: '지점명', name:'center_nm', align: 'center'},
@@ -187,7 +187,7 @@
 			}
 			$popup.find('button.blueBtn').off('click').click(fnPartClassInsert);
 			$form.find(':hidden[name=mode]').val('Ins');
-			$form.find(':hidden[name=partSeq]').val('');
+			$form.find(':hidden[name=partClassSeq]').val('');
 			$form.find(':text').val('');
 			$form.find(':radio[name=useYn]:first').prop('checked', true);
 		}
@@ -195,7 +195,7 @@
 			$popup.find('h2:first').text('구역 정보 수정');
 			$popup.find('button.blueBtn').off('click').click(fnPartClassUpdate);
 			$form.find(':hidden[name=mode]').val('Edt');
-			$form.find(':hidden[name=partSeq]').val(rowData.part_seq);
+			$form.find(':hidden[name=partClassSeq]').val(rowData.part_seq);
 			$form.find(':hidden[name=centerNm]').val(rowData.center_nm);
 			$form.find('select[name=centerCd]').val(rowData.center_cd).prop('disabled', true);
 			$form.find('select[name=partClass]').val(rowData.part_class).prop('disabled', true);
@@ -289,7 +289,7 @@
 			$("select[name=centerCd]").removeAttr('disabled');
 			//체크 박스 체그 값 알아오기 
 			var formData = new FormData();
-			formData.append('partSeq', $form.find(':hidden[name=partSeq]').val());;
+			formData.append('partClassSeq', $form.find(':hidden[name=partClassSeq]').val());;
 			formData.append('partIcon', $form.find(':file[name=partIcon]')[0].files[0]);
 	 	    formData.append('centerCd' , $form.find('select[name=centerCd]').val());
 	 	    formData.append('partClass' , $form.find('select[name=partClass]').val());
@@ -332,7 +332,7 @@
 			EgovIndexApi.apiExecuteJson(
 				'POST',
 				'/backoffice/bld/partClassDelete.do', {
-					partSeq: rowId
+					partClassSeq: rowId
 				},
 				null,
 				function(json) {

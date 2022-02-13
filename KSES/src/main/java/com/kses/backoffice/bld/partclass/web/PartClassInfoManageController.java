@@ -181,7 +181,7 @@ import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 	public ModelAndView deletePartClassInfo(@RequestBody PartClassInfo partClassInfo) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 	
-		partClassService.deletePartClassInfo(partClassInfo.getPartSeq());
+		partClassService.deletePartClassInfo(partClassInfo.getPartClassSeq());
 		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		model.addObject(Globals.STATUS_MESSAGE,	egovMessageSource.getMessage("success.common.delete"));
 	  

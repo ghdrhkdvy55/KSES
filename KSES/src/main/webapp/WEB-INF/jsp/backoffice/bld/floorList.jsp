@@ -271,8 +271,8 @@
                     	<td>
 							<select id="partClass">
 							<option value="">구역 등급 선택</option>
-							<c:forEach items="${seatClass}" var="seatClass">
-								<option value="${seatClass.part_class}"><c:out value='${seatClass.part_class_nm}'/></option>
+							<c:forEach items="${partClass}" var="partClass">
+								<option value="${partClass.part_class_seq}"><c:out value='${partClass.part_class_nm}'/></option>
 							</c:forEach>
 						</select>
 					</td>

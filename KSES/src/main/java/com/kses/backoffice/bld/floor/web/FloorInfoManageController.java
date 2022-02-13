@@ -112,7 +112,7 @@ public class FloorInfoManageController {
 			model.addObject("floorlistInfo", codeDetailService.selectCmmnDetailComboEtc(params));
 			model.addObject("floorListSeq", floorService.selectFloorInfoComboList(param.get("searchCenterCd")));
 			model.addObject("floorPart", codeDetailService.selectCmmnDetailCombo("FLOOR_PART"));
-			model.addObject("seatClass", partClassService.selectPartClassComboList(param.get("searchCenterCd")));
+			model.addObject("partClass", partClassService.selectPartClassComboList(param.get("searchCenterCd")));
 			model.addObject("seatDvsn", codeDetailService.selectCmmnDetailCombo("SEAT_DVSN"));
 			model.addObject("payDvsn", codeDetailService.selectCmmnDetailCombo("PAY_DVSN"));
 		} catch(Exception e) {

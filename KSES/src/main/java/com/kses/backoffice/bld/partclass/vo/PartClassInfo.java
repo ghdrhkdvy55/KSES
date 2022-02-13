@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class PartClassInfo {
 	// 지점코드 
-	private String partSeq;
+	private String partClassSeq;
 	
 	// 지점코드 
 	private String centerCd;

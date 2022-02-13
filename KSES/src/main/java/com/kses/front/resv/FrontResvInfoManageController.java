@@ -119,13 +119,13 @@ public class FrontResvInfoManageController {
 			
 			Map<String, Object> resvInfo = centerService.selectCenterInfoDetail(centerCd);
 			List<Map<String, Object>> floorList = floorService.selectFloorInfoComboList(centerCd);
-			List<Map<String, Object>> seatClass = partClassService.selectPartClassComboList(centerCd);
+			List<Map<String, Object>> partClass = partClassService.selectPartClassComboList(centerCd);
 			
 			resvInfo.put("centerCd", centerCd);
 			resvInfo.put("resvDate", resvDate);
 			resvInfo.forEach((key, value) -> params.merge(key, value, (v1, v2) -> v2));
 			
-			model.addObject("seatClass", seatClass);
+			model.addObject("partClass", partClass);
 			model.addObject("resvInfo", params);
 			model.addObject("floorList", floorList);
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);

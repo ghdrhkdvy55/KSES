@@ -231,7 +231,7 @@
                                 <div id="price" class="price">
                                     <table>
                                         <tbody>
-											<c:forEach var="item" items="${seatClass}" begin="0" step="1" varStatus="status">
+											<c:forEach var="item" items="${partClass}" begin="0" step="1" varStatus="status">
 												<c:if test="${(status.index + 1)%2 != 0}"><tr></c:if>
 													<td>
 														<img src="/upload/${item.part_icon}"><c:out value='${item.part_class_nm}'/>
