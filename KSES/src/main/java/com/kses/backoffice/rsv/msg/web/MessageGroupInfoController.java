@@ -279,13 +279,13 @@ public class MessageGroupInfoController {
 			if (searchVO.get("searchUserGubun").toString().equals("EMP")) {
 
                 switch (searchVO.get("searchUserCondition").toString()) {
-				     case "EMP_NO"  : 
+				     case "USERID"  : 
 				    	  searchCondition = "emp_no";
 				    	  break;
-				     case "EMP_NM" : 
+				     case "USERNAME" : 
 				    	  searchCondition = "emp_nm";
 				    	  break;
-				     case "EMP_CLPHN"  : 
+				     case "CELLPHNONE"  : 
 				    	  searchCondition = "emp_cell";
 				    	  break;
 				}
@@ -506,7 +506,7 @@ public class MessageGroupInfoController {
 		              
 		   	PaginationInfo paginationInfo = new PaginationInfo();
 			paginationInfo.setCurrentPageNo( Integer.parseInt( SmartUtil.NVL(searchVO.get("pageIndex"), "1") ) );
-			paginationInfo.setRecordCountPerPage(pageUnit);
+			paginationInfo.setRecordCountPerPage(9);
 			paginationInfo.setPageSize(propertiesService.getInt("pageSize"));
 			searchVO.put("firstIndex", paginationInfo.getFirstRecordIndex());
 			searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());

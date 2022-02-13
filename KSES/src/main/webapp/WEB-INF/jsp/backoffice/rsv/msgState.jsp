@@ -151,22 +151,19 @@
         <a class="button b-close">X</a>
         <h2 class="pop_tit">그룹 현황</h2>
         
-        <div class="pop_wrap">
-             <div class="whiteBox searchBox">
-              <div class="top">
-	            <div>
-	              <p class="srchTxt">
-	              <input type="text" id="searchGroupTxt" name="searchGroupTxt">
-	              </p>
-	            </div>
-	          </div>
-	          <div class="inlineBtn">
-	              <a href="#" onClick="msgFunction.fn_GroupSearch()" class="grayBtn">검색</a>
-	              <a href="#" onClick="msgFunction.fn_GroupMsgInfo('Ins', '')" class="grayBtn">그룹 등록</a>
-	               <a href="#" onClick="msgFunction.fn_GroupMsgListUpdate()" class="grayBtn">수신그룹등록</a>
-	              
-	          </div>
-	          <div class="clear"></div>
+		<div class="pop_wrap">
+			<div class="whiteBox searchBox">
+				<div class="top">
+					<div>
+						<p class="srchTxt">
+							<input type="text" id="searchGroupTxt" name="searchGroupTxt">
+						</p>
+					</div>
+				</div>
+				<div class="inlineBtn">
+					<a href="#" onClick="msgFunction.fn_GroupSearch()" class="grayBtn">검색</a>
+				</div>
+				<div class="clear"></div>
 	        </div>
             
             <table class="detail_table" id='tb_groupList'>
@@ -184,235 +181,235 @@
                 </tbody>
             </table>
         </div>
-        <div class="clear"></div>
+        <div class="clear">
+        	<div class="right_box">
+	          	<a href="#" onClick="msgFunction.fn_GroupMsgListUpdate()" class="blueBtn">그룹추가</a>
+	          	<a href="#" class="grayBtn b-close"">닫기</a>
+	          </div>
+        </div>
     </div>
 </div>
 <div id="dv_messageUserSerach" class="popup m_pop">
     <div class="pop_con">
         <a class="button b-close">X</a>
         <h2 class="pop_tit">사용자 조회</h2>
-        <div class="mms_title"> ▶ 조회 </div>
-          <div class="srch_bar" >
-            <p class="sel_srch">
-              <select id="searchUserGubun_In" name="searchUserGubun">
-				  <option value="">선택</option>
-				  <option value="EMP">사용자</option>
-				  <option value="USR">고객</option>
-			  </select>
-			  <select id="searchUserCondition_In" name="searchUserCondition">
-				  <option value="">선택</option>
-				  <option value="USERNAME">이름</option>
-				  <option value="USERID">아아디</option>
-				  <option value="CELLPHNONE">전화번호</option>
-			  </select> 
-            </p>  
-            <p class="sum_srch">
-              <input type="text" id="searchUserKeyworkd_In" name="searchUserKeyworkd">
-	          <a href="#" onClick="msgFunction.fn_UserSearchRes()" class="grayBtn">검색</a>
-	          <a href="#" onClick="msgFunction.fn_UserMsgListUpdate()" class="grayBtn">등록</a>
-            </p>
-        </div>
+        
+
         <div class="pop_wrap">
-            <table class="detail_table" id="tb_searchT_User">
-            <thead>
-               <th style="width:50px;"><input type="checkbox" id="ck_userAll" name="ck_userAll" onClick="msgFunction.fn_CheckboxAll()"></th>
-               <th>이름</th>
-               <th>전화번호</th>
-            </thead>
-            <tbody>
+        	<div class="whiteBox searchBox">
+				<div class="srch_bar" >
+					<p class="sel_srch">
+						<select id="searchUserGubun_In" name="searchUserGubun">
+							<option value="">선택</option>
+							<option value="EMP">사용자</option>
+							<option value="USR">고객</option>
+						</select>
+						<select id="searchUserCondition_In" name="searchUserCondition">
+							<option value="">선택</option>
+							<option value="USERNAME">이름</option>
+							<option value="USERID">아아디</option>
+							<option value="CELLPHNONE">전화번호</option>
+						</select> 
+					</p>  
+					<p class="sum_srch">
+						<input type="text" id="searchUserKeyworkd_In" name="searchUserKeyworkd">
+						<a href="#" onClick="msgFunction.fn_UserSearchRes()" class="grayBtn">검색</a>
+					</p>
+				</div>
+			</div>
+        
+			<table class="detail_table" id="tb_searchT_User">
+				<thead>
+					<th style="width:50px;"><input type="checkbox" id="ck_userAll" name="ck_userAll" onClick="msgFunction.fn_CheckboxAll()"></th>
+					<th>이름</th>
+					<th>전화번호</th>
+				</thead>
+				<tbody>
               
-            </tbody>
-          </table>
-        </div>
-        <div class="clear"></div>
-    </div>
+				</tbody>
+			</table>
+		</div>
+		<div class="clear">
+			<div class="right_box">
+				<a href="#" onClick="msgFunction.fn_UserMsgListUpdate()" class="blueBtn">등록</a>
+	          	<a href="#" class="grayBtn b-close"">닫기</a>
+			</div>
+		</div>
+	</div>
 </div>
 <div id="dv_messageGroup" class="popup m_pop">
-    <div class="pop_con">
-        <a class="button b-close">X</a>
-        <h2 class="pop_tit">그룹 추가</h2>
-        <div class="pop_wrap">
-            <table class="detail_table">
-                <tbody>
-                    <tr>
-                    	<th>그룹명</th>
-                    	<td>
-                    	    <input type="text" id="groupTitle" name="groupTitle">
-                    	    <input type="hidden" id="groupCode" name="groupCode">
-                    	</td>
-                	</tr>
-                	<tr>
-                	   <th>사용유무</th>
-                    	<td>
-                    	    <label for="useYn_Y"><input id="useYn_Y" type="radio" name="useYn" value="Y" checked>Y</label>
-                    		<label for="useYn_N"><input id="useYn_N" type="radio" name="useYn" value="N">N</label>
-                    	</td>
-                	</tr>
-                	<tr>
-                	    <th>비고</th>
-                	    <td >
-                	       <input type="text" id="groupDc" name="groupDc">
-                	    </td>
-                	</tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="right_box">
-            <a href="javascript:common_modelClose('dv_messageGroup')" class="grayBtn">취소</a>
-            <a href="#" onClick="msgFunction.fn_CheckForm()" class="blueBtn" id="btnUpdate">저장</a>
-        </div>
-        <div class="clear"></div>
-    </div>
+	<div class="pop_con">
+		<a class="button b-close">X</a>
+		<h2 class="pop_tit">그룹 등록</h2>
+		<div class="pop_wrap">
+			<table class="detail_table">
+				<tbody>
+					<tr>
+						<th>그룹명</th>
+						<td>
+							<input type="text" id="groupTitle" name="groupTitle">
+							<input type="hidden" id="groupCode" name="groupCode">
+						</td>
+						</tr>
+					<tr>
+						<th>사용유무</th>
+						<td>
+							<label for="useYn_Y"><input id="useYn_Y" type="radio" name="useYn" value="Y" checked>Y</label>
+							<label for="useYn_N"><input id="useYn_N" type="radio" name="useYn" value="N">N</label>
+						</td>
+					</tr>
+					<tr>
+						<th>비고</th>
+						<td>
+							<input type="text" id="groupDc" name="groupDc">
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="right_box">
+			<a href="javascript:common_modelClose('dv_messageGroup')" class="grayBtn">취소</a>
+			<a href="#" onClick="msgFunction.fn_CheckForm()" class="blueBtn" id="btnUpdate">저장</a>
+		</div>
+		<div class="clear"></div>
+	</div>
 </div>
 <!-- // 메시지 보관함 팝업 -->
 <div data-popup="save_mms_list" id="save_mms_list" class="popup m_pop">
-  <div class="pop_con">
-      <a class="button b-close">X</a>
-      <h2 class="pop_tit">메시지 보관함</h2>
-      <div class="pop_wrap">
-        <div class="mms_sel_num">
-          <p>총 <span id="sp_msgTempCnt"></span>개 <em class="point">( 적용하실 메시지를 더블클릭 해주세요. )</em></p>
-        </div>
-        <ul class="save_mms" id="ul_savemms"> 
-        </ul>
-        <p class="page_num" id="ul_savemms_page">
-          
-        </p>
-      </div>
-      <div class="center_box">
-          <a href="" class="grayBtn">닫기</a>
-      </div>
-      <div class="clear"></div>
-  </div>
+	<div class="pop_con">
+		<a class="button b-close">X</a>
+		<h2 class="pop_tit">메시지 보관함</h2>
+		<div class="pop_wrap">
+			<div class="mms_sel_num">
+				<p>총 <span id="sp_msgTempCnt"></span>개 <em class="point">( 적용하실 메시지를 더블클릭 해주세요. )</em></p>
+			</div>
+			<ul class="save_mms" id="ul_savemms"> 
+			</ul>
+			<p class="page_num" id="ul_savemms_page"></p>
+		</div>
+		<div class="center_box">
+			<a href="" class="grayBtn">닫기</a>
+		</div>
+		<div class="clear"></div>
+  	</div>
 </div>
 <!-- // 예약전송 팝업 -->
 <div data-popup="rsv_mms_sum" id="rsv_mms_sum" class="popup m_pop">
-  <div class="pop_con">
-      <a class="button b-close">X</a>
-      <h2 class="pop_tit">예약 전송</h2>
-      <div class="pop_wrap">
-        <ul class="rsv_mms">
-          <li class="rsv_mms_tit"><span>예약 날짜/시간 선택</span></li>
-          <li><input class="datepicker" id="sendDate"  name="sendDate" ></li>
-          <li>
-            <select name="send_hour" id="send_hour">
-              <option value="00">00시</option>
-              <option value="01">01시</option>
-              <option value="02">02시</option>
-              <option value="03">03시</option>
-              <option value="04">04시</option>
-              <option value="05">05시</option>
-              <option value="06">06시</option>
-              <option value="07">07시</option>
-              <option value="08">08시</option>
-              <option value="09">09시</option>
-              <option value="10">10시</option>
-              <option value="11">11시</option>
-              <option value="12">12시</option>
-              <option value="13">13시</option>
-              <option value="14">14시</option>
-              <option value="15">15시</option>
-              <option value="16">16시</option>
-              <option value="17">17시</option>
-              <option value="18">18시</option>
-              <option value="19">19시</option>
-              <option value="20">20시</option>
-              <option value="21">21시</option>
-              <option value="22">22시</option>
-              <option value="23">23시</option>
-            </select>
-          </li>
-          <li>
-            <select name="send_minute" id="send_minute">
-              <option value="00">00분</option>
-              <option value="05">05분</option>
-              <option value="10">10분</option>
-              <option value="15">15분</option>
-              <option value="20">20분</option>
-              <option value="25">25분</option>
-              <option value="30">30분</option>
-              <option value="35">35분</option>
-              <option value="40">40분</option>
-              <option value="45">45분</option>
-              <option value="50">50분</option>
-              <option value="55">55분</option>
-            </select>
-          </li>
-        </ul>
-      </div>
-      <div class="center_box">
-          <a href="#" onClick="msgFunction.fn_ResMessage()" class="blueBtn">예약하기</a>
-          <a href="#" onClick="common_modelClose('rsv_mms_sum')" class="grayBtn">닫기</a>
-      </div>
-      <div class="clear"></div>
-  </div>
+	<div class="pop_con">
+		<a class="button b-close">X</a>
+		<h2 class="pop_tit">예약 전송</h2>
+		<div class="pop_wrap">
+			<ul class="rsv_mms">
+				<li class="rsv_mms_tit"><span>예약 날짜/시간 선택</span></li>
+				<li><input class="datepicker" id="sendDate"  name="sendDate" ></li>
+				<li>
+					<select name="send_hour" id="send_hour">
+						<option value="00">00시</option>
+						<option value="01">01시</option>
+						<option value="02">02시</option>
+						<option value="03">03시</option>
+						<option value="04">04시</option>
+						<option value="05">05시</option>
+						<option value="06">06시</option>
+						<option value="07">07시</option>
+						<option value="08">08시</option>
+						<option value="09">09시</option>
+						<option value="10">10시</option>
+						<option value="11">11시</option>
+						<option value="12">12시</option>
+						<option value="13">13시</option>
+						<option value="14">14시</option>
+						<option value="15">15시</option>
+						<option value="16">16시</option>
+						<option value="17">17시</option>
+						<option value="18">18시</option>
+						<option value="19">19시</option>
+						<option value="20">20시</option>
+						<option value="21">21시</option>
+						<option value="22">22시</option>
+						<option value="23">23시</option>
+					</select>
+				</li>
+				<li>
+					<select name="send_minute" id="send_minute">
+						<option value="00">00분</option>
+						<option value="05">05분</option>
+						<option value="10">10분</option>
+						<option value="15">15분</option>
+						<option value="20">20분</option>
+						<option value="25">25분</option>
+						<option value="30">30분</option>
+						<option value="35">35분</option>
+						<option value="40">40분</option>
+						<option value="45">45분</option>
+						<option value="50">50분</option>
+						<option value="55">55분</option>
+					</select>
+				</li>
+			</ul>
+		</div>
+		<div class="center_box">
+			<a href="#" onClick="msgFunction.fn_ResMessage()" class="blueBtn">예약하기</a>
+			<a href="#" onClick="common_modelClose('rsv_mms_sum')" class="grayBtn">닫기</a>
+		</div>
+		<div class="clear"></div>
+	</div>
 </div>
 <div id="dv_messageGroup_user" class="popup">
-  <div class="pop_con">
-      <a class="button b-close" onClick="msgFunction.fn_MsgUserCloseInfo()">X</a>
-      <h2 class="pop_tit">그룹 사용자 추가</h2>
-      <div class="pop_wrap mms_mng_container">
-        <div class="mms_selectedUserList whiteBox mms_con1">
-          <div class="mms_title"> ▶ 조회 </div>
-          <div class="srch_bar" >
-            <p class="sel_srch">
-              <select id="searchUserGubun" name="searchUserGubun">
-				  <option value="">선택</option>
-				  <option value="EMP">사용자</option>
-				  <option value="USR">고객</option>
-			  </select>
-			  <select id="searchUserCondition" name="searchUserCondition">
-				  <option value="">선택</option>
-				  <option value="USERNAME">이름</option>
-				  <option value="USERID">아아디</option>
-				  <option value="CELLPHNONE">전화번호</option>
-			  </select> 
-            </p>           
-
-            <p class="sum_srch">
-              <input type="text" id="searchUserKeyworkd" name="searchUserKeyworkd">
-	          <a href="#" onClick="msgFunction.fn_leftUserSearch()" class="grayBtn">검색</a>
-	        </p>
-          </div>
-          <table class="detail_table" id="tb_searchT">
-            <tbody>
-              <tr>
-                <td>
-                   <ul>
-                    
-                   </ul>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="mms_selectedUserList whiteBox">
-          <div class="mms_title"> ▶ 그룹사용자 </div>
-          <table class="detail_table" id="tb_groupT">
-            <tbody>
-              <tr>
-                <td>
-                   <ul>
-                   </ul>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-      </div>
-     
-      <div class="clear"></div>
-  </div>
+	<div class="pop_con">
+		<a class="button b-close" onClick="msgFunction.fn_MsgUserCloseInfo()">X</a>
+		<h2 class="pop_tit">그룹 사용자 추가</h2>
+		<div class="pop_wrap mms_mng_container">
+			<div class="mms_selectedUserList whiteBox mms_con1">
+				<div class="mms_title"> ▶ 조회 </div>
+				<div class="srch_bar" >
+					<p class="sel_srch">
+						<select id="searchUserGubun" name="searchUserGubun">
+							<option value="">선택</option>
+							<option value="EMP">사용자</option>
+							<option value="USR">고객</option>
+						</select>
+						<select id="searchUserCondition" name="searchUserCondition">
+							<option value="">선택</option>
+							<option value="USERNAME">이름</option>
+							<option value="USERID">아아디</option>
+							<option value="CELLPHNONE">전화번호</option>
+						</select> 
+					</p>           
+					<p class="sum_srch">
+						<input type="text" id="searchUserKeyworkd" name="searchUserKeyworkd">
+						<a href="#" onClick="msgFunction.fn_leftUserSearch()" class="grayBtn">검색</a>
+					</p>
+				</div>
+				<table class="detail_table" id="tb_searchT">
+					<tbody>
+						<tr>
+							<td>
+								<ul></ul>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="mms_selectedUserList whiteBox">
+				<div class="mms_title"> ▶ 그룹사용자 </div>
+				<table class="detail_table" id="tb_groupT">
+					<tbody>
+						<tr>
+							<td>
+								<ul></ul>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="clear"></div>
+	</div>
 </div>
 <!-- pooup// -->
 <script type="text/javascript">
     $(document).ready(function() { 
-		if($("#authorCd").val() != "ROLE_ADMIN" && $("#authorCd").val() != "ROLE_SYSTEM") {
-			$(".hideAuthor").hide();
-		}
-		
 		var clareCalendar = {
 		monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
 		dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
@@ -434,114 +431,113 @@
 		
  	});
     
-    var msgFunction = {
-   		 fn_CheckForm  : function (){
-         	   if (any_empt_line_span("dv_messageGroup", "groupTitle", "시즌명를 입력해 주세요.","sp_message", "savePage") == false) return;
-         	   var commentTxt = ($("#mode").val() == "Ins") ? "신규 그룹 정보를 등록 하시겠습니까?" : "입력한  그룹  정보를 저장 하시겠습니까?";
- 			   $("#id_ConfirmInfo").attr("href", "javascript:msgFunction.fn_update()");
- 	       	   fn_ConfirmPop(commentTxt);
- 		 }, fn_update : function(){
- 			  $("#confirmPage").bPopup().close();
- 			  var url = "/backoffice/rsv/msgGroupUpdate.do";
- 		      var params = {    'groupCode' : $("#groupCode").val(),
- 		    		            'groupTitle' : $("#groupTitle").val(),
- 		    		            'groupDc' : $("#groupDc").val(),
- 				    		    'groupUseyn' :fn_emptyReplace($("input[name='useYn']:checked").val(),"Y"),
- 				    		    'mode' : $("#mode").val()
- 		    	               }; 
- 		      fn_Ajax(url, "POST", params, false,
- 		      			function(result) {
- 		    	               if (result.status == "LOGIN FAIL"){
- 		 				    	   common_popup(result.message, "Y","dv_messageGroup");
- 		   						   location.href="/backoffice/login.do";
- 		   					   }else if (result.status == "SUCCESS"){
- 		   						   //총 게시물 정리 하기'
- 		   						   if ($("#searchGroupTxt").val() == "")
- 		   		 		    	     $("#searchGroupTxt").val( $("#groupTitle").val());
- 		   		 		           msgFunction.fn_GroupSearch()
- 		   					   }else if (result.status == "FAIL"){
- 		   						   common_popup("저장 도중 문제가 발생 하였습니다.", "Y", "dv_messageGroup");
- 		   					   }
- 		 				    },
- 		 				    function(request){
- 		 					    common_popup("Error:" + request.status, "Y", "dv_messageGroup");
- 		 				    }    		
- 		      );
- 		      
- 		      $("#dv_messageGroupSearch").bPopup();  
- 		 }, fn_MsgInfo : function(mode, groupCode){
- 			$("#mode").val(mode);
- 			common_modelClose('dv_messageGroupSearch');
+	var msgFunction = {
+		fn_CheckForm  : function (){
+			if (any_empt_line_span("dv_messageGroup", "groupTitle", "시즌명를 입력해 주세요.","sp_message", "savePage") == false) return;
+			var commentTxt = ($("#mode").val() == "Ins") ? "신규 그룹 정보를 등록 하시겠습니까?" : "입력한  그룹  정보를 저장 하시겠습니까?";
+			$("#id_ConfirmInfo").attr("href", "javascript:msgFunction.fn_update()");
+			fn_ConfirmPop(commentTxt);
+		}, 
+		fn_update : function(){
+			$("#confirmPage").bPopup().close();
+			var url = "/backoffice/rsv/msgGroupUpdate.do";
+			var params = 
+			{ 
+				'groupCode' : $("#groupCode").val(),
+				'groupTitle' : $("#groupTitle").val(),
+				'groupDc' : $("#groupDc").val(),
+				'groupUseyn' :fn_emptyReplace($("input[name='useYn']:checked").val(),"Y"),
+				'mode' : $("#mode").val()
+			}; 
+			fn_Ajax(url, "POST", params, false,
+				function(result) {
+					if (result.status == "LOGIN FAIL"){
+						common_popup(result.message, "Y","dv_messageGroup");
+						location.href="/backoffice/login.do";
+					}else if (result.status == "SUCCESS"){
+						//총 게시물 정리 하기'
+						if ($("#searchGroupTxt").val() == "")
+							$("#searchGroupTxt").val( $("#groupTitle").val());
+							msgFunction.fn_GroupSearch()
+						}else if (result.status == "FAIL"){
+							common_popup("저장 도중 문제가 발생 하였습니다.", "Y", "dv_messageGroup");
+						}
+					},
+					function(request){
+						common_popup("Error:" + request.status, "Y", "dv_messageGroup");
+					}    		
+			);
+			$("#dv_messageGroupSearch").bPopup();  
+		},
+		fn_MsgInfo : function(mode, groupCode){
+			$("#mode").val(mode);
+			common_modelClose('dv_messageGroupSearch');
  			
-	   	    if (mode == "Edt"){
-	   	    	
-			  	$("#groupCode").val(groupCode).prop('readonly', true);
-			  	$("#btnUpdate").text("수정");
-			  	var params = {"groupCode" : groupCode};
+			if (mode == "Edt"){
+				$("#groupCode").val(groupCode).prop('readonly', true);
+				$("#btnUpdate").text("수정");
+				var params = {"groupCode" : groupCode};
 			  	
-			  	var url = "/backoffice/rsv/msgGroupDetail.do";
-			  	fn_Ajax(url, "GET", params, false,
-			     	function(result) {
-			  		       if (result.status == "LOGIN FAIL"){
-			 			      common_modelCloseM(result.meesage, "Y", "dv_messageGroup");
-							  location.href="/backoffice/login.do";
-			  		       }else if (result.status == "SUCCESS"){
-	 					       var obj  = result.regist;
-	 					       $("#groupTitle").val(obj.group_title);
-	 					       $("#groupDc").val(obj.group_dc);
-	 					       $("input:radio[name='useYn']:radio[value='"+obj.group_useyn+"']").prop('checked', true)
-			 			   }else{
-			  				   common_modelCloseM(result.message,"dv_messageGroup");
-			  			   }
-			  		},
-			  		function(request){
-			  		     common_modelCloseM("Error:" + request.status,"dv_messageGroup");
-			  		}
-			     );
+				var url = "/backoffice/rsv/msgGroupDetail.do";
+				fn_Ajax(url, "GET", params, false,
+					function(result) {
+						if (result.status == "LOGIN FAIL"){
+							common_modelCloseM(result.meesage, "Y", "dv_messageGroup");
+							location.href="/backoffice/login.do";
+						}else if (result.status == "SUCCESS"){
+							var obj  = result.regist;
+							$("#groupTitle").val(obj.group_title);
+							$("#groupDc").val(obj.group_dc);
+							$("input:radio[name='useYn']:radio[value='"+obj.group_useyn+"']").prop('checked', true)
+						}else{
+							common_modelCloseM(result.message,"dv_messageGroup");
+						}
+					},
+					function(request){
+						common_modelCloseM("Error:" + request.status,"dv_messageGroup");
+					}
+				);
 			}else{
-			  	$("#groupCode").val('').prop('readonly', false);
-			  	$("#groupTitle").val('');
-			  	$("#groupDc").val('');
-			  	$("input:radio[name='useYn']:radio[value='Y']").prop('checked', true)
-			  	$("#btnUpdate").text("입력");
+				$("#groupCode").val('').prop('readonly', false);
+				$("#groupTitle").val('');
+				$("#groupDc").val('');
+				$("input:radio[name='useYn']:radio[value='Y']").prop('checked', true)
+				$("#btnUpdate").text("입력");
 			}
-		    $("#dv_messageGroup").bPopup();  
- 		}, fn_GroupPop : function (groupCode){
- 			$("#groupCode").val(groupCode);
- 			$("#dv_messageGroupSearch").bPopup();
- 			$("#searchGroupTxt").val('');
- 			$("#tb_groupList > tbody").empty();
- 			
-        }, fn_GroupSearch : function (){
-        	if (any_empt_line_span("dv_messageGroupSearch", "searchGroupTxt", "검색어를  입력해주세요.","sp_message", "savePage") == false) return;
-        	$("#dv_messageGroupSearch").bPopup().close();  
-        	var params = {"searchKeyword" : $("#searchGroupTxt").val()};
+			$("#dv_messageGroup").bPopup();  
+		},
+		fn_GroupPop : function (groupCode){
+			$("#groupCode").val(groupCode);
+			$("#dv_messageGroupSearch").bPopup();
+			$("#searchGroupTxt").val('');
+			$("#tb_groupList > tbody").empty(); 			
+        },
+		fn_GroupSearch : function (){
+			if (any_empt_line_span("dv_messageGroupSearch", "searchGroupTxt", "검색어를  입력해주세요.","sp_message", "savePage") == false) return;
+			$("#dv_messageGroupSearch").bPopup().close();  
+			var params = {"searchKeyword" : $("#searchGroupTxt").val()};
 			var returnval = uniAjaxReturn("/backoffice/rsv/msgGroupList.do", "POST", false, params,  "lst");
 			var html = "";
 			if (returnval != ""){
-				  
-				  $("#tb_groupList > tbody").empty();
-				  for (var i in returnval){		
-					  html  = "<tr style='text-align:center;'>"
-						    + "   <td><input type='checkbox' id='send_GroupCell' name='send_GroupCell' value='"+ returnval[i].group_code +":"+returnval[i].group_title+"'></td>"
-							+ "   <td><a href=\"#\" onClick=\"msgFunction.fn_MsgInfo('Edt','"+ returnval[i].group_code+"')\">" + returnval[i].group_title + "</a></td>"
-							+ "   <td><a href=\"#\" onClick=\"msgFunction.fn_MsgUserPopInfo('"+ returnval[i].group_code+"')\">" + returnval[i].group_cnt + "</a></td>"
-							+ "   <td><a href=\"#\" onClick=\"msgFunction.fn_MsgInfo('Edt','"+ returnval[i].group_code+"')\">" + fn_emptyReplace(returnval[i].group_dc) + "</a></td>"
-							+ "   <td>" + returnval[i].last_updt_dtm + "</td>"
-							+ "   <td>" + returnval[i].last_updusr_id + "</td>"
-							+ "   <td><a href=\"#\" onClick=\"msgFunction.fn_MsgDel('"+ returnval[i].group_code+"')\">삭제</a></td>"
-							+ " </tr>";		   					
-					  $("#tb_groupList > tbody").append(html);
-					  html = "";
-				  }
-				 
+				$("#tb_groupList > tbody").empty();
+				for (var i in returnval){		
+					html = "<tr style='text-align:center;'>"
+						 + "   <td><input type='checkbox' id='send_GroupCell' name='send_GroupCell' value='"+ returnval[i].group_code +":"+returnval[i].group_title+"'></td>"
+						 + "   <td><a href=\"#\" onClick=\"msgFunction.fn_MsgInfo('Edt','"+ returnval[i].group_code+"')\">" + returnval[i].group_title + "</a></td>"
+						 + "   <td><a href=\"#\" onClick=\"msgFunction.fn_MsgUserPopInfo('"+ returnval[i].group_code+"')\">" + returnval[i].group_cnt + "</a></td>"
+						 + "   <td><a href=\"#\" onClick=\"msgFunction.fn_MsgInfo('Edt','"+ returnval[i].group_code+"')\">" + fn_emptyReplace(returnval[i].group_dc) + "</a></td>"
+						 + "   <td>" + returnval[i].last_updt_dtm + "</td>"
+						 + "   <td>" + returnval[i].last_updusr_id + "</td>"
+						 + "   <td><a href=\"#\" onClick=\"msgFunction.fn_MsgDel('"+ returnval[i].group_code+"')\">삭제</a></td>"
+						 + " </tr>";		   					
+					$("#tb_groupList > tbody").append(html);
+					html = "";
+				}
 			}else {
-				 html  = "<tr><td colspan='5' style='text-align:center'>검색한 내용이 없습니다.</td></tr>"
-			     $("#tb_groupList > tbody").append(html);
-				 
+				html  = "<tr><td colspan='5' style='text-align:center'>검색한 내용이 없습니다.</td></tr>"
+				$("#tb_groupList > tbody").append(html); 
 			}
-			 $("#dv_messageGroupSearch").bPopup();  
-			
+				$("#dv_messageGroupSearch").bPopup();  		
         }, fn_GroupMsgInfo : function (mode, groupCode){
         	$("#mode").val(mode);
         	common_modalOpenAndClose("dv_messageGroup","dv_messageGroupSearch");
@@ -633,32 +629,34 @@
         }, fn_GroupUserUpdate : function (userId, userNm, userCellp){
        
 			var url = "/backoffice/rsv/msgGroupUserUpdate.do";
-		    var params = {  'groupUserid' : userId,
-		    	            'groupUsername' : userNm,
-		    	            'groupUserCellphone' : userCellp,
-		    	            'groupCode' : $("#groupCode").val(),
-			    		    'groupUserGubun' : $("#searchUserGubun").val()
-		                   }; 
-		    fn_Ajax(url, "POST", params, false,
-		    			function(result) {
-		                   if (result.status == "LOGIN FAIL"){
-		 			    	   common_popup(result.message, "Y","dv_messageGroup_user");
-		   					   location.href="/backoffice/login.do";
-		   				   }else if (result.status == "OVERLAP FAIL"){
-		   					   //총 게시물 정리 하기'
-		   					   common_popup(result.message, "N","dv_messageGroup_user");
-		   					   msgFunction.fn_GroupState();
-		   				   }else if (result.status == "SUCCESS"){
-		   					   //총 게시물 정리 하기'
-		   					   msgFunction.fn_MsgUserInfo()
-		   				   }else if (result.status == "FAIL"){
-		   					   common_popup("저장 도중 문제가 발생 하였습니다.", "Y", "dv_messageGroup_user");
-		   				   }
-		 			    },
-		 			    function(request){
-		 				    common_popup("Error:" + request.status, "Y", "dv_messageGroup_user");
-		 			    }    		
-		    );
+		    var params = 
+		    {
+				'groupUserid' : userId,
+				'groupUsername' : userNm,
+				'groupUserCellphone' : userCellp,
+				'groupCode' : $("#groupCode").val(),
+				'groupUserGubun' : $("#searchUserGubun").val()
+			}; 
+			fn_Ajax(url, "POST", params, false,
+				function(result) {
+					if (result.status == "LOGIN FAIL"){
+						common_popup(result.message, "Y","dv_messageGroup_user");
+						location.href="/backoffice/login.do";
+					}else if (result.status == "OVERLAP FAIL"){
+						//총 게시물 정리 하기'
+						common_popup(result.message, "N","dv_messageGroup_user");
+						msgFunction.fn_GroupState();
+					}else if (result.status == "SUCCESS"){
+						//총 게시물 정리 하기'
+						msgFunction.fn_MsgUserInfo()
+					}else if (result.status == "FAIL"){
+						common_popup("저장 도중 문제가 발생 하였습니다.", "Y", "dv_messageGroup_user");
+					}
+				},
+				function(request){
+					common_popup("Error:" + request.status, "Y", "dv_messageGroup_user");
+				}    		
+			);
         }, fn_GroupState : function (){
         	msgFunction.fn_MsgUserInfo();
 			msgFunction.fn_leftUserSearch();
@@ -671,9 +669,11 @@
         	$("#tb_searchT_User > tbody").empty();
         	
         }, fn_UserSearchRes : function (){
-        	$("#dv_messageUserSerach").bPopup().close();
+        	$("#dv_messageUserSerach").bPopup().close(); 
         	if (any_empt_line_span("dv_messageUserSerach", "searchUserGubun_In", "검색할 고객 구분을 선택해 주세요.","sp_message", "savePage") == false) return;
+        	/*
         	if (any_empt_line_span("dv_messageUserSerach", "searchUserCondition_In", "검색할 조건을  선택해 주세요.","sp_message", "savePage") == false) return;
+        	 */
         	if (any_empt_line_span("dv_messageUserSerach", "searchUserKeyworkd_In", "검색어를 입력해 주세요.","sp_message", "savePage") == false) return;
         	var params = {
         			      "searchUserGubun" : $("#searchUserGubun_In").val(), 
@@ -833,9 +833,10 @@
         	                 }
         	                 //페이징
         	                 var pageObj  = result.paginationInfo;
+        	                 console.log("pageObj : " + pageObj);
         	                 var pageHtml = ajaxPaging(pageObj.currentPageNo, pageObj.firstPageNo, pageObj.recordCountPerPage, 
 	                                                   pageObj.firstPageNoOnPageList, pageObj.lastPageNoOnPageList, 
-	                                                   pageObj.totalRecordCount, pageObj.pageSize, "fn_megPop");
+	                                                   pageObj.totalRecordCount, pageObj.pageSize, "msgFunction.fn_megPop");
 	                        $("#ul_savemms_page").html(pageHtml);
 		   				   }else if (result.status == "FAIL"){
 		   					   common_popup("저장 도중 문제가 발생 하였습니다.", "Y", "save_mms_list");

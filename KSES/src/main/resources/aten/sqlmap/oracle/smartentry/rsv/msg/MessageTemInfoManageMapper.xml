@@ -26,7 +26,7 @@
 				ORDER BY A.LAST_UPDT_DTM DESC
 			) TB 
 		) TA
-		WHERE ROWNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
+		WHERE RNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}
 		ORDER BY TA.RNUM DESC 
    	</select>
    	<select id="selectMessageTemplateDetail" resultType="lmap">
