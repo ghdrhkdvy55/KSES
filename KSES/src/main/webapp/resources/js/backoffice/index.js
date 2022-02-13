@@ -1,6 +1,5 @@
 $.EgovIndexApi = function() {
 	console.log('EgovIndexApi');
-	let jqXhr;
 };
 
 $.EgovIndexApi.prototype.camelToUnderscore = function(key) {
@@ -22,32 +21,31 @@ $.EgovIndexApi.prototype.getUrlParameter = function(name) {
 };
 
 $.EgovIndexApi.prototype._apiExecute = function(contentType, method, url, params, beforeFunc, doneFunc, failFunc) {
-	this.jqXhr = 
-		$.ajax({
-			contentType: contentType,
-			type: method,
-			url: url,
-			data: params,
-			dataType: 'json',
-			headers: { 'AJAX': true },
-			beforeSend: function(xhr) {
-				if (beforeFunc !== undefined && beforeFunc !== null) {
-					beforeFunc(xhr);
-				}
+	$.ajax({
+		contentType: contentType,
+		type: method,
+		url: url,
+		data: params,
+		dataType: 'json',
+		headers: { 'AJAX': true },
+		beforeSend: function(xhr) {
+			if (beforeFunc !== undefined && beforeFunc !== null) {
+				beforeFunc(xhr);
 			}
-		}).always(function (xhr, status, err) {
-			if (status === 'success') {
-				let json = xhr;
-				if (json.status === 'SUCCESS') {
-					doneFunc(json);
-				} else {
-					failFunc(json);
-				}
+		}
+	}).always(function (xhr, status, err) {
+		if (status === 'success') {
+			let json = xhr;
+			if (json.status === 'SUCCESS') {
+				doneFunc(json);
+			} else {
+				failFunc(json);
 			}
-			else {
-				EgovIndexApi._apiResponseException(xhr);
-			}
-		});
+		}
+		else {
+			EgovIndexApi._apiResponseException(xhr);
+		}
+	});
 };
 
 $.EgovIndexApi.prototype._apiResponseException = function(xhr) {
@@ -91,35 +89,34 @@ $.EgovIndexApi.prototype.apiExecuteForm = function(url, params, beforeFunc, done
 };
 
 $.EgovIndexApi.prototype.apiExcuteMultipart = function(url, formData, beforeFunc, doneFunc, failFunc) {
-	this.jqXhr =
-		$.ajax({
-			enctype: 'multipart/form-data',
-			contentType: false,
-			processData: false,
-			type: 'POST',
-			url: url,
-			data: formData,
-			cache: false,
-			timeout: 600000,
-			headers: { 'AJAX': true },
-			beforeSend: function(xhr) {
-				if (beforeFunc !== undefined && beforeFunc !== null) {
-					beforeFunc(xhr);
-				}
+	$.ajax({
+		enctype: 'multipart/form-data',
+		contentType: false,
+		processData: false,
+		type: 'POST',
+		url: url,
+		data: formData,
+		cache: false,
+		timeout: 600000,
+		headers: { 'AJAX': true },
+		beforeSend: function(xhr) {
+			if (beforeFunc !== undefined && beforeFunc !== null) {
+				beforeFunc(xhr);
 			}
-		}).always(function (xhr, status, err) {
-			if (status === 'success') {
-				let json = xhr;
-				if (json.status === 'SUCCESS') {
-					doneFunc(json);
-				} else {
-					failFunc(json);
-				}
+		}
+	}).always(function (xhr, status, err) {
+		if (status === 'success') {
+			let json = xhr;
+			if (json.status === 'SUCCESS') {
+				doneFunc(json);
+			} else {
+				failFunc(json);
 			}
-			else {
-				EgovIndexApi._apiResponseException(xhr);
-			}
-		});
+		}
+		else {
+			EgovIndexApi._apiResponseException(xhr);
+		}
+	});
 }
 
 $.EgovIndexApi.prototype.s2ab = function(s) {
