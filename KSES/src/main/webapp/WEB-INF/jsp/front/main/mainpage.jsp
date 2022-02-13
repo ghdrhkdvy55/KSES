@@ -452,7 +452,8 @@
 										setHtml = "";
 										setHtml += "<li><span><a href='javascript:mainService.fn_userResvInfo(&#39;NOW&#39;, &#39;" + obj.resv_seq + "&#39;, &#39;rsv_info&#39;);' >" + obj.center_nm + " " + obj.seat_nm + "</a></span></li>";
 										setHtml += "<li class='rsv_cancel'><a href='javascript:mainService.fn_userResvInfo(&#39;CANCEL&#39;, &#39;" + obj.resv_seq + "&#39;, &#39;cancel_rsv_info&#39;);'>예약취소</a></li>";
-										setHtml += obj.resv_entry_dvsn == "ENTRY_DVSN_2" ? "<li><em class='n_class'>" + obj.resv_seat_class +"</em></li>" : "<li><em></em></li>";
+										setHtml += "<li>예약번호 : " + obj.resv_seq + "</li>";
+										setHtml += obj.resv_entry_dvsn == "ENTRY_DVSN_2" ? "<li><em class='n_class'>" + obj.resv_seat_class + "</em></li>" : "";
 
 										userInfoBottomArea.append(setHtml);
 										
