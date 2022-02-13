@@ -117,7 +117,7 @@
             $form.find(':radio[name=centerStandYn]:first').prop('checked', true);
             $popup.bPopup();
         } else {
-            $popup.find('h2:first').text('지점 수정');
+            $popup.find('h2:first').text(centerNm +' 지점 수정');
             EgovIndexApi.apiExecuteJson(
                 'GET',
                 '/backoffice/bld/centerInfoDetail.do', {
