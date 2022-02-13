@@ -149,7 +149,7 @@ public class UserInfoController {
 	    return model;
 	}
 	
-	@RequestMapping (value="updateUserListInfo.do")
+	@RequestMapping (value="userListInfoUpdate.do")
 	public ModelAndView updateHolyInfo(	@ModelAttribute("loginVO") LoginVO loginVO, 
 										@RequestBody UserInfo vo, 
 										HttpServletRequest request, 
@@ -167,9 +167,9 @@ public class UserInfoController {
 		     }
 			 //사용자 등록
 			 loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
-			/* vo.setUserId(loginVO.getAdminId()); */
+			 vo.setLastUpdusrId(loginVO.getAdminId());
 			 
-			 int ret  = userService.updateUserListInfo(vo);
+			 int ret  = userService.updateUserInfo(vo);
 			 meesage = "sucess.common.update";
 			 if (ret > 0){
 				 model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);

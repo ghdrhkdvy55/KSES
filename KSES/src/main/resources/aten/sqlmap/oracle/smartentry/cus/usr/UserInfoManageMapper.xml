@@ -195,12 +195,11 @@
 
 	<update id="updateUserInfo">
 		UPDATE TSER_USER_INFO_I SET 
-			USER_NM = #{userNm, jdbcType=VARCHAR}, 
-			USER_PHONE = #{userPhone, jdbcType=VARCHAR}, 
-			USER_SEX_MF = #{userSexMf, jdbcType=VARCHAR}, 
-			USER_BIRTH_DY = #{userBirthDy, jdbcType=VARCHAR}, 
-			LAST_UPDUSR_ID = #{userId}, 
-			LAST_UPDT_DTM = SYSDATE                     
+			VACNTN_DVSN = #{vacntnDvsn, jdbcType=VARCHAR}, 
+			VACNTN_DT = #{vacntnDt, jdbcType=VARCHAR}, 
+			VACNTN_ROUND = #{vacntnRound, jdbcType=VARCHAR},
+			LAST_UPDUSR_ID = #{lastUpdusrId},
+			LAST_UPDT_DTM = SYSDATE
 		WHERE USER_ID = #{userId}
    	</update>
    	
@@ -275,12 +274,4 @@
 		FROM TSER_USER_INFO_I A
 		WHERE A.USER_ID = #{userId}
    	</select>
-   	
-	<update id="updateUserListInfo">
-		UPDATE TSER_USER_INFO_I SET 
-			VACNTN_DVSN = #{vacntnDvsn, jdbcType=VARCHAR}, 
-			VACNTN_DT = #{vacntnDt, jdbcType=VARCHAR}, 
-			VACNTN_ROUND = #{vacntnRound, jdbcType=VARCHAR} 
-       	WHERE USER_ID = #{userId, jdbcType=VARCHAR}
-   	</update>
 </mapper>

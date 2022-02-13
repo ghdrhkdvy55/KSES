@@ -58,7 +58,7 @@ public class UserInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 
 	@Override
 	public int updateUserInfo(UserInfo vo) throws Exception {
-		return vo.getMode().equals("Ins") ?  userMapper.insertUserInfo(vo) : userMapper.updateUserInfo(vo);
+		return vo.getMode().equals("Ins") ? userMapper.insertUserInfo(vo) : userMapper.updateUserInfo(vo);
 	}
 	
 	@Override
@@ -86,10 +86,5 @@ public class UserInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	public Map<String, Object> selectUserListDetail(String userId) throws Exception{
 		
 		return userMapper.selectUserListDetail(userId);
-	}
-	
-	@Override
-	public int updateUserListInfo(UserInfo vo) throws Exception {
-		return userMapper.updateUserListInfo(vo) ;
 	}
 }
