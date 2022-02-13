@@ -55,8 +55,8 @@
    	</update>
    	
    	<delete id="deleteMessageGroupInfo">
-   	    <foreach collection="delCds" item="item" separator=";" open="DECLARE BEGIN" close="; END;">  
-   	            DELETE FROM TSES_MESSAGGROUP_USER  WHERE GROUP_CODE= #{item}
+   	    <foreach collection="delCds" item="item" separator=";" open="DECLARE BEGIN" close="END;">
+   	            DELETE FROM TSES_MESSAGGROUP_USER  WHERE GROUP_CODE= #{item};
 	            DELETE FROM TSES_MESSAGGROUP WHERE GROUP_CODE = #{item};
 	    </foreach>		
    	</delete>
