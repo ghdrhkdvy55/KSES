@@ -34,7 +34,15 @@ public interface BillInfoManageService {
 	 * @throws Exception
 	 */
 	public Map<String, Object> selectBillInfoDetail(String billSeq) throws Exception;
-	
+
+	/**
+	 * SPDM 지점 현금영수증 발행 정보 갱신
+	 * @param billInfo
+	 * @return
+	 * @throws Exception
+	 */
+	public int insertBillInfo(BillInfo billInfo) throws Exception;
+
 	/**
 	 * SPDM 지점 현금영수증 발행 정보 갱신
 	 * 
@@ -60,5 +68,5 @@ public interface BillInfoManageService {
 	 * @return
 	 * @throws Exception
 	 */
-	public int deleteBillInfo(String billSeq) throws Exception;
+	public int deleteBillInfo(BillInfo billInfo) throws Exception;
 }

@@ -23,6 +23,8 @@ public interface BillInfoManageMapper {
 	public int updateBillInfo(BillInfo billInfo) throws Exception;
 	
 	public int updateBillDayInfo(@Param("billDayInfoList") List<BillDayInfo> billDayInfoList) throws Exception;
+
+	public int updateBillDayInfoByCenterCd(BillInfo billInfo);
 	
 	public int deleteBillInfo(@Param("billSeq") String billSeq) throws Exception;
 }

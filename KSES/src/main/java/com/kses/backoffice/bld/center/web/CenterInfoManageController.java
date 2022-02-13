@@ -67,7 +67,6 @@ public class CenterInfoManageController {
 		ModelAndView model = new ModelAndView("/backoffice/bld/centerList"); 
 		List<Map<String, Object>> centerInfoComboList = centerInfoManageService.selectCenterInfoComboList();
 		model.addObject("centerInfoComboList", centerInfoComboList);
-		model.addObject("billDvsnInfoComboList", codeDetailService.selectCmmnDetailCombo("BILL_DVSN"));
 		model.addObject("floorInfo", codeDetailService.selectCmmnDetailCombo("CENTER_FLOOR"));
 		model.addObject(Globals.STATUS_REGINFO , searchVO);
 		return model;	

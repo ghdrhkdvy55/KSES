@@ -1,5 +1,6 @@
 package com.kses.backoffice.bld.center.web;
 
+import com.kses.backoffice.bas.code.service.EgovCcmCmmnDetailCodeManageService;
 import com.kses.backoffice.bld.center.service.BillInfoManageService;
 import com.kses.backoffice.bld.center.service.CenterInfoManageService;
 import com.kses.backoffice.bld.center.vo.BillDayInfo;
@@ -9,11 +10,15 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.Globals;
 import egovframework.com.cmm.util.EgovUserDetailsHelper;
+import egovframework.rte.fdl.cmmn.exception.EgovBizException;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -22,11 +27,10 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequestMapping("/backoffice/bld")
 public class BillInfoManageController {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(BillInfoManageController.class);
     
     @Autowired
     EgovMessageSource egovMessageSource;
@@ -39,6 +43,21 @@ public class BillInfoManageController {
 
 	@Autowired
 	protected EgovPropertyService propertiesService;
+
+	@Autowired
+	private EgovCcmCmmnDetailCodeManageService codeDetailService;
+
+	/**
+	 * 현금영수증 설정 팝업 화면 호출
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "billInfoPopup.do", method = RequestMethod.GET)
+	public ModelAndView popupBillInfo() throws Exception {
+		ModelMap model = new ModelMap();
+		model.addAttribute("billDvsnInfoComboList", codeDetailService.selectCmmnDetailCombo("BILL_DVSN"));
+		return new ModelAndView("/backoffice/bld/sub/billInfo", model);
+	}
 
 	/**
 	 * 지점별 영수증 목록 조회
@@ -53,7 +72,6 @@ public class BillInfoManageController {
 		String centerCd = (String) searchVO.get("centerCd");
 
 		List<Map<String, Object>> billInfoList = billService.selectBillInfoList(centerCd);
-
 		model.addObject(Globals.JSON_RETURN_RESULTLISR, billInfoList);
 		model.addObject(Globals.PAGE_TOTALCNT, billInfoList.size());
 		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
@@ -99,63 +117,63 @@ public class BillInfoManageController {
     	
     	return model;
     }
-     
-	@RequestMapping (value="billInfoDetail.do")
-	public ModelAndView selectCenterInfoDetail( @RequestParam("billSeq") String billSeq , 
-												HttpServletRequest request) throws Exception {	
-		
-		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
-	    Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-		if(!isAuthenticated) {
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-			model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
-			return model;	
-	    }	
-		
-		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-		model.addObject(Globals.STATUS_REGINFO, billService.selectBillInfoDetail(billSeq));	     	
+
+	/**
+	 * 지점별 현금영수증(요일) 저장
+	 * @param billInfo
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping (value = "billInfoUpdate.do", method = RequestMethod.POST)
+	public ModelAndView updateBillInfo(@RequestBody BillInfo billInfo) throws Exception {
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+
+		String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
+		billInfo.setFrstRegterId(userId);
+		billInfo.setLastUpdusrId(userId);
+		int ret = 0;
+		switch (billInfo.getMode()) {
+			case Globals.SAVE_MODE_INSERT:
+				ret = billService.insertBillInfo(billInfo);
+				break;
+			case Globals.SAVE_MODE_UPDATE:
+				ret = billService.updateBillInfo(billInfo);
+				break;
+			default:
+				throw new EgovBizException("잘못된 호출입니다.");
+		}
+		String messageKey = "";
+		if (ret > 0) {
+			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+			messageKey = StringUtils.equals(billInfo.getMode(), Globals.SAVE_MODE_INSERT)
+					? "sucess.common.insert" : "sucess.common.update";
+		}
+		else {
+			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			messageKey = StringUtils.equals(billInfo.getMode(), Globals.SAVE_MODE_INSERT)
+					? "fail.common.insert" : "fail.common.update";
+		}
+		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(messageKey));
+
 		return model;
 	}
-    
-	@RequestMapping (value="billInfoUpdate.do")
-	public ModelAndView updateBillInfo(	HttpServletRequest request,  
-										@RequestBody BillInfo vo) throws Exception {
-		
+
+	/**
+	 * 현금영수증 정보 삭제
+	 * @param billSeq
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping (value = "billInfoDelete.do", method = RequestMethod.POST)
+	public ModelAndView deleteBillInfoManage(@RequestBody BillInfo billInfo) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-		String meesage = "";
-		
-		try {	
-			Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-			if(!isAuthenticated) {
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-				model.setViewName("/backoffice/login");
-				return model;
-			} else {
-				HttpSession httpSession = request.getSession();
-				LoginVO loginVO = (LoginVO)httpSession.getAttribute("LoginVO");
-				vo.setFrstRegterId(loginVO.getAdminId());
-				vo.setLastUpdusrId(loginVO.getAdminId());
-			}
-		
-			int ret = billService.updateBillInfo(vo);
-			meesage = vo.getMode().equals("Ins") ? "sucess.common.insert" : "sucess.common.update";
-			
-			if (ret > 0) {
-				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
-			} else if (ret == -1) {
-				meesage = "fail.common.overlap";
-				model.addObject(Globals.STATUS, Globals.STATUS_OVERLAPFAIL);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
-			} else {
-				throw new Exception();
-			}		
-		} catch (Exception e){
-			LOGGER.error("updateBillInfo ERROR : " + e.toString());
-			meesage = (vo.getMode().equals("Ins")) ? "fail.common.insert" : "fail.common.update";
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));	
-		}	
+
+		billService.deleteBillInfo(billInfo);
+
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.delete") );
+
 		return model;
 	}
 
@@ -179,28 +197,22 @@ public class BillInfoManageController {
     	return model;
     }
 	
-	@RequestMapping (value="billInfoDelete.do")
-	public ModelAndView deleteBillInfoManage(	@RequestParam("billSeq") String billSeq, 
-												HttpServletRequest request) throws Exception {
-		
-		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-		
-		try {
-			Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-		    if(!isAuthenticated) {
-		    	model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-		    	model.setViewName("/backoffice/login");
-		    	return model;	
-		    }	
-	    
-	    	billService.deleteBillInfo(billSeq);
-			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.delete") );		    	 
-		} catch (Exception e) {
-			LOGGER.info(e.toString());
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.delete"));			
-		}		
-		return model;
-	}
+
+
+//	@RequestMapping (value="billInfoDetail.do")
+//	public ModelAndView selectCenterInfoDetail( @RequestParam("billSeq") String billSeq ,
+//												HttpServletRequest request) throws Exception {
+//
+//		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+//		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+//		if(!isAuthenticated) {
+//			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
+//			model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
+//			return model;
+//		}
+//
+//		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+//		model.addObject(Globals.STATUS_REGINFO, billService.selectBillInfoDetail(billSeq));
+//		return model;
+//	}
 }

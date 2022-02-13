@@ -35,7 +35,7 @@
 					<a href="javascript:fnCenterSearch(1);" class="grayBtn">검색</a>
 				</div>
 				<div class="right_box">
-					<a href="javascript:void(0);" class="blueBtn">현금영수증 설정</a>
+					<a href="javascript:fnPopupBillInfo();" class="blueBtn">현금영수증 설정</a>
 					<a href="javascript:fnCenterInfo();" class="blueBtn">지점 등록</a>
 					<a href="javascript:fnCenterDelete();" class="grayBtn">지점 삭제</a>
 				</div>
@@ -158,14 +158,21 @@
 			</form>
 		</div>
 		<popup-right-button />
+		<div style="width:570px;display:none;">
+			<table id="popGrid"></table>
+			<div id="popPager"></div>
+		</div>
 	</div>
 </div>
-
+<div data-popup="bld_billinfo_add" class="popup">
+</div>
 <!-- popup// -->
 <script type="text/javascript" src="/resources/jqgrid/jqgrid.custom.egovapi.js"></script>
 <script type="text/javascript">
 	let MainGridAjaxUrl = '';
 	$(document).ready(function() {
+        // 외부 팝업 load
+		$('[data-popup=bld_billinfo_add]').load('/backoffice/bld/billInfoPopup.do');
 		// 지점 JqGrid 정의
 		EgovJqGridApi.popGrid('centerGrid', [
 			{ label: '지점코드', name: 'center_cd', key: true, hidden:true },
@@ -406,7 +413,6 @@
 			);
 		});
 	}
-
 	// 하위 목록 영역 초기화
 	function fnRightAreaClear() {
 		$('#rightArea').empty().html(
@@ -429,7 +435,7 @@
 			EgovJqGridApi.mainGridAjax(MainGridAjaxUrl, params, fnSearch);
 		}
 	}
-
+	// 오른쪽 탭 목록 수정 저장
 	function fnRightAreaSave() {
 		let tabMenu = $('div.tabs .tab.active').attr('id');
 		let changedArr = $('#mainGrid').jqGrid('getChangedCells', 'all');
@@ -474,6 +480,16 @@
 				}
 			);
 		});
+	}
+	// 현금영수증 팝업 호출
+	function fnPopupBillInfo() {
+		let rowId = $('#centerGrid').jqGrid('getGridParam', 'selrow');
+		if (rowId === null) {
+			toastr.info('지점을 선택해주세요.');
+			return;
+		}
+		let rowData = $('#centerGrid').jqGrid('getRowData', rowId);
+		BillInfo.bPopup(rowId, rowData.center_nm);
 	}
 </script>
 <script type="text/javascript" src="/resources/js/backoffice/bld/centerList.preopen.js"></script>

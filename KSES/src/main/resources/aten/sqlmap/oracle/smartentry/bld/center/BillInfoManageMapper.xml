@@ -4,7 +4,7 @@
 	<select id="selectBillInfoList" resultType="lmap">
 		SELECT 
 			A.BILL_SEQ, A.BILL_NUM, A.BILL_CORP_NAME, A.BILL_CEO_NAME, A.BILL_ADDR,
-			A.BILL_TEL, A.BILL_USER_ID, A.BILL_EMAIL, A.CENTER_CD, B.CENTER_NM,  
+			A.BILL_TEL, A.BILL_USER_ID, A.BILL_EMAIL, A.CENTER_CD, A.BILL_DVSN, B.CENTER_NM,
 			FN_DETAILCODENM(A.BILL_DVSN) AS BILL_DVSN_TEXT
 		FROM TSER_BILL_INFO_I A, TSEB_CENTER_INFO_M B
 		WHERE A.CENTER_CD = #{centerCd}
@@ -82,8 +82,14 @@
 			WHERE BILLDAY_CD = #{item.billdayCd}
 		</foreach>
 	</update>
+
+	<update id="updateBillDayInfoByCenterCd">
+		UPDATE TESR_BILLDAY_INFO_I SET
+			BILL_SEQ = #{billSeq}, LAST_UPDUSR_ID = #{lastUpdusrId}, LAST_UPDT_DTM = SYSDATE
+		WHERE CENTER_CD = #{centerCd}
+	</update>
 	
-	<select id="deleteBillInfo" resultType="lmap">
+	<delete id="deleteBillInfo">
 		DELETE FROM TSER_BILL_INFO_I WHERE BILL_SEQ = #{billSeq}
-	</select>
+	</delete>
 </mapper>
