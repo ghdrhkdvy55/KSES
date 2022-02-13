@@ -8,12 +8,12 @@ $.Floor.prototype.mainGridSettings = function() {
             '<img src="'+ (row.floor_map1 === 'no_image.png' ? '/resources/img/no_image.png' : '/upload/'+ row.floor_map1) +'" style="width:120px;"/>'
         },
         { label: '층이름', name: 'floor_nm', align: 'center', sortable: false, editable: true },
-        { label: '좌석수', name:'floor_seat_cnt', align: 'center', sortable: false },
         { label: '사용여부', name:'use_yn', align: 'center', sortable: false, formatter: 'select', editable: true,
             edittype: 'select', editoptions: {
                 value: 'Y:사용;N:사용안함'
             }
         },
+        { label: '좌석수', name:'floor_seat_cnt', align: 'center', sortable: false },
         { label: '구역사용구분', name:'floor_part_dvsn', hidden: true },
         { label: '첨부', align:'center', sortable: false, width: 50, fixed: true, formatter: (c, o, row) =>
             '<a href="javascript:void(0);" class="atc_icon"></a>'
