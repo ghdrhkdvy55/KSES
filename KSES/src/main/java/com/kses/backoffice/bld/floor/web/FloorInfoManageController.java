@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -33,7 +34,6 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.property.EgovPropertyService;
-import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import lombok.extern.slf4j.Slf4j;
 
@@ -98,11 +98,22 @@ public class FloorInfoManageController {
 		model.addObject("floorlistInfo", codeDetailService.selectCmmnDetailComboEtc(params));
 		model.addObject("floorListSeq", floorService.selectFloorInfoComboList(param.get("searchCenterCd")));
 		model.addObject("floorPart", codeDetailService.selectCmmnDetailCombo("FLOOR_PART"));
-			model.addObject("seatClass", partClassService.selectPartClassComboList(param.get("searchCenterCd")));
+		model.addObject("seatClass", partClassService.selectPartClassComboList(param.get("searchCenterCd")));
 		model.addObject("seatDvsn", codeDetailService.selectCmmnDetailCombo("SEAT_DVSN"));
 		model.addObject("payDvsn", codeDetailService.selectCmmnDetailCombo("PAY_DVSN"));
 
 		return model;
+	}
+
+	/**
+	 * 층 정보 팝업
+	 * @return
+	 * @throws Exception
+	 */
+	@NoLogging
+	@RequestMapping (value="floorInfoPopup.do", method = RequestMethod.GET)
+	public ModelAndView popupFloorInfo() throws Exception {
+		return new ModelAndView("/backoffice/bld/sub/floorInfo");
 	}
 
 	/**
@@ -142,28 +153,23 @@ public class FloorInfoManageController {
 
 		return model;
 	}
-	
-	@RequestMapping (value="floorInfoDetail.do")
-	public ModelAndView selectFloorInfoManage(	@ModelAttribute("LoginVO") LoginVO loginVO, 
-												@RequestBody FloorInfo floorInfo) throws Exception{
-		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
-	    Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-	    if(!isAuthenticated) {
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-			model.setViewName("/backoffice/login");
-			return model;	
-	    }
-	    
-	    try {
-	    	model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-			model.addObject(Globals.STATUS_REGINFO, floorService.selectFloorInfoDetail(floorInfo.getFloorCd()));
-	    } catch(Exception e) {
-	    	log.info(e.toString());
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
-	    }
+
+	/**
+	 * 층 정보 상세
+	 * @param floorCd
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping (value = "floorInfoDetail.do", method = RequestMethod.GET)
+	public ModelAndView selectFloorInfoDetail(@RequestParam("floorCd") String floorCd) throws Exception{
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+
+		model.addObject(Globals.JSON_RETURN_RESULT, floorService.selectFloorInfoDetail(floorCd));
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+
 	    return model;
 	}
+
 	// 층 신규 GUI 작업 
 	@RequestMapping (value="floorInfoGui.do")
 	public ModelAndView selectFloorInfoGuiManage(@ModelAttribute("LoginVO") LoginVO loginVO, 
@@ -231,7 +237,7 @@ public class FloorInfoManageController {
 	public ModelAndView updateFloorInfoList(@RequestBody List<FloorInfo> floorInfoList) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 
-		String userId = egovframework.com.cmm.util.EgovUserDetailsHelper.getAuthenticatedUserId();
+		String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
 		floorInfoList.stream().forEach(x -> x.setLastUpdusrId(userId));
 		floorService.updateFloorInfoList(floorInfoList);
 		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
@@ -240,44 +246,26 @@ public class FloorInfoManageController {
 		return model;
 	}
 
+	/**
+	 * 층 정보 수정
+	 * @param floorInfo
+	 * @return
+	 * @throws Exception
+	 */
 	@NoLogging
-	@RequestMapping (value="floorInfoUpdate.do")
-	public ModelAndView updateFloorInfo(HttpServletRequest request
-			                                   , MultipartRequest mRequest
-											   , @ModelAttribute("LoginVO") LoginVO loginVO
-											   , @ModelAttribute("FloorInfo") FloorInfo vo
-											   , BindingResult result) throws Exception{
-		
+	@RequestMapping (value = "floorInfoUpdate.do", method = RequestMethod.POST)
+	public ModelAndView updateFloorInfo(@ModelAttribute FloorInfo floorInfo) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-		
-		if(!isAuthenticated) {
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-			model.setViewName("/backoffice/login");
-		} else {
-			HttpSession httpSession = request.getSession(true);
-	    	loginVO = (LoginVO)httpSession.getAttribute("LoginVO");
-	    	vo.setLastUpdusrId(loginVO.getAdminId());
-	    }
-		
-		try {
-			
-			model.addObject(Globals.STATUS_REGINFO , vo);
-			String meesage = "";
-			
-	    	vo.setFloorMap1(uploadFile.uploadFileNm(mRequest.getFiles("floorMap1"), propertiesService.getString("Globals.filePath")));
-			
-			meesage = vo.getMode().equals(Globals.SAVE_MODE_INSERT) ? "sucess.common.insert" : "sucess.common.update" ;
-				  		
-			floorService.updateFloorInfo(vo);
-			model.addObject(Globals.STATUS  , Globals.STATUS_SUCCESS);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
-		} catch (Exception e){
-			log.error("floorInfoUpdate ERROR:" + e);
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.insert"));	
-		}	
-		log.debug("MODEL : " + model);
+
+		String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
+		floorInfo.setFrstRegterId(userId);
+		floorInfo.setLastUpdusrId(userId);
+		floorInfo.setFloorMap1(uploadFile.uploadFileNm(floorInfo.getFloorMap1File(), propertiesService.getString("Globals.filePath")));
+		floorService.updateFloorInfo(floorInfo);
+
+		model.addObject(Globals.STATUS  , Globals.STATUS_SUCCESS);
+		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("sucess.common.update"));
+
 		return model;
 	}
 	

@@ -145,7 +145,6 @@
                     $form.find(':text[name=centerEntryPayCost]').val(data.center_entry_pay_cost);
                     $form.find(':text[name=centerSpeedCd]').val(data.center_speed_cd);
                     $form.find(':text[name=centerRbmCd]').val(data.center_rbm_cd);
-                    $popup.bPopup();
                 },
                 function(json) {
                     toastr.warning(json.message);

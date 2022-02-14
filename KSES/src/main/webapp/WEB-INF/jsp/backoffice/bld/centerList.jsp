@@ -48,7 +48,7 @@
 		</div>
 		<div class="xs-6">
 			<div style="font-size:14px;color:#333;margin-top:12px;margin-left:5px;">
-				지점:&nbsp;<span id="spCenterNm">선택되지 않음</span>
+				<b>지점명:</b>&nbsp;<span id="spCenterNm">선택되지 않음</span>
 			</div>
 			<div class="tabs blacklist">
 				<div id="preopen" class="tab">사전예약시간</div>
@@ -68,6 +68,8 @@
 </div>
 <div data-popup="bld_centerinfo_add" class="popup"></div>
 <div data-popup="bld_billinfo_add" class="popup"></div>
+<div data-popup="bld_floorinfo_add" class="popup"></div>
+<div data-popup="bld_partinfo_add" class="popup"></div>
 <!-- popup// -->
 <script type="text/javascript" src="/resources/jqgrid/jqgrid.custom.egovapi.js"></script>
 <script type="text/javascript">
@@ -76,6 +78,7 @@
         // 외부 팝업 load
 		$('[data-popup=bld_centerinfo_add]').load('/backoffice/bld/centerInfoPopup.do');
 		$('[data-popup=bld_billinfo_add]').load('/backoffice/bld/billInfoPopup.do');
+		$('[data-popup=bld_floorinfo_add]').load('/backoffice/bld/floorInfoPopup.do');
 		// 지점 JqGrid 정의
 		EgovJqGridApi.popGrid('centerGrid', [
 			{ label: '지점코드', name: 'center_cd', key: true, hidden:true },
