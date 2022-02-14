@@ -181,9 +181,8 @@ public class EgovFileMngUtil {
         	    String newName = KeyStr + EgovStringUtil.getTimeStamp() + fileKey+"."+fileExt;
         	    long _size = mpf.getSize();
 
-        	    if (!"".equals(orginFileName)) {
-        	    	// 220203 gkp filePath 수정 + "\\" 추가 
-	        		filePath =  storePathString + "\\" +  newName;
+        	    if (!"".equals(orginFileName)) { 
+	        		filePath =  storePathString + "/" +  newName;
 	        		LOGGER.debug("storePathString:"  + storePathString + ":" + filePath);
 	        		mpf.transferTo(new File(filePath));
         	    }

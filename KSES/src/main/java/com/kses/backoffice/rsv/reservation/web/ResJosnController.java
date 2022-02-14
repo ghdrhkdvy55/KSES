@@ -45,24 +45,7 @@ import com.popbill.api.Response;
 import com.popbill.api.CBIssueResponse;
 import com.popbill.api.cashbill.Cashbill;
 import com.popbill.api.cashbill.CashbillInfo;
-import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.LoginVO;
-import egovframework.com.cmm.service.Globals;
-import egovframework.let.utl.sim.service.EgovFileScrty;
-import egovframework.rte.fdl.property.EgovPropertyService;
-import lombok.extern.slf4j.Slf4j;
-import org.json.simple.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
-
-@Slf4j
 @RestController
 @RequestMapping("/backoffice/rsv")
 public class ResJosnController {
@@ -128,12 +111,12 @@ public class ResJosnController {
 					encryptType = "SHA-512";
 					password = jsonObject.get("User_Pw").toString();
 					jsonObject.put("User_Pw", SmartUtil.encryptPassword(password, encryptType));
-					log.debug("1 : " + SmartUtil.encryptPassword(password, encryptType));
+					LOGGER.debug("1 : " + SmartUtil.encryptPassword(password, encryptType));
 				} else {
 					encryptType = "SHA-256";
 					password = jsonObject.get("Card_Pw").toString();
 					jsonObject.put("Card_Pw", SmartUtil.encryptPassword(password, encryptType));
-					log.debug("2 : " + SmartUtil.encryptPassword(password, encryptType));
+					LOGGER.debug("2 : " + SmartUtil.encryptPassword(password, encryptType));
 				}
 
 				node = SmartUtil.requestHttpJson(Url, jsonObject.toJSONString(), "SPEEDLOGIN", "SPEEDON", "KSES");
@@ -149,8 +132,8 @@ public class ResJosnController {
 					user.setUserCardNo(node.get("Card_No").asText());
 					user.setUserCardId(node.get("Card_Id").asText());
 					user.setUserCardSeq(node.get("Card_Seq").asText());
-
 					user.setMode("Ins");
+					
 					userService.updateUserInfo(user);
 
 					// 최초 로그인시 개인정보 동의를 위한 고객정보 전송
@@ -238,11 +221,23 @@ public class ResJosnController {
 				// 취소 정보
 				Url = propertiesService.getString("speedOnUrl") + "trade/fepDeposit";
 				Map<String, Object> resvInfo = resService.selectUserResvInfo(jsonObject);
-
+				
 				if(!SmartUtil.NVL(resvInfo.get("resv_pay_dvsn"),"").equals("RESV_PAY_DVSN_2")) {
 					switch (SmartUtil.NVL(resvInfo.get("resv_pay_dvsn"),"")) {
 						case "RESV_PAY_DVSN_1" : Message = "미결제 예약정보 입니다.";  break;
 						case "RESV_PAY_DVSN_3" : Message = "이미 결제취소된 예약정보 입니다.";  break;
+						default: Message = "알수없는 예약정보 입니다."; break;
+					}
+					model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+					model.addObject(Globals.STATUS_MESSAGE, Message);
+					return model;
+				}
+				
+				if(!SmartUtil.NVL(resvInfo.get("resv_state"),"").equals("RESV_STATE_1")) {
+					switch (SmartUtil.NVL(resvInfo.get("resv_state"),"")) {
+						case "RESV_STATE_2" : Message = "이미 이용중인 예약정보 입니다.";  break;
+						case "RESV_STATE_3" : Message = "이미 이용완료 처리된 예약정보 입니다.";  break;
+						case "RESV_STATE_4" : Message = "이미 취소된 예약정보 입니다.";  break;
 						default: Message = "알수없는 예약정보 입니다."; break;
 					}
 					model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
@@ -296,7 +291,7 @@ public class ResJosnController {
 		} catch (Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
-			log.info("e:" + e.toString() + ":" + lineNumber);
+			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 		}
@@ -451,8 +446,8 @@ public class ResJosnController {
 				
 				sendInfo = attendService.insertAttendInfo(sendInfo);
 				IOGUBUN_TXT = inotMsg;
-				log.info("inOt??? : " + inOt);
-				log.info("RcvCd?? : " + sendInfo.getRcvCd());
+				LOGGER.info("inOt??? : " + inOt);
+				LOGGER.info("RcvCd?? : " + sendInfo.getRcvCd());
 				if (sendInfo.getRcvCd().equals("OK")) {
 					ERROR_CD = "OK";
 					ERROR_MSG = "";
@@ -501,7 +496,7 @@ public class ResJosnController {
 		} catch (Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
-			log.error("selectQrCheckInfo error:" + e.toString() + ":" + lineNumber);
+			LOGGER.error("selectQrCheckInfo error:" + e.toString() + ":" + lineNumber);
 			model.addObject("ERROR_CD", "ERROR_02");
 			model.addObject("ERROR_MSG", "시스템 에러");
 
@@ -521,7 +516,6 @@ public class ResJosnController {
 			searchVO.put("resvDate", nowDate);
 
 			Map<String, Object> resInfo = resService.selectUserResvInfo(searchVO);
-//			String resvTicketDvsn = SmartUtil.NVL(resInfo.get("resv_ticket_dvsn"), "");
 			String resvState = SmartUtil.NVL(resInfo.get("resv_state"), "");
 			
 			if(resInfo == null || Integer.valueOf(resInfo.get("resv_end_dt").toString()) < Integer.valueOf(nowDate)) {
@@ -532,10 +526,6 @@ public class ResJosnController {
 				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 				model.addObject(Globals.STATUS_MESSAGE, "예약 취소된 예약정보 입니다.");
 				return model;
-//			} else if(resvTicketDvsn.toString().equals("RESV_TICKET_DVSN_2")) { 
-//				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-//				model.addObject(Globals.STATUS_MESSAGE, "종이QR발급된  예약정보입니다.");
-//				return model;
 			} else {
 				AttendInfo vo = new AttendInfo();
 				vo.setResvSeq(resvSeq);
@@ -579,7 +569,7 @@ public class ResJosnController {
 		} catch (Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
-			log.info("e:" + e.toString() + ":" + lineNumber);
+			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 		}
@@ -636,12 +626,11 @@ public class ResJosnController {
 					returnCode = "ERROR_03";
 					returnMessage = "해당 지점 예약이 아닙니다. \n예약내역을 확인하여 주십시요.";
 				} else if (resInfo != null && !SmartUtil.NVL(resInfo.get("resv_pay_dvsn"), "").toString().equals("RESV_PAY_DVSN_1")) {
-					 log.info("RESV_PAY_DVSN123" +  SmartUtil.NVL(resInfo.get("resv_pay_dvsn"), "").toString());
 					returnCode = "ERROR_04";
 					returnMessage = "이미 결제가 완료 되었습니다.";
 				} else {
 					if (resInfo != null && SmartUtil.NVL(resInfo.get("resv_end_dt"), "").toString().equals(localTime) && recDate.substring(0, 8).equals(localTime)) {
-						log.info(localTime);
+						LOGGER.info(localTime);
 						resName = SmartUtil.NVL(resInfo.get("user_nm"), "").toString();
 						resPrice = SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString();
 						resDay = SmartUtil.NVL(resInfo.get("resv_start_dt"), "").toString();
@@ -668,7 +657,7 @@ public class ResJosnController {
 		} catch (Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
-			log.error("selectTickMachinRes error:" + e.toString() + ":" + lineNumber);
+			LOGGER.error("selectTickMachinRes error:" + e.toString() + ":" + lineNumber);
 			returnCode = "ERROR_02";
 			info.setRqesterId("SYSTEM");
 			info.setResultCode(returnCode);
@@ -684,7 +673,6 @@ public class ResJosnController {
 		model.addObject("RES_PERSON_CNT", resPersonCnt);
 		model.addObject("RETURN_CODE", returnCode);
 		model.addObject("RETURN_MESSAGE", returnMessage);
-
 
 		// 인터페이스 연계
 		info.setResultMessage(ParamToJson.paramToJson(model));
@@ -737,8 +725,8 @@ public class ResJosnController {
 			String recDate = SmartUtil.NVL(jsonInfo.get("RES_SEND_DATE"), "19700101").toString();
 			String qrTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
 			
-			log.debug(Integer.valueOf(SmartUtil.NVL(jsonInfo.get("RES_PRICE"), "").toString()) + ":" + Integer.valueOf(SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString()));
-
+			LOGGER.debug(Integer.valueOf(SmartUtil.NVL(jsonInfo.get("RES_PRICE"), "").toString()) + ":" + Integer.valueOf(SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString()));
+			
 			if (resInfo == null || !recDate.substring(0, 8).equals(localTime)) {
 				returnCode = "ERROR_01";
 				returnMessage = "예약 정보 없음.";
@@ -787,7 +775,12 @@ public class ResJosnController {
 				resInfoU.setResvPayDvsn("RESV_PAY_DVSN_2");
 				resInfoU.setResvTicketDvsn("RESV_TICKET_DVSN_2");
 				resInfoU.setResvSeq(SmartUtil.NVL(jsonInfo.get("RES_NO"), "").toString());
-
+				
+				// SPDM요청사항 강낭지점한정 무인발권기 결제시 예약상태 '예약' -> '이용중' 으로 변경
+				if(resInfo.get("center_cd").equals("C21110401")) {
+					resInfoU.setResvState("RESV_STATE_2");
+				}
+				
 				int ret = resService.resPriceChange(resInfoU);
 				if (ret > 0) {
 					returnCode = "OK";
@@ -809,7 +802,7 @@ public class ResJosnController {
 			// 결제 로직 타기
 
 		} catch (Exception e) {
-			log.error("selectTickMachinPrice error:" + e.toString());
+			LOGGER.error("selectTickMachinPrice error:" + e.toString());
 			returnCode = "ERROR_02";
 			// 애러시 코드 값 입력
 			info.setResultCode(returnCode);
@@ -829,7 +822,6 @@ public class ResJosnController {
 		model.addObject("USER_PHONE", userPhoneBack4);
 		model.addObject("PART_INITIAL", partInitial);
 		
-
 		info.setResultMessage(ParamToJson.paramToJson(model));
 		interfaceService.InterfaceInsertLoginLog(info);
 
@@ -845,7 +837,6 @@ public class ResJosnController {
 			Map<String, Object> resvInfo = resService.selectResvInfoDetail(resvSeq);
 			Map<String, Object> billInfo = resService.selectResvBillInfo(resvSeq);
 			
-			
 			if(billInfo == null) {
 				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 				model.addObject(Globals.STATUS_MESSAGE, "해당 지점(요일)에 등록된 현금영수증 발행 정보가 없습니다.");
@@ -856,7 +847,7 @@ public class ResJosnController {
 			if(resvRcptState.equals("")) {
 				resvRcptState = "RESV_RCPT_STATE_1";
 			} else {
-				resvRcptState = resvRcptState.equals("RESV_RCPT_STATE_1") ? "RESV_RCPT_STATE_2" : "RESV_RCPT_STATE_1";
+				resvRcptState = resvRcptState.equals("RESV_RCPT_STATE_1") ? "RESV_RCPT_STATE_2" : "RESV_RCPT_STATE_1"; 
 			}
 			
 			// 지점 현금영수증 정보
@@ -930,7 +921,7 @@ public class ResJosnController {
 			
 			// 공급가액, 숫자만 가능
 			cashbill.setSupplyCost(String.valueOf(payCost));
-
+			
 			// 부가세, 숫자만 가능
 			cashbill.setTax(String.valueOf(payTxt));
 
@@ -956,7 +947,7 @@ public class ResJosnController {
 
 			// 발행안내 문자 전송여부
 			cashbill.setSmssendYN(false);
-
+			
 			// 거래처 고객명
 			cashbill.setCustomerName(SmartUtil.NVL(resvInfo.get("user_nm"), "0").toString());
 
@@ -978,17 +969,17 @@ public class ResJosnController {
 			if(resvRcptState.equals("RESV_RCPT_STATE_1")) {
 				CBIssueResponse response = cashbillService.registIssue(corpNum, cashbill, memo, userId);
 				resvRcptNumber = response.getConfirmNum();
-				log.info(resvRcptNumber);
+				LOGGER.info(resvRcptNumber);
 				model.addObject("popBill", response);
 				model.addObject(Globals.STATUS_MESSAGE, "현금영수증 발행 완료");
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-				log.info("예약번호 : " + resvSeq + "현금영수증 발행  완료");
+				LOGGER.info("예약번호 : " + resvSeq + "현금영수증 발행  완료");
 			} else {
 				Response response =	cashbillService.cancelIssue(corpNum, delMgtKey, memo, userId);
 				model.addObject("popBill", response);
 				model.addObject(Globals.STATUS_MESSAGE, "현금영수증 발행 취소 완료");
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-				log.info("예약번호 : " + resvSeq + "현금영수증 발행 취소 완료");
+				LOGGER.info("예약번호 : " + resvSeq + "현금영수증 발행 취소 완료");
 			}
 			
 			// 현금 영수증 출력 번호
@@ -1002,16 +993,16 @@ public class ResJosnController {
 			// 재발행 및 취소시 기존 문서번호 재활용을 위한 현금영수증 삭제
 			if(cashbillService.checkMgtKeyInUse(corpNum, delMgtKey)) {
 				cashbillService.delete(corpNum, delMgtKey);
-				log.info("현금영수증 문서 삭제 완료");
+				LOGGER.info("현금영수증 문서 삭제 완료");
 			}
 		} catch (PopbillException e) {
 			// 예외 발생 시, e.getCode() 로 오류 코드를 확인하고, e.getMessage()로 오류 메시지를 확인합니다.
-			log.error("오류 코드" + e.getCode());
-			log.error("오류 메시지" + e.getMessage());
+			LOGGER.error("오류 코드" + e.getCode());
+			LOGGER.error("오류 메시지" + e.getMessage());
 
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
-			log.error("selectPopBillInfo error:" + e.toString() + ":" + lineNumber);
+			LOGGER.error("selectPopBillInfo error:" + e.toString() + ":" + lineNumber);
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, e.getCode() + ":" + e.getMessage());
 		}
@@ -1028,7 +1019,7 @@ public class ResJosnController {
 			Map<String, Object> resvInfo = resService.selectResvInfoDetail(resvSeq);
 			Map<String, Object> billInfo = resService.selectResvBillInfo(resvSeq);
 			
-			if(SmartUtil.NVL(resvInfo.get("resv_rcpt_state"),"").equals("")) {
+			if(SmartUtil.NVL(resvInfo.get("resv_rcpt_state"),"").equals("")) {	
 				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 				model.addObject(Globals.STATUS_MESSAGE, "현금영수증 발행 기록이 없습니다 .");
 				return model;
@@ -1037,7 +1028,7 @@ public class ResJosnController {
 				model.addObject(Globals.STATUS_MESSAGE, "예약 지점에 등록된 현금영수증 발행 정보가 없습니다 .");
 				return model;
 			}
-
+			
 			String corpNum = SmartUtil.NVL(billInfo.get("bill_num"), "");
 			String mgtKey = SmartUtil.NVL(resvInfo.get("resv_rcpt_state"), "").equals("RESV_RCPT_STATE_1") ? resvSeq + "_001" : resvSeq + "_002";
 			CashbillInfo cashBillInfo = cashbillService.getInfo(corpNum, mgtKey);
@@ -1046,12 +1037,12 @@ public class ResJosnController {
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		} catch (PopbillException e) {
 			// 예외 발생 시, e.getCode() 로 오류 코드를 확인하고, e.getMessage()로 오류 메시지를 확인합니다.
-			log.error("오류 코드" + e.getCode());
-			log.error("오류 메시지" + e.getMessage());
+			LOGGER.error("오류 코드" + e.getCode());
+			LOGGER.error("오류 메시지" + e.getMessage());
 
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
-			log.error("selectPopBillInfo error:" + e.toString() + ":" + lineNumber);
+			LOGGER.error("selectPopBillInfo error:" + e.toString() + ":" + lineNumber);
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, e.getCode() + ":" + e.getMessage());
 		}

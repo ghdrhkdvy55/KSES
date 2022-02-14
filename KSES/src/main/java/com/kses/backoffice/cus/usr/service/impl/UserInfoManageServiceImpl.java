@@ -14,7 +14,6 @@ import com.kses.backoffice.cus.usr.vo.UserInfo;
 import com.kses.backoffice.util.SmartUtil;
 import com.kses.front.login.vo.UserLoginInfo;
 
-import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 
@@ -59,7 +58,7 @@ public class UserInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 
 	@Override
 	public int updateUserInfo(UserInfo vo) throws Exception {
-		return vo.getMode().equals(Globals.SAVE_MODE_INSERT) ?  userMapper.insertUserInfo(vo) : userMapper.updateUserInfo(vo);
+		return vo.getMode().equals("Ins") ? userMapper.insertUserInfo(vo) : userMapper.updateUserInfo(vo);
 	}
 	
 	@Override
@@ -87,10 +86,5 @@ public class UserInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	public Map<String, Object> selectUserListDetail(String userId) throws Exception{
 		
 		return userMapper.selectUserListDetail(userId);
-	}
-	
-	@Override
-	public int updateUserListInfo(UserInfo vo) throws Exception {
-		return userMapper.updateUserListInfo(vo) ;
 	}
 }

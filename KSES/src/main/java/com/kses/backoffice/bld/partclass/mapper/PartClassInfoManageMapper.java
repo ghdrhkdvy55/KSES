@@ -21,7 +21,5 @@ public interface PartClassInfoManageMapper {
 	
 	public int updatePartClassInfo(PartClassInfo partClassInfo);
 	
-	public int deletePartClassInfo(String partSeq); 
-
+	public int deletePartClassInfo(String partClassSeq);
 }
- 

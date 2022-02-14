@@ -35,7 +35,7 @@
     
     <div class="wrapper rsvBack">
         <!--// contents-->
-        <div id="container">
+        <div id="container" style="padding: 7rem 0;">
             <div>
                 <div class="contents qrEnter"> 
                     <!--qr코드-->
@@ -122,6 +122,7 @@
     	var qrTime = 30;
     	var qrEndTime;
     	var setIntervalId;
+    	var qrAutoRefresh = true;
     	var isFirst = true;
     
 		$(document).ready(function() {
@@ -172,8 +173,8 @@
 
 								var qrcode = new QRCode("qr_enter_code", {
 								    text: qrCode,
-								    width: 256,
-								    height: 256,
+								    width: 200,
+								    height: 200,
 								    colorDark : "#000000",
 								    colorLight : "#ffffff",
 								    correctLevel : QRCode.CorrectLevel.M
@@ -209,9 +210,13 @@
 				qrEndTime = qrTime;
 				setIntervalId = setInterval(function () {
 					if (qrEndTime == 0) {
-						$("#timeStamp").css("color","red");
-						$("#mask_qr").show();
-						return;
+						if(qrAutoRefresh) {
+							qrService.fn_createQrCode();
+							qrAutoRefresh = false;
+						} else {
+							$("#timeStamp").css("color","red");
+							$("#mask_qr").show();
+						}
 					} else {
 						qrEndTime --;
 						$("#timeStamp").html("0" + parseInt(qrEndTime/60) + ":" +(((qrEndTime%60)>9)?(qrEndTime%60):"0"+(qrEndTime%60)));	

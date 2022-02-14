@@ -179,12 +179,13 @@ function any_empt_line_span_noPop(frm_nm, alert_message){
    	 var form_nm = eval("document.getElementById('"+frm_nm+"')");
    	 $("#sp_errorMessage").html("");
    	 if (form_nm.value.length < 1){
-   		  $("#sp_Message").html(alert_message);
-   		  $("#sp_Message").attr("style", "color:red");
+		  $("#savePage #sp_Message").html(alert_message);
+		  $("#savePage #sp_Message").attr("style", "color:red");
    		  $("#"+ frm_nm).attr("style", "border-color:red");
    		  $("#savePage").bPopup()
    		  return false;
    	 }else{
+   	 	   $("#sp_Message").text("");
            return true;
    	 }
 }

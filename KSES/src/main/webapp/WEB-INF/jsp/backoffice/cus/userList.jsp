@@ -133,7 +133,7 @@
 					<tr>     
 						<th>접종 일자</th>
 			            <td>
-	                    	<input type="text" name="vacntnDt" id="vacntnDt" class="cal_icon">
+	                    	<input type="text" name="vacntnDt" id="vacntnDt" class="cal_icon" readonly>
 						</td> 
 					</tr>	
 				</tbody>
@@ -362,7 +362,7 @@
 		}, fn_update : function (){
 			//확인 
 			$("#confirmPage").bPopup().close();
-			var url = "/backoffice/cus/updateUserListInfo.do";
+			var url = "/backoffice/cus/userListInfoUpdate.do";
 			var params = 
 			{ 	
 				'userId' : $("#sp_userId").html(),

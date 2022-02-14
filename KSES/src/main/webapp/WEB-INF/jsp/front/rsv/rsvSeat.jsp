@@ -123,13 +123,13 @@
                         <!--예약 정보 입력-->
                             <h4>예약 정보 입력</h4>
                             <ul id="ENTRY_DVSN_1_resv_area">
-                                <li><input type="text" id="ENTRY_DVSN_1_resvUserNm" class="nonMemberArea" placeholder="이름을 입력해주세요."></li>
-                                <li><input type="text" id="ENTRY_DVSN_1_resvUserClphn" class="nonMemberArea" onkeypress="onlyNum(this);" placeholder="전화번호를 '-'없이 입력해주세요."></li>
+                                <li><input type="text" id="ENTRY_DVSN_1_resvUserNm" class="nonMemberArea" placeholder="이름을 입력해주세요." autocomplete="off"></li>
+                                <li><input type="number" id="ENTRY_DVSN_1_resvUserClphn" class="nonMemberArea" onkeypress="onlyNum(this);" placeholder="전화번호를 '-'없이 입력해주세요." autocomplete="off"></li>
                                 <li class="certify nonMemberArea" onclick="javascript:seatService.fn_SmsCertifi();">
                                 	<a href="javascript:void(0);"><img src="/resources/img/front/certify.svg" alt="">인증번호 받기</a>
                                 </li>
 								
-								<li class="nonMemberArea"><input type="text" id="ENTRY_DVSN_1_resvCertifiCode" placeholder="인증번호를 입력하세요."></li>
+								<li class="nonMemberArea"><input type="number" id="ENTRY_DVSN_1_resvCertifiCode" placeholder="인증번호를 입력하세요." autocomplete="off"></li>
 								<li class="certify nonMemberArea" onclick="javascript:seatService.fn_checkCertifiCode();">
 									<a href="javascript:void(0);"><img src="/resources/img/front/certify.svg" alt="">인증 하기</a>
 								</li>
@@ -231,7 +231,7 @@
                                 <div id="price" class="price">
                                     <table>
                                         <tbody>
-											<c:forEach var="item" items="${seatClass}" begin="0" step="1" varStatus="status">
+											<c:forEach var="item" items="${partClass}" begin="0" step="1" varStatus="status">
 												<c:if test="${(status.index + 1)%2 != 0}"><tr></c:if>
 													<td>
 														<img src="/upload/${item.part_icon}"><c:out value='${item.part_class_nm}'/>
@@ -275,13 +275,13 @@
                                     <!--예약 정보 입력-->
                                     <h4>예약 정보 입력</h4>
                                     <ul id="ENTRY_DVSN_2_resv_area">
-                                        <li class="nonMemberArea"><input type="text" id="ENTRY_DVSN_2_resvUserNm" placeholder="이름을 입력해주세요."></li>
-                                        <li class="nonMemberArea"><input type="text" id="ENTRY_DVSN_2_resvUserClphn" onkeyup="onlyNum(this);" placeholder="전화번호를 '-'없이 입력해주세요."></li>
+                                        <li class="nonMemberArea"><input type="text" id="ENTRY_DVSN_2_resvUserNm" placeholder="이름을 입력해주세요." autocomplete="off"></li>
+                                        <li class="nonMemberArea"><input type="number" id="ENTRY_DVSN_2_resvUserClphn" onkeyup="onlyNum(this);" placeholder="전화번호를 '-'없이 입력해주세요." autocomplete="off"></li>
 										<li class="certify nonMemberArea" onclick="javascript:seatService.fn_SmsCertifi();">
 											<a href="javascript:void(0);"><img src="/resources/img/front/certify.svg" alt="">인증번호 받기</a>
 										</li>
 										
-                                		<li class="nonMemberArea"><input type="text" id="ENTRY_DVSN_2_resvCertifiCode" placeholder="인증번호를 입력하세요."></li>
+                                		<li class="nonMemberArea"><input type="number" id="ENTRY_DVSN_2_resvCertifiCode" placeholder="인증번호를 입력하세요." autocomplete="off"></li>
                                         <li class="certify nonMemberArea" onclick="javascript:seatService.fn_checkCertifiCode();">
                                         	<a href="javascript:void(0);"><img src="/resources/img/front/certify.svg" alt="">인증 하기</a>
                                         </li>
@@ -559,12 +559,14 @@
     	
     	var certifiYn = false;
     	var certifiCode = "";
+    	
+		var setIntervalId = "";
+		var reCertifiTime = 180;
+		var reCertifiEndTime = 0;
+		var reCertifiYn = true;
+    	
     	var resvUserNm = isMember ? "${sessionScope.userLoginInfo.userNm}" : "";
     	var resvUserClphn = isMember ? "${sessionScope.userLoginInfo.userPhone}" : "";
-    	
-    	var userRcptYn = isMember ? "${sessionScope.userLoginInfo.userRcptYn}" : "";
-    	var userRcptDvsn = isMember ? "${sessionScope.userLoginInfo.userRcptDvsn}" : "";
-    	var userRcptNumber = isMember ? "${sessionScope.userLoginInfo.userRcptNumber}" : "";
     	
     	var pinchzoom = "";
     	var pinchInit = true;
@@ -956,8 +958,9 @@
 				
 				if(!fn_resvDuplicateCheck(duplicateParams)) {
 					if(certifiYn) {
-						fn_openPopup("이미 인증을 진행하였습니다.", "red", "ERROR", "확인", "");
-						return;
+						fn_openPopup("이미 인증을 진행하였습니다.", "red", "ERROR", "확인", ""); return;
+					} else if (!reCertifiYn) {
+						fn_openPopup("이미 인증번호가 발송되었습니다.<br>" + reCertfiEndTime + "초 후 다시 시도해주세요.", "red", "ERROR", "확인", ""); return;
 					} else {
 						if(certifiNm == "") {
 							fn_openPopup("이름을 입력해주세요.", "red", "ERROR", "확인", ""); return;
@@ -981,7 +984,19 @@
 							false,
 							function(result) {
 						    	if(result.status == "SUCCESS") {
-						    		fn_openPopup("인증번호가 발송 되었습니다.(" +  result.certifiCode + ")", "blue", "SUCCESS", "확인", "");
+						    		// 인증요청 3분 인터벌 적용
+						    		reCertifiYn = false;
+						    		reCertfiEndTime = reCertifiTime;
+									setIntervalId = setInterval(function () {
+										if (reCertfiEndTime == 0) {
+											reCertifiYn = true;
+											clearInterval(setIntervalId);
+										} else {
+											reCertfiEndTime --;	
+										}
+									},1000);
+						    		
+						    		fn_openPopup("인증번호가 발송 되었습니다.", "blue", "SUCCESS", "확인", "");
 									certifiCode = result.certifiCode;
 							    	resvUserNm = certifiNm;
 							    	resvUserClphn = certifiNum;

@@ -38,7 +38,7 @@ import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 	}
 
 	@Override
-	public int deletePartClassInfo(String partSeq) throws Exception {
-		return partClassMapper.deletePartClassInfo(partSeq); 
+	public int deletePartClassInfo(String partClassSeq) throws Exception {
+		return partClassMapper.deletePartClassInfo(partClassSeq); 
 	} 
 }

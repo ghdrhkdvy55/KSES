@@ -47,10 +47,10 @@ public interface PartClassInfoManageService {
 	/**
 	 * SPDM 구역 등급 정보 삭제
 	 * 
-	 * @param partSeq
+	 * @param partClassSeq
 	 * @return
 	 * @throws Exception
 	 */
-	int deletePartClassInfo(String partSeq) throws Exception; 
+	int deletePartClassInfo(String partClassSeq) throws Exception; 
 }
 		 

@@ -271,8 +271,8 @@
                     	<td>
 							<select id="partClass">
 							<option value="">구역 등급 선택</option>
-							<c:forEach items="${seatClass}" var="seatClass">
-								<option value="${seatClass.part_class}"><c:out value='${seatClass.part_class_nm}'/></option>
+							<c:forEach items="${partClass}" var="partClass">
+								<option value="${partClass.part_class_seq}"><c:out value='${partClass.part_class_nm}'/></option>
 							</c:forEach>
 						</select>
 					</td>
@@ -1295,7 +1295,7 @@
 		    formData.append('centerCd', $("#centerCd").val());
 		    formData.append('floorCd', $("#floorCd").val());
 		    formData.append('partCd', $("#partCd").val());
-		    formData.append('partClass', $("#partClass").val());
+		    formData.append('partClassSeq', $("#partClass").val());
 		    formData.append('partMap1', $('#partMap1')[0].files[0]);
 		    formData.append('partCss', $("#partCss").val());
 		    formData.append('partNm', $("#partNm").val());
@@ -1374,10 +1374,10 @@
 			             	
 			             	$("#bld_section_add .pop_tit").html(obj.center_nm + " " + obj.floor_nm + " " + obj.part_nm +  "구역 정보 수정");
 			                $("#btnPartUpdate").text('수정');
-
+			                
 			                $("#partNm").val(obj.part_nm);
 			                $("#partCss").val(obj.part_css);
-			                $("#partClass").val(obj.part_class);
+			                $("#partClass").val(obj.part_class_seq);
 			                $("#partMiniCss").val(obj.part_mini_css);
 			                $("#partMiniTop").val(obj.part_mini_top);
 			                $("#partMiniLeft").val(obj.part_mini_left);

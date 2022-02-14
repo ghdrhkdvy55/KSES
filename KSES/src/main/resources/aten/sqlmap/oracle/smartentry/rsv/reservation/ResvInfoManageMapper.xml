@@ -7,7 +7,7 @@
 		( 
 			SELECT 	
 				SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT, 
-				ROW_NUMBER() OVER (ORDER BY TB.RESV_SEQ DESC) AS RNUM, 
+				ROW_NUMBER() OVER (ORDER BY TB.RESV_SEQ DESC) AS RNUM,
 				TB.* 
 			FROM 	
 			(	
@@ -97,6 +97,9 @@
 							)
 						</otherwise>
 					</choose>
+				</if>
+				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchPhoneBack4)">
+					AND SUBSTR(A.RESV_USER_CLPHN,-4) = #{params.searchPhoneBack4}
 				</if>
 				<if test="@org.apache.commons.lang3.StringUtils@equals(params.centerRegistSelect,'centerRegistSelect')">
 					AND A.RESV_STATE != 'RESV_STATE_4'
@@ -523,6 +526,9 @@
 					REFOUND_DATE = SYSDATE,
 				</otherwise>
 			</choose>
+			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(resvState)"> 
+				RESV_STATE = #{resvState},
+			</if>
 			RESV_PAY_DVSN = #{resvPayDvsn}
         WHERE RESV_SEQ = #{resvSeq}
     </update>
