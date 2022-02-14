@@ -38,7 +38,7 @@
 						</c:forEach>
               		</select>
 	              	<p>검색어</p>
-	              	<input type="text" id="searchKeyword" placeholder="검색어를 입력하세요.">
+	              	<input type="text" id="searchPhoneBack4" placeholder="전화번호 마지막 4자리를 입력하세요.">
 				</div>
 			</div>
 	
@@ -109,7 +109,7 @@
 		let params = {
 			pageIndex: pageNo,
 			pageUnit: $('.ui-pg-selbox option:selected').val(),
-			searchKeyword: $('#searchKeyword').val(),
+			searchPhoneBack4: $('#searchPhoneBack4').val(),
 			searchCenterCd: $('#searchCenterCd').val(),
 			centerRegistSelect: "centerRegistSelect"
 		};
@@ -190,7 +190,17 @@
 		let result = ''; 
 
 		if(name === 'user_nm') {
-			result = item.user_nm.replace(/(?<=.{1})./gi, "*");
+			if(item.user_nm.length > 2) {
+				var originName = item.user_nm.split('');
+				originName.forEach(function(name, i) {
+					if (i === 0 || i === originName.length - 1) return;
+						originName[i] = '*';
+					});
+					var joinName = originName.join();
+					return joinName.replace(/,/g, '');
+			} else{
+				result = item.user_nm.replace(/(?<=.{1})./gi, "*");
+			}
 		} else if(name === 'user_phone') {
 			if(item.user_phone.length == 13){
 				result = item.user_phone.replace(/-[0-9]{4}-/g, "-****-");

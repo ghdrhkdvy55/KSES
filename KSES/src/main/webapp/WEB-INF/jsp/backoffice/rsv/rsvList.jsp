@@ -865,8 +865,8 @@
 						});
 						
 						//좌석변경 버튼표출 -> 스피드온 결제상태 + 예약 또는 이용중 상태
-						if(obj.resvTicketDvsn == "RESV_TICKET_DVSN_1" &&(obj.resv_state == "RESV_STATE_1" || obj.resv_state == "RESV_STATE_2")) {
-							$("#rsvPopSeatChange a").off().on('click',function (e) {
+						if(obj.resv_ticket_dvsn == "RESV_TICKET_DVSN_1" && (obj.resv_state == "RESV_STATE_1" || obj.resv_state == "RESV_STATE_2")) {
+							$("#rsvPopSeatChange a").show().off().on('click',function () {
 								jqGridFunc.fn_resvSeatInfo("CHANGE",obj);
 							});
 						} else {
