@@ -18,7 +18,8 @@ $.Floor.prototype.mainGridSettings = function() {
             '<a href="javascript:Floor.popupFloorInfo(\''+ row.floor_cd + '\',\''+ row.floor_nm + '\');" class="edt_icon"></a>'
         },
         { label: 'GUI', align:'center', sortable: false, width: 50, fixed: true, formatter: (c, o, row) =>
-            '<a href="javascript:void(0);" class="gui_icon"></a>'
+            row.floor_map1 === null || row.floor_map1 === 'no_image.png' ? ''
+                : '<a href="javascript:Floor.guiFloor(\'' + row.floor_cd + '\',\'' + row.floor_nm + '\');" class="gui_icon"></a>'
         }
     ], false, true, fnSearch, false).jqGrid('setGridParam', {
         isHasSubGrid: function(rowId) {
@@ -48,7 +49,7 @@ $.Floor.prototype.subFloorPartGrid = function(id, parentId) {
             '<a href="javascript:void(0);" class="edt_icon"></a>'
         },
         { label: 'GUI', align:'center', sortable: false, width: 50, fixed: true, formatter: (c, o, row) =>
-            '<a href="javascript:void(0);" class="gui_icon"></a>'
+            '<a href="javascript:Floor.guiPart();" class="gui_icon"></a>'
         }
     ], 'POST', '/backoffice/bld/partListAjax.do', {
         floorCd: parentId
@@ -67,6 +68,10 @@ $.Floor.prototype.updateSettings = function(ajaxUpdate, changedArr) {
 
 $.Floor.prototype.popupFloorInfo = function(rowId, name) {
     FloorInfo.bPopup(rowId, name);
+};
+
+$.Floor.prototype.guiFloor = function(rowId, name) {
+    FloorGui.initialize(rowId, name);
 };
 
 const Floor = new $.Floor();

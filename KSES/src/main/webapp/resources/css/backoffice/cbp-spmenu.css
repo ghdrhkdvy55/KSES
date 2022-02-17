@@ -1,0 +1,191 @@
+.cbp-spmenu {
+    background: #3670c5;
+    position: fixed;
+}
+.cbp-spmenu-right {
+    right: -1720px;
+}
+.cbp-spmenu-right.cbp-spmenu-open {
+    right: 0px;
+}
+.cbp-spmenu-vertical {
+    width: 1720px;
+    height: 930px;
+    top: 0;
+    z-index: 1000;
+}
+.cbp-spmenu > a {
+    position: absolute;
+    right: 40px;
+    top: 24px;
+    color: white !important;
+    z-index: 10;
+    font-size: 18px;
+}
+.cbp-spmenu > .title {
+    background: #32383b;
+    padding: 25px 40px;
+    position: relative;
+    left: 0;
+    top: 0;
+    color: white;
+    margin: 0;
+    width: 100%;
+}
+.cbp-spmenu-push {
+    overflow-x: hidden;
+    position: relative;
+    left: 0;
+}
+.cbp-spmenu, .cbp-spmenu-push {
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+.cbp-spmenu > .back_map {
+    padding-top: 20px;
+    overflow: initial !important;
+}
+.back_map > .box_shadow {
+    margin-bottom: 25px;
+    float: left;
+    margin-left: 18px;
+}
+.box_shadow > .page {
+    height: auto;
+    overflow: inherit;
+    width: 100%;
+    height: 758px;
+    border: 1px solid #eaeaea;
+    border-radius: 5px;
+    box-shadow: 1px 5px 5px rgba(0,0,0,0.2);
+}
+.box_shadow .defaultBtn {
+    background-color: #198aeb;
+    color: #fff;
+    font-weight: 500;
+    padding: 7px 20px;
+    /*border: 1px solid #fff;*/
+    float: right;
+    border-radius: 6px;
+    margin-top: 5px;
+}
+.page .map_box_sizing {
+    width: 100%;
+    height: 100%;
+    border: 1px solid #e2e1e1;
+    border-radius: 5px;
+    overflow-x: scroll;
+    position: relative;
+}
+.page .mapArea {
+    box-sizing: border-box;
+    width: 1375px;
+    height: 750px;
+    background-size: contain !important;
+    padding: 5px;
+}
+.mapArea li.seat {
+    background-color: #fff;
+    color: #464646;
+    border: 2px solid #006ecd;
+}
+li.seat > .section {
+    position: absolute;
+    top:0;
+    width: 100%;
+    margin: auto;
+    height: 100%;
+    display: grid;
+    z-index: -1;
+}
+.section > span {
+    color: #fff;
+    font-weight: 700;
+    font-size: 2em;
+    display: grid;
+    align-content: center;
+    align-items: center;
+    text-align: center;
+}
+.mapArea ul li {
+    position: absolute;
+    box-sizing: border-box;
+    border-radius: 3px;
+}
+.box_shadow > .custom_bg {
+    height: auto;
+    margin-bottom: 18px;
+    padding: 20px 20px 10px 20px;
+    box-shadow: 1px 2px 5px rgba(0,0,0,0.1);
+    border-radius: 5px;
+    border:1px solid #e2e2e2;
+    background: #fff;
+}
+.box_shadow .gui_text {
+    height: auto;
+    max-height: 567px;
+    padding-top: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    box-shadow: 1px 2px 5px rgba(0,0,0,0.1);
+    border-radius: 5px;
+    border:1px solid #e2e2e2;
+    background: #fff;
+}
+.custom_bg > .search_tab {
+    margin-bottom: 0px;
+    padding: 20px 0;
+}
+.search_tab tr {
+    display: inline-block;
+}
+.search_tab th {
+    padding: 0 20px;
+}
+.box_shadow .txt_con {
+    border-bottom: 1px dashed #ccc;
+    padding: 0 0 20px 0;
+    overflow: hidden;
+}
+.txt_con > p {
+    float: left;
+    font-size: 18px;
+    line-height: 2em;
+}
+.scroll_table {
+    position: relative;
+    padding-top: 40px;
+    overflow: auto;
+    height: 500px;
+}
+.scroll_table table thead tr {
+    position: absolute;
+    top: 0;
+    background-color: #fff;
+    z-index: 999;
+    border-bottom: 1px solid #e6e6e6;
+    max-width: 850px;
+    box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.04);
+    display: -webkit-inline-box;
+}
+.scroll_table table thead tr th{
+    border-bottom: none;
+    font-weight: 400;
+}
+
+.a_sec {background: #ffbc26;}
+.b_sec {background: #4abcff;}
+.c_sec {background: #ff6e42;}
+.d_sec {background: #b665ff;}
+.e_sec {background: #ff65e5;}
+.f_sec {background: #6e65ff;}
+.g_sec {background: #4b8bff;}
+.h_sec {background: #27c7a9;}
+.i_sec {background: #1c4acf;}
+.j_sec {background: #ff186d;}
+.k_sec {background: #426021;}
+.gr_sec {background: #206618;}
+.n_sec {background: #80D242;}
+.p_sec {background: #EC4A4F;}
+.s_sec {background: #11195D;}

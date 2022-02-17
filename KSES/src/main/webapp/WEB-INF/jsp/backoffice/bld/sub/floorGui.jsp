@@ -1,0 +1,308 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<link rel="stylesheet" href="/resources/css/backoffice/cbp-spmenu.css">
+<script type="text/javascript" src="/resources/js/classie.js"></script>
+<script type="text/javascript" src="/resources/js/jquery.ui.rotatable.js"></script>
+<div class="title">
+    <h3><span id="centerNm"></span>점 <span id="floorNm"></span> GUI 화면</h3>
+</div>
+<div class="back_map">
+    <div class="box_shadow" style="width:1000px;">
+        <div class="page">
+            <div class="map_box_sizing">
+                <div class="mapArea" style="background: url('/upload/2F_3.png') center center no-repeat;">
+                    <ul id="partLayer"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="box_shadow" style="width:680px;">
+        <div class="custom_bg">
+            <div class="txt_con">
+                <p>층 선택</p>
+            </div>
+            <table class="search_tab">
+                <tr>
+                    <th>층</th>
+                    <td><select id="searchFloor"></select></td>
+                </tr>
+            </table>
+        </div>
+        <div class="gui_text">
+            <div class="txt_con">
+                <p>구역 설정</p>
+                <a href="javascript:void(0);" class="defaultBtn">저장</a>
+            </div>
+            <div class="scroll_table" style="width:650px;height:508px;padding-top:0px;">
+                <div style="width:720px;margin-right:15px;">
+                    <table id="guiGrid"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clear"></div>
+</div>
+<div class="title" style="padding:12px 40px;">
+    <div style="float:right;padding-right:56px;">
+        <a href="javascript:FloorGui.open();" class="grayBtn">닫기</a>
+    </div>
+</div>
+<script type="text/javascript">
+    const FloorGuiMinWidth = 60;
+    const FloorGuiMinHeight = 80;
+    $.FloorGui = function() {
+        let _editoptions = function(num) {
+            return {
+                dataInit: function(el) {
+                    EgovIndexApi.numberOnly(el);
+                },
+                size: num,
+                maxlength: num
+            }
+        };
+        EgovJqGridApi.popGrid('guiGrid', [
+            { label: '구역코드', name: 'part_cd', key: true, hidden: true },
+            { label: '구역명', name: 'part_nm', align: 'center', sortable: false },
+            { label: 'TOP', name: 'part_mini_top', align: 'center', sortable: false, editable: true, editoptions: _editoptions(4) },
+            { label: 'LEFT', name: 'part_mini_left', align: 'center', sortable: false, editable: true, editoptions: _editoptions(4) },
+            { label: '넓이', name: 'part_mini_width', align: 'center', sortable: false, editable: true, editoptions: _editoptions(4) },
+            { label: '높이', name: 'part_mini_height', align: 'center', sortable: false, editable: true, editoptions: _editoptions(4) },
+            { label: '회전', name: 'part_mini_rotate', align: 'center', sortable: false, editable: true, editoptions: _editoptions(3) },
+            { label: 'CSS', align: 'center', sortable: false, formatter: (c, o, row) => {
+                    let html = '<select data-rowid="'+ row.part_cd +'">';
+                    html += '<option value="" style="background-color:transparent;">선택</option>';
+                    for (let partColor of EgovIndexApi.partColorList) {
+                        let color = partColor.split(',');
+                        html += '<option value="'+ color[0] +'" style="background-color:'+ color[1] +'"'
+                            + (row.part_css === color[0] ? 'selected' : '') + '>'+ color[1] +'</option>';
+                    }
+                    html += '</select>';
+                    return html;
+                }
+            },
+        ], null, []).jqGrid('setGridParam', {
+            cellEdit: true,
+            cellsubmit: 'clientArray',
+            beforeSaveCell: function(rowId, name, val) {
+                switch (name) {
+                    case 'part_mini_width':
+                        if (val < FloorGuiMinWidth) {
+                            return FloorGuiMinWidth;
+                        }
+                        break;
+                    case 'part_mini_height':
+                        if (val < FloorGuiMinHeight) {
+                            return FloorGuiMinHeight;
+                        }
+                        break;
+                    case 'part_mini_rotate':
+                        if (val >= 360 || val < 0) {
+                            return '0';
+                        }
+                        break;
+                    default:
+                }
+            },
+            afterSaveCell: function(rowId, name, val) {
+                FloorGui.partLayerSetting(rowId, name, val);
+            }
+        });
+    };
+
+    $.FloorGui.prototype.getGui = function() {
+        return $('nav#cbp-spmenu-floor');
+    };
+
+    $.FloorGui.prototype.initialize = function(floorCd, floorNm) {
+        let $panel = this.getGui();
+        let centerGridSelectedRowId = $('#centerGrid').jqGrid('getGridParam', 'selrow');
+        $('#centerNm', $panel).text($('#centerGrid').jqGrid('getRowData', centerGridSelectedRowId).center_nm);
+        $('#floorNm', $panel).text(floorNm);
+        this.getFloor(floorCd, function(data) {
+            $('.mapArea', $panel).css({
+                'background': 'url(/upload/'+ data.floor_map1 +')',
+                'background-repeat': 'no-repeat',
+                'background-position': 'center'
+            });
+        });
+        this.getFloorList(centerGridSelectedRowId, function(list) {
+            let $select = $('#searchFloor', $panel);
+            $select.empty();
+            for (let item of list) {
+                let $option = $('<option value="'+ item.floor_cd +'">'+ item.floor_nm +'</option>').appendTo($select);
+                if (floorCd === item.floor_cd) {
+                    $option.prop('selected', true);
+                }
+            }
+            $select.off('change').on('change', function() {
+                FloorGui.initialize($(this).find('option:selected').val(), $(this).find('option:selected').text());
+                FloorGui.open();
+            });
+        });
+        $('#partLayer', $panel).empty();
+        this.getFloorPartList(floorCd, function(list) {
+            for (let item of list) {
+                let part = $('<li class="seat" style="opacity:0.7;display:inline-block;"></li>'
+                ).data('item', item).css({
+                    top: item.part_mini_top +'px',
+                    left: item.part_mini_left +'px',
+                    width: item.part_mini_width +'px',
+                    height: item.part_mini_height +'px'
+                }).appendTo($('#partLayer', $panel));
+                $(part).resizable({
+                    containment: '.mapArea',
+                    aspectRatio: false,
+                    minWidth: FloorGuiMinWidth,
+                    minHeight: FloorGuiMinHeight,
+                    start: function() {
+                        EgovJqGridApi.selection('guiGrid', $(this).data('item').part_cd);
+                    },
+                    stop: function() {
+                        EgovJqGridApi.selection('guiGrid');
+                    },
+                    resize: function(e, ui) {
+                        let rowId = $('#guiGrid').jqGrid('getGridParam', 'selrow');
+                        $('#guiGrid').jqGrid('setCell', rowId, 'part_mini_width', Math.floor(ui.size.width))
+                            .jqGrid('setCell', rowId, 'part_mini_height', Math.floor(ui.size.height));
+                    }
+                }).rotatable({
+                    degrees: item.part_mini_rotate,
+                    handle: $(document.createElement('img')).attr('src', '/resources/img/rotate.png'),
+                    wheelRotate: false,
+                    start: function() {
+                        let data = $(this).data('item');
+                        EgovJqGridApi.selection('guiGrid', $(this).data('item').part_cd);
+                    },
+                    stop: function() {
+                        EgovJqGridApi.selection('guiGrid');
+                    },
+                    rotate: function(e, ui) {
+                        let rowId = $('#guiGrid').jqGrid('getGridParam', 'selrow');
+                        $('#guiGrid').jqGrid('setCell', rowId, 'part_mini_rotate', Math.floor(ui.angle.degrees));
+                    }
+                }).draggable({
+                    containment: '.mapArea',
+                    start: function() {
+                        let data = $(this).data('item');
+                        EgovJqGridApi.selection('guiGrid', $(this).data('item').part_cd);
+                    },
+                    stop: function() {
+                        EgovJqGridApi.selection('guiGrid');
+                    },
+                    drag: function(e, ui) {
+                        let rowId = $('#guiGrid').jqGrid('getGridParam', 'selrow');
+                        $('#guiGrid').jqGrid('setCell', rowId, 'part_mini_top', Math.floor(ui.position.top))
+                            .jqGrid('setCell', rowId, 'part_mini_left', Math.floor(ui.position.left));
+                    }
+                }).append(
+                    '<div class="section">'+
+                        '<span class="'+ item.part_css +'">'+
+                            item.part_nm +
+                            '<em style="font-size:20px;">'+
+                                (item.part_class_text !== '일반' ? '('+ item.part_class_text +')' : '')+
+                            '</em>'+
+                        '</span>'+
+                    '</div>'
+                );
+            }
+        });
+        this.getFloorPartList(floorCd);
+        this.open();
+    };
+
+    $.FloorGui.prototype.getFloor = function(floorCd, callback) {
+        EgovIndexApi.apiExecuteJson(
+            'GET',
+            '/backoffice/bld/floorInfoDetail.do', {
+                floorCd: floorCd
+            },
+            null,
+            function(json) {
+                callback(json.result);
+            },
+            function(json) {
+                toastr.error(json.message);
+            }
+        );
+    };
+
+    $.FloorGui.prototype.getFloorList = function(centerCd, callback) {
+        EgovIndexApi.apiExecuteJson(
+            'GET',
+            '/backoffice/bld/floorComboInfo.do', {
+                centerCd: centerCd
+            },
+            null,
+            function(json) {
+                callback(json.resultlist);
+            },
+            function(json) {
+                toastr.error(json.message);
+            }
+        );
+    };
+
+    $.FloorGui.prototype.getFloorPartList = function(floorCd, callback) {
+        let jqGridParams = {
+            url: '/backoffice/bld/partListAjax.do',
+            postData: JSON.stringify({
+                floorCd: floorCd,
+                useYn: 'Y',
+                pageIndex: '1',
+                pageUnit: '20'
+            }),
+            loadComplete: function(data) {
+                if (data.status === 'FAIL') {
+                    toastr.error(data.message);
+                    return false;
+                }
+                $('select', this).on('change', function() {
+                    let rowId = $(this).data('rowid');
+                    let cssClass = $('option:selected', this);
+                    if (cssClass.val() === '') {
+                        $(this).css('background-color', 'transparent');
+                    } else {
+                        $(this).css('background-color', cssClass.text());
+                        FloorGui.partLayerSetting(rowId, 'part_css', cssClass.val());
+                    }
+                }).trigger('change');
+                callback(data.resultlist);
+            }
+        };
+        $('#guiGrid').jqGrid('setGridParam', jqGridParams).trigger('reloadGrid');
+    };
+
+    $.FloorGui.prototype.open = function(floorCd, floorName) {
+        classie.toggle($('#cbp-spmenu-floor')[0], 'cbp-spmenu-open');
+    };
+
+    $.FloorGui.prototype.partLayerSetting = function(rowId, type, val) {
+        $.each($('#partLayer', FloorGui.getGui()).find('li'), function() {
+            let data = $(this).data('item');
+            if (data.part_cd === rowId) {
+                switch (type) {
+                    case 'part_mini_top':
+                        $(this).css('top', val+'px');
+                        break;
+                    case 'part_mini_left':
+                        $(this).css('left', val+'px');
+                        break;
+                    case 'part_mini_width':
+                        $(this).css('width', val+'px');
+                        break;
+                    case 'part_mini_height':
+                        $(this).css('height', val+'px');
+                        break;
+                    case 'part_mini_rotate':
+                        $(this).data('uiRotatable').angle(Math.PI * val / 180);
+                        break;
+                    case 'part_css':
+                        $(this).find('span').attr('class', val);
+                        break;
+                }
+                return false;
+            }
+        });
+    };
+
+    const FloorGui = new $.FloorGui();
+</script>

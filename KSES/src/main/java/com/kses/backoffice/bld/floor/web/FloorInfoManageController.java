@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 
 import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -110,10 +111,19 @@ public class FloorInfoManageController {
 	 * @return
 	 * @throws Exception
 	 */
-	@NoLogging
-	@RequestMapping (value="floorInfoPopup.do", method = RequestMethod.GET)
+	@RequestMapping (value = "floorInfoPopup.do", method = RequestMethod.GET)
 	public ModelAndView popupFloorInfo() throws Exception {
 		return new ModelAndView("/backoffice/bld/sub/floorInfo");
+	}
+
+	/**
+	 * 층 정보 GUI 화면
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping (value="floorGui.do", method=RequestMethod.GET)
+	public ModelAndView guiFloor() throws Exception {
+		return new ModelAndView("/backoffice/bld/sub/floorGui");
 	}
 
 	/**
@@ -207,22 +217,19 @@ public class FloorInfoManageController {
 	    return model;
 	}
 
-	//combo box 구역 떄문에 수정
-	@RequestMapping (value="floorComboInfo.do")
-	public ModelAndView selectFloorComboInfo(	@RequestParam("centerCd") String centerCd,
-												HttpServletRequest request) throws Exception{
-
+	/**
+	 * 지점 층 목록 얻기
+	 * @param centerCd
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping (value = "floorComboInfo.do", method = RequestMethod.GET)
+	public ModelAndView selectFloorComboInfo(@RequestParam("centerCd") String centerCd) throws Exception{
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-		
-		try {
-			model.addObject(Globals.STATUS  , Globals.STATUS_SUCCESS);
-			model.addObject(Globals.JSON_RETURN_RESULTLISR, floorService.selectFloorInfoComboList(centerCd));
-		}  catch (Exception e){
-			log.error("floorComboInfo ERROR : " + e);
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));	
-		}
-		log.debug("model:" + model);
+
+		model.addObject(Globals.JSON_RETURN_RESULTLISR, floorService.selectFloorInfoComboList(centerCd));
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+
 		return model;
 	}
 
