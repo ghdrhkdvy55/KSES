@@ -40,7 +40,7 @@ input[type=password]::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
   }
 input[type=password]:-ms-input-placeholder { /* Internet Explorer 10-11 */
     color: #888;
-  }  
+}  
 input[type=password]::-ms-input-placeholder { /* Microsoft Edge */
     color: #888;
 } 
@@ -2699,7 +2699,7 @@ ul.tabs li{
 .error {
 	text-align: center;
 	width: 80%;
-	margin: 225px auto;
+	margin: 180px auto;
 }
 
 .error > .logo {

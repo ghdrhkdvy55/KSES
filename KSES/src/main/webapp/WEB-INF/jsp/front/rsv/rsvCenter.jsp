@@ -38,7 +38,7 @@
             <ul class="rsv_info">
                 <li class="backImg"></li>
                 <li class="rsv_branch hidden"></li>
-                <li class="rsv_state">좌석 예약 중 입니다.</li>
+                <li class="rsv_state">지점 선택중입니다.</li>
                 <li></li>
             </ul>             
         </div>

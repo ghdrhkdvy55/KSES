@@ -452,7 +452,7 @@
 										setHtml = "";
 										setHtml += "<li><span><a href='javascript:mainService.fn_userResvInfo(&#39;NOW&#39;, &#39;" + obj.resv_seq + "&#39;, &#39;rsv_info&#39;);' >" + obj.center_nm + " " + obj.seat_nm + "</a></span></li>";
 										setHtml += "<li class='rsv_cancel'><a href='javascript:mainService.fn_userResvInfo(&#39;CANCEL&#39;, &#39;" + obj.resv_seq + "&#39;, &#39;cancel_rsv_info&#39;);'>예약취소</a></li>";
-										setHtml += "<li>예약번호 : " + obj.resv_seq + "</li>";
+										setHtml += "<li style='font-weight:bold; font-size:2.3rem;'>예약번호 : " + obj.resv_seq.replace(/(^0+)/, ""); + "</li>";
 										setHtml += obj.resv_entry_dvsn == "ENTRY_DVSN_2" ? "<li><em class='n_class'>" + obj.resv_seat_class + "</em></li>" : "";
 
 										userInfoBottomArea.append(setHtml);
@@ -848,7 +848,7 @@
 					params.resvDate = result.resvDate;
 					sessionStorage.setItem("accessCheck","1");
 					$.each(result, function(index, item) {
-						$("form[name=regist]").append($('<input/>', {type: 'hidden', name: index, value:item }));
+						$("form[name=regist]").append($('<input/>', {type: 'hidden', name: index, value:item}));
 						$("form[name=regist]").attr("action", "/front/rsvSeat.do").attr("method","get").submit();
 					});
 				}

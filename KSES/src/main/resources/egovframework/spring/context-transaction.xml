@@ -8,9 +8,9 @@
 
     <!-- transaction 설정 -->
     <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="dataSource-${Globals.DbType}"/>
+		<property name="dataSource" ref="dataSourceLog4j"/>
 	</bean>
-   
+   <tx:annotation-driven proxy-target-class="true" transaction-manager="txManager"/>
     
 	<tx:advice id="txAdvice" transaction-manager="txManager">
 		<tx:attributes>
@@ -23,5 +23,4 @@
 		                                          execution(* com.kses..*Impl.*(..))"/>
 		<aop:advisor advice-ref="txAdvice" pointcut-ref="requiredTx" />
 	</aop:config>
-    <tx:annotation-driven transaction-manager="txManager"/> 
 </beans>
