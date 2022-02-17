@@ -14,6 +14,7 @@ import com.kses.backoffice.bas.system.vo.SystemInfo;
 import com.kses.backoffice.bld.center.service.NoshowInfoManageService;
 import com.kses.backoffice.mng.employee.service.EmpInfoManageService;
 import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
+import com.kses.backoffice.stt.dashboard.service.DashboardInfoManageService;
 import com.kses.backoffice.sym.log.service.InterfaceInfoManageService;
 import com.kses.backoffice.util.SmartUtil;
 
@@ -39,6 +40,9 @@ public class Scheduler {
 	
 	@Autowired
 	private SystemInfoManageService systemService;
+	
+	@Autowired
+	DashboardInfoManageService dashBoardService;
 
 	/**
 	 * 노쇼 예약정보 자동취소 스케줄러
@@ -46,7 +50,7 @@ public class Scheduler {
 	 * @throws Exception
 	 */
 	@Scheduled(cron = "0 0/30 * * * * ")
-	public void resvNoshowScheduler() throws Exception {
+	public void updateResvNoshowScheduler() throws Exception {
 		List<Map<String, Object>> noshowResvList;
 		SystemInfo systemInfo = systemService.selectSystemInfo();
 
@@ -120,16 +124,39 @@ public class Scheduler {
 	 * @throws Exception
 	 */
 	@Scheduled(cron="0 0 23 * * ?")
-	public void ksesupdateResvUseComplete() throws Exception {		
+	public void updateResvUseComplete() throws Exception {		
 		try {
 			LOGGER.info("----------------------------KSES COMPLETE USE BATCH START----------------------------");
 			resvService.updateResvUseComplete();
 		} catch (RuntimeException re) {
-			LOGGER.error("ksesupdateResvUseComplete => Run Failed", re);
+			LOGGER.error("updateResvUseComplete => Run Failed", re);
 		} catch (Exception e) {
-			LOGGER.error("ksesupdateResvUseComplete => Failed", e);
+			LOGGER.error("updateResvUseComplete => Failed", e);
 		}
 		LOGGER.info("----------------------------KSES COMPLETE USE BATCH END----------------------------");
+	}
+	
+	/**
+	 * 지점별 이용통계 현황 갱신
+	 * 
+	 * @throws Exception
+	 */
+	@Scheduled(cron="0 30 23 * * ?")
+	public void updateResvUsageStat() throws Exception {		
+		try {
+			LOGGER.info("----------------------------KSES RESV USAGE STAT UPDATE BATCH START----------------------------");
+			int ret = dashBoardService.insertCenterUsageStat();
+			if(ret >= 0) {
+				LOGGER.info("updateResvUsageStat => " + "지점별 이용통계 " + ret + "건 갱신");
+			} else {
+				throw new Exception();
+			}
+		} catch (RuntimeException re) {
+			LOGGER.error("updateResvUsageStat => Run Failed", re);
+		} catch (Exception e) {
+			LOGGER.error("updateResvUsageStat => Failed", e);
+		}
+		LOGGER.info("----------------------------KSES RESV USAGE STAT UPDATE BATCH END----------------------------");
 	}
 
 	/**
@@ -138,19 +165,19 @@ public class Scheduler {
 	 * @throws Exception
 	 */
 	@Scheduled(cron="0 0 08 * * ?")
-	public void ksesEmpInfoUpdateScheduler() throws Exception {		
+	public void updateEmpInfoScheduler() throws Exception {		
 		try {
 			LOGGER.info("----------------------------KSES EMP BATCH START----------------------------");
 			int ret = empService.mergeEmpInfo();
 			if(ret >= 0) {
-				LOGGER.info("ksesEmpInfoUpdateScheduler => " + "인사정보 " + ret + "건 갱신");
+				LOGGER.info("updateEmpInfoScheduler => " + "인사정보 " + ret + "건 갱신");
 			} else {
 				throw new Exception();
 			}
 		} catch (RuntimeException re) {
-			LOGGER.error("ksesEmpInfoUpdateScheduler => Run Failed", re);
+			LOGGER.error("updateEmpInfoScheduler => Run Failed", re);
 		} catch (Exception e) {
-			LOGGER.error("ksesEmpInfoUpdateScheduler => Failed", e);
+			LOGGER.error("updateEmpInfoScheduler => Failed", e);
 		}
 		LOGGER.info("----------------------------KSES EMP BATCH END----------------------------");
 	}
