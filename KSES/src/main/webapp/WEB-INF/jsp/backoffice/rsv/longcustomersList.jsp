@@ -14,6 +14,12 @@
 	outline-style: none;
 	height: 30px;
 }
+a.blueBtn, a.grayBtn {
+	padding: 5px 12px;
+	border-radius: 5px;
+	font-size: 13px;
+	margin-right: 5px;
+}
 </style>
 <!-- //contents -->
 <div class="breadcrumb">
@@ -180,6 +186,8 @@
 			{ label: '장기예약종료일', name:'long_resv_end_dt', align:'center'},
 			{ label: '고객아이디', name:'user_id', align:'center' },
             { label: '담당자사번', name:'emp_no', align:'center'},
+            { label: '장기예약 전체취소', name:'long_resv_cancel', align:'center', formatter:fnLongResvInfoCancelButton},
+            { label: '버튼상태', name:'all_cancel_btn_state', align:'center'},
 		], false, true, fnSearch);
 		
 		$("#searchFrom").datepicker(EgovCalendar);
@@ -196,6 +204,7 @@
 		};
 		EgovJqGridApi.mainGridAjax('/backoffice/rsv/longCustomerListsAjax.do', params, fnSearch, fnSubGrid);
 		EgovJqGridApi.mainGridDetail(fnLongcustomersInfo);
+
 	}
 	
   	function fnSubGrid(id, longResvSeq) {
@@ -214,7 +223,10 @@
 			{label: '신청일자', name:'resv_req_date', align:'center'},
 			{label: '예약일자', name:'resv_end_dt', align:'center'},
 			{label: '예약상태', name:'resv_state_text', align:'center'},
-			{label: '결재상태', name:'resv_pay_dvsn_text', align:'center'},
+			{label: '결제상태', name:'resv_pay_dvsn_text', align:'center'},
+			{label: '예약취소', name:'resv_cancel', align:'center', formatter:fnResvInfoCancelButton},
+			{label: '예약상태', name:'resv_state', align:'center', hidden:true},
+			{label: '결제상태', name:'resv_pay_dvsn', align:'center', hidden:true},
 			{label: '입장료', name:'resv_entry_pay_cost', align:'center', hidden: true},
 			{label: '좌석료', name:'resv_seat_pay_cost', align:'center', hidden: true},
 			{label: '발권 구분', name:'resv_ticket_dvsn_text', align:'center', hidden: true},
@@ -257,4 +269,91 @@
 		$popup.bPopup();
 	}
 	
+	function fnResvInfoCancelButton(cellvalue, options, rowObject) {
+		
+		if(today_get() < rowObject.resv_end_dt){
+			if (rowObject.resv_state == "RESV_STATE_4"){
+				return '<a href="javascript:void(0);" class="grayBtn">취소 완료</a>';
+			}else {
+				return '<a href="javascript:fnResvInfoCancel(&#39;'+rowObject.resv_seq+'&#39;);" class="blueBtn">예약 취소</a>';
+			}
+		} else {
+			return '<a href="javascript:void(0);" class="grayBtn">취소 불가</a>';
+		}
+	}
+	
+	function fnResvInfoCancel(resvSeq) {
+		common_modelClose("confirmPage");
+		var url = "/backoffice/rsv/resvInfoCancel.do";
+		var params = {"resvSeq" : resvSeq};
+		
+		fn_Ajax
+		(
+			url,
+			"GET",
+			params,
+			false,
+			function(result) {
+				if (result.status == "SUCCESS") {
+					common_popup(result.message, "Y", "");
+					fnSearch(1);
+				} else if (result.status == "LOGIN FAIL") {
+					common_popup("로그인 정보가 올바르지않습니다 다시 로그인해주세요", "Y", "");
+				} else {
+					common_popup(result.message, "Y", "");
+				}
+			},
+			function(request) {
+				common_popup("ERROR : " + request.status, "Y", "");	       						
+			}    		
+		);
+	}
+	function fnLongResvInfoCancelButton(cellvalue, options, rowObject) {
+		if(rowObject.all_cancel_btn_state == "ON"){
+			return '<a href="javascript:fnLongResvInfoCancel(&#39;'+rowObject.long_resv_seq+'&#39;);" class="blueBtn">예약 취소</a>';	
+		} else {
+			return '<a href="javascript:void(0);" class="grayBtn">취소 완료</a>';
+		}
+	}
+	
+	function fnLongResvInfoCancel(longResvSeq) {
+
+		var url = "/backoffice/rsv/resvInfoCancelAll.do";
+		var params = {"longResvSeq" : longResvSeq,
+					  "mode" : "Long"
+					 };
+		
+		fn_Ajax
+		(
+		    url,
+		    "POST",
+			params,
+			false,
+			function(result) {
+				if (result.status == "SUCCESS") {
+					if(result.allCount > 0) {
+						result.message = 
+							"전체 예약취소가 정상적으로 처리 되었습니다." + "<br><br>" +
+							"취소 예약정보 : "  + result.allCount + "건" + "<br>" +
+							"취소 성공 : "  + result.successCount + "건" + "<br>" + 
+							"취소 실패 : "  + result.failCount + "건" + "<br>" +
+							"무인발권기 예외 : "  + result.ticketCount + "건";
+						common_popup(result.message, "Y", "");
+						fnSearch(1);
+					} else {
+						common_popup("예약 일자를 확인해 주세요.", "Y", "");
+					}
+		    	} else if (result.status == "LOGIN FAIL") {
+		    		common_popup("로그인 정보가 올바르지않습니다 다시 로그인해주세요", "N", "");
+		    	} else {
+		    		common_popup(result.message, "N", "");
+		    	}
+			},
+			function(request) {
+				common_popup("ERROR : " + request.status, "N", "");	       						
+			}    		
+		);
+	}
+	
 </script>
+<c:import url="/backoffice/inc/popup_common.do" />

@@ -310,16 +310,26 @@ public class ResvInfoManageController {
 				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
 				return model;	
 		    }
-			
-			params.put("firstIndex", 0);
-			params.put("recordCountPerPage", 5000);
-			params.put("searchCenterCd", params.get("centerCd").toString());
-			params.put("searchFrom", params.get("resvDate").toString());
-			params.put("searchTo", params.get("resvDate").toString());
-			params.put("searchDayCondition","resvDate");
-			params.put("searchResvState","RESV_STATE_4");
-			params.put("searchStateCondition","cancel");
-			
+
+			if(SmartUtil.NVL(params.get("mode"), "").toString().equals("Long")) {
+				LOGGER.info("TEST1 : " + params.get("longResvSeq").toString());
+				params.put("firstIndex", 0);
+				params.put("recordCountPerPage", 5000);
+				params.put("searchResvState","RESV_STATE_1");
+				params.put("searchResvPayDvsn","RESV_PAY_DVSN_1");
+				params.put("searchLongResvSeq", params.get("longResvSeq").toString());
+			} else {
+				params.put("firstIndex", 0);
+				params.put("recordCountPerPage", 5000);
+				params.put("searchCenterCd", params.get("centerCd").toString());
+				params.put("searchFrom", params.get("resvDate").toString());
+				params.put("searchTo", params.get("resvDate").toString());
+				params.put("searchDayCondition","resvDate");
+				params.put("searchResvState","RESV_STATE_4");
+				params.put("searchStateCondition","cancel");
+			}
+							
+
 			List<Map<String, Object>> resvList = resvService.selectResvInfoManageListByPagination(params);
 
 			for(Map<String,Object> resvInfo : resvList) {
