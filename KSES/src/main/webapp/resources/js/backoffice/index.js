@@ -126,8 +126,9 @@ $.EgovIndexApi.prototype.s2ab = function(s) {
     return buf;
 };
 
-$.EgovIndexApi.prototype.numberOnly = function() {
-	$('input:text[numberonly]').on('focus', function () {
+$.EgovIndexApi.prototype.numberOnly = function(el) {
+	let $el = (el) ? $(el) : $('input:text[numberonly]');
+	$el.on('focus', function () {
 		let x = $(this).val();
 		$(this).val(x);
 	}).on('focusout', function() {
@@ -177,6 +178,24 @@ $.EgovIndexApi.prototype.validEmail = function(str) {
 	}
 	return true;
 };
+
+$.EgovIndexApi.prototype.partColorList = [
+	"a_sec,#ffbc26",
+	"b_sec,#4abcff",
+	"c_sec,#ff6e42",
+	"d_sec,#b665ff",
+	"e_sec,#ff65e5",
+	"f_sec,#6e65ff",
+	"g_sec,#4b8bff",
+	"h_sec,#27c7a9",
+	"i_sec,#1c4acf",
+	"j_sec,#ff186d",
+	"k_sec,#426021",
+	"gr_sec,#206618",
+	"n_sec,#80D242",
+	"p_sec,#EC4A4F",
+	"s_sec,#11195D"
+];
 
 const EgovIndexApi = new $.EgovIndexApi();
 
