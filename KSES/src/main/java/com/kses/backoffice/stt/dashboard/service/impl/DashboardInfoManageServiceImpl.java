@@ -56,5 +56,14 @@ public class DashboardInfoManageServiceImpl extends EgovAbstractServiceImpl impl
         );
         return dashboardList;
     }
+    
+    @Override
+    public List<Map<String, Object>> selectCenterUsageStatList(Map<String, Object> parmas) throws Exception {
+    	return dashboardInfoManageMapper.selectCenterUsageStatList(parmas);
+    }
 
+    @Override
+    public int insertCenterUsageStat() throws Exception {
+    	return dashboardInfoManageMapper.insertCenterUsageStat();
+    }
 }
