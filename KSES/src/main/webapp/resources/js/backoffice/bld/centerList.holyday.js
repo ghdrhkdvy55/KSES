@@ -1,4 +1,8 @@
-$.Holyday = function() {};
+$.Holyday = function() {
+    this._editoptions = {
+        value: 'Y:사용;N:사용안함'
+    };
+};
 
 $.Holyday.prototype.mainGridSettings = function() {
     MainGridAjaxUrl = '/backoffice/bld/centerHolyInfoListAjax.do';
@@ -6,10 +10,7 @@ $.Holyday.prototype.mainGridSettings = function() {
         { label: '지점휴일시퀀스', name: 'center_holy_seq', key: true, hidden: true },
         { label: '휴일일자', name: 'holy_dt', align: 'center', sortable: false },
         { label: '휴일명', name: 'holy_nm', align: 'center', sortable: false, editable: true },
-        { label: '사용여부', name: 'use_yn', align: 'center', sortable: false, formatter: 'select', editable: true,
-            edittype: 'select', editoptions: {
-                value: 'Y:사용;N:사용안함'
-            }
+        { label: '사용여부', name: 'use_yn', align: 'center', sortable: false, formatter: 'select', editable: true,  edittype: 'select', editoptions: this._editoptions
         },
     ], false, false, fnSearch, false).jqGrid('setGridParam', {
         cellEdit: true,

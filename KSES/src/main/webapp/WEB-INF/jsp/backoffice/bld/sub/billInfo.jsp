@@ -21,7 +21,7 @@
                         </select>
                     </td>
                     <th>사업자번호 *</th>
-                    <td><input type="text" name="billNum" maxlength="20" style="width:100%;"></td>
+                    <td><input type="text" name="billNum" maxlength="12" style="width:100%;" numberonly></td>
                 </tr>
                 <tr>
                     <th>법인명 *</th>
@@ -61,6 +61,7 @@
 </div>
 <script type="text/javascript">
     $.BillInfo = function () {
+        EgovIndexApi.numberOnly();
         EgovJqGridApi.popGrid('billInfoGrid', [
             {label: '현금영수증코드', name: 'bill_seq', key: true, hidden: true},
             {label: '발급구분코드', name: 'bill_dvsn', hidden: true },

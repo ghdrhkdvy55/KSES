@@ -92,6 +92,7 @@
 </div>
 <script type="text/javascript">
     $.CenterInfo = function() {
+        EgovIndexApi.numberOnly();
     };
 
     $.CenterInfo.prototype.getPopup = function() {
