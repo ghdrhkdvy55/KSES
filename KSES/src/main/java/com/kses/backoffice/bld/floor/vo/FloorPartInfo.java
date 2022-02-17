@@ -49,14 +49,17 @@ public class FloorPartInfo {
 	 // 사용 유무
 	 private String useYn;
 	 
-	 // 구역 사용 유무
+	 // 구역 등급
 	 private String partClass;
 	 
-	 // 구역 사용 유무
+	 // 구역 비용
 	 private String partPayCost;
 	 
-	 // 구역 사용 유무
+	 // 구역 순서
 	 private String partOrder;
+	 
+	// 구역 등급 시퀀스
+	private String partClassSeq;
 	 
 	 // 최초 등록 일자
 	 private String frstRegistDtm;

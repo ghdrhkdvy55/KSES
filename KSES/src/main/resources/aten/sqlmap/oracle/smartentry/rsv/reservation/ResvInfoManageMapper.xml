@@ -526,6 +526,9 @@
 					REFOUND_DATE = SYSDATE,
 				</otherwise>
 			</choose>
+			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(resvState)"> 
+				RESV_STATE = #{resvState},
+			</if>
 			RESV_PAY_DVSN = #{resvPayDvsn}
         WHERE RESV_SEQ = #{resvSeq}
     </update>

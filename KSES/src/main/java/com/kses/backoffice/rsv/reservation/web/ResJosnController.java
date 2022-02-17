@@ -775,7 +775,12 @@ public class ResJosnController {
 				resInfoU.setResvPayDvsn("RESV_PAY_DVSN_2");
 				resInfoU.setResvTicketDvsn("RESV_TICKET_DVSN_2");
 				resInfoU.setResvSeq(SmartUtil.NVL(jsonInfo.get("RES_NO"), "").toString());
-
+				
+				// SPDM요청사항 강낭지점한정 무인발권기 결제시 예약상태 '예약' -> '이용중' 으로 변경
+				if(resInfo.get("center_cd").equals("C21110401")) {
+					resInfoU.setResvState("RESV_STATE_2");
+				}
+				
 				int ret = resService.resPriceChange(resInfoU);
 				if (ret > 0) {
 					returnCode = "OK";
