@@ -205,4 +205,11 @@ $.EgovJqGridApi.prototype.popGridAjax = function(id, url, params, searchFunc) {
 	$('#'+id).jqGrid('setGridParam', jqGridParams).trigger('reloadGrid');
 };
 
+$.EgovJqGridApi.prototype.selection = function(id, rowId) {
+	$('#'+id).jqGrid('resetSelection');
+	if (rowId !== null && rowId !== undefined) {
+		$('#'+id).jqGrid('setSelection', rowId);
+	}
+};
+
 const EgovJqGridApi = new $.EgovJqGridApi();
