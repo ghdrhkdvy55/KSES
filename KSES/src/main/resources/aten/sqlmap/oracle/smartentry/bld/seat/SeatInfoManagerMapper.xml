@@ -163,7 +163,7 @@
 					SELECT  
 						A.CENTER_CD, A.FLOOR_CD, A.PART_CD, #{floorNm, jdbcType=VARCHAR}|| '_' || A.PART_NM || '_' || B.RN AS RN,  
 						ROW_NUMBER() OVER(ORDER BY B.RN ASC) AS RNUM, A.PART_CLASS
-					FROM TSEB_PART_INFO_D A
+					FROM TSEB_PART_INFO_D A,
 					( 
 						SELECT NUM AS RN FROM TABLE(FN_ROWTABLE(${params.seatStr}, ${params.seatEnd}))
 					) B 
