@@ -104,6 +104,10 @@
 				<if test="@org.apache.commons.lang3.StringUtils@equals(params.centerRegistSelect,'centerRegistSelect')">
 					AND A.RESV_STATE != 'RESV_STATE_4'
 				</if>
+				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchLongResvSeq)">
+					AND A.LONG_RESV_SEQ = #{params.searchLongResvSeq}
+					AND A.RESV_END_DT > TO_CHAR(SYSDATE,'YYYYMMDD')
+				</if>
 			) TB
 			ORDER BY TB.RESV_SEQ DESC	
 		) TA
