@@ -83,7 +83,7 @@
 		</foreach>
 	</update>
 	
-	<select id="deleteBillInfo" resultType="lmap">
+	<select id="deleteBillInfo">
 		DELETE FROM TSER_BILL_INFO_I WHERE BILL_SEQ = #{billSeq}
 	</select>
 </mapper>

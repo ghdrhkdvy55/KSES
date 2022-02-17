@@ -214,7 +214,7 @@ public class BillInfoManageController {
 	    
 	    	billService.deleteBillInfo(billSeq);
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.delete") );		    	 
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.delete"));		    	 
 		} catch (Exception e) {
 			LOGGER.info(e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
