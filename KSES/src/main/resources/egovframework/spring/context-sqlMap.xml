@@ -23,7 +23,7 @@
                 <value>classpath:/egovframework/sqlmap/mybatis/oracle-config.xml</value>
             </list>
         </property>
-        <property name="dataSource" ref="dataSource-oracle"/>
+        <property name="dataSource" ref="dataSourceLog4j"/>
         <property name="lobHandler" ref="lobHandler"/>
     </bean>
 
