@@ -432,7 +432,8 @@ function fn_resvDateFormat(el) {
  * @returns
  */
 function fn_resvSeqFormat(el) {
-    return el.toString().replace(/\B(?=(\d{4})+(?!\d))/g, "-");
+    /*return el.toString().replace(/\B(?=(\d{4})+(?!\d))/g, "-");*/
+	return el.toString().replace(/(^0+)/, "");
 }
 
 /**

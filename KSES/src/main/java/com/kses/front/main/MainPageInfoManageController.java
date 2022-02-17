@@ -173,7 +173,7 @@ public class MainPageInfoManageController {
 		return model;
 	}
 	
-	@RequestMapping (value="userResvInfo.do") 
+	@RequestMapping (value="userResvInfo.do")
 	public ModelAndView selectUserResvInfo(	HttpServletRequest request,
 											@RequestBody Map<String, Object> params) throws Exception {
 		

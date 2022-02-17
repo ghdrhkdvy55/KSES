@@ -208,7 +208,7 @@
 		AND A.FLOOR_CD = C.FLOOR_CD(+)
 		AND A.PART_CD = D.PART_CD(+)
 		AND A.SEAT_CD = E.SEAT_CD(+)
-		AND A.USER_ID = F.USER_ID   
+		AND A.USER_ID = F.USER_ID
 	]]>	  
     </select>
     
