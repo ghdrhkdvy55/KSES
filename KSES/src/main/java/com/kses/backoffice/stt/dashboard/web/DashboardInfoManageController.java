@@ -94,7 +94,7 @@ public class DashboardInfoManageController {
 		ModelMap model = new ModelMap();
 		model.addAttribute("centerList", centerService.selectCenterInfoComboList());
 		model.addAttribute(Globals.STATUS, Globals.STATUS_SUCCESS);
-		return new ModelAndView("/backoffice/stt/dashboardByCenterList");
+		return new ModelAndView("/backoffice/stt/dashboardByCenterList", model);
 	}
 	
 	/**
@@ -106,7 +106,10 @@ public class DashboardInfoManageController {
 	public ModelAndView selectDashboardByCenterList(	HttpServletRequest request,
 														@RequestBody Map<String,Object> params) throws Exception {
 		ModelMap model = new ModelMap();
-		model.addAttribute("usageStatList", dashboardInfoManageService.selectCenterUsageStatList(params));
+		List<Map<String, Object>> usageStatList = dashboardInfoManageService.selectCenterUsageStatList(params);
+		usageStatList.add(dashboardInfoManageService.selectCenterUsageStatTotal(params));
+		
+		model.addAttribute("usageStatList", usageStatList);
 		model.addAttribute(Globals.STATUS, Globals.STATUS_SUCCESS);
 		return new ModelAndView(Globals.JSONVIEW, model);
 	}

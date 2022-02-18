@@ -16,6 +16,8 @@ public interface DashboardInfoManageMapper {
     List<Map<String, Object>> selectDashboardList();
     
     List<Map<String, Object>> selectCenterUsageStatList(@Param("params") Map<String, Object> parmas);
+    
+    Map<String, Object> selectCenterUsageStatTotal(@Param("params") Map<String, Object> parmas);
 
     int insertCenterUsageStat();
 }

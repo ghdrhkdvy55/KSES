@@ -63,6 +63,11 @@ public class DashboardInfoManageServiceImpl extends EgovAbstractServiceImpl impl
     }
 
     @Override
+    public Map<String, Object> selectCenterUsageStatTotal(Map<String, Object> parmas) throws Exception {
+    	return dashboardInfoManageMapper.selectCenterUsageStatTotal(parmas);
+    }
+
+    @Override
     public int insertCenterUsageStat() throws Exception {
     	return dashboardInfoManageMapper.insertCenterUsageStat();
     }

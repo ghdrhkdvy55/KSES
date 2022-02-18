@@ -1,9 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ page import="java.util.Date" %>
 <link rel="stylesheet" href="/resources/jqgrid/src/css/ui.jqgrid.css">
 <script type="text/javascript" src="/resources/jqgrid/js/jquery.jqGrid.min.js"></script>
-<jsp:useBean id="toDay" class="java.util.Date" />
+<c:set var="fSearchDateFrom" value="<%=new Date(new Date().getTime() - 60*60*24*1000*16)%>"/>
+<c:set var="fSearchDateTo" value="<%=new Date(new Date().getTime() - 60*60*24*1000*1)%>"/>
+
 <!-- //contents -->
 <div class="breadcrumb">
 	<ol class="breadcrumb-item">
@@ -32,7 +35,8 @@
 				
 				<p>기간</p>
 				<p>
-				<input type="text" id="searchResvDateFrom" class="cal_icon" name="date_from" value=<fmt:formatDate value="${toDay}" pattern="yyyyMMdd" /> autocomplete=off style="width:110px;">
+				<input type="text" id="searchResvDateFrom" class="cal_icon" name="date_from" value=<fmt:formatDate value="${fSearchDateFrom}" pattern="yyyyMMdd" /> autocomplete=off style="width:110px;">~
+				<input type="text" id="searchResvDateTo" class="cal_icon" name="date_from" value=<fmt:formatDate value="${fSearchDateTo}" pattern="yyyyMMdd" /> autocomplete=off style="width:110px;">
 				</p>
           	</div>
           	
@@ -53,6 +57,7 @@
 			<table class="main_table dashboard">
            		<thead class="active">
 	            	<tr>
+	            		<th></th>
 	            		<th colspan="2">지점인원</th>
 	            		<th colspan="4">회원</th>
 	            		<th colspan="4">비회원</th>
@@ -60,6 +65,7 @@
 	            		<th colspan="3">통합</th>
 	            	</tr>
 	            	<tr>
+	            		<th>일자</th>
 			            <th>지점명</th>
 			            <th>예약정원</th>
 			            <th>예약</th>
@@ -104,7 +110,7 @@
 				currentText: "Today"
 		};	       
 			
-		var datePickerObject = ["#searchResvDateFrom"];
+		var datePickerObject = ["#searchResvDateFrom","#searchResvDateTo"];
 		$.each(datePickerObject, function (index, item) {
 			$(item).datepicker(clareCalendar);
 		});
@@ -115,13 +121,19 @@
 	});
 
 	function fnCenterUsageStatList() {
+		if(!dateIntervalCheckTemp($("#searchResvDateFrom").val(), $("#searchResvDateTo").val())){
+			common_popup("검색종료일자가 시작일자보다 빠를수 없습니다.", "N", "");
+			return;
+		}
+		
 		fn_Ajax 
 		(
 			'/backoffice/stt/dashboardByCenterListAjax.do',
 			"POST",
 			{
 				"searchCenterCd" : $("#searchCenterCd").val(),
-				"searchResvDateFrom" : $("#searchResvDateFrom").val()
+				"searchResvDateFrom" : $("#searchResvDateFrom").val(),
+				"searchResvDateTo" : $("#searchResvDateTo").val()
 			},
 			false,
 			function(result) {
@@ -129,12 +141,23 @@
 					let tbody = $(".main_table tbody");
 					tbody.empty();
 					
-					if(result.usageStatList.length > 0) {
+					if(result.usageStatList.length > 1) {
 						$.each(result.usageStatList, function (index, item) {
+							var isLastIndex = (index == (result.usageStatList.length - 1));
+							var tdRow = "";
+							var trClass = "";
+							
+							if(!isLastIndex) {
+								tdRow = "<td>" + item.resv_date + "</td>" + 
+										"<td>" + item.center_nm + "</td>";	
+							} else {
+								tdRow = "<td colspan='2'>총계</td>";
+								trClass ="tb_bottom";
+							}
+							
 							tbody.append
 							(
-								"<tr>" +
-									"<td>" + item.center_nm + "</td>" +
+								"<tr class='" + trClass + "'>" + tdRow +
 									"<td>" + item.seat_all_count + "</td>" +
 									"<td>" + item.m_resv_all_count + "</td>" +
 									"<td>" + item.m_resv_success_count + "</td>" +
@@ -154,7 +177,7 @@
 							);
 						});
 					} else {
-						tbody.append("<tr><td colspan='17'>조회 데이터 없음</td></tr>");
+						tbody.append("<tr><td colspan='17'>조회 일자에 데이터가 존재하지 않습니다.</td></tr>");
 					}
 				}
 			},
@@ -164,3 +187,4 @@
 		);
 	}
 </script>
+<c:import url="/backoffice/inc/popup_common.do" />
