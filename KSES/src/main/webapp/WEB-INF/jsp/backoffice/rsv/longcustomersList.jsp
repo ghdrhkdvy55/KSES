@@ -187,7 +187,7 @@ a.blueBtn, a.grayBtn {
 			{ label: '고객아이디', name:'user_id', align:'center' },
             { label: '담당자사번', name:'emp_no', align:'center'},
             { label: '장기예약 전체취소', name:'long_resv_cancel', align:'center', formatter:fnLongResvInfoCancelButton},
-            { label: '버튼상태', name:'all_cancel_btn_state', align:'center'},
+            { label: '버튼상태', name:'all_cancel_btn_state', align:'center', hidden:true}
 		], false, true, fnSearch);
 		
 		$("#searchFrom").datepicker(EgovCalendar);
