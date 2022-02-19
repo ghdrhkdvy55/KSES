@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <div class="pop_con">
     <a class="button b-close">X</a>
-    <h2 class="pop_tit">지점 등록</h2>
+    <h2 class="pop_tit"></h2>
     <div class="pop_wrap">
         <form>
             <input type="hidden" name="mode" value="Ins">
@@ -116,7 +116,6 @@
             $form.find(':radio[name=useYn]:first').prop('checked', true);
             $form.find(':radio[name=centerPilotYn]:first').prop('checked', true);
             $form.find(':radio[name=centerStandYn]:first').prop('checked', true);
-            $popup.bPopup();
         } else {
             $popup.find('h2:first').text(centerNm +' 지점 수정');
             EgovIndexApi.apiExecuteJson(
