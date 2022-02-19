@@ -14,6 +14,13 @@
 	outline-style: none;
 	height: 30px;
 }
+a.blueBtn, a.redBtn {
+	padding: 5px 12px;
+	border-radius: 5px;
+	font-size: 13px;
+	margin-right: 5px;
+	width: 55px;
+}
 </style>
 <!-- //contents -->
 <div class="breadcrumb">
@@ -90,12 +97,13 @@
 			{label: '이름', name:'user_nm', align:'center', formatter:fnMasking},
 			{label: '전화번호', name:'user_phone', align:'center', formatter:fnMasking},
 			{label: '금액', name: 'resv_pay_cost', align:'center'},
-			{label: '신청일자', name:'resv_req_date', align:'center'},
+			{label: '신청일자', name:'resv_req_date', align:'center', hidden:true},
 			{label: '예약일자', name:'resv_end_dt', align:'center'},
 			{label: '결제구분', name: 'resv_pay_dvsn_text', align:'center'},
-			{label: '예약상태', name:'resv_state_text', align:'center', hidden:true},
+			{label: '예약상태', name:'resv_state_text', align:'center'},
 			{label: '시범구분', name: 'center_pilot_yn', align:'center', hidden:true},
-			{label: '등록', name: 'enter_regist', align:'center', formatter:fnEnterRegistButton}
+			{label: '등록', name: 'enter_regist', align:'center', formatter:fnEnterRegistButton},
+			{label: '버튼상태', name:'enter_regist_btn_state', align:'center', hidden:true}
 		], false, true, fnSearch);
 		
     	$("body").keydown(function (key) {
@@ -114,6 +122,15 @@
 			centerRegistSelect: "centerRegistSelect"
 		};
 		EgovJqGridApi.mainGridAjax('/backoffice/rsv/enterRegistAjax.do', params, fnSearch, fnSubGrid);
+		if($("#loginAuthorCd").val() == "ROLE_ENT") {
+			$("#mainGrid").jqGrid('hideCol', ["resv_seq", "user_id", "resv_pay_cost", "resv_req_date"]);
+			gridResize("mainGrid");
+		}
+	}	
+	
+	function gridResize(gridId) { 
+		let _MainGridSelector = "#mainGrid";
+		$(_MainGridSelector).setGridWidth($(_MainGridSelector).closest('div.boardlist').width() , true);
 	}
 	
 	function fnSubGrid(id, resvSeq) {
@@ -133,9 +150,13 @@
 	}
 	
 	function fnEnterRegistButton(cellvalue, options, rowObject) {
-		return '<a href="javascript:fnEnterRegist(&#39;'+rowObject.resv_seq+'&#39;,&#39;'+rowObject.resv_pay_dvsn_text+'&#39;,&#39;'+rowObject.center_pilot_yn+'&#39;);" class="blueBtn">입장 등록</a>';	
+		if (rowObject.enter_regist_btn_state == "OFF") {
+			return '<a href="javascript:fnEnterRegist(&#39;'+rowObject.resv_seq+'&#39;,&#39;'+rowObject.resv_pay_dvsn_text+'&#39;,&#39;'+rowObject.center_pilot_yn+'&#39;);" class="blueBtn">입장</a>';	
+		} else {
+			return '<a href="javascript:fnEnterRegist(&#39;'+rowObject.resv_seq+'&#39;,&#39;'+rowObject.resv_pay_dvsn_text+'&#39;,&#39;'+rowObject.center_pilot_yn+'&#39;);" class="redBtn">재입장</a>';	
+		}
+		
 	}
-	
 	
  	function fnEnterRegist(resvSeq,resvPayDvsn,centerPilotYn){	
 		if (resvPayDvsn != '결제' && centerPilotYn == 'Y') { 		 	

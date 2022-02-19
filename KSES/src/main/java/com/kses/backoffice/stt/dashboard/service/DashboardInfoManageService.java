@@ -10,5 +10,10 @@ public interface DashboardInfoManageService {
     int selectTodayResvNumber(List<String> resvStates) throws Exception;
 
     List<Map<String, Object>> selectDashboardList() throws Exception;
+    
+    List<Map<String, Object>> selectCenterUsageStatList(Map<String, Object> parmas) throws Exception;
+    
+    Map<String, Object> selectCenterUsageStatTotal(Map<String, Object> parmas) throws Exception;
 
+    int insertCenterUsageStat() throws Exception;
 }
