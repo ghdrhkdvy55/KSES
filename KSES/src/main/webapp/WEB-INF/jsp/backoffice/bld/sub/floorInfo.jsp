@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <div class="pop_con">
     <a class="button b-close">X</a>
-    <h2 class="pop_tit">층정보 수정</h2>
+    <h2 class="pop_tit"></h2>
     <div class="pop_wrap">
         <form>
         <input type="hidden" name="mode">
@@ -37,10 +37,9 @@
         return $('[data-popup=bld_floorinfo_add]');
     };
 
-    $.FloorInfo.prototype.bPopup = function(floorCd, floorNm) {
+    $.FloorInfo.prototype.bPopup = function(floorCd) {
         let $popup = this.getPopup();
         let $form = $popup.find('form:first');
-        $popup.find('h2:first').text(floorNm +' 층 정보 수정');
         EgovIndexApi.apiExecuteJson(
             'GET',
             '/backoffice/bld/floorInfoDetail.do', {
@@ -49,6 +48,7 @@
             null,
             function(json) {
                 let data = json.result;
+                $popup.find('h2:first').text(data.floor_nm +' 정보 수정');
                 $form.find(':hidden[name=mode]').val('Edt');
                 $form.find(':hidden[name=floorCd]').val(data.floor_cd);
                 $form.find(':text[name=floorNm]').val(data.floor_nm);

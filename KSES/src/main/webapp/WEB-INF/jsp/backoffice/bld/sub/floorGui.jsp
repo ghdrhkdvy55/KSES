@@ -112,12 +112,12 @@
         return $('nav#cbp-spmenu-floor');
     };
 
-    $.FloorGui.prototype.initialize = function(floorCd, floorNm) {
+    $.FloorGui.prototype.initialize = function(floorCd) {
         let $panel = this.getGui();
         let centerGridSelectedRowId = $('#centerGrid').jqGrid('getGridParam', 'selrow');
         $('#centerNm', $panel).text($('#centerGrid').jqGrid('getRowData', centerGridSelectedRowId).center_nm);
-        $('#floorNm', $panel).text(floorNm);
         this.getFloor(floorCd, function(data) {
+            $('#floorNm', $panel).text(data.floor_nm);
             $('.mapArea', $panel).css({
                 'background': 'url(/upload/'+ data.floor_map1 +')',
                 'background-repeat': 'no-repeat',

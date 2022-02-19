@@ -15,11 +15,11 @@ $.Floor.prototype.mainGridSettings = function() {
         { label: '좌석수', name:'floor_seat_cnt', align: 'center', sortable: false },
         { label: '구역사용구분', name:'floor_part_dvsn', hidden: true },
         { label: '수정', align:'center', sortable: false, width: 50, fixed: true, formatter: (c, o, row) =>
-            '<a href="javascript:Floor.popupFloorInfo(\''+ row.floor_cd + '\',\''+ row.floor_nm + '\');" class="edt_icon"></a>'
+            '<a href="javascript:Floor.popupFloorInfo(\''+ row.floor_cd + '\');" class="edt_icon"></a>'
         },
         { label: 'GUI', align:'center', sortable: false, width: 50, fixed: true, formatter: (c, o, row) =>
             row.floor_map1 === null || row.floor_map1 === 'no_image.png' ? ''
-                : '<a href="javascript:Floor.guiFloor(\'' + row.floor_cd + '\',\'' + row.floor_nm + '\');" class="gui_icon"></a>'
+                : '<a href="javascript:Floor.guiFloor(\'' + row.floor_cd + '\');" class="gui_icon"></a>'
         }
     ], false, true, fnSearch, false).jqGrid('setGridParam', {
         isHasSubGrid: function(rowId) {
@@ -46,10 +46,10 @@ $.Floor.prototype.subFloorPartGrid = function(id, parentId) {
         { label: '좌석수', name: 'seat_cnt', align: 'center' },
         { label: '사용여부', name: 'use_yn', align: 'center' },
         { label: '수정', align: 'center', width: 50, fixed: true, formatter: (c, o, row) =>
-            '<a href="javascript:void(0);" class="edt_icon"></a>'
+            '<a href="javascript:Floor.popupPartInfo();" class="edt_icon"></a>'
         },
         { label: 'GUI', align:'center', sortable: false, width: 50, fixed: true, formatter: (c, o, row) =>
-            '<a href="javascript:Floor.guiPart();" class="gui_icon"></a>'
+            '<a href="javascript:void(0);" class="gui_icon"></a>'
         }
     ], 'POST', '/backoffice/bld/partListAjax.do', {
         floorCd: parentId
@@ -66,12 +66,16 @@ $.Floor.prototype.updateSettings = function(ajaxUpdate, changedArr) {
     }));
 };
 
-$.Floor.prototype.popupFloorInfo = function(rowId, name) {
-    FloorInfo.bPopup(rowId, name);
+$.Floor.prototype.popupFloorInfo = function(rowId) {
+    FloorInfo.bPopup(rowId);
 };
 
-$.Floor.prototype.guiFloor = function(rowId, name) {
-    FloorGui.initialize(rowId, name);
+$.Floor.prototype.popupPartInfo = function(rowId) {
+    PartInfo.bPopup();
+};
+
+$.Floor.prototype.guiFloor = function(rowId) {
+    FloorGui.initialize(rowId);
 };
 
 const Floor = new $.Floor();
