@@ -50,7 +50,13 @@
         let $popup = this.getPopup();
         let $form = $popup.find('form:first');
         if (partCd === undefined || partCd === null) {
-
+            $popup.find('h2:first').text('구역 등록');
+            $form.find(':hidden[name=mode]').val('Ins');
+            $form.find(':hidden[name=partCd]').val('');
+            $form.find(':text').val('');
+            $form.find('select[name=partClassSeq]').val('');
+            $form.find(':text[name=partOrder]').val('0');
+            $form.find(':radio[name=useYn]:first').prop('checked', true);
         } else {
             EgovIndexApi.apiExecuteJson(
                 'GET',
@@ -80,6 +86,7 @@
         let $popup = this.getPopup();
         let $partClassSeq = $('select[name=partClassSeq]', $popup);
         $partClassSeq.empty();
+        $partClassSeq.append('<option value="">선택</option>');
         EgovIndexApi.apiExecuteJson(
             'POST',
             '/backoffice/bld/partClassListAjax.do', {

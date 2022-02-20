@@ -30,6 +30,9 @@ $.Floor.prototype.mainGridSettings = function() {
             return true;
         }
     });
+    $('#rightAreaUqBtn').html(
+        '<a href="javascript:Floor.popupPartInfo();" class="orangeBtn">구역등록</a>'
+    ).show();
     $('#rightAreaBtn').show();
 };
 
@@ -71,6 +74,12 @@ $.Floor.prototype.popupFloorInfo = function(rowId) {
 };
 
 $.Floor.prototype.popupPartInfo = function(rowId) {
+    if (rowId === undefined || rowId === null) {
+        if ($('#mainGrid').jqGrid('getGridParam', 'selrow') === null) {
+            toastr.warning('층 목록을 선택하여 주세요.');
+            return false;
+        }
+    }
     PartInfo.bPopup(rowId);
 };
 
