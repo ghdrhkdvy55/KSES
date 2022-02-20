@@ -46,7 +46,7 @@ $.Floor.prototype.subFloorPartGrid = function(id, parentId) {
         { label: '좌석수', name: 'seat_cnt', align: 'center' },
         { label: '사용여부', name: 'use_yn', align: 'center' },
         { label: '수정', align: 'center', width: 50, fixed: true, formatter: (c, o, row) =>
-            '<a href="javascript:Floor.popupPartInfo();" class="edt_icon"></a>'
+            '<a href="javascript:Floor.popupPartInfo(\'' + row.part_cd + '\');" class="edt_icon"></a>'
         },
         { label: 'GUI', align:'center', sortable: false, width: 50, fixed: true, formatter: (c, o, row) =>
             '<a href="javascript:void(0);" class="gui_icon"></a>'
@@ -71,7 +71,7 @@ $.Floor.prototype.popupFloorInfo = function(rowId) {
 };
 
 $.Floor.prototype.popupPartInfo = function(rowId) {
-    PartInfo.bPopup();
+    PartInfo.bPopup(rowId);
 };
 
 $.Floor.prototype.guiFloor = function(rowId) {

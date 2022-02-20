@@ -82,6 +82,7 @@
 		$('[data-popup=bld_centerinfo_add]').load('/backoffice/bld/centerInfoPopup.do');
 		$('[data-popup=bld_billinfo_add]').load('/backoffice/bld/billInfoPopup.do');
 		$('[data-popup=bld_floorinfo_add]').load('/backoffice/bld/floorInfoPopup.do');
+		$('[data-popup=bld_partinfo_add]').load('/backoffice/bld/partInfoPopup.do');
 		$('#cbp-spmenu-floor').load('/backoffice/bld/floorGui.do');
 		// 지점 JqGrid 정의
 		EgovJqGridApi.popGrid('centerGrid', [
@@ -181,13 +182,15 @@
 	}
 	// 하위 목록 조회
 	function fnSearch(pageNo) {
+		let centerCd = $('#centerGrid').jqGrid('getGridParam', 'selrow');
 		let params = {
 			pageIndex: pageNo,
 			pageUnit: $('#pager .ui-pg-selbox option:selected').val(),
-			centerCd: $('#centerGrid').jqGrid('getGridParam', 'selrow')
+			centerCd: centerCd
 		};
 		if ($('div.tabs .tab.active').attr('id') === 'floor') {
 			EgovJqGridApi.mainGridAjax(MainGridAjaxUrl, params, fnSearch, Floor.subFloorPartGrid);
+			PartInfo.partClassComboList(centerCd);
 		} else {
 			EgovJqGridApi.mainGridAjax(MainGridAjaxUrl, params, fnSearch);
 		}

@@ -47,6 +47,16 @@ public class FloorPartInfoManageController {
 	private UniSelectInfoManageService uniService;
 
 	/**
+	 * 구역 팝업 화면
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping (value = "partInfoPopup.do", method = RequestMethod.GET)
+	public ModelAndView popupPartInfo() throws Exception {
+		return new ModelAndView("/backoffice/bld/sub/partInfo");
+	}
+
+	/**
 	 * 구역 목록 조회
 	 * @param searchVO
 	 * @return
@@ -80,29 +90,20 @@ public class FloorPartInfoManageController {
 
 		return model;
 	}
-	
-	@RequestMapping (value="partDetail.do")
-	public ModelAndView selectPartDetailInfoManage(	@ModelAttribute("LoginVO") LoginVO loginVO, 
-													@RequestParam("partCd") String partCd) throws Exception {
-		
-		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
-		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-		
-		if(!isAuthenticated) {
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-			model.setViewName("/backoffice/login");
-			return model;	
-		}
-		
-		try {
-			//Detail 값 가지고 오기
-			model.addObject(Globals.STATUS_REGINFO, partService.selectFloorPartInfoDetail(partCd));
-			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-		} catch(Exception e) {
-			log.info(e.toString());
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
-		}
+
+	/**
+	 * 구역 상세 조회
+	 * @param partCd
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping (value = "partDetail.do", method = RequestMethod.GET)
+	public ModelAndView selectPartDetailInfoManage(@RequestParam("partCd") String partCd) throws Exception {
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+
+		model.addObject(Globals.JSON_RETURN_RESULT, partService.selectFloorPartInfoDetail(partCd));
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+
 		return model;
 	}
 	
