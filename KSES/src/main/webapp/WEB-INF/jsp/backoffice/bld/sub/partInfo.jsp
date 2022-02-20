@@ -35,7 +35,7 @@
         </table>
         </form>
     </div>
-    <popup-right-button />
+    <popup-right-button clickFunc="PartInfo.save();" />
 </div>
 <script type="text/javascript">
     $.PartInfo = function() {
@@ -105,6 +105,27 @@
                 toastr.warning(json.message);
             }
         );
+    };
+
+    $.PartInfo.prototype.save = function() {
+        let $popup = this.getPopup();
+        let $form = $popup.find('form:first');
+        let formData = new FormData($form[0]);
+        bPopupConfirm('구역 정보 저장', '저장 하시겠습니까?', function() {
+            EgovIndexApi.apiExcuteMultipart(
+                '/backoffice/bld/partUpdate.do',
+                formData,
+                null,
+                function(json) {
+                    toastr.success(json.message);
+                    $popup.bPopup().close();
+                    fnSearch(1);
+                },
+                function(json) {
+                    toastr.error(json.message);
+                }
+            );
+        });
     };
 
     const PartInfo = new $.PartInfo();

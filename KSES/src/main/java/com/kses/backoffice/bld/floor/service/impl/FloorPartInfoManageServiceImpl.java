@@ -1,17 +1,14 @@
 package com.kses.backoffice.bld.floor.service.impl;
 
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.kses.backoffice.bld.floor.mapper.FloorPartInfoManageMapper;
 import com.kses.backoffice.bld.floor.service.FloorPartInfoManageService;
 import com.kses.backoffice.bld.floor.vo.FloorPartInfo;
-
-import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class FloorPartInfoManageServiceImpl extends EgovAbstractServiceImpl  implements FloorPartInfoManageService{
@@ -38,8 +35,13 @@ public class FloorPartInfoManageServiceImpl extends EgovAbstractServiceImpl  imp
 	}
 
 	@Override
+	public int insertFloorPartInfoManage(FloorPartInfo floorPartInfo) throws Exception {
+		return partMapper.insertFloorPartInfo(floorPartInfo);
+	}
+
+	@Override
 	public int updateFloorPartInfoManage(FloorPartInfo vo) throws Exception {
-		return vo.getMode().equals(Globals.SAVE_MODE_INSERT) ? partMapper.insertFloorPartInfo(vo) : partMapper.updateFloorPartInfo(vo);
+		return partMapper.updateFloorPartInfo(vo);
 	}
 	
 	@Override

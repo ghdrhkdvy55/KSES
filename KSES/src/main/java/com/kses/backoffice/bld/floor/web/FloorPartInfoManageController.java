@@ -11,18 +11,18 @@ import com.kses.backoffice.util.service.fileService;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.Globals;
+import egovframework.com.cmm.util.EgovUserDetailsHelper;
+import egovframework.rte.fdl.cmmn.exception.EgovBizException;
 import egovframework.rte.fdl.property.EgovPropertyService;
-import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
@@ -129,50 +129,48 @@ public class FloorPartInfoManageController {
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 		}
 		return model;
-	} 
+	}
 
-	
-	@RequestMapping (value="partUpdate.do")
-	public ModelAndView updatePartInfoManage(	HttpServletRequest request, 
-												MultipartRequest mRequest, 
-												@ModelAttribute("LoginVO") LoginVO loginVO, 
-												@ModelAttribute("FloorPartInfo") FloorPartInfo vo, 
-												BindingResult result) throws Exception {
-		
+	/**
+	 * 구역 정보 저장
+	 * @param floorPartInfo
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping (value = "partUpdate.do", method = RequestMethod.POST)
+	public ModelAndView updatePartInfoManage(@ModelAttribute("FloorPartInfo") FloorPartInfo floorPartInfo) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-		
-		if(!isAuthenticated) {
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-			model.setViewName("/backoffice/login");
-		} else {
-	    	HttpSession httpSession = request.getSession(true);
-	    	loginVO = (LoginVO)httpSession.getAttribute("LoginVO");
-	    	vo.setFrstRegterId(loginVO.getAdminId());
-	    	vo.setLastUpdusrId(loginVO.getAdminId());
-	    }
-		
-		try {
-			model.addObject(Globals.STATUS_REGINFO , vo);
-			String meesage = "";
-			
-	    	vo.setPartMap1(uploadFile.uploadFileNm(mRequest.getFiles("partMap1"), propertiesService.getString("Globals.filePath")));
-			vo.setPartMap2( uploadFile.uploadFileNm(mRequest.getFiles("partMap2"), propertiesService.getString("Globals.filePath")));
-			meesage = vo.getMode().equals(Globals.SAVE_MODE_INSERT) ? "sucess.common.insert" : "sucess.common.update" ;
-					
-			int ret = partService.updateFloorPartInfoManage(vo);
-			if (ret > 0) {
-				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
-			} else {
-				throw new Exception();
-			}
-		}catch (Exception e){
-			log.error("floorUpdate ERROR : " + e.toString());
+
+		String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
+		floorPartInfo.setFrstRegterId(userId);
+		floorPartInfo.setLastUpdusrId(userId);
+		floorPartInfo.setPartMap1(uploadFile.uploadFileNm(floorPartInfo.getPartMap1File(), propertiesService.getString("Globals.filePath")));
+
+		int ret = 0;
+		switch (floorPartInfo.getMode()) {
+			case Globals.SAVE_MODE_INSERT:
+				ret = partService.insertFloorPartInfoManage(floorPartInfo);
+				break;
+			case Globals.SAVE_MODE_UPDATE:
+				ret = partService.updateFloorPartInfoManage(floorPartInfo);
+				break;
+			default:
+				throw new EgovBizException("잘못된 호출입니다.");
+		}
+
+		String messageKey = "";
+		if (ret > 0) {
+			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+			messageKey = StringUtils.equals(floorPartInfo.getMode(), Globals.SAVE_MODE_INSERT)
+					? "sucess.common.insert" : "sucess.common.update";
+		}
+		else {
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.insert"));	
-		}	
-		log.debug("model:" + model.toString());
+			messageKey = StringUtils.equals(floorPartInfo.getMode(), Globals.SAVE_MODE_INSERT)
+					? "fail.common.insert" : "fail.common.update";
+		}
+		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(messageKey));
+
 		return model;
 	}
 	
