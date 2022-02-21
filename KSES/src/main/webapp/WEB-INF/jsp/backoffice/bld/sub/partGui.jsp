@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <link rel="stylesheet" href="/resources/css/backoffice/cbp-spmenu.css">
 <script type="text/javascript" src="/resources/js/classie.js"></script>
-<script type="text/javascript" src="/resources/js/jquery.ui.rotatable.js"></script>
 <div class="title">
     <h3><span id="centerNm"></span>점 <span name="floorNm"></span> <span id="partNm"></span> 구역 GUI 화면</h3>
 </div>
@@ -92,7 +91,9 @@
                 'background': 'url(/upload/'+ data.part_map1 +')',
                 'background-repeat': 'no-repeat',
                 'background-position': 'center'
-            });
+            }).data('item', data);
+            $('#partLayer', $panel).empty();
+            PartGui.getPartSeatList(centerGridSelectedRowId, data.floor_cd, partCd, PartGui.drawPartSeat);
         });
     	this.open();
     };
@@ -140,7 +141,61 @@
                 toastr.error(json.message);
             }
         );
-    }
+    };
+
+    $.PartGui.prototype.getPartSeatList = function(centerCd, floorCd, partCd, callback) {
+        let jqGridParams = {
+            url: '/backoffice/bld/seatListAjax.do',
+            postData: JSON.stringify({
+                searchCenter: centerCd,
+                searchFloorCd: floorCd,
+                searchPartCd: partCd,
+                useYn: 'Y',
+                pageIndex: '1',
+                pageUnit: '1000'
+            }),
+            rowNum: 1000,
+            loadComplete: function(data) {
+                if (data.status === 'FAIL') {
+                    toastr.error(data.message);
+                    return false;
+                }
+                callback(data.resultlist);
+            }
+        };
+        $(PartGuiGridSelector).jqGrid('setGridParam', jqGridParams).trigger('reloadGrid');
+    };
+
+    $.PartGui.prototype.drawPartSeat = function(list) {
+        let $panel = PartGui.getGui();
+        let idx = 0;
+        for (let item of list) {
+            let seat = $(
+                '<li class="seat" style="opacity:0.7;display:inline-block;width:30px;height:30px;"></li>'
+            ).data('item', item).css({
+                top: item.seat_top +'px',
+                left: item.seat_left +'px',
+            }).appendTo($('#partLayer', $panel));
+            $(seat).draggable({
+                containment: '#cbp-spmenu-part .mapArea',
+                start: function() {
+                    EgovJqGridApi.selection(PartGuiGridId, $(this).data('item').seat_cd);
+                    let rowId = $(PartGuiGridSelector).jqGrid('getGridParam', 'selrow');
+                    $(PartGuiGridSelector).closest('.scroll_table').scrollTop($('tr#'+rowId, $(PartGuiGridSelector))[0].offsetTop);
+                },
+                stop: function() {
+                    EgovJqGridApi.selection(PartGuiGridId);
+                },
+                drag: function(e, ui) {
+                    let rowId = $(PartGuiGridSelector).jqGrid('getGridParam', 'selrow');
+                    $(PartGuiGridSelector).jqGrid('setCell', rowId, 'seat_top', Math.floor(ui.position.top))
+                        .jqGrid('setCell', rowId, 'seat_left', Math.floor(ui.position.left));
+                }
+            }).append(
+                '<div class="section">'+ (++idx)+ '</div>'
+            );
+        }
+    };
     
     const PartGui = new $.PartGui();
 </script>

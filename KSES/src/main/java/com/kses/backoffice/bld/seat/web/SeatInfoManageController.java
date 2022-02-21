@@ -1,22 +1,5 @@
 package com.kses.backoffice.bld.seat.web;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -26,17 +9,25 @@ import com.kses.backoffice.bld.floor.service.FloorInfoManageService;
 import com.kses.backoffice.bld.floor.service.FloorPartInfoManageService;
 import com.kses.backoffice.bld.seat.service.SeatInfoManageService;
 import com.kses.backoffice.bld.seat.vo.SeatInfo;
-//import com.kses.backoffice.rsv.msg.service.MessageInfoManageService;
 import com.kses.backoffice.sym.log.annotation.NoLogging;
 import com.kses.backoffice.util.SmartUtil;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.Globals;
+import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import egovframework.rte.fdl.property.EgovPropertyService;
-import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -82,62 +73,43 @@ public class SeatInfoManageController {
         model.addObject("payDvsn", cmmnDetailService.selectCmmnDetailCombo("PAY_DVSN"));	      
         return model;
 	}
-	
-	//좌석 리스트 보여 주기 
-	@RequestMapping(value="seatListAjax.do")
-	public ModelAndView selectSeatInfoList(	@ModelAttribute("loginVO") LoginVO loginVO, 
-											@RequestBody Map<String,Object> searchVO, 
-											HttpServletRequest request, 
-											BindingResult bindingResult	) throws Exception {
-		
-		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
-		
-		try {
-			
-			int pageUnit = searchVO.get("pageUnit") == null ? propertiesService.getInt("pageUnit") : Integer.valueOf((String) searchVO.get("pageUnit"));
-			  
-		    searchVO.put("pageSize", propertiesService.getInt("pageSize"));
-		  
-		    log.info("pageUnit:" + pageUnit);
-		  
-	   	    PaginationInfo paginationInfo = new PaginationInfo();
-		    paginationInfo.setCurrentPageNo(Integer.parseInt(SmartUtil.NVL(searchVO.get("pageIndex"), "1")));
-		    paginationInfo.setRecordCountPerPage(pageUnit);
-		    paginationInfo.setPageSize(propertiesService.getInt("pageSize"));
 
-		    searchVO.put("firstIndex", paginationInfo.getFirstRecordIndex());
-		    searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
-		    searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
-		    
-		    loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
-			searchVO.put("authorCd", loginVO.getAuthorCd());
-			searchVO.put("centerCd", loginVO.getCenterCd());
-			  
-			  
-			List<Map<String, Object>> seatList = seatService.selectSeatInfoList(searchVO);
-			int totCnt = seatList.size() > 0 ?  Integer.valueOf( seatList.get(0).get("total_record_count").toString()) : 0;
-			model.addObject(Globals.JSON_RETURN_RESULTLISR, seatList);
-			
-			//System.out.println(seatList);
-			
-		    model.addObject(Globals.PAGE_TOTALCNT, totCnt);
-		    paginationInfo.setTotalRecordCount(totCnt);
-		    model.addObject(Globals.JSON_PAGEINFO, paginationInfo);
-		    
-		    //지도 이미지 
-		    if (searchVO.get("searchFloorCd") != null ) {
-		    	log.info(searchVO.get("searchPartCd").toString());
-		    	Map<String, Object> mapInfo = "0".equals((String)searchVO.get("searchPartCd")) ? floorService.selectFloorInfoDetail(searchVO.get("searchFloorCd").toString()) : partService.selectFloorPartInfoDetail(searchVO.get("searchPartCd").toString());
-		    	model.addObject("seatMapInfo", mapInfo);
-		    }
+	/**
+	 * 좌석 목록 조회
+	 * @param searchVO
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "seatListAjax.do", method = RequestMethod.POST)
+	public ModelAndView selectSeatInfoList(@RequestBody Map<String,Object> searchVO) throws Exception {
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 
-		    model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+		LoginVO loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
 
-		} catch(Exception e) {
-			log.info(e.toString());
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));	
-		}
+		int pageUnit = searchVO.get("pageUnit") == null ? propertiesService.getInt("pageUnit")
+				: Integer.valueOf((String) searchVO.get("pageUnit"));
+
+		PaginationInfo paginationInfo = new PaginationInfo();
+		paginationInfo.setCurrentPageNo(Integer.parseInt(SmartUtil.NVL(searchVO.get("pageIndex"), "1")));
+		paginationInfo.setRecordCountPerPage(pageUnit);
+		paginationInfo.setPageSize(propertiesService.getInt("pageSize"));
+
+		searchVO.put("firstIndex", paginationInfo.getFirstRecordIndex());
+		searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
+		searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
+		searchVO.put("authorCd", loginVO.getAuthorCd());
+		searchVO.put("centerCd", loginVO.getCenterCd());
+
+		List<Map<String, Object>> list = seatService.selectSeatInfoList(searchVO);
+		int totCnt = list.size() > 0 ? Integer.valueOf(list.get(0).get("total_record_count").toString()) : 0;
+		paginationInfo.setTotalRecordCount(totCnt);
+
+		model.addObject(Globals.STATUS_REGINFO, searchVO);
+		model.addObject(Globals.JSON_RETURN_RESULTLISR, list);
+		model.addObject(Globals.PAGE_TOTALCNT, totCnt);
+		model.addObject(Globals.JSON_PAGEINFO, paginationInfo);
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+
 		return model;
 	}
 	
