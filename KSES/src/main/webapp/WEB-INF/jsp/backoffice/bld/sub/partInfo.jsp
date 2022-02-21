@@ -5,6 +5,8 @@
     <div class="pop_wrap">
         <form>
         <input type="hidden" name="mode">
+        <input type="hidden" name="centerCd">
+        <input type="hidden" name="floorCd">
         <input type="hidden" name="partCd">
         <table class="detail_table">
             <tbody>
@@ -35,7 +37,10 @@
         </table>
         </form>
     </div>
-    <popup-right-button clickFunc="PartInfo.save();" />
+    <div id="popupLeftBtn" style="float:left;display:none;">
+        <a href="javascript:PartInfo.delete();" class="grayBtn" style="padding: 4px 15px;">삭제</a>
+    </div>
+    <popup-right-button clickFunc="PartInfo.save();"></popup-right-button>
 </div>
 <script type="text/javascript">
     $.PartInfo = function() {
@@ -49,6 +54,8 @@
     $.PartInfo.prototype.bPopup = function(partCd) {
         let $popup = this.getPopup();
         let $form = $popup.find('form:first');
+        $(':hidden[name=centerCd]', $popup).val($('#centerGrid').jqGrid('getGridParam', 'selrow'));
+        $(':hidden[name=floorCd]', $popup).val($('#mainGrid').jqGrid('getGridParam', 'selrow'));
         if (partCd === undefined || partCd === null) {
             $popup.find('h2:first').text('구역 등록');
             $form.find(':hidden[name=mode]').val('Ins');
@@ -57,6 +64,7 @@
             $form.find('select[name=partClassSeq]').val('');
             $form.find(':text[name=partOrder]').val('0');
             $form.find(':radio[name=useYn]:first').prop('checked', true);
+            $popup.find('#popupLeftBtn').hide();
         } else {
             EgovIndexApi.apiExecuteJson(
                 'GET',
@@ -73,6 +81,7 @@
                     $form.find('select[name=partClassSeq]').val(data.part_class_seq);
                     $form.find(':text[name=partOrder]').val(data.part_order);
                     $form.find(':radio[name=useYn][value='+ data.use_yn +']').prop('checked', true);
+                    $popup.find('#popupLeftBtn').show();
                 },
                 function(json) {
                     toastr.warning(json.message);
@@ -111,6 +120,14 @@
         let $popup = this.getPopup();
         let $form = $popup.find('form:first');
         let formData = new FormData($form[0]);
+        if ($form.find(':text[name=partNm]').val() === '') {
+            toastr.warning('구역명을 입력하세요.');
+            return false;
+        }
+        if ($form.find('select[name=partClassSeq]').val() === '') {
+            toastr.warning('구역등급을 선택하세요.');
+            return false;
+        }
         bPopupConfirm('구역 정보 저장', '저장 하시겠습니까?', function() {
             EgovIndexApi.apiExcuteMultipart(
                 '/backoffice/bld/partUpdate.do',
@@ -123,6 +140,27 @@
                 },
                 function(json) {
                     toastr.error(json.message);
+                }
+            );
+        });
+    };
+
+    $.PartInfo.prototype.delete = function() {
+        let $popup = this.getPopup();
+        bPopupConfirm('구역 정보 삭제', '삭제 하시겠습니까?', function() {
+            EgovIndexApi.apiExecuteJson(
+                'POST',
+                '/backoffice/bld/partInfoDelete.do', {
+                    partCd: $(':hidden[name=partCd]', $popup).val(),
+                },
+                null,
+                function(json) {
+                    toastr.success(json.message);
+                    $popup.bPopup().close();
+                    fnSearch(1);
+                },
+                function(json) {
+                    toastr.warning(json.message);
                 }
             );
         });

@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.kses.backoffice.bld.floor.service.FloorPartInfoManageService;
 import com.kses.backoffice.bld.floor.vo.FloorPartInfo;
+import com.kses.backoffice.bld.partclass.service.PartClassInfoManageService;
 import com.kses.backoffice.util.SmartUtil;
 import com.kses.backoffice.util.service.UniSelectInfoManageService;
 import com.kses.backoffice.util.service.fileService;
@@ -45,6 +46,9 @@ public class FloorPartInfoManageController {
 	
 	@Autowired
 	private UniSelectInfoManageService uniService;
+
+	@Autowired
+	private PartClassInfoManageService partClassService;
 
 	/**
 	 * 구역 팝업 화면
@@ -146,6 +150,9 @@ public class FloorPartInfoManageController {
 		floorPartInfo.setLastUpdusrId(userId);
 		floorPartInfo.setPartMap1(uploadFile.uploadFileNm(floorPartInfo.getPartMap1File(), propertiesService.getString("Globals.filePath")));
 
+		Map<String, Object> partClass = partClassService.selectPartClass(floorPartInfo.getPartClassSeq());
+		floorPartInfo.setPartClass(partClass.get("part_class").toString());
+
 		int ret = 0;
 		switch (floorPartInfo.getMode()) {
 			case Globals.SAVE_MODE_INSERT:
@@ -173,39 +180,24 @@ public class FloorPartInfoManageController {
 
 		return model;
 	}
-	
-	
-	
-	@RequestMapping (value="partInfoDelete.do")
-	public ModelAndView deletePartInfoManage(	@ModelAttribute("loginVO") LoginVO loginVO,
-			                                   	@RequestParam("partCd") String partCd) throws Exception {
-		
-		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
-	    Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-	    
-	    if(!isAuthenticated) {
-	    	model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-	    	model.setViewName("/backoffice/login");
-	    	return model;	
-	    }	
-		
-	    try{
-			// 이미지 삭제
-			int ret = uniService.deleteUniStatement("PART_MAP1, PART_MAP2", "TSEB_PART_INFO_D", "PART_CD=[" + partCd + "[");		      
-		    if (ret > 0) {		
-		    	//구역 삭제 
-		    	model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-		    	model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.delete") );		    	 
-		    } else {
-		    	throw new Exception();		    	  
-		    }
-		}catch (Exception e){
-			log.info(e.toString());
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.delete"));			
-		}		
+
+	/**
+	 * 구역 삭제
+	 * @param searchVO
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping (value = "partInfoDelete.do", method = RequestMethod.POST)
+	public ModelAndView deletePartInfoManage(@RequestBody Map<String,Object> searchVO) throws Exception {
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+
+		uniService.deleteUniStatement("PART_MAP1, PART_MAP2", "TSEB_PART_INFO_D", "PART_CD=[" + searchVO.get("partCd") + "[");
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.delete") );
+
 		return model;
 	}
+	
 	//신규 
 	@RequestMapping(value="partGuiUpdate.do", method=RequestMethod.POST)
 	public ModelAndView updatePartGuiPosition (	@RequestBody Map<String, Object> params, 

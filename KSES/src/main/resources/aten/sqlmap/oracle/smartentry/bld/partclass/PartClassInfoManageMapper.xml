@@ -21,6 +21,19 @@
 		WHERE RNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}   
 		ORDER BY TB.RNUM ASC
 	</select>
+
+	<select id="selectPartClass" resultType="lmap">
+		SELECT
+			PART_CLASS_SEQ,
+			CENTER_CD,
+			PART_CLASS,
+			FN_DETAILCODENM(PART_CLASS) AS PART_CLASS_NM,
+			PART_PAY_COST,
+			PART_ICON,
+			USE_YN
+		FROM TSEB_CENTER_PART_CLASS_D
+		WHERE PART_CLASS_SEQ = #{value}
+	</select>
 	
 	<select id="selectPartClassComboList" resultType="lmap">
 		SELECT 

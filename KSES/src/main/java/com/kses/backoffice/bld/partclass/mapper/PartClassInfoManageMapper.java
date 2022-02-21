@@ -16,6 +16,8 @@ public interface PartClassInfoManageMapper {
 	public List<Map<String, Object>> selectPartClassList (@Param("params") Map<String, Object> searchVO);
 	
 	public List<Map<String, Object>> selectPartClassComboList (@Param("centerCd") String centerCd);
+
+	public Map<String, Object> selectPartClass(String partClassSeq);
 	
 	public int insertPartClassInfo(PartClassInfo partClassInfo);
 	
