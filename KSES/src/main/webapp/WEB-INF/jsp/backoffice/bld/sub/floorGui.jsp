@@ -105,13 +105,17 @@
                 }
             },
             afterSaveCell: function(rowId, name, val) {
-                FloorGui.partLayerSetting(rowId, name, val);
+                FloorGui.setFloorPart(rowId, name, val);
             }
         });
     };
 
     $.FloorGui.prototype.getGui = function() {
         return $('nav#cbp-spmenu-floor');
+    };
+
+    $.FloorGui.prototype.open = function(floorCd, floorName) {
+        classie.toggle(FloorGui.getGui()[0], 'cbp-spmenu-open');
     };
 
     $.FloorGui.prototype.initialize = function(floorCd) {
@@ -128,73 +132,7 @@
             });
         });
         $('#partLayer', $panel).empty();
-        this.getFloorPartList(floorCd, function(list) {
-            for (let item of list) {
-                let part = $('<li class="seat" style="opacity:0.7;display:inline-block;"></li>'
-                ).data('item', item).css({
-                    top: item.part_mini_top +'px',
-                    left: item.part_mini_left +'px',
-                    width: item.part_mini_width +'px',
-                    height: item.part_mini_height +'px'
-                }).appendTo($('#partLayer', $panel));
-                $(part).resizable({
-                    containment: '.mapArea',
-                    aspectRatio: false,
-                    minWidth: FloorGuiMinWidth,
-                    minHeight: FloorGuiMinHeight,
-                    start: function() {
-                        EgovJqGridApi.selection(FloorGuiGridId, $(this).data('item').part_cd);
-                    },
-                    stop: function() {
-                        EgovJqGridApi.selection(FloorGuiGridId);
-                    },
-                    resize: function(e, ui) {
-                        let rowId = $(FloorGuiGridSelector).jqGrid('getGridParam', 'selrow');
-                        $(FloorGuiGridSelector).jqGrid('setCell', rowId, 'part_mini_width', Math.floor(ui.size.width))
-                            .jqGrid('setCell', rowId, 'part_mini_height', Math.floor(ui.size.height));
-                    }
-                }).rotatable({
-                    degrees: item.part_mini_rotate,
-                    handle: $(document.createElement('img')).attr('src', '/resources/img/rotate.png'),
-                    wheelRotate: false,
-                    start: function() {
-                        let data = $(this).data('item');
-                        EgovJqGridApi.selection(FloorGuiGridId, $(this).data('item').part_cd);
-                    },
-                    stop: function() {
-                        EgovJqGridApi.selection(FloorGuiGridId);
-                    },
-                    rotate: function(e, ui) {
-                        let rowId = $(FloorGuiGridSelector).jqGrid('getGridParam', 'selrow');
-                        $(FloorGuiGridSelector).jqGrid('setCell', rowId, 'part_mini_rotate', Math.floor(ui.angle.degrees));
-                    }
-                }).draggable({
-                    containment: '.mapArea',
-                    start: function() {
-                        let data = $(this).data('item');
-                        EgovJqGridApi.selection(FloorGuiGridId, $(this).data('item').part_cd);
-                    },
-                    stop: function() {
-                        EgovJqGridApi.selection(FloorGuiGridId);
-                    },
-                    drag: function(e, ui) {
-                        let rowId = $(FloorGuiGridSelector).jqGrid('getGridParam', 'selrow');
-                        $(FloorGuiGridSelector).jqGrid('setCell', rowId, 'part_mini_top', Math.floor(ui.position.top))
-                            .jqGrid('setCell', rowId, 'part_mini_left', Math.floor(ui.position.left));
-                    }
-                }).append(
-                    '<div class="section">'+
-                        '<span class="'+ item.part_css +'">'+
-                            item.part_nm +
-                            '<em style="font-size:20px;">'+
-                                (item.part_class_text !== '일반' ? '('+ item.part_class_text +')' : '')+
-                            '</em>'+
-                        '</span>'+
-                    '</div>'
-                );
-            }
-        });
-        this.getFloorPartList(floorCd);
+        this.getFloorPartList(floorCd, this.drawFloorPart);
         this.open();
     };
 
@@ -264,21 +202,18 @@
                         $(this).css('background-color', 'transparent');
                     } else {
                         $(this).css('background-color', cssClass.text());
-                        FloorGui.partLayerSetting(rowId, 'part_css', cssClass.val());
+                        FloorGui.setFloorPart(rowId, 'part_css', cssClass.val());
                     }
                 }).trigger('change');
                 callback(data.resultlist);
             }
         };
-        $('#guiGrid').jqGrid('setGridParam', jqGridParams).trigger('reloadGrid');
+        $(FloorGuiGridSelector).jqGrid('setGridParam', jqGridParams).trigger('reloadGrid');
     };
 
-    $.FloorGui.prototype.open = function(floorCd, floorName) {
-        classie.toggle(FloorGui.getGui()[0], 'cbp-spmenu-open');
-    };
-
-    $.FloorGui.prototype.partLayerSetting = function(rowId, type, val) {
-        $.each($('#partLayer', FloorGui.getGui()).find('li'), function() {
+    $.FloorGui.prototype.setFloorPart = function(rowId, type, val) {
+        let $panel = FloorGui.getGui();
+        $.each($('#partLayer', $panel).find('li'), function() {
             let data = $(this).data('item');
             if (data.part_cd === rowId) {
                 switch (type) {
@@ -304,6 +239,75 @@
                 return false;
             }
         });
+    };
+
+    $.FloorGui.prototype.drawFloorPart = function(list) {
+        let $panel = FloorGui.getGui();
+        for (let item of list) {
+            let part = $(
+                '<li class="seat" style="opacity:0.7;display:inline-block;"></li>'
+            ).data('item', item).css({
+                top: item.part_mini_top +'px',
+                left: item.part_mini_left +'px',
+                width: item.part_mini_width +'px',
+                height: item.part_mini_height +'px'
+            }).appendTo($('#partLayer', $panel));
+            $(part).resizable({
+                containment: '.mapArea',
+                aspectRatio: false,
+                minWidth: FloorGuiMinWidth,
+                minHeight: FloorGuiMinHeight,
+                start: function() {
+                    EgovJqGridApi.selection(FloorGuiGridId, $(this).data('item').part_cd);
+                },
+                stop: function() {
+                    EgovJqGridApi.selection(FloorGuiGridId);
+                },
+                resize: function(e, ui) {
+                    let rowId = $(FloorGuiGridSelector).jqGrid('getGridParam', 'selrow');
+                    $(FloorGuiGridSelector).jqGrid('setCell', rowId, 'part_mini_width', Math.floor(ui.size.width))
+                        .jqGrid('setCell', rowId, 'part_mini_height', Math.floor(ui.size.height));
+                }
+            }).rotatable({
+                degrees: item.part_mini_rotate,
+                handle: $(document.createElement('img')).attr('src', '/resources/img/rotate.png'),
+                wheelRotate: false,
+                start: function() {
+                    let data = $(this).data('item');
+                    EgovJqGridApi.selection(FloorGuiGridId, $(this).data('item').part_cd);
+                },
+                stop: function() {
+                    EgovJqGridApi.selection(FloorGuiGridId);
+                },
+                rotate: function(e, ui) {
+                    let rowId = $(FloorGuiGridSelector).jqGrid('getGridParam', 'selrow');
+                    $(FloorGuiGridSelector).jqGrid('setCell', rowId, 'part_mini_rotate', Math.floor(ui.angle.degrees));
+                }
+            }).draggable({
+                containment: '.mapArea',
+                start: function() {
+                    let data = $(this).data('item');
+                    EgovJqGridApi.selection(FloorGuiGridId, $(this).data('item').part_cd);
+                },
+                stop: function() {
+                    EgovJqGridApi.selection(FloorGuiGridId);
+                },
+                drag: function(e, ui) {
+                    let rowId = $(FloorGuiGridSelector).jqGrid('getGridParam', 'selrow');
+                    $(FloorGuiGridSelector).jqGrid('setCell', rowId, 'part_mini_top', Math.floor(ui.position.top))
+                        .jqGrid('setCell', rowId, 'part_mini_left', Math.floor(ui.position.left));
+                }
+            }).append(
+                '<div class="section">'+
+                    '<span class="'+ item.part_css +'">'+
+                        item.part_nm +
+                        '<em style="font-size:20px;">'+
+                            (item.part_class_text !== '일반' ? '('+ item.part_class_text +')' : '')+
+                        '</em>'+
+                    '</span>'+
+                '</div>'
+            );
+        }
     };
 
     const FloorGui = new $.FloorGui();
