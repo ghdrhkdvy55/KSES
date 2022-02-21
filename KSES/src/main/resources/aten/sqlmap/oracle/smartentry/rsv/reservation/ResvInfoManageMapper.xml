@@ -20,16 +20,6 @@
 					FN_DETAILCODENM(A.RESV_PAY_DVSN) AS RESV_PAY_DVSN_TEXT,
 					FN_DETAILCODENM(A.RESV_STATE) AS RESV_STATE_TEXT,
 					FN_DETAILCODENM(E.PART_CLASS) AS PART_CLASS,
-					<![CDATA[
-					CASE WHEN 
-						(	
-							SELECT COUNT(*) FROM TSER_QR_CHECK_H 
-							WHERE RESV_SEQ = A.RESV_SEQ 
-							AND INOUT_DVSN = 'IN'
-						) > 0 THEN 'ON'
-					ELSE 'OFF'
-					END AS ENTER_REGIST_BTN_STATE,
-					]]>
 					CASE  
     					WHEN A.RESV_ENTRY_DVSN = 'ENTRY_DVSN_1'  THEN '자유석' 
     					ELSE (SELECT SEAT_NM FROM TSEB_SEAT_INFO_D WHERE SEAT_CD = A.SEAT_CD)
@@ -107,12 +97,6 @@
 							)
 						</otherwise>
 					</choose>
-				</if>
-				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchPhoneBack4)">
-					AND SUBSTR(A.RESV_USER_CLPHN,-4) = #{params.searchPhoneBack4}
-				</if>
-				<if test="@org.apache.commons.lang3.StringUtils@equals(params.centerRegistSelect,'centerRegistSelect')">
-					AND A.RESV_STATE != 'RESV_STATE_4'
 				</if>
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchLongResvSeq)">
 					AND A.LONG_RESV_SEQ = #{params.searchLongResvSeq}
@@ -222,7 +206,7 @@
 		AND A.FLOOR_CD = C.FLOOR_CD(+)
 		AND A.PART_CD = D.PART_CD(+)
 		AND A.SEAT_CD = E.SEAT_CD(+)
-		AND A.USER_ID = F.USER_ID
+		AND A.USER_ID = F.USER_ID   
 	]]>	  
     </select>
     
