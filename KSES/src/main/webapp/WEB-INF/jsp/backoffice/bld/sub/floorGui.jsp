@@ -9,7 +9,7 @@
     <div class="box_shadow" style="width:1000px;">
         <div class="page">
             <div class="map_box_sizing">
-                <div class="mapArea" style="background: url('/upload/2F_3.png') center center no-repeat;">
+                <div class="mapArea" style="background: url('/resources/img/no_image.png') center center no-repeat;">
                     <ul id="partLayer"></ul>
                 </div>
             </div>
@@ -49,6 +49,8 @@
 <script type="text/javascript">
     const FloorGuiMinWidth = 60;
     const FloorGuiMinHeight = 80;
+    const FloorGuiGridId = 'guiGrid';
+    const FloorGuiGridSelector = '#'+ FloorGuiGridId;
     $.FloorGui = function() {
         let _editoptions = function(num) {
             return {
@@ -59,7 +61,7 @@
                 maxlength: num
             }
         };
-        EgovJqGridApi.popGrid('guiGrid', [
+        EgovJqGridApi.popGrid(FloorGuiGridId, [
             { label: '구역코드', name: 'part_cd', key: true, hidden: true },
             { label: '구역명', name: 'part_nm', align: 'center', sortable: false },
             { label: 'TOP', name: 'part_mini_top', align: 'center', sortable: false, editable: true, editoptions: _editoptions(4) },
@@ -116,26 +118,13 @@
         let $panel = this.getGui();
         let centerGridSelectedRowId = $('#centerGrid').jqGrid('getGridParam', 'selrow');
         $('#centerNm', $panel).text($('#centerGrid').jqGrid('getRowData', centerGridSelectedRowId).center_nm);
+        this.getFloorList(centerGridSelectedRowId, floorCd);
         this.getFloor(floorCd, function(data) {
             $('#floorNm', $panel).text(data.floor_nm);
             $('.mapArea', $panel).css({
                 'background': 'url(/upload/'+ data.floor_map1 +')',
                 'background-repeat': 'no-repeat',
                 'background-position': 'center'
-            });
-        });
-        this.getFloorList(centerGridSelectedRowId, function(list) {
-            let $select = $('#searchFloor', $panel);
-            $select.empty();
-            for (let item of list) {
-                let $option = $('<option value="'+ item.floor_cd +'">'+ item.floor_nm +'</option>').appendTo($select);
-                if (floorCd === item.floor_cd) {
-                    $option.prop('selected', true);
-                }
-            }
-            $select.off('change').on('change', function() {
-                FloorGui.initialize($(this).find('option:selected').val(), $(this).find('option:selected').text());
-                FloorGui.open();
             });
         });
         $('#partLayer', $panel).empty();
@@ -154,14 +143,14 @@
                     minWidth: FloorGuiMinWidth,
                     minHeight: FloorGuiMinHeight,
                     start: function() {
-                        EgovJqGridApi.selection('guiGrid', $(this).data('item').part_cd);
+                        EgovJqGridApi.selection(FloorGuiGridId, $(this).data('item').part_cd);
                     },
                     stop: function() {
-                        EgovJqGridApi.selection('guiGrid');
+                        EgovJqGridApi.selection(FloorGuiGridId);
                     },
                     resize: function(e, ui) {
-                        let rowId = $('#guiGrid').jqGrid('getGridParam', 'selrow');
-                        $('#guiGrid').jqGrid('setCell', rowId, 'part_mini_width', Math.floor(ui.size.width))
+                        let rowId = $(FloorGuiGridSelector).jqGrid('getGridParam', 'selrow');
+                        $(FloorGuiGridSelector).jqGrid('setCell', rowId, 'part_mini_width', Math.floor(ui.size.width))
                             .jqGrid('setCell', rowId, 'part_mini_height', Math.floor(ui.size.height));
                     }
                 }).rotatable({
@@ -170,27 +159,27 @@
                     wheelRotate: false,
                     start: function() {
                         let data = $(this).data('item');
-                        EgovJqGridApi.selection('guiGrid', $(this).data('item').part_cd);
+                        EgovJqGridApi.selection(FloorGuiGridId, $(this).data('item').part_cd);
                     },
                     stop: function() {
-                        EgovJqGridApi.selection('guiGrid');
+                        EgovJqGridApi.selection(FloorGuiGridId);
                     },
                     rotate: function(e, ui) {
-                        let rowId = $('#guiGrid').jqGrid('getGridParam', 'selrow');
-                        $('#guiGrid').jqGrid('setCell', rowId, 'part_mini_rotate', Math.floor(ui.angle.degrees));
+                        let rowId = $(FloorGuiGridSelector).jqGrid('getGridParam', 'selrow');
+                        $(FloorGuiGridSelector).jqGrid('setCell', rowId, 'part_mini_rotate', Math.floor(ui.angle.degrees));
                     }
                 }).draggable({
                     containment: '.mapArea',
                     start: function() {
                         let data = $(this).data('item');
-                        EgovJqGridApi.selection('guiGrid', $(this).data('item').part_cd);
+                        EgovJqGridApi.selection(FloorGuiGridId, $(this).data('item').part_cd);
                     },
                     stop: function() {
-                        EgovJqGridApi.selection('guiGrid');
+                        EgovJqGridApi.selection(FloorGuiGridId);
                     },
                     drag: function(e, ui) {
-                        let rowId = $('#guiGrid').jqGrid('getGridParam', 'selrow');
-                        $('#guiGrid').jqGrid('setCell', rowId, 'part_mini_top', Math.floor(ui.position.top))
+                        let rowId = $(FloorGuiGridSelector).jqGrid('getGridParam', 'selrow');
+                        $(FloorGuiGridSelector).jqGrid('setCell', rowId, 'part_mini_top', Math.floor(ui.position.top))
                             .jqGrid('setCell', rowId, 'part_mini_left', Math.floor(ui.position.left));
                     }
                 }).append(
@@ -225,7 +214,10 @@
         );
     };
 
-    $.FloorGui.prototype.getFloorList = function(centerCd, callback) {
+    $.FloorGui.prototype.getFloorList = function(centerCd, floorCd) {
+        let $panel = this.getGui();
+        let $select = $('#searchFloor', $panel);
+        $select.empty();
         EgovIndexApi.apiExecuteJson(
             'GET',
             '/backoffice/bld/floorComboInfo.do', {
@@ -233,7 +225,17 @@
             },
             null,
             function(json) {
-                callback(json.resultlist);
+                let list = json.resultlist;
+                for (let item of list) {
+                    let $option = $('<option value="'+ item.floor_cd +'">'+ item.floor_nm +'</option>').appendTo($select);
+                    if (floorCd === item.floor_cd) {
+                        $option.prop('selected', true);
+                    }
+                }
+                $select.off('change').on('change', function() {
+                    FloorGui.initialize($(this).find('option:selected').val());
+                    FloorGui.open();
+                });
             },
             function(json) {
                 toastr.error(json.message);

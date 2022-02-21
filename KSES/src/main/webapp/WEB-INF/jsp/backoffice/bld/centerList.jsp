@@ -73,6 +73,7 @@
 <div data-popup="bld_floorinfo_add" class="popup"></div>
 <div data-popup="bld_partinfo_add" class="popup"></div>
 <nav id="cbp-spmenu-floor" class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right"></nav>
+<nav id="cbp-spmenu-part" class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right"></nav>
 <!-- popup// -->
 <script type="text/javascript" src="/resources/jqgrid/jqgrid.custom.egovapi.js"></script>
 <script type="text/javascript">
@@ -84,6 +85,7 @@
 		$('[data-popup=bld_floorinfo_add]').load('/backoffice/bld/floorInfoPopup.do');
 		$('[data-popup=bld_partinfo_add]').load('/backoffice/bld/partInfoPopup.do');
 		$('#cbp-spmenu-floor').load('/backoffice/bld/floorGui.do');
+		$('#cbp-spmenu-part').load('/backoffice/bld/partGui.do');
 		// 지점 JqGrid 정의
 		EgovJqGridApi.popGrid('centerGrid', [
 			{ label: '지점코드', name: 'center_cd', key: true, hidden:true },

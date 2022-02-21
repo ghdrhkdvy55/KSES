@@ -61,6 +61,16 @@ public class FloorPartInfoManageController {
 	}
 
 	/**
+	 * 구역 정보 GUI 화면
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping (value = "partGui.do", method = RequestMethod.GET)
+	public ModelAndView guiPart() throws Exception {
+		return new ModelAndView("/backoffice/bld/sub/partGui");
+	}
+
+	/**
 	 * 구역 목록 조회
 	 * @param searchVO
 	 * @return
@@ -110,28 +120,20 @@ public class FloorPartInfoManageController {
 
 		return model;
 	}
-	
-	@RequestMapping (value="partInfoComboList.do")
-	public ModelAndView selectPartInfoComboList(	@ModelAttribute("LoginVO") LoginVO loginVO, 
-													@RequestParam("floorCd") String floorCd) throws Exception {
-		
-		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
-		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-		
-		if(!isAuthenticated) {
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-			model.setViewName("/backoffice/login");
-			return model;	
-		}
-		
-		try {
-			model.addObject(Globals.JSON_RETURN_RESULTLISR, partService.selectFloorPartInfoManageCombo(floorCd));
-			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-		} catch(Exception e) {
-			log.info(e.toString());
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
-		}
+
+	/**
+	 * 지점 층 구역 목록 얻기
+	 * @param floorCd
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping (value = "partInfoComboList.do", method = RequestMethod.GET)
+	public ModelAndView selectPartInfoComboList(@RequestParam("floorCd") String floorCd) throws Exception {
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+
+		model.addObject(Globals.JSON_RETURN_RESULTLISR, partService.selectFloorPartInfoManageCombo(floorCd));
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+
 		return model;
 	}
 
