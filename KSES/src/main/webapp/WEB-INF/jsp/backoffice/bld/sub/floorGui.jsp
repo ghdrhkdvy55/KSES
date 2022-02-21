@@ -253,7 +253,7 @@
                 height: item.part_mini_height +'px'
             }).appendTo($('#partLayer', $panel));
             $(part).resizable({
-                containment: '.mapArea',
+                containment: '#cbp-spmenu-floor .mapArea',
                 aspectRatio: false,
                 minWidth: FloorGuiMinWidth,
                 minHeight: FloorGuiMinHeight,
@@ -284,9 +284,8 @@
                     $(FloorGuiGridSelector).jqGrid('setCell', rowId, 'part_mini_rotate', Math.floor(ui.angle.degrees));
                 }
             }).draggable({
-                containment: '.mapArea',
+                containment: '#cbp-spmenu-floor .mapArea',
                 start: function() {
-                    let data = $(this).data('item');
                     EgovJqGridApi.selection(FloorGuiGridId, $(this).data('item').part_cd);
                 },
                 stop: function() {
