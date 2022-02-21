@@ -272,7 +272,7 @@
     };
 
     $.FloorGui.prototype.open = function(floorCd, floorName) {
-        classie.toggle($('#cbp-spmenu-floor')[0], 'cbp-spmenu-open');
+        classie.toggle(FloorGui.getGui()[0], 'cbp-spmenu-open');
     };
 
     $.FloorGui.prototype.partLayerSetting = function(rowId, type, val) {
