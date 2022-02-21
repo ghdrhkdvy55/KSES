@@ -24,4 +24,60 @@
 		) TA
 		ORDER BY TA.QR_CHECK_TM DESC 
    	</select>
+   	
+   	
+   	<select id="selectResvInfoEnterRegistList" resultType="lmap">
+		SELECT * FROM 
+		( 
+			SELECT 	
+				SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT, 
+				ROW_NUMBER() OVER (ORDER BY TB.RESV_SEQ DESC) AS RNUM,
+				TB.* 
+			FROM 	
+			(	
+				SELECT  
+					A.RESV_SEQ, A.RESV_END_DT, TO_CHAR(A.RESV_REQ_DATE,'YYYY-MM-DD HH24:MI') AS RESV_REQ_DATE,
+					A.USER_ID, A.RESV_PAY_COST, B.CENTER_NM, B.CENTER_PILOT_YN, C.USER_NM,
+					FN_DETAILCODENM(A.RESV_PAY_DVSN) AS RESV_PAY_DVSN_TEXT,
+					FN_DETAILCODENM(A.RESV_STATE) AS RESV_STATE_TEXT,
+					FN_DETAILCODENM(D.PART_CLASS) AS PART_CLASS,
+					<![CDATA[
+					CASE WHEN 
+						(	
+							SELECT COUNT(*) FROM TSER_QR_CHECK_H 
+							WHERE RESV_SEQ = A.RESV_SEQ
+						) > 0 THEN 'ON'
+					ELSE 'OFF'
+					END AS ENTER_REGIST_BTN_STATE,
+					]]>
+					CASE  
+    					WHEN A.RESV_ENTRY_DVSN = 'ENTRY_DVSN_1'  THEN '자유석' 
+    					ELSE (SELECT SEAT_NM FROM TSEB_SEAT_INFO_D WHERE SEAT_CD = A.SEAT_CD)
+    				END AS SEAT_NM, 
+					REGEXP_REPLACE(C.USER_PHONE, '(02|.{3})(.+)(.{4})', '\1-\2-\3') AS USER_PHONE
+				FROM TSER_RESV_INFO_I A, TSEB_CENTER_INFO_M B, TSER_USER_INFO_I C, TSEB_PART_INFO_D D
+				WHERE A.PART_CD = D.PART_CD(+)
+				AND A.CENTER_CD = B.CENTER_CD
+				AND A.USER_ID = C.USER_ID
+				AND A.RESV_STATE != 'RESV_STATE_4'
+				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchCenterCd)">
+					AND A.CENTER_CD = #{params.searchCenterCd}
+				</if>
+				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.authorCd)">
+					<if test="params.authorCd != 'ROLE_ADMIN' and params.authorCd != 'ROLE_SYSTEM'">
+					   AND A.CENTER_CD = #{params.centerCd}
+					</if>
+				</if>
+				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
+					AND SUBSTR(A.RESV_USER_CLPHN,-4) = #{params.searchKeyword}
+				</if>
+				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchFrom) and !@org.apache.commons.lang3.StringUtils@isEmpty(params.searchTo)">
+					AND A.RESV_END_DT BETWEEN #{params.searchFrom} AND #{params.searchTo}
+				</if>
+			) TB
+			ORDER BY TB.RESV_SEQ DESC	
+		) TA
+		WHERE RNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
+		ORDER BY TA.RESV_SEQ DESC
+    </select>
 </mapper>

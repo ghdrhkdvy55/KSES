@@ -117,7 +117,7 @@ a.blueBtn, a.redBtn {
 		let params = {
 			pageIndex: pageNo,
 			pageUnit: $('.ui-pg-selbox option:selected').val(),
-			searchPhoneBack4: $('#searchPhoneBack4').val(),
+			searchKeyword: $('#searchPhoneBack4').val(),
 			searchCenterCd: $('#searchCenterCd').val(),
 			centerRegistSelect: "centerRegistSelect"
 		};
