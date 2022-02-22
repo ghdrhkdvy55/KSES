@@ -139,34 +139,35 @@
                                     <p>
                                         <span>&lt;전자문진표 작성&gt;</span>
                                         <ol>
-                                            <li>확진자/자가격리자 접촉</li>
-                                            <li>해외 및 코로나19 감염 위험지역 방문</li>
+                                            <li>확진자/자가격리자와 동거 또는 본인 확인</li>
+                                            <li>PCR 검사 결과 대기자</li>
                                             <li>발열(37.5도 이상), 근육통, 기침, 인후통 등 호흡기 증상</li>
                                             <li>지자체(기관)로부터 코로나19 검사 요청(능동감시자)</li>
                                             <li class="check_impnt">
                                                 <input class="magic-checkbox qna_check" type="checkbox" name="layout" id="ENTRY_DVSN_1_qna_check" value="Y">
                                                 <label for="ENTRY_DVSN_1_qna_check">
-                                               	 최근14일 이내 위 사항에 해당사항이 없으며, 허위기재로 문제발생시 본인에게 책임이 있음을 확인합니다.
+                                               	 위 사항에 해당사항이 없으며, 허위기재로 문제발생시 본인에게 책임이 있음을 확인합니다.
                                                 </label>     
                                             </li>
                                         </ol>
                                     </p>
                                 </li>
                                 
-								<!-- 사전결제동의 -->
+								<!-- 자동결제동의 -->
 								<li class="auto_payment_check">
 									<p>
-										<span>&lt;사전결제동의&gt;</span>
+										<span>&lt;자동결제동의&gt;</span>
 										<ol>
-                                             <li>해당 예약은 오전10시30분에 입장료 및 좌석이용료가 스피드온에서 자동결제됩니다.</li>
-                                             <li>스피드온 잔액부족 시 결제는 이루어지지 않습니다 잔액충전 후 수동결제 바랍니다.</li>
-                                             <li>사전결제된 예약은 미입장시 수목 오후6시, 금토일 오후7시 일괄환불됩니다.</li>
-                                             <li class="check_impnt">
-                                                 <input class="magic-checkbox qna_check" type="checkbox" name="layout" id="ENTRY_DVSN_1_auto_payment_check" value="Y">
-                                                 <label for="ENTRY_DVSN_1_auto_payment_check">
+											<li>스피드온 결제가능시간(수목 10:30~18:00/금토일 10:30~19:00) 예약 시 입장료 및 좌석이용료가 스피드온에서 자동 결제 됩니다.</li>
+											<li>스피드온 결제불가시간에 예약된 내역은 10:30에 일괄자동결제됩니다.</li>
+                                            <li>스피드온 잔액부족 시 자동결제는 이루어지지 않습니다. 자동결제가 되지 않을 시 스피드온 잔액 충전 후 QR생성화면에서 결제하기를 진행해주세요</li>
+                                            <li>미입장한 결제내역은 예약지점의 입장마감시간에 일괄환불됩니다.(강남지점 17시)</li>
+                                            <li class="check_impnt">
+												<input class="magic-checkbox qna_check" type="checkbox" name="layout" id="ENTRY_DVSN_1_auto_payment_check" value="Y">
+                                                <label for="ENTRY_DVSN_1_auto_payment_check">
                                                  	스피드온 사전결제에 동의합니다.
-                                                 </label>     
-                                             </li>
+                                                </label>     
+                                            </li>
 										</ol>
 									</p>
 								</li>
@@ -223,7 +224,7 @@
                                 <h4>구역을 선택하세요.</h4>
                                 <!--구역선택 맵-->
 								<div id="part_select" class="seat_select">
-
+									
 								</div>
 
                                 <h5>좌석 이용료 <span>(입장료 별도)</span></h5>
@@ -291,28 +292,29 @@
                                             <p>
                                                 <span>&lt;전자문진표 작성&gt;</span>
                                                 <ol>
-                                                    <li>확진자/자가격리자 접촉</li>
-                                                    <li>해외 및 코로나19 감염 위험지역 방문</li>
+                                            		<li>확진자/자가격리자와 동거 또는 본인 확인</li>
+                                            		<li>PCR 검사 결과 대기자</li>
                                                     <li>발열(37.5도 이상), 근육통, 기침, 인후통 등 호흡기 증상</li>
                                                     <li>지자체(기관)로부터 코로나19 검사 요청(능동감시자)</li>
                                                     <li class="check_impnt">
                                                         <input class="magic-checkbox qna_check" type="checkbox" name="layout" id="ENTRY_DVSN_2_qna_check" value="Y">
                                                         <label for="ENTRY_DVSN_2_qna_check">
-                                                        	최근14일 이내 위 사항에 해당사항이 없으며, 허위기재로 문제발생시 본인에게 책임이 있음을 확인합니다.
+                                                        	위 사항에 해당사항이 없으며, 허위기재로 문제발생시 본인에게 책임이 있음을 확인합니다.
                                                         </label>     
                                                     </li>
                                                 </ol>
                                             </p>
                                         </li>
                                         
-										<!-- 사전결제동의 -->
+										<!-- 자동결제동의 -->
 										<li class="auto_payment_check">
                                             <p>
-                                                <span>&lt;사전결제동의&gt;</span>
+                                                <span>&lt;자동결제동의&gt;</span>
                                                 <ol>
-                                                    <li>해당 예약은 오전10시30분에 입장료 및 좌석이용료가 스피드온에서 자동결제됩니다.</li>
-                                                    <li>스피드온 잔액부족 시 결제는 이루어지지 않습니다 잔액충전 후 수동결제 바랍니다.</li>
-                                                    <li>사전결제된 예약은 미입장시 수목 오후6시, 금토일 오후7시 일괄환불됩니다.</li>
+													<li>스피드온 결제가능시간(수목 10:30~18:00/금토일 10:30~19:00) 예약 시 입장료 및 좌석이용료가 스피드온에서 자동 결제 됩니다.</li>
+													<li>스피드온 결제불가시간에 예약된 내역은 10:30에 일괄자동결제됩니다.</li>
+                                            		<li>스피드온 잔액부족 시 자동결제는 이루어지지 않습니다. 자동결제가 되지 않을 시 스피드온 잔액 충전 후 QR생성화면에서 결제하기를 진행해주세요</li>
+                                            		<li>미입장한 결제내역은 예약지점의 입장마감시간에 일괄환불됩니다.(강남지점 17시)</li>
                                                     <li class="check_impnt">
                                                         <input class="magic-checkbox qna_check" type="checkbox" name="layout" id="ENTRY_DVSN_2_auto_payment_check" value="Y">
                                                         <label for="ENTRY_DVSN_2_auto_payment_check">

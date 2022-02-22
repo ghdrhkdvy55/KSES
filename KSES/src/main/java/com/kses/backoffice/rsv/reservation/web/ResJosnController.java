@@ -11,6 +11,7 @@ import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -79,8 +80,9 @@ public class ResJosnController {
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "speedCheck.do", method = { RequestMethod.POST })
-	public ModelAndView selectPreOpenInfo(@ModelAttribute("loginVO") LoginVO loginVO,
-			@RequestBody Map<String, Object> sendInfo, HttpServletRequest request) {
+	@Transactional
+	public ModelAndView selectSpeedCheck(	@ModelAttribute("loginVO") LoginVO loginVO,
+											@RequestBody Map<String, Object> sendInfo, HttpServletRequest request) {
 
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
@@ -578,6 +580,7 @@ public class ResJosnController {
 
 	// 무인 발권기
 	@RequestMapping(value = "tickMachinRes.do")
+	@Transactional
 	public ModelAndView selectTickMachinRes(@RequestBody Map<String, Object> jsonInfo) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 
@@ -682,6 +685,7 @@ public class ResJosnController {
 	}
 
 	@RequestMapping(value = "tickMachinQr.do")
+	@Transactional
 	public ModelAndView selectTickMachinPrice(@RequestBody Map<String, Object> jsonInfo) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 

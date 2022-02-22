@@ -179,7 +179,7 @@ public class MainPageInfoManageController {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
-			model.addObject(Globals.JSON_RETURN_RESULTLISR, resvService.selectUserResvInfo(params));
+			model.addObject(Globals.JSON_RETURN_RESULTLISR, resvService.selectUserResvInfoFront(params));
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		} catch(Exception e) {
 			LOGGER.error("selectUserResvInfo : " + e.toString());

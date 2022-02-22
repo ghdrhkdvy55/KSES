@@ -787,7 +787,9 @@
 								) :
 								fn_openPopup("예약이 정상적으로 취소되었습니다.", "blue", "SUCCESS", "확인", "javascript:location.reload();");
 						} else if (result.status == "LOGIN FAIL"){
-							fn_openPopup(result.message, "blue", "SUCCESS", "확인", "javascript:location.reload();");
+							fn_openPopup(result.message, "red", "ERROR", "확인", "javascript:location.reload();");
+						} else {
+							fn_openPopup(result.message, "red", "ERROR", "확인", "javascript:location.reload();");
 						}
 					},
 					function(request) {
