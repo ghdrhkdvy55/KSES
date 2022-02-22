@@ -127,5 +127,14 @@ const ParentGUI = {
     },
     gridCellEdited: function(rowId) {
         $("#"+$.jgrid.jqID(rowId)).removeClass('edited').addClass('edited');
+    },
+    gridEditOptions: function(num) {
+        return {
+            dataInit: function(el) {
+                EgovIndexApi.numberOnly(el);
+            },
+            size: num,
+            maxlength: num
+        }
     }
 };

@@ -58,21 +58,12 @@
     const PartGuiGridId = 'guiPartGrid';
     const PartGuiGridSelector = '#'+ PartGuiGridId;
     $.PartGui = function() {
-        let _editoptions = function(num) {
-            return {
-                dataInit: function(el) {
-                    EgovIndexApi.numberOnly(el);
-                },
-                size: num,
-                maxlength: num
-            }
-        };
         EgovJqGridApi.popGrid(PartGuiGridId, [
             { label: '좌석코드', name: 'seat_cd', key: true, hidden: true },
             { label: '좌석번호', name: 'seat_number', align: 'center', sortable: false },
             { label: '좌석명', name: 'seat_nm', align: 'center', sortable: false },
-            { label: 'TOP', name: 'seat_top', align: 'center', sortable: false, editable: true, editoptions: _editoptions(4) },
-            { label: 'LEFT', name: 'seat_left', align: 'center', sortable: false, editable: true, editoptions: _editoptions(4) },
+            { label: 'TOP', name: 'seat_top', align: 'center', sortable: false, editable: true, editoptions: this.gridEditOptions(4) },
+            { label: 'LEFT', name: 'seat_left', align: 'center', sortable: false, editable: true, editoptions: this.gridEditOptions(4) },
             { label: '정렬순서', name: 'seat_order', hidden: true },
         ], null, []).jqGrid('setGridParam', {
             cellEdit: true,

@@ -52,23 +52,14 @@
     const FloorGuiGridId = 'guiGrid';
     const FloorGuiGridSelector = '#'+ FloorGuiGridId;
     $.FloorGui = function() {
-        let _editoptions = function(num) {
-            return {
-                dataInit: function(el) {
-                    EgovIndexApi.numberOnly(el);
-                },
-                size: num,
-                maxlength: num
-            }
-        };
         EgovJqGridApi.popGrid(FloorGuiGridId, [
             { label: '구역코드', name: 'part_cd', key: true, hidden: true },
             { label: '구역명', name: 'part_nm', align: 'center', sortable: false },
-            { label: 'TOP', name: 'part_mini_top', align: 'center', sortable: false, editable: true, editoptions: _editoptions(4) },
-            { label: 'LEFT', name: 'part_mini_left', align: 'center', sortable: false, editable: true, editoptions: _editoptions(4) },
-            { label: '넓이', name: 'part_mini_width', align: 'center', sortable: false, editable: true, editoptions: _editoptions(4) },
-            { label: '높이', name: 'part_mini_height', align: 'center', sortable: false, editable: true, editoptions: _editoptions(4) },
-            { label: '회전', name: 'part_mini_rotate', align: 'center', sortable: false, editable: true, editoptions: _editoptions(3) },
+            { label: 'TOP', name: 'part_mini_top', align: 'center', sortable: false, editable: true, editoptions: this.gridEditOptions(4) },
+            { label: 'LEFT', name: 'part_mini_left', align: 'center', sortable: false, editable: true, editoptions: this.gridEditOptions(4) },
+            { label: '넓이', name: 'part_mini_width', align: 'center', sortable: false, editable: true, editoptions: this.gridEditOptions(4) },
+            { label: '높이', name: 'part_mini_height', align: 'center', sortable: false, editable: true, editoptions: this.gridEditOptions(4) },
+            { label: '회전', name: 'part_mini_rotate', align: 'center', sortable: false, editable: true, editoptions: this.gridEditOptions(3) },
             { label: 'CSS', align: 'center', sortable: false, formatter: (c, o, row) => {
                     let html = '<select data-rowid="'+ row.part_cd +'">';
                     html += '<option value="" style="background-color:transparent;">선택</option>';
