@@ -9,7 +9,7 @@
     <div class="box_shadow" style="width:1000px;">
         <div class="page">
             <div class="map_box_sizing">
-                <div class="mapArea" style="background: url('/resources/img/no_map.png') center center no-repeat;">
+                <div class="mapArea">
                     <ul id="partLayer"></ul>
                 </div>
             </div>
@@ -110,49 +110,30 @@
         });
     };
 
+    $.FloorGui.prototype = Object.create(ParentGUI);
     $.FloorGui.prototype.getGui = function() {
         return $('nav#cbp-spmenu-floor');
     };
-
-    $.FloorGui.prototype.open = function(floorCd, floorName) {
-        classie.toggle(FloorGui.getGui()[0], 'cbp-spmenu-open');
+    $.FloorGui.prototype.open = function() {
+        classie.toggle(this.getGui()[0], 'cbp-spmenu-open');
     };
 
     $.FloorGui.prototype.initialize = function(floorCd) {
         let $panel = this.getGui();
         let centerGridSelectedRowId = $('#centerGrid').jqGrid('getGridParam', 'selrow');
         $('#centerNm', $panel).text($('#centerGrid').jqGrid('getRowData', centerGridSelectedRowId).center_nm);
-        this.getFloorList(centerGridSelectedRowId, floorCd);
-        this.getFloor(floorCd, function(data) {
+        this.initMap($panel);
+        this.setComboList(centerGridSelectedRowId, floorCd);
+        this.getDetail('/backoffice/bld/floorInfoDetail.do', { floorCd: floorCd }, function(data) {
             $('#floorNm', $panel).text(data.floor_nm);
-            $('.mapArea', $panel).css({
-                'background': 'url(/upload/'+ data.floor_map1 +')',
-                'background-repeat': 'no-repeat',
-                'background-position': 'center'
-            });
+            FloorGui.setMap($panel, data.floor_map1);
         });
-        $('#partLayer', $panel).empty();
+        this.initLayer($panel);
         this.getFloorPartList(floorCd, this.drawFloorPart);
         this.open();
     };
 
-    $.FloorGui.prototype.getFloor = function(floorCd, callback) {
-        EgovIndexApi.apiExecuteJson(
-            'GET',
-            '/backoffice/bld/floorInfoDetail.do', {
-                floorCd: floorCd
-            },
-            null,
-            function(json) {
-                callback(json.result);
-            },
-            function(json) {
-                toastr.error(json.message);
-            }
-        );
-    };
-
-    $.FloorGui.prototype.getFloorList = function(centerCd, floorCd) {
+    $.FloorGui.prototype.setComboList = function(centerCd, floorCd) {
         let $panel = this.getGui();
         let $select = $('#searchFloor', $panel);
         $select.empty();
@@ -165,7 +146,7 @@
             function(json) {
                 let list = json.resultlist;
                 for (let item of list) {
-                    let $option = $('<option value="'+ item.floor_cd +'">'+ item.floor_nm +'</option>').appendTo($select);
+                    let $option = $('<option value="'+ item.floor_cd +'">'+ item.floor_nm +'</option>').data('item', item).appendTo($select);
                     if (floorCd === item.floor_cd) {
                         $option.prop('selected', true);
                     }
@@ -203,7 +184,7 @@
                     } else {
                         $(this).css('background-color', cssClass.text());
                         FloorGui.setFloorPart(rowId, 'part_css', cssClass.val());
-                        $("#"+$.jgrid.jqID(rowId)).removeClass('edited').addClass('edited');
+                        FloorGui.gridCellEdited(rowId);
                     }
                 }).trigger('change');
                 callback(data.resultlist);
@@ -268,7 +249,7 @@
                     let rowId = $(FloorGuiGridSelector).jqGrid('getGridParam', 'selrow');
                     $(FloorGuiGridSelector).jqGrid('setCell', rowId, 'part_mini_width', Math.floor(ui.size.width))
                         .jqGrid('setCell', rowId, 'part_mini_height', Math.floor(ui.size.height));
-                    $("#"+$.jgrid.jqID(rowId)).removeClass('edited').addClass('edited');
+                    FloorGui.gridCellEdited(rowId);
                 }
             }).rotatable({
                 degrees: item.part_mini_rotate,
@@ -283,9 +264,10 @@
                 rotate: function(e, ui) {
                     let rowId = $(FloorGuiGridSelector).jqGrid('getGridParam', 'selrow');
                     $(FloorGuiGridSelector).jqGrid('setCell', rowId, 'part_mini_rotate', Math.floor(ui.angle.degrees));
-                    $("#"+$.jgrid.jqID(rowId)).removeClass('edited').addClass('edited');
+                    FloorGui.gridCellEdited(rowId);
                 }
             }).draggable({
+                // 회전된 구역 drag 시 버그로 주석처리.
                 // containment: '#cbp-spmenu-floor .mapArea',
                 start: function() {
                     EgovJqGridApi.selection(FloorGuiGridId, $(this).data('item').part_cd);
@@ -297,7 +279,7 @@
                     let rowId = $(FloorGuiGridSelector).jqGrid('getGridParam', 'selrow');
                     $(FloorGuiGridSelector).jqGrid('setCell', rowId, 'part_mini_top', Math.floor(ui.position.top))
                         .jqGrid('setCell', rowId, 'part_mini_left', Math.floor(ui.position.left));
-                    $("#"+$.jgrid.jqID(rowId)).removeClass('edited').addClass('edited');
+                    FloorGui.gridCellEdited(rowId);
                 }
             }).append(
                 '<div class="section">'+

@@ -12,7 +12,7 @@
     <div class="box_shadow" style="width:1000px;">
         <div class="page">
             <div class="map_box_sizing">
-                <div class="mapArea" style="background: url('/resources/img/no_map.png') center center no-repeat;">
+                <div class="mapArea">
                     <ul id="partLayer"></ul>
                 </div>
             </div>
@@ -92,51 +92,31 @@
             }
         });
     };
-    
+    $.PartGui.prototype = Object.create(ParentGUI);
     $.PartGui.prototype.getGui = function() {
         return $('nav#cbp-spmenu-part');
     };
-    
     $.PartGui.prototype.open = function(floorCd, floorName) {
-        classie.toggle($('nav#cbp-spmenu-part')[0], 'cbp-spmenu-open');
+        classie.toggle(this.getGui()[0], 'cbp-spmenu-open');
     };
     
     $.PartGui.prototype.initialize = function(partCd, floorCd) {
     	let $panel = this.getGui();
         let centerGridSelectedRowId = $('#centerGrid').jqGrid('getGridParam', 'selrow');
         $('#centerNm', $panel).text($('#centerGrid').jqGrid('getRowData', centerGridSelectedRowId).center_nm);
-        this.getPartList(floorCd, partCd);
-        this.getPart(partCd, function(data) {
+        this.initMap($panel);
+        this.setComboList(floorCd, partCd);
+        this.getDetail('/backoffice/bld/partDetail.do', { partCd: partCd }, function(data) {
             $('span[name=floorNm]', $panel).text(data.floor_nm);
             $('#partNm', $panel).text(data.part_nm);
-            $('.mapArea', $panel).css({
-                'background': 'url(/upload/'+ data.part_map1 +')',
-                'background-repeat': 'no-repeat',
-                'background-position': 'center'
-            }).data('item', data);
+            PartGui.setMap($panel, data.part_map1);
         });
-        $('#partLayer', $panel).empty();
+        this.initLayer($panel);
         this.getPartSeatList(centerGridSelectedRowId, floorCd, partCd, this.drawPartSeat);
     	this.open();
     };
 
-    $.PartGui.prototype.getPart = function(partCd, callback) {
-        EgovIndexApi.apiExecuteJson(
-            'GET',
-            '/backoffice/bld/partDetail.do', {
-                partCd: partCd
-            },
-            null,
-            function(json) {
-                callback(json.result);
-            },
-            function(json) {
-                toastr.error(json.message);
-            }
-        );
-    };
-
-    $.PartGui.prototype.getPartList = function(floorCd, partCd) {
+    $.PartGui.prototype.setComboList = function(floorCd, partCd) {
         let $panel = this.getGui();
         let $select = $('#searchPart', $panel);
         $select.empty();
@@ -231,7 +211,7 @@
                     let rowId = $(PartGuiGridSelector).jqGrid('getGridParam', 'selrow');
                     $(PartGuiGridSelector).jqGrid('setCell', rowId, 'seat_top', Math.floor(ui.position.top))
                         .jqGrid('setCell', rowId, 'seat_left', Math.floor(ui.position.left));
-                    $("#"+$.jgrid.jqID(rowId)).removeClass('edited').addClass('edited');
+                    PartGui.gridCellEdited(rowId);
                 }
             }).append(
                 '<div class="section">'+ (item.seat_number === undefined ? '' : item.seat_number) +'</div>'
