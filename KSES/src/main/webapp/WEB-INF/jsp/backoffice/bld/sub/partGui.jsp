@@ -231,7 +231,7 @@
                     let rowId = $(PartGuiGridSelector).jqGrid('getGridParam', 'selrow');
                     $(PartGuiGridSelector).jqGrid('setCell', rowId, 'seat_top', Math.floor(ui.position.top))
                         .jqGrid('setCell', rowId, 'seat_left', Math.floor(ui.position.left));
-                    $("#"+$.jgrid.jqID(rowId)).addClass("edited");
+                    $("#"+$.jgrid.jqID(rowId)).removeClass('edited').addClass('edited');
                 }
             }).append(
                 '<div class="section">'+ (item.seat_number === undefined ? '' : item.seat_number) +'</div>'

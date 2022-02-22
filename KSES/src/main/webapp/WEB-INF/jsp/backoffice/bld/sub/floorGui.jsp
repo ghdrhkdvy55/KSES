@@ -203,7 +203,7 @@
                     } else {
                         $(this).css('background-color', cssClass.text());
                         FloorGui.setFloorPart(rowId, 'part_css', cssClass.val());
-                        $("#"+$.jgrid.jqID(rowId)).addClass("edited");
+                        $("#"+$.jgrid.jqID(rowId)).removeClass('edited').addClass('edited');
                     }
                 }).trigger('change');
                 callback(data.resultlist);
@@ -268,7 +268,7 @@
                     let rowId = $(FloorGuiGridSelector).jqGrid('getGridParam', 'selrow');
                     $(FloorGuiGridSelector).jqGrid('setCell', rowId, 'part_mini_width', Math.floor(ui.size.width))
                         .jqGrid('setCell', rowId, 'part_mini_height', Math.floor(ui.size.height));
-                    $("#"+$.jgrid.jqID(rowId)).addClass("edited");
+                    $("#"+$.jgrid.jqID(rowId)).removeClass('edited').addClass('edited');
                 }
             }).rotatable({
                 degrees: item.part_mini_rotate,
@@ -283,7 +283,7 @@
                 rotate: function(e, ui) {
                     let rowId = $(FloorGuiGridSelector).jqGrid('getGridParam', 'selrow');
                     $(FloorGuiGridSelector).jqGrid('setCell', rowId, 'part_mini_rotate', Math.floor(ui.angle.degrees));
-                    $("#"+$.jgrid.jqID(rowId)).addClass("edited");
+                    $("#"+$.jgrid.jqID(rowId)).removeClass('edited').addClass('edited');
                 }
             }).draggable({
                 // containment: '#cbp-spmenu-floor .mapArea',
@@ -297,7 +297,7 @@
                     let rowId = $(FloorGuiGridSelector).jqGrid('getGridParam', 'selrow');
                     $(FloorGuiGridSelector).jqGrid('setCell', rowId, 'part_mini_top', Math.floor(ui.position.top))
                         .jqGrid('setCell', rowId, 'part_mini_left', Math.floor(ui.position.left));
-                    $("#"+$.jgrid.jqID(rowId)).addClass("edited");
+                    $("#"+$.jgrid.jqID(rowId)).removeClass('edited').addClass('edited');
                 }
             }).append(
                 '<div class="section">'+
