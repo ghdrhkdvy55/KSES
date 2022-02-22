@@ -328,7 +328,23 @@ public class FrontResvInfoManageController {
 										HttpServletRequest request) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+		String Message = "";
+		
 		try {
+			Map<String, Object> resvInfo = resvService.selectUserResvInfo(params);
+			
+			if(!SmartUtil.NVL(resvInfo.get("resv_state"),"").equals("RESV_STATE_1")) {
+				switch (SmartUtil.NVL(resvInfo.get("resv_state"),"")) {
+					case "RESV_STATE_2" : Message = "이미 이용중인 예약정보 입니다.";  break;
+					case "RESV_STATE_3" : Message = "이미 이용완료 처리된 예약정보 입니다.";  break;
+					case "RESV_STATE_4" : Message = "이미 취소된 예약정보 입니다.";  break;
+					default: Message = "알수없는 예약정보 입니다."; break;
+				}
+				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+				model.addObject(Globals.STATUS_MESSAGE, Message);
+				return model;
+			}
+			
 			int ret = resvService.resvInfoCancel(params);
 			if(ret > 0) {
 				sureService.insertResvSureData("CANCEL", params.get("resv_seq").toString());

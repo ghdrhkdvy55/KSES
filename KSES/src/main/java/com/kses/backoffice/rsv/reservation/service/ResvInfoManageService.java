@@ -64,6 +64,15 @@ public interface ResvInfoManageService {
 	public Map<String, Object> selectUserResvInfo(Map<String, Object> params) throws Exception;
 	
 	/**
+	 * SPDM 회원 예약 정보 조회
+	 * 
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 */
+	public Map<String, Object> selectUserResvInfoFront(Map<String, Object> params) throws Exception;
+	
+	/**
 	 * SPDM 회원 예약 정보 등록 및 수정
 	 * 
 	 * @param vo

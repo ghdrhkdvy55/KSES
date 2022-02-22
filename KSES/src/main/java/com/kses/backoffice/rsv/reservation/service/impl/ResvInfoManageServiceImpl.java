@@ -69,6 +69,11 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	}
 	
 	@Override
+	public Map<String, Object> selectUserResvInfoFront(Map<String, Object> params) throws Exception {
+		return resvMapper.selectUserResvInfoFront(params);
+	}
+	
+	@Override
 	public List<String> selectResvDateList(ResvInfo vo) throws Exception {
 		return resvMapper.selectResvDateList(vo);
 	}
