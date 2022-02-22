@@ -173,7 +173,15 @@ public class ResJosnController {
 				jsonObject.put("System_Type", "E");
 				jsonObject.put("External_Key", resvInfo.get("resv_seq"));
 				jsonObject.put("Card_Id", resvInfo.get("user_card_id"));
-				jsonObject.put("Card_Pw", SmartUtil.encryptPassword(jsonObject.get("Card_Pw").toString(), "SHA-256"));
+				
+				if(SmartUtil.NVL(jsonObject.get("Pw_YN"),"Y").equals("Y")) {
+					jsonObject.put("Card_Pw", SmartUtil.encryptPassword(jsonObject.get("Card_Pw").toString(), "SHA-256"));
+					jsonObject.put("Pw_YN", "Y");
+				} else {
+					jsonObject.put("Card_Pw", "");
+					jsonObject.put("Pw_YN", "N");
+				}
+				
 				jsonObject.put("Card_Seq", resvInfo.get("user_card_seq"));
 				jsonObject.put("Div_Cd", resvInfo.get("center_speed_cd"));
 				jsonObject.put("Pw_YN", "Y");
