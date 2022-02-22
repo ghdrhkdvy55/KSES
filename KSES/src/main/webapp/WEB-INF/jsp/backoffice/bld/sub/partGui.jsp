@@ -32,6 +32,9 @@
             <div class="txt_con">
                 <p>좌석 설정</p>
                 <a href="javascript:PartGui.save();" class="defaultBtn">저장</a>
+                <a href="javascript:void(0);" class="defaultBtn" style="margin-right:10px;">엑셀다운로드</a>
+                <a href="javascript:void(0);" class="defaultBtn" style="margin-right:10px;">엑셀업로드</a>
+                <a href="javascript:void(0);" class="defaultBtn" style="margin-right:10px;">좌석일괄등록</a>
             </div>
             <div class="scroll_table" style="width:650px;height:508px;padding-top:0px;">
                 <div style="width:638px;">
