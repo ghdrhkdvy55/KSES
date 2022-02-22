@@ -1,6 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <link rel="stylesheet" href="/resources/css/backoffice/cbp-spmenu.css">
 <script type="text/javascript" src="/resources/js/classie.js"></script>
+<!-- Xlsx -->
+<script type="text/javascript" src="/resources/js/xlsx.full.min.js"></script>
+<!-- FileSaver -->
+<script src="/resources/js/FileSaver.min.js"></script>
 <div class="title">
     <h3><span id="centerNm"></span>점 <span name="floorNm"></span> <span id="partNm"></span> 구역 GUI 화면</h3>
 </div>
@@ -32,7 +36,7 @@
             <div class="txt_con">
                 <p>좌석 설정</p>
                 <a href="javascript:PartGui.save();" class="defaultBtn">저장</a>
-                <a href="javascript:void(0);" class="defaultBtn" style="margin-right:10px;">엑셀다운로드</a>
+                <a href="javascript:PartGui.excelDownload();" class="defaultBtn" style="margin-right:10px;">엑셀다운로드</a>
                 <a href="javascript:void(0);" class="defaultBtn" style="margin-right:10px;">엑셀업로드</a>
                 <a href="javascript:void(0);" class="defaultBtn" style="margin-right:10px;">좌석일괄등록</a>
             </div>
@@ -69,6 +73,7 @@
             { label: '좌석명', name: 'seat_nm', align: 'center', sortable: false },
             { label: 'TOP', name: 'seat_top', align: 'center', sortable: false, editable: true, editoptions: _editoptions(4) },
             { label: 'LEFT', name: 'seat_left', align: 'center', sortable: false, editable: true, editoptions: _editoptions(4) },
+            { label: '정렬순서', name: 'seat_order', hidden: true },
         ], null, []).jqGrid('setGridParam', {
             cellEdit: true,
             cellsubmit: 'clientArray',
@@ -262,6 +267,31 @@
                 }
             );
         });
+    };
+
+    $.PartGui.prototype.excelDownload = function() {
+        if ($(PartGuiGridSelector).getGridParam("reccount") === 0) {
+            toastr.warning('다운받으실 데이터가 없습니다.');
+            return;
+        }
+        let list = $(PartGuiGridSelector).jqGrid('getRowData');
+        let excelData = new Array();
+        excelData.push(['NO', '좌석코드', '좌석번호', '좌석명', 'TOP', 'LEFT', '정렬순서']);
+        for (let idx in list) {
+            let arr = new Array();
+            arr.push(Number(idx)+1);
+            arr.push(list[idx].seat_cd);
+            arr.push(list[idx].seat_number);
+            arr.push(list[idx].seat_nm);
+            arr.push(list[idx].seat_top);
+            arr.push(list[idx].seat_left);
+            arr.push(list[idx].seat_order);
+            excelData.push(arr);
+        }
+        let wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(excelData), 'sheet1');
+        let wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+        saveAs(new Blob([EgovIndexApi.s2ab(wbout)],{ type: 'application/octet-stream' }), '구역GUI_좌석목록.xlsx');
     };
     
     const PartGui = new $.PartGui();
