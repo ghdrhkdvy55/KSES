@@ -31,7 +31,7 @@
         <div class="gui_text">
             <div class="txt_con">
                 <p>좌석 설정</p>
-                <a href="javascript:void(0);" class="defaultBtn">저장</a>
+                <a href="javascript:PartGui.save();" class="defaultBtn">저장</a>
             </div>
             <div class="scroll_table" style="width:650px;height:508px;padding-top:0px;">
                 <div style="width:638px;">
@@ -214,7 +214,7 @@
                 start: function() {
                     EgovJqGridApi.selection(PartGuiGridId, $(this).data('item').seat_cd);
                     let rowId = $(PartGuiGridSelector).jqGrid('getGridParam', 'selrow');
-                    $(PartGuiGridSelector).closest('.scroll_table').scrollTop($('tr#'+rowId, $(PartGuiGridSelector))[0].offsetTop);
+                    $(PartGuiGridSelector).closest('.scroll_table').scrollTop($('#'+$.jgrid.jqID(rowId))[0].offsetTop);
                 },
                 stop: function() {
                     EgovJqGridApi.selection(PartGuiGridId);
@@ -223,11 +223,42 @@
                     let rowId = $(PartGuiGridSelector).jqGrid('getGridParam', 'selrow');
                     $(PartGuiGridSelector).jqGrid('setCell', rowId, 'seat_top', Math.floor(ui.position.top))
                         .jqGrid('setCell', rowId, 'seat_left', Math.floor(ui.position.left));
+                    $("#"+$.jgrid.jqID(rowId)).addClass("edited");
                 }
             }).append(
                 '<div class="section">'+ (++idx)+ '</div>'
             );
         }
+    };
+
+    $.PartGui.prototype.save = function() {
+        let changedArr = $(PartGuiGridSelector).jqGrid('getChangedCells', 'all');
+        if (changedArr.length === 0) {
+            toastr.info('변경된 좌석이 없습니다.');
+            return;
+        }
+        let params = new Array();
+        changedArr.forEach(x =>
+            params.push({
+                seatCd: x.seat_cd,
+                seatTop: x.seat_top,
+                seatLeft: x.seat_left
+            })
+        );
+        bPopupConfirm('좌석 위치 변경', changedArr.length +'건에 대해 수정 하시겠습니까?', function() {
+            EgovIndexApi.apiExecuteJson(
+                'POST',
+                '/backoffice/bld/seatGuiUpdate.do',
+                params,
+                null,
+                function(json) {
+                    toastr.success(json.message);
+                },
+                function(json) {
+                    toastr.error(json.message);
+                }
+            );
+        });
     };
     
     const PartGui = new $.PartGui();

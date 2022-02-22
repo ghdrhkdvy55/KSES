@@ -220,40 +220,26 @@ public class SeatInfoManageController {
 		return model;
 	}
 
-	//수정 구문 
-	@RequestMapping(value="seatGuiUpdate.do", method=RequestMethod.POST)
-	public ModelAndView updateSeatGuiPosition (	@RequestBody Map<String, Object> params, 
-												HttpServletRequest request, 
-												BindingResult bindingResult) throws Exception {
-		
+	/**
+	 * 좌석 정보 저장
+	 * @param seatInfoList
+	 * @return
+	 * @throws Exception
+	 */
+	@NoLogging
+	@RequestMapping(value = "seatGuiUpdate.do", method = RequestMethod.POST)
+	public ModelAndView updateSeatGuiPosition (	@RequestBody List<SeatInfo> seatInfoList) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-	    if(!isAuthenticated) {
-	    	model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-	    	model.setViewName("/backoffice/login");
-	    	return model;	
-	    }
-		try {
-			
-			Gson gson = new GsonBuilder().create();
-			List<SeatInfo> seatInfos = gson.fromJson(params.get("data").toString(), new TypeToken<List<SeatInfo>>(){}.getType());
-			
-			LoginVO loginVO = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
-	    	String userId = loginVO.getAdminId();
-	    	seatInfos.forEach(SeatInfo -> SeatInfo.setUserId(userId));
-			
-			
-			int result = seatService.updateSeatPositionInfo(seatInfos);
-			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-            model.addObject("resutlCnt", result);
-		}catch(Exception e) {
-			log.info(e.toString());
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.update"));
-		}
+
+		String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
+		seatInfoList.stream().forEach(x -> x.setLastUpdusrId(userId));
+		seatService.updateSeatPositionInfo(seatInfoList);
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("sucess.common.update"));
+
 		return model;
-		
 	}
+	
 	//신규 excel upload
 	@RequestMapping(value="SeatExcelUpload.do", method=RequestMethod.POST)
 	public ModelAndView updateExcelUpload (@RequestBody Map<String, Object> params, 

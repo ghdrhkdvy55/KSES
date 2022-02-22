@@ -110,7 +110,7 @@
 				PART_MINI_HEIGHT = #{item.partMiniHeight,jdbcType=VARCHAR}, 
 				PART_MINI_ROTATE = #{item.partMiniRotate,jdbcType=VARCHAR}, 
 				LAST_UPDT_DTM = SYSDATE, 
-				LAST_UPDUSR_ID = #{item.userId, jdbcType=VARCHAR}
+				LAST_UPDUSR_ID = #{item.lastUpdusrId, jdbcType=VARCHAR}
 			WHERE PART_CD = #{item.partCd} 
 		</foreach> 
     </update>

@@ -199,28 +199,25 @@ public class FloorPartInfoManageController {
 
 		return model;
 	}
-	
-	//신규 
-	@RequestMapping(value="partGuiUpdate.do", method=RequestMethod.POST)
-	public ModelAndView updatePartGuiPosition (	@RequestBody Map<String, Object> params, 
-												HttpServletRequest request, 
-												BindingResult bindingResult) throws Exception {
-		
+
+
+	/**
+	 * 구역 정보 저장
+	 * @param floorPartInfoList
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "partGuiUpdate.do", method = RequestMethod.POST)
+	public ModelAndView updatePartGuiPosition(@RequestBody List<FloorPartInfo> floorPartInfoList) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-		
-		try {
-			
-			Gson gson = new GsonBuilder().create();
-			List<FloorPartInfo> seatInfos = gson.fromJson(params.get("data").toString(), new TypeToken<List<FloorPartInfo>>(){}.getType());
-			int result = partService.updateFloorPartInfPositionInfo(seatInfos);
-			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-            model.addObject("resutlCnt", result);
-		}catch(Exception e) {
-			log.info(e.toString());
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.update"));
-		}
+
+		String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
+		floorPartInfoList.stream().forEach(x -> x.setLastUpdusrId(userId));
+		partService.updateFloorPartInfPositionInfo(floorPartInfoList);
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("sucess.common.update"));
+
 		return model;
-		
 	}
+
 }

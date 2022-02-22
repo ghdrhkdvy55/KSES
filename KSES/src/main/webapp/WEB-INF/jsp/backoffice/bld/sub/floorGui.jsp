@@ -30,7 +30,7 @@
         <div class="gui_text">
             <div class="txt_con">
                 <p>구역 설정</p>
-                <a href="javascript:void(0);" class="defaultBtn">저장</a>
+                <a href="javascript:FloorGui.save();" class="defaultBtn">저장</a>
             </div>
             <div class="scroll_table" style="width:650px;height:508px;padding-top:0px;">
                 <div style="width:720px;margin-right:15px;">
@@ -203,6 +203,7 @@
                     } else {
                         $(this).css('background-color', cssClass.text());
                         FloorGui.setFloorPart(rowId, 'part_css', cssClass.val());
+                        $("#"+$.jgrid.jqID(rowId)).addClass("edited");
                     }
                 }).trigger('change');
                 callback(data.resultlist);
@@ -267,13 +268,13 @@
                     let rowId = $(FloorGuiGridSelector).jqGrid('getGridParam', 'selrow');
                     $(FloorGuiGridSelector).jqGrid('setCell', rowId, 'part_mini_width', Math.floor(ui.size.width))
                         .jqGrid('setCell', rowId, 'part_mini_height', Math.floor(ui.size.height));
+                    $("#"+$.jgrid.jqID(rowId)).addClass("edited");
                 }
             }).rotatable({
                 degrees: item.part_mini_rotate,
                 handle: $(document.createElement('img')).attr('src', '/resources/img/rotate.png'),
                 wheelRotate: false,
                 start: function() {
-                    let data = $(this).data('item');
                     EgovJqGridApi.selection(FloorGuiGridId, $(this).data('item').part_cd);
                 },
                 stop: function() {
@@ -282,9 +283,10 @@
                 rotate: function(e, ui) {
                     let rowId = $(FloorGuiGridSelector).jqGrid('getGridParam', 'selrow');
                     $(FloorGuiGridSelector).jqGrid('setCell', rowId, 'part_mini_rotate', Math.floor(ui.angle.degrees));
+                    $("#"+$.jgrid.jqID(rowId)).addClass("edited");
                 }
             }).draggable({
-                containment: '#cbp-spmenu-floor .mapArea',
+                // containment: '#cbp-spmenu-floor .mapArea',
                 start: function() {
                     EgovJqGridApi.selection(FloorGuiGridId, $(this).data('item').part_cd);
                 },
@@ -295,6 +297,7 @@
                     let rowId = $(FloorGuiGridSelector).jqGrid('getGridParam', 'selrow');
                     $(FloorGuiGridSelector).jqGrid('setCell', rowId, 'part_mini_top', Math.floor(ui.position.top))
                         .jqGrid('setCell', rowId, 'part_mini_left', Math.floor(ui.position.left));
+                    $("#"+$.jgrid.jqID(rowId)).addClass("edited");
                 }
             }).append(
                 '<div class="section">'+
@@ -307,6 +310,40 @@
                 '</div>'
             );
         }
+    };
+
+    $.FloorGui.prototype.save = function() {
+        let changedArr = $(FloorGuiGridSelector).jqGrid('getChangedCells', 'all');
+        if (changedArr.length === 0) {
+            toastr.info('변경된 좌석이 없습니다.');
+            return;
+        }
+        let params = new Array();
+        changedArr.forEach(x =>
+            params.push({
+                partCd: x.part_cd,
+                partCss: $('select[data-rowid='+x.part_cd+']').val(),
+                partMiniTop: x.part_mini_top,
+                partMiniLeft: x.part_mini_left,
+                partMiniWidth: x.part_mini_width,
+                partMiniHeight: x.part_mini_height,
+                partMiniRotate: x.part_mini_rotate
+            })
+        );
+        bPopupConfirm('구역 변경', changedArr.length +'건에 대해 수정 하시겠습니까?', function() {
+            EgovIndexApi.apiExecuteJson(
+                'POST',
+                '/backoffice/bld/partGuiUpdate.do',
+                params,
+                null,
+                function(json) {
+                    toastr.success(json.message);
+                },
+                function(json) {
+                    toastr.error(json.message);
+                }
+            );
+        });
     };
 
     const FloorGui = new $.FloorGui();
