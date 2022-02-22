@@ -93,3 +93,39 @@ $.Floor.prototype.guiPart = function(rowId, parentId) {
 }
 
 const Floor = new $.Floor();
+const ParentGUI = {
+    initMap: function(_panel) {
+        $('.mapArea', _panel).css({
+            'background': 'url(/resources/img/no_map.png)',
+            'background-repeat': 'no-repeat',
+            'background-position': 'center'
+        });
+    },
+    setMap: function(_panel, _fileNm) {
+        $('.mapArea', _panel).css({
+            'background': 'url(/upload/'+ _fileNm +')',
+            'background-repeat': 'no-repeat',
+            'background-position': 'center'
+        });
+    },
+    initLayer: function(_panel) {
+        $('#partLayer', _panel).empty();
+    },
+    getDetail: function(_url, _params, callback) {
+        EgovIndexApi.apiExecuteJson(
+            'GET',
+            _url,
+            _params,
+            null,
+            function(json) {
+                callback(json.result);
+            },
+            function(json) {
+                toastr.error(json.message);
+            }
+        );
+    },
+    gridCellEdited: function(rowId) {
+        $("#"+$.jgrid.jqID(rowId)).removeClass('edited').addClass('edited');
+    }
+};
