@@ -9,7 +9,7 @@
     <div class="box_shadow" style="width:1000px;">
         <div class="page">
             <div class="map_box_sizing">
-                <div class="mapArea" style="background: url('/resources/img/no_image.png') center center no-repeat;">
+                <div class="mapArea" style="background: url('/resources/img/no_map.png') center center no-repeat;">
                     <ul id="partLayer"></ul>
                 </div>
             </div>
