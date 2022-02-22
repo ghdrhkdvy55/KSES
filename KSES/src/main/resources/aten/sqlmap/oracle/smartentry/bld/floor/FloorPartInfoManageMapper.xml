@@ -47,7 +47,7 @@
     </select>
     
     <select id="selectFloorPartInfoManageCombo" resultType="lmap">
-		SELECT PART_CD, PART_NM 
+		SELECT PART_CD, PART_NM, FLOOR_CD
 	    FROM TSEB_PART_INFO_D
 		WHERE USE_YN = 'Y'
 		<if test="floorCd != '' ">  

@@ -53,7 +53,7 @@ $.Floor.prototype.subFloorPartGrid = function(id, parentId) {
         },
         { label: 'GUI', align:'center', sortable: false, width: 50, fixed: true, formatter: (c, o, row) =>
         	row.part_map1 === null || row.part_map1 === 'no_image.png' ? '' :
-            	'<a href="javascript:Floor.guiPart(\'' + row.part_cd + '\');" class="gui_icon"></a>'
+            	'<a href="javascript:Floor.guiPart(\'' + row.part_cd + '\', \'' + row.floor_cd + '\');" class="gui_icon"></a>'
         }
     ], 'POST', '/backoffice/bld/partListAjax.do', {
         floorCd: parentId
@@ -88,8 +88,8 @@ $.Floor.prototype.guiFloor = function(rowId) {
     FloorGui.initialize(rowId);
 };
 
-$.Floor.prototype.guiPart = function(rowId) {
-	PartGui.initialize(rowId);
+$.Floor.prototype.guiPart = function(rowId, parentId) {
+	PartGui.initialize(rowId, parentId);
 }
 
 const Floor = new $.Floor();

@@ -34,7 +34,7 @@
                 <a href="javascript:void(0);" class="defaultBtn">저장</a>
             </div>
             <div class="scroll_table" style="width:650px;height:508px;padding-top:0px;">
-                <div style="width:650px;margin-right:15px;">
+                <div style="width:638px;">
                     <table id="guiPartGrid"></table>
                 </div>
             </div>
@@ -68,6 +68,19 @@
         ], null, []).jqGrid('setGridParam', {
             cellEdit: true,
             cellsubmit: 'clientArray',
+            beforeSaveCell: function(rowId, name, val) {
+                switch (name) {
+                    case 'seat_top':
+                    case 'seat_left':
+                        if (val < 0) {
+                            return 0;
+                        }
+                    default:
+                }
+            },
+            afterSaveCell: function(rowId, name, val) {
+                PartGui.setPartSeat(rowId, name, val);
+            }
         });
     };
     
@@ -79,12 +92,12 @@
         classie.toggle($('nav#cbp-spmenu-part')[0], 'cbp-spmenu-open');
     };
     
-    $.PartGui.prototype.initialize = function(partCd) {
+    $.PartGui.prototype.initialize = function(partCd, floorCd) {
     	let $panel = this.getGui();
         let centerGridSelectedRowId = $('#centerGrid').jqGrid('getGridParam', 'selrow');
         $('#centerNm', $panel).text($('#centerGrid').jqGrid('getRowData', centerGridSelectedRowId).center_nm);
+        this.getPartList(floorCd, partCd);
         this.getPart(partCd, function(data) {
-            PartGui.getPartList(data.floor_cd, partCd);
             $('span[name=floorNm]', $panel).text(data.floor_nm);
             $('#partNm', $panel).text(data.part_nm);
             $('.mapArea', $panel).css({
@@ -92,9 +105,9 @@
                 'background-repeat': 'no-repeat',
                 'background-position': 'center'
             }).data('item', data);
-            $('#partLayer', $panel).empty();
-            PartGui.getPartSeatList(centerGridSelectedRowId, data.floor_cd, partCd, PartGui.drawPartSeat);
         });
+        $('#partLayer', $panel).empty();
+        this.getPartSeatList(centerGridSelectedRowId, floorCd, partCd, this.drawPartSeat);
     	this.open();
     };
 
@@ -127,13 +140,14 @@
             function(json) {
                 let list = json.resultlist;
                 for (let item of list) {
-                    let $option = $('<option value="'+ item.part_cd +'">'+ item.part_nm +'</option>').appendTo($select);
+                    let $option = $('<option value="'+ item.part_cd +'">'+ item.part_nm +'</option>').data('item', item).appendTo($select);
                     if (partCd === item.part_cd) {
                         $option.prop('selected', true);
                     }
                 }
                 $select.off('change').on('change', function() {
-                    PartGui.initialize($(this).find('option:selected').val());
+                    let data = $(this).find('option:selected').data('item');
+                    PartGui.initialize(data.part_cd, data.floor_cd);
                     PartGui.open();
                 });
             },
@@ -152,9 +166,9 @@
                 searchPartCd: partCd,
                 useYn: 'Y',
                 pageIndex: '1',
-                pageUnit: '1000'
+                pageUnit: '500'
             }),
-            rowNum: 1000,
+            rowNum: 500,
             loadComplete: function(data) {
                 if (data.status === 'FAIL') {
                     toastr.error(data.message);
@@ -164,6 +178,25 @@
             }
         };
         $(PartGuiGridSelector).jqGrid('setGridParam', jqGridParams).trigger('reloadGrid');
+    };
+
+    $.PartGui.prototype.setPartSeat = function(rowId, type, val) {
+        let $panel = PartGui.getGui();
+        $.each($('#partLayer', $panel).find('li'), function() {
+            let data = $(this).data('item');
+            if (data.seat_cd === rowId) {
+                switch (type) {
+                    case 'seat_top':
+                        $(this).css('top', val+'px');
+                        break;
+                    case 'seat_left':
+                        $(this).css('left', val+'px');
+                        break;
+                    default:
+                }
+                return false;
+            }
+        });
     };
 
     $.PartGui.prototype.drawPartSeat = function(list) {
