@@ -65,6 +65,7 @@
         };
         EgovJqGridApi.popGrid(PartGuiGridId, [
             { label: '좌석코드', name: 'seat_cd', key: true, hidden: true },
+            { label: '좌석번호', name: 'seat_number', align: 'center', sortable: false },
             { label: '좌석명', name: 'seat_nm', align: 'center', sortable: false },
             { label: 'TOP', name: 'seat_top', align: 'center', sortable: false, editable: true, editoptions: _editoptions(4) },
             { label: 'LEFT', name: 'seat_left', align: 'center', sortable: false, editable: true, editoptions: _editoptions(4) },
@@ -204,7 +205,6 @@
 
     $.PartGui.prototype.drawPartSeat = function(list) {
         let $panel = PartGui.getGui();
-        let idx = 0;
         for (let item of list) {
             let seat = $(
                 '<li class="seat" style="opacity:0.7;display:inline-block;width:30px;height:30px;"></li>'
@@ -229,7 +229,7 @@
                     $("#"+$.jgrid.jqID(rowId)).addClass("edited");
                 }
             }).append(
-                '<div class="section">'+ (++idx)+ '</div>'
+                '<div class="section">'+ (item.seat_number === undefined ? '' : item.seat_number) +'</div>'
             );
         }
     };
