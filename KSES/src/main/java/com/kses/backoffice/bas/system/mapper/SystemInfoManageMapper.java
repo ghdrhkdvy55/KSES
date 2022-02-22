@@ -9,5 +9,7 @@ public interface SystemInfoManageMapper {
 	
 	public SystemInfo selectSystemInfo() throws Exception;
 	
+	public String selectTodayAutoPaymentYn() throws Exception;
+	
 	public int updateSystemInfo(SystemInfo vo) throws Exception;
 }

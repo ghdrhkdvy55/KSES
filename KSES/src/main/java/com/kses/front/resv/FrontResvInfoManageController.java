@@ -31,6 +31,7 @@ import com.kses.backoffice.cus.usr.service.UserInfoManageService;
 import com.kses.backoffice.cus.usr.vo.UserInfo;
 import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
 import com.kses.backoffice.rsv.reservation.vo.ResvInfo;
+import com.kses.backoffice.sym.log.service.InterfaceInfoManageService;
 import com.kses.backoffice.util.SmartUtil;
 import com.kses.front.annotation.LoginUncheck;
 import com.kses.front.login.vo.UserLoginInfo;
@@ -82,6 +83,9 @@ public class FrontResvInfoManageController {
 	
 	@Autowired
 	private SystemInfoManageService systemService;
+	
+	@Autowired
+	private InterfaceInfoManageService interfaceService;
 		
 	@LoginUncheck
 	@RequestMapping (value="rsvCenter.do")
@@ -270,7 +274,7 @@ public class FrontResvInfoManageController {
 	
 	@LoginUncheck
 	@RequestMapping (value="updateUserResvInfo.do")
-	@Transactional(rollbackFor = Exception.class)
+	@Transactional
 	public ModelAndView updateUserResvInfo( @RequestBody ResvInfo vo,
 											HttpServletRequest request) throws Exception {
 		
@@ -290,10 +294,20 @@ public class FrontResvInfoManageController {
 			if(ret > 0) {
 				// 방금 예약한 정보 조회 (지점,층,구역,좌석 명칭)
 				Map<String, Object> resvInfo = resvService.selectInUserResvInfo(vo);
-				model.addObject("resvInfo", resvInfo);
+				String autoPaymentYn = systemService.selectTodayAutoPaymentYn();
 				
-				UserInfo user = new UserInfo();
-				if("USER_DVSN_2".equals(vo.getResvUserDvsn())) {
+				if(vo.getResvUserDvsn().equals("USER_DVSN_1")) {
+					new Thread(()->{
+						try {
+							if(resvInfo.get("center_pilot_yn").toString().equals("Y") && autoPaymentYn.equals("Y")) {
+								interfaceService.SpeedOnPayMent(vo.getResvSeq(), "", false);
+							}
+						} catch (Exception e) {
+							LOGGER.info("RESV_SEQ : " + resvInfo.get("resv_seq") + " RESERVATION AUTO PAYMENT FAIL");
+						}
+					}).start();
+				} else {
+					UserInfo user = new UserInfo();
 					user.setUserDvsn("USER_DVSN_2");
 					user.setUserId(resvInfo.get("user_id").toString());
 					user.setUserBirthDy("19700000");
@@ -308,6 +322,7 @@ public class FrontResvInfoManageController {
 				
 				sureService.insertResvSureData("RESERVATION", resvInfo.get("resv_seq").toString());
 				
+				model.addObject("resvInfo", resvInfo);
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 			} else {
@@ -328,7 +343,24 @@ public class FrontResvInfoManageController {
 										HttpServletRequest request) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+		String Message = "";
+		
 		try {
+			params.put("resvSeq", params.get("resv_seq"));
+			Map<String, Object> resvInfo = resvService.selectUserResvInfo(params);
+			
+			if(!SmartUtil.NVL(resvInfo.get("resv_state"),"").equals("RESV_STATE_1")) {
+				switch (SmartUtil.NVL(resvInfo.get("resv_state"),"")) {
+					case "RESV_STATE_2" : Message = "이미 이용중인 예약정보 입니다.";  break;
+					case "RESV_STATE_3" : Message = "이미 이용완료 처리된 예약정보 입니다.";  break;
+					case "RESV_STATE_4" : Message = "이미 취소된 예약정보 입니다.";  break;
+					default: Message = "알수없는 예약정보 입니다."; break;
+				}
+				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+				model.addObject(Globals.STATUS_MESSAGE, Message);
+				return model;
+			}
+			
 			int ret = resvService.resvInfoCancel(params);
 			if(ret > 0) {
 				sureService.insertResvSureData("CANCEL", params.get("resv_seq").toString());

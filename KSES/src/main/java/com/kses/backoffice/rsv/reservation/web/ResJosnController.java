@@ -11,6 +11,7 @@ import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -79,8 +80,9 @@ public class ResJosnController {
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "speedCheck.do", method = { RequestMethod.POST })
-	public ModelAndView selectPreOpenInfo(@ModelAttribute("loginVO") LoginVO loginVO,
-			@RequestBody Map<String, Object> sendInfo, HttpServletRequest request) {
+	@Transactional
+	public ModelAndView selectSpeedCheck(	@ModelAttribute("loginVO") LoginVO loginVO,
+											@RequestBody Map<String, Object> sendInfo, HttpServletRequest request) {
 
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
@@ -171,7 +173,15 @@ public class ResJosnController {
 				jsonObject.put("System_Type", "E");
 				jsonObject.put("External_Key", resvInfo.get("resv_seq"));
 				jsonObject.put("Card_Id", resvInfo.get("user_card_id"));
-				jsonObject.put("Card_Pw", SmartUtil.encryptPassword(jsonObject.get("Card_Pw").toString(), "SHA-256"));
+				
+				if(SmartUtil.NVL(jsonObject.get("Pw_YN"),"Y").equals("Y")) {
+					jsonObject.put("Card_Pw", SmartUtil.encryptPassword(jsonObject.get("Card_Pw").toString(), "SHA-256"));
+					jsonObject.put("Pw_YN", "Y");
+				} else {
+					jsonObject.put("Card_Pw", "");
+					jsonObject.put("Pw_YN", "N");
+				}
+				
 				jsonObject.put("Card_Seq", resvInfo.get("user_card_seq"));
 				jsonObject.put("Div_Cd", resvInfo.get("center_speed_cd"));
 				jsonObject.put("Pw_YN", "Y");
@@ -578,6 +588,7 @@ public class ResJosnController {
 
 	// 무인 발권기
 	@RequestMapping(value = "tickMachinRes.do")
+	@Transactional
 	public ModelAndView selectTickMachinRes(@RequestBody Map<String, Object> jsonInfo) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 
@@ -682,6 +693,7 @@ public class ResJosnController {
 	}
 
 	@RequestMapping(value = "tickMachinQr.do")
+	@Transactional
 	public ModelAndView selectTickMachinPrice(@RequestBody Map<String, Object> jsonInfo) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 

@@ -66,7 +66,6 @@ public class EntranceInfoManageController {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		
 		String nowDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-		searchVO.put("searchDayCondition", "resvDate");
 		searchVO.put("searchTo", nowDate);
 		searchVO.put("searchFrom", nowDate);
 		
@@ -87,7 +86,7 @@ public class EntranceInfoManageController {
 		searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
 		searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
 		
-		List<Map<String, Object>> list = resvService.selectResvInfoManageListByPagination(searchVO);
+		List<Map<String, Object>> list = EntranceService.selectResvInfoEnterRegistList(searchVO);
 
 	    model.addObject(Globals.JSON_RETURN_RESULTLISR, list);
 	    model.addObject(Globals.STATUS_REGINFO, searchVO);

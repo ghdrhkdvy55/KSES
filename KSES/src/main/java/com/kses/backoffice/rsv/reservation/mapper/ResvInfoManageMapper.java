@@ -30,23 +30,25 @@ public interface ResvInfoManageMapper {
 	
 	public List<Map<String, Object>> selectGuestMyResvInfo(@Param("params") Map<String, Object> paramMap);
 	
-	public int updateResvSeatInfo(@Param("params") Map<String, Object> paramMap);
-	
-	public int updateResvInfoCopy(@Param("params") Map<String, Object> paramMap) throws Exception; 
-	
-	public int resvInfoCancel(@Param("params") Map<String, Object> paramMap);
-	
-	public int resvInfoDuplicateCheck(@Param("params") Map<String, Object> params);
-	//신규 추가
 	public List<Map<String, Object>> selectResvInfoManageListByPagination(@Param("params") Map<String, Object> params);
 	
 	public Map<String, Object> selectUserResvInfo(@Param("params") Map<String, Object> params);
+	
+	public Map<String, Object> selectUserResvInfoFront(@Param("params") Map<String, Object> params);
+	
+	public int resvInfoDuplicateCheck(@Param("params") Map<String, Object> params);
 	
 	public int insertUserResvInfo(ResvInfo vo);
 	
 	public int insertLongResvInfo(ResvInfo vo);
 	
 	public int insertUserLongResvInfo(ResvInfo vo);
+	
+	public int updateResvSeatInfo(@Param("params") Map<String, Object> paramMap);
+	
+	public int updateResvInfoCopy(@Param("params") Map<String, Object> paramMap) throws Exception; 
+	
+	public int resvInfoCancel(@Param("params") Map<String, Object> paramMap);
 	
 	public int updateUserResvInfo(ResvInfo vo);
 	

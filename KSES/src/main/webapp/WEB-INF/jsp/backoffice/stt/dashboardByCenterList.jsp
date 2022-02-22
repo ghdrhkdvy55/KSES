@@ -4,8 +4,7 @@
 <%@ page import="java.util.Date" %>
 <link rel="stylesheet" href="/resources/jqgrid/src/css/ui.jqgrid.css">
 <script type="text/javascript" src="/resources/jqgrid/js/jquery.jqGrid.min.js"></script>
-<c:set var="fSearchDateFrom" value="<%=new Date(new Date().getTime() - 60*60*24*1000*16)%>"/>
-<c:set var="fSearchDateTo" value="<%=new Date(new Date().getTime() - 60*60*24*1000*1)%>"/>
+<c:set var="fSearchDate" value="<%=new Date(new Date().getTime() - 60*60*24*1000*1)%>"/>
 
 <!-- //contents -->
 <div class="breadcrumb">
@@ -35,8 +34,8 @@
 				
 				<p>기간</p>
 				<p>
-				<input type="text" id="searchResvDateFrom" class="cal_icon" name="date_from" value=<fmt:formatDate value="${fSearchDateFrom}" pattern="yyyyMMdd" /> autocomplete=off style="width:110px;">~
-				<input type="text" id="searchResvDateTo" class="cal_icon" name="date_from" value=<fmt:formatDate value="${fSearchDateTo}" pattern="yyyyMMdd" /> autocomplete=off style="width:110px;">
+				<input type="text" id="searchResvDateFrom" class="cal_icon" name="date_from" value=<fmt:formatDate value="${fSearchDate}" pattern="yyyyMMdd" /> autocomplete=off style="width:110px;">~
+				<input type="text" id="searchResvDateTo" class="cal_icon" name="date_from" value=<fmt:formatDate value="${fSearchDate}" pattern="yyyyMMdd" /> autocomplete=off style="width:110px;">
 				</p>
           	</div>
           	

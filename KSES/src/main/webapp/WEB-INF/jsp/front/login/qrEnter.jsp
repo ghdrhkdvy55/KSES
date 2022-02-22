@@ -73,7 +73,7 @@
                     <!--// 미 결제 시 표출 -->
                     <div class="pay_btn">
                         <ul>
-                            <li class="mintBtn"><a data-popup-open="pay_number">결제</a></li>
+                            <li class="mintBtn"><a href="javascript:qrService.fn_payment();">결제</a></li>
                             <li class="grayBtn"><a href="javascript:history.back();">닫기</a></li>
                         </ul>  
                     </div>
@@ -230,6 +230,7 @@
 					"sendInfo" : {
 						"resvSeq" : $("#resvSeq").val(),
 						"Card_Pw" : $("#Card_Pw").val(),
+						"Pw_YN" : "N",
 						"System_Type" : "E"
 					}
 				}
