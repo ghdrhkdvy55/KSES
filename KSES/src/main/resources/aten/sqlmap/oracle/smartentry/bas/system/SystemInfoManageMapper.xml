@@ -16,6 +16,18 @@
 		WHERE SYSTEM_CD = 'KSES'
    	</select>
 
+	<select id="selectTodayAutoPaymentYn" resultType="String">
+		SELECT 
+			CASE 
+				NVL(COUNT(*),0)  WHEN 1 THEN 'Y'
+			ELSE 'N'
+			END
+		FROM TSEC_AUTO_PAYMENT_INFO_I 
+		WHERE USE_YN = 'Y'
+		AND AUTO_PAYMENT_DAY = TO_CHAR(SYSDATE,'d')
+		AND TO_CHAR(SYSDATE,'HH24MI') BETWEEN AUTO_PAYMENT_OPEN_TM AND AUTO_PAYMENT_CLOSE_TM
+	</select>
+
 	<update id="updateSystemInfo">
 		UPDATE TSEC_SYSTEM_INFO_M SET
 			COM_TITLE = #{comTitle, jdbcType=VARCHAR}, 

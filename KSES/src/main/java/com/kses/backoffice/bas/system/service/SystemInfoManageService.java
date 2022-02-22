@@ -10,7 +10,9 @@ import com.kses.backoffice.bas.system.vo.SystemInfo;
  */
 public interface SystemInfoManageService {
 	
-    public SystemInfo selectSystemInfo() throws Exception;
+    SystemInfo selectSystemInfo() throws Exception;
 	
-    public int updateSystemInfo(SystemInfo vo) throws Exception;
+    int updateSystemInfo(SystemInfo vo) throws Exception;
+    
+    String selectTodayAutoPaymentYn() throws Exception;
 }

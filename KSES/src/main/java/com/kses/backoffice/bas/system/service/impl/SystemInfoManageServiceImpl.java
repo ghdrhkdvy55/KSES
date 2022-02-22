@@ -21,6 +21,11 @@ public class SystemInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
 	}
 
 	@Override
+	public String selectTodayAutoPaymentYn() throws Exception {
+		return systemMapper.selectTodayAutoPaymentYn();
+	}
+	
+	@Override
 	public int updateSystemInfo(SystemInfo vo) throws Exception {
 		return systemMapper.updateSystemInfo(vo);
 	}
