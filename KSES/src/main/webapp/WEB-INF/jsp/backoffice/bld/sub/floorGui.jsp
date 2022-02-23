@@ -293,7 +293,7 @@
     $.FloorGui.prototype.save = function() {
         let changedArr = $(FloorGuiGridSelector).jqGrid('getChangedCells', 'all');
         if (changedArr.length === 0) {
-            toastr.info('변경된 좌석이 없습니다.');
+            toastr.info('변경된 구역이 없습니다.');
             return;
         }
         let params = new Array();
