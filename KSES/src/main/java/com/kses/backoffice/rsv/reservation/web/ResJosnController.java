@@ -184,7 +184,6 @@ public class ResJosnController {
 				
 				jsonObject.put("Card_Seq", resvInfo.get("user_card_seq"));
 				jsonObject.put("Div_Cd", resvInfo.get("center_speed_cd"));
-				jsonObject.put("Pw_YN", "Y");
 
 				if (resvInfo.get("resv_entry_dvsn").equals("ENTRY_DVSN_1")) {
 					jsonObject.put("Pay_Type", "001");
