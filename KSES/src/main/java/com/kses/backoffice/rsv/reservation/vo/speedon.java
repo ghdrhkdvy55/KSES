@@ -21,7 +21,7 @@ public enum speedon {
 	TRADE_ERROR_008("TRADE_ERROR_008", "스피드온 앱에서 본인인증 및 이용정지 해제 바랍니다."), 
 	TRADE_ERROR_009("TRADE_ERROR_009", "카드(구매) 비밀번호 설정되지 않음"), 
 	TRADE_ERROR_010("TRADE_ERROR_010", "카드비밀번호가 불일치 합니다."), 
-	TRADE_ERROR_011("TRADE_ERROR_011", "입출금 업무서비스 비활성화"), 
+	TRADE_ERROR_011("TRADE_ERROR_011", "지금은 결제 가능시간이 아닙니다."), 
 	TRADE_ERROR_012("TRADE_ERROR_012", "잔액이 부족합니다.<br>스피드온 앱에서 계좌충전 바랍니다."), 
 	TRADE_ERROR_013("TRADE_ERROR_013", "시스템타입 없음"), 
 	TRADE_ERROR_014("TRADE_ERROR_014", "지금은 결제 가능시간이 아닙니다."),
