@@ -61,15 +61,20 @@
             { label: '높이', name: 'part_mini_height', align: 'center', sortable: false, editable: true, editoptions: this.gridEditOptions(4) },
             { label: '회전', name: 'part_mini_rotate', align: 'center', sortable: false, editable: true, editoptions: this.gridEditOptions(3) },
             { label: 'CSS', align: 'center', sortable: false, formatter: (c, o, row) => {
-                    let html = '<select data-rowid="'+ row.part_cd +'">';
-                    html += '<option value="" style="background-color:transparent;">선택</option>';
+                    let colorText = 'transparent';
+                    let innerHtml = '<option value="" style="background-color:transparent;">선택</option>';
                     for (let partColor of EgovIndexApi.partColorList) {
-                        let color = partColor.split(',');
-                        html += '<option value="'+ color[0] +'" style="background-color:'+ color[1] +'"'
-                            + (row.part_css === color[0] ? 'selected' : '') + '>'+ color[1] +'</option>';
+                        let classNm = partColor.split(',')[0];
+                        let colorHx = partColor.split(',')[1];
+                        if (row.part_css === classNm) {
+                            innerHtml += '<option value="'+classNm+'" style="background-color:'+colorHx+'" selected>'+colorHx+'</option>';
+                            colorText = colorHx;
+                        } else {
+                            innerHtml += '<option value="'+classNm+'" style="background-color:'+colorHx+'">'+colorHx+'</option>';
+                        }
                     }
-                    html += '</select>';
-                    return html;
+                    return '<select data-rowid="'+row.part_cd+'" style="background-color:'+colorText+'">'+innerHtml+'</select>';
+
                 }
             },
         ], null, []).jqGrid('setGridParam', {
@@ -177,7 +182,7 @@
                         FloorGui.setFloorPart(rowId, 'part_css', cssClass.val());
                         FloorGui.gridCellEdited(rowId);
                     }
-                }).trigger('change');
+                });
                 callback(data.resultlist);
             }
         };
