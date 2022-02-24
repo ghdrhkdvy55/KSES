@@ -29,7 +29,6 @@
 </head>
 <body>
 	<form:form name="regist" commandName="regist" method="post" action="/front/main.do">
-	<input type="hidden" id="secretKey" name="secretKey" value="${sessionScope.userLoginInfo.secretKey}">
 	<input type="hidden" id="userDvsn" name="userDvsn" value="${sessionScope.userLoginInfo.userDvsn}">
 	<input type="hidden" id="resvSeq" name="resvSeq" value="">
 
@@ -303,51 +302,7 @@
 		</div>
     </div>
     <!-- 최근입장정보 팝업 // -->
-
-    <!-- // 최근입장불가 팝업 -->
-	<div data-popup="none_seat" class="popup">
-		<div class="pop_con rsv_popup">
-			<a class="button b-close">X</a>
-          	<div class="pop_wrap">
-              	<h4><span class="name">홍길동</span>님의</h4>
-              	<p>최근 입장 좌석은 예약이 불가능 합니다. <br> 처음부터 예약 부탁드립니다.</p>
-          	</div>
-          	<div class="summit_btn">
-              	<a href="" class="mintBtn">새로 예약하기</a>
-          	</div>
-          	<div class="clear"></div>
-      	</div>
-    </div>
-    <!-- 최근입장불가 팝업 // -->
     
-    <!-- 결제인증 팝업 // -->
-    <!-- // 결제인증 팝업 -->
-	<div id="pay_number" class="popup">
-		<div class="pop_con rsv_popup">
-			<a class="button b-close">X</a>
-			<div class="pop_wrap">
-				<h4>결제 비밀번호를 입력해주세요.</h4>
-				<ul class="cost_list">
-					<li>
-						<ul class="costStat">
-							<li>환불 금액</li>
-							<li><span class="classCost"></span>원</li>
-						</ul>
-					</li>
-					<li>
-						<ul class="pay_passWord">
-	                        <li>결제</li>
-	                        <li><input type="password" id="Card_Pw" placeholder="결제 비밀번호를 입력하세요."></li>
-                    	</ul>
-                	</li>
-            	</ul>
-				<ul class="cost_btn">
-					<li class="okBtn"><a href="javascript:void(0);">확인</a></li>
-				</ul>
-			</div>
-		</div>
-	</div>
-    <!-- 결제인증 팝업// -->
 	<!-- // 자료무단복제금지 팝업 -->
 	<div data-popup="none_copy" class="popup">
 		<div class="pop_con">
@@ -747,12 +702,7 @@
 					if(resvInfo.resv_state != "RESV_STATE_4") {
 						if(resvInfo.resv_pay_dvsn != "RESV_PAY_DVSN_1") {
 							if(resvInfo.resv_ticket_dvsn != 'RESV_TICKET_DVSN_2') {
-								$("#Card_Pw").val("");
-								$("#pay_number").bPopup();
-								$(".classCost").html(resvInfo.resv_pay_cost);
-								$("#pay_number a:eq(1)").off().on('click', function(resvSeq) {
-									mainService.fn_payment(resvInfo);	
-								});
+								mainService.fn_payment(resvInfo);	
 							} else {
 								fn_openPopup("무인발권기 결제완료 상태입니다.", "red", "ERROR", "확인", "");
 							}
@@ -803,8 +753,7 @@
 					"gubun" : "dep",
 					"sendInfo" : {
 						"resvSeq" : resvInfo.resv_seq,
-						"Card_Pw" : $("#Card_Pw").val(),
-						"System_Type" : "E"
+						"Pw_YN" : "N",
 					}
 				}
 				

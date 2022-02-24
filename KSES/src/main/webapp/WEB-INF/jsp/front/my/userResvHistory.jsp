@@ -335,16 +335,9 @@
 					if(resvInfo.resv_state != "RESV_STATE_4") {
 						if(resvInfo.resv_pay_dvsn != "RESV_PAY_DVSN_1") {
 							if(resvInfo.resv_ticket_dvsn != 'RESV_TICKET_DVSN_2') {
-								$("#Card_Pw").val("");
-								$("#pay_number").bPopup();
-								$(".classCost").html(resvInfo.resv_pay_cost);
-								$("#pay_number a:eq(1)").off().on('click', function() {});
-								$("#pay_number a:eq(1)").click(function(resvSeq) {
-									if(fn_payment(resvInfo)){
-										userResvService.fn_userResvInfo(true);
-										bPopupClose("pay_number");
-									}
-								});
+								if(fn_payment(resvInfo)){
+									userResvService.fn_userResvInfo(true);
+								}
 							} else {
 								fn_openPopup("무인발권기 결제완료 상태입니다.", "red", "ERROR", "확인", "");
 							}
