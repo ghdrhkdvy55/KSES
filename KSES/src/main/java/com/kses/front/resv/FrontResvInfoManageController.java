@@ -180,7 +180,6 @@ public class FrontResvInfoManageController {
 				resultList = seasonSeatService.selectReservationSeasonSeatList(params);
 			}
 			
-			Thread.sleep(10000);
 			Map<String, Object> mapInfo = floorPartService.selectFloorPartInfoDetail(params.get("partCd").toString());
 	    	
 			model.addObject("seatMapInfo", mapInfo);
