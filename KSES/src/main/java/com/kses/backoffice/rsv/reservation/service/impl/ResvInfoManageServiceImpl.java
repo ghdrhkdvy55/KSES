@@ -358,9 +358,4 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	public int resvBillChange(ResvInfo vo) throws Exception {
 		return resvMapper.resvBillChange(vo);
 	}
-	
-	@Override
-	public Map<String, Object> selectTicketMchnSnoCheck(Map<String, Object> params) {
-		return resvMapper.selectTicketMchnSnoCheck(params);
-	}
 }
