@@ -101,7 +101,6 @@
           	<a class="button b-close">X</a>
           	<div class="pop_wrap">
               	<h4>예약 취소 하시겠습니까?</h4>
-              	<p>15시 까지 미 입장시 입장예약이 취소됩니다.</p>
 				<ul class="rsv_list">
                 	<li>
                     	<ol>
