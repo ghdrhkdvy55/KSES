@@ -10,7 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -181,6 +180,7 @@ public class FrontResvInfoManageController {
 				resultList = seasonSeatService.selectReservationSeasonSeatList(params);
 			}
 			
+			Thread.sleep(10000);
 			Map<String, Object> mapInfo = floorPartService.selectFloorPartInfoDetail(params.get("partCd").toString());
 	    	
 			model.addObject("seatMapInfo", mapInfo);
@@ -274,7 +274,6 @@ public class FrontResvInfoManageController {
 	
 	@LoginUncheck
 	@RequestMapping (value="updateUserResvInfo.do")
-	@Transactional
 	public ModelAndView updateUserResvInfo( @RequestBody ResvInfo vo,
 											HttpServletRequest request) throws Exception {
 		
