@@ -94,14 +94,14 @@
 			WHERE USER_CARD_ID = #{params.cardId, jdbcType=VARCHAR}
 		</when>
 		<otherwise>
-			WHERE USER_CARD_ID = (SELECT FC_DEC(#{params.cardId, jdbcType=VARCHAR}) FROM DUAL)
+			WHERE USER_CARD_ID = (SELECT REPLACE(FC_DEC(#{params.cardId, jdbcType=VARCHAR}),' ','+') FROM DUAL)
 			AND USER_CARD_SEQ = #{params.cardSeq, jdbcType=VARCHAR}
 		</otherwise>
 		</choose>
    	</select>
    	
    	<select id="selectDecodeCardId" resultType="String">
-   		SELECT FC_DEC(#{cardId, jdbcType=VARCHAR}) FROM DUAL
+   		SELECT REPLACE(FC_DEC(#{cardId, jdbcType=VARCHAR}),' ','+') FROM DUAL
    	</select>
    	
 	<select id="selectUserVacntnInfo" resultType="lmap">
