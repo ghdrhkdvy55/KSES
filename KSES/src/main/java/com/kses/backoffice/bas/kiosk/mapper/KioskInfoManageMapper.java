@@ -20,5 +20,6 @@ public interface KioskInfoManageMapper {
     public int updateKioskInfo(KioskInfo vo);
     
     public int deleteKioskInfo(@Param("kioskList") List<String> kioskList);
-    
+	
+	public Map<String, Object> selectTicketMchnSnoCheck(@Param("params") Map<String, Object> params);
 }

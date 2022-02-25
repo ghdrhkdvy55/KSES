@@ -261,12 +261,4 @@ public interface ResvInfoManageService {
 	 * @throws Exception
 	 */
 	public void resvValidCheck(Map<String, Object> params) throws Exception;
-	
-	/**
-	 * SPDM 무인발권기 조회 시 지점 체크
-	 * 
-	 * @param params
-	 * @return
-	 */
-	public Map<String, Object> selectTicketMchnSnoCheck(@Param("params") Map<String, Object> params);
 }

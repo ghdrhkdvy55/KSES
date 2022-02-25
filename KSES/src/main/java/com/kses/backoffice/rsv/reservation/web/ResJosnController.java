@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.kses.backoffice.bas.kiosk.service.KioskInfoService;
 import com.kses.backoffice.cus.usr.service.UserInfoManageService;
 import com.kses.backoffice.cus.usr.vo.UserInfo;
 import com.kses.backoffice.rsv.reservation.service.AttendInfoManageService;
@@ -77,6 +78,9 @@ public class ResJosnController {
 	
 	@Autowired
 	private UniSelectInfoManageService uniService;
+	
+	@Autowired
+	private KioskInfoService kioskService;
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "speedCheck.do", method = { RequestMethod.POST })
@@ -643,7 +647,7 @@ public class ResJosnController {
 				Map<String, Object> machineVO = new HashMap<String, Object>();
 				machineVO.put("ticketMchnSno", SmartUtil.NVL(jsonInfo.get("MACHINE_SERIAL"), "").toString());
 				machineVO.put("centerCd", SmartUtil.NVL(resInfo.get("center_cd"), "").toString());
-				Map<String, Object> machineSerial = resService.selectTicketMchnSnoCheck(machineVO);
+				Map<String, Object> machineSerial = kioskService.selectTicketMchnSnoCheck(machineVO);
 				
 				String recDate = SmartUtil.NVL(jsonInfo.get("RES_SEND_DATE"), "19700101").toString();
 				

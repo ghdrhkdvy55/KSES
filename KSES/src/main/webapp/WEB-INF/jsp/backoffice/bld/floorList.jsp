@@ -1539,6 +1539,9 @@
 	 	                alert(result.message);
 	 	                location.href = "/backoffice/login.do";
 	 	            } else if (result.status == "SUCCESS") {
+	 	            	let obj = result.resultlist.filter(obj => {
+							return obj.use_yn == "Y";
+						})
 	 	                //테이블 정리 하기
 	 	                var img = "#fff  url()";
 	 	                if (result.seatMapInfo != null) {
@@ -1551,15 +1554,13 @@
 	                        'background-repeat': 'no-repeat',
 	                        'background-position': ' center'
 	                    });
-	 	                if (result.resultlist.length > 0) {
+	 	                if (obj.length > 0) {
 	 	                    var shtml = '';
-	 	                    var obj = result.resultlist;
-								
-	 	                        for (var i in result.resultlist) {
+	 	                        for (var i in obj) {
 	 	                            shtml += '<li id="s' + trim(fn_NVL(obj[i].seat_nm)) + '" class="seat" seat-id="' + obj[i].seat_cd + '" name="' + obj[i].seat_cd + '" >' + fn_NVL(obj[i].seat_number) + '</li>';
 	 	                        }
 	 	                        $('#seat_list').html(shtml);
-	 	                        for (var i in result.resultlist) {
+	 	                        for (var i in obj) {
 	 	                            $('.mapArea ul li#s' + trim(fn_NVL(obj[i].seat_nm))).css({
 	 	                                "top": fn_NVL(obj[i].seat_top) + "px",
 	 	                                "left": fn_NVL(obj[i].seat_left) + "px"
@@ -1568,8 +1569,7 @@
 	 	                        $('.seat').dragmove();
 	 	                        $("#seat_resultList > tbody").empty();
 	 	                        $("#part_resultList > tbody").empty();
-	 	                        if (result.resultlist.length > 0) {
-	 	                            var obj = result.resultlist;
+	 	                        if (obj.length > 0) {
 	 	                            var shtml = "";
 	 	                            for (var i in obj) {
 	 	                                shtml += "<tr>" +
