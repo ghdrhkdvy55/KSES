@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,7 +31,6 @@ import com.kses.backoffice.cus.usr.service.UserInfoManageService;
 import com.kses.backoffice.cus.usr.vo.UserInfo;
 import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
 import com.kses.backoffice.rsv.reservation.vo.ResvInfo;
-import com.kses.backoffice.sym.log.service.InterfaceInfoManageService;
 import com.kses.backoffice.util.SmartUtil;
 import com.kses.front.annotation.LoginUncheck;
 import com.kses.front.login.vo.UserLoginInfo;
@@ -84,7 +84,7 @@ public class FrontResvInfoManageController {
 	private SystemInfoManageService systemService;
 	
 	@Autowired
-	private InterfaceInfoManageService interfaceService;
+	ApplicationContext applicationContext;
 		
 	@LoginUncheck
 	@RequestMapping (value="rsvCenter.do")
@@ -292,18 +292,15 @@ public class FrontResvInfoManageController {
 			if(ret > 0) {
 				// 방금 예약한 정보 조회 (지점,층,구역,좌석 명칭)
 				Map<String, Object> resvInfo = resvService.selectInUserResvInfo(vo);
+				sureService.insertResvSureData("RESERVATION", resvInfo.get("resv_seq").toString());
 				String autoPaymentYn = systemService.selectTodayAutoPaymentYn();
 				
 				if(vo.getResvUserDvsn().equals("USER_DVSN_1")) {
-					new Thread(()->{
-						try {
-							if(resvInfo.get("center_pilot_yn").toString().equals("Y") && autoPaymentYn.equals("Y")) {
-								interfaceService.SpeedOnPayMent(vo.getResvSeq(), "", false);
-							}
-						} catch (Exception e) {
-							LOGGER.info("RESV_SEQ : " + resvInfo.get("resv_seq") + " RESERVATION AUTO PAYMENT FAIL");
-						}
-					}).start();
+					if(resvInfo.get("center_pilot_yn").toString().equals("Y") && autoPaymentYn.equals("Y")) {
+						AutoPaymentThread autoPaymentThread = new AutoPaymentThread(vo.getResvSeq());
+						applicationContext.getAutowireCapableBeanFactory().autowireBean(autoPaymentThread);
+						autoPaymentThread.start();
+					}
 				} else {
 					UserInfo user = new UserInfo();
 					user.setUserDvsn("USER_DVSN_2");
@@ -317,8 +314,6 @@ public class FrontResvInfoManageController {
 					
 					userService.updateUserInfo(user);
 				}
-				
-				sureService.insertResvSureData("RESERVATION", resvInfo.get("resv_seq").toString());
 				
 				model.addObject("resvInfo", resvInfo);
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
