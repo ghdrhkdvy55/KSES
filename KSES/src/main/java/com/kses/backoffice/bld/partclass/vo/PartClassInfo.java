@@ -15,8 +15,11 @@ public class PartClassInfo {
 	// 구역등급 
 	private String partClass;
 	
-	// 지점코드 
+	// 구역 일반 금액
 	private String partPayCost;
+	
+	// 구역 스피드온 금액
+	private String partSpeedPayCost;
 	
 	// 구역아이콘 
 	private String partIcon;
@@ -39,8 +42,9 @@ public class PartClassInfo {
 	// 정렬 순서
 	private String partClassOrder;
 	
-	//
+	// 입력 구분
 	private String mode;
 	
+	// 등록 & 수정자 아이디
 	private String userId = "";
 }
