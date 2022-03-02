@@ -61,7 +61,7 @@ public class LoginPageInfoManageController {
 	@LoginUncheck
 	@RequestMapping (value="userSessionCreate.do")
 	public ModelAndView createUserSession(	@RequestBody UserLoginInfo userLoginInfo,
-										HttpServletRequest request) throws Exception {
+											HttpServletRequest request) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {

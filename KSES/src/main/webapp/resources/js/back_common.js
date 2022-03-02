@@ -719,36 +719,41 @@ function timepicker() {
 
 //페이징 스크립트;
 function ajaxPaging(currentPageNo, firstPageNo, recordCountPerPage, firstPageNoOnPageList, lastPageNoOnPageList, totalPageCount, pageSize, pageScript){
-    var pageHtml = "";
+	var pageHtml = "";
     pageHtml += "";
-	 if (currentPageNo == firstPageNo ){
-      pageHtml += "<a href='#' >&laquo;</a>";
-	 }else {
-      pageHtml += "<a href='#' onclick='"+pageScript+"("+ firstPageNo +")';return false; '>&laquo;</a>";
-	 }
-	 if (parseInt(currentPageNo) > parseInt(firstPageNo)){
-      pageHtml += "<a href='#' onclick='"+pageScript+"("+ parseInt(parseInt(currentPageNo) -1)+");return false;'>&lt;</a>"
-	 }else {
-      pageHtml += "<a href='#' >&lt;</a>"
-	 }
+    
+    if(currentPageNo == firstPageNo ) {
+    	pageHtml += "<a href='#' >&laquo;</a>";
+    } else {
+    	pageHtml += "<a href='#' onclick='" + pageScript + "(" + firstPageNo + ")';return false; '>&laquo;</a>";
+    }
+    
+    if(parseInt(currentPageNo) > parseInt(firstPageNo)) {
+    	pageHtml += "<a href='#' onclick='" + pageScript + "(" + parseInt(parseInt(currentPageNo) -1) + ");return false;'>&lt;</a>";
+    } else {
+    	pageHtml += "<a href='#' >&lt;</a>";
+    }
+    
     for(var  i = firstPageNoOnPageList; i<= lastPageNoOnPageList; i++){
-		 if (i == currentPageNo){
-            pageHtml += "<a class=active>"+i+"</a>";
-		 }else {
-            pageHtml += "<a href='#' onclick='"+pageScript+"("+i+");return false; '>"+i+"</a>";
-		 }
+    	if (i == currentPageNo){
+    		pageHtml += "<a class=active>" + i + "</a>";
+    	} else {
+    		pageHtml += "<a href='#' onclick='" + pageScript + "(" + i + ");return false; '>" + i + "</a>";
+    	}
     }
 
-	 if (parseInt(totalPageCount) > parseInt(pageSize) ){
-        pageHtml += "<a href='#' onclick='"+pageScript+"("+ parseInt(parseInt(currentPageNo) + 1)+");return false;'>&gt;</a>"
-	 }else {
-        pageHtml += "<a href='#' onclick='"+pageScript+"("+ parseInt(parseInt(currentPageNo) + 1)+");return false;'>&gt;</a>"
-	 }
-    if (parseInt(totalPageCount) > parseInt(pageSize)  ){
-      pageHtml += "<a href='#' onclick='"+pageScript+"("+ totalPageCount +");return false;'>&raquo;</a>";
-	 }else{
-      pageHtml += "<a href='#' >&raquo;</a>";
-	 }	
+    if(parseInt(totalPageCount) > parseInt(pageSize)) {
+    	pageHtml += "<a href='#' onclick='" + pageScript + "("+ parseInt(parseInt(currentPageNo) + 1) + ");return false;'>&gt;</a>"
+	} else {
+        pageHtml += "<a href='#' onclick='" + pageScript + "(" + parseInt(parseInt(currentPageNo) + 1) + ");return false;'>&gt;</a>"
+	}
+    
+    if(parseInt(totalPageCount) > parseInt(pageSize)){
+    	pageHtml += "<a href='#' onclick='" + pageScript + "(" + totalPageCount + ");return false;'>&raquo;</a>";
+    } else {
+    	pageHtml += "<a href='#' >&raquo;</a>";
+	}	
+    
     return pageHtml;
 }
 
