@@ -965,16 +965,17 @@
 			let params = {
 				pageIndex: '1',
 				pageUnit: '1000',
+				searchCondition : $("#searchCondition").val(),
 				searchKeyword: $('#searchKeyword').val(),
 				searchCenterCd : $("#searchCenterCd").val(),
 				searchDayCondition : $('input[name=searchRsvDay]:checked').val(),
 				searchFrom : $("#searchResvDateFrom").val(),
 				searchTo : $("#searchResvDateTo").val(),
+				searchResvUserDvsn : $("searchResvUserDvsn").val(),
 				searchResvState : $("#searchResvState").val(),
 				searchResvPayDvsn : $("#searchResvPayDvsn").val(),
 				searchResvRcptYn : $("#searchResvRcptYn").val(),
-				searchCondition : $("#searchCondition").val(),
-				searchKeyword : $("#searchKeyword").val(),
+				searchResvTicketDvsn : $("#searchResvTicketDvsn").val()
 			};
 			EgovIndexApi.apiExecuteJson(
 				'POST',
