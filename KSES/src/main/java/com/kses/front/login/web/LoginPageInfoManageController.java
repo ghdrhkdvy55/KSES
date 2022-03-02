@@ -118,6 +118,7 @@ public class LoginPageInfoManageController {
 	}
 	
 	@LoginUncheck
+	@ReferrerUncheck
 	@RequestMapping (value="ssoLogin.do")
 	public ModelAndView frontSSOLogin(	HttpServletRequest request,
 										@RequestParam Map<String, Object> params) throws Exception {
