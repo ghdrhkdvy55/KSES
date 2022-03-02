@@ -246,7 +246,25 @@
 		
 		END
 	}
-   	</update>   	
+   	</update>
+   	
+   	<update id="updateUserPhoneNumber">
+   		MERGE INTO TSER_USER_INFO_I A
+   		USING
+		<choose>
+			<when test="@org.apache.commons.lang3.StringUtils@equals(envType,'DEV')">
+   				VW_KRACEWEB@SMARTDEVLINK
+   			</when>
+   			<when test="@org.apache.commons.lang3.StringUtils@equals(envType,'PROD')">
+   				VW_KRACEWEB@SMARTENTRLINK
+   			</when>
+   		</choose>
+   		B ON (A.USER_ID = B.USER_ID)
+   		WHEN MATCHED THEN
+   		UPDATE SET A.USER_PHONE = B.MOBILE
+   		WHERE A.USER_ID = B.USER_ID
+   		AND A.USER_PHONE != B.MOBILE
+   	</update>
 
    	<delete id="deleteUserInfo">
    	    <foreach collection="delCds" item="item" separator=";" open="DECLARE BEGIN" close="; END;">  

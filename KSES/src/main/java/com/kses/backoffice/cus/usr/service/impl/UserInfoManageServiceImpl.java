@@ -72,6 +72,11 @@ public class UserInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	}
 	
 	@Override
+	public int updateUserPhoneNumber(String envType) throws Exception {
+		return userMapper.updateUserPhoneNumber(envType);
+	}
+	
+	@Override
 	public boolean deleteUserInfo(String delCds) throws Exception {
         try {
         	userMapper.deleteUserInfo(SmartUtil.dotToList(delCds));
