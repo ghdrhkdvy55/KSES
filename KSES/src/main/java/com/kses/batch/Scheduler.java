@@ -214,6 +214,30 @@ public class Scheduler {
 		}
 		LOGGER.info("----------------------------KSES RESV PAY STAT UPDATE BATCH END----------------------------");
 	}
+	
+	/**
+	 * 금일자 회원/비회원 최초 입장정보 등록
+	 * 
+	 * @throws Exception
+	 */
+	@Scheduled(cron="0 55 23 * * ?")
+	public void updateUserEntryInfo() throws Exception {		
+		try {
+			LOGGER.info("----------------------------KSES USER ENTRY INFO UPDATE BATCH START----------------------------");
+			int ret = userService.insertUserEntryInfo();
+			
+			if(ret >= 0) {
+				LOGGER.info("updateUserEntryInfo => " + "지점별 결제 금액통계 " + ret + "건 갱신");
+			} else {
+				throw new Exception();
+			}
+		} catch (RuntimeException re) {
+			LOGGER.error("updateUserEntryInfo => Run Failed", re);
+		} catch (Exception e) {
+			LOGGER.error("updateUserEntryInfo => Failed", e);
+		}
+		LOGGER.info("----------------------------KSES USER ENTRY INFO UPDATE BATCH END----------------------------");
+	}
 
 	/**
 	 * 스피드온 회원 휴대폰번호 갱신 스케줄러
@@ -222,6 +246,30 @@ public class Scheduler {
 	 */
 	@Scheduled(cron="0 0 01 * * ?")
 	public void updateUserPhoneNumber() throws Exception {		
+		try {
+			LOGGER.info("----------------------------KSES USER PHONE NUMBER UPDATE BATCH START----------------------------");
+			int ret = userService.updateUserPhoneNumber(propertiesService.getString("Globals.envType"));
+			
+			if(ret >= 0) {
+				LOGGER.info("updateUserPhoneNumber => " + "회원 휴대폰 번호 " + ret + "건 갱신");
+			} else {
+				throw new Exception();
+			}
+		} catch (RuntimeException re) {
+			LOGGER.error("updateUserPhoneNumber => Run Failed", re);
+		} catch (Exception e) {
+			LOGGER.error("updateUserPhoneNumber => Failed", e);
+		}
+		LOGGER.info("----------------------------KSES USER PHONE NUMBER UPDATE BATCH END----------------------------");
+	}
+	
+	/**
+	 * 스피드온 회원테이블 등록일 4주지난 비회원 개인정보 갱신 -> 휴대폰 번호, 이름 
+	 * 
+	 * @throws Exception
+	 */
+	@Scheduled(cron="0 05 01 * * ?")
+	public void updateGuestPrivacyInfo() throws Exception {		
 		try {
 			LOGGER.info("----------------------------KSES USER PHONE NUMBER UPDATE BATCH START----------------------------");
 			int ret = userService.updateUserPhoneNumber(propertiesService.getString("Globals.envType"));

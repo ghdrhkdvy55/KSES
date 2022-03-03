@@ -55,6 +55,11 @@ public class UserInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	public Map<String, Object> selectSpeedOnVacntnInfo(UserLoginInfo userLoginInfo) throws Exception {
 		return userMapper.selectSpeedOnVacntnInfo(userLoginInfo);
 	}
+	
+	@Override
+	public int insertUserEntryInfo() throws Exception {
+		return userMapper.insertUserEntryInfo();
+	}
 
 	@Override
 	public int updateUserInfo(UserInfo vo) throws Exception {
