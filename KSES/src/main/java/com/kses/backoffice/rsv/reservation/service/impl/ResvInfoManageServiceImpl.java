@@ -191,6 +191,7 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 				}
 				
 				// 3.신규 예약정보 출금거래
+				LOGGER.info("resvSeatChange : " + SmartUtil.NVL(resvInfo.get("resv_seq"),"") + "번 결제 시작");
 				resultMap = interfaceService.SpeedOnPayMent(copyResvSeq, cardPw, true);
 				if(!resultMap.get(Globals.STATUS).equals(Globals.STATUS_SUCCESS)) {
 					resultMap.addAttribute("resvSeq", copyResvSeq);

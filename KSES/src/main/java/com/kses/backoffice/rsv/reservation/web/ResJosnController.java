@@ -90,11 +90,9 @@ public class ResJosnController {
 
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
-			// 값 넣기
 			String Url = "";
 			JsonNode node = null;
-			// _requstId
-			//
+
 			String Message = "";
 			String errorCd = "";
 
@@ -108,8 +106,6 @@ public class ResJosnController {
 			if (SmartUtil.NVL(sendInfo.get("gubun"), "").toString().equals("login")) {
 				Url = propertiesService.getString("speedOnUrl") + "user/userChk";
 
-				// 스피드온 패스워드 암호화(임시)
-				// Login_Type -> 1 = SHA-512 + Base64 : 2 = SHA-256 + Base64
 				String encryptType = "";
 				String password = "";
 
@@ -150,10 +146,11 @@ public class ResJosnController {
 					}
 				}
 			} else if (SmartUtil.NVL(sendInfo.get("gubun"), "").toString().equals("fep")) {
-				// 출금 정보
 				Url = propertiesService.getString("speedOnUrl") + "trade/fepWithdraw";
 
 				Map<String, Object> resvInfo = resService.selectUserResvInfo(jsonObject);
+				LOGGER.info("selectSpeedCheck : " + SmartUtil.NVL(resvInfo.get("resv_seq"),"") + "번 결제 시작");
+				
 				if(!SmartUtil.NVL(resvInfo.get("resv_state"),"").equals("RESV_STATE_1")) {
 					switch (SmartUtil.NVL(resvInfo.get("resv_state"),"")) {
 						case "RESV_STATE_2" : Message = "이미 이용중인 예약정보 입니다.";  break;
@@ -169,6 +166,12 @@ public class ResJosnController {
 				if(SmartUtil.NVL(resvInfo.get("resv_pay_dvsn"),"").equals("RESV_PAY_DVSN_2")) {
 					model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 					model.addObject(Globals.STATUS_MESSAGE, "이미 결제처리된 예약정보 입니다.");
+					return model;
+				}
+				
+				if(SmartUtil.NVL(resvInfo.get("center_pilot_yn"),"N").equals("N")) {
+					model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+					model.addObject(Globals.STATUS_MESSAGE, "비시범 지점 예약정보 입니다.");
 					return model;
 				}
 				
