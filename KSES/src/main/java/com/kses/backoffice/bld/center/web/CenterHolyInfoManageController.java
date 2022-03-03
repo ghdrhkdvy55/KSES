@@ -90,10 +90,9 @@ public class CenterHolyInfoManageController {
 			
 			List<Map<String, Object>> centerHolyInfoList = centerHolyInfoService.selectCenterHolyInfoList(searchVO);
 			//신규 추가 리스트 값 없을때 처리 
-			String centerCd = centerHolyInfoList.get(0).get("center_cd").toString();
 			String centerNm =   (centerHolyInfoList.size() > 0) ? 
 				         centerHolyInfoList.get(0).get("center_nm").toString():
-				         centerInfoManageService.selectCenterInfoDetail(centerCd).get("center_nm").toString();
+				         SmartUtil.NVL(searchVO.get("centerNm"),"").toString();
 				         
 			int totCnt = centerHolyInfoList.size() > 0 ?  Integer.valueOf( centerHolyInfoList.get(0).get("total_record_count").toString()) : 0;
 						    

@@ -255,7 +255,7 @@
         	<fieldset class="whiteBox searchBox">
 	          	<div class="top" style="border-bottom: 0px; padding: 0px;">
 	            	<p>복사지점</p>
-	            	<select id="centerHolyList" onChange="jqGridFunc.fn_centerHolyInfo('change',this)">
+	            	<select id="centerHolyList" onChange="jqGridFunc.fn_centerHolyInfo('change',this, 1)">
 						<c:forEach items="${centerInfoComboList}" var="centerInfoComboList">
 							<option value="${centerInfoComboList.center_cd}"><c:out value='${centerInfoComboList.center_nm}'/></option>
 						</c:forEach>
@@ -1015,11 +1015,11 @@
 		},
 		//지점 휴일정보시 관련 function
 		fn_centerHolyInfo : function(division, centerCd, page, callbackYn) {
-			centerCd = division == "list" ? centerCd : centerCd.value;
+			centerCd = division == "list" ? centerCd : $("#centerHolyList option:selected").val();
 			if(division == "list") {
 				$("#searchCenterCd").val(centerCd);
 			}
-			
+
 			var url = "/backoffice/bld/centerHolyInfoListAjax.do";
 			var param = {
 							"centerCd" : centerCd,
@@ -1059,16 +1059,14 @@
 							}
  							//페이징
 							var pageObj  = result.paginationInfo;
-							console.log("pageObj : " + pageObj);
 							var pageHtml = ajaxPagingParam(pageObj.currentPageNo, pageObj.firstPageNo, pageObj.recordCountPerPage, 
-	                        							pageObj.firstPageNoOnPageList, pageObj.lastPageNoOnPageList, 
-														pageObj.totalRecordCount, pageObj.pageSize, "jqGridFunc.fn_centerHolyInfo","list", $("#searchCenterCd").val());
+            						pageObj.firstPageNoOnPageList, pageObj.lastPageNoOnPageList, 
+									pageObj.totalRecordCount, pageObj.pageSize, "jqGridFunc.fn_centerHolyInfo", division, centerCd);
 							$("#centerHoly_page").html(pageHtml);
 						} else {
 							setHtml += "<tr class='cur_poin'><td colspan='4'>등록된 휴일정보가 존재하지 않습니다.<td></tr>";	
+							$("#centerHoly_page").empty();
 						}
-						
-						
 						$("#bld_holiday_add .inTxt").prepend(setHtml);
 						$("#centerHolyList").val(centerCd);
 					}
