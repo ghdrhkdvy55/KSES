@@ -35,5 +35,7 @@ public interface UserInfoManageMapper {
     
     public int updateUserPhoneNumber(@Param("envType") String envType);
     
+    public int updateGuestPrivacyInfo();
+    
     public void deleteUserInfo(@Param("delCds") List<String> delCds);
 }

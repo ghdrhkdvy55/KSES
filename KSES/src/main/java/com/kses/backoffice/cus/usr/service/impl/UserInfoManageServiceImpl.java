@@ -82,6 +82,11 @@ public class UserInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	}
 	
 	@Override
+	public int updateGuestPrivacyInfo() throws Exception {
+		return userMapper.updateGuestPrivacyInfo();
+	}
+	
+	@Override
 	public boolean deleteUserInfo(String delCds) throws Exception {
         try {
         	userMapper.deleteUserInfo(SmartUtil.dotToList(delCds));

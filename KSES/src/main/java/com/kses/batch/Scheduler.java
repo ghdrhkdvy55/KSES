@@ -271,19 +271,19 @@ public class Scheduler {
 	@Scheduled(cron="0 05 01 * * ?")
 	public void updateGuestPrivacyInfo() throws Exception {		
 		try {
-			LOGGER.info("----------------------------KSES USER PHONE NUMBER UPDATE BATCH START----------------------------");
-			int ret = userService.updateUserPhoneNumber(propertiesService.getString("Globals.envType"));
+			LOGGER.info("----------------------------KSES GUEST PRIVACY INFO UPDATE BATCH START----------------------------");
+			int ret = userService.updateGuestPrivacyInfo();
 			
 			if(ret >= 0) {
-				LOGGER.info("updateUserPhoneNumber => " + "회원 휴대폰 번호 " + ret + "건 갱신");
+				LOGGER.info("updateGuestPrivacyInfo => " + " 기간만료된 비회원 개인정보 " + ret + "건 갱신");
 			} else {
 				throw new Exception();
 			}
 		} catch (RuntimeException re) {
-			LOGGER.error("updateUserPhoneNumber => Run Failed", re);
+			LOGGER.error("updateGuestPrivacyInfo => Run Failed", re);
 		} catch (Exception e) {
-			LOGGER.error("updateUserPhoneNumber => Failed", e);
+			LOGGER.error("updateGuestPrivacyInfo => Failed", e);
 		}
-		LOGGER.info("----------------------------KSES USER PHONE NUMBER UPDATE BATCH END----------------------------");
+		LOGGER.info("----------------------------KSES GUEST PRIVACY INFO UPDATE BATCH END----------------------------");
 	}
 }

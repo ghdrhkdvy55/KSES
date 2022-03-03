@@ -30,5 +30,7 @@ public interface UserInfoManageService {
     
     int updateUserPhoneNumber(String envType) throws Exception;
     
+    int updateGuestPrivacyInfo() throws Exception;
+    
     boolean deleteUserInfo(String delCds) throws Exception;
 }
