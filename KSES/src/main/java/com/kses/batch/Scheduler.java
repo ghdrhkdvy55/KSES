@@ -190,6 +190,30 @@ public class Scheduler {
 		}
 		LOGGER.info("----------------------------KSES RESV USAGE STAT UPDATE BATCH END----------------------------");
 	}
+	
+	/**
+	 * 지점별 결제 금액통계 갱신
+	 * 
+	 * @throws Exception
+	 */
+	@Scheduled(cron="0 50 23 * * ?")
+	public void updateResvCenterPayStat() throws Exception {		
+		try {
+			LOGGER.info("----------------------------KSES RESV PAY STAT UPDATE BATCH START----------------------------");
+			int ret = dashBoardService.insertCenterResvPayStat();
+			
+			if(ret >= 0) {
+				LOGGER.info("updateResvCenterPayStat => " + "지점별 결제 금액통계 " + ret + "건 갱신");
+			} else {
+				throw new Exception();
+			}
+		} catch (RuntimeException re) {
+			LOGGER.error("updateResvCenterPayStat => Run Failed", re);
+		} catch (Exception e) {
+			LOGGER.error("updateResvCenterPayStat => Failed", e);
+		}
+		LOGGER.info("----------------------------KSES RESV PAY STAT UPDATE BATCH END----------------------------");
+	}
 
 	/**
 	 * 스피드온 회원 휴대폰번호 갱신 스케줄러

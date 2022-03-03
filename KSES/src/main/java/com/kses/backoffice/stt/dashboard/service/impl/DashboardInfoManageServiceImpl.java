@@ -71,4 +71,9 @@ public class DashboardInfoManageServiceImpl extends EgovAbstractServiceImpl impl
     public int insertCenterUsageStat() throws Exception {
     	return dashboardInfoManageMapper.insertCenterUsageStat();
     }
+
+    @Override
+    public int insertCenterResvPayStat() throws Exception {
+    	return dashboardInfoManageMapper.insertCenterResvPayStat();
+    }
 }
