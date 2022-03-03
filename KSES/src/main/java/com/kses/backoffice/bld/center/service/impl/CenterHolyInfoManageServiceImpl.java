@@ -23,8 +23,8 @@ public class CenterHolyInfoManageServiceImpl extends EgovAbstractServiceImpl imp
 	private UniSelectInfoManageMapper uniMapper;
 	
 	@Override
-	public List<Map<String, Object>> selectCenterHolyInfoList(String centerCd) throws Exception {
-		return centerHolyMapper.selectCenterHolyInfoList(centerCd);
+	public List<Map<String, Object>> selectCenterHolyInfoList(Map<String, Object> params) throws Exception {
+		return centerHolyMapper.selectCenterHolyInfoList(params);
 	}
 
 	@Override
@@ -57,5 +57,4 @@ public class CenterHolyInfoManageServiceImpl extends EgovAbstractServiceImpl imp
 	public int deleteCenterHolyInfo(int centerHolySeq) throws Exception {
 		return centerHolyMapper.deleteCenterHolyInfo(centerHolySeq);
 	}
-
 }

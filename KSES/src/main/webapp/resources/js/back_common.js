@@ -806,6 +806,41 @@ Date.prototype.format = function (f) {
     });
 };
 
+//페이징 스크립트 매개변수 추가;
+function ajaxPagingParam(currentPageNo, firstPageNo, recordCountPerPage, firstPageNoOnPageList, lastPageNoOnPageList, totalPageCount, pageSize, pageScript, param1, param2){
+	var pageHtml = "";
+	pageHtml += "";
+	if (currentPageNo == firstPageNo ){
+		pageHtml += "<a href='#' >&laquo;</a>";
+	}else {
+		pageHtml += "<a href='#' onclick='"+pageScript+"(&#39;"+ param1 +"&#39;,&#39;"+ param2 +"&#39;,"+ firstPageNo +")';return false; '>&laquo;</a>";
+	}
+	if (parseInt(currentPageNo) > parseInt(firstPageNo)){
+		pageHtml += "<a href='#' onclick='"+pageScript+"(&#39;"+ param1 +"&#39;,&#39;"+ param2 +"&#39;,"+ parseInt(parseInt(currentPageNo) -1)+");return false;'>&lt;</a>"
+	}else {
+		pageHtml += "<a href='#' >&lt;</a>"
+	}
+	for(var  i = firstPageNoOnPageList; i<= lastPageNoOnPageList; i++){
+		if (i == currentPageNo){
+			pageHtml += "<a class=active>"+i+"</a>";
+		}else {
+			pageHtml += "<a href='#' onclick='"+pageScript+"(&#39;"+ param1 +"&#39;,&#39;"+ param2 +"&#39;,"+i+");return false; '>"+i+"</a>";
+		}
+	}
+
+	if (parseInt(currentPageNo) != parseInt(lastPageNoOnPageList) ){
+		pageHtml += "<a href='#' onclick='"+pageScript+"(&#39;"+ param1 +"&#39;,&#39;"+ param2 +"&#39;,"+ parseInt(parseInt(currentPageNo) + 1)+");return false;'>&gt;</a>"
+	}else {
+		pageHtml += "<a href='#' >&gt;</a>"
+	}
+	if (parseInt(totalPageCount) > parseInt(pageSize)  ){
+		pageHtml += "<a href='#' onclick='"+pageScript+"(&#39;"+ param1 +"&#39;,&#39;"+ param2 +"&#39;,"+ lastPageNoOnPageList +");return false;'>&raquo;</a>";
+	}else{
+		pageHtml += "<a href='#' >&raquo;</a>";
+	}	
+	return pageHtml;
+}
+
 String.prototype.string = function (len) { var s = '', i = 0; while (i++ < len) { s += this; } return s; };
 String.prototype.zf = function (len) { return "0".string(len - this.length) + this; };
 Number.prototype.zf = function (len) { return this.toString().zf(len); };

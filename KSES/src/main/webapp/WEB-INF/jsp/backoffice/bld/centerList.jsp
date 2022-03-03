@@ -22,6 +22,7 @@
 <input type="hidden" id="billSeq" name="billSeq">
 <input type="hidden" id="centerHolySeq" name="centerHolySeq">
 <input type="hidden" id="targetCenterHolySeq" name="targetCenterHolySeq">
+<input type="hidden" id="pageIndex" name="pageIndex" />
 <div class="breadcrumb">
 	<ol class="breadcrumb-item">
 		<li>시설 관리&nbsp;&gt;&nbsp;</li>
@@ -287,6 +288,7 @@
 	            	</tr>
 	          	</tbody>
 			</table>
+			<p class="page_num" id="centerHoly_page"></p>
 		</div>
 	</div>
 </div>
@@ -593,7 +595,7 @@
 			} else if(index == "floor") {
 				form = '<a href="javascript:jqGridFunc.fn_centerFloorInfo(&#39;'+ rowObject.center_cd +'&#39;);" class="blueBtn">층 관리</a>';
 			} else if(index == "holy") {
-				form = '<a href="javascript:jqGridFunc.fn_centerHolyInfo(&#39;list&#39;,&#39;' + rowObject.center_cd + '&#39;);" class="orangeBtn">설정</a>';
+				form = '<a href="javascript:jqGridFunc.fn_centerHolyInfo(&#39;list&#39;,&#39;' + rowObject.center_cd + '&#39;,&#39;1&#39;);" class="orangeBtn">설정</a>';
 			} else if(index == "bill") {
 				form = '<a href="javascript:jqGridFunc.fn_billInfoList(&#39;' + rowObject.center_cd + '&#39;);" class="orangeBtn">설정</a>';
 			} else if(index == "billDay") {
@@ -1012,21 +1014,24 @@
 			
 		},
 		//지점 휴일정보시 관련 function
-		fn_centerHolyInfo : function(division, centerCd, callbackYn) {
+		fn_centerHolyInfo : function(division, centerCd, page, callbackYn) {
 			centerCd = division == "list" ? centerCd : centerCd.value;
 			if(division == "list") {
 				$("#searchCenterCd").val(centerCd);
 			}
 			
 			var url = "/backoffice/bld/centerHolyInfoListAjax.do";
-			var param = {"centerCd" : centerCd};
+			var param = {
+							"centerCd" : centerCd,
+							"pageIndex" : page
+						};
 
 			$("#bld_holiday_add .inTxt .cur_poin").remove();
 			
 			fn_Ajax
 			(
 				url, 
-				"GET",
+				"POST",
 				param, 
 				false,
 				function(result) {
@@ -1052,9 +1057,17 @@
 								setHtml += "<td><a onclick='jqGridFunc.fn_updateSelect(\"Edt\", "+ obj.center_holy_seq +")' class='blueBtn'>수정</a><a onclick='jqGridFunc.fn_holyDel(" + obj.center_holy_seq+ ")' class='grayBtn' style='margin-left: 5px;'>삭제</a></td>";;
 								setHtml += "</tr>";
 							}
+ 							//페이징
+							var pageObj  = result.paginationInfo;
+							console.log("pageObj : " + pageObj);
+							var pageHtml = ajaxPagingParam(pageObj.currentPageNo, pageObj.firstPageNo, pageObj.recordCountPerPage, 
+	                        							pageObj.firstPageNoOnPageList, pageObj.lastPageNoOnPageList, 
+														pageObj.totalRecordCount, pageObj.pageSize, "jqGridFunc.fn_centerHolyInfo","list", $("#searchCenterCd").val());
+							$("#centerHoly_page").html(pageHtml);
 						} else {
 							setHtml += "<tr class='cur_poin'><td colspan='4'>등록된 휴일정보가 존재하지 않습니다.<td></tr>";	
 						}
+						
 						
 						$("#bld_holiday_add .inTxt").prepend(setHtml);
 						$("#centerHolyList").val(centerCd);
@@ -1111,6 +1124,7 @@
 			fn_ConfirmPop("해당 지점의 사전예약정보를 복사 하시겠습니까?");
 		},
 		fn_centerHolyInfoCopy : function() {
+			$("#confirmPage").bPopup().close();
 			var url = "/backoffice/bld/centerHolyInfoCopy.do";
 			var copyCenterCd = $("#centerHolyList option:selected").val();
 			var targetCenterCd = $("#searchCenterCd").val();
@@ -1129,13 +1143,12 @@
 				true,
 				function(result) {
 					if (result.status == "LOGIN FAIL") {
-						common_popup(result.meesage, "N","");
+						common_popup(result.message, "N","");
 						location.href="/backoffice/login.do";
 					} else if (result.status == "SUCCESS") {
-						$("#bld_early_set").bPopup().close();
-						common_modelClose("bld_holiday_add");
+						common_popup(result.message, "Y","");
 					}else {
-						common_popup(result.meesage, "Y","bld_holiday_add");
+						common_popup(result.message, "N","");
 					}
 				},
 				function(request){ 
@@ -1175,18 +1188,16 @@
 					}else if (result.status == "SUCCESS"){
 						   //총 게시물 정리 하기'								
 							common_popup("저장에 성공했습니다.", "Y", "bld_holiday_add");
-					 	jqGridFunc.fn_centerHolyInfo("list",$("#searchCenterCd").val(), true);
+					 	jqGridFunc.fn_centerHolyInfo("list",$("#searchCenterCd").val(), "1", true);
 							$("#centerHolySeq").val("");
 							$("#holyDt").val("");
 							$("#holyNm").val("");
-							$("#useYn").val("");
+							$("#useYn").val("Y");
 							$("#mode").val("Ins");
 					}else if (result.status == "OVERLAP FAIL"){
 							common_popup("휴일 일자가 중복 발생 하였습니다.", "Y", "bld_holiday_add");
-							jqGridFunc.fn_holySearch();
 					}else if (result.status == "FAIL"){
 						   common_modelCloseM("저장 도중 문제가 발생 하였습니다.", "Y", "bld_holiday_add");
-						   jqGridFunc.fn_holySearch();
 					}
 				},
 				function(request){
@@ -1197,7 +1208,7 @@
 		fn_holyDel : function(centerHolySeq) {
 			var params = {'centerHolySeq': centerHolySeq};
 			fn_uniDelAction("/backoffice/bld/centerHolyInfoDelete.do", "GET", params, false, "jqGridFunc.fn_search");
-			jqGridFunc.fn_centerHolyInfo("list",$("#searchCenterCd").val(), true);
+			jqGridFunc.fn_centerHolyInfo("list",$("#searchCenterCd").val(), "1", true);
 		},
 		//지점 현금영수증 정보 Function
 		fn_billInfoList : function(centerCd) {			

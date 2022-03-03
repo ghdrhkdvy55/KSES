@@ -16,7 +16,7 @@ public interface CenterHolyInfoManageService {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<Map<String, Object>> selectCenterHolyInfoList(@Param("centerHolySeq") String centerHolySeq) throws Exception;
+	public List<Map<String, Object>> selectCenterHolyInfoList(Map<String, Object> params) throws Exception;
 	
 	/**
 	 * SPDM 지점 휴일 정보 갱신
@@ -35,7 +35,6 @@ public interface CenterHolyInfoManageService {
 	 * @throws Exception
 	 */
 	public int copyCenterHolyInfo(Map<String, Object> params) throws Exception;
-	
 	
 	public Map<String, Object>  centerUpdateSelect(String centerHolySeq) throws Exception;
 	
