@@ -1059,6 +1059,7 @@
 				var checkDvsn = entryDvsn == "ENTRY_DVSN_1" ? "STANDING" : "SEAT";
 				params = {
 					"checkDvsn" : checkDvsn,
+					"inResvDate" : $("#resvDate").val(),
 					"userDvsn" : $("#userDvsn").val(),
 					"userId" : $("#userId").val(),
 					"userPhnum" : resvUserClphn,

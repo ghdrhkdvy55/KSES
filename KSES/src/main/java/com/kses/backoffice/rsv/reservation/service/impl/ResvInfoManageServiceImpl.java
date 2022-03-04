@@ -82,6 +82,11 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	public String selectResvSeqNext() throws Exception {
 		return resvMapper.selectResvSeqNext();
 	}
+	
+	@Override
+	public String selectResvDate(String centerCd) throws Exception {
+		return resvMapper.selectResvDate(centerCd);
+	}
 
 	@Override
 	public int updateUserResvInfo(ResvInfo vo) throws Exception {

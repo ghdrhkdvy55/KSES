@@ -3,7 +3,6 @@ package com.kses.backoffice.rsv.reservation.service;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.ui.ModelMap;
 
 import com.kses.backoffice.rsv.reservation.vo.ResvInfo;
@@ -46,6 +45,15 @@ public interface ResvInfoManageService {
 	public String selectResvSeqNext() throws Exception;
 	
 	/**
+	 * SPDM 지점 예약일자 조회
+	 * 
+	 * @param centerCd
+	 * @return
+	 * @throws Exception
+	 */
+	public String selectResvDate(String centerCd) throws Exception;
+	
+	/**
 	 * SPDM 회원 마지막 예약 정보 조회
 	 * 
 	 * @param userId
@@ -71,33 +79,6 @@ public interface ResvInfoManageService {
 	 * @throws Exception
 	 */
 	public Map<String, Object> selectUserResvInfoFront(Map<String, Object> params) throws Exception;
-	
-	/**
-	 * SPDM 회원 예약 정보 등록 및 수정
-	 * 
-	 * @param vo
-	 * @return
-	 * @throws Exception
-	 */
-	public int updateUserResvInfo(ResvInfo vo) throws Exception;
-	
-	/**
-	 * SPDM 장기예약 정보 등록
-	 * 
-	 * @param vo
-	 * @return
-	 * @throws Exception
-	 */
-	public int updateLongResvInfo(ResvInfo vo) throws Exception;
-	
-	/**
-	 * SPDM 회원 장기예약 정보 등록 및 수정
-	 * 
-	 * @param vo
-	 * @return
-	 * @throws Exception
-	 */
-	public int updateUserLongResvInfo(ResvInfo vo) throws Exception;
 	
 	/**
 	 * SPDM 회원 예약 현시간 예약한 정보 조회
@@ -143,6 +124,33 @@ public interface ResvInfoManageService {
 	 * @throws Exception
 	 */
 	public List<Map<String, Object>> selectGuestMyResvInfo(Map<String, Object> params) throws Exception;
+	
+	/**
+	 * SPDM 회원 예약 정보 등록 및 수정
+	 * 
+	 * @param vo
+	 * @return
+	 * @throws Exception
+	 */
+	public int updateUserResvInfo(ResvInfo vo) throws Exception;
+	
+	/**
+	 * SPDM 장기예약 정보 등록
+	 * 
+	 * @param vo
+	 * @return
+	 * @throws Exception
+	 */
+	public int updateLongResvInfo(ResvInfo vo) throws Exception;
+	
+	/**
+	 * SPDM 회원 장기예약 정보 등록 및 수정
+	 * 
+	 * @param vo
+	 * @return
+	 * @throws Exception
+	 */
+	public int updateUserLongResvInfo(ResvInfo vo) throws Exception;
 	
 	/**
 	 * SPDM 예약 좌석정보 변경
@@ -233,7 +241,7 @@ public interface ResvInfoManageService {
 	 * @return
 	 * @throws Exception
 	 */
-	public Map<String, Object> resvQrDoubleCheck(@Param("params") Map<String, Object> params) throws Exception;	
+	public Map<String, Object> resvQrDoubleCheck(Map<String, Object> params) throws Exception;	
 	
 	/**
 	 * SPDM 입급 또는 환불시 예약정보 상태 변경

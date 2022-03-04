@@ -22,6 +22,8 @@ public interface ResvInfoManageMapper {
 	
 	public String selectResvSeqNext() throws Exception;
 	
+	public String selectResvDate(@Param("centerCd") String centerCd);
+	
 	public Map<String, Object> selectInUserResvInfo(ResvInfo paramResvInfo);
 	
 	public Map<String, Object> selectResvBillInfo(@Param("resvSeq") String resvSeq) throws Exception;

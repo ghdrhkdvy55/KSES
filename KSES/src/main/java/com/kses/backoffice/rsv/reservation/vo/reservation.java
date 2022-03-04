@@ -9,6 +9,7 @@ public enum reservation {
 	RESV_ERROR_004("RESV_ERROR_004", "현재 예약일자에 이미 예약정보가 존재합니다."),
 	RESV_ERROR_005("RESV_ERROR_005", "예약 기간중 이미 예약 회원의 예약정보가 존재합니다."),
 	RESV_ERROR_006("RESV_ERROR_006", "최대자유석수를 초과하였습니다.<br>지정 좌석예약을 이용바랍니다."),
+	RESV_ERROR_007("RESV_ERROR_007", "예약일자가 올바르지 않습니다."),
 	RESV_ERROR_999("RESV_ERROR_999", "시스템 에러가 발생하였습니다.");
 	
 	private String code; 

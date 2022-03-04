@@ -368,6 +368,10 @@
 		SELECT LPAD(SEQ_SER_RERV_INFO.NEXTVAL,12,0) FROM DUAL
 	</select>
 	
+	<select id="selectResvDate" resultType="String">
+    	SELECT FN_RESVDATE(#{centerCd}) FROM DUAL
+    </select>
+	
 	<!-- 회원 예약정보 등록 -->
     <insert id="insertUserResvInfo">
 		<selectKey resultType="String" keyProperty="resvSeq" order="BEFORE">
