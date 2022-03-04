@@ -234,7 +234,7 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 			if(resvMapper.updateResvInfoCopy(params) > 0) {
 				resultMap.addAttribute(Globals.STATUS, Globals.STATUS_SUCCESS);
 				resultMap.addAttribute(Globals.STATUS_MESSAGE, "신규 예약정보 등록 완료");
-				sureService.insertResvSureData("RESERVATION", params.get("copyResvSeq").toString());
+				sureService.insertResvSureData(Globals.SMS_TYPE_RESV, params.get("copyResvSeq").toString());
 			} else {
 				throw new Exception();
 			}	
@@ -317,7 +317,7 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 					resultMap.put(Globals.STATUS, Globals.STATUS_SUCCESS);
 					resultMap.put(Globals.STATUS_MESSAGE, "예약정보가 정상적으로 취소되었습니다.");
 					
-					sureService.insertResvSureData("CANCEL", resvSeq);
+					sureService.insertResvSureData(Globals.SMS_TYPE_CANCEL, resvSeq);
 				} else {
 					step = "[예약취소]";
 					message = "예약취소중 오류가 발생하였습니다.";

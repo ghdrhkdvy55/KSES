@@ -292,7 +292,7 @@ public class FrontResvInfoManageController {
 			if(ret > 0) {
 				// 방금 예약한 정보 조회 (지점,층,구역,좌석 명칭)
 				Map<String, Object> resvInfo = resvService.selectInUserResvInfo(vo);
-				sureService.insertResvSureData("RESERVATION", resvInfo.get("resv_seq").toString());
+				sureService.insertResvSureData(Globals.SMS_TYPE_RESV, resvInfo.get("resv_seq").toString());
 				String autoPaymentYn = systemService.selectTodayAutoPaymentYn();
 				
 				if(vo.getResvUserDvsn().equals("USER_DVSN_1")) {
@@ -305,7 +305,7 @@ public class FrontResvInfoManageController {
 					UserInfo user = new UserInfo();
 					user.setUserDvsn("USER_DVSN_2");
 					user.setUserId(resvInfo.get("user_id").toString());
-					user.setUserBirthDy("19700000");
+					user.setUserBirthDy("00000000");
 					user.setUserSexMf("N");
 					user.setUserPhone(vo.getResvUserClphn());
 					user.setUserNm(vo.getResvUserNm());
@@ -356,7 +356,7 @@ public class FrontResvInfoManageController {
 			
 			int ret = resvService.resvInfoCancel(params);
 			if(ret > 0) {
-				sureService.insertResvSureData("CANCEL", params.get("resv_seq").toString());
+				sureService.insertResvSureData(Globals.SMS_TYPE_CANCEL, params.get("resv_seq").toString());
 
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("sucess.common.reservation"));

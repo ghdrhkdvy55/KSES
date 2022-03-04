@@ -1,5 +1,6 @@
 package com.kses.backoffice.bld.center.service.impl;
 
+import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 import java.util.List;
@@ -96,7 +97,7 @@ public class NoshowInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
 				resultCount = noshowMapper.updateNoshowResvInfoTranCancel(resvInfo);
 				if(resultCount > 0) {
 					LOGGER.info("예약번호 : " + resvSeq + " 예약 정보 취소성공");
-					sureService.insertResvSureData("CANCEL", resvSeq);
+					sureService.insertResvSureData(Globals.SMS_TYPE_CANCEL, resvSeq);
 				} else {
 					resultCount = 0;
 					LOGGER.info("예약번호 : " + resvSeq + " 예약 정보 취소실패");

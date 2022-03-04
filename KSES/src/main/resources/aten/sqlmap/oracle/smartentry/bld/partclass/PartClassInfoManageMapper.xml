@@ -2,9 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.kses.backoffice.bld.partclass.mapper.PartClassInfoManageMapper">
 	<select id="selectPartClassList" resultType="lmap">
-		SELECT TB.* FROM 
+		SELECT TB.* FROM
 		(
-			SELECT 
+			SELECT
 				SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT,
 				ROW_NUMBER() OVER (ORDER BY B.CENTER_ORDER ASC, A.PART_CLASS_ORDER ASC) AS RNUM,
 				A.PART_CLASS_SEQ,	A.CENTER_CD, FN_CODE_NM(A.CENTER_CD, 'CENTER') AS CENTER_NM, FN_DETAILCODENM(A.PART_CLASS) AS PART_CLASS_NM,
@@ -17,13 +17,13 @@
 			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchCenterCd)">
 				AND A.CENTER_CD = #{params.searchCenterCd}
 			</if>
-		)TB  
-		WHERE RNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}   
+		) TB
+		WHERE RNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}
 		ORDER BY TB.RNUM ASC
 	</select>
 	
 	<select id="selectPartClassComboList" resultType="lmap">
-		SELECT 
+		SELECT
 			A.PART_CLASS_SEQ, FN_DETAILCODENM(A.PART_CLASS) AS PART_CLASS_NM, A.PART_PAY_COST, A.PART_ICON
 		FROM TSEB_CENTER_PART_CLASS_D A
 		WHERE A.CENTER_CD = #{centerCd}
@@ -32,12 +32,12 @@
 	</select>
 	
 	<insert id="insertPartClassInfo">
-		INSERT INTO TSEB_CENTER_PART_CLASS_D 
+		INSERT INTO TSEB_CENTER_PART_CLASS_D
 		(
-			PART_CLASS_SEQ, CENTER_CD, PART_CLASS, PART_PAY_COST, PART_SPEED_PAY_COST, 
+			PART_CLASS_SEQ, CENTER_CD, PART_CLASS, PART_PAY_COST, PART_SPEED_PAY_COST,
 			USE_YN, PART_ICON, PART_CLASS_ORDER
 			FRST_REGIST_DTM, FRST_REGTER_ID, LAST_UPDT_DTM, LAST_UPDUSR_ID
-		) 
+		)
 		VALUES
 		(
 			SEQ_SEB_CENTER_PART_CLASS.NEXTVAL, #{centerCd}, #{partClass, jdbcType=VARCHAR}, #{partPayCost}, #{partSpeedPayCost},
