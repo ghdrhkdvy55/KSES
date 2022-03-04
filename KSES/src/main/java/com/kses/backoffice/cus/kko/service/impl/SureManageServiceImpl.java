@@ -14,6 +14,7 @@ import com.kses.backoffice.cus.kko.vo.SureDataInfo;
 import com.kses.backoffice.cus.kko.vo.SureMsgInfo;
 import com.kses.backoffice.rsv.reservation.mapper.ResvInfoManageMapper;
 
+import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.fdl.property.EgovPropertyService;
 
@@ -61,7 +62,7 @@ public class SureManageServiceImpl extends EgovAbstractServiceImpl implements Su
 			sureDataInfo.setReqtime("00000000000000");
 			ret = sureMapper.insertSureData(sureDataInfo);
 			
-			msgDvsn = msgDvsn.equals("RESERVATION") ? "완료" : "취소";
+			msgDvsn = msgDvsn.equals(Globals.SMS_TYPE_RESV) ? "완료" : "취소";
 			if(ret > 0) {
 				LOGGER.info("예약번호 : " + resvSeq + "번 예약" + msgDvsn + "알림톡 발송성공");
 			} else {

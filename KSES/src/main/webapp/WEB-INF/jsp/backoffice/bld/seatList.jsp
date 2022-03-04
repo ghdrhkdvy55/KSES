@@ -172,7 +172,7 @@
 					{label: '구역', name:'part_nm', index:'part_nm', align:'center'},
 					{label: '좌석명', name:'seat_nm', index:'seat_nm', align:'center'},
 					{label: '좌석등급', name:'seat_class_txt', index:'seat_class_txt', align:'center'},
-					{label: '금액', name: 'pay_cost',  index:'pay_cost', align:'center'},
+					{label: '금액', name: 'part_pay_cost',  index:'part_pay_cost', align:'center'},
 					{label: '정렬순서', name: 'seat_order',  index:'seat_order', align:'center'},
 					{label: '사용유무', name: 'use_yn', index:'use_yn', align:'center'},
 					{label: '수정일자', name:'last_updt_dtm', index:'last_updt_dtm', align:'center'},

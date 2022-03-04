@@ -69,9 +69,24 @@
    	
    	<select id="selectUserInfoDetail" resultType="lmap">
 		SELECT 
-			USER_ID, USER_NM, USER_PHONE, USER_SEX_MF, USER_BIRTH_DY, LAST_UPDUSR_ID, LAST_UPDT_DTM,
-			USER_RCPT_YN, USER_RCPT_DVSN, USER_RCPT_NUMBER
-		FROM TSER_USER_INFO_I 
+			USER_ID, USER_NM, USER_PHONE,
+			CASE USER_SEX_MF 
+				WHEN 'M' THEN '남성' 
+				ELSE '여성' 
+			END AS USER_SEX_MF, 
+			TO_CHAR(TO_DATE(USER_BIRTH_DY, 'yyyy-mm-dd'), 'yyyy-mm-dd') AS USER_BIRTH_DY,
+			CASE INDVDLINFO_AGRE_YN 
+				WHEN 'Y' THEN '동의' 
+				ELSE '동의 안함'
+			END AS INDVDLINFO_AGRE_YN, 
+			CASE INDVDLINFO_AGRE_DT
+				WHEN NULL THEN '동의 안함'
+				ELSE TO_CHAR(INDVDLINFO_AGRE_DT, 'yyyy-mm-dd')
+			END AS INDVDLINFO_AGRE_DT,
+			VACNTN_DVSN, VACNTN_DT, VACNTN_ROUND,
+			USER_RCPT_YN, USER_RCPT_DVSN, USER_RCPT_NUMBER,
+			LAST_UPDUSR_ID, LAST_UPDT_DTM
+		FROM TSER_USER_INFO_I A
 		WHERE USER_ID = #{userId}
    	</select>
    	
@@ -94,14 +109,14 @@
 			WHERE USER_CARD_ID = #{params.cardId, jdbcType=VARCHAR}
 		</when>
 		<otherwise>
-			WHERE USER_CARD_ID = (SELECT FC_DEC(#{params.cardId, jdbcType=VARCHAR}) FROM DUAL)
+			WHERE USER_CARD_ID = (SELECT REPLACE(FC_DEC(#{params.cardId, jdbcType=VARCHAR}),' ','+') FROM DUAL)
 			AND USER_CARD_SEQ = #{params.cardSeq, jdbcType=VARCHAR}
 		</otherwise>
 		</choose>
    	</select>
    	
    	<select id="selectDecodeCardId" resultType="String">
-   		SELECT FC_DEC(#{cardId, jdbcType=VARCHAR}) FROM DUAL
+   		SELECT REPLACE(FC_DEC(#{cardId, jdbcType=VARCHAR}),' ','+') FROM DUAL
    	</select>
    	
 	<select id="selectUserVacntnInfo" resultType="lmap">
@@ -192,6 +207,31 @@
         	FROM TSER_USER_INFO_I WHERE USER_ID = #{userId, jdbcType=VARCHAR}   
     	</selectKey>    
 	</insert>
+	
+	<insert id="insertUserEntryInfo">
+		INSERT INTO TSEA_SPDON_LSRT  
+		(
+			ENTRY_DATE, CENTER_RBM_CD, USER_PHONE, FRST_ENTNC_TM 
+		)
+		WITH ENTRY_INFO AS 
+		(
+			SELECT RESV_SEQ, QR_CHECK_TM FROM
+			(
+				SELECT DENSE_RANK() OVER(PARTITION BY RESV_SEQ ORDER BY QR_CHECK_TM) AS RNUM, RESV_SEQ, QR_CHECK_TM
+				FROM TSER_QR_CHECK_H 
+			)
+			WHERE RNUM = 1 
+		)
+		SELECT
+			A.RESV_END_DT, B.CENTER_RBM_CD, D.USER_PHONE, C.QR_CHECK_TM
+		FROM TSER_RESV_INFO_I A, TSEB_CENTER_INFO_M B, ENTRY_INFO C, TSER_USER_INFO_I D
+		WHERE A.CENTER_CD = B.CENTER_CD
+		AND A.RESV_SEQ = C.RESV_SEQ
+		AND A.USER_ID = D.USER_ID
+		AND A.RESV_END_DT = TO_CHAR(SYSDATE, 'YYYYMMDD')
+		AND A.RESV_STATE = 'RESV_STATE_3'
+		ORDER BY B.CENTER_ORDER ASC
+	</insert>
 
 	<update id="updateUserInfo">
 		UPDATE TSER_USER_INFO_I SET 
@@ -246,32 +286,39 @@
 		
 		END
 	}
-   	</update>   	
+   	</update>
+   	
+   	<update id="updateUserPhoneNumber">
+   		MERGE INTO TSER_USER_INFO_I A
+   		USING
+		<choose>
+			<when test="@org.apache.commons.lang3.StringUtils@equals(envType,'DEV')">
+   				VW_KRACEWEB@SMARTDEVLINK
+   			</when>
+   			<when test="@org.apache.commons.lang3.StringUtils@equals(envType,'PROD')">
+   				VW_KRACEWEB@SMARTENTRLINK
+   			</when>
+   		</choose>
+   		B ON (A.USER_ID = B.USER_ID)
+   		WHEN MATCHED THEN
+   		UPDATE SET A.USER_PHONE = B.MOBILE
+   		WHERE A.USER_ID = B.USER_ID
+   		AND A.USER_PHONE != B.MOBILE
+   	</update>
+   	
+   	<update id="updateGuestPrivacyInfo">
+	   	UPDATE TSER_USER_INFO_I SET
+	   		USER_NM = '정보없음', 
+	   		USER_PHONE = '정보없음' 
+		WHERE USER_DVSN = 'USER_DVSN_2'
+		<![CDATA[
+		AND TO_CHAR(LAST_UPDT_DTM,'YYYYMMDD') <= TO_CHAR(SYSDATE - INTERVAL '28' DAY,'YYYYMMDD')
+		]]>
+   	</update>
 
    	<delete id="deleteUserInfo">
    	    <foreach collection="delCds" item="item" separator=";" open="DECLARE BEGIN" close="; END;">  
    	         DELETE FROM TSER_USER_INFO_I WHERE USER_ID= #{item}
 	    </foreach>		
    	</delete>
-   	
-   	<select id="selectUserListDetail" resultType="lmap">
-		SELECT 
-			A.USER_ID, A.USER_NM, A.USER_PHONE, A.USER_EMAIL, 
-			CASE A.USER_SEX_MF 
-				WHEN 'M' THEN '남성' 
-				ELSE '여성' 
-			END AS USER_SEX_MF, 
-			TO_CHAR(TO_DATE(A.USER_BIRTH_DY, 'yyyy-mm-dd'), 'yyyy-mm-dd') AS USER_BIRTH_DY,
-			CASE A.INDVDLINFO_AGRE_YN 
-				WHEN 'Y' THEN '동의' 
-				ELSE '동의 안함'
-			END AS INDVDLINFO_AGRE_YN, 
-			CASE A.INDVDLINFO_AGRE_DT
-				WHEN NULL THEN '동의 안함'
-				ELSE TO_CHAR(A.INDVDLINFO_AGRE_DT, 'yyyy-mm-dd')
-			END AS INDVDLINFO_AGRE_DT,
-			A.VACNTN_DVSN, A.VACNTN_DT, A.VACNTN_ROUND
-		FROM TSER_USER_INFO_I A
-		WHERE A.USER_ID = #{userId}
-   	</select>
 </mapper>

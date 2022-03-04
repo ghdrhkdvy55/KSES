@@ -14,11 +14,13 @@ public interface UserInfoManageService {
     
     UserLoginInfo selectSSOUserInfo(Map<String, Object> params) throws Exception;
     
-    public String selectDecodeCardId(String cardId) throws Exception;
+    String selectDecodeCardId(String cardId) throws Exception;
     
     Map<String, Object> selectUserVacntnInfo(String userId) throws Exception;
     
     Map<String, Object> selectSpeedOnVacntnInfo(UserLoginInfo userLoginInfo) throws Exception;
+    
+    int insertUserEntryInfo() throws Exception;
     
     int updateUserInfo(UserInfo vo) throws Exception;
     
@@ -26,7 +28,9 @@ public interface UserInfoManageService {
     
     int updateUserNoshowCount(String userId) throws Exception;
     
-    boolean deleteUserInfo(String delCds) throws Exception;
+    int updateUserPhoneNumber(String envType) throws Exception;
     
-    public Map<String, Object> selectUserListDetail(String userId) throws Exception;
+    int updateGuestPrivacyInfo() throws Exception;
+    
+    boolean deleteUserInfo(String delCds) throws Exception;
 }

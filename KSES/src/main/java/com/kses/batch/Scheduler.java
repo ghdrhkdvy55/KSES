@@ -12,6 +12,7 @@ import org.springframework.ui.ModelMap;
 import com.kses.backoffice.bas.system.service.SystemInfoManageService;
 import com.kses.backoffice.bas.system.vo.SystemInfo;
 import com.kses.backoffice.bld.center.service.NoshowInfoManageService;
+import com.kses.backoffice.cus.usr.service.UserInfoManageService;
 import com.kses.backoffice.mng.employee.service.EmpInfoManageService;
 import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
 import com.kses.backoffice.stt.dashboard.service.DashboardInfoManageService;
@@ -19,12 +20,16 @@ import com.kses.backoffice.sym.log.service.InterfaceInfoManageService;
 import com.kses.backoffice.util.SmartUtil;
 
 import egovframework.com.cmm.service.Globals;
+import egovframework.rte.fdl.property.EgovPropertyService;
 
 //spring 배치 서비스 정리 
 @Component
 public class Scheduler {
 
 	private static final Logger LOGGER = Logger.getLogger(Scheduler.class);
+	
+	@Autowired
+	protected EgovPropertyService propertiesService;
 
 	@Autowired
 	private EmpInfoManageService empService;
@@ -43,6 +48,9 @@ public class Scheduler {
 	
 	@Autowired
 	DashboardInfoManageService dashBoardService;
+	
+	@Autowired
+	UserInfoManageService userService;
 
 	/**
 	 * 노쇼 예약정보 자동취소 스케줄러
@@ -119,6 +127,29 @@ public class Scheduler {
 	}
 	
 	/**
+	 * SPDM 인사정보 배치 스케줄러
+	 * 
+	 * @throws Exception
+	 */
+	@Scheduled(cron="0 0 08 * * ?")
+	public void updateEmpInfoScheduler() throws Exception {		
+		try {
+			LOGGER.info("----------------------------KSES EMP BATCH START----------------------------");
+			int ret = empService.mergeEmpInfo();
+			if(ret >= 0) {
+				LOGGER.info("updateEmpInfoScheduler => " + "인사정보 " + ret + "건 갱신");
+			} else {
+				throw new Exception();
+			}
+		} catch (RuntimeException re) {
+			LOGGER.error("updateEmpInfoScheduler => Run Failed", re);
+		} catch (Exception e) {
+			LOGGER.error("updateEmpInfoScheduler => Failed", e);
+		}
+		LOGGER.info("----------------------------KSES EMP BATCH END----------------------------");
+	}
+	
+	/**
 	 * 폐점 후 예약상태 '이용완료' 변경
 	 * 
 	 * @throws Exception
@@ -146,6 +177,7 @@ public class Scheduler {
 		try {
 			LOGGER.info("----------------------------KSES RESV USAGE STAT UPDATE BATCH START----------------------------");
 			int ret = dashBoardService.insertCenterUsageStat();
+			
 			if(ret >= 0) {
 				LOGGER.info("updateResvUsageStat => " + "지점별 이용통계 " + ret + "건 갱신");
 			} else {
@@ -158,46 +190,100 @@ public class Scheduler {
 		}
 		LOGGER.info("----------------------------KSES RESV USAGE STAT UPDATE BATCH END----------------------------");
 	}
-
+	
 	/**
-	 * SPDM 인사정보 배치 스케줄러
+	 * 지점별 결제 금액통계 갱신
 	 * 
 	 * @throws Exception
 	 */
-	@Scheduled(cron="0 0 08 * * ?")
-	public void updateEmpInfoScheduler() throws Exception {		
+	@Scheduled(cron="0 50 23 * * ?")
+	public void updateResvCenterPayStat() throws Exception {		
 		try {
-			LOGGER.info("----------------------------KSES EMP BATCH START----------------------------");
-			int ret = empService.mergeEmpInfo();
+			LOGGER.info("----------------------------KSES RESV PAY STAT UPDATE BATCH START----------------------------");
+			int ret = dashBoardService.insertCenterResvPayStat();
+			
 			if(ret >= 0) {
-				LOGGER.info("updateEmpInfoScheduler => " + "인사정보 " + ret + "건 갱신");
+				LOGGER.info("updateResvCenterPayStat => " + "지점별 결제 금액통계 " + ret + "건 갱신");
 			} else {
 				throw new Exception();
 			}
 		} catch (RuntimeException re) {
-			LOGGER.error("updateEmpInfoScheduler => Run Failed", re);
+			LOGGER.error("updateResvCenterPayStat => Run Failed", re);
 		} catch (Exception e) {
-			LOGGER.error("updateEmpInfoScheduler => Failed", e);
+			LOGGER.error("updateResvCenterPayStat => Failed", e);
 		}
-		LOGGER.info("----------------------------KSES EMP BATCH END----------------------------");
+		LOGGER.info("----------------------------KSES RESV PAY STAT UPDATE BATCH END----------------------------");
 	}
 	
-//	/**
-//	 * 금일자 예약정보 자동결제
-//	 * 
-//	 * @throws Exception
-//	 */
-//	@Scheduled(cron="0 30 10 * * ?")
-//	public void ksesAutoPaymentScheduler() throws Exception {		
-//		try {
-//			LOGGER.info("----------------------------KSES AUTO PAYMENT BATCH START----------------------------");
-//			
-//
-//		} catch (RuntimeException re) {
-//			LOGGER.error("ksesAutoPaymentScheduler => Run Failed", re);
-//		} catch (Exception e) {
-//			LOGGER.error("ksesAutoPaymentScheduler => Failed", e);
-//		}
-//		LOGGER.info("----------------------------KSES AUTO PAYMENT END----------------------------");
-//	}
+	/**
+	 * 금일자 회원/비회원 최초 입장정보 등록
+	 * 
+	 * @throws Exception
+	 */
+	@Scheduled(cron="0 55 23 * * ?")
+	public void updateUserEntryInfo() throws Exception {		
+		try {
+			LOGGER.info("----------------------------KSES USER ENTRY INFO UPDATE BATCH START----------------------------");
+			int ret = userService.insertUserEntryInfo();
+			
+			if(ret >= 0) {
+				LOGGER.info("updateUserEntryInfo => " + "지점별 결제 금액통계 " + ret + "건 갱신");
+			} else {
+				throw new Exception();
+			}
+		} catch (RuntimeException re) {
+			LOGGER.error("updateUserEntryInfo => Run Failed", re);
+		} catch (Exception e) {
+			LOGGER.error("updateUserEntryInfo => Failed", e);
+		}
+		LOGGER.info("----------------------------KSES USER ENTRY INFO UPDATE BATCH END----------------------------");
+	}
+
+	/**
+	 * 스피드온 회원 휴대폰번호 갱신 스케줄러
+	 * 
+	 * @throws Exception
+	 */
+	@Scheduled(cron="0 0 01 * * ?")
+	public void updateUserPhoneNumber() throws Exception {		
+		try {
+			LOGGER.info("----------------------------KSES USER PHONE NUMBER UPDATE BATCH START----------------------------");
+			int ret = userService.updateUserPhoneNumber(propertiesService.getString("Globals.envType"));
+			
+			if(ret >= 0) {
+				LOGGER.info("updateUserPhoneNumber => " + "회원 휴대폰 번호 " + ret + "건 갱신");
+			} else {
+				throw new Exception();
+			}
+		} catch (RuntimeException re) {
+			LOGGER.error("updateUserPhoneNumber => Run Failed", re);
+		} catch (Exception e) {
+			LOGGER.error("updateUserPhoneNumber => Failed", e);
+		}
+		LOGGER.info("----------------------------KSES USER PHONE NUMBER UPDATE BATCH END----------------------------");
+	}
+	
+	/**
+	 * 스피드온 회원테이블 등록일 4주지난 비회원 개인정보 갱신 -> 휴대폰 번호, 이름 
+	 * 
+	 * @throws Exception
+	 */
+	@Scheduled(cron="0 05 01 * * ?")
+	public void updateGuestPrivacyInfo() throws Exception {		
+		try {
+			LOGGER.info("----------------------------KSES GUEST PRIVACY INFO UPDATE BATCH START----------------------------");
+			int ret = userService.updateGuestPrivacyInfo();
+			
+			if(ret >= 0) {
+				LOGGER.info("updateGuestPrivacyInfo => " + " 기간만료된 비회원 개인정보 " + ret + "건 갱신");
+			} else {
+				throw new Exception();
+			}
+		} catch (RuntimeException re) {
+			LOGGER.error("updateGuestPrivacyInfo => Run Failed", re);
+		} catch (Exception e) {
+			LOGGER.error("updateGuestPrivacyInfo => Failed", e);
+		}
+		LOGGER.info("----------------------------KSES GUEST PRIVACY INFO UPDATE BATCH END----------------------------");
+	}
 }

@@ -16,4 +16,6 @@ public interface DashboardInfoManageService {
     Map<String, Object> selectCenterUsageStatTotal(Map<String, Object> parmas) throws Exception;
 
     int insertCenterUsageStat() throws Exception;
+    
+    int insertCenterResvPayStat() throws Exception;
 }

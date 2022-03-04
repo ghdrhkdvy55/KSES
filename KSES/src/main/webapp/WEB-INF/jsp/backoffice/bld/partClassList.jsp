@@ -90,19 +90,14 @@
 						</td>
 	                </tr>
 					<tr>
-						<th>구역금액</th>
+						<th>일반 금액</th>
 						<td>
 							<input type="text" name="partPayCost">원
 						</td>
-						<th>사용 유무</th>
-					    <td>
-				            <span>
-			                    <input type="radio" name="useYn" value="Y">사용
-							</span>
-						    <span>
-					            <input type="radio" name="useYn" value="N">사용 안함
-			                </span>
-		                </td>
+						<th>스피드온 금액</th>
+						<td>
+							<input type="text" name="partSpeedPayCost">원
+						</td>
 	                </tr>
 	                <tr>
                   		<th>아이콘</th>
@@ -113,6 +108,17 @@
                   		<td>
                   			<input type="text" name="partClassOrder">
                   		</td>
+	                </tr>
+	                <tr>
+						<th>사용 유무</th>
+					    <td>
+				            <span>
+			                    <input type="radio" name="useYn" value="Y">사용
+							</span>
+						    <span>
+					            <input type="radio" name="useYn" value="N">사용 안함
+			                </span>
+		                </td>
 	                </tr>
 	            </tbody>
             </table>
@@ -153,9 +159,12 @@
 			{ label: '지점명', name:'center_nm', align: 'center'},
 			{ label: '구역 등급',  name:'part_class_nm', align: 'center'},
 			{ label: '구역 등급',  name:'part_class', align: 'center', hidden:true},
-			{ label: '구역 비용', name:'part_pay_cost', align:'center'},
-			{ label: '사용유무', name:'use_yn_value', align:'center', hidden:true},
-			{ label: '사용유무', name:'use_yn', align:'center'},
+			{ label: '일반 금액', name:'part_pay_cost', align:'center', formatter:'currency', 
+				formatoptions:{decimalSeparator:",", thousandsSeparator: ",", decimalPlaces: 0, defaulValue: 0, suffix : "원"}},
+			{ label: '스피드온 금액', name:'part_speed_pay_cost', align:'center', formatter:'currency', 
+				formatoptions:{decimalSeparator:",", thousandsSeparator: ",", decimalPlaces: 0, defaulValue: 1000, suffix : "원"}},
+			{ label: '사용유무', name:'use_yn', align:'center', hidden:true},
+			{ label: '사용유무', name:'use_yn_value', align:'center'},
 			{ label: '정렬순서', name:'part_class_order', align:'center', hidden: true},
 			{ label: '수정자', name:'last_updusr_id', align:'center'},
             { label: '수정일자', name:'last_updt_dtm', align:'center'},
@@ -200,8 +209,9 @@
 			$form.find('select[name=centerCd]').val(rowData.center_cd).prop('disabled', true);
 			$form.find('select[name=partClass]').val(rowData.part_class).prop('disabled', true);
 			$form.find(':text[name=partPayCost]').val(rowData.part_pay_cost);
+			$form.find(':text[name=partSpeedPayCost]').val(rowData.part_speed_pay_cost);
 			$form.find(':text[name=partClassOrder]').val(rowData.part_class_order);
-			$form.find(':radio[name=useYn][value='+ rowData.use_yn_value +']').prop('checked', true);
+			$form.find(':radio[name=useYn][value='+ rowData.use_yn +']').prop('checked', true);
 		}
 		$popup.bPopup();
 	}
@@ -218,12 +228,16 @@
 		if ($popup.find('select[name=partClass]').val() === '') {
 			//toastr.warning('구역 등급을 선택해 주세요.');
 			alert('구역 등급을 선택해 주세요.');
-			
 			return;	
 		}
 		if ($popup.find(':text[name=partPayCost]').val() === '') {
 			//toastr.warning('구역 금액을 입력해 주세요.');
-			alert('구역 금액을 입력해 주세요.');
+			alert('구역 금액(일반)을 입력해 주세요.');
+			return;
+		}
+		if ($popup.find(':text[name=partSpeedPayCost]').val() === '') {
+			//toastr.warning('구역 금액을 입력해 주세요.');
+			alert('구역 금액(스피드온)을 입력해 주세요.');
 			return;
 		}	
 		if ($popup.find(':text[name=partClassOrder]').val() === '') {
@@ -240,6 +254,7 @@
 	 	    formData.append('centerCd' , $form.find('select[name=centerCd]').val());
 	 	    formData.append('partClass' , $form.find('select[name=partClass]').val());
 	 	    formData.append('partPayCost' , $form.find(':text[name=partPayCost]').val());
+	 	   	formData.append('partSpeedPayCost' , $form.find(':text[name=partSpeedPayCost]').val());
 	 	    formData.append('partClassOrder' , $form.find(':text[name=partClassOrder]').val());
 	 	   	formData.append('useYn', $form.find('input[name=useYn]:checked').val());
 	 	   	formData.append('mode' , $form.find(':hidden[name=mode]').val());

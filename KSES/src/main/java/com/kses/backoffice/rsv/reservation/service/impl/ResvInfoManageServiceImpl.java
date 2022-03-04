@@ -191,6 +191,7 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 				}
 				
 				// 3.신규 예약정보 출금거래
+				LOGGER.info("resvSeatChange : " + SmartUtil.NVL(resvInfo.get("resv_seq"),"") + "번 결제 시작");
 				resultMap = interfaceService.SpeedOnPayMent(copyResvSeq, cardPw, true);
 				if(!resultMap.get(Globals.STATUS).equals(Globals.STATUS_SUCCESS)) {
 					resultMap.addAttribute("resvSeq", copyResvSeq);
@@ -233,7 +234,7 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 			if(resvMapper.updateResvInfoCopy(params) > 0) {
 				resultMap.addAttribute(Globals.STATUS, Globals.STATUS_SUCCESS);
 				resultMap.addAttribute(Globals.STATUS_MESSAGE, "신규 예약정보 등록 완료");
-				sureService.insertResvSureData("RESERVATION", params.get("copyResvSeq").toString());
+				sureService.insertResvSureData(Globals.SMS_TYPE_RESV, params.get("copyResvSeq").toString());
 			} else {
 				throw new Exception();
 			}	
@@ -316,7 +317,7 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 					resultMap.put(Globals.STATUS, Globals.STATUS_SUCCESS);
 					resultMap.put(Globals.STATUS_MESSAGE, "예약정보가 정상적으로 취소되었습니다.");
 					
-					sureService.insertResvSureData("CANCEL", resvSeq);
+					sureService.insertResvSureData(Globals.SMS_TYPE_CANCEL, resvSeq);
 				} else {
 					step = "[예약취소]";
 					message = "예약취소중 오류가 발생하였습니다.";
@@ -357,10 +358,5 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	@Override
 	public int resvBillChange(ResvInfo vo) throws Exception {
 		return resvMapper.resvBillChange(vo);
-	}
-	
-	@Override
-	public Map<String, Object> selectTicketMchnSnoCheck(Map<String, Object> params) {
-		return resvMapper.selectTicketMchnSnoCheck(params);
 	}
 }

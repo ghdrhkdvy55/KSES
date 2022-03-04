@@ -585,6 +585,11 @@
 	var seatSearchInfo = {};
 
 	$(document).ready(function() { 
+		if($("#loginAuthorCd").val() != "ROLE_ADMIN" && $("#loginAuthorCd").val() != "ROLE_SYSTEM") {
+			$(".top > div > p").eq(0).hide();
+			$(".top > div > select").eq(0).hide();
+		}
+		
 		jqGridFunc.setGrid("mainGrid");
 		var clareCalendar = {
 			monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
@@ -960,16 +965,17 @@
 			let params = {
 				pageIndex: '1',
 				pageUnit: '1000',
+				searchCondition : $("#searchCondition").val(),
 				searchKeyword: $('#searchKeyword').val(),
 				searchCenterCd : $("#searchCenterCd").val(),
 				searchDayCondition : $('input[name=searchRsvDay]:checked').val(),
 				searchFrom : $("#searchResvDateFrom").val(),
 				searchTo : $("#searchResvDateTo").val(),
+				searchResvUserDvsn : $("searchResvUserDvsn").val(),
 				searchResvState : $("#searchResvState").val(),
 				searchResvPayDvsn : $("#searchResvPayDvsn").val(),
 				searchResvRcptYn : $("#searchResvRcptYn").val(),
-				searchCondition : $("#searchCondition").val(),
-				searchKeyword : $("#searchKeyword").val(),
+				searchResvTicketDvsn : $("#searchResvTicketDvsn").val()
 			};
 			EgovIndexApi.apiExecuteJson(
 				'POST',

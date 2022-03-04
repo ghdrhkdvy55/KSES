@@ -3,6 +3,8 @@ package com.kses.backoffice.cus.kko.vo;
 import java.util.Map;
 import com.kses.backoffice.util.SmartUtil;
 
+import egovframework.com.cmm.service.Globals;
+
 public class SureMsgInfo {
 	public SureDataInfo resvSureDataMsg(String msgDvsn, Map<String, Object> resvInfo) throws Exception {
 		SureDataInfo sureData = new SureDataInfo();
@@ -23,7 +25,7 @@ public class SureMsgInfo {
 		String centerNm = resvInfo.get("center_nm").toString();
 		String seatNm = resvInfo.get("seat_nm").toString();
 		
-		if(msgDvsn.equals("RESERVATION")) {
+		if(msgDvsn.equals(Globals.SMS_TYPE_RESV)) {
 			if(userDvsn.equals("USER_DVSN_1")) {
 				templateCode = "KSES_001";
                 	
@@ -46,7 +48,7 @@ public class SureMsgInfo {
                 buttonNm = "QR링크";
                 buttonUrl = domain + "resvSeq=" + resvSeq + "&" + "accessType=BUTTON";
 			}
-		} else if(msgDvsn.equals("CANCEL")) {
+		} else if(msgDvsn.equals(Globals.SMS_TYPE_CANCEL)) {
 			templateCode = "KSES_004";
 			msg += resvDate.substring(4,6) + "월 " + resvDate.substring(6,8) + "일  " + "입장취소 완료되었습니다.";
 		}

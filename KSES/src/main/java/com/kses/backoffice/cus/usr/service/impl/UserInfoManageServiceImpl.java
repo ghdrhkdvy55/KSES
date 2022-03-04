@@ -55,6 +55,11 @@ public class UserInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	public Map<String, Object> selectSpeedOnVacntnInfo(UserLoginInfo userLoginInfo) throws Exception {
 		return userMapper.selectSpeedOnVacntnInfo(userLoginInfo);
 	}
+	
+	@Override
+	public int insertUserEntryInfo() throws Exception {
+		return userMapper.insertUserEntryInfo();
+	}
 
 	@Override
 	public int updateUserInfo(UserInfo vo) throws Exception {
@@ -72,6 +77,16 @@ public class UserInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	}
 	
 	@Override
+	public int updateUserPhoneNumber(String envType) throws Exception {
+		return userMapper.updateUserPhoneNumber(envType);
+	}
+	
+	@Override
+	public int updateGuestPrivacyInfo() throws Exception {
+		return userMapper.updateGuestPrivacyInfo();
+	}
+	
+	@Override
 	public boolean deleteUserInfo(String delCds) throws Exception {
         try {
         	userMapper.deleteUserInfo(SmartUtil.dotToList(delCds));
@@ -80,11 +95,5 @@ public class UserInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 			LOGGER.error("deleteAuthInfo error:" + e.toString());
 			return false;
 		}
-	}
-	
-	@Override
-	public Map<String, Object> selectUserListDetail(String userId) throws Exception{
-		
-		return userMapper.selectUserListDetail(userId);
 	}
 }

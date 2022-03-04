@@ -20,4 +20,6 @@ public interface DashboardInfoManageMapper {
     Map<String, Object> selectCenterUsageStatTotal(@Param("params") Map<String, Object> parmas);
 
     int insertCenterUsageStat();
+    
+    int insertCenterResvPayStat();
 }

@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.kses.backoffice.bas.kiosk.service.KioskInfoService;
 import com.kses.backoffice.cus.usr.service.UserInfoManageService;
 import com.kses.backoffice.cus.usr.vo.UserInfo;
 import com.kses.backoffice.rsv.reservation.service.AttendInfoManageService;
@@ -77,6 +78,9 @@ public class ResJosnController {
 	
 	@Autowired
 	private UniSelectInfoManageService uniService;
+	
+	@Autowired
+	private KioskInfoService kioskService;
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "speedCheck.do", method = { RequestMethod.POST })
@@ -86,11 +90,9 @@ public class ResJosnController {
 
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
-			// 값 넣기
 			String Url = "";
 			JsonNode node = null;
-			// _requstId
-			//
+
 			String Message = "";
 			String errorCd = "";
 
@@ -104,8 +106,6 @@ public class ResJosnController {
 			if (SmartUtil.NVL(sendInfo.get("gubun"), "").toString().equals("login")) {
 				Url = propertiesService.getString("speedOnUrl") + "user/userChk";
 
-				// 스피드온 패스워드 암호화(임시)
-				// Login_Type -> 1 = SHA-512 + Base64 : 2 = SHA-256 + Base64
 				String encryptType = "";
 				String password = "";
 
@@ -113,12 +113,10 @@ public class ResJosnController {
 					encryptType = "SHA-512";
 					password = jsonObject.get("User_Pw").toString();
 					jsonObject.put("User_Pw", SmartUtil.encryptPassword(password, encryptType));
-					LOGGER.debug("1 : " + SmartUtil.encryptPassword(password, encryptType));
 				} else {
 					encryptType = "SHA-256";
 					password = jsonObject.get("Card_Pw").toString();
 					jsonObject.put("Card_Pw", SmartUtil.encryptPassword(password, encryptType));
-					LOGGER.debug("2 : " + SmartUtil.encryptPassword(password, encryptType));
 				}
 
 				node = SmartUtil.requestHttpJson(Url, jsonObject.toJSONString(), "SPEEDLOGIN", "SPEEDON", "KSES");
@@ -148,10 +146,11 @@ public class ResJosnController {
 					}
 				}
 			} else if (SmartUtil.NVL(sendInfo.get("gubun"), "").toString().equals("fep")) {
-				// 출금 정보
 				Url = propertiesService.getString("speedOnUrl") + "trade/fepWithdraw";
 
 				Map<String, Object> resvInfo = resService.selectUserResvInfo(jsonObject);
+				LOGGER.info("selectSpeedCheck : " + SmartUtil.NVL(resvInfo.get("resv_seq"),"") + "번 결제 시작");
+				
 				if(!SmartUtil.NVL(resvInfo.get("resv_state"),"").equals("RESV_STATE_1")) {
 					switch (SmartUtil.NVL(resvInfo.get("resv_state"),"")) {
 						case "RESV_STATE_2" : Message = "이미 이용중인 예약정보 입니다.";  break;
@@ -170,6 +169,12 @@ public class ResJosnController {
 					return model;
 				}
 				
+				if(SmartUtil.NVL(resvInfo.get("center_pilot_yn"),"N").equals("N")) {
+					model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+					model.addObject(Globals.STATUS_MESSAGE, "비시범 지점 예약정보 입니다.");
+					return model;
+				}
+				
 				jsonObject.put("System_Type", "E");
 				jsonObject.put("External_Key", resvInfo.get("resv_seq"));
 				jsonObject.put("Card_Id", resvInfo.get("user_card_id"));
@@ -184,7 +189,6 @@ public class ResJosnController {
 				
 				jsonObject.put("Card_Seq", resvInfo.get("user_card_seq"));
 				jsonObject.put("Div_Cd", resvInfo.get("center_speed_cd"));
-				jsonObject.put("Pw_YN", "Y");
 
 				if (resvInfo.get("resv_entry_dvsn").equals("ENTRY_DVSN_1")) {
 					jsonObject.put("Pay_Type", "001");
@@ -243,6 +247,16 @@ public class ResJosnController {
 					return model;
 				}
 				
+				if(!SmartUtil.NVL(resvInfo.get("resv_ticket_dvsn"),"").equals("RESV_TICKET_DVSN_1")) {
+					switch (SmartUtil.NVL(resvInfo.get("resv_pay_dvsn"),"")) {
+						case "RESV_TICKET_DVSN_2" : Message = "미결제 예약정보 입니다.";  break;
+						default: Message = "알수없는 예약정보 입니다."; break;
+					}
+					model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+					model.addObject(Globals.STATUS_MESSAGE, Message);
+					return model;
+				}
+				
 				if(!SmartUtil.NVL(resvInfo.get("resv_state"),"").equals("RESV_STATE_1")) {
 					switch (SmartUtil.NVL(resvInfo.get("resv_state"),"")) {
 						case "RESV_STATE_2" : Message = "이미 이용중인 예약정보 입니다.";  break;
@@ -258,8 +272,15 @@ public class ResJosnController {
 				jsonObject.put("System_Type", "E");
 				jsonObject.put("External_Key", resvInfo.get("resv_seq"));
 				jsonObject.put("Card_Id", resvInfo.get("user_card_id"));
-				jsonObject.put("Card_Pw", SmartUtil.encryptPassword(jsonObject.get("Card_Pw").toString(), "SHA-256"));
-				jsonObject.put("Pw_YN", "Y");
+				
+				if(SmartUtil.NVL(jsonObject.get("Pw_YN"),"Y").equals("Y")) {
+					jsonObject.put("Card_Pw", SmartUtil.encryptPassword(jsonObject.get("Card_Pw").toString(), "SHA-256"));
+					jsonObject.put("Pw_YN", "Y");
+				} else {
+					jsonObject.put("Card_Pw", "");
+					jsonObject.put("Pw_YN", "N");
+				}
+				
 				jsonObject.put("Card_Seq", resvInfo.get("user_card_seq"));
 				jsonObject.put("Div_Cd", resvInfo.get("center_speed_cd"));
 
@@ -629,7 +650,7 @@ public class ResJosnController {
 				Map<String, Object> machineVO = new HashMap<String, Object>();
 				machineVO.put("ticketMchnSno", SmartUtil.NVL(jsonInfo.get("MACHINE_SERIAL"), "").toString());
 				machineVO.put("centerCd", SmartUtil.NVL(resInfo.get("center_cd"), "").toString());
-				Map<String, Object> machineSerial = resService.selectTicketMchnSnoCheck(machineVO);
+				Map<String, Object> machineSerial = kioskService.selectTicketMchnSnoCheck(machineVO);
 				
 				String recDate = SmartUtil.NVL(jsonInfo.get("RES_SEND_DATE"), "19700101").toString();
 				

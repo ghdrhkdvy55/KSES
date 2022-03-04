@@ -71,6 +71,4 @@ public interface ResvInfoManageMapper {
 	public int resPriceChange(ResvInfo vo);
 	
 	public String resvValidCheck(@Param("params") Map<String, Object> params);
-	
-	public Map<String, Object> selectTicketMchnSnoCheck(@Param("params") Map<String, Object> params);
 }

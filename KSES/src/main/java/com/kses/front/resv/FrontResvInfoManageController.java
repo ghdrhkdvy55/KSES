@@ -10,7 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,7 +31,6 @@ import com.kses.backoffice.cus.usr.service.UserInfoManageService;
 import com.kses.backoffice.cus.usr.vo.UserInfo;
 import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
 import com.kses.backoffice.rsv.reservation.vo.ResvInfo;
-import com.kses.backoffice.sym.log.service.InterfaceInfoManageService;
 import com.kses.backoffice.util.SmartUtil;
 import com.kses.front.annotation.LoginUncheck;
 import com.kses.front.login.vo.UserLoginInfo;
@@ -85,7 +84,7 @@ public class FrontResvInfoManageController {
 	private SystemInfoManageService systemService;
 	
 	@Autowired
-	private InterfaceInfoManageService interfaceService;
+	ApplicationContext applicationContext;
 		
 	@LoginUncheck
 	@RequestMapping (value="rsvCenter.do")
@@ -274,7 +273,6 @@ public class FrontResvInfoManageController {
 	
 	@LoginUncheck
 	@RequestMapping (value="updateUserResvInfo.do")
-	@Transactional
 	public ModelAndView updateUserResvInfo( @RequestBody ResvInfo vo,
 											HttpServletRequest request) throws Exception {
 		
@@ -294,23 +292,20 @@ public class FrontResvInfoManageController {
 			if(ret > 0) {
 				// 방금 예약한 정보 조회 (지점,층,구역,좌석 명칭)
 				Map<String, Object> resvInfo = resvService.selectInUserResvInfo(vo);
+				sureService.insertResvSureData(Globals.SMS_TYPE_RESV, resvInfo.get("resv_seq").toString());
 				String autoPaymentYn = systemService.selectTodayAutoPaymentYn();
 				
 				if(vo.getResvUserDvsn().equals("USER_DVSN_1")) {
-					new Thread(()->{
-						try {
-							if(resvInfo.get("center_pilot_yn").toString().equals("Y") && autoPaymentYn.equals("Y")) {
-								interfaceService.SpeedOnPayMent(vo.getResvSeq(), "", false);
-							}
-						} catch (Exception e) {
-							LOGGER.info("RESV_SEQ : " + resvInfo.get("resv_seq") + " RESERVATION AUTO PAYMENT FAIL");
-						}
-					}).start();
+					if(resvInfo.get("center_pilot_yn").toString().equals("Y") && autoPaymentYn.equals("Y")) {
+						AutoPaymentThread autoPaymentThread = new AutoPaymentThread(vo.getResvSeq());
+						applicationContext.getAutowireCapableBeanFactory().autowireBean(autoPaymentThread);
+						autoPaymentThread.start();
+					}
 				} else {
 					UserInfo user = new UserInfo();
 					user.setUserDvsn("USER_DVSN_2");
 					user.setUserId(resvInfo.get("user_id").toString());
-					user.setUserBirthDy("19700000");
+					user.setUserBirthDy("00000000");
 					user.setUserSexMf("N");
 					user.setUserPhone(vo.getResvUserClphn());
 					user.setUserNm(vo.getResvUserNm());
@@ -319,8 +314,6 @@ public class FrontResvInfoManageController {
 					
 					userService.updateUserInfo(user);
 				}
-				
-				sureService.insertResvSureData("RESERVATION", resvInfo.get("resv_seq").toString());
 				
 				model.addObject("resvInfo", resvInfo);
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
@@ -363,7 +356,7 @@ public class FrontResvInfoManageController {
 			
 			int ret = resvService.resvInfoCancel(params);
 			if(ret > 0) {
-				sureService.insertResvSureData("CANCEL", params.get("resv_seq").toString());
+				sureService.insertResvSureData(Globals.SMS_TYPE_CANCEL, params.get("resv_seq").toString());
 
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("sucess.common.reservation"));

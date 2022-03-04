@@ -24,6 +24,8 @@ public interface UserInfoManageMapper {
     public Map<String, Object> selectSpeedOnVacntnInfo(UserLoginInfo userLoginInfo);
     
     public int insertUserInfo(UserInfo vo);
+    
+    public int insertUserEntryInfo();
 	
     public int updateUserInfo(UserInfo vo);
     
@@ -31,7 +33,9 @@ public interface UserInfoManageMapper {
     
     public int updateUserNoshowCount(@Param("userId") String userId);
     
-    public void deleteUserInfo(@Param("delCds") List<String> delCds);
+    public int updateUserPhoneNumber(@Param("envType") String envType);
     
-    public Map<String, Object> selectUserListDetail(String userId);
+    public int updateGuestPrivacyInfo();
+    
+    public void deleteUserInfo(@Param("delCds") List<String> delCds);
 }

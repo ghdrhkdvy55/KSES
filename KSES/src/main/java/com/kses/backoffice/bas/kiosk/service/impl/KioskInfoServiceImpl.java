@@ -41,5 +41,9 @@ public class KioskInfoServiceImpl extends EgovAbstractServiceImpl implements Kio
 	public int deleteKioskInfo(List<String> kioskList) throws Exception {
 		return kioskMapper.deleteKioskInfo(kioskList);
 	}
-
+	
+	@Override
+	public Map<String, Object> selectTicketMchnSnoCheck(Map<String, Object> params) {
+		return kioskMapper.selectTicketMchnSnoCheck(params);
+	}
 }

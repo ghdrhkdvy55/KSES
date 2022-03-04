@@ -646,8 +646,7 @@ function fn_payment(resvInfo) {
 		"gubun" : "dep",
 		"sendInfo" : {
 			"resvSeq" : resvInfo.resv_seq,
-			"Card_Pw" : $("#Card_Pw").val(),
-			"System_Type" : "E"
+			"Pw_YN" : "N"
 		}
 	}
 	

@@ -140,7 +140,7 @@ public class UserInfoController {
 	    
 	    try {
 	    	model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-			model.addObject(Globals.STATUS_REGINFO, userService.selectUserListDetail(userId));
+			model.addObject(Globals.STATUS_REGINFO, userService.selectUserInfoDetail(userId));
 	    } catch(Exception e) {
 			LOGGER.info(e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);

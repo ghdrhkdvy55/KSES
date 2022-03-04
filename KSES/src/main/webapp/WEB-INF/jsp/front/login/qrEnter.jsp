@@ -81,36 +81,7 @@
             </div>
         </div>
         <!--contents //-->
-    </div>  
-    
-	<!-- // 결제인증 팝업 -->
-    <div data-popup="pay_number" class="popup" style="display:none;">
-      <div class="pop_con rsv_popup">
-          <a class="button b-close">X</a>
-          <div class="pop_wrap">
-            <h4>결제 비밀번호를 입력해주세요.</h4>
-            <ul class="cost_list">
-                <li>
-                    <ul class="costStat">
-                        <li>결제 금액</li>
-                        <li><span class="classCost"></span>원</li>
-                    </ul>
-                </li>
-                <li>
-                    <ul class="pay_passWord">
-                        <li>결제</li>
-                        <li><input type="password" id="Card_Pw" placeholder="결제 비밀번호를 입력하세요."></li>
-                    </ul>
-                </li>
-            </ul>
-    
-            <ul class="cost_btn">
-                <li class="okBtn"><a href="javascript:qrService.fn_payment();">확인</a></li>
-            </ul>
-          </div>
-      </div>
     </div>
-    <!-- 결제인증 팝업 // -->
 	
 	<c:import url="/front/inc/popup_common.do" />
 	<script src="/resources/js/front/jquery-spinner.min.js"></script>
@@ -229,9 +200,7 @@
 					"gubun" : "fep",
 					"sendInfo" : {
 						"resvSeq" : $("#resvSeq").val(),
-						"Card_Pw" : $("#Card_Pw").val(),
-						"Pw_YN" : "N",
-						"System_Type" : "E"
+						"Pw_YN" : "N"
 					}
 				}
 				
