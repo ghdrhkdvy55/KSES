@@ -16,7 +16,7 @@ public interface CentertInfoManageMapper {
 	
 	public Map<String, Object> selectCenterInfoDetail(@Param("centerCd") String centerCd);
 	
-	public List<Map<String, Object>> selectResvCenterList(@Param("resvDate") String resvDate);
+	public List<Map<String, Object>> selectResvCenterList();
 		
 	public int insertCenterInfoManage(CenterInfo vo);
 	

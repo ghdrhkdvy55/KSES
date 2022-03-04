@@ -41,8 +41,8 @@ public class CenterInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
 	}
 	
 	@Override
-	public List<Map<String, Object>> selectResvCenterList(String resvDate)throws Exception {
-		return centerMapper.selectResvCenterList(resvDate);
+	public List<Map<String, Object>> selectResvCenterList()throws Exception {
+		return centerMapper.selectResvCenterList();
 	}
 	
 	@Override
