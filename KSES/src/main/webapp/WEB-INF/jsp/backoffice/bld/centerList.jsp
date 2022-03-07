@@ -15,6 +15,11 @@
 	height: 30px;
 }
 </style>
+<!-- Xlsx -->
+<script type="text/javascript" src="/resources/js/xlsx.js"></script>
+<script type="text/javascript" src="/resources/js/xlsx.full.min.js"></script>
+<!-- FileSaver -->
+<script type="text/javascript" src="/resources/js/FileSaver.min.js"></script>
 <!-- //contents -->
 <input type="hidden" id="mode" name="mode">
 <input type="hidden" id="searchCenterCd" name="searchCenterCd">
@@ -263,6 +268,9 @@
 					<a href="javascript:jqGridFunc.fn_centerHolyCopyModel();"class="grayBtn">복사</a>
 	          	</div>
         	</fieldset>
+			<div class="right_box">	            	
+				<a href="#" class="blueBtn" onclick="jqGridFunc.fn_Upload()" style="margin-bottom:15px">엑셀 업로드</a>
+			</div>
         	<table class="whiteBox main_table">
 				<thead>
 					<tr>
@@ -1186,7 +1194,7 @@
 					}else if (result.status == "SUCCESS"){
 						   //총 게시물 정리 하기'								
 							common_popup("저장에 성공했습니다.", "Y", "bld_holiday_add");
-					 	jqGridFunc.fn_centerHolyInfo("list",$("#searchCenterCd").val(), "1", true);
+					 		jqGridFunc.fn_centerHolyInfo("list",$("#searchCenterCd").val(), "1", true);
 							$("#centerHolySeq").val("");
 							$("#holyDt").val("");
 							$("#holyNm").val("");
@@ -1207,6 +1215,35 @@
 			var params = {'centerHolySeq': centerHolySeq};
 			fn_uniDelAction("/backoffice/bld/centerHolyInfoDelete.do", "GET", params, false, "jqGridFunc.fn_search");
 			jqGridFunc.fn_centerHolyInfo("list",$("#searchCenterCd").val(), "1", true);
+		},
+		fn_Upload : function (){
+			$("#dv_excelUpload").bPopup();
+			$("#aUploadId").attr("href", "javascript:fn_excelUpload('0',jqGridFunc.fn_centerHolyUpload)");
+			
+		}, 
+		fn_centerHolyUpload : function (sheetNameList, sheetName, jsonResult){
+			var params = {
+				"data": jsonResult,
+				"centerCd": $("#searchCenterCd").val()
+			};
+			var url = "/backoffice/bld/centerHolyInfoExcelUpload.do";
+			fn_Ajax(url, "POST", params, true,
+	      			function(result) {
+				           if (result.status == "LOGIN FAIL"){
+	 				    	   common_popup(result.message, "Y","dv_excelUpload");
+	   						   location.href="/backoffice/login.do";
+	   					   }else if (result.status == "SUCCESS"){
+	   						   //총 게시물 정리 하기'
+	   							common_modelCloseM(result.message,"dv_excelUpload");
+	   							jqGridFunc.fn_centerHolyInfo("list",$("#searchCenterCd").val(), "1", true);
+	   					   }else if (result.status == "FAIL"){
+	   						   common_popup("저장 도중 문제가 발생 하였습니다.", "Y", "dv_excelUpload");
+	   					   }
+	 				    },
+	 				    function(request){
+	 				    	common_modelCloseM("Error:" + request.status,"dv_excelUpload");
+	 				    }    		
+	        ); 
 		},
 		//지점 현금영수증 정보 Function
 		fn_billInfoList : function(centerCd) {			
