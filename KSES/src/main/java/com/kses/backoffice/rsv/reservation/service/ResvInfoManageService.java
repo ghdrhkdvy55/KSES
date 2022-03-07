@@ -51,7 +51,7 @@ public interface ResvInfoManageService {
 	 * @return
 	 * @throws Exception
 	 */
-	public String selectResvDate(String centerCd) throws Exception;
+	public String selectCenterResvDate(String centerCd) throws Exception;
 	
 	/**
 	 * SPDM 회원 마지막 예약 정보 조회
@@ -88,6 +88,15 @@ public interface ResvInfoManageService {
 	 * @throws Exception
 	 */
 	public Map<String, Object> selectInUserResvInfo(ResvInfo vo) throws Exception;
+	
+	/**
+	 * SPDM 회원 로그인시 자동결제 적용 예약정보 조회
+	 * 
+	 * @param userId
+	 * @return
+	 * @throws Exception
+	 */
+	public String selectAutoPaymentResvInfo(String userId) throws Exception;
 	
 	/**
 	 * SPDM 현금영수증 발행정보 조회

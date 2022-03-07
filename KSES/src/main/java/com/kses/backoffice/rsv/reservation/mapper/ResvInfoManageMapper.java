@@ -18,15 +18,17 @@ public interface ResvInfoManageMapper {
 	
 	public String selectResvPayCost(@Param("params") Map<String, Object> paramMap) ;
 	
-	public List<String> selectResvDateList(ResvInfo vo) throws Exception;
+	public List<String> selectResvDateList(ResvInfo vo);
 	
 	public String selectResvSeqNext() throws Exception;
 	
-	public String selectResvDate(@Param("centerCd") String centerCd);
+	public String selectCenterResvDate(@Param("centerCd") String centerCd);
 	
 	public Map<String, Object> selectInUserResvInfo(ResvInfo paramResvInfo);
 	
-	public Map<String, Object> selectResvBillInfo(@Param("resvSeq") String resvSeq) throws Exception;
+	public String selectAutoPaymentResvInfo(@Param("userId") String userId);
+	
+	public Map<String, Object> selectResvBillInfo(@Param("resvSeq") String resvSeq);
 	
 	public List<Map<String, Object>> selectUserMyResvInfo(@Param("params") Map<String, Object> paramMap);
 	
@@ -48,7 +50,7 @@ public interface ResvInfoManageMapper {
 	
 	public int updateResvSeatInfo(@Param("params") Map<String, Object> paramMap);
 	
-	public int updateResvInfoCopy(@Param("params") Map<String, Object> paramMap) throws Exception; 
+	public int updateResvInfoCopy(@Param("params") Map<String, Object> paramMap); 
 	
 	public int resvInfoCancel(@Param("params") Map<String, Object> paramMap);
 	

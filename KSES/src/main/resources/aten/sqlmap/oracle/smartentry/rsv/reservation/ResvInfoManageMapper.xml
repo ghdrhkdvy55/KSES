@@ -319,6 +319,18 @@
 		AND A.SEAT_CD = E.SEAT_CD(+)  	
     </select>
     
+    <select id="selectAutoPaymentResvInfo" resultType="String">
+		SELECT RESV_SEQ FROM TSER_RESV_INFO_I A, TSEB_CENTER_INFO_M B, TSEC_AUTO_PAYMENT_INFO_I C 
+		WHERE A.USER_ID =  #{userId}
+		AND A.RESV_END_DT = TO_CHAR(SYSDATE,'YYYYMMDD')
+		AND A.RESV_STATE = 'RESV_STATE_1'
+		AND A.RESV_PAY_DVSN = 'RESV_PAY_DVSN_1'
+		AND A.CENTER_CD = B.CENTER_CD
+		AND B.CENTER_PILOT_YN = 'Y'
+		AND C.AUTO_PAYMENT_DAY = TO_CHAR(TO_DATE(A.RESV_END_DT),'d')
+		AND TO_CHAR(SYSDATE,'HH24MI') BETWEEN C.AUTO_PAYMENT_OPEN_TM AND C.AUTO_PAYMENT_CLOSE_TM
+    </select>
+    
     <!-- 예약정보에 대한 현금영수증 발급정보 조회 -->
     <select id="selectResvBillInfo" resultType="lmap">
 		SELECT 			
@@ -368,7 +380,7 @@
 		SELECT LPAD(SEQ_SER_RERV_INFO.NEXTVAL,12,0) FROM DUAL
 	</select>
 	
-	<select id="selectResvDate" resultType="String">
+	<select id="selectCenterResvDate" resultType="String">
     	SELECT FN_RESVDATE(#{centerCd}) FROM DUAL
     </select>
 	

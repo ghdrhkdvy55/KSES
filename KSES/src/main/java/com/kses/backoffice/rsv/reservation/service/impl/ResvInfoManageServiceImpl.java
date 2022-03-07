@@ -84,8 +84,8 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	}
 	
 	@Override
-	public String selectResvDate(String centerCd) throws Exception {
-		return resvMapper.selectResvDate(centerCd);
+	public String selectCenterResvDate(String centerCd) throws Exception {
+		return resvMapper.selectCenterResvDate(centerCd);
 	}
 
 	@Override
@@ -120,6 +120,11 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	@Override
 	public Map<String, Object> selectInUserResvInfo(ResvInfo vo) throws Exception {
 		return resvMapper.selectInUserResvInfo(vo);
+	}
+	
+	@Override
+	public String selectAutoPaymentResvInfo(String userId) throws Exception {
+		return resvMapper.selectAutoPaymentResvInfo(userId);
 	}
 	
 	@Override
