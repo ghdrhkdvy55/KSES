@@ -19,7 +19,7 @@
 	<select id="selectTodayAutoPaymentYn" resultType="String">
 		SELECT 
 			CASE 
-				NVL(COUNT(*),0)  WHEN 1 THEN 'Y'
+				NVL(COUNT(*),0) WHEN 1 THEN 'Y'
 			ELSE 'N'
 			END
 		FROM TSEC_AUTO_PAYMENT_INFO_I 

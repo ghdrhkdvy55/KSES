@@ -62,7 +62,13 @@ public class SureManageServiceImpl extends EgovAbstractServiceImpl implements Su
 			sureDataInfo.setReqtime("00000000000000");
 			ret = sureMapper.insertSureData(sureDataInfo);
 			
-			msgDvsn = msgDvsn.equals(Globals.SMS_TYPE_RESV) ? "완료" : "취소";
+			switch(msgDvsn) {
+				case Globals.SMS_TYPE_RESV : msgDvsn = "완료"; break;
+				case Globals.SMS_TYPE_CANCEL : msgDvsn = "취소"; break;
+				case Globals.SMS_TYPE_PAYMENT : msgDvsn = "결제"; break;
+				default : msgDvsn = "정보"; break;
+			}
+			 
 			if(ret > 0) {
 				LOGGER.info("예약번호 : " + resvSeq + "번 예약" + msgDvsn + "알림톡 발송성공");
 			} else {

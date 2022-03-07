@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.kses.backoffice.cus.kko.service.SureManageSevice;
 import com.kses.backoffice.sym.log.service.InterfaceInfoManageService;
 import com.kses.backoffice.util.SmartUtil;
 
@@ -16,6 +17,9 @@ public class AutoPaymentThread extends Thread {
 	
 	@Autowired
 	InterfaceInfoManageService interfaceService;
+	
+	@Autowired
+	SureManageSevice sureService;
 	
 	String resvSeq = "";
 	String message = "";
@@ -33,6 +37,7 @@ public class AutoPaymentThread extends Thread {
 			if(SmartUtil.NVL(autoPaymentResult.get(Globals.STATUS),"").equals(Globals.STATUS_SUCCESS)) {
 				// 2022-02-25 에이텐시스템 장대한
 				// TODO 자동결제 예약정보에 대한 알림톡 발송 적용
+				sureService.insertResvSureData(Globals.SMS_TYPE_PAYMENT, resvSeq);
 			} else {
 				message = SmartUtil.NVL(autoPaymentResult.get(Globals.STATUS_MESSAGE),"");
 				throw new Exception();

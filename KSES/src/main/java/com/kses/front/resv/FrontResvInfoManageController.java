@@ -123,7 +123,7 @@ public class FrontResvInfoManageController {
 			List<Map<String, Object>> partClass = partClassService.selectPartClassComboList(centerCd);
 			
 			resvInfo.put("centerCd", centerCd);
-			resvInfo.put("resvDate", resvService.selectResvDate(centerCd));
+			resvInfo.put("resvDate", resvService.selectCenterResvDate(centerCd));
 			resvInfo.forEach((key, value) -> params.merge(key, value, (v1, v2) -> v2));
 			
 			model.addObject("partClass", partClass);
@@ -290,6 +290,7 @@ public class FrontResvInfoManageController {
 			if(ret > 0) {
 				// 방금 예약한 정보 조회 (지점,층,구역,좌석 명칭)
 				Map<String, Object> resvInfo = resvService.selectInUserResvInfo(vo);
+				sureService.insertResvSureData(Globals.SMS_TYPE_RESV, resvInfo.get("resv_seq").toString());
 				String autoPaymentYn = systemService.selectTodayAutoPaymentYn();
 				
 				if(vo.getResvUserDvsn().equals("USER_DVSN_1")) {
@@ -312,7 +313,6 @@ public class FrontResvInfoManageController {
 					userService.updateUserInfo(user);
 				}
 				
-				sureService.insertResvSureData(Globals.SMS_TYPE_RESV, resvInfo.get("resv_seq").toString());
 				model.addObject("resvInfo", resvInfo);
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
