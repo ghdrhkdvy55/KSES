@@ -35,6 +35,35 @@
 			#{frstRegterId, jdbcType=VARCHAR}, SYSDATE, #{lastUpdusrId, jdbcType=VARCHAR}, SYSDATE
 		)
 	</insert>
+     	
+	<insert id="insertExcelCenterHoly">
+   	    <foreach collection="centerHolyInfoList" item="item" separator=";" open="DECLARE BEGIN" close="; END;">   
+   	        MERGE INTO TSEB_CENTERHOLY_INFO_I A
+		    USING DUAL
+		    ON 
+			(	
+				A.CENTER_CD = #{item.centerCd}
+				AND
+				A.HOLY_DT = #{item.holyDt}
+			)
+			WHEN MATCHED THEN
+			UPDATE SET 
+				A.HOLY_NM = #{item.holyNm},
+				A.LAST_UPDT_DTM = SYSDATE,
+				A.LAST_UPDUSR_ID = #{item.lastUpdusrId, jdbcType=VARCHAR}
+			WHEN NOT MATCHED THEN
+			INSERT
+			(
+			  A.CENTER_HOLY_SEQ , A.HOLY_DT, A.HOLY_NM, A.USE_YN, A.CENTER_CD,
+			  A.LAST_UPDT_DTM, A.LAST_UPDUSR_ID, A.FRST_REGIST_DTM, A.FRST_REGTER_ID
+			)
+			VALUES 
+			( 
+			   SEQ_ESB_CENTERHOLY_INFO.NEXTVAL, #{item.holyDt}, #{item.holyNm,jdbcType=VARCHAR}, #{item.useYn,jdbcType=VARCHAR}, #{item.centerCd},
+			   SYSDATE, #{item.lastUpdusrId, jdbcType=VARCHAR}, SYSDATE, #{item.lastUpdusrId, jdbcType=VARCHAR} 
+			)
+   	    </foreach>
+   	</insert>
      
 	<update id="updateCenterHolyInfo">	
 		UPDATE TSEB_CENTERHOLY_INFO_I SET 
@@ -62,8 +91,7 @@
 			WHEN MATCHED THEN
 			UPDATE SET 
 				T.HOLY_NM = A.HOLY_NM,
-				T.FRST_REGTER_ID = A.FRST_REGTER_ID,
-				T.LAST_UPDT_DTM = sysdate,
+				T.LAST_UPDT_DTM = SYSDATE,
 	            T.LAST_UPDUSR_ID = A.LAST_UPDUSR_ID
 			WHEN NOT MATCHED THEN
 			INSERT 

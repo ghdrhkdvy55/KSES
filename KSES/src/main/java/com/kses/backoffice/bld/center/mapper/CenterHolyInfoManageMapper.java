@@ -22,4 +22,6 @@ public interface CenterHolyInfoManageMapper {
 	public Map<String, Object> centerUpdateSelect(@Param("centerHolySeq") String centerHolySeq) throws Exception;
 	
 	public int deleteCenterHolyInfo(int centerHolySeq);
+	
+	public void insertExcelCenterHoly(@Param("centerHolyInfoList") List<CenterHolyInfo> centerHolyInfoList) throws Exception;
 }

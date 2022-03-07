@@ -18,11 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kses.backoffice.bld.center.service.CenterInfoManageService;
-import com.kses.backoffice.bas.holy.vo.HolyInfo;
-import com.kses.backoffice.bld.center.mapper.CenterHolyInfoManageMapper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.kses.backoffice.bld.center.service.CenterHolyInfoManageService;
 import com.kses.backoffice.bld.center.vo.CenterHolyInfo;
-import com.kses.backoffice.cus.usr.vo.UserInfo;
 import com.kses.backoffice.util.SmartUtil;
 
 import egovframework.com.cmm.LoginVO;
@@ -49,12 +49,6 @@ public class CenterHolyInfoManageController {
     
     @Autowired
     CenterInfoManageService centerInfoService;
-	
-	@Autowired
-	private CenterInfoManageService centerInfoManageService;
-	
-	@Autowired
-	private CenterHolyInfoManageMapper centerHolyMapper;
     
     @RequestMapping("centerHolyInfoListAjax.do")
     public ModelAndView selectCenterHolyInfo(	@ModelAttribute("loginVO") LoginVO loginVO,
@@ -180,6 +174,48 @@ public class CenterHolyInfoManageController {
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.delete"));			
 		}		
 		return model;
+	}
+	
+	@RequestMapping (value="centerHolyInfoExcelUpload.do")
+	public ModelAndView selectHolyInfoExcelUpload(@ModelAttribute("loginVO") LoginVO loginVO, 
+			                                      @RequestBody Map<String, Object> params, 
+												  HttpServletRequest request, 
+												  BindingResult bindingResult) throws Exception{	
+		
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
+	    Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+	    if(!isAuthenticated) {
+	    	model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
+	    	model.setViewName("/backoffice/login");
+	    	return model;	
+	    }
+	    
+	    try {
+	    	
+	    	loginVO = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
+	    	String lastUpdusrId = loginVO.getAdminId();
+	    	
+	    	Gson gson = new GsonBuilder().create();
+	    	List<CenterHolyInfo> centerHolyInfos = gson.fromJson(params.get("data").toString(), new TypeToken<List<CenterHolyInfo>>(){}.getType());
+			//좌석/ 회의실 정리 하기 
+	    	centerHolyInfos.forEach(CenterHolyInfo -> CenterHolyInfo.setLastUpdusrId(lastUpdusrId));
+	    	centerHolyInfos.forEach(CenterHolyInfo -> CenterHolyInfo.setCenterCd(params.get("centerCd").toString()));
+			
+			boolean centerHolyInsert = centerHolyInfoService.insertExcelCenterHoly(centerHolyInfos);
+			LOGGER.debug("centerHolyInsert=" + centerHolyInsert);
+			if (centerHolyInsert == true) {
+				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("sucess.common.insert"));
+			}else {
+				throw new Exception();
+			}
+	    	
+	    } catch(Exception e) {
+			LOGGER.info(e.toString());
+			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.insert"));
+	    }
+	    return model;
 	}
 	
 	@RequestMapping("centerHolyUpdateSelect.do")
