@@ -133,8 +133,8 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	}
 	
 	@Override
-	public int resvInfoDuplicateCheck(Map<String, Object> params) throws Exception {
-		return resvMapper.resvInfoDuplicateCheck(params);
+	public int selectResvDuplicate(Map<String, Object> params) throws Exception {
+		return resvMapper.selectResvDuplicate(params);
 	}
 	
 	@Override

@@ -319,6 +319,7 @@
 		AND A.SEAT_CD = E.SEAT_CD(+)  	
     </select>
     
+    <!-- 회원 자동결제 예약정보 조회 -->
     <select id="selectAutoPaymentResvInfo" resultType="String">
 		SELECT RESV_SEQ FROM TSER_RESV_INFO_I A, TSEB_CENTER_INFO_M B, TSEC_AUTO_PAYMENT_INFO_I C 
 		WHERE A.USER_ID =  #{userId}
@@ -344,7 +345,7 @@
     </select>
     
 	<!-- 회원 현재 예약일자에 대한 예약 유무 조회 -->
-	<select id="resvInfoDuplicateCheck" resultType="int">
+	<select id="selectResvDuplicate" resultType="int">
 		SELECT NVL(COUNT(*),0) AS CNT
 		FROM TSER_RESV_INFO_I A
 		<choose>
@@ -376,10 +377,12 @@
 	]]>
 	</select>
 	
+	<!-- 다음 예약시퀀스 조회 -->
 	<select id="selectResvSeqNext" resultType="String">
 		SELECT LPAD(SEQ_SER_RERV_INFO.NEXTVAL,12,0) FROM DUAL
 	</select>
 	
+	<!-- 지점 예약일자 조회 -->
 	<select id="selectCenterResvDate" resultType="String">
     	SELECT FN_RESVDATE(#{centerCd}) FROM DUAL
     </select>
@@ -466,6 +469,7 @@
 		)
     </insert>
     
+    <!-- 좌석 정보 변경 -->
 	<update id="updateResvSeatInfo">
     	UPDATE TSER_RESV_INFO_I SET
     		SEASON_CD = #{params.seasonCd, jdbcType=VARCHAR},

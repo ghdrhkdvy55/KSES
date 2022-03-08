@@ -371,8 +371,8 @@ public class FrontResvInfoManageController {
 	}
 	
 	@LoginUncheck
-	@RequestMapping (value="resvInfoDuplicateCheck.do")
-	public ModelAndView resvInfoDuplicateCheck( @RequestBody Map<String, Object> params,
+	@RequestMapping (value="selectResvDuplicate.do")
+	public ModelAndView selectResvDuplicate( @RequestBody Map<String, Object> params,
 												HttpServletRequest request) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
@@ -382,12 +382,12 @@ public class FrontResvInfoManageController {
 			
 			String userId = userLoginInfo != null ? userLoginInfo.getUserId() : "";
 			params.put("userId", userId);
-			int resvCount = resvService.resvInfoDuplicateCheck(params);
+			int resvCount = resvService.selectResvDuplicate(params);
 	    	
 	    	model.addObject("resvCount", resvCount);
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		} catch(Exception e) {
-			LOGGER.error("resvInfoDuplicateCheck : " + e.toString());
+			LOGGER.error("selectResvDuplicate : " + e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg")); 
 		}

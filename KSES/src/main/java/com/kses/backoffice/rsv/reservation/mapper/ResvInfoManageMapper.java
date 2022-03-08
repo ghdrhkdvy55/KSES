@@ -40,7 +40,7 @@ public interface ResvInfoManageMapper {
 	
 	public Map<String, Object> selectUserResvInfoFront(@Param("params") Map<String, Object> params);
 	
-	public int resvInfoDuplicateCheck(@Param("params") Map<String, Object> params);
+	public int selectResvDuplicate(@Param("params") Map<String, Object> params);
 	
 	public int insertUserResvInfo(ResvInfo vo);
 	
