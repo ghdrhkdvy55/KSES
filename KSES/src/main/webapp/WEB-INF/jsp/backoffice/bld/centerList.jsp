@@ -1064,8 +1064,10 @@
 								setHtml += "<td>" + obj.last_updusr_id + "</td>";
 								if($("#loginAuthorCd").val() != "ROLE_ADMIN" && $("#loginAuthorCd").val() != "ROLE_SYSTEM") {
 									if($("#loginCenterCd").val() == centerCd){
-									setHtml += "<td><a onclick='jqGridFunc.fn_updateSelect(\"Edt\", "+ obj.center_holy_seq +")' class='blueBtn'>수정</a><a onclick='jqGridFunc.fn_holyDel(" + obj.center_holy_seq+ ")' class='grayBtn' style='margin-left: 5px;'>삭제</a></td>";
+										setHtml += "<td><a onclick='jqGridFunc.fn_updateSelect(\"Edt\", "+ obj.center_holy_seq +")' class='blueBtn'>수정</a><a onclick='jqGridFunc.fn_holyDel(" + obj.center_holy_seq+ ")' class='grayBtn' style='margin-left: 5px;'>삭제</a></td>";
 									}
+								}else {
+									setHtml += "<td><a onclick='jqGridFunc.fn_updateSelect(\"Edt\", "+ obj.center_holy_seq +")' class='blueBtn'>수정</a><a onclick='jqGridFunc.fn_holyDel(" + obj.center_holy_seq+ ")' class='grayBtn' style='margin-left: 5px;'>삭제</a></td>";
 								}
 								setHtml += "</tr>";
 							}
