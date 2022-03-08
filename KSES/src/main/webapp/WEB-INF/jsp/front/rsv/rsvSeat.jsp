@@ -1028,10 +1028,22 @@
 			fn_checkForm : function() {
 				var entryDvsn = $("#entryDvsn").val();
 				
-				if(entryDvsn != "ENTRY_DVSN_1" && $("#seatCd").val() == "") {fn_openPopup("좌석을 선택해주세요", "red", "ERROR", "확인", ""); return;}
-				if(!isMember && !certifiYn) {fn_openPopup("본인인증을 진행해주세요", "red", "ERROR", "확인", ""); return;}
-				if(!$("input:checkbox[id='" + entryDvsn + "_qna_check']").is(":checked")) {fn_openPopup("전자문진표 작성여부에 동의해주세요", "red", "ERROR", "확인", ""); return;}
-				if(!$("input:checkbox[id='" + entryDvsn + "_person_agree']").is(":checked") && !isMember) {fn_openPopup("개인정보 수집 이용여부에 대하여 동의해주세요", "red", "ERROR", "확인", ""); return;}
+				if(entryDvsn != "ENTRY_DVSN_1" && $("#seatCd").val() == "") {
+					fn_openPopup("좌석을 선택해주세요", "red", "ERROR", "확인", ""); 
+					return;
+				}
+				if(!isMember && !certifiYn) {
+					fn_openPopup("본인인증을 진행해주세요", "red", "ERROR", "확인", ""); 
+					return;
+				}
+				if(!$("input:checkbox[id='" + entryDvsn + "_qna_check']").is(":checked")) {
+					fn_openPopup("전자문진표 작성여부에 동의해주세요", "red", "ERROR", "확인", ""); 
+					return;
+				}
+				if(!$("input:checkbox[id='" + entryDvsn + "_person_agree']").is(":checked") && !isMember) {
+					fn_openPopup("개인정보 수집 이용여부에 대하여 동의해주세요", "red", "ERROR", "확인", ""); 
+					return;
+				}
 				if(!$("input:checkbox[id='" + entryDvsn + "_auto_payment_check']").is(":checked") && isMember && $("#centerAutoPaymentYn").val() == "Y") {
 					fn_openPopup("사전결제동의 항목에 체크해주세요", "red", "ERROR", "확인", ""); 
 					return;

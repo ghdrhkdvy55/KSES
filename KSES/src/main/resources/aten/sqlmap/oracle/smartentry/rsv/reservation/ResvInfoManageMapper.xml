@@ -386,6 +386,13 @@
 	<select id="selectCenterResvDate" resultType="String">
     	SELECT FN_RESVDATE(#{centerCd}) FROM DUAL
     </select>
+    
+	<select id="selectQrDuplicate" resultType="lmap">
+    	SELECT NVL(COUNT(*),0) AS CNT
+		FROM TSER_QR_CHECK_H  
+		WHERE RESV_SEQ = #{params.resvSeq}
+		AND QR_CODE = #{params.qrCode}
+    </select>
 	
 	<!-- 회원 예약정보 등록 -->
     <insert id="insertUserResvInfo">
@@ -551,14 +558,7 @@
         WHERE RESV_SEQ = #{resvSeq}
     </update>     
     
-    <select id="resvQrDoubleCheck" resultType="lmap">
-    	SELECT NVL(COUNT(*),0) AS CNT
-		FROM TSER_QR_CHECK_H  
-		WHERE RESV_SEQ = #{params.resvSeq}
-		AND QR_CODE = #{params.qrCode}
-    </select>
-    
-	<update id="resPriceChange">
+	<update id="updateResvPriceInfo">
 		UPDATE TSER_RESV_INFO_I SET 
 			<choose>
 				<when test="resvPayDvsn == 'RESV_PAY_DVSN_2'">

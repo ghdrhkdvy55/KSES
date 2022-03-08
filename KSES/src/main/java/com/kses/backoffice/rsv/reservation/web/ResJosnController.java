@@ -211,7 +211,7 @@ public class ResJosnController {
 					resInfo.setResvTicketDvsn("RESV_TICKET_DVSN_1");
 					resInfo.setTradNo(node.get("Trade_No").asText());
 
-					resService.resPriceChange(resInfo);
+					resService.updateResvPriceInfo(resInfo);
 				} else {
 					for (speedon direction : speedon.values()) {
 						if (direction.getCode().equals(node.get("Error_Cd").asText())) {
@@ -306,7 +306,7 @@ public class ResJosnController {
 
 					resInfo.setResvTicketDvsn("RESV_TICKET_DVSN_1");
 					resInfo.setTradNo(node.get("Trade_No").asText());
-					resService.resPriceChange(resInfo);
+					resService.updateResvPriceInfo(resInfo);
 
 				} else {
 					for (speedon direction : speedon.values()) {
@@ -382,7 +382,7 @@ public class ResJosnController {
 				Map<String, Object> doubleCheckVO = new HashMap<String, Object>();
 				doubleCheckVO.put("resvSeq", SmartUtil.NVL(resSeq, "").toString());
 				doubleCheckVO.put("qrCode", SmartUtil.NVL(qrCheck, "").toString());
-				Map<String, Object> qrDoubleCheck = resService.resvQrDoubleCheck(doubleCheckVO);
+				Map<String, Object> qrDoubleCheck = resService.selectQrDuplicate(doubleCheckVO);
 				
 				Map<String, Object> resInfo = resService.selectUserResvInfo(searchVO);
 				
@@ -814,7 +814,7 @@ public class ResJosnController {
 					resInfoU.setResvState("RESV_STATE_2");
 				}
 				
-				int ret = resService.resPriceChange(resInfoU);
+				int ret = resService.updateResvPriceInfo(resInfoU);
 				if (ret > 0) {
 					returnCode = "OK";
 				} else {

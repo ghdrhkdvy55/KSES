@@ -68,11 +68,11 @@ public interface ResvInfoManageMapper {
 	
 	public int updateResvQrCount(@Param("resvSeq") String resvSeq);
 	
-	public Map<String, Object> resvQrDoubleCheck(@Param("params") Map<String, Object> params);
+	public Map<String, Object> selectQrDuplicate(@Param("params") Map<String, Object> params);
 	
 	public int resvBillChange(ResvInfo vo);
 	
-	public int resPriceChange(ResvInfo vo);
+	public int updateResvPriceInfo(ResvInfo vo);
 	
 	public String resvValidCheck(@Param("params") Map<String, Object> params);
 }

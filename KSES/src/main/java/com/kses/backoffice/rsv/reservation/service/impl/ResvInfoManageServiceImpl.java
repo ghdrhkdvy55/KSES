@@ -158,8 +158,8 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	}
 	
 	@Override
-	public int resPriceChange(ResvInfo vo) throws Exception {
-		return resvMapper.resPriceChange(vo);
+	public int updateResvPriceInfo(ResvInfo vo) throws Exception {
+		return resvMapper.updateResvPriceInfo(vo);
 	}
 	
 	@Override
@@ -268,8 +268,8 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	}
 	
 	@Override
-	public Map<String, Object> resvQrDoubleCheck(Map<String, Object> params) throws Exception {
-		return resvMapper.resvQrDoubleCheck(params);
+	public Map<String, Object> selectQrDuplicate(Map<String, Object> params) throws Exception {
+		return resvMapper.selectQrDuplicate(params);
 	}
 	
 	@Override
@@ -316,7 +316,7 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 						resInfo.setResvState("RESV_STATE_4");
 						resInfo.setResvTicketDvsn("RESV_TICKET_DVSN_1");
 						resInfo.setTradNo(tradeNo);
-						resvService.resPriceChange(resInfo);
+						resvService.updateResvPriceInfo(resInfo);
 					}
 				} 
 				

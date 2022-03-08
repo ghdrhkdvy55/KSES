@@ -250,7 +250,7 @@ public interface ResvInfoManageService {
 	 * @return
 	 * @throws Exception
 	 */
-	public Map<String, Object> resvQrDoubleCheck(Map<String, Object> params) throws Exception;	
+	public Map<String, Object> selectQrDuplicate(Map<String, Object> params) throws Exception;	
 	
 	/**
 	 * SPDM 입급 또는 환불시 예약정보 상태 변경
@@ -259,7 +259,7 @@ public interface ResvInfoManageService {
 	 * @return
 	 * @throws Exception
 	 */
-	public int resPriceChange(ResvInfo vo) throws Exception;
+	public int updateResvPriceInfo(ResvInfo vo) throws Exception;
 	
 	/**
 	 * SPDM 현금영수증 발행시 예약정보 상태 변경

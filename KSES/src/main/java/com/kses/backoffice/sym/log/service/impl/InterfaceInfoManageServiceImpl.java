@@ -124,7 +124,7 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 				resInfo.setResvTicketDvsn("RESV_TICKET_DVSN_1");
 				resInfo.setTradNo(node.get("Trade_No").asText());
 
-				resvService.resPriceChange(resInfo);
+				resvService.updateResvPriceInfo(resInfo);
 			} else {
 				for (speedon direction : speedon.values()) {
 					if (direction.getCode().equals(node.get("Error_Cd").asText())) {
@@ -208,7 +208,7 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 				resInfo.setResvState("RESV_STATE_4");
 				resInfo.setResvTicketDvsn("RESV_TICKET_DVSN_1");
 				resInfo.setTradNo(node.get("Trade_No").asText());
-				resvService.resPriceChange(resInfo);
+				resvService.updateResvPriceInfo(resInfo);
 				
 				result.addAttribute(Globals.STATUS, Globals.STATUS_SUCCESS);
 				result.addAttribute(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.request.msg"));
