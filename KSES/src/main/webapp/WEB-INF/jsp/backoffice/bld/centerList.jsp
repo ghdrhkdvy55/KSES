@@ -91,7 +91,7 @@
                   		<td colspan="3">
                     		<input type="text" id="centerAddr1" style="width: 200px; margin-right: 5px;">
                     		<input type="text" id="centerAddr2" style="width: 200px; margin-right: 5px;">
-                    		<input type ="button" onclick="execDaumPostcode()" value ="우편번호 찾기" >
+                    		<!-- <input type ="button" onclick="execDaumPostcode()" value ="우편번호 찾기" > -->
                   		</td>
                 	</tr>
                 	<tr>
@@ -128,36 +128,37 @@
                   		</td>
 					</tr>
                 	<tr>
-						<th>URL</th>
-	                  	<td><input type="text" id="centerUrl"></td>
 	                  	<th>사용 유무</th>
 	                  	<td>
                     		<label for="useYn_Y"><input id="useYn_Y" type="radio" name="useYn" value="Y" checked>Y</label>
                     		<label for="useYn_N"><input id="useYn_N" type="radio" name="useYn" value="N">N</label>
                   		</td>
-					</tr>
-					<tr>
 						<th>시범 지점 여부</th>
 	                  	<td>
                     		<label for="centerPilotYn_Y"><input id="centerPilotYn_Y" type="radio" name="centerPilotYn" value="Y" checked>Y</label>
                     		<label for="centerPilotYn_N"><input id="centerPilotYn_N" type="radio" name="centerPilotYn" value="N">N</label>
                   		</td>
+					</tr>
+					<tr>
+
                   		<th>자유석 여부</th>
 	                  	<td>
                     		<label for="centerStandYn_Y"><input id="centerStandYn_Y" type="radio" name="centerStandYn" value="Y" checked>Y</label>
                     		<label for="centerStandYn_N"><input id="centerStandYn_N" type="radio" name="centerStandYn" value="N">N</label>
                   		</td>
-					</tr>
-					<tr>
 						<th>최대 자유석수</th>
 	                  	<td><input type="text" id="centerStandMax" name="centerStandMax" onkeypress="onlyNum();"></td>
+					</tr>
+					<tr>
 	                  	<th>지점 입장료</th>
 	                  	<td><input type="text" id="centerEntryPayCost" name="centerEntryPayCost" onkeypress="onlyNum();"></td>
+						<th>지점 입장료(스피드온)</th>
+	                  	<td><input type="text" id="centerSpeedEntryPayCost" name="centerSpeedEntryPayCost"></td>
 					</tr>
 					<tr>
 	                  	<th>SPEEDON CODE</th>
-	                  	<td><input type="text" id="centerSpeedCd"  name="centerSpeedCd"></td>
-	                  	<th>RBM CODE</th>
+	                  	<td><input type="text" id="centerSpeedCd" name="centerSpeedCd"></td>
+						<th>RBM CODE</th>
 	                  	<td><input type="text" id="centerRbmCd" name="centerRbmCd" onkeypress="onlyNum();"></td>
 					</tr>
 				</tbody>
@@ -676,11 +677,11 @@
 				$("#centerAddr2").val("");
 				$("#centerTel").val("");
 				$("#centerFax").val("");
-				$("#centerUrl").val("");
 				$("#centerSpeedCd").val("");					
 				$("input:radio[name='centerStandYn']:radio[value='Y']").prop('checked', true);
 				$("#centerStandMax").val("");
 				$("#centerEntryPayCost").val("");
+				$("#centerSpeedEntryPayCost").val("");
 				$("#centerRbmCd").val("");
 				$("input:radio[name='useYn']:radio[value='Y']").prop('checked', true);
 				
@@ -710,20 +711,20 @@
 							$("#centerFax").val(obj.center_fax);
 							$("#startFloor").val(obj.start_floor);
 							$("#endFloor").val(obj.end_floor);
-							$("#centerUrl").val(obj.center_url);
 							$("#centerSpeedCd").val(obj.center_speed_cd);
 							$("input:radio[name='useYn']:radio[value='" + obj.use_yn + "']").prop('checked', true);
 							$("input:radio[name='centerPilotYn']:radio[value='" + obj.center_pilot_yn + "']").prop('checked', true);
 							$("input:radio[name='centerStandYn']:radio[value='" + obj.center_stand_yn + "']").prop('checked', true);
 							$("#centerStandMax").val(obj.center_stand_max);
 							$("#centerEntryPayCost").val(obj.center_entry_pay_cost);
+							$("#centerSpeedEntryPayCost").val(obj.center_speed_entry_pay_cost);
 							$("#centerRbmCd").val(obj.center_rbm_cd);
 							$("#ir3").val(obj.center_info);
 							fnCreatCheckbox("sp_floorInfo", $("#startFloor").val().replace("CENTER_FLOOR_", ""),  $("#endFloor").val().replace("CENTER_FLOOR_", ""), obj.floor_info, "floorInfos", "층") ;
 						}
 					},
 					function(request){
-						    common_popup("Error:" + request.status,"");
+						common_popup("ERROR : " + request.status, "");
 					}    		
 				);
 			}
@@ -831,7 +832,7 @@
 					}
 				},
 				function(request){
-					common_modelCloseM("Error:" + request.status,"bld_early_set");
+					common_modelCloseM("ERROR : " + request.status, "bld_early_set");
 				}    		
 			);
 			
@@ -869,7 +870,7 @@
 					}
 				},
 				function(request){ 
-					common_popup("Error:" + request.status,"");
+					common_popup("ERROR : " + request.status, "");
 				}    		
 			);
 			
@@ -937,7 +938,7 @@
 					}
 				},
 				function(request){
-					common_popup("Error:" + request.status,"");
+					common_popup("ERROR : " + request.status, "");
 				}    		
 			);
 			
@@ -1016,7 +1017,7 @@
 					}
 				},
 				function(request){ 
-					common_popup("Error:" + request.status,"");
+					common_popup("ERROR : " + request.status, "");
 				}    		
 			);
 			
@@ -1207,7 +1208,7 @@
 					}
 				},
 				function(request){
-					common_modelCloseM("Error:" + request.status,"bld_holiday_add");
+					common_modelCloseM("ERROR : " + request.status, "bld_holiday_add");
 				}    		
 	        );
 		},
@@ -1241,7 +1242,7 @@
 	   					   }
 	 				    },
 	 				    function(request){
-	 				    	common_modelCloseM("Error:" + request.status,"dv_excelUpload");
+	 				    	common_modelCloseM("ERROR : " + request.status, "dv_excelUpload");
 	 				    }    		
 	        ); 
 		},
@@ -1540,7 +1541,6 @@
      	    formData.append('centerAddr2' , $("#centerAddr2").val());
      	    formData.append('centerTel' , $("#centerTel").val());
      	    formData.append('centerFax' , $("#centerFax").val());
-     	   	formData.append('centerUrl' , $("#centerUrl").val());
      	    formData.append('mode' , $("#mode").val());
      	    formData.append('centerInfo' , $("#centerInfo").val());
      	    formData.append('startFloor' , $("#startFloor").val());
@@ -1552,6 +1552,7 @@
      	   	formData.append('centerStandYn', $('input[name=centerStandYn]:checked').val());
      	    formData.append('centerStandMax' , $("#centerStandMax").val());
      	    formData.append('centerEntryPayCost' , $("#centerEntryPayCost").val());
+     	   	formData.append('centerSpeedEntryPayCost' , $("#centerSpeedEntryPayCost").val());
      	    formData.append('centerRbmCd' , $("#centerRbmCd").val());
      	   
      	    uniAjaxMutipart
