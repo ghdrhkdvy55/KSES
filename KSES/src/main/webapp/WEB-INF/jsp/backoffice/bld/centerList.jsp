@@ -253,7 +253,7 @@
   </div>
 </div>
 <!-- // 휴일관리 팝업 -->
-<div id="bld_holiday_add" data-popup="bld_holiday_add" class="popup">
+<div id="bld_holiday_add" data-popup="bld_holiday_add" class="popup" style="width:1400px;">
 	<div class="pop_con">
 		<a class="button b-close">X</a>
 		<h2 class="pop_tit">지점 휴일 정보 <span></span></h2>
@@ -279,7 +279,7 @@
 	            		<th>휴일명</th>
 	            		<th>사용유무</th>
 	            		<th>최종수정자</th>
-	                    <th>수정/삭제</th>
+	                    <th id="test">수정/삭제</th>
 					</tr>
 	          	</thead>
 	          	<tbody class="inTxt">
@@ -1063,9 +1063,24 @@
 								setHtml += "<td>" + obj.holy_nm + "</td>";
 								setHtml += "<td>" + obj.use_yn + "</td>";
 								setHtml += "<td>" + obj.last_updusr_id + "</td>";
-								setHtml += "<td><a onclick='jqGridFunc.fn_updateSelect(\"Edt\", "+ obj.center_holy_seq +")' class='blueBtn'>수정</a><a onclick='jqGridFunc.fn_holyDel(" + obj.center_holy_seq+ ")' class='grayBtn' style='margin-left: 5px;'>삭제</a></td>";;
+								if($("#loginAuthorCd").val() != "ROLE_ADMIN" && $("#loginAuthorCd").val() != "ROLE_SYSTEM") {
+									if($("#loginCenterCd").val() == centerCd){
+										setHtml += "<td><a onclick='jqGridFunc.fn_updateSelect(\"Edt\", "+ obj.center_holy_seq +")' class='blueBtn'>수정</a><a onclick='jqGridFunc.fn_holyDel(" + obj.center_holy_seq+ ")' class='grayBtn' style='margin-left: 5px;'>삭제</a></td>";
+									}
+								}else {
+									setHtml += "<td><a onclick='jqGridFunc.fn_updateSelect(\"Edt\", "+ obj.center_holy_seq +")' class='blueBtn'>수정</a><a onclick='jqGridFunc.fn_holyDel(" + obj.center_holy_seq+ ")' class='grayBtn' style='margin-left: 5px;'>삭제</a></td>";
+								}
 								setHtml += "</tr>";
 							}
+ 							if($("#loginAuthorCd").val() != "ROLE_ADMIN" && $("#loginAuthorCd").val() != "ROLE_SYSTEM") {
+ 								if($("#loginCenterCd").val() != centerCd){
+ 									$("#bld_holiday_add .main_table > thead > tr > th:last").hide();
+ 									$("#bld_holiday_add .inTxt > tr:last").hide();
+	 							} else{
+	 								$("#bld_holiday_add .main_table > thead > tr > th:last").show();
+	 								$("#bld_holiday_add .inTxt > tr:last").show();
+	 							}
+ 							}
  							//페이징
 							var pageObj  = result.paginationInfo;
 							var pageHtml = ajaxPagingParam(pageObj.currentPageNo, pageObj.firstPageNo, pageObj.recordCountPerPage, 
@@ -1073,7 +1088,19 @@
 									pageObj.totalRecordCount, pageObj.pageSize, "jqGridFunc.fn_centerHolyInfo", division, centerCd);
 							$("#centerHoly_page").html(pageHtml);
 						} else {
-							setHtml += "<tr class='cur_poin'><td colspan='4'>등록된 휴일정보가 존재하지 않습니다.<td></tr>";	
+ 							if($("#loginAuthorCd").val() != "ROLE_ADMIN" && $("#loginAuthorCd").val() != "ROLE_SYSTEM") {
+ 								if($("#loginCenterCd").val() != centerCd){
+ 									$("#bld_holiday_add .main_table > thead > tr > th:last").hide();
+ 									$("#bld_holiday_add .inTxt > tr:last").hide();
+ 									setHtml += "<tr class='cur_poin'><td colspan='4'>등록된 휴일정보가 존재하지 않습니다.</tr>";	
+	 							} else{
+	 								$("#bld_holiday_add .main_table > thead > tr > th:last").show();
+	 								$("#bld_holiday_add .inTxt > tr:last").show();
+	 								setHtml += "<tr class='cur_poin'><td colspan='4'>등록된 휴일정보가 존재하지 않습니다.<td></tr>";	
+	 							}
+ 							} else {
+ 								setHtml += "<tr class='cur_poin'><td colspan='4'>등록된 휴일정보가 존재하지 않습니다.<td></tr>";	
+ 							}
 							$("#centerHoly_page").empty();
 						}
 						$("#bld_holiday_add .inTxt").prepend(setHtml);
