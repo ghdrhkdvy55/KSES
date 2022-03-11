@@ -429,7 +429,7 @@ public class BoardInfoManageController {
 				                                 , @RequestParam("boardSeq") String boardSeq)throws Exception{
 			
 			ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-			String returnMessage = "F";
+
 			try{
 				Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
 			    if(!isAuthenticated) {
@@ -457,7 +457,7 @@ public class BoardInfoManageController {
                                                   , @RequestParam("fileSeqs") String fileSeqs)throws Exception{
 
 			ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-			String returnMessage = "F";
+			
 			try{
 				Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
 				if(!isAuthenticated) {

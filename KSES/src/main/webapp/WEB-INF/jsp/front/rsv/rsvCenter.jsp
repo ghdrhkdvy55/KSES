@@ -30,7 +30,6 @@
 <body>
 <form:form name="regist" commandName="regist" method="get" action="/front/rsvCenter.do">	
 	<input type="hidden" id="centerCd" name="centerCd" value="">
-	<input type="hidden" id="resvDate" name="resvDate" value="">
     
     <div class="wrapper rsvBack">
         <!--// header -->
@@ -78,25 +77,19 @@
     <!--메뉴버튼 속성-->
     <script>
 		$(document).ready(function() {			
-//			var date = new Date();
-//			var today = date.format("yyyy-MM-dd");
-//			$(".date").html(today);
-			
-    		centerService.fn_makeCenterInfoArea(sessionStorage.getItem("resvDate"));
+    		centerService.fn_makeCenterInfoArea();
     	});
     	
     	var centerService =
 		{ 
-			fn_makeCenterInfoArea: function(resvDate) {
+			fn_makeCenterInfoArea: function() {
 				var url = "/front/rsvCenterListAjax.do";
-				
-				var parmas = {"resvDate" : resvDate};
 				
 				fn_Ajax
 				(
 				    url,
-				    "GET",
-				    parmas,
+				    "POST",
+				    null,
 					false,
 					function(result) {
 						if (result.status == "SUCCESS") {
@@ -167,7 +160,6 @@
 									fn_openPopup(result.validResult.resultMessage, "red", "ERROR", "확인", "");
 								} else {
 									validResult = result.validResult;
-									$("#resvDate").val(result.validResult.resvDate);
 									sessionStorage.setItem("accessCheck","1");
 									fn_pageMove('regist','/front/rsvSeat.do');
 								}

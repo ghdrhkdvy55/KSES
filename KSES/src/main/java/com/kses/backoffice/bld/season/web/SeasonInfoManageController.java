@@ -98,6 +98,11 @@ public class SeasonInfoManageController {
 			  searchVO.put("firstIndex", paginationInfo.getFirstRecordIndex());
 			  searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
 			  searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
+			  
+			  loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
+			  searchVO.put("authorCd", loginVO.getAuthorCd());
+			  searchVO.put("centerCd", loginVO.getCenterCd());
+			  
 			  List<Map<String, Object>> list = seasonService.selectSeasonInfoList(searchVO);
 			  model.addObject(Globals.JSON_RETURN_RESULTLISR, list);
 		      model.addObject(Globals.STATUS_REGINFO, searchVO);
@@ -292,7 +297,7 @@ public class SeasonInfoManageController {
 	
 	@RequestMapping (value="seasonInfoDelete.do")
 	public ModelAndView deleteSeasonInfoManage(	@ModelAttribute("loginVO") LoginVO loginVO,
-			                                   	@RequestParam("seasonCd") String seasonCd ) throws Exception {
+												@RequestBody Map<String, Object> info  ) throws Exception {
 		
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
@@ -305,7 +310,7 @@ public class SeasonInfoManageController {
 	    }	
 	    
 	    try {
-	    	seasonService.deleteSeasonInfo(seasonCd);
+	    	seasonService.deleteSeasonInfo(info.get("seasonCd").toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 	    	model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.delete") );
 		} catch (Exception e) {

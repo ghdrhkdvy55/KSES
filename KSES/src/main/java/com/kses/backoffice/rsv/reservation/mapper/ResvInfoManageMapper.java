@@ -18,13 +18,17 @@ public interface ResvInfoManageMapper {
 	
 	public String selectResvPayCost(@Param("params") Map<String, Object> paramMap) ;
 	
-	public List<String> selectResvDateList(ResvInfo vo) throws Exception;
+	public List<String> selectResvDateList(ResvInfo vo);
 	
 	public String selectResvSeqNext() throws Exception;
 	
+	public String selectCenterResvDate(@Param("centerCd") String centerCd);
+	
 	public Map<String, Object> selectInUserResvInfo(ResvInfo paramResvInfo);
 	
-	public Map<String, Object> selectResvBillInfo(@Param("resvSeq") String resvSeq) throws Exception;
+	public String selectAutoPaymentResvInfo(@Param("userId") String userId);
+	
+	public Map<String, Object> selectResvBillInfo(@Param("resvSeq") String resvSeq);
 	
 	public List<Map<String, Object>> selectUserMyResvInfo(@Param("params") Map<String, Object> paramMap);
 	
@@ -36,7 +40,7 @@ public interface ResvInfoManageMapper {
 	
 	public Map<String, Object> selectUserResvInfoFront(@Param("params") Map<String, Object> params);
 	
-	public int resvInfoDuplicateCheck(@Param("params") Map<String, Object> params);
+	public int selectResvDuplicate(@Param("params") Map<String, Object> params);
 	
 	public int insertUserResvInfo(ResvInfo vo);
 	
@@ -46,7 +50,7 @@ public interface ResvInfoManageMapper {
 	
 	public int updateResvSeatInfo(@Param("params") Map<String, Object> paramMap);
 	
-	public int updateResvInfoCopy(@Param("params") Map<String, Object> paramMap) throws Exception; 
+	public int updateResvInfoCopy(@Param("params") Map<String, Object> paramMap); 
 	
 	public int resvInfoCancel(@Param("params") Map<String, Object> paramMap);
 	
@@ -64,11 +68,11 @@ public interface ResvInfoManageMapper {
 	
 	public int updateResvQrCount(@Param("resvSeq") String resvSeq);
 	
-	public Map<String, Object> resvQrDoubleCheck(@Param("params") Map<String, Object> params);
+	public Map<String, Object> selectQrDuplicate(@Param("params") Map<String, Object> params);
 	
 	public int resvBillChange(ResvInfo vo);
 	
-	public int resPriceChange(ResvInfo vo);
+	public int updateResvPriceInfo(ResvInfo vo);
 	
 	public String resvValidCheck(@Param("params") Map<String, Object> params);
 }

@@ -84,7 +84,7 @@ public class FrontResvInfoManageController {
 	private SystemInfoManageService systemService;
 	
 	@Autowired
-	ApplicationContext applicationContext;
+	private ApplicationContext applicationContext;
 		
 	@LoginUncheck
 	@RequestMapping (value="rsvCenter.do")
@@ -94,12 +94,11 @@ public class FrontResvInfoManageController {
 	
 	@LoginUncheck
 	@RequestMapping (value="rsvCenterListAjax.do")
-	public ModelAndView selectRsvCenterListAjax(	@RequestParam("resvDate") String resvDate,
-													HttpServletRequest request) throws Exception {
+	public ModelAndView selectRsvCenterListAjax(HttpServletRequest request) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
-			List<Map<String, Object>> resultList = centerService.selectResvCenterList(resvDate);
+			List<Map<String, Object>> resultList = centerService.selectResvCenterList();
 			model.addObject(Globals.JSON_RETURN_RESULTLISR, resultList);
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		} catch(Exception e) {
@@ -118,14 +117,13 @@ public class FrontResvInfoManageController {
 		ModelAndView model = new ModelAndView("/front/rsv/rsvSeat");
 		try {
 			String centerCd = (String)params.get("centerCd");
-			String resvDate = (String)params.get("resvDate");
 			
 			Map<String, Object> resvInfo = centerService.selectCenterInfoDetail(centerCd);
 			List<Map<String, Object>> floorList = floorService.selectFloorInfoComboList(centerCd);
 			List<Map<String, Object>> partClass = partClassService.selectPartClassComboList(centerCd);
 			
 			resvInfo.put("centerCd", centerCd);
-			resvInfo.put("resvDate", resvDate);
+			resvInfo.put("resvDate", resvService.selectCenterResvDate(centerCd));
 			resvInfo.forEach((key, value) -> params.merge(key, value, (v1, v2) -> v2));
 			
 			model.addObject("partClass", partClass);
@@ -292,7 +290,6 @@ public class FrontResvInfoManageController {
 			if(ret > 0) {
 				// 방금 예약한 정보 조회 (지점,층,구역,좌석 명칭)
 				Map<String, Object> resvInfo = resvService.selectInUserResvInfo(vo);
-				sureService.insertResvSureData(Globals.SMS_TYPE_RESV, resvInfo.get("resv_seq").toString());
 				String autoPaymentYn = systemService.selectTodayAutoPaymentYn();
 				
 				if(vo.getResvUserDvsn().equals("USER_DVSN_1")) {
@@ -314,6 +311,8 @@ public class FrontResvInfoManageController {
 					
 					userService.updateUserInfo(user);
 				}
+				
+				sureService.insertResvSureData(Globals.SMS_TYPE_RESV, resvInfo.get("resv_seq").toString());
 				
 				model.addObject("resvInfo", resvInfo);
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
@@ -373,8 +372,8 @@ public class FrontResvInfoManageController {
 	}
 	
 	@LoginUncheck
-	@RequestMapping (value="resvInfoDuplicateCheck.do")
-	public ModelAndView resvInfoDuplicateCheck( @RequestBody Map<String, Object> params,
+	@RequestMapping (value="selectResvDuplicate.do")
+	public ModelAndView selectResvDuplicate( @RequestBody Map<String, Object> params,
 												HttpServletRequest request) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
@@ -384,12 +383,12 @@ public class FrontResvInfoManageController {
 			
 			String userId = userLoginInfo != null ? userLoginInfo.getUserId() : "";
 			params.put("userId", userId);
-			int resvCount = resvService.resvInfoDuplicateCheck(params);
+			int resvCount = resvService.selectResvDuplicate(params);
 	    	
 	    	model.addObject("resvCount", resvCount);
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		} catch(Exception e) {
-			LOGGER.error("resvInfoDuplicateCheck : " + e.toString());
+			LOGGER.error("selectResvDuplicate : " + e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg")); 
 		}

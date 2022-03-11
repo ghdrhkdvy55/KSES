@@ -82,6 +82,11 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	public String selectResvSeqNext() throws Exception {
 		return resvMapper.selectResvSeqNext();
 	}
+	
+	@Override
+	public String selectCenterResvDate(String centerCd) throws Exception {
+		return resvMapper.selectCenterResvDate(centerCd);
+	}
 
 	@Override
 	public int updateUserResvInfo(ResvInfo vo) throws Exception {
@@ -118,13 +123,18 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	}
 	
 	@Override
+	public String selectAutoPaymentResvInfo(String userId) throws Exception {
+		return resvMapper.selectAutoPaymentResvInfo(userId);
+	}
+	
+	@Override
 	public Map<String, Object> selectResvBillInfo(String resvSeq) throws Exception {
 		return resvMapper.selectResvBillInfo(resvSeq);
 	}
 	
 	@Override
-	public int resvInfoDuplicateCheck(Map<String, Object> params) throws Exception {
-		return resvMapper.resvInfoDuplicateCheck(params);
+	public int selectResvDuplicate(Map<String, Object> params) throws Exception {
+		return resvMapper.selectResvDuplicate(params);
 	}
 	
 	@Override
@@ -148,8 +158,8 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	}
 	
 	@Override
-	public int resPriceChange(ResvInfo vo) throws Exception {
-		return resvMapper.resPriceChange(vo);
+	public int updateResvPriceInfo(ResvInfo vo) throws Exception {
+		return resvMapper.updateResvPriceInfo(vo);
 	}
 	
 	@Override
@@ -258,8 +268,8 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	}
 	
 	@Override
-	public Map<String, Object> resvQrDoubleCheck(Map<String, Object> params) throws Exception {
-		return resvMapper.resvQrDoubleCheck(params);
+	public Map<String, Object> selectQrDuplicate(Map<String, Object> params) throws Exception {
+		return resvMapper.selectQrDuplicate(params);
 	}
 	
 	@Override
@@ -306,7 +316,7 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 						resInfo.setResvState("RESV_STATE_4");
 						resInfo.setResvTicketDvsn("RESV_TICKET_DVSN_1");
 						resInfo.setTradNo(tradeNo);
-						resvService.resPriceChange(resInfo);
+						resvService.updateResvPriceInfo(resInfo);
 					}
 				} 
 				

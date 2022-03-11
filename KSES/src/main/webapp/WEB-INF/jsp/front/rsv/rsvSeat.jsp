@@ -7,10 +7,10 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta http-equiv="refresh" content="600; URL=/front/main.do">
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
     <link href="/resources/css/front/reset.css" rel="stylesheet" />
     <script src="/resources/js/front/jquery-3.5.1.min.js"></script>
@@ -159,8 +159,8 @@
 										<span>&lt;자동결제동의&gt;</span>
 										<ol>
 											<li>스피드온 결제가능시간(수목 10:30~18:00/금토일 10:30~19:00) 예약 시 입장료 및 좌석이용료가 스피드온에서 자동 결제 됩니다.</li>
-											<li>스피드온 결제불가시간에 예약된 내역은 10:30에 일괄자동결제됩니다.</li>
-                                            <li>스피드온 잔액부족 시 자동결제는 이루어지지 않습니다. 자동결제가 되지 않을 시 스피드온 잔액 충전 후 QR생성화면에서 결제하기를 진행해주세요</li>
+											<li>스피드온 결제불가시간에 예약된 내역은 결제가능시간에 스마트입장시스템 로그인 시 자동결제됩니다.</li>
+											<li>스피드온 잔액부족 시 자동결제는 이루어지지 않습니다. 자동결제가 되지 않을 시 스피드온 잔액 충전 후 스마트입장시스템에 로그인하면 자동결제됩니다.</li>
                                             <li>미입장한 결제내역은 예약지점의 입장마감시간에 일괄환불됩니다.(강남지점 17시)</li>
                                             <li class="check_impnt">
 												<input class="magic-checkbox qna_check" type="checkbox" name="layout" id="ENTRY_DVSN_1_auto_payment_check" value="Y">
@@ -312,8 +312,8 @@
                                                 <span>&lt;자동결제동의&gt;</span>
                                                 <ol>
 													<li>스피드온 결제가능시간(수목 10:30~18:00/금토일 10:30~19:00) 예약 시 입장료 및 좌석이용료가 스피드온에서 자동 결제 됩니다.</li>
-													<li>스피드온 결제불가시간에 예약된 내역은 10:30에 일괄자동결제됩니다.</li>
-                                            		<li>스피드온 잔액부족 시 자동결제는 이루어지지 않습니다. 자동결제가 되지 않을 시 스피드온 잔액 충전 후 QR생성화면에서 결제하기를 진행해주세요</li>
+													<li>스피드온 결제불가시간에 예약된 내역은 결제가능시간에 스마트입장시스템 로그인 시 자동결제됩니다.</li>
+                                            		<li>스피드온 잔액부족 시 자동결제는 이루어지지 않습니다. 자동결제가 되지 않을 시 스피드온 잔액 충전 후 스마트입장시스템에 로그인하면 자동결제됩니다.</li>
                                             		<li>미입장한 결제내역은 예약지점의 입장마감시간에 일괄환불됩니다.(강남지점 17시)</li>
                                                     <li class="check_impnt">
                                                         <input class="magic-checkbox qna_check" type="checkbox" name="layout" id="ENTRY_DVSN_2_auto_payment_check" value="Y">
@@ -1028,10 +1028,22 @@
 			fn_checkForm : function() {
 				var entryDvsn = $("#entryDvsn").val();
 				
-				if(entryDvsn != "ENTRY_DVSN_1" && $("#seatCd").val() == "") {fn_openPopup("좌석을 선택해주세요", "red", "ERROR", "확인", ""); return;}
-				if(!isMember && !certifiYn) {fn_openPopup("본인인증을 진행해주세요", "red", "ERROR", "확인", ""); return;}
-				if(!$("input:checkbox[id='" + entryDvsn + "_qna_check']").is(":checked")) {fn_openPopup("전자문진표 작성여부에 동의해주세요", "red", "ERROR", "확인", ""); return;}
-				if(!$("input:checkbox[id='" + entryDvsn + "_person_agree']").is(":checked") && !isMember) {fn_openPopup("개인정보 수집 이용여부에 대하여 동의해주세요", "red", "ERROR", "확인", ""); return;}
+				if(entryDvsn != "ENTRY_DVSN_1" && $("#seatCd").val() == "") {
+					fn_openPopup("좌석을 선택해주세요", "red", "ERROR", "확인", ""); 
+					return;
+				}
+				if(!isMember && !certifiYn) {
+					fn_openPopup("본인인증을 진행해주세요", "red", "ERROR", "확인", ""); 
+					return;
+				}
+				if(!$("input:checkbox[id='" + entryDvsn + "_qna_check']").is(":checked")) {
+					fn_openPopup("전자문진표 작성여부에 동의해주세요", "red", "ERROR", "확인", ""); 
+					return;
+				}
+				if(!$("input:checkbox[id='" + entryDvsn + "_person_agree']").is(":checked") && !isMember) {
+					fn_openPopup("개인정보 수집 이용여부에 대하여 동의해주세요", "red", "ERROR", "확인", ""); 
+					return;
+				}
 				if(!$("input:checkbox[id='" + entryDvsn + "_auto_payment_check']").is(":checked") && isMember && $("#centerAutoPaymentYn").val() == "Y") {
 					fn_openPopup("사전결제동의 항목에 체크해주세요", "red", "ERROR", "확인", ""); 
 					return;
@@ -1059,6 +1071,7 @@
 				var checkDvsn = entryDvsn == "ENTRY_DVSN_1" ? "STANDING" : "SEAT";
 				params = {
 					"checkDvsn" : checkDvsn,
+					"inResvDate" : $("#resvDate").val(),
 					"userDvsn" : $("#userDvsn").val(),
 					"userId" : $("#userId").val(),
 					"userPhnum" : resvUserClphn,

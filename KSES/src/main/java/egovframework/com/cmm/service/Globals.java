@@ -108,7 +108,7 @@ public class Globals {
 
 	public static final String STEP = "step";
 	public static final String JSON_NO_KEY = "NO_KEY";
-
+	
 	public static final String SMS_TYPE_RESV = "RESV";
 	public static final String SMS_TYPE_AUTO_RESV = "AUTORESV";
 	public static final String SMS_TYPE_CANCEL = "CANCEL";

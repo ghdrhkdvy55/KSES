@@ -52,8 +52,7 @@ public class SeasonInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
 
 	@Override
 	public int deleteSeasonInfo(String seasonCd) {
-		List<String> seasonList =  SmartUtil.dotToList(seasonCd);
-		return sessionMapper.deleteSeasonInfo(seasonList);
+		return sessionMapper.deleteSeasonInfo(seasonCd);
 	}
 
 	@Override

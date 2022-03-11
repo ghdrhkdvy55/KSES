@@ -3,7 +3,6 @@ package com.kses.backoffice.rsv.reservation.service;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Param;
 import org.springframework.ui.ModelMap;
 
 import com.kses.backoffice.rsv.reservation.vo.ResvInfo;
@@ -46,6 +45,15 @@ public interface ResvInfoManageService {
 	public String selectResvSeqNext() throws Exception;
 	
 	/**
+	 * SPDM 지점 예약일자 조회
+	 * 
+	 * @param centerCd
+	 * @return
+	 * @throws Exception
+	 */
+	public String selectCenterResvDate(String centerCd) throws Exception;
+	
+	/**
 	 * SPDM 회원 마지막 예약 정보 조회
 	 * 
 	 * @param userId
@@ -73,6 +81,60 @@ public interface ResvInfoManageService {
 	public Map<String, Object> selectUserResvInfoFront(Map<String, Object> params) throws Exception;
 	
 	/**
+	 * SPDM 회원 예약 현시간 예약한 정보 조회
+	 * 
+	 * @param vo
+	 * @return
+	 * @throws Exception
+	 */
+	public Map<String, Object> selectInUserResvInfo(ResvInfo vo) throws Exception;
+	
+	/**
+	 * SPDM 회원 로그인시 자동결제 적용 예약정보 조회
+	 * 
+	 * @param userId
+	 * @return
+	 * @throws Exception
+	 */
+	public String selectAutoPaymentResvInfo(String userId) throws Exception;
+	
+	/**
+	 * SPDM 현금영수증 발행정보 조회
+	 * 
+	 * @param resvSeq
+	 * @return
+	 * @throws Exception
+	 */
+	public Map<String, Object> selectResvBillInfo(String resvSeq) throws Exception;
+	
+	/**
+	 * SPDM 회원 현재 예약일자 예약정보 유무 확인
+	 * 
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 */
+	public int selectResvDuplicate(Map<String, Object> params) throws Exception;
+	
+	/**
+	 * SPDM 회원 마이페이지 예약정보 조회
+	 * 
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 */
+	public List<Map<String, Object>> selectUserMyResvInfo(Map<String, Object> params) throws Exception;
+	
+	/**
+	 * SPDM 비회원 마이페이지 예약정보 조회
+	 * 
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 */
+	public List<Map<String, Object>> selectGuestMyResvInfo(Map<String, Object> params) throws Exception;
+	
+	/**
 	 * SPDM 회원 예약 정보 등록 및 수정
 	 * 
 	 * @param vo
@@ -98,51 +160,6 @@ public interface ResvInfoManageService {
 	 * @throws Exception
 	 */
 	public int updateUserLongResvInfo(ResvInfo vo) throws Exception;
-	
-	/**
-	 * SPDM 회원 예약 현시간 예약한 정보 조회
-	 * 
-	 * @param vo
-	 * @return
-	 * @throws Exception
-	 */
-	public Map<String, Object> selectInUserResvInfo(ResvInfo vo) throws Exception;
-	
-	/**
-	 * SPDM 현금영수증 발행정보 조회
-	 * 
-	 * @param resvSeq
-	 * @return
-	 * @throws Exception
-	 */
-	public Map<String, Object> selectResvBillInfo(String resvSeq) throws Exception;
-	
-	/**
-	 * SPDM 회원 현재 예약일자 예약정보 유무 확인
-	 * 
-	 * @param params
-	 * @return
-	 * @throws Exception
-	 */
-	public int resvInfoDuplicateCheck(Map<String, Object> params) throws Exception;
-	
-	/**
-	 * SPDM 회원 마이페이지 예약정보 조회
-	 * 
-	 * @param params
-	 * @return
-	 * @throws Exception
-	 */
-	public List<Map<String, Object>> selectUserMyResvInfo(Map<String, Object> params) throws Exception;
-	
-	/**
-	 * SPDM 비회원 마이페이지 예약정보 조회
-	 * 
-	 * @param params
-	 * @return
-	 * @throws Exception
-	 */
-	public List<Map<String, Object>> selectGuestMyResvInfo(Map<String, Object> params) throws Exception;
 	
 	/**
 	 * SPDM 예약 좌석정보 변경
@@ -233,7 +250,7 @@ public interface ResvInfoManageService {
 	 * @return
 	 * @throws Exception
 	 */
-	public Map<String, Object> resvQrDoubleCheck(@Param("params") Map<String, Object> params) throws Exception;	
+	public Map<String, Object> selectQrDuplicate(Map<String, Object> params) throws Exception;	
 	
 	/**
 	 * SPDM 입급 또는 환불시 예약정보 상태 변경
@@ -242,7 +259,7 @@ public interface ResvInfoManageService {
 	 * @return
 	 * @throws Exception
 	 */
-	public int resPriceChange(ResvInfo vo) throws Exception;
+	public int updateResvPriceInfo(ResvInfo vo) throws Exception;
 	
 	/**
 	 * SPDM 현금영수증 발행시 예약정보 상태 변경

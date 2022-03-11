@@ -101,7 +101,7 @@ public class NoshowInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
 				} else {
 					resultCount = 0;
 					LOGGER.info("예약번호 : " + resvSeq + " 예약 정보 취소실패");
-					throw new Exception();
+					throw new Exception();              
 				}
 			} else {
 				LOGGER.info("예약번호 : " + resvSeq + " 노쇼 정보 등록실패");

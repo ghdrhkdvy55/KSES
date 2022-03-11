@@ -191,8 +191,12 @@
 				ELSE 'N'
 			END AS PART_INITIAL,
 			B.CENTER_PILOT_YN, A.TRAD_NO, A.TRAD_DATE, B.CENTER_SPEED_CD, B.CENTER_RBM_CD,
-			A.RESV_USER_NM, A.RESV_USER_CLPHN, FN_DETAILCODENM(D.PART_CLASS) AS SEAT_CLASS
-		FROM TSER_RESV_INFO_I A, TSEB_CENTER_INFO_M B, TSEB_FLOOR_INFO_M C, TSEB_PART_INFO_D D, TSEB_SEAT_INFO_D E, TSER_USER_INFO_I F
+			A.RESV_USER_NM, A.RESV_USER_CLPHN, FN_DETAILCODENM(D.PART_CLASS) AS SEAT_CLASS,
+			B.CENTER_SPEED_ENTRY_PAY_COST,
+			FN_PARTPAYCOST(D.PART_CD,'SPEED') AS PART_SPEED_PAY_COST 
+		FROM 
+			TSER_RESV_INFO_I A, TSEB_CENTER_INFO_M B, TSEB_FLOOR_INFO_M C, TSEB_PART_INFO_D D, 
+			TSEB_SEAT_INFO_D E, TSER_USER_INFO_I F
 		WHERE A.RESV_SEQ = #{params.resvSeq}
 		AND A.CENTER_CD = B.CENTER_CD
 		AND A.FLOOR_CD = C.FLOOR_CD(+)
@@ -319,6 +323,19 @@
 		AND A.SEAT_CD = E.SEAT_CD(+)  	
     </select>
     
+    <!-- 회원 자동결제 예약정보 조회 -->
+    <select id="selectAutoPaymentResvInfo" resultType="String">
+		SELECT RESV_SEQ FROM TSER_RESV_INFO_I A, TSEB_CENTER_INFO_M B, TSEC_AUTO_PAYMENT_INFO_I C 
+		WHERE A.USER_ID =  #{userId}
+		AND A.RESV_END_DT = TO_CHAR(SYSDATE,'YYYYMMDD')
+		AND A.RESV_STATE = 'RESV_STATE_1'
+		AND A.RESV_PAY_DVSN = 'RESV_PAY_DVSN_1'
+		AND A.CENTER_CD = B.CENTER_CD
+		AND B.CENTER_PILOT_YN = 'Y'
+		AND C.AUTO_PAYMENT_DAY = TO_CHAR(TO_DATE(A.RESV_END_DT),'d')
+		AND TO_CHAR(SYSDATE,'HH24MI') BETWEEN C.AUTO_PAYMENT_OPEN_TM AND C.AUTO_PAYMENT_CLOSE_TM
+    </select>
+    
     <!-- 예약정보에 대한 현금영수증 발급정보 조회 -->
     <select id="selectResvBillInfo" resultType="lmap">
 		SELECT 			
@@ -332,7 +349,7 @@
     </select>
     
 	<!-- 회원 현재 예약일자에 대한 예약 유무 조회 -->
-	<select id="resvInfoDuplicateCheck" resultType="int">
+	<select id="selectResvDuplicate" resultType="int">
 		SELECT NVL(COUNT(*),0) AS CNT
 		FROM TSER_RESV_INFO_I A
 		<choose>
@@ -364,9 +381,22 @@
 	]]>
 	</select>
 	
+	<!-- 다음 예약시퀀스 조회 -->
 	<select id="selectResvSeqNext" resultType="String">
 		SELECT LPAD(SEQ_SER_RERV_INFO.NEXTVAL,12,0) FROM DUAL
 	</select>
+	
+	<!-- 지점 예약일자 조회 -->
+	<select id="selectCenterResvDate" resultType="String">
+    	SELECT FN_RESVDATE(#{centerCd}) FROM DUAL
+    </select>
+    
+	<select id="selectQrDuplicate" resultType="lmap">
+    	SELECT NVL(COUNT(*),0) AS CNT
+		FROM TSER_QR_CHECK_H  
+		WHERE RESV_SEQ = #{params.resvSeq}
+		AND QR_CODE = #{params.qrCode}
+    </select>
 	
 	<!-- 회원 예약정보 등록 -->
     <insert id="insertUserResvInfo">
@@ -450,6 +480,7 @@
 		)
     </insert>
     
+    <!-- 좌석 정보 변경 -->
 	<update id="updateResvSeatInfo">
     	UPDATE TSER_RESV_INFO_I SET
     		SEASON_CD = #{params.seasonCd, jdbcType=VARCHAR},
@@ -475,7 +506,7 @@
 			RESV_USER_CLPHN, RESV_USER_ASK_YN, RESV_STATE, RESV_RCPT_YN, RESV_RCPT_DVSN,
 			RESV_RCPT_TEL, RESV_INDVDLINFO_AGRE_YN, RESV_SEAT_CLASS, RESV_ENTRY_DVSN, RESV_PAY_DVSN, 
 			RESV_ENTRY_PAY_COST, RESV_SEAT_PAY_COST, RESV_PAY_COST, FRST_REGIST_DTM, FRST_REGTER_ID, 
-			LAST_UPDT_DTM, LAST_UPDUSR_ID  
+			LAST_UPDT_DTM, LAST_UPDUSR_ID
 		)
 		SELECT 
 			#{params.copyResvSeq}, #{params.seasonCd, jdbcType=VARCHAR}, #{params.centerCd}, #{params.floorCd}, #{params.partCd},
@@ -531,20 +562,18 @@
         WHERE RESV_SEQ = #{resvSeq}
     </update>     
     
-    <select id="resvQrDoubleCheck" resultType="lmap">
-    	SELECT NVL(COUNT(*),0) AS CNT
-		FROM TSER_QR_CHECK_H  
-		WHERE RESV_SEQ = #{params.resvSeq}
-		AND QR_CODE = #{params.qrCode}
-    </select>
-    
-	<update id="resPriceChange">
+	<update id="updateResvPriceInfo">
 		UPDATE TSER_RESV_INFO_I SET 
 			<choose>
-				<when test="resvPayDvsn == 'RESV_PAY_DVSN_2'">
+				<when test="@org.apache.commons.lang3.StringUtils@equals(resvPayDvsn,'RESV_PAY_DVSN_2')">
 					TRAD_NO = #{tradNo},
 					TRAD_DATE = SYSDATE,
 					RESV_TICKET_DVSN = #{resvTicketDvsn},
+					<if test="@org.apache.commons.lang3.StringUtils@equals(resvTicketDvsn,'RESV_TICKET_DVSN_1')">
+						RESV_PAY_COST = #{resvPayCost},
+						RESV_ENTRY_PAY_COST = #{resvEntryPayCost},
+						RESV_SEAT_PAY_COST = #{resvSeatPayCost},
+					</if>
 				</when>
 				<otherwise>
 					REFOUND_NO = #{tradNo},

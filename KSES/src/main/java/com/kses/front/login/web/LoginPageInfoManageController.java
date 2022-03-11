@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,11 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kses.backoffice.cus.usr.service.UserInfoManageService;
+import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
 import com.kses.backoffice.util.SmartUtil;
 import com.kses.front.annotation.LoginUncheck;
 import com.kses.front.annotation.ReferrerUncheck;
 import com.kses.front.login.service.UserLoginService;
 import com.kses.front.login.vo.UserLoginInfo;
+import com.kses.front.resv.AutoPaymentThread;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.Globals;
@@ -37,12 +40,15 @@ public class LoginPageInfoManageController {
 	    
 	@Autowired
 	protected EgovPropertyService propertiesService;
-	
-	@Autowired
-	protected UserLoginService loginService;
-	
+
 	@Autowired
 	private UserInfoManageService userService;
+	
+	@Autowired
+	private ResvInfoManageService resvService;
+	
+	@Autowired
+	private ApplicationContext applicationContext;
 	
 	@LoginUncheck
 	@RequestMapping (value="actionLogout.do")
@@ -125,7 +131,6 @@ public class LoginPageInfoManageController {
 		
 		ModelAndView model = new ModelAndView("redirect:/front/main.do");
 		try {
-			//외부 테스트 로그인
 			String envType = propertiesService.getString("Globals.envType");
 			params.put("envType", envType);
 			UserLoginInfo userLoginInfo = userService.selectSSOUserInfo(params);
@@ -139,6 +144,13 @@ public class LoginPageInfoManageController {
 				model.addObject("decodeCardId", decodeCardId);
 				model.setViewName("/front/login/loginpage");
 				return model;
+			}
+			
+			String resvSeq = resvService.selectAutoPaymentResvInfo(userLoginInfo.getUserId());
+			if(resvSeq != null) {
+				AutoPaymentThread autoPaymentThread = new AutoPaymentThread(resvSeq);
+				applicationContext.getAutowireCapableBeanFactory().autowireBean(autoPaymentThread);
+				autoPaymentThread.start();
 			}
  			
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);

@@ -513,7 +513,7 @@ function fn_moveReservation() {
  * @returns
  */
 function fn_resvDuplicateCheck(params) {
-	var url = "/front/resvInfoDuplicateCheck.do";
+	var url = "/front/selectResvDuplicate.do";
 	var isResvDuplicate = true;
 	
 	fn_Ajax

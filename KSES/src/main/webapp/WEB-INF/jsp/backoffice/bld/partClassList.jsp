@@ -162,7 +162,7 @@
 			{ label: '일반 금액', name:'part_pay_cost', align:'center', formatter:'currency', 
 				formatoptions:{decimalSeparator:",", thousandsSeparator: ",", decimalPlaces: 0, defaulValue: 0, suffix : "원"}},
 			{ label: '스피드온 금액', name:'part_speed_pay_cost', align:'center', formatter:'currency', 
-				formatoptions:{decimalSeparator:",", thousandsSeparator: ",", decimalPlaces: 0, defaulValue: 1000, suffix : "원"}},
+				formatoptions:{decimalSeparator:",", thousandsSeparator: ",", decimalPlaces: 0, defaulValue: 0, suffix : "원"}},
 			{ label: '사용유무', name:'use_yn', align:'center', hidden:true},
 			{ label: '사용유무', name:'use_yn_value', align:'center'},
 			{ label: '정렬순서', name:'part_class_order', align:'center', hidden: true},
@@ -309,6 +309,7 @@
 	 	    formData.append('centerCd' , $form.find('select[name=centerCd]').val());
 	 	    formData.append('partClass' , $form.find('select[name=partClass]').val());
 	 	    formData.append('partPayCost' , $form.find(':text[name=partPayCost]').val());
+	 	   	formData.append('partSpeedPayCost' , $form.find(':text[name=partSpeedPayCost]').val());
 	 	    formData.append('partClassOrder' , $form.find(':text[name=partClassOrder]').val());
 	 	   	formData.append('useYn', $form.find('input[name=useYn]:checked').val());
 	 	   	formData.append('mode' , $form.find(':hidden[name=mode]').val());

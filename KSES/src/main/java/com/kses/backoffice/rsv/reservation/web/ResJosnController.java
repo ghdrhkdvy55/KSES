@@ -149,7 +149,9 @@ public class ResJosnController {
 				Url = propertiesService.getString("speedOnUrl") + "trade/fepWithdraw";
 
 				Map<String, Object> resvInfo = resService.selectUserResvInfo(jsonObject);
-				LOGGER.info("selectSpeedCheck : " + SmartUtil.NVL(resvInfo.get("resv_seq"),"") + "번 결제 시작");
+				int partSpeedPayCost = Integer.parseInt(SmartUtil.NVL(resvInfo.get("part_speed_pay_cost"),"0")); 
+			    int centerSpeedEntryPayCost = Integer.parseInt(SmartUtil.NVL(resvInfo.get("center_speed_entry_pay_cost"),"0")); 
+			    LOGGER.info("selectSpeedCheck : " + SmartUtil.NVL(resvInfo.get("resv_seq"),"") + "번 결제 시작");
 				
 				if(!SmartUtil.NVL(resvInfo.get("resv_state"),"").equals("RESV_STATE_1")) {
 					switch (SmartUtil.NVL(resvInfo.get("resv_state"),"")) {
@@ -200,18 +202,20 @@ public class ResJosnController {
 					jsonObject.put("Trade_Detail", "입장시스템 입장/좌석 이용료 출금");
 				}
 				
-				jsonObject.put("Trade_Pay", resvInfo.get("resv_pay_cost").toString());
+				jsonObject.put("Trade_Pay", partSpeedPayCost + centerSpeedEntryPayCost);
 
 				node = SmartUtil.requestHttpJson(Url, jsonObject.toJSONString(), "SPEEDWITHDRAW", "SPEEDON", "KSES");
 				if (node.get("Error_Cd").asText().equals("SUCCESS")) {
-					// 예약 테이블 출금 정보 처리 하기
 					ResvInfo resInfo = new ResvInfo();
 					resInfo.setResvSeq(SmartUtil.NVL(resvInfo.get("resv_seq"), "").toString());
+					resInfo.setResvSeatPayCost(String.valueOf(partSpeedPayCost));
+					resInfo.setResvEntryPayCost(String.valueOf(centerSpeedEntryPayCost));
+					resInfo.setResvPayCost(String.valueOf(partSpeedPayCost + centerSpeedEntryPayCost));
 					resInfo.setResvPayDvsn("RESV_PAY_DVSN_2");
 					resInfo.setResvTicketDvsn("RESV_TICKET_DVSN_1");
 					resInfo.setTradNo(node.get("Trade_No").asText());
 
-					resService.resPriceChange(resInfo);
+					resService.updateResvPriceInfo(resInfo);
 				} else {
 					for (speedon direction : speedon.values()) {
 						if (direction.getCode().equals(node.get("Error_Cd").asText())) {
@@ -306,7 +310,7 @@ public class ResJosnController {
 
 					resInfo.setResvTicketDvsn("RESV_TICKET_DVSN_1");
 					resInfo.setTradNo(node.get("Trade_No").asText());
-					resService.resPriceChange(resInfo);
+					resService.updateResvPriceInfo(resInfo);
 
 				} else {
 					for (speedon direction : speedon.values()) {
@@ -382,7 +386,7 @@ public class ResJosnController {
 				Map<String, Object> doubleCheckVO = new HashMap<String, Object>();
 				doubleCheckVO.put("resvSeq", SmartUtil.NVL(resSeq, "").toString());
 				doubleCheckVO.put("qrCode", SmartUtil.NVL(qrCheck, "").toString());
-				Map<String, Object> qrDoubleCheck = resService.resvQrDoubleCheck(doubleCheckVO);
+				Map<String, Object> qrDoubleCheck = resService.selectQrDuplicate(doubleCheckVO);
 				
 				Map<String, Object> resInfo = resService.selectUserResvInfo(searchVO);
 				
@@ -814,7 +818,7 @@ public class ResJosnController {
 					resInfoU.setResvState("RESV_STATE_2");
 				}
 				
-				int ret = resService.resPriceChange(resInfoU);
+				int ret = resService.updateResvPriceInfo(resInfoU);
 				if (ret > 0) {
 					returnCode = "OK";
 				} else {

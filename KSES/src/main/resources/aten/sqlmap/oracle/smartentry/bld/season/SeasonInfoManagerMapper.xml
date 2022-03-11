@@ -12,7 +12,7 @@
 			(	
 				SELECT SEASON_CD, SEASON_START_DAY, SEASON_END_DAY, USE_YN, SEASON_NM,
                        SEASON_DC, FRST_REGIST_DTM, FRST_REGTER_ID, TO_CHAR( LAST_UPDT_DTM, 'YYYY-MM-DD') LAST_UPDT_DTM, LAST_UPDUSR_ID,
-                       FN_SEASON_CENTERNM(A.SEASON_CENTERINFO) SEASON_CENTERINFO
+                       A.SEASON_CENTERINFO, FN_SEASON_CENTERNM(A.SEASON_CENTERINFO) AS SEASON_CENTERINFO_NM
 				FROM TSEB_SEASON_M A
 				WHERE 1=1
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
@@ -32,12 +32,14 @@
 								OR SEASON_DC LIKE '%' || #{params.searchKeyword} || '%' 
 							)
 						</otherwise>
-						
 					</choose>
 				</if>
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchCenter)">
 				    AND INSTR(A.SEASON_CENTERINFO,  #{params.searchCenter})  > 0
 				</if>
+				<if test="params.authorCd != 'ROLE_ADMIN' and params.authorCd != 'ROLE_SYSTEM'">
+				   AND INSTR(A.SEASON_CENTERINFO, #{params.centerCd}) >0
+				</if>	
 			) TB 
 		) TA
 		WHERE ROWNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
@@ -191,18 +193,9 @@
 		DECLARE
 		BEGIN
 		
- 	    DELETE FROM TSEB_SEASON_M
-   		WHERE SEASON_CD IN
-		      <foreach collection="seasonList" item="item"  open="(" separator="," close=")">
-	          #{item}
-	          </foreach>
-	    ;
-   		DELETE FROM TSEB_SEASON_STINFO_D
-   		WHERE SEASON_CD IN
-	   		 <foreach collection="seasonList" item="item"  open="(" separator="," close=")">
-             #{item}
-            </foreach>
-	    ;
+	 	    DELETE FROM TSEB_SEASON_M WHERE SEASON_CD = #{seasonCd};
+	   		DELETE FROM TSEB_SEASON_STINFO_D WHERE SEASON_CD = #{seasonCd};
+   		
 		END
 	}	
    	</delete>

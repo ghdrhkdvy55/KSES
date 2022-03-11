@@ -24,6 +24,7 @@ public class SureMsgInfo {
 		String resvDate = resvInfo.get("resv_end_dt").toString();
 		String centerNm = resvInfo.get("center_nm").toString();
 		String seatNm = resvInfo.get("seat_nm").toString();
+		String resvPayCost = resvInfo.get("resv_pay_cost").toString();
 		
 		if(msgDvsn.equals(Globals.SMS_TYPE_RESV)) {
 			if(userDvsn.equals("USER_DVSN_1")) {
@@ -51,6 +52,11 @@ public class SureMsgInfo {
 		} else if(msgDvsn.equals(Globals.SMS_TYPE_CANCEL)) {
 			templateCode = "KSES_004";
 			msg += resvDate.substring(4,6) + "월 " + resvDate.substring(6,8) + "일  " + "입장취소 완료되었습니다.";
+		} else if(msgDvsn.equals(Globals.SMS_TYPE_PAYMENT)) {
+			templateCode = "KSES_005";
+            msg += SmartUtil.getSmsName(resvInfo) + "님 " + resvDate.substring(4,6) + "월 " + resvDate.substring(6,8) + "일 ";
+            msg += centerNm + "지점 " + resvPayCost + "원 스피드온 결제 완료되었습니다. ";
+            msg += "(예약번호 : " + resvSeq.replaceAll("^0+", "") + ")";
 		}
 		
 		sureData.setCallname(userNm);

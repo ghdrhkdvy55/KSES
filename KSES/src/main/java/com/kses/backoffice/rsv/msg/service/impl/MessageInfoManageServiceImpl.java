@@ -17,9 +17,6 @@ import com.kses.backoffice.rsv.msg.vo.MessageInfo;
 @Service
 public class MessageInfoManageServiceImpl extends EgovAbstractServiceImpl implements MessageInfoManageService {
 
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(MessageInfoManageServiceImpl.class);
-	
 	@Autowired
 	private MessageInfoManageMapper msgMapper;
 
@@ -41,6 +38,4 @@ public class MessageInfoManageServiceImpl extends EgovAbstractServiceImpl implem
 	public int deleteMsgManage(String msgSeq) throws Exception {
 		return 0;
 	}
-	
-	
 }
