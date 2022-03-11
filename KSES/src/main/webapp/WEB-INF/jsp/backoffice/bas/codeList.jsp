@@ -315,12 +315,12 @@
 	function fnCmmnCodeDelete() {
         let $popup = $('[data-popup=bas_code_add]');
         let $form = $popup.find('form:first');
-        let codeId = $form.find(':text[name=codeId]').val();
-		bPopupConfirm('분류코드 삭제', '<b>'+ codeId +'</b> 를( 을) 삭제 하시겠습니까?', function() {
+        let rowId = $form.find(':text[name=codeId]').val();
+		bPopupConfirm('분류코드 삭제', '<b>'+ rowId +'</b> 를( 을) 삭제 하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(
 				'POST',
 				'/backoffice/bas/codeDelete.do', {
-					codeId: codeId
+					codeId: rowId
 				},
 				null,
 				function(json) {
@@ -421,12 +421,12 @@
 	function fnCmmnDetailCodeDelete() {
         let $popup = $('[data-popup=bas_detailcode_add]');
         let $form = $popup.find('form:first');
-        let code = $form.find(':hidden[name=code]').val();
-		bPopupConfirm('상세코드 삭제', '<b>'+ code +'</b> 를(을) 삭제 하시겠습니까?', function() {
+        let rowId = $form.find(':hidden[name=code]').val();
+		bPopupConfirm('상세코드 삭제', '<b>'+ rowId +'</b> 를(을) 삭제 하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(
 				'POST',
 				'/backoffice/bas/codeDetailCodeDelete.do', {
-					code: code
+					code: rowId
 				},
 				null,
 				function(json) {
