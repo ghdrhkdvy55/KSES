@@ -73,6 +73,7 @@
 <input type="hidden" id="seasonCdGui" name="seasonCdGui">
 <input type="hidden" id="partExits" name="partExits">
 <input type="hidden" id="seasonCenterinfo" name="seasonCenterinfo">
+<input type="hidden" id="adminId" name="adminId" value="${LoginVO.adminId}">
 <div class="breadcrumb">
   	<ol class="breadcrumb-item">
     	<li>시설 관리&nbsp;&gt;&nbsp;</li>
@@ -113,7 +114,6 @@
     </div>
     <div class="right_box">
         <a href="javascript:jqGridFunc.fn_SeasonInfo('Ins', '')" class="blueBtn">시즌 등록</a>
-        <a href="javascript:jqGridFunc.fn_SeasonDel()"  class="grayBtn">삭제</a>
     </div>
     <div class="clear"></div>
     <div class="whiteBox">
@@ -275,18 +275,25 @@
 </nav>
 <script type="text/javascript">
 $(document).ready(function() { 
-	   jqGridFunc.setGrid("mainGrid");
-	   var clareCalendar = {
-	   monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
-	   dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
-	   weekHeader: 'Wk',
-	   dateFormat: 'yymmdd', //형식(20120303)
-	   autoSize: false, //오토리사이즈(body등 상위태그의 설정에 따른다)
-	   changeMonth: true, //월변경가능
-	   changeYear: true, //년변경가능
-	   showMonthAfterYear: true, //년 뒤에 월 표시
-	   buttonImageOnly: false, //이미지표시
-	   yearRange: '2021:2099' //1990년부터 2020년까지
+	if($("#loginAuthorCd").val() != "ROLE_ADMIN" && $("#loginAuthorCd").val() != "ROLE_SYSTEM") {
+		$("#searchCenter").val($("#loginCenterCd").val());
+		$(".top > p:first").hide();
+		$(".top > select:first").hide();
+		
+	}
+	
+	jqGridFunc.setGrid("mainGrid");
+	var clareCalendar = {
+		monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+		dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
+		weekHeader: 'Wk',
+		dateFormat: 'yymmdd', //형식(20120303)
+		autoSize: false, //오토리사이즈(body등 상위태그의 설정에 따른다)
+		changeMonth: true, //월변경가능
+		changeYear: true, //년변경가능
+		showMonthAfterYear: true, //년 뒤에 월 표시
+		buttonImageOnly: false, //이미지표시
+		yearRange: '2021:2099' //1990년부터 2020년까지
     };	       
 	   $("#seasonStartDay").datepicker(clareCalendar);
 	   $("#seasonEndDay").datepicker(clareCalendar);
@@ -296,259 +303,276 @@ $(document).ready(function() {
 
 
 var jqGridFunc  = {
-		setGrid : function(gridOption){
-			var grid = $('#'+gridOption);
-		    var postData = {"pageIndex": "1"};
-		    grid.jqGrid({
-		    	url : '/backoffice/bld/seasonListAjax.do' ,
-		        mtype :  'POST',
-		        datatype :'json',
-		        
-		        ajaxGridOptions: { contentType: "application/json; charset=UTF-8" },
-		        ajaxRowOptions: { contentType: "application/json; charset=UTF-8", async: true },
-		        ajaxSelectOptions: { contentType: "application/json; charset=UTF-8", dataType: "JSON" }, 
-		       
-		        postData :  JSON.stringify( postData ),
-		        jsonReader : {
-		             root : 'resultlist',
-		             "page":"paginationInfo.currentPageNo",
-		             "total":"paginationInfo.totalPageCount",
-		             "records":"paginationInfo.totalRecordCount",
-		             repeatitems:false
-	            },
-		        colModel :  [
-		        	            { label: '시즌코드',  key: true, name:'season_cd', index:'season_cd',  align:'left', hidden:true},
-		        	            { label: '시즌명',  name:'season_nm', index:'season_nm',  align:'left',   width:'10%'},
-		        	            { label: '시즌시작일',  name:'season_start_day', index:'season_start_day',  align:'left',   width:'10%'},
-		        	            { label: '시즌종료일',  name:'season_end_day', index:'season_end_day',  align:'left',   width:'10%'},
- 		 	                { label: '사용유무',  name:'use_yn', index:'use_yn', align:'left',   width:'10%' ,
- 		 	                	formatter:jqGridFunc.useYn},
- 		 	                { label: '적용지점',  name:'season_centerinfo',  index:'season_centerinfo', align:'left',   width:'20%'},
- 		 	                { label: '설정',  name:'seasonSetting',  index:'seasonSetting', align:'left',   width:'10%', 
- 		 	                	formatter:jqGridFunc.seasonSetting },
- 		 	                { label: '수정자', name:'last_updusr_id',      index:'last_updusr_id',     align:'center', width:'14%'},
- 			                { label: '수정 일자', name:'last_updt_dtm', index:'last_updt_dtm', align:'center', width:'12%', 
- 			                  sortable: 'date' ,formatter: "date", formatoptions: { newformat: "Y-m-d"}}
-			                ],  //상단면 
-		        rowNum : 10,  //레코드 수
-		        rowList : [10,20,30,40,50,100],  // 페이징 수
-		        pager: $('#pager'),  
-		        pager : pager,
-		        viewrecord : false,    // 하단 레코드 수 표기 유무
-		        
-		        refresh : true,
-	            rownumbers : false, // 리스트 순번
-		        loadonce : false,     // true 데이터 한번만 받아옴 
-		        loadui : "enable",
-		        loadtext:'데이터를 가져오는 중...',
-		        emptyrecords : "조회된 데이터가 없습니다", //빈값일때 표시 
-		        height : "100%",
-		        autowidth:true,
-		        shrinkToFit : true,
-		        refresh : true,
-		        multiselect:true, 
-		        loadComplete : function (data){
-		        	 $("#sp_totcnt").text(data.paginationInfo.totalRecordCount);
-		        	 var rowIds  = $("#listRepairLoaner").jqGrid('getDataIDs');
-		        	    for( var n = 0; n <= rowIds.length; n++ ) {
-		        	        var rowId = rowIds[n];
-		        	        //cbox라는 class를 적용받는데 해당 class에서 선택을 방지
-		        	        $("#jqg_listRepairLoaner_"+rowId).removeClass("cbox");
-		        	    }
-		        }, beforeSelectRow: function (rowid, e) {
-		            var $myGrid = $(this);
-		            var i = $.jgrid.getCellIndex($(e.target).closest('td')[0]);
-		            var cm = $myGrid.jqGrid('getGridParam', 'colModel');
-		            return (cm[i].name == 'cb'); // 선택된 컬럼이 cb가 아닌 경우 false를 리턴하여 체크선택을 방지
-		        }, loadError:function(xhr, status, error) {
-		            alert("loadError:" + error); 
-		        },onSelectRow: function(rowId){
-	                if(rowId != null) {  }// 체크 할떄
-	            },ondblClickRow : function(rowid, iRow, iCol, e){
-	            	grid.jqGrid('editRow', rowid, {keys: true});
-	            },onCellSelect : function (rowid, index, contents, action){
-	            	var cm = $(this).jqGrid('getGridParam', 'colModel');
-	                //console.log(cm);
-	                if (cm[index].name !='cb'){
-	                	jqGridFunc.fn_SeasonInfo("Edt", $(this).jqGrid('getCell', rowid, 'season_cd'));
-     		    }
-	            }
-		    });
-		}, useYn: function (cellvalue, options, rowObject){
-         return rowObject.use_yn == "Y" ? "사용" : "사용안함";
-     }, seasonSetting : function(cellvalue, options, rowObject){
-     	return '<a href="javascript:jqGridFunc.fn_SeasonFloorInfo(&#39;'+rowObject.season_cd+'&#39;);" class="orangeBtn">층 관리</a>';	
-     } , refreshGrid : function(){
-        $('#mainGrid').jqGrid().trigger("reloadGrid");
-     }, fn_search: function(){
- 	    $("#mainGrid").setGridParam({
- 	    	 datatype	: "json",
- 	    	 postData	: JSON.stringify(  {
- 	    		"pageIndex": $("#pager .ui-pg-input").val(),
-      			"searchCenter" : $("#searchCenter").val(),
-      			"searchCondition" : $("#searchCondition").val(),
-      			"searchKeyword" : $("#searchKeyword").val(),
-      			"pageUnit":$('.ui-pg-selbox option:selected').val()
+	setGrid : function(gridOption){
+		var grid = $('#'+gridOption);
+		var postData = {"pageIndex": "1"};
+		grid.jqGrid({
+			url : '/backoffice/bld/seasonListAjax.do' ,
+			mtype :  'POST',
+			datatype :'json',
+			
+			ajaxGridOptions: { contentType: "application/json; charset=UTF-8" },
+			ajaxRowOptions: { contentType: "application/json; charset=UTF-8", async: true },
+			ajaxSelectOptions: { contentType: "application/json; charset=UTF-8", dataType: "JSON" }, 
+			
+			postData :  JSON.stringify( postData ),
+			jsonReader : {
+				root : 'resultlist',
+				"page":"paginationInfo.currentPageNo",
+				"total":"paginationInfo.totalPageCount",
+				"records":"paginationInfo.totalRecordCount",
+				repeatitems:false
+			},
+			colModel :  [
+							{ label: '시즌코드', key: true, name:'season_cd', index:'season_cd', align:'left', hidden:true},
+							{ label: '시즌명', name:'season_nm', index:'season_nm', align:'left', width:'10%'},
+							{ label: '시즌시작일', name:'season_start_day', index:'season_start_day', align:'left', width:'10%'},
+							{ label: '시즌종료일', name:'season_end_day', index:'season_end_day', align:'left', width:'10%'},
+							{ label: '사용유무', name:'use_yn', index:'use_yn', align:'left', width:'10%',	formatter:jqGridFunc.useYn},
+							{ label: '적용지점', name:'season_centerinfo_nm', index:'season_centerinfo_nm', align:'left', width:'20%'},
+							{ label: '적용지점', name:'season_centerinfo', index:'season_centerinfo', align:'left', hidden:true},
+							{ label: '설정', name:'seasonSetting', index:'seasonSetting', align:'left', width:'10%', formatter:jqGridFunc.seasonSetting },
+							{ label: '수정자', name:'last_updusr_id', index:'last_updusr_id', align:'center', width:'14%'},
+							{ label: '수정 일자', name:'last_updt_dtm', index:'last_updt_dtm', align:'center', width:'12%', sortable:'date', 
+							formatter: "date", formatoptions: { newformat: "Y-m-d"}},
+							{ label: '삭제', name: 'btn', index:'btn', align:'center', width: 50, fixed:true, sortable: false,
+							formatter:jqGridFunc.rowBtn}
+			            ],  //상단면 
+			rowNum : 10,  //레코드 수
+			rowList : [10,20,30,40,50,100],  // 페이징 수
+			pager: $('#pager'),  
+			pager : pager,
+			viewrecord : false,    // 하단 레코드 수 표기 유무
+			
+			refresh : true,
+			rownumbers : false, // 리스트 순번
+			loadonce : false,     // true 데이터 한번만 받아옴 
+			loadui : "enable",
+			loadtext:'데이터를 가져오는 중...',
+			emptyrecords : "조회된 데이터가 없습니다", //빈값일때 표시 
+			height : "100%",
+			autowidth:true,
+			shrinkToFit : true,
+			refresh : true,
+			multiselect : false,
+			loadComplete : function (data){
+				$("#sp_totcnt").text(data.paginationInfo.totalRecordCount);
+				var rowIds  = $("#listRepairLoaner").jqGrid('getDataIDs');
+				for( var n = 0; n <= rowIds.length; n++ ) {
+					var rowId = rowIds[n];
+					//cbox라는 class를 적용받는데 해당 class에서 선택을 방지
+					$("#jqg_listRepairLoaner_"+rowId).removeClass("cbox");
+				}
+			}, beforeSelectRow: function (rowid, e) {
+				var $myGrid = $(this);
+				var i = $.jgrid.getCellIndex($(e.target).closest('td')[0]);
+				var cm = $myGrid.jqGrid('getGridParam', 'colModel');
+				return (cm[i].name == 'cb'); // 선택된 컬럼이 cb가 아닌 경우 false를 리턴하여 체크선택을 방지
+			}, loadError:function(xhr, status, error) {
+				alert("loadError:" + error); 
+			},onSelectRow: function(rowId){
+				if(rowId != null) {  }// 체크 할떄
+			},ondblClickRow : function(rowid, iRow, iCol, e){
+				grid.jqGrid('editRow', rowid, {keys: true});
+			},onCellSelect : function (rowid, index, contents, action){
+				var cm = $(this).jqGrid('getGridParam', 'colModel');
+				//console.log(cm);
+				if (cm[index].name !='cb'){
+					jqGridFunc.fn_SeasonInfo("Edt", $(this).jqGrid('getCell', rowid, 'season_cd'));
+				}
+			}
+		});
+	}, useYn: function (cellvalue, options, rowObject){
+		return rowObject.use_yn == "Y" ? "사용" : "사용안함";
+	}, seasonSetting : function(cellvalue, options, rowObject){
+		return '<a href="javascript:jqGridFunc.fn_SeasonFloorInfo(&#39;'+rowObject.season_cd+'&#39;);" class="orangeBtn">층 관리</a>';	
+	}, refreshGrid : function(){
+		$('#mainGrid').jqGrid().trigger("reloadGrid");
+	}, fn_search: function(){
+		$("#mainGrid").setGridParam({
+			datatype	: "json",
+			postData	: JSON.stringify(  {
+				"pageIndex": $("#pager .ui-pg-input").val(),
+				"searchCenter" : $("#searchCenter").val(),
+				"searchCondition" : $("#searchCondition").val(),
+				"searchKeyword" : $("#searchKeyword").val(),
+				"pageUnit":$('.ui-pg-selbox option:selected').val()
       		}),
- 	    	loadComplete	: function(data) {$("#sp_totcnt").text(data.paginationInfo.totalRecordCount);}
- 	     }).trigger("reloadGrid");
-     }, clearGrid : function() {
-         $("#mainGrid").clearGridData();
-     }, fn_SeasonInfo : function (mode, seasonCd){
-     	$("#mode").val(mode);
- 	    if (mode == "Edt"){
-	        	$("#seasonCd").val(seasonCd).prop('readonly', true);
-	        	$("#btnUpdate").text("수정");
-	        	var params = {"seasonCd" : seasonCd};
-	        	var url = "/backoffice/bld/seasonInfoDetail.do";
-	        	fn_Ajax(url, "GET", params, false, 
-		          	    function(result) {
-  				       if (result.status == "LOGIN FAIL"){
-	 				    	   common_popup(result.meesage, "Y", "bas_menu_add");
-	   						   location.href="/backoffice/login.do";
-    					   }else if (result.status == "SUCCESS"){
-						       var obj  = result.regist;
+			loadComplete	: function(data) {$("#sp_totcnt").text(data.paginationInfo.totalRecordCount);}
+		}).trigger("reloadGrid");
+	}, clearGrid : function() {
+		$("#mainGrid").clearGridData();
+	}, fn_SeasonInfo : function (mode, seasonCd){
+		$("#mode").val(mode);
+		if (mode == "Edt"){
+			$("#seasonCd").val(seasonCd).prop('readonly', true);
+			$("#btnUpdate").text("수정");
+			var params = {"seasonCd" : seasonCd};
+			var url = "/backoffice/bld/seasonInfoDetail.do";
+			fn_Ajax(url, "GET", params, false, 
+				function(result) {
+					if (result.status == "LOGIN FAIL"){
+						common_popup(result.meesage, "Y", "bas_menu_add");
+						location.href="/backoffice/login.do";
+					}else if (result.status == "SUCCESS"){
+						var obj  = result.regist;
 						      
-						       $("#seasonNm").val(obj.season_nm);
-						       $("#seasonStartDay").val(obj.season_start_day);
-						       $("#seasonEndDay").val(obj.season_end_day);
-						       $("#seasonDc").val(obj.season_dc);
-						       $("input:radio[name='useYn']:radio[value='"+obj.use_yn+"']").prop('checked', true)
-						       fn_CheckboxChoice("seasonCenterinfo", obj.season_centerinfo);
-						       $("#btnSave").text("수정");
-						       $("#bld_season_add > div >h2").text("시즌 정보 수정");
-    					   }else{
-    						   common_modelCloseM(result.message, "bas_menu_add");
-    					   }
-		     			},
-		     			function(request){
-		     			    common_modelCloseM("ERROR : " +request.status, "bas_menu_add");
-		     			}
-	               );
-	        }else{
-	        	$("#seasonCd").val('').prop('readonly', false);
-	        	$("#seasonNm").val('');
-			    $("#seasonStartDay").val('');
-			    $("#seasonEndDay").val('');
-			    fn_CheckboxAllChange("seasonCenterinfo", false);
-			    $("#seasonDc").val('');				  
-	        	$("#btnUpdate").text("등록");
-	        	$("#useAt_Y").prop("checked", true)
-	        	$("#bld_season_add > div >h2").text("시즌 정보 등록");
-	        }
-	        $("#bld_season_add").bPopup();
+						$("#seasonNm").val(obj.season_nm);
+						$("#seasonStartDay").val(obj.season_start_day);
+						$("#seasonEndDay").val(obj.season_end_day);
+						$("#seasonDc").val(obj.season_dc);
+						$("input:radio[name='useYn']:radio[value='"+obj.use_yn+"']").prop('checked', true)
+						fn_CheckboxChoice("seasonCenterinfo", obj.season_centerinfo);
+						$("#btnUpdate").text("수정");
+						$("#bld_season_add > div >h2").text("시즌 정보 수정");
+						if($("#loginAuthorCd").val() != "ROLE_ADMIN" && $("#loginAuthorCd").val() != "ROLE_SYSTEM") {
+							$("#bld_season_add .detail_table > tbody > tr:eq(2)").hide();
+							obj.season_centerinfo != $("#loginCenterCd").val() ? $("#btnUpdate").hide() : $("#btnUpdate").show();
+						}
+					}else{
+						common_modelCloseM(result.message, "bas_menu_add");
+					}
+				},
+				function(request){
+					common_modelCloseM("ERROR : " +request.status, "bas_menu_add");
+				}
+			);
+		}else{
+			$("#seasonCd").val('').prop('readonly', false);
+			$("#seasonNm").val('');
+			$("#seasonStartDay").val('');
+			$("#seasonEndDay").val('');
+			if($("#loginAuthorCd").val() != "ROLE_ADMIN" && $("#loginAuthorCd").val() != "ROLE_SYSTEM") {
+				fn_CheckboxChoice("seasonCenterinfo", $("#loginCenterCd").val());
+				$("#bld_season_add .detail_table > tbody > tr:eq(2)").hide();
+			} else {
+				fn_CheckboxAllChange("seasonCenterinfo", false);
+			}
+			$("#seasonDc").val('');				  
+			$("#btnUpdate").text("등록");
+			$("#useAt_Y").prop("checked", true);
+			$("#bld_season_add > div >h2").text("시즌 정보 등록");
+		}
+		$("#bld_season_add").bPopup();
     },fn_CheckForm  : function (){
- 	   if (any_empt_line_span("bld_season_add", "seasonNm", "시즌명를 입력해 주세요.","sp_message", "savePage") == false) return;
- 	   if (any_empt_line_span("bld_season_add", "seasonStartDay", "시즌 시작일를 선택해 주세요.","sp_message", "savePage") == false) return;
- 	   if (any_empt_line_span("bld_season_add", "seasonEndDay", "시즌 시작일를 선택해 주세요.","sp_message", "savePage") == false) return;
- 	   if (endday_early_check("bld_season_add", "seasonStartDay", "seasonEndDay", "종료일이 시작일 보다 빠릅니다.","sp_message", "savePage") == false) return;
- 	   var choiceCenter = ckeckboxValue("시즌을 사용할 지점을 선택 하지 않았습니다.", "seasonCenterinfo", "bld_season_add");
+		if (any_empt_line_span("bld_season_add", "seasonNm", "시즌명를 입력해 주세요.","sp_message", "savePage") == false) return;
+		if (any_empt_line_span("bld_season_add", "seasonStartDay", "시즌 시작일를 선택해 주세요.","sp_message", "savePage") == false) return;
+		if (any_empt_line_span("bld_season_add", "seasonEndDay", "시즌 시작일를 선택해 주세요.","sp_message", "savePage") == false) return;
+		if (endday_early_check("bld_season_add", "seasonStartDay", "seasonEndDay", "종료일이 시작일 보다 빠릅니다.","sp_message", "savePage") == false) return;
+		var choiceCenter = ckeckboxValue("시즌을 사용할 지점을 선택 하지 않았습니다.", "seasonCenterinfo", "bld_season_add");
  	 
  	   
-		   $("#seasonCenterinfo").val(choiceCenter);
-  	   var commentTxt = ($("#mode").val() == "Ins") ? "신규 시즌 정보를 등록 하시겠습니까?" : "입력한 시즌 정보를 저장 하시겠습니까?";
-		   $("#id_ConfirmInfo").attr("href", "javascript:jqGridFunc.fn_update()");
-    	   fn_ConfirmPop(commentTxt);
-	  }, fn_update : function(){
-		  $("#confirmPage").bPopup().close();
-		  var url = "/backoffice/bld/seasonInfoUpdate.do";
-	      var params = {    'seasonCd' : $("#seasonCd").val(),
-			    		    'seasonNm' : $("#seasonNm").val(),
-			    		    'useYn' :fn_emptyReplace($("input[name='useYn']:checked").val(),"Y"),
-			    		    'seasonStartDay' : $("#seasonStartDay").val(),
-			    		    'seasonEndDay' : $("#seasonEndDay").val(),
-			    		    'seasonCenterinfo' : $("#seasonCenterinfo").val(),
-			    		    'seasonDc' : $("#seasonDc").val(),
-			    		    'mode' : $("#mode").val()
-	    	               }; 
-	       fn_Ajax(url, "POST", params, false,
-	      			function(result) {
-	    	               if (result.status == "LOGIN FAIL"){
-	 				    	   common_popup(result.message, "Y","bld_season_add");
-	   						   location.href="/backoffice/login.do";
-	   					   }else if (result.status == "OVERLAP FAIL" ){
-	   						    common_popup(result.message, "N", "bld_season_add");
-	   						   jqGridFunc.fn_search();
-	   					   }else if (result.status == "SUCCESS"){
-	   						   //총 게시물 정리 하기'
-	   						   common_modelCloseM(result.message, "bld_season_add");
-	   						   jqGridFunc.fn_search();
-	   					   }else if (result.status == "FAIL"){
-	   						   common_popup("저장 도중 문제가 발생 하였습니다.", "Y", "bld_season_add");
-	   						   jqGridFunc.fn_search();
-	   					   }
-	 				    },
-	 				    function(request){
-	 					    common_popup("Error:" + request.status, "Y", "bld_season_add");
-	 				    }    		
-	        );
+		$("#seasonCenterinfo").val(choiceCenter);
+		var commentTxt = ($("#mode").val() == "Ins") ? "신규 시즌 정보를 등록 하시겠습니까?" : "입력한 시즌 정보를 저장 하시겠습니까?";
+		$("#id_ConfirmInfo").attr("href", "javascript:jqGridFunc.fn_update()");
+		fn_ConfirmPop(commentTxt);
+	}, fn_update : function(){
+		$("#confirmPage").bPopup().close();
+		var url = "/backoffice/bld/seasonInfoUpdate.do";
+		var params = {'seasonCd' : $("#seasonCd").val(),
+						'seasonNm' : $("#seasonNm").val(),
+						'useYn' :fn_emptyReplace($("input[name='useYn']:checked").val(),"Y"),
+						'seasonStartDay' : $("#seasonStartDay").val(),
+						'seasonEndDay' : $("#seasonEndDay").val(),
+						'seasonCenterinfo' : $("#seasonCenterinfo").val(),
+						'seasonDc' : $("#seasonDc").val(),
+						'mode' : $("#mode").val()
+					}; 
+		fn_Ajax(url, "POST", params, false,
+			function(result) {
+				if (result.status == "LOGIN FAIL"){
+					common_popup(result.message, "Y","bld_season_add");
+					location.href="/backoffice/login.do";
+				}else if (result.status == "OVERLAP FAIL" ){
+					common_popup(result.message, "N", "bld_season_add");
+					jqGridFunc.fn_search();
+				}else if (result.status == "SUCCESS"){
+					//총 게시물 정리 하기'
+					common_modelCloseM(result.message, "bld_season_add");
+					jqGridFunc.fn_search();
+				}else if (result.status == "FAIL"){
+					common_popup("저장 도중 문제가 발생 하였습니다.", "Y", "bld_season_add");
+					jqGridFunc.fn_search();
+				}
+			},
+			function(request){
+				common_popup("Error:" + request.status, "Y", "bld_season_add");
+			}    		
+		);
+	}, rowBtn: function (cellvalue, options, rowObject){
+        if (rowObject.season_cd != "")
+        	if($("#loginAuthorCd").val() != "ROLE_ADMIN" && $("#loginAuthorCd").val() != "ROLE_SYSTEM") {
+        		if(rowObject.season_centerinfo == $("#loginCenterCd").val()){
+        			return "<a href='javascript:jqGridFunc.delRow(\""+rowObject.season_cd+"\");'>삭제</a>";
+        		} else {
+        			return '<a href="javascript:void(0);"></a>';
+        		}
+        	} else {
+        		return "<a href='javascript:jqGridFunc.delRow(\""+rowObject.season_cd+"\");'>삭제</a>";
+        	}
+			
+	}, delRow : function (seasonCd){
+     	if(seasonCd != "") {
+    		 $("#hid_DelCode").val(seasonCd)
+				 $("#id_ConfirmInfo").attr("href", "javascript:jqGridFunc.fn_del()");
+   		     fn_ConfirmPop("삭제 하시겠습니까?");
+		    }
+    }, fn_del: function (){
+		var params = {'seasonCd': $.trim($("#hid_DelCode").val()) };
+		fn_uniDelAction("/backoffice/bld/seasonInfoDelete.do", "POST", params, false, "jqGridFunc.fn_search");
+	}, fn_SeasonFloorInfo : function (seasonCd){
+		//시즌 정리 하기 
 		  
-	  }, fn_SeasonDel : function(){
-		  var menuArray = new Array();
-		  getEquipArray("mainGrid", menuArray);
-		  if (menuArray.length > 0){
-			  $("#hid_DelCode").val(menuArray.join(","))
-			  $("#id_ConfirmInfo").attr("href", "javascript:jqGridFunc.fn_del()");
-			  menuArray = null;
-		      fn_ConfirmPop("삭제 하시겠습니까?");
-		  }else {
-			  menuArray = null;
-			  common_modelCloseM("체크된 값이 없습니다.", "savePage");
-		  }
-		  
-	  }, fn_del : function (){
-		  var params = {'seasonCd': $("#hid_DelCode").val() };
-	      fn_uniDelAction("/backoffice/bld/seasonInfoDelete.do","GET", params, false, "jqGridFunc.fn_search");
-	  }, fn_SeasonFloorInfo : function (seasonCd){
-		  //시즌 정리 하기 
-		  
-		  $("#dv_Title").html("시즌 좌석 설정");
+		$("#dv_Title").html("시즌 좌석 설정");
 		  	
-		  showLeft(); //좌측 메뉴 나오게 하기 
-		  $("#seasonCdGui").val(seasonCd);
-		  var url = "/backoffice/bld/seasonCenterLst.do"
-		  var params = {"seasonCd": seasonCd};
-		  fn_Ajax(url, "GET", params, false,
-	      			function(result) {
-	    	               if (result.status == "LOGIN FAIL"){
-	 				    	   showLeft(); 
-	   						   location.href="/backoffice/login.do";
-	   					   }else if (result.status == "SUCCESS"){
-	   						   //총 게시물 정리 하기'
-	   						   //alert(result.status);
-	   						  
-	   						   
-	   						   fn_comboListJson("searchCenterCd", result.regist, "fn_floorChange", "100px;", "");
-	   						   $("#searchCenterCd option:eq(0)").prop("selected", true);
-	   						   fn_comboListJson("searchFloorCd", result.floorlist, "fn_partChange", "100px;", "");
-	   						   
-	   						   $("#searchFloorCd option:eq(0)").prop("selected", true);
-	   						   if ( result.partlist.length > 0){
-	   							   $("#searchPartCd").show();
-	   							   fn_comboListJson("searchPartCd", result.partlist, "", "100px;", ""); 
-	   							   $("#searchPartCd option:eq(0)").prop("selected", true);
-	   						   }else {
-	   							   $("#searchPartCd").hide();
-	   						   }
-	   						   fn_GuiSearch($("#seasonCdGui").val());
-	   					   }else if (result.status == "FAIL"){
-	   						   showLeft(); 
-	   						   common_popup(result.message, "N", "");
-	   					   }
-	 				    },
-	 				    function(request){
-	 					    common_popup("Error:" + request.status, "N", "");
-	 				    }    		
-	        );
-	  }, fn_SeasonGuiSearch: function () {
-	    	if($("#searchFloorCd option").length > 1 && $("#searchFloorCd").val() == ""){
-				if (any_empt_line_span_noPop("searchFloorCd", "층을 선택해주세요.") == false) return;	
+		showLeft(); //좌측 메뉴 나오게 하기 
+		$("#seasonCdGui").val(seasonCd);
+		var url = "/backoffice/bld/seasonCenterLst.do"
+		var params = {"seasonCd": seasonCd};
+		fn_Ajax(url, "GET", params, false,
+			function(result) {
+				if (result.status == "LOGIN FAIL"){
+					showLeft(); 
+					location.href="/backoffice/login.do";
+				}else if (result.status == "SUCCESS"){
+					//총 게시물 정리 하기'
+					//alert(result.status);
+					
+					fn_comboListJson("searchCenterCd", result.regist, "fn_floorChange", "100px;", "");
+					fn_comboListJson("searchFloorCd", result.floorlist, "fn_partChange", "100px;", "");
+					if($("#loginAuthorCd").val() != "ROLE_ADMIN" && $("#loginAuthorCd").val() != "ROLE_SYSTEM") {
+						$("#searchCenterCd").val( $("#loginCenterCd").val()).trigger("change");	
+						$(".search_tab > tbody > tr:first").hide();
+					} else {
+						$("#searchFloorCd option:eq(0)").prop("selected", true);	
+					}		
+					$("#searchFloorCd option:eq(0)").prop("selected", true);
+					if ( result.partlist.length > 0){
+						$("#searchPartCd").show();
+						fn_comboListJson("searchPartCd", result.partlist, "", "100px;", ""); 
+						$("#searchPartCd option:eq(0)").prop("selected", true);
+					}else {
+						$("#searchPartCd").hide();
+					}
+						fn_GuiSearch($("#seasonCdGui").val());
+				}else if (result.status == "FAIL"){
+					showLeft(); 
+					common_popup(result.message, "N", "");
+				}
+			},
+			function(request){
+				common_popup("Error:" + request.status, "N", "");
 			}
-			if($("#searchPartCd option").length > 1 && $("#searchPartCd").val() == ""){
-				if (any_empt_line_span_noPop("searchPartCd", "구역을 선택해주세요.") == false) return;	
-			}
-	    	fn_GuiSearch($("#seasonCdGui").val());
-	 	}
+		);
+	}, fn_SeasonGuiSearch: function () {
+		if($("#searchFloorCd option").length > 1 && $("#searchFloorCd").val() == ""){
+			if (any_empt_line_span_noPop("searchFloorCd", "층을 선택해주세요.") == false) return;	
+		}
+		if($("#searchPartCd option").length > 1 && $("#searchPartCd").val() == ""){
+			if (any_empt_line_span_noPop("searchPartCd", "구역을 선택해주세요.") == false) return;	
+		}
+		fn_GuiSearch($("#seasonCdGui").val());
+	}
 }
  	var menuRight = document.getElementById('cbp-spmenu-s2')
     function showLeft() {
@@ -567,7 +591,7 @@ var jqGridFunc  = {
 		var title = "시즌 좌석 관리";
 	    $(".sp_title").text(title);
  	    var params = {
- 	        "seasonCd": seasonCd,
+			"seasonCd": seasonCd,
  	        "searchCenter": $("#searchCenterCd").val(),
  	        "searchFloorCd": $("#searchFloorCd").val(),
  	        "searchPartCd": fn_emptyReplace($("#searchPartCd").val(), "0"),

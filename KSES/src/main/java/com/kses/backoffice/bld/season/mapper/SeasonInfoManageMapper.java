@@ -26,6 +26,6 @@ public interface SeasonInfoManageMapper {
 	
     public int updateSeasonInfo(SeasonInfo vo);
     
-    public int deleteSeasonInfo(@Param("seasonList") List<String> seasonList);
+    public int deleteSeasonInfo(String seasonCd);
 
 }
