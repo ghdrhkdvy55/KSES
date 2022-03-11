@@ -59,7 +59,7 @@
 		</div>
 		<div class="right_box">
 			<a href="javascript:fnAdminInfo();" class="blueBtn">관리자 등록</a>
-			<a href="javascript:fnAdminDelete();" class="grayBtn">관리자 삭제</a>
+			<a href="javascript:fnAdminDelete();" class="grayBtn">삭제</a>
 		</div>
 		<div class="clear"></div>
 		<div class="whiteBox">
