@@ -13,7 +13,7 @@ public interface CenterInfoManageService {
 	
 	Map<String, Object> selectCenterInfoDetail(String centerCd) throws Exception;
 	
-	List<Map<String, Object>> selectResvCenterList(String resvDate) throws Exception;
+	List<Map<String, Object>> selectResvCenterList() throws Exception;
 
 	int insertCenterInfoManage(CenterInfo centerInfo) throws Exception;
 

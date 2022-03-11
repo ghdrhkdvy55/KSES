@@ -60,4 +60,6 @@ public class CenterInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
 	public int updateCenterFloorInfoManage(String floorInfo, String centerCode) throws Exception {
 		return centerMapper.updateCenterFloorInfoManage(floorInfo, centerCode);
 	}
+
+
 }
