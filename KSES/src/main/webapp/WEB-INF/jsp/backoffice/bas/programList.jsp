@@ -44,7 +44,7 @@
         <div class="right_box">
 			<a href="javascript:fnExcelDownload();" class="blueBtn">엑셀 다운로드</a> 
         	<a href="javascript:fnProgramInfo();" class="blueBtn">프로그램 등록</a>
-        	<a href="javascript:fnProgramDelete();" class="grayBtn">프로그램 삭제</a>            	
+<%--        	<a href="javascript:fnProgramDelete();" class="grayBtn">프로그램 삭제</a>            	--%>
         </div>
          
         <div class="clear"></div>
@@ -104,6 +104,9 @@
             </table>
             </form>
         </div>
+		<div style="float:left;">
+			<a href="javascript:fnProgramDelete();" class="grayBtn" style="font-size:16px;padding: 6px 24px;">삭제</a>
+		</div>
         <popup-right-button />
     </div>
 </div>
@@ -156,24 +159,25 @@
 			$form.find(':text[name=progrmKoreannm]').val(rowData.progrm_koreannm);
 			$form.find(':text[name=url]').val(rowData.url);
 			$form.find('textarea[name=progrmDc]').val(rowData.progrm_dc);
+			EgovJqGridApi.selection('mainGrid', rowId);
 		}
 		$popup.bPopup();
 	}
 	// 프로그램명 중복 체크
 	function fnIdCheck() {
-		let $popup = $('[data-popup=bas_program_add]');
-		if ($popup.find(':text[name=progrmFileNm]').val() === '') {
+		let $form = $('[data-popup=bas_program_add] form:first');
+		if ($form.find(':text[name=progrmFileNm]').val() === '') {
 			toastr.warning('프로그램 파일명을 입력해주세요.');
 			return;
 		}
 		EgovIndexApi.apiExecuteJson(
 			'GET',
 			'/backoffice/bas/programIDCheck.do', {
-				progrmFileNm: $popup.find(':text[name=progrmFileNm]').val()
+				progrmFileNm: $form.find(':text[name=progrmFileNm]').val()
 			},
 			null,
 			function(json) {
-				$popup.find(':hidden#idCheck').val('Y');
+				$form.find(':hidden#idCheck').val('Y');
 				toastr.info(json.message);
 			},
 			function(json) {
@@ -249,26 +253,24 @@
 	}
 	// 프로그램 삭제 호출
 	function fnProgramDelete() {
-		let rowId = $('#mainGrid').jqGrid('getGridParam', 'selrow');
-		if (rowId === null) {
-			toastr.warning('프로그램을 선택해 주세요.');
-			return false;
-		}
+		let $popup = $('[data-popup=bas_program_add]');
+		let rowId = $popup.find(':text[name=progrmFileNm]').val();
 		bPopupConfirm('프로그램 삭제', '<b>'+ rowId +'</b> 를(을) 삭제 하시겠습니까?', function() {
-			fnProgramDeleteConfirm(rowId);
+			fnProgramDeleteConfirm($popup, rowId);
 		});
 	}
 	// 프로그램 삭제 확인
-	function fnProgramDeleteConfirm(code) {
-		bPopupConfirm('프로그램 삭제', '<b>'+ code +'</b> 를(을) 삭제하시면 시스템에 영향이 있을 수 있습니다.<br>정말로 삭제하시겠습니까?', function() {
+	function fnProgramDeleteConfirm($popup, progrmFileNm) {
+		bPopupConfirm('프로그램 삭제', '<b>'+ progrmFileNm +'</b> 를(을) 삭제하시면 시스템에 영향이 있을 수 있습니다.<br>정말로 삭제하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(
 				'POST',
 				'/backoffice/bas/programeDelete.do', {
-					progrmFileNm: code
+					progrmFileNm: progrmFileNm
 				},
 				null,
 				function(json) {
 					toastr.success(json.message);
+					$popup.bPopup().close();
 					fnSearch(1);
 				},
 				function(json) {
