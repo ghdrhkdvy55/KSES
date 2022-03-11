@@ -44,7 +44,7 @@
 				<table>
 					<tbody>
 						<tr>
-							<th>메뉴아이디</th>
+							<th style="color: #000;background-color: #fff;">메뉴아이디</th>
 							<td>
 								<input type="text" name="menuNo" style="width:410px;">
 								<span id="sp_Unqi" style="display:none;">
@@ -54,26 +54,26 @@
 							</td>
 						</tr>
 						<tr>
-							<th>메뉴명</th>
+							<th style="color: #000;background-color: #fff;">메뉴명</th>
 							<td>
 								<input type="text" name="menuNm">
 							</td>
 						</tr>
 						<tr>
-							<th>상위메뉴명</th>
+							<th style="color: #000;background-color: #fff;">상위메뉴명</th>
 							<td>
 								<input type="hidden" name="upperMenuNo">
 								<input type="text" name="upperMenuNm">
 							</td>
 						</tr>
 						<tr>
-							<th>메뉴순서</th>
+							<th style="color: #000;background-color: #fff;">메뉴순서</th>
 							<td>
 								<input type="text" name="menuOrdr" numberonly>
 							</td>
 						</tr>
 						<tr>
-							<th>프로그램</th>
+							<th style="color: #000;background-color: #fff;">프로그램</th>
 							<td>
 								<input type="hidden" name="progrmFileNm">
 								<input type="text" name="progrmKoreannm" readonly>
@@ -81,7 +81,7 @@
 							</td>
 						</tr>
 						<tr>
-							<th>메뉴설명</th>
+							<th style="color: #000;background-color: #fff;">메뉴설명</th>
 							<td>
 								<textarea name="menuDc" style="height:120px;"></textarea>
 							</td>
@@ -89,8 +89,8 @@
 					</tbody>
 				</table>
 				<div class="top10" style="padding:10px 0 0 520px;border-top:1px solid #e4e4e4;">
-					<button type="button" class="blueBtn">저장</button>
-					<button type="button" onclick="fnJstreeRefresh();" class="grayBtn" style="display:none;">취소</button>
+					<button type="button" class="blueBtn" style="font-size:16px;padding: 6px 24px;">저장</button>
+					<button type="button" onclick="fnJstreeRefresh();" class="grayBtn" style="display:none;font-size:16px;padding: 6px 24px;">취소</button>
 				</div>
 				<div class="clear"></div>
 			</form>
