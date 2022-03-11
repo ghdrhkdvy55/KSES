@@ -44,7 +44,6 @@
         <div class="right_box">
         	<a href="javascript:fnMenuSetting();" class="blueBtn">메뉴 설정</a>
 	        <a href="javascript:fnAuthInfo();" class="blueBtn">권한분류 등록</a>
-	        <a href="javascript:fnAuthDelete();" class="grayBtn">권한분류 삭제</a>
         </div>
         <div class="clear"></div>
         <div class="whiteBox">
@@ -90,6 +89,9 @@
                 </tbody>
             </table>
             </form>
+        </div>
+        <div style="float:left;">
+            <a href="javascript:fnAuthDelete();" class="grayBtn" style="font-size:16px;padding: 6px 24px;">삭제</a>
         </div>
         <popup-right-button />
     </div>
@@ -200,24 +202,25 @@
 			$form.find(':text[name=authorCode]').prop('readonly', true).val(rowData.author_code);
 			$form.find(':text[name=authorNm]').val(rowData.author_nm);
 			$form.find(':text[name=authorDc]').val(rowData.author_dc);
+            EgovJqGridApi.selection('mainGrid', rowId);
 		}
 		$popup.bPopup();
 	}
 	// 중복 권한 코드 체크
 	function fnIdCheck() {
-		let $popup = $('[data-popup=bas_auth_add]');
-		if ($popup.find(':text[name=authorCode]').val() === '') {
+		let $form = $('[data-popup=bas_auth_add] form:first');
+		if ($form.find(':text[name=authorCode]').val() === '') {
 			toastr.warning('코드를 입력해 주세요.');
 			return;
 		}
 		EgovIndexApi.apiExecuteJson(
 			'GET',
 			'/backoffice/bas/authorIDCheck.do', {
-				authorCode: $popup.find(':text[name=authorCode]').val()
+				authorCode: $form.find(':text[name=authorCode]').val()
 			},
 			null,
 			function(json) {
-				$popup.find(':hidden#idCheck').val('Y');
+                $form.find(':hidden#idCheck').val('Y');
 				toastr.info(json.message);
 			},
 			function(json) {
@@ -285,26 +288,25 @@
 	}
 	// 권한 삭제 호출
 	function fnAuthDelete() {
-		let rowId = $('#mainGrid').jqGrid('getGridParam', 'selrow');
-		if (rowId === null) {
-			toastr.warning('분류코드를 선택해 주세요.');
-			return false;
-		}
+        let $popup = $('[data-popup=bas_auth_add]');
+        let $form = $popup.find('form:first');
+        let rowId = $form.find(':text[name=authorCode]').val();
 		bPopupConfirm('권한코드 삭제', '<b>'+ rowId +'</b> 를(을) 삭제 하시겠습니까?', function() {
-			fnAuthDeleteConfirm(rowId);
+			fnAuthDeleteConfirm($popup, rowId);
 		});
 	}
 	// 권한 삭제 확인
-	function fnAuthDeleteConfirm(code) {
-		bPopupConfirm('권한코드 삭제', '<b>'+ code +'</b> 를(을) 삭제하시면 시스템에 영향이 있을 수 있습니다.<br>정말로 삭제하시겠습니까?', function() {
+	function fnAuthDeleteConfirm($popup, authorCode) {
+		bPopupConfirm('권한코드 삭제', '<b>'+ authorCode +'</b> 를(을) 삭제하시면 시스템에 영향이 있을 수 있습니다.<br>정말로 삭제하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(
 				'POST',
 				'/backoffice/bas/authDelete.do', {
-					authorCode: code
+					authorCode: authorCode
 				},
 				null,
 				function(json) {
 					toastr.success(json.message);
+                    $popup.bPopup().close();
 					fnSearch(1);
 				},
 				function(json) {
