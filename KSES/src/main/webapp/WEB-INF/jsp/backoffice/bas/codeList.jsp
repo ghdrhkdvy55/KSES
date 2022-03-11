@@ -41,7 +41,6 @@
         <div class="right_box">
         	<a href="javascript:fnCmmnDetailCodeInfo();" class="blueBtn">상세코드 등록</a>
             <a href="javascript:fnCmmnCodeInfo();" class="blueBtn">분류코드 등록</a>
-            <a href="javascript:fnCmmnCodeDelete();" class="grayBtn">분류코드 삭제</a>
         </div>
         <div class="clear"></div>
         <div class="whiteBox">
@@ -89,6 +88,9 @@
 	            </tbody>
             </table>
             </form>
+        </div>
+        <div style="float:left;">
+            <a href="javascript:fnCmmnCodeDelete();" class="grayBtn" style="font-size:16px;padding: 6px 24px;">삭제</a>
         </div>
         <popup-right-button />
     </div>
@@ -139,6 +141,9 @@
                 </tbody>
             </table>
             </form>
+        </div>
+        <div style="float:left;">
+            <a href="javascript:fnCmmnDetailCodeDelete();" class="grayBtn" style="font-size:16px;padding: 6px 24px;">삭제</a>
         </div>
         <popup-right-button />
     </div>
@@ -191,13 +196,12 @@
             { label: '사용유무', name:'use_at', align:'center', width: '100', fixed: true },
             { label: '수정자', name:'last_updusr_id', align:'center', width:'120', fixed: true },
             { label: '수정일자', name:'last_updt_pnttm', align:'center', width:'120', fixed: true, formatter: 'date' },
-            { label: '삭제', align: 'center', width: 50, fixed: true, sortable: false, formatter: (c, o, row) => 
-            	'<a href="javascript:fnCmmnDetailCodeDelete(\''+ row.code +'\',\''+ row.code_id +'\');" class="del_icon"></a>'
+            { label: '수정', align: 'center', width: 50, fixed: true, sortable: false, formatter: (c, o, row) =>
+                '<a href="javascript:fnCmmnDetailCodeInfo(\''+ subGridId +'\', \''+ row.code +'\');" class="edt_icon"></a>'
            	}
 		], 'GET', '/backoffice/bas/CmmnDetailCodeList.do', {
 			codeId: codeId
 		});
-		EgovJqGridApi.subGridDetail(subGridId, fnCmmnDetailCodeInfo);
 	}
 	// 분류 코드 상세 팝업 정의
 	function fnCmmnCodeInfo(rowId) {
@@ -223,24 +227,25 @@
 			$form.find(':text[name=codeIdNm]').val(rowData.code_id_nm);
 			$form.find(':text[name=codeIdDc]').val(rowData.code_id_dc);
 			$form.find(':radio[name=useAt][value='+ rowData.use_at +']').prop('checked', true);
+            EgovJqGridApi.selection('mainGrid', rowId);
 		}
 		$popup.bPopup();
 	}
 	// 분류코드 중복 체크
 	function fnCmmnCodeIdCheck() {
-		let $popup = $('[data-popup=bas_code_add]');
-		if ($popup.find(':text[name=codeId]').val() === '') {
+		let $form = $('[data-popup=bas_code_add] form:first');
+		if ($form.find(':text[name=codeId]').val() === '') {
 			toastr.warning('코드를 입력해 주세요.');
 			return;
 		}
 		EgovIndexApi.apiExecuteJson(
 			'GET',
 			'/backoffice/bas/codeIDCheck.do', {
-				codeId: $popup.find(':text[name=codeId]').val()
+				codeId: $form.find(':text[name=codeId]').val()
 			},
 			null,
 			function(json) {
-				$popup.find(':hidden#idCheck').val('Y');
+                $form.find(':hidden#idCheck').val('Y');
 				toastr.info(json.message);
 			},
 			function(json) {
@@ -308,21 +313,19 @@
 	}
 	// 분류 코드 삭제
 	function fnCmmnCodeDelete() {
-		let rowId = $('#mainGrid').jqGrid('getGridParam', 'selrow');
-		if (rowId === null) {
-			toastr.warning('분류코드를 선택해 주세요.');
-			return false;
-		}
-		let rowData = $('#mainGrid').jqGrid('getRowData', rowId);
-		bPopupConfirm('분류코드 삭제', '<b>'+ rowData.code_id +'</b> 를(을) 삭제 하시겠습니까?', function() {
+        let $popup = $('[data-popup=bas_code_add]');
+        let $form = $popup.find('form:first');
+        let codeId = $form.find(':text[name=codeId]').val();
+		bPopupConfirm('분류코드 삭제', '<b>'+ codeId +'</b> 를( 을) 삭제 하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(
 				'POST',
 				'/backoffice/bas/codeDelete.do', {
-					codeId: rowId
+					codeId: codeId
 				},
 				null,
 				function(json) {
 					toastr.success(json.message);
+                    $popup.bPopup().close();
 					fnSearch(1);
 				},
 				function(json) {
@@ -332,7 +335,7 @@
 		});
 	}
 	// 상세 코드 팝업 정의
-	function fnCmmnDetailCodeInfo(id, rowData, gridId) {
+	function fnCmmnDetailCodeInfo(id, rowId) {
 		let $popup = $('[data-popup=bas_detailcode_add]');
 		let $form = $popup.find('form:first');
 		if (id === undefined || id === null) {
@@ -350,6 +353,7 @@
 			$form.find(':hidden[name=mode]').val('Ins');
 		}
 		else {
+            let rowData = $('#'+id).jqGrid('getRowData', rowId);
 			$popup.find('h2:first').text('상세코드 수정');
 			$popup.find('td:first').html(rowData.code_id);
 			$popup.find('button.blueBtn').off('click').click(fnCmmnDetailCodeUpdate);
@@ -378,10 +382,9 @@
 				$form.serializeObject(),
 				null,
 				function(json) {
+                    EgovJqGridApi.subGridReload($form.find(':hidden[name=codeId]').val(), fnSubGrid);
 					toastr.success(json.message);
 					$popup.bPopup().close();
-					let codeId = $popup.find(':hidden[name=codeId]').val();
-					EgovJqGridApi.subGridReload(codeId, fnSubGrid);
 				},
 				function(json) {
 					toastr.error(json.message);
@@ -404,10 +407,9 @@
 				$form.serializeObject(),
 				null,
 				function(json) {
+                    EgovJqGridApi.subGridReload($form.find(':hidden[name=codeId]').val(), fnSubGrid);
 					toastr.success(json.message);
 					$popup.bPopup().close();
-					let codeId = $popup.find(':hidden[name=codeId]').val();
-					EgovJqGridApi.subGridReload(codeId, fnSubGrid);
 				},
 				function(json) {
 					toastr.error(json.message);
@@ -416,7 +418,10 @@
 		});
 	}
 	// 상세 코드 삭제
-	function fnCmmnDetailCodeDelete(code, codeId) {
+	function fnCmmnDetailCodeDelete() {
+        let $popup = $('[data-popup=bas_detailcode_add]');
+        let $form = $popup.find('form:first');
+        let code = $form.find(':hidden[name=code]').val();
 		bPopupConfirm('상세코드 삭제', '<b>'+ code +'</b> 를(을) 삭제 하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(
 				'POST',
@@ -425,8 +430,9 @@
 				},
 				null,
 				function(json) {
+                    EgovJqGridApi.subGridReload($form.find(':hidden[name=codeId]').val(), fnSubGrid);
 					toastr.success(json.message);
-					EgovJqGridApi.subGridReload(codeId, fnSubGrid);
+                    $popup.bPopup().close();
 				},
 				function(json) {
 					toastr.error(json.message);
