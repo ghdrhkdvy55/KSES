@@ -249,19 +249,19 @@
 	}
 	// 중복 휴일 체크
 	function fnIdCheck() {
-		let $popup = $('[data-popup=bas_holiday_add]');
-		if ($popup.find(':text[name=holyDt]').val() === '') {
+		let $form = $('[data-popup=bas_holiday_add] form:first');
+		if ($form.find(':text[name=holyDt]').val() === '') {
 			toastr.warning('휴일일자를 입력해 주세요.');
 			return;
 		}
 		EgovIndexApi.apiExecuteJson(
 			'GET',
 			'/backoffice/bas/holyDtCheck.do', {
-				holyDt: $popup.find(':text[name=holyDt]').val()
+				holyDt: $form.find(':text[name=holyDt]').val()
 			},
 			null,
 			function(json) {
-				$popup.find(':hidden#idCheck').val('Y');
+				$form.find(':hidden#idCheck').val('Y');
 				toastr.info(json.message);
 			},
 			function(json) {
