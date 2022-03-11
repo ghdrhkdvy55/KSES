@@ -191,8 +191,12 @@
 				ELSE 'N'
 			END AS PART_INITIAL,
 			B.CENTER_PILOT_YN, A.TRAD_NO, A.TRAD_DATE, B.CENTER_SPEED_CD, B.CENTER_RBM_CD,
-			A.RESV_USER_NM, A.RESV_USER_CLPHN, FN_DETAILCODENM(D.PART_CLASS) AS SEAT_CLASS
-		FROM TSER_RESV_INFO_I A, TSEB_CENTER_INFO_M B, TSEB_FLOOR_INFO_M C, TSEB_PART_INFO_D D, TSEB_SEAT_INFO_D E, TSER_USER_INFO_I F
+			A.RESV_USER_NM, A.RESV_USER_CLPHN, FN_DETAILCODENM(D.PART_CLASS) AS SEAT_CLASS,
+			B.CENTER_SPEED_ENTRY_PAY_COST,
+			FN_PARTPAYCOST(D.PART_CD,'SPEED') AS PART_SPEED_PAY_COST 
+		FROM 
+			TSER_RESV_INFO_I A, TSEB_CENTER_INFO_M B, TSEB_FLOOR_INFO_M C, TSEB_PART_INFO_D D, 
+			TSEB_SEAT_INFO_D E, TSER_USER_INFO_I F
 		WHERE A.RESV_SEQ = #{params.resvSeq}
 		AND A.CENTER_CD = B.CENTER_CD
 		AND A.FLOOR_CD = C.FLOOR_CD(+)
@@ -502,7 +506,7 @@
 			RESV_USER_CLPHN, RESV_USER_ASK_YN, RESV_STATE, RESV_RCPT_YN, RESV_RCPT_DVSN,
 			RESV_RCPT_TEL, RESV_INDVDLINFO_AGRE_YN, RESV_SEAT_CLASS, RESV_ENTRY_DVSN, RESV_PAY_DVSN, 
 			RESV_ENTRY_PAY_COST, RESV_SEAT_PAY_COST, RESV_PAY_COST, FRST_REGIST_DTM, FRST_REGTER_ID, 
-			LAST_UPDT_DTM, LAST_UPDUSR_ID  
+			LAST_UPDT_DTM, LAST_UPDUSR_ID
 		)
 		SELECT 
 			#{params.copyResvSeq}, #{params.seasonCd, jdbcType=VARCHAR}, #{params.centerCd}, #{params.floorCd}, #{params.partCd},
@@ -561,10 +565,15 @@
 	<update id="updateResvPriceInfo">
 		UPDATE TSER_RESV_INFO_I SET 
 			<choose>
-				<when test="resvPayDvsn == 'RESV_PAY_DVSN_2'">
+				<when test="@org.apache.commons.lang3.StringUtils@equals(resvPayDvsn,'RESV_PAY_DVSN_2')">
 					TRAD_NO = #{tradNo},
 					TRAD_DATE = SYSDATE,
 					RESV_TICKET_DVSN = #{resvTicketDvsn},
+					<if test="@org.apache.commons.lang3.StringUtils@equals(resvTicketDvsn,'RESV_TICKET_DVSN_1')">
+						RESV_PAY_COST = #{resvPayCost},
+						RESV_ENTRY_PAY_COST = #{resvEntryPayCost},
+						RESV_SEAT_PAY_COST = #{resvSeatPayCost},
+					</if>
 				</when>
 				<otherwise>
 					REFOUND_NO = #{tradNo},

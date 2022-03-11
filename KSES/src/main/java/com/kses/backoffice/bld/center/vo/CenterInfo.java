@@ -106,6 +106,9 @@ public class CenterInfo {
 	 // 지점 입장료
 	 private String centerEntryPayCost = "";
 	 
+	 // 지점 스피드온 입장료
+	 private String centerSpeedEntryPayCost = "";
+	 
 	 // SPDM 지점코드
 	 private String centerRbmCd = "";
 }

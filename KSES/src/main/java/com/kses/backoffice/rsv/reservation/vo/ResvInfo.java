@@ -59,7 +59,10 @@ public class ResvInfo {
 
 	// 고객 구분
 	private String resvUserDvsn = "";
-
+	
+	// 예약 입장 금액
+	private String resvEntryPayCost = "";
+	
 	// 예약 좌석 금액
 	private String resvSeatPayCost = "";
 	
@@ -147,7 +150,7 @@ public class ResvInfo {
 	// 시범/비시범 지점 구분
 	private String centerPilotYn = "";
 	
-	//신규 추가
+	// 신규 추가
 	private String tradNo = "";
 	
 	private String tradDate = ""; 

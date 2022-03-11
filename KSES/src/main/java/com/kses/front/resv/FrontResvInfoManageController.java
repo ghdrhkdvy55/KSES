@@ -290,7 +290,6 @@ public class FrontResvInfoManageController {
 			if(ret > 0) {
 				// 방금 예약한 정보 조회 (지점,층,구역,좌석 명칭)
 				Map<String, Object> resvInfo = resvService.selectInUserResvInfo(vo);
-				sureService.insertResvSureData(Globals.SMS_TYPE_RESV, resvInfo.get("resv_seq").toString());
 				String autoPaymentYn = systemService.selectTodayAutoPaymentYn();
 				
 				if(vo.getResvUserDvsn().equals("USER_DVSN_1")) {
@@ -312,6 +311,8 @@ public class FrontResvInfoManageController {
 					
 					userService.updateUserInfo(user);
 				}
+				
+				sureService.insertResvSureData(Globals.SMS_TYPE_RESV, resvInfo.get("resv_seq").toString());
 				
 				model.addObject("resvInfo", resvInfo);
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
