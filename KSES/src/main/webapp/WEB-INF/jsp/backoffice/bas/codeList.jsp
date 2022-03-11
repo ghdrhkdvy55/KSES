@@ -314,8 +314,7 @@
 	// 분류 코드 삭제
 	function fnCmmnCodeDelete() {
         let $popup = $('[data-popup=bas_code_add]');
-        let $form = $popup.find('form:first');
-        let rowId = $form.find(':text[name=codeId]').val();
+        let rowId = $popup.find(':text[name=codeId]').val();
 		bPopupConfirm('분류코드 삭제', '<b>'+ rowId +'</b> 를( 을) 삭제 하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(
 				'POST',
@@ -420,8 +419,7 @@
 	// 상세 코드 삭제
 	function fnCmmnDetailCodeDelete() {
         let $popup = $('[data-popup=bas_detailcode_add]');
-        let $form = $popup.find('form:first');
-        let rowId = $form.find(':hidden[name=code]').val();
+        let rowId = $popup.find(':hidden[name=code]').val();
 		bPopupConfirm('상세코드 삭제', '<b>'+ rowId +'</b> 를(을) 삭제 하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(
 				'POST',

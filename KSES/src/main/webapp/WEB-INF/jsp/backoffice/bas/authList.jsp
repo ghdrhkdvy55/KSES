@@ -289,8 +289,7 @@
 	// 권한 삭제 호출
 	function fnAuthDelete() {
         let $popup = $('[data-popup=bas_auth_add]');
-        let $form = $popup.find('form:first');
-        let rowId = $form.find(':text[name=authorCode]').val();
+        let rowId = $popup.find(':text[name=authorCode]').val();
 		bPopupConfirm('권한코드 삭제', '<b>'+ rowId +'</b> 를(을) 삭제 하시겠습니까?', function() {
 			fnAuthDeleteConfirm($popup, rowId);
 		});
