@@ -40,6 +40,7 @@
     $.FloorInfo.prototype.bPopup = function(floorCd) {
         let $popup = this.getPopup();
         let $form = $popup.find('form:first');
+        EgovJqGridApi.selection('mainGrid', floorCd);
         EgovIndexApi.apiExecuteJson(
             'GET',
             '/backoffice/bld/floorInfoDetail.do', {
@@ -65,11 +66,10 @@
     $.FloorInfo.prototype.save = function() {
         let $popup = this.getPopup();
         let $form = $popup.find('form:first');
-        let formData = new FormData($form[0]);
         bPopupConfirm('층 정보 수정', '저장 하시겠습니까?', function() {
             EgovIndexApi.apiExcuteMultipart(
                 '/backoffice/bld/floorInfoUpdate.do',
-                formData,
+                new FormData($form[0]),
                 null,
                 function(json) {
                     toastr.success(json.message);

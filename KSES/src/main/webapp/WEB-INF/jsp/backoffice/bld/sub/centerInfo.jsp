@@ -88,6 +88,9 @@
             </table>
         </form>
     </div>
+    <div style="float:left;">
+        <a href="javascript:CenterInfo.delete();" class="grayBtn" style="font-size:16px;padding: 6px 24px;">삭제</a>
+    </div>
     <popup-right-button clickFunc="CenterInfo.save();" />
 </div>
 <script type="text/javascript">
@@ -118,6 +121,7 @@
             $form.find(':radio[name=centerStandYn]:first').prop('checked', true);
         } else {
             $popup.find('h2:first').text(centerNm +' 지점 수정');
+            EgovJqGridApi.selection('centerGrid', centerCd);
             EgovIndexApi.apiExecuteJson(
                 'GET',
                 '/backoffice/bld/centerInfoDetail.do', {
@@ -192,8 +196,16 @@
         });
     };
 
-    $.CenterInfo.prototype.delete = function(centerCd, centerNm) {
-        bPopupConfirm('지점 삭제', '<b>'+ centerNm +'</b> 를(을) 삭제하시면 시스템에 영향이 있을 수 있습니다.<br>정말로 삭제하시겠습니까?', function() {
+    $.CenterInfo.prototype.delete = function() {
+        let $popup = this.getPopup();
+        let rowId = $popup.find(':hidden[name=centerCd]').val();
+        bPopupConfirm('지점 삭제', '<b>'+ rowId +'</b> 를(을) 삭제하시겠습니까?', function() {
+            CenterInfo._deleteConfirm($popup, rowId);
+        });
+    };
+
+    $.CenterInfo.prototype._deleteConfirm = function($popup, centerCd) {
+        bPopupConfirm('지점 삭제', '<b>'+ centerCd +'</b> 를(을) 삭제하시면 시스템에 영향이 있을 수 있습니다.<br>정말로 삭제하시겠습니까?', function() {
             EgovIndexApi.apiExecuteJson(
                 'POST',
                 '/backoffice/bld/centerInfoDelete.do', {

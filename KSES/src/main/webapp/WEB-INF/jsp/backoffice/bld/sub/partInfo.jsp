@@ -38,7 +38,7 @@
         </form>
     </div>
     <div id="popupLeftBtn" style="float:left;display:none;">
-        <a href="javascript:PartInfo.delete();" class="grayBtn" style="padding: 4px 15px;">삭제</a>
+        <a href="javascript:PartInfo.delete();" class="grayBtn" style="font-size:16px;padding: 6px 24px;">삭제</a>
     </div>
     <popup-right-button clickFunc="PartInfo.save();"></popup-right-button>
 </div>

@@ -39,7 +39,6 @@
 				<div class="right_box">
 					<a href="javascript:fnPopupBillInfo();" class="blueBtn">현금영수증 설정</a>
 					<a href="javascript:fnPopupCenterInfo();" class="blueBtn">지점 등록</a>
-					<a href="javascript:fnCenterDelete();" class="grayBtn">지점 삭제</a>
 				</div>
 			</div>
 			<div class="clear"></div>
@@ -160,18 +159,6 @@
 			searchKeyword: $('#searchKeyword').val()
 		};
 		EgovJqGridApi.popGridAjax('centerGrid', '/backoffice/bld/centerListAjax.do', params, fnCenterSearch);
-	}
-	// 지점 삭제
-	function fnCenterDelete() {
-		let rowId = $('#centerGrid').jqGrid('getGridParam', 'selrow');
-		if (rowId === null) {
-			toastr.warning('지점을 선택해 주세요.');
-			return false;
-		}
-		let rowData = $('#centerGrid').jqGrid('getRowData', rowId);
-		bPopupConfirm('지점 삭제', '<b>'+ rowData.center_nm +'</b> 를(을) 삭제 하시겠습니까?', function() {
-			CenterInfo.delete(rowId, rowData.center_nm);
-		});
 	}
 	// 하위 목록 영역 초기화
 	function fnRightAreaClear() {
