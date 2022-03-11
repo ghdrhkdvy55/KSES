@@ -53,7 +53,7 @@
 		</div>
 		<div class="right_box">
 			<a href="javascript:fnEmpInfo();" class="blueBtn">사용자 등록</a>
-			<a href="javascript:fnEmpDelete();" class="grayBtn">삭제</a>
+<%--			<a href="javascript:fnEmpDelete();" class="grayBtn">삭제</a>--%>
 		</div>
 		<div class="clear"></div>
 		<div class="whiteBox">
@@ -143,6 +143,9 @@
 			</table>
 			</form>
 		</div>
+		<div id="popupLeftBtn" style="float:left;display:none;">
+			<a href="javascript:fnEmpDelete();" class="grayBtn" style="font-size:16px;padding: 6px 24px;">삭제</a>
+		</div>
 		<popup-right-button />
 	</div>
 </div>
@@ -209,6 +212,7 @@
 				$popup.find('h2:first').text('사용자 상세');
 				$popup.find('tr#trPassword').hide();
 				$popup.find('button.blueBtn').off('click').hide();
+				$popup.find('#popupLeftBtn').hide();
 				$form.find(':text').prop('readonly', true);
 				$form.find(':radio[name=useYn]').prop('disabled', true);
 				$form.find('select[name=deptCd]').prop('disabled', true);
@@ -219,6 +223,7 @@
 				$popup.find('h2:first').text('사용자 수정');
 				$popup.find('tr#trPassword').show();
 	 			$popup.find('button.blueBtn').off('click').click(fnEmpUpdate).show();
+				$popup.find('#popupLeftBtn').show();
 	 			$form.find('select[name=useYn]').removeAttr('disabled');
 	 			$form.find('select[name=deptCd]').removeAttr('disabled');
 	 			$form.find('select[name=empState]').removeAttr('disabled');
@@ -236,24 +241,25 @@
 			$form.find(':text[name=empClphn]').val(rowData.emp_clphn);
 			$form.find(':radio[name=useYn][value='+ rowData.use_yn +']').prop('checked', true);
 			$form.find('select[name=empState]').val(rowData.emp_state);
+			EgovJqGridApi.selection('mainGrid', rowId);
 		}
 		$popup.bPopup();
 	}
 	// 중복 휴일 체크
 	function fnIdCheck() {
-		let $popup = $('[data-popup=mng_emp_add]');
-		if ($popup.find(':text[name=empNo]').val() === '') {
+		let $form = $('[data-popup=mng_emp_add] form:first');
+		if ($form.find(':text[name=empNo]').val() === '') {
 			toastr.warning('사번을 입력해 주세요.');
 			return;
 		}
 		EgovIndexApi.apiExecuteJson(
 			'GET',
 			'/backoffice/mng/empNoCheck.do', {
-				empNo: $popup.find(':text[name=empNo]').val()
+				empNo: $form.find(':text[name=empNo]').val()
 			},
 			null,
 			function(json) {
-				$popup.find(':hidden#idCheck').val('Y');
+				$form.find(':hidden#idCheck').val('Y');
 				toastr.info(json.message);
 			},
 			function(json) {
@@ -369,11 +375,8 @@
 	}
 	// 사용자 삭제
 	function fnEmpDelete() {
-		let rowId = $('#mainGrid').jqGrid('getGridParam', 'selrow');
-		if (rowId === null) {
-			toastr.warning('사용자를 선택해 주세요.');
-			return false;
-		}
+		let $popup = $('[data-popup=mng_emp_add]');
+		let rowId = $popup.find(':text[name=empNo]').val();
 		bPopupConfirm('사용자 삭제', '<b>'+ rowId +'</b> 를(을) 삭제 하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(
 				'POST',
