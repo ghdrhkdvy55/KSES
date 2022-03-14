@@ -119,7 +119,7 @@
 		</div>
 	
 		<div class="right_box">
-			<a href="javascript:common_modelOpen('all_cancel_pop');" class="blueBtn">전체 예약취소</a>
+			<!-- <a href="javascript:common_modelOpen('all_cancel_pop');" class="blueBtn">전체 예약취소</a> -->
 			<a href="javascript:jqGridFunc.fn_longSeatAdd();" class="blueBtn">장기 예매</a>
 			<a id="export" onClick="jqGridFunc.fn_excelDown()" class="blueBtn">엑셀 다운로드</a>
 		</div>
