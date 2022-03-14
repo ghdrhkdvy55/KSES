@@ -73,6 +73,9 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 			int partSpeedPayCost = Integer.parseInt(SmartUtil.NVL(resvInfo.get("part_speed_pay_cost"),"0")); 
 		    int centerSpeedEntryPayCost = Integer.parseInt(SmartUtil.NVL(resvInfo.get("center_speed_entry_pay_cost"),"0")); 
 			
+		    LOGGER.info("예약번호 : " + resvInfo.get("resv_seq") + "번 스피드온 결제 시작");
+		    LOGGER.info("입장로 : " + centerSpeedEntryPayCost + " 좌석료 : " + partSpeedPayCost);
+		    
 			if(!SmartUtil.NVL(resvInfo.get("resv_state"),"").equals("RESV_STATE_1")) {
 				switch (SmartUtil.NVL(resvInfo.get("resv_state"),"")) {
 					case "RESV_STATE_2" : message = "이미 이용중인 예약정보 입니다.";  break;
@@ -161,7 +164,7 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 		try {
 			jsonObject.put("resvSeq", resvSeq);
 			Map<String, Object> resvInfo = resvService.selectUserResvInfo(jsonObject);
-		
+			
 			if(!SmartUtil.NVL(resvInfo.get("resv_pay_dvsn"),"").equals("RESV_PAY_DVSN_2")) {
 				switch (SmartUtil.NVL(resvInfo.get("resv_pay_dvsn"),"")) {
 					case "RESV_PAY_DVSN_1" : message = "미결제 예약정보 입니다.";  break;
