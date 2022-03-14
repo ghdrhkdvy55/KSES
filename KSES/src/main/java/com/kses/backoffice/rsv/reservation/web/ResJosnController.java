@@ -599,11 +599,19 @@ public class ResJosnController {
 			
 			Map<String, Object> resInfo = resService.selectUserResvInfo(searchVO);
 			
+			LOGGER.debug("resvSeq : " + SmartUtil.NVL(resInfo.get("resv_seq"), "").toString() + 
+					", resvUserDvsn : " + SmartUtil.NVL(resInfo.get("resv_user_dvsn"), "").toString() + 
+					", centerNm : " + SmartUtil.NVL(resInfo.get("center_nm"), "").toString() + 
+					", seatNm : " + SmartUtil.NVL(resInfo.get("seat_nm"), "").toString() + 
+					", seatClass : " + SmartUtil.NVL(resInfo.get("seat_class"), "").toString() + 
+					", resvEndDt : " + SmartUtil.NVL(resInfo.get("resv_end_dt"), "").toString() + 
+					", userId : " + SmartUtil.NVL(resInfo.get("user_id"), "").toString() +
+					", userNm : " + SmartUtil.NVL(resInfo.get("user_nm"), "").toString() +
+					", resvPayCost : " + SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString());
+			
 			String localTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 			String recDate = SmartUtil.NVL(jsonInfo.get("RES_SEND_DATE"), "19700101").toString();
 			String qrTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-			
-			LOGGER.debug(Integer.valueOf(SmartUtil.NVL(jsonInfo.get("RES_PRICE"), "").toString()) + ":" + Integer.valueOf(SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString()));
 			
 			if (resInfo == null || !recDate.substring(0, 8).equals(localTime)) {
 				returnCode = "ERROR_01";
