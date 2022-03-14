@@ -21,7 +21,6 @@ import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
 import com.kses.backoffice.util.SmartUtil;
 import com.kses.front.annotation.LoginUncheck;
 import com.kses.front.annotation.ReferrerUncheck;
-import com.kses.front.login.service.UserLoginService;
 import com.kses.front.login.vo.UserLoginInfo;
 import com.kses.front.resv.AutoPaymentThread;
 

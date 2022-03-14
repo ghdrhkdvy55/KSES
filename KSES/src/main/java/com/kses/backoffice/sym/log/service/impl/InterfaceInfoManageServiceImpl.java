@@ -247,5 +247,4 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 	public int InterfaceUpdateLoginLog(InterfaceInfo vo) throws Exception {
 		return interfaceMapper.InterfaceUpdateLoginLog(vo);
 	}
-
 }
