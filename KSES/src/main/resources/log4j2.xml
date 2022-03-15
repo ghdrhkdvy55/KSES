@@ -20,29 +20,35 @@
         <Logger name="jdbc.audit" level="off" additivity="false">
             <AppenderRef ref="console" />
         </Logger>
+        
         <Logger name="jdbc.connection" level="off" additivity="false">
             <AppenderRef ref="console" />
         </Logger>
-        <logger name="jdbc.resultset" level="warn" additivity="false"> 
-                   <appender-ref ref="console"/> 
-               </logger>
-               <logger name="jdbc.resultsettable" level="info" additivity="false"> 
-                   <appender-ref ref="console"/> 
-               </logger>
-               <Logger name="jdbc.sqlonly" level="info" additivity="false">
+        
+        <logger name="jdbc.resultset" level="off" additivity="false"> 
+			<appender-ref ref="console"/> 
+		</logger>
+		
+		<logger name="jdbc.resultsettable" level="off" additivity="false"> 
+			<appender-ref ref="console"/> 
+		</logger>
+		
+		<Logger name="jdbc.sqlonly" level="info" additivity="false">
             <AppenderRef ref="console" />
         </Logger>
         
         <Logger name="jdbc.sqltiming" level="warn" additivity="false">
             <AppenderRef ref="console" />
         </Logger>
+       
         <Logger name="org.springframework" level="INFO" additivity="false">
             <AppenderRef ref="console" />
         </Logger>
-        <Logger name="jdbc.resultsettable" additivity="false"> 
-            <level value="INFO" /> 
+       
+        <Logger name="jdbc.resultsettable" level="off" additivity="false">
             <appender-ref ref="console" />
         </Logger>
+        
         <Root level="INFO">
             <AppenderRef ref="console" />
         </Root>
