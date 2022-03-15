@@ -23,6 +23,7 @@
 <body>
 <input type="hidden" id="loginAuthorCd" name="loginAuthorCd" value="${LoginVO.authorCd}">
 <input type="hidden" id="loginCenterCd" name="loginCenterCd" value="${LoginVO.centerCd}">
+<input type="hidden" id="adminId" name="adminId" value="${LoginVO.adminId}">
 <div class="wrapper">
 	<div class="header_wrap">
 		<header>
@@ -53,6 +54,7 @@
 	    }
 	})();
 	$(document).ready(function() {
+		localStorage.getItem("checkYn") != "Y" ? localStorage.removeItem("adminId") : localStorage.setItem("adminId", $("#adminId").val());
 		var menu = uniAjaxReturn("/backoffice/inc/user_menu.do", "POST", false, null,  "lst");
 		for (let m of menu) {
 			switch (m.level) {

@@ -22,120 +22,123 @@
     <script src="/resources/js/bpopup.js"></script>
 </head>
 <body>
-    <form name="regist" method="post" action="/backoffice/actionSecurityLogin.do" autocomplete="off" style="height:100%;">
-    <div class="wrapper loginBack ">       
-        <div class="loginBox">
-            <div class="log_box">
-                <h1 class="logo"></h1>
-            </div>
-            <div class="loginArea">
-                <ul>
-                    <li>
-                        <span class="id_icon">사번</span>
-                        <div class="text-clear">
-                            <input type="text" id="adminId" name="adminId" placeholder="사번을 입력해주세요." value="" class="form-control" tabindex="1"/>  
-                            <button class="input_reset hidden"  id="id_reset" type="button"></button>
-                            <label id="id_wrong" style="color:red"></label>
-                        </div>
-                        
-                    </li>
-                    <li>
-                        <span class="pw_icon">비밀번호</span>
-                        <div class="text-clear">
-                            <input type="password" id="adminPwd" name="adminPwd" placeholder="비밀번호를 입력해 주세요." tabindex="2"/>
-                            <button class="input_reset hidden"  id="pass_reset" type="button"></button>
-                            <label id="pw_wrong" style="color:red"></label>
-                        </div>
-                    </li>
-                </ul>
-            <div class="check_wrap">
-                <ul>
-                    <li>
-                        <input class="magic-checkbox" type="checkbox" name="layout" id="1" value="option">
-                        <label for="1"></label>
-                        <label class="text" for="1">사번 기억하기</label>
-                    </li>
-
-                </ul>                
-            </div>
-            <div class="clear"></div>
-            <div>
-                <button type="button"  onClick='form_check();' class="no_login loginBtn">로그인</button>
-            </div>
-        </div>
-        
-        <!-- popup //-->
+	<form name="regist" method="post" action="/backoffice/actionSecurityLogin.do" autocomplete="off" style="height:100%;">
+	<div class="wrapper loginBack ">       
+		<div class="loginBox">
+			<div class="log_box">
+				<h1 class="logo"></h1>
+			</div>
+			<div class="loginArea">
+				<ul>
+					<li>
+						<span class="id_icon">사번</span>
+						<div class="text-clear">
+							<input type="text" id="adminId" name="adminId" placeholder="사번을 입력해주세요." value="" class="form-control" tabindex="1"/>  
+							<button class="input_reset hidden"  id="id_reset" type="button"></button>
+							<label id="id_wrong" style="color:red"></label>
+						</div>
+					</li>
+					<li>
+						<span class="pw_icon">비밀번호</span>
+						<div class="text-clear">
+							<input type="password" id="adminPwd" name="adminPwd" placeholder="비밀번호를 입력해 주세요." tabindex="2"/>
+							<button class="input_reset hidden"  id="pass_reset" type="button"></button>
+							<label id="pw_wrong" style="color:red"></label>
+						</div>
+					</li>
+				</ul>
+			<div class="check_wrap">
+				<ul>
+					<li>
+						<input class="magic-checkbox" type="checkbox" name="layout" id="saveId" value="option" class="pass-form">
+						<label for="saveId"></label>
+						<label class="text" for="saveId">사번 기억하기</label>
+					</li>
+				</ul>                
+			</div>
+			<div class="clear"></div>
+			<div>
+				<button type="button"  onClick='form_check();' class="no_login loginBtn">로그인</button>
+			</div>
+		</div>
+	<!-- popup //-->
     </div>
     </form>
     <!-- //popup -->
 
     <!--저장확인팝업-->
-    <div data-popup="savePage" id="savePage" class="popup m_pop">
-      <div class="pop_con">
-        <a href="javascript:;" class="button b-close">X</a>
-        <p class="pop_tit">관리자 화면 로그인</p>
-        <p class="pop_wrap"><span id="sp_Message"></span></p>
-      </div>
-    </div>
+	<div data-popup="savePage" id="savePage" class="popup m_pop">
+		<div class="pop_con">
+			<a href="javascript:;" class="button b-close">X</a>
+			<p class="pop_tit">관리자 화면 로그인</p>
+			<p class="pop_wrap"><span id="sp_Message"></span></p>
+		</div>
+	</div>
     
    
     
-    <button type="button" id="btn_Message" style="display:none" data-popup-open="savePage"></button>
+	<button type="button" id="btn_Message" style="display:none" data-popup-open="savePage"></button>
     
-    <script src="/resources/js/common.js"></script>
-    <script type="text/javascript">
-    function form_check(){
-       if (any_empt_line_span("adminId", "<spring:message code='page.common.alert01' />", "sp_message", "btn_Message") == false) return;
- 	   if (any_empt_line_span("adminPwd", "<spring:message code='page.common.alert02' />", "sp_message", "btn_Message") == false) return; 
- 	   $("form[name=regist]").attr("action", "/backoffice/actionSecurityLogin.do").submit(); 	   
-    }       
+	<script src="/resources/js/common.js"></script>
+	<script type="text/javascript">
+	function form_check(){
+		if (any_empt_line_span("adminId", "<spring:message code='page.common.alert01' />", "sp_message", "btn_Message") == false) return;
+		if (any_empt_line_span("adminPwd", "<spring:message code='page.common.alert02' />", "sp_message", "btn_Message") == false) return; 
+		$("form[name=regist]").attr("action", "/backoffice/actionSecurityLogin.do").submit(); 
+		if($("input:checkbox[id='saveId']").is(":checked")){
+			localStorage.setItem("checkYn", "Y");
+		} else {
+			localStorage.setItem("checkYn", "N");
+		}
+	}       
     $(document).ready(function() {
+    	$("#adminId").val(localStorage.getItem("adminId"));
+    	if(localStorage.getItem("checkYn") == "Y"){
+    		$("input:checkbox[id='saveId']").prop("checked", true);
+    	}
     	$('#adminId').focus();
+    	
     	$("body").keydown(function (key) {
-        	if(key.keyCode == 13){
-        		form_check();
-        	}
-    	});
+			if(key.keyCode == 13){
+				form_check();
+			}
+		});
     	
 		if ("${message}" != "") {
-			if ("${message}" == "login_ok"){
-				location.href="/backoffice/resManage/resList.do?searchRoomType=swc_gubun_1";  
-			} else {
+			if ("${message}" == "로그인 정보가 올바르지 않습니다."){
 				alert("<spring:message code='page.common.alert03' />");
 				$("#adminId").focus() ;	    			  
 			}				
 		}    	           	    	
-    });  
-    function any_empt_line_span(frm_nm, alert_message, spanTxt){        
-   	 var form_nm = eval("document.getElementById('"+frm_nm+"')");
-   	 $("#sp_errorMessage").html("");
-   	 if (form_nm.value.length < 1){
-   		  $("#sp_Message").html(alert_message);
-   		  $("#sp_Message").attr("style", "color:red");
-   		  $("#"+ frm_nm).attr("style", "border-color:red");
-   		  $("#savePage").bPopup()
-   		  return false;
-   	 }else{
-           return true;
-   	 }
-   }
+	});  
+	function any_empt_line_span(frm_nm, alert_message, spanTxt){        
+		var form_nm = eval("document.getElementById('"+frm_nm+"')");
+		$("#sp_errorMessage").html("");
+		if (form_nm.value.length < 1){
+			$("#sp_Message").html(alert_message);
+			$("#sp_Message").attr("style", "color:red");
+			$("#"+ frm_nm).attr("style", "border-color:red");
+			$("#savePage").bPopup()
+			return false;
+		}else{
+			return true;
+		}
+	}
     </script>
 
     <!-- input del icon -->
-    <script type="text/javascript">    
-        $('li input[type="text"], li input[type="password"]').on('input propertychange', function() {
-          var $this = $(this);
-          var visible = Boolean($this.val());
-          $this.siblings('.input_reset').toggleClass('hidden', !visible);
-        }).trigger('propertychange');
+	<script type="text/javascript">    
+		$('li input[type="text"], li input[type="password"]').on('input propertychange', function() {
+			var $this = $(this);
+			var visible = Boolean($this.val());
+			$this.siblings('.input_reset').toggleClass('hidden', !visible);
+		}).trigger('propertychange');
         
-        $('#id_reset').click(function() {
-          $(this).siblings('#userid').val('')
-            .trigger('propertychange').focus();
+		$('#id_reset').click(function() {
+			$(this).siblings('#userid').val('').trigger('propertychange').focus();
         });      
         $('#pass_reset').click(function() {
-          $(this).siblings('#pw').val('')
-            .trigger('propertychange').focus();
+			$(this).siblings('#pw').val('').trigger('propertychange').focus();
         });  
     </script> 
 </body>

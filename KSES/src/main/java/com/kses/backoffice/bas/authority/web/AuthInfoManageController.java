@@ -203,7 +203,7 @@ public class AuthInfoManageController {
     	return model;
     }
 	@RequestMapping (value="authDelete.do")
-	public ModelAndView deleteholyInfoManage(	@ModelAttribute("loginVO") LoginVO loginVO, 
+	public ModelAndView deleteAuthInfoManage(	@ModelAttribute("loginVO") LoginVO loginVO, 
 			                                    @RequestBody Map<String, Object> info, 
 												HttpServletRequest request) throws Exception {
 		
