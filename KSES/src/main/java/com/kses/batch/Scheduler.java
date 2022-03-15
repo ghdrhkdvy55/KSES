@@ -1,5 +1,10 @@
 package com.kses.batch;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +22,7 @@ import com.kses.backoffice.mng.employee.service.EmpInfoManageService;
 import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
 import com.kses.backoffice.stt.dashboard.service.DashboardInfoManageService;
 import com.kses.backoffice.sym.log.service.InterfaceInfoManageService;
+import com.kses.backoffice.sym.log.vo.InterfaceInfo;
 import com.kses.backoffice.util.SmartUtil;
 
 import egovframework.com.cmm.service.Globals;
@@ -47,10 +53,10 @@ public class Scheduler {
 	private SystemInfoManageService systemService;
 	
 	@Autowired
-	DashboardInfoManageService dashBoardService;
+	private DashboardInfoManageService dashBoardService;
 	
 	@Autowired
-	UserInfoManageService userService;
+	private UserInfoManageService userService;
 
 	/**
 	 * 노쇼 예약정보 자동취소 스케줄러
@@ -285,5 +291,63 @@ public class Scheduler {
 			LOGGER.error("updateGuestPrivacyInfo => Failed", e);
 		}
 		LOGGER.info("----------------------------KSES GUEST PRIVACY INFO UPDATE BATCH END----------------------------");
+	}
+	
+	/**
+	 * 일주일 분량의 인터페이스 송수신 로그  CSV파일 생성 및 DB데이터 삭제
+	 * 
+	 * @throws Exception
+	 */
+	//@Scheduled(cron="0 0/3 * * * *")
+	@Scheduled(cron="0 59 23 ? * 7", zone="Asia/Seoul")
+	public void selectInterfaceLogFileCreate() throws Exception {		
+		LOGGER.info("----------------------------KSES INTERFACE LOG FILE CRATE BATCH START----------------------------");
+		String csvFilePath = "D:/";
+		String csvFilePrefix = "test_";
+		String csvFileSuffix = ".csv";
+		
+		File csvFile = null;
+		BufferedWriter bw = null;
+		String NEWLINE = System.lineSeparator();
+		
+		try {
+			InterfaceInfo interfaceInfo = new InterfaceInfo();
+			LocalDateTime now = LocalDateTime.now();
+			
+			String[] dateList = new String[7];
+			String csvHeader = interfaceService.selectInterfaceLogCsvHeader();
+			List<String> csvList;
+			
+			for(int i=0; i<7; i++) {
+				dateList[i] = now.minusDays(i).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+			}
+			
+			for(String logDate : dateList) {
+				String fileFullPath = csvFilePath + csvFilePrefix + logDate + csvFileSuffix; 
+				csvFile = new File(fileFullPath);
+				bw = new BufferedWriter(new FileWriter(csvFile));
+				
+				interfaceInfo.setOccrrncDe(logDate);
+				csvList = interfaceService.selectInterfaceLogCsvList(interfaceInfo);
+				bw.write(csvHeader);
+				bw.write(NEWLINE);
+				
+				for(String csvRow : csvList) {
+					bw.write(csvRow);
+					bw.write(NEWLINE);
+				}
+				
+				bw.flush();
+				bw.close();
+				
+				interfaceService.deleteInterfaceLogCsvList(logDate);
+			}
+
+		} catch (RuntimeException re) {
+			LOGGER.error("selectInterfaceLogFileCreate => Run Failed", re);
+		} catch (Exception e) {
+			LOGGER.error("selectInterfaceLogFileCreate => Failed", e);
+		}
+		LOGGER.info("----------------------------KSES INTERFACE LOG FILE CRATE BATCH END----------------------------");
 	}
 }

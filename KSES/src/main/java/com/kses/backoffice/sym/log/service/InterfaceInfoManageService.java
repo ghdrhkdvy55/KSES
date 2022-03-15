@@ -9,9 +9,13 @@ import com.kses.backoffice.sym.log.vo.InterfaceInfo;
 
 public interface InterfaceInfoManageService {
 
-    List<Map<String, Object>> selectInterfaceLogInfo (Map<String, Object> searchVO) throws Exception;
+    List<Map<String, Object>> selectInterfaceLogInfo(Map<String, Object> searchVO) throws Exception;
     
     Map<String, Object> selectInterfaceDetail (String requstId) throws Exception;
+    
+    String selectInterfaceLogCsvHeader() throws Exception;
+    
+    List<String> selectInterfaceLogCsvList(InterfaceInfo vo) throws Exception;
     
     ModelMap SpeedOnPayMent(String resvSeq, String cardPw, boolean isPassword) throws Exception;
     
@@ -20,4 +24,6 @@ public interface InterfaceInfoManageService {
     int InterfaceInsertLoginLog(InterfaceInfo vo) throws Exception;
 	
 	int InterfaceUpdateLoginLog(InterfaceInfo vo) throws Exception;
+	
+	int deleteInterfaceLogCsvList(String occrrncDe) throws Exception;
 }

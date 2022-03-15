@@ -60,6 +60,16 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 	}
 	
 	@Override
+    public String selectInterfaceLogCsvHeader() throws Exception {
+		return interfaceMapper.selectInterfaceLogCsvHeader();
+	}
+    
+	@Override
+    public List<String> selectInterfaceLogCsvList(InterfaceInfo vo) throws Exception{
+		return interfaceMapper.selectInterfaceLogCsvList(vo);
+	}
+	
+	@Override
 	public ModelMap SpeedOnPayMent(String resvSeq, String cardPw, boolean isPassword) throws Exception {
 		String Url = propertiesService.getString("speedOnUrl") + "trade/fepWithdraw";		
 		JSONObject jsonObject = new JSONObject();
@@ -249,5 +259,10 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 	@Override
 	public int InterfaceUpdateLoginLog(InterfaceInfo vo) throws Exception {
 		return interfaceMapper.InterfaceUpdateLoginLog(vo);
+	}
+	
+	@Override
+	public int deleteInterfaceLogCsvList(String occrrncDe) throws Exception {
+		return interfaceMapper.deleteInterfaceLogCsvList(occrrncDe);
 	}
 }
