@@ -199,8 +199,7 @@
 				var params = {
 					"gubun" : "fep",
 					"sendInfo" : {
-						"resvSeq" : $("#resvSeq").val(),
-						"Pw_YN" : "N"
+						"resvSeq" : $("#resvSeq").val()
 					}
 				}
 				

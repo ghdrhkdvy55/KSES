@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -145,184 +146,25 @@ public class ResJosnController {
 						}
 					}
 				}
+				
+				model.addObject(Globals.STATUS, errorCd);
+				model.addObject(Globals.STATUS_MESSAGE, Message);
+				model.addObject(Globals.STATUS_REGINFO, node);
+			
 			} else if (SmartUtil.NVL(sendInfo.get("gubun"), "").toString().equals("fep")) {
-				Url = propertiesService.getString("speedOnUrl") + "trade/fepWithdraw";
-
-				Map<String, Object> resvInfo = resService.selectUserResvInfo(jsonObject);
-				int partSpeedPayCost = Integer.parseInt(SmartUtil.NVL(resvInfo.get("part_speed_pay_cost"),"0")); 
-			    int centerSpeedEntryPayCost = Integer.parseInt(SmartUtil.NVL(resvInfo.get("center_speed_entry_pay_cost"),"0")); 
-			    LOGGER.info("selectSpeedCheck : " + SmartUtil.NVL(resvInfo.get("resv_seq"),"") + "번 결제 시작");
+				ModelMap result = interfaceService.SpeedOnPayMent(jsonObject.get("resvSeq").toString(), "", false);
 				
-				if(!SmartUtil.NVL(resvInfo.get("resv_state"),"").equals("RESV_STATE_1")) {
-					switch (SmartUtil.NVL(resvInfo.get("resv_state"),"")) {
-						case "RESV_STATE_2" : Message = "이미 이용중인 예약정보 입니다.";  break;
-						case "RESV_STATE_3" : Message = "이미 이용완료 처리된 예약정보 입니다.";  break;
-						case "RESV_STATE_4" : Message = "이미 취소된 예약정보 입니다.";  break;
-						default: Message = "알수없는 예약정보 입니다."; break;
-					}
-					model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-					model.addObject(Globals.STATUS_MESSAGE, Message);
-					return model;
-				}
-				
-				if(SmartUtil.NVL(resvInfo.get("resv_pay_dvsn"),"").equals("RESV_PAY_DVSN_2")) {
-					model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-					model.addObject(Globals.STATUS_MESSAGE, "이미 결제처리된 예약정보 입니다.");
-					return model;
-				}
-				
-				if(SmartUtil.NVL(resvInfo.get("center_pilot_yn"),"N").equals("N")) {
-					model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-					model.addObject(Globals.STATUS_MESSAGE, "비시범 지점 예약정보 입니다.");
-					return model;
-				}
-				
-				jsonObject.put("System_Type", "E");
-				jsonObject.put("External_Key", resvInfo.get("resv_seq"));
-				jsonObject.put("Card_Id", resvInfo.get("user_card_id"));
-				
-				if(SmartUtil.NVL(jsonObject.get("Pw_YN"),"Y").equals("Y")) {
-					jsonObject.put("Card_Pw", SmartUtil.encryptPassword(jsonObject.get("Card_Pw").toString(), "SHA-256"));
-					jsonObject.put("Pw_YN", "Y");
-				} else {
-					jsonObject.put("Card_Pw", "");
-					jsonObject.put("Pw_YN", "N");
-				}
-				
-				jsonObject.put("Card_Seq", resvInfo.get("user_card_seq"));
-				jsonObject.put("Div_Cd", resvInfo.get("center_speed_cd"));
-
-				if (resvInfo.get("resv_entry_dvsn").equals("ENTRY_DVSN_1")) {
-					jsonObject.put("Pay_Type", "001");
-					jsonObject.put("Trade_Cd", "20A61");
-					jsonObject.put("Trade_Detail", "입장시스템 입장료 출금");
-				} else {
-					jsonObject.put("Pay_Type", "003");
-					jsonObject.put("Trade_Cd", "20A63");
-					jsonObject.put("Trade_Detail", "입장시스템 입장/좌석 이용료 출금");
-				}
-				
-				jsonObject.put("Trade_Pay", partSpeedPayCost + centerSpeedEntryPayCost);
-
-				node = SmartUtil.requestHttpJson(Url, jsonObject.toJSONString(), "SPEEDWITHDRAW", "SPEEDON", "KSES");
-				if (node.get("Error_Cd").asText().equals("SUCCESS")) {
-					ResvInfo resInfo = new ResvInfo();
-					resInfo.setResvSeq(SmartUtil.NVL(resvInfo.get("resv_seq"), "").toString());
-					resInfo.setResvSeatPayCost(String.valueOf(partSpeedPayCost));
-					resInfo.setResvEntryPayCost(String.valueOf(centerSpeedEntryPayCost));
-					resInfo.setResvPayCost(String.valueOf(partSpeedPayCost + centerSpeedEntryPayCost));
-					resInfo.setResvPayDvsn("RESV_PAY_DVSN_2");
-					resInfo.setResvTicketDvsn("RESV_TICKET_DVSN_1");
-					resInfo.setTradNo(node.get("Trade_No").asText());
-
-					resService.updateResvPriceInfo(resInfo);
-				} else {
-					for (speedon direction : speedon.values()) {
-						if (direction.getCode().equals(node.get("Error_Cd").asText())) {
-							Message = direction.getName();
-						}
-					}
-				}
-			} else if (SmartUtil.NVL(sendInfo.get("gubun"), "").toString().equals("Inf")) {
-				Url = propertiesService.getString("speedOnUrl") + "trade/schTradeInfo";
-				node = SmartUtil.requestHttpJson(Url, jsonObject.toJSONString(), "SPEEDSCHTRADEINFO", "SPEEDON","KSES");
-				if (node.get("Error_Cd").asText().equals("SUCCESS")) {
-					// 예약 테이블 취소 정보 처리 하기
-				} else {
-					for (speedon direction : speedon.values()) {
-						if (direction.getCode().equals(node.get("Error_Cd").asText())) {
-							Message = direction.getName();
-						}
-					}
-				}
+				model.addObject(Globals.STATUS, result.get(Globals.STATUS));
+				model.addObject(Globals.STATUS_MESSAGE, result.get(Globals.STATUS));
+				model.addObject(Globals.STATUS_REGINFO, result.get(Globals.STATUS_REGINFO));
+			
 			} else if (SmartUtil.NVL(sendInfo.get("gubun"), "").toString().equals("dep")) {
-				// 취소 정보
-				Url = propertiesService.getString("speedOnUrl") + "trade/fepDeposit";
-				Map<String, Object> resvInfo = resService.selectUserResvInfo(jsonObject);
+				ModelMap result = interfaceService.SpeedOnPayMentCancel(jsonObject.get("resvSeq").toString(), "", false);
 				
-				if(!SmartUtil.NVL(resvInfo.get("resv_pay_dvsn"),"").equals("RESV_PAY_DVSN_2")) {
-					switch (SmartUtil.NVL(resvInfo.get("resv_pay_dvsn"),"")) {
-						case "RESV_PAY_DVSN_1" : Message = "미결제 예약정보 입니다.";  break;
-						case "RESV_PAY_DVSN_3" : Message = "이미 결제취소된 예약정보 입니다.";  break;
-						default: Message = "알수없는 예약정보 입니다."; break;
-					}
-					model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-					model.addObject(Globals.STATUS_MESSAGE, Message);
-					return model;
-				}
-				
-				if(!SmartUtil.NVL(resvInfo.get("resv_ticket_dvsn"),"").equals("RESV_TICKET_DVSN_1")) {
-					switch (SmartUtil.NVL(resvInfo.get("resv_pay_dvsn"),"")) {
-						case "RESV_TICKET_DVSN_2" : Message = "미결제 예약정보 입니다.";  break;
-						default: Message = "알수없는 예약정보 입니다."; break;
-					}
-					model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-					model.addObject(Globals.STATUS_MESSAGE, Message);
-					return model;
-				}
-				
-				if(!SmartUtil.NVL(resvInfo.get("resv_state"),"").equals("RESV_STATE_1")) {
-					switch (SmartUtil.NVL(resvInfo.get("resv_state"),"")) {
-						case "RESV_STATE_2" : Message = "이미 이용중인 예약정보 입니다.";  break;
-						case "RESV_STATE_3" : Message = "이미 이용완료 처리된 예약정보 입니다.";  break;
-						case "RESV_STATE_4" : Message = "이미 취소된 예약정보 입니다.";  break;
-						default: Message = "알수없는 예약정보 입니다."; break;
-					}
-					model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-					model.addObject(Globals.STATUS_MESSAGE, Message);
-					return model;
-				}
-
-				jsonObject.put("System_Type", "E");
-				jsonObject.put("External_Key", resvInfo.get("resv_seq"));
-				jsonObject.put("Card_Id", resvInfo.get("user_card_id"));
-				
-				if(SmartUtil.NVL(jsonObject.get("Pw_YN"),"Y").equals("Y")) {
-					jsonObject.put("Card_Pw", SmartUtil.encryptPassword(jsonObject.get("Card_Pw").toString(), "SHA-256"));
-					jsonObject.put("Pw_YN", "Y");
-				} else {
-					jsonObject.put("Card_Pw", "");
-					jsonObject.put("Pw_YN", "N");
-				}
-				
-				jsonObject.put("Card_Seq", resvInfo.get("user_card_seq"));
-				jsonObject.put("Div_Cd", resvInfo.get("center_speed_cd"));
-
-				if (resvInfo.get("resv_entry_dvsn").equals("ENTRY_DVSN_1")) {
-					jsonObject.put("Pay_Type", "001");
-					jsonObject.put("Trade_Cd", "10A11");
-					jsonObject.put("Trade_Detail", "입장시스템 입장료 출금 취소");
-				} else {
-					jsonObject.put("Pay_Type", "003");
-					jsonObject.put("Trade_Cd", "10A13");
-					jsonObject.put("Trade_Detail", "입장시스템 입장/좌석 이용료 출금 취소");
-				}
-
-				jsonObject.put("Trade_No", resvInfo.get("trad_no").toString());
-				jsonObject.put("Trade_Pay", resvInfo.get("resv_pay_cost").toString());
-
-				node = SmartUtil.requestHttpJson(Url, jsonObject.toJSONString(), "SPEEDFEPDEPOSIT", "SPEEDON", "KSES");
-				if (node.get("Error_Cd").asText().equals("SUCCESS")) {
-					// 예약 테이블 취소 정보 처리 하기
-					ResvInfo resInfo = new ResvInfo();
-					resInfo.setResvSeq(SmartUtil.NVL(sendInfo.get("resvSeq"), "").toString());
-					resInfo.setResvPayDvsn("RESV_PAY_DVSN_3");
-
-					resInfo.setResvTicketDvsn("RESV_TICKET_DVSN_1");
-					resInfo.setTradNo(node.get("Trade_No").asText());
-					resService.updateResvPriceInfo(resInfo);
-
-				} else {
-					for (speedon direction : speedon.values()) {
-						if (direction.getCode().equals(node.get("Error_Cd").asText())) {
-							Message = direction.getName();
-						}
-					}
-				}
+				model.addObject(Globals.STATUS, result.get(Globals.STATUS));
+				model.addObject(Globals.STATUS_MESSAGE, result.get(Globals.STATUS));
+				model.addObject(Globals.STATUS_REGINFO, result.get(Globals.STATUS_REGINFO));
 			}
-			model.addObject(Globals.STATUS, errorCd);
-			model.addObject(Globals.STATUS_MESSAGE, Message);
-			model.addObject(Globals.STATUS_REGINFO, node);
 		} catch (Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
@@ -481,8 +323,7 @@ public class ResJosnController {
 				
 				sendInfo = attendService.insertAttendInfo(sendInfo);
 				IOGUBUN_TXT = inotMsg;
-				LOGGER.info("inOt??? : " + inOt);
-				LOGGER.info("RcvCd?? : " + sendInfo.getRcvCd());
+				
 				if (sendInfo.getRcvCd().equals("OK")) {
 					ERROR_CD = "OK";
 					ERROR_MSG = "";
@@ -758,11 +599,19 @@ public class ResJosnController {
 			
 			Map<String, Object> resInfo = resService.selectUserResvInfo(searchVO);
 			
+			LOGGER.debug("resvSeq : " + SmartUtil.NVL(resInfo.get("resv_seq"), "").toString() + 
+					", resvUserDvsn : " + SmartUtil.NVL(resInfo.get("resv_user_dvsn"), "").toString() + 
+					", centerNm : " + SmartUtil.NVL(resInfo.get("center_nm"), "").toString() + 
+					", seatNm : " + SmartUtil.NVL(resInfo.get("seat_nm"), "").toString() + 
+					", seatClass : " + SmartUtil.NVL(resInfo.get("seat_class"), "").toString() + 
+					", resvEndDt : " + SmartUtil.NVL(resInfo.get("resv_end_dt"), "").toString() + 
+					", userId : " + SmartUtil.NVL(resInfo.get("user_id"), "").toString() +
+					", userNm : " + SmartUtil.NVL(resInfo.get("user_nm"), "").toString() +
+					", resvPayCost : " + SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString());
+			
 			String localTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 			String recDate = SmartUtil.NVL(jsonInfo.get("RES_SEND_DATE"), "19700101").toString();
 			String qrTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-			
-			LOGGER.debug(Integer.valueOf(SmartUtil.NVL(jsonInfo.get("RES_PRICE"), "").toString()) + ":" + Integer.valueOf(SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString()));
 			
 			if (resInfo == null || !recDate.substring(0, 8).equals(localTime)) {
 				returnCode = "ERROR_01";

@@ -12,12 +12,17 @@ import egovframework.rte.psl.dataaccess.mapper.Mapper;
 @Mapper
 public interface InterfaceInfoManageMapper {
 
-    public List<Map<String, Object>> selectInterfaceLogInfo (@Param("params") Map<String, Object> searchVO);
+    public List<Map<String, Object>> selectInterfaceLogInfo(@Param("params") Map<String, Object> searchVO);
     
-    public Map<String, Object> selectInterfaceDetail (String requstId);
+    public Map<String, Object> selectInterfaceDetail(String requstId);
 	
+    public String selectInterfaceLogCsvHeader() throws Exception;
+    
+    public List<String> selectInterfaceLogCsvList(InterfaceInfo vo);
+    
 	public int InterfaceInsertLoginLog(InterfaceInfo vo);
 	
 	public int InterfaceUpdateLoginLog(InterfaceInfo vo);
 	
+	public int deleteInterfaceLogCsvList(@Param("occrrncDe") String occrrncDe);
 }

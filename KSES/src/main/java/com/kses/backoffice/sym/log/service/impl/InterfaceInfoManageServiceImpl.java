@@ -60,6 +60,16 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 	}
 	
 	@Override
+    public String selectInterfaceLogCsvHeader() throws Exception {
+		return interfaceMapper.selectInterfaceLogCsvHeader();
+	}
+    
+	@Override
+    public List<String> selectInterfaceLogCsvList(InterfaceInfo vo) throws Exception{
+		return interfaceMapper.selectInterfaceLogCsvList(vo);
+	}
+	
+	@Override
 	public ModelMap SpeedOnPayMent(String resvSeq, String cardPw, boolean isPassword) throws Exception {
 		String Url = propertiesService.getString("speedOnUrl") + "trade/fepWithdraw";		
 		JSONObject jsonObject = new JSONObject();
@@ -73,6 +83,9 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 			int partSpeedPayCost = Integer.parseInt(SmartUtil.NVL(resvInfo.get("part_speed_pay_cost"),"0")); 
 		    int centerSpeedEntryPayCost = Integer.parseInt(SmartUtil.NVL(resvInfo.get("center_speed_entry_pay_cost"),"0")); 
 			
+		    LOGGER.info("예약번호 : " + resvInfo.get("resv_seq") + "번 스피드온 결제 시작");
+		    LOGGER.info("입장로 : " + centerSpeedEntryPayCost + " 좌석료 : " + partSpeedPayCost);
+		    
 			if(!SmartUtil.NVL(resvInfo.get("resv_state"),"").equals("RESV_STATE_1")) {
 				switch (SmartUtil.NVL(resvInfo.get("resv_state"),"")) {
 					case "RESV_STATE_2" : message = "이미 이용중인 예약정보 입니다.";  break;
@@ -161,7 +174,7 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 		try {
 			jsonObject.put("resvSeq", resvSeq);
 			Map<String, Object> resvInfo = resvService.selectUserResvInfo(jsonObject);
-		
+			
 			if(!SmartUtil.NVL(resvInfo.get("resv_pay_dvsn"),"").equals("RESV_PAY_DVSN_2")) {
 				switch (SmartUtil.NVL(resvInfo.get("resv_pay_dvsn"),"")) {
 					case "RESV_PAY_DVSN_1" : message = "미결제 예약정보 입니다.";  break;
@@ -247,5 +260,9 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 	public int InterfaceUpdateLoginLog(InterfaceInfo vo) throws Exception {
 		return interfaceMapper.InterfaceUpdateLoginLog(vo);
 	}
-
+	
+	@Override
+	public int deleteInterfaceLogCsvList(String occrrncDe) throws Exception {
+		return interfaceMapper.deleteInterfaceLogCsvList(occrrncDe);
+	}
 }

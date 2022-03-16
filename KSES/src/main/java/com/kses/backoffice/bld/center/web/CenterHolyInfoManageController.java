@@ -146,7 +146,7 @@ public class CenterHolyInfoManageController {
 	}
 	
 	@RequestMapping (value="centerHolyInfoDelete.do")
-	public ModelAndView deleteholyInfoManage(	@ModelAttribute("loginVO") LoginVO loginVO, 
+	public ModelAndView deleteCenterHolyInfoManage(	@ModelAttribute("loginVO") LoginVO loginVO, 
 												@RequestParam("centerHolySeq") int centerHolySeq, 
 												HttpServletRequest request) throws Exception {
 		

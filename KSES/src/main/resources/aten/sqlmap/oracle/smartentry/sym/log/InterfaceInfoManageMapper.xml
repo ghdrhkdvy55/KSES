@@ -62,5 +62,24 @@
 	   	ORDER BY TB.OCCRRNC_DE DESC
 	</select>
 
-
+	<select id="selectInterfaceLogCsvHeader" resultType="String">
+		SELECT LISTAGG(COLUMN_NAME,',') WITHIN GROUP (ORDER BY COLUMN_ID) FROM USER_TAB_COLUMNS WHERE TABLE_NAME = 'COMTNTRSMRCVLOG'
+	</select>
+	
+	<select id="selectInterfaceLogCsvList" resultType="String">
+		SELECT 
+			'"' || REQUST_ID || '","' ||  OCCRRNC_DE || '","' || TRSMRCV_SE_CODE || '","' || INTEG_ID || '","' || PROVD_INSTT_ID || '","' ||
+			PROVD_SYS_ID || '","' || PROVD_SVC_ID || '","' || REQUST_INSTT_ID || '","' || REQUST_SYS_ID || '","' || REQUST_TRNSMIT_TM || '","' ||
+			REQUST_RECPTN_TM || '","' || RSPNS_TRNSMIT_TM || '","' || RSPNS_RECPTN_TM || '","' || RESULT_CODE || '","' ||  
+			REPLACE(REPLACE(REPLACE(RESULT_MESSAGE, CHR(10),''),CHR(13),''),' ','') || '","' ||
+			FRST_REGIST_PNTTM || '","' || RQESTER_ID || '","' || 
+			REPLACE(REPLACE(REPLACE(SEND_MESSAGE, CHR(10),''),CHR(13),''),' ','') || '"' AS csvFileList
+		FROM COMTNTRSMRCVLOG
+		WHERE OCCRRNC_DE = #{occrrncDe}
+		ORDER BY REQUST_ID ASC
+	</select>
+	
+	<delete id="deleteInterfaceLogCsvList">
+		DELETE FROM COMTNTRSMRCVLOG WHERE OCCRRNC_DE = #{occrrncDe}
+	</delete>
 </mapper>
