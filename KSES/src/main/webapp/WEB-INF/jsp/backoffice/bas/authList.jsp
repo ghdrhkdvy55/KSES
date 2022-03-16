@@ -345,17 +345,25 @@
 	function fnMenuSettingSave() {
 		let $popup = $('[data-popup=bas_menu_setting]');
 		let authorCode = $popup.find(':hidden[name=authorCode]').val();
-		let checkedMenuNo = $('#jstree').jstree('get_selected', false);
-		if (checkedMenuNo.length === 0) {
-			toastr.warning('체크된 값이 없습니다.');
-			return;
-		}
+        if ($('#jstree').jstree('get_selected', false).length === 0) {
+            toastr.warning('체크된 값이 없습니다.');
+            return;
+        }
+		let arrCheckedMenuNo = new Array();
+        for (let menu of $('#jstree').jstree('get_selected', true)) {
+            if (!arrCheckedMenuNo.includes(menu.id)) {
+                arrCheckedMenuNo.push(menu.id);
+            }
+            if (menu.parent !== '#' && !arrCheckedMenuNo.includes(menu.parent)) {
+                arrCheckedMenuNo.push(menu.parent);
+            }
+        }
 		bPopupConfirm('메뉴설정 저장', '<b>'+ authorCode +'</b> 메뉴설정 저장 하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(
 				'POST',
 				'/backoffice/bas/menuCreateUpdateAjax.do', {
 					authorCode: authorCode,
-					checkedMenuNo: checkedMenuNo.join(',')
+					checkedMenuNo: arrCheckedMenuNo.join(',')
 				},
 				null,
 				function(json) {
