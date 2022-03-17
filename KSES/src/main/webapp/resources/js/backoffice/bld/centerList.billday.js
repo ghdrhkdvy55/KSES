@@ -24,7 +24,7 @@ $.Billday.prototype.mainGridSettings = function() {
         cellEdit: true,
         cellsubmit: 'clientArray'
     });
-    $('#rightAreaBtn').show();
+    $('#rightAreaBtn').hide();
 };
 
 $.Billday.prototype.updateSettings = function(ajaxUpdate, changedArr) {
@@ -38,9 +38,9 @@ $.Billday.prototype.updateSettings = function(ajaxUpdate, changedArr) {
 
 $.Billday.prototype.changedArray = function() {
     let ret = [];
-    $.each($('#mainGrid select[data-rowid]'), function(i, item) {
+    $.each($('select[data-rowid]', MainGridSelector), function(i, item) {
         let rowId = $(this).data('rowid');
-        let rowData = $('#mainGrid').jqGrid('getRowData', rowId);
+        let rowData = EgovJqGridApi.getMainGridRowData(rowId);
         if (rowData.bill_seq !== $(item).val()) {
             rowData.bill_seq = $(item).val();
             ret.push(rowData);

@@ -62,7 +62,7 @@
 <script type="text/javascript">
     $.BillInfo = function () {
         EgovIndexApi.numberOnly();
-        EgovJqGridApi.popGrid('billInfoGrid', [
+        EgovJqGridApi.defaultGrid('billInfoGrid', [
             {label: '현금영수증코드', name: 'bill_seq', key: true, hidden: true},
             {label: '발급구분코드', name: 'bill_dvsn', hidden: true },
             {label: '대표자명', name: 'bill_ceo_name', hidden: true },
@@ -79,19 +79,19 @@
         ], null, []).jqGrid('setGridParam', {
             onSelectRow: function (rowId, status, e) {
                 let $popup = BillInfo.getPopup();
-                let rowData = $('#billInfoGrid').jqGrid('getRowData', rowId);
-                $('#spModeNm', $popup).text('수정');
-                $(':hidden[name=mode]', $popup).val('Edt');
-                $(':hidden[name=billSeq]', $popup).val(rowData.bill_seq);
-                $('select[name=billDvsn]', $popup).val(rowData.bill_dvsn);
-                $(':text[name=billCeoName]', $popup).val(rowData.bill_ceo_name);
-                $(':text[name=billAddr]', $popup).val(rowData.bill_addr);
-                $(':text[name=billTel]', $popup).val(rowData.bill_tel);
-                $(':text[name=billEmail]', $popup).val(rowData.bill_email);
-                $(':text[name=billNum]', $popup).val(rowData.bill_num);
-                $(':text[name=billCorpName]', $popup).val(rowData.bill_corp_name);
-                $(':text[name=billUserId]', $popup).val(rowData.bill_user_id);
-                $('#divBillInsert', $popup).show();
+                let rowData = EgovJqGridApi.getDefaultGridRowData('billInfoGrid', rowId);
+                $popup.find('#spModeNm').text('수정');
+                $popup.find(':hidden[name=mode]').val('Edt');
+                $popup.find(':hidden[name=billSeq]').val(rowData.bill_seq);
+                $popup.find('select[name=billDvsn]').val(rowData.bill_dvsn);
+                $popup.find(':text[name=billCeoName]').val(rowData.bill_ceo_name);
+                $popup.find(':text[name=billAddr]').val(rowData.bill_addr);
+                $popup.find(':text[name=billTel]').val(rowData.bill_tel);
+                $popup.find(':text[name=billEmail]').val(rowData.bill_email);
+                $popup.find(':text[name=billNum]').val(rowData.bill_num);
+                $popup.find(':text[name=billCorpName]').val(rowData.bill_corp_name);
+                $popup.find(':text[name=billUserId]').val(rowData.bill_user_id);
+                $popup.find('#divBillInsert').show();
             }
         });
     };
@@ -102,50 +102,50 @@
 
     $.BillInfo.prototype.bPopup = function (centerCd, centerNm) {
         let $popup = this.getPopup();
-        $('#spCenterNm', $popup).text(centerNm);
-        $(':hidden[name=centerCd]', $popup).val(centerCd);
+        $popup.find('#spCenterNm').text(centerNm);
+        $popup.find(':hidden[name=centerCd]').val(centerCd);
         this.selectList();
         this.createView();
         $popup.bPopup();
     };
 
     $.BillInfo.prototype.selectList = function() {
-        EgovJqGridApi.popGridAjax('billInfoGrid', '/backoffice/bld/billInfoListAjax.do', {
-            centerCd: $(':hidden[name=centerCd]', BillInfo.getPopup()).val()
+        let $popup = this.getPopup();
+        EgovJqGridApi.defaultGridAjax('billInfoGrid', '/backoffice/bld/billInfoListAjax.do', {
+            centerCd: $popup.find(':hidden[name=centerCd]').val()
         });
     };
 
     $.BillInfo.prototype.createView = function () {
         let $popup = this.getPopup();
-        $('#spModeNm', $popup).text('등록');
-        $(':hidden[name=mode]', $popup).val('Ins');
-        $(':hidden[name=billSeq]', $popup).val('');
-        $('select[name=billDvsn] option:first', $popup).prop('selected', true);
-        $(':text', $popup).val('');
-        $('#divBillInsert', $popup).hide();
-        $("#billInfoGrid").jqGrid("resetSelection");
+        $popup.find('#spModeNm').text('등록');
+        $popup.find(':hidden[name=mode]').val('Ins');
+        $popup.find(':hidden[name=billSeq]').val('');
+        $popup.find('select[name=billDvsn] option:first').prop('selected', true);
+        $popup.find(':text').val('');
+        $popup.find('#divBillInsert').hide();
+        EgovJqGridApi.selection('billInfoGrid');
     };
 
     $.BillInfo.prototype.save = function() {
         let $popup = this.getPopup();
-        let $form = $popup.find('form:first');
-        if ($form.find('select[name=billDvsn]').val() === '') {
+        if ($popup.find('select[name=billDvsn]').val() === '') {
             toastr.warning('발급구분을 선택해 주세요.');
             return;
         }
-        if ($form.find(':text[name=billNum]').val() === '') {
+        if ($popup.find(':text[name=billNum]').val() === '') {
             toastr.warning('사업자번호를 입력해 주세요.');
             return;
         }
-        if ($form.find(':text[name=billCorpName]').val() === '') {
+        if ($popup.find(':text[name=billCorpName]').val() === '') {
             toastr.warning('법인명을 입력해 주세요.');
             return;
         }
-        bPopupConfirm('현금영수증 '+ ($form.find(':hidden[name=mode]').val() === 'Ins' ? '등록' : '수정'), '저장 하시겠습니까?', function() {
+        bPopupConfirm('현금영수증 '+ ($popup.find(':hidden[name=mode]').val() === 'Ins' ? '등록' : '수정'), '저장 하시겠습니까?', function() {
             EgovIndexApi.apiExecuteJson(
                 'POST',
                 '/backoffice/bld/billInfoUpdate.do',
-                $form.serializeObject(),
+                $popup.find('form:first').serializeObject(),
                 null,
                 function(json) {
                     toastr.success(json.message);
@@ -164,7 +164,7 @@
             EgovIndexApi.apiExecuteJson(
                 'POST',
                 '/backoffice/bld/billInfoDelete.do', {
-                    centerCd: $(':hidden[name=centerCd]', $popup).val(),
+                    centerCd: $popup.find(':hidden[name=centerCd]').val(),
                     billSeq: key
                 },
                 null,

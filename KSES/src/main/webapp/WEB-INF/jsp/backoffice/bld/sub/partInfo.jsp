@@ -54,24 +54,28 @@
     $.PartInfo.prototype.bPopup = function(partCd) {
         let $popup = this.getPopup();
         let $form = $popup.find('form:first');
-        $(':hidden[name=centerCd]', $popup).val($('#centerGrid').jqGrid('getGridParam', 'selrow'));
-        $(':hidden[name=floorCd]', $popup).val($('#mainGrid').jqGrid('getGridParam', 'selrow'));
+        let centerCd = EgovJqGridApi.getDefaultGridSelectionId('centerGrid');
+        let floorCd = EgovJqGridApi.getMainGridSingleSelectionId();
+        $popup.find(':hidden[name=centerCd]').val(centerCd);
+        $popup.find(':hidden[name=floorCd]').val(floorCd);
         if (partCd === undefined || partCd === null) {
             $popup.find('h2:first').text('구역 등록');
+            $popup.find('#popupLeftBtn').hide();
             $form.find(':hidden[name=mode]').val('Ins');
             $form.find(':hidden[name=partCd]').val('');
             $form.find(':text').val('');
             $form.find('select[name=partClassSeq]').val('');
             $form.find(':text[name=partOrder]').val('0');
             $form.find(':radio[name=useYn]:first').prop('checked', true);
-            $popup.find('#popupLeftBtn').hide();
         } else {
             EgovIndexApi.apiExecuteJson(
                 'GET',
                 '/backoffice/bld/partDetail.do', {
                     partCd: partCd
                 },
-                null,
+                function(xhr) {
+                    $popup.find('#popupLeftBtn').show();
+                },
                 function(json) {
                     let data = json.result;
                     $popup.find('h2:first').text(data.part_nm +' 구역 수정');
@@ -81,7 +85,6 @@
                     $form.find('select[name=partClassSeq]').val(data.part_class_seq);
                     $form.find(':text[name=partOrder]').val(data.part_order);
                     $form.find(':radio[name=useYn][value='+ data.use_yn +']').prop('checked', true);
-                    $popup.find('#popupLeftBtn').show();
                 },
                 function(json) {
                     toastr.warning(json.message);
@@ -94,8 +97,6 @@
     $.PartInfo.prototype.partClassComboList = function(centerCd) {
         let $popup = this.getPopup();
         let $partClassSeq = $('select[name=partClassSeq]', $popup);
-        $partClassSeq.empty();
-        $partClassSeq.append('<option value="">선택</option>');
         EgovIndexApi.apiExecuteJson(
             'POST',
             '/backoffice/bld/partClassListAjax.do', {
@@ -103,7 +104,10 @@
                 pageIndex: '1',
                 pageUnit: '10'
             },
-            null,
+            function(xhr) {
+                $partClassSeq.empty();
+                $partClassSeq.append('<option value="">선택</option>');
+            },
             function(json) {
                 let list = json.resultlist;
                 for (let item of list) {
@@ -118,20 +122,18 @@
 
     $.PartInfo.prototype.save = function() {
         let $popup = this.getPopup();
-        let $form = $popup.find('form:first');
-        let formData = new FormData($form[0]);
-        if ($form.find(':text[name=partNm]').val() === '') {
+        if ($popup.find(':text[name=partNm]').val() === '') {
             toastr.warning('구역명을 입력하세요.');
             return false;
         }
-        if ($form.find('select[name=partClassSeq]').val() === '') {
+        if ($popup.find('select[name=partClassSeq]').val() === '') {
             toastr.warning('구역등급을 선택하세요.');
             return false;
         }
         bPopupConfirm('구역 정보 저장', '저장 하시겠습니까?', function() {
             EgovIndexApi.apiExcuteMultipart(
                 '/backoffice/bld/partUpdate.do',
-                formData,
+                new FormData($popup.find('form:first')[0]),
                 null,
                 function(json) {
                     toastr.success(json.message);
@@ -151,7 +153,7 @@
             EgovIndexApi.apiExecuteJson(
                 'POST',
                 '/backoffice/bld/partInfoDelete.do', {
-                    partCd: $(':hidden[name=partCd]', $popup).val(),
+                    partCd: $popup.find(':hidden[name=partCd]').val()
                 },
                 null,
                 function(json) {

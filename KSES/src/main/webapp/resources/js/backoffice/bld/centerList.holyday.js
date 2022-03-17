@@ -16,7 +16,7 @@ $.Holyday.prototype.mainGridSettings = function() {
         cellEdit: true,
         cellsubmit: 'clientArray'
     });
-    $('#rightAreaBtn').show();
+    $('#rightAreaBtn').hide();
 };
 
 $.Holyday.prototype.updateSettings = function(ajaxUpdate, changedArr) {

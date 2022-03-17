@@ -140,7 +140,7 @@
 	        }
 		], true, false, fnSearch);
 		// 휴일 적용 센터 JqGrid 정의
-		EgovJqGridApi.popGrid('popGrid', [
+		EgovJqGridApi.defaultGrid('popGrid', [
 			{ label: '지점코드', name: 'center_cd', key: true, hidden: true },
 			{ label: '적용지점', name: 'center_nm', align: 'center', sortable: false },
 			{ label: '적용휴일명', name: 'holy_nm', align: 'center', sortable: false }
@@ -233,7 +233,7 @@
 			$form.find(':radio[name=useYn]:first').prop('checked', true);
 		}
 		else {
-			let rowData = $('#mainGrid').jqGrid('getRowData', rowId);
+			let rowData = EgovJqGridApi.getMainGridRowData(rowId);
 			$popup.find('h2:first').text('휴일정보 수정');
 			$popup.find('span#sp_Unqi').hide();
 			$popup.find('#popCenterList').show();
@@ -249,19 +249,20 @@
 	}
 	// 중복 휴일 체크
 	function fnIdCheck() {
-		let $form = $('[data-popup=bas_holiday_add] form:first');
-		if ($form.find(':text[name=holyDt]').val() === '') {
+		let $popup = $('[data-popup=bas_holiday_add]');
+		let rowId = $popup.find(':text[name=holyDt]').val();
+		if (rowId === '') {
 			toastr.warning('휴일일자를 입력해 주세요.');
 			return;
 		}
 		EgovIndexApi.apiExecuteJson(
 			'GET',
 			'/backoffice/bas/holyDtCheck.do', {
-				holyDt: $form.find(':text[name=holyDt]').val()
+				holyDt: rowId
 			},
 			null,
 			function(json) {
-				$form.find(':hidden#idCheck').val('Y');
+				$popup.find(':hidden#idCheck').val('Y');
 				toastr.info(json.message);
 			},
 			function(json) {
@@ -272,24 +273,23 @@
 	// 휴일 등록
 	function fnHolyInsert() {
 		let $popup = $('[data-popup=bas_holiday_add]');
-		let $form = $popup.find('form:first');
-		if ($form.find(':text[name=holyDt]').val() === '') {
+		if ($popup.find(':text[name=holyDt]').val() === '') {
 			toastr.warning('휴일일자를 입력해 주세요.');
 			return;
 		}
-		if ($form.find(':hidden#idCheck').val() !== 'Y') {
+		if ($popup.find(':hidden#idCheck').val() !== 'Y') {
 			toastr.warning('중복체크가 안되었습니다.');
 			return;	
 		}
-		if ($form.find(':text[name=holyNm]').val() === '') {
+		if ($popup.find(':text[name=holyNm]').val() === '') {
 			toastr.warning('휴일명을 입력해 주세요.');
 			return;
 		}
 		bPopupConfirm('휴일일자 등록', '등록 하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(
 				'POST',
-				'/backoffice/bas/holyUpdate.do', 
-				$form.serializeObject(),
+				'/backoffice/bas/holyUpdate.do',
+				$popup.find('form:first').serializeObject(),
 				null,
 				function(json) {
 					toastr.success(json.message);
@@ -305,17 +305,16 @@
 	// 휴일 수정
 	function fnHolyUpdate() {
 		let $popup = $('[data-popup=bas_holiday_add]');
-		let $form = $popup.find('form:first');
-		$form.find(':text[name=holyDt]').removeAttr('disabled');
-		if ($form.find(':text[name=holyNm]').val() === '') {
+		if ($popup.find(':text[name=holyNm]').val() === '') {
 			toastr.warning('휴일명을 입력해 주세요.');
 			return;
 		}
-		bPopupConfirm('휴일일자 수정', '<b>'+ $form.find(':text[name=holyDt]').val() +'</b> 수정 하시겠습니까?', function() {
+		let rowId = $popup.find(':text[name=holyDt]').removeAttr('disabled').val();
+		bPopupConfirm('휴일일자 수정', '<b>'+ rowId +'</b> 수정 하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(
 				'POST',
-				'/backoffice/bas/holyUpdate.do', 
-				$form.serializeObject(),
+				'/backoffice/bas/holyUpdate.do',
+				$popup.find('form:first').serializeObject(),
 				null,
 				function(json) {
 					toastr.success(json.message);
@@ -330,7 +329,7 @@
 	}
 	// 휴일 삭제
 	function fnHolyDelete() {
-		let rowIds = $('#mainGrid').jqGrid('getGridParam', 'selarrrow');
+		let rowIds = EgovJqGridApi.getMainGridMutipleSelectionIds();
 		if (rowIds.length === 0) {
 			toastr.warning('목록을 선택해 주세요.');
 			return false;
@@ -354,17 +353,16 @@
 	}
 	// 휴일 적용 지점 목록
 	function fnCenterHolyInfoSearch(pageNo) {
-		let $popup = $('[data-popup=bas_holiday_add]');
 		let params = {
 			pageIndex: pageNo,
 			pageUnit: '5',
-			holyDt: $popup.find(':text[name=holyDt]').val()
+			holyDt: $('[data-popup=bas_holiday_add]').find(':text[name=holyDt]').val()
 		};
-		EgovJqGridApi.popGridAjax('popGrid', '/backoffice/bas/holyCenterListAjax.do', params, fnCenterHolyInfoSearch);
+		EgovJqGridApi.defaultGridAjax('popGrid', '/backoffice/bas/holyCenterListAjax.do', params, fnCenterHolyInfoSearch);
 	}
 	// 엑셀 다운로드
 	function fnExcelDownload() {
-		if ($("#mainGrid").getGridParam("reccount") === 0) {
+		if ($(MainGridSelector).getGridParam("reccount") === 0) {
 			toastr.warning('다운받으실 데이터가 없습니다.');
 			return;
 		}
@@ -403,8 +401,9 @@
 				}
 				let wb = XLSX.utils.book_new();
 				XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(excelData), 'sheet1');
-				var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
-				saveAs(new Blob([EgovIndexApi.s2ab(wbout)],{ type: 'application/octet-stream' }), '휴일관리.xlsx');
+				saveAs(new Blob([EgovIndexApi.s2ab(
+					XLSX.write(wb, { bookType: 'xlsx', type: 'binary' })
+				)],{ type: 'application/octet-stream' }), '휴일관리.xlsx');
 			},
 			function(json) {
 				toastr.error(json.message);
@@ -413,14 +412,14 @@
 	}
 	// 전체지점 휴일 등록
 	function fnHolyInfoCenterApply() {
-		let rowIds = $('#mainGrid').jqGrid('getGridParam', 'selarrrow');
+		let rowIds = EgovJqGridApi.getMainGridMutipleSelectionIds();
 		if (rowIds.length === 0) {
 			toastr.warning('목록을 선택해 주세요.');
 			return false;
 		}
 		let params = new Array();
-		for (var rowId of rowIds) {
-			let rowData = $('#mainGrid').jqGrid('getRowData', rowId);
+		for (let rowId of rowIds) {
+			let rowData = EgovJqGridApi.getMainGridRowData(rowId);
 			params.push({
 				holyDt: rowData.holy_dt,
 				holyNm: rowData.holy_nm

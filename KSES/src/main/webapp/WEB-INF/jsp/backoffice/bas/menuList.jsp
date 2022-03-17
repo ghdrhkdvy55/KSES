@@ -152,17 +152,18 @@
 						icon: '/resources/img/sub_add.png',
 						action: function(data) {
 							let $tree = $.jstree.reference(data.reference);
-							let node = $tree.get_selected(true)[0];
-							if (node.data === null) {
+							let selectedNode = $tree.get_selected(true)[0];
+							if (selectedNode.data === null) {
 								toastr.warning('저장된 메뉴만 하위메뉴를 생성할 수 있습니다.');
 								return;
 							}
-							if (node.data.level === 3) {
+							if (selectedNode.data.level === 3) {
 								toastr.warning('더 이상 하위메뉴를 생성할 수 없습니다.');
 								return;
 							}
-							node = $tree.create_node(node.id, { type: 'default' }, 'last');
-							$tree.edit(node);
+							$tree.edit(
+								$tree.create_node(selectedNode.id, { type: 'default' }, 'last')
+							);
 						}
 					},
 					'delete': {
@@ -172,17 +173,17 @@
 						icon: '/resources/img/sub_del.png',
 						action: function(data) {
 							let $tree = $.jstree.reference(data.reference);
-							let node = $tree.get_selected(true)[0];
-							if (node.data === null) {
-								$tree.delete_node(node.id);
+							let selectedNode = $tree.get_selected(true)[0];
+							if (selectedNode.data === null) {
+								$tree.delete_node(selectedNode.id);
 								$('.input_form .top10 .grayBtn').trigger('click');
 								return;
 							}
-							if (node.children.length > 0) {
+							if (selectedNode.children.length > 0) {
 								toastr.warning('하위 메뉴가 있는 메뉴는 제거할 수 없습니다.');
 								return;
 							}
-							fnMenuInfoDelete(node);
+							fnMenuInfoDelete(selectedNode);
 						}
 					}
 				}
@@ -193,7 +194,7 @@
 			$(this).jstree('select_node', rootId);
 		}).on('select_node.jstree', function(e, data) { // 노드 선택 시 -> 메뉴 수정 
 			let ret = data.node.data;
-			if (data.node.data === null) {
+			if (ret === null) {
 				return;
 			}
 			let $form = $('.input_form form');
@@ -211,7 +212,7 @@
 			$form.find('button.grayBtn').hide();
 			$form.find('span#sp_Unqi').hide();
 		}).on('rename_node.jstree', function(e, data, o) { // 노드 이름 변경 시 -> 메뉴 등록
-			let parent = data.instance.get_node(data.node.parent);
+			let parentNode = data.instance.get_node(data.node.parent);
 			let $form = $('.input_form form');
 			$('#detail_tit').html('메뉴 등록');
 			$form.find(':hidden[name=mode]').val('Ins');
@@ -219,42 +220,42 @@
 			$form.find(':text,textarea').val('');
 			$form.find(':text[name=menuNo]').removeAttr('readonly');
 			$form.find(':text[name=menuNm]').val(data.text);
-			$form.find(':hidden[name=upperMenuNo]').val(parent.id);
-			$form.find(':text[name=upperMenuNm]').val(parent.text);
+			$form.find(':hidden[name=upperMenuNo]').val(parentNode.id);
+			$form.find(':text[name=upperMenuNm]').val(parentNode.text);
 			$form.find(':text[name=menuOrdr]').val('0');
 			$form.find('button.blueBtn').off('click').click(fnMenuInfoInsert);
 			$form.find('button.grayBtn').show();
 			$form.find('span#sp_Unqi').show();
 		});
 		// 팝업 JqGrid 정의
-		EgovJqGridApi.popGrid('popGrid', [
+		EgovJqGridApi.defaultGrid('popGrid', [
 			{ label: '파일명', name: 'progrm_file_nm', align: 'center', sortable: false, key: true },
 			{ label: '한글명',  name: 'progrm_koreannm', align: 'left', sortable: false },
 			{ label: '저장경로', name: 'progrm_stre_path', align: 'left', sortable: false }
 		], 'popPager').jqGrid('setGridParam', {
 			ondblClickRow: function(rowId, iRow, iCol, e) {
-				let rowData = $(this).jqGrid('getRowData', rowId);
+				let rowData = EgovJqGridApi.getDefaultGridRowData('popGrid', rowId);
 				fnProgramSelect(rowData);
 			}
 		});
 		// 프로그램 선택 팝업 [선택] 버튼 클릭 시 
 		$('[data-popup=bas_progrm_create] .blueBtn').click(function(e) {
-			let rowId = $('#popGrid').jqGrid('getGridParam', 'selrow');
-			let rowData = $('#popGrid').jqGrid('getRowData', rowId);
+			let rowData = EgovJqGridApi.getDefaultGridSelectionData('popGrid');
 			fnProgramSelect(rowData);
 		});
 		fnJstreeRefresh();
 	});
 	// 전체 메뉴 정보 얻기 -> 메뉴 트리 새로 고침
 	function fnJstreeRefresh() {
-		$('#jstree').jstree(true).deselect_all();
 		EgovIndexApi.apiExecuteJson(
 			'POST',
 			'/backoffice/bas/menuListAjax.do',{
 				pageIndex: '1',
 				pageUnit: '1000'	
 			},
-			null,
+			function(xhr) {
+				$('#jstree').jstree(true).deselect_all();
+			},
 			function(json) {
 				let arr = new Array();
 				for (var m of json.resultlist) {
@@ -280,14 +281,15 @@
 	// 메뉴아이디 중복 체크
 	function fnIdCheck() {
 		let $form = $('.input_form form');
-		if ($form.find(':text[name=menuNo]').val() === '') {
+		let rowId = $form.find(':text[name=menuNo]').val();
+		if (rowId === '') {
 			toastr.warning('메뉴아이디를 입력해 주세요.');
 			return;
 		}
 		EgovIndexApi.apiExecuteJson(
 			'GET',
 			'/backoffice/bas/menuNoCheck.do', {
-				'menuNo': $form.find(':text[name=menuNo]').val()
+				'menuNo': rowId
 			},
 			null,
 			function(json) {
@@ -337,8 +339,7 @@
 			toastr.warning('선택된 프로그램 정보가 없습니다.');
 			return;
 		}
-		let node = $('#jstree').jstree('get_selected',true)[0];
-		let nodeData = node.data;
+		let nodeData = $('#jstree').jstree('get_selected',true)[0].data;
 		bPopupConfirm('메뉴 수정', '<b>'+ $.trim(nodeData.menu_nm) +'</b>을(를) 수정 하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(
 				'POST',
@@ -389,14 +390,13 @@
 			pageUnit: '5',
 			searchKeyword: $('[data-popup=bas_progrm_create] #searchKeyword').val()
 		};
-		EgovJqGridApi.popGridAjax('popGrid', '/backoffice/bas/progrmListAjax.do', params, fnProgramSearch);
+		EgovJqGridApi.defaultGridAjax('popGrid', '/backoffice/bas/progrmListAjax.do', params, fnProgramSearch);
 	}
 	// 프로그램 선택 시
 	function fnProgramSelect(rowData) {
 		let $popup = $('[data-popup=bas_progrm_create]');
-		let $form = $('.input_form form');
-		$form.find(':hidden[name=progrmFileNm]').val(rowData.progrm_file_nm);
-		$form.find(':text[name=progrmKoreannm]').val(rowData.progrm_koreannm);
+		$popup.find(':hidden[name=progrmFileNm]').val(rowData.progrm_file_nm);
+		$popup.find(':text[name=progrmKoreannm]').val(rowData.progrm_koreannm);
 		$popup.bPopup().close();
 	}
 	

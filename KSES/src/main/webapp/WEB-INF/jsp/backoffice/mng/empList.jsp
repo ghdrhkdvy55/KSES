@@ -53,7 +53,7 @@
 		</div>
 		<div class="right_box">
 			<a href="javascript:fnEmpInfo();" class="blueBtn">사용자 등록</a>
-<%--			<a href="javascript:fnEmpDelete();" class="grayBtn">삭제</a>--%>
+			<a href="javascript:fnEmpDelete();" class="grayBtn">삭제</a>
 		</div>
 		<div class="clear"></div>
 		<div class="whiteBox">
@@ -143,9 +143,6 @@
 			</table>
 			</form>
 		</div>
-		<div id="popupLeftBtn" style="float:left;display:none;">
-			<a href="javascript:fnEmpDelete();" class="grayBtn" style="font-size:16px;padding: 6px 24px;">삭제</a>
-		</div>
 		<popup-right-button />
 	</div>
 </div>
@@ -206,13 +203,12 @@
 			$form.find('select[name=empState]').removeAttr('disabled');
 		}
 		else {
-			let rowData = $('#mainGrid').jqGrid('getRowData', rowId);
+			let rowData = EgovJqGridApi.getMainGridRowData(rowId);
 			// 직원일 경우 수정 불가
 			if (rowData.last_updusr_id === 'BATCH') {
 				$popup.find('h2:first').text('사용자 상세');
 				$popup.find('tr#trPassword').hide();
 				$popup.find('button.blueBtn').off('click').hide();
-				$popup.find('#popupLeftBtn').hide();
 				$form.find(':text').prop('readonly', true);
 				$form.find(':radio[name=useYn]').prop('disabled', true);
 				$form.find('select[name=deptCd]').prop('disabled', true);
@@ -223,7 +219,6 @@
 				$popup.find('h2:first').text('사용자 수정');
 				$popup.find('tr#trPassword').show();
 	 			$popup.find('button.blueBtn').off('click').click(fnEmpUpdate).show();
-				$popup.find('#popupLeftBtn').show();
 	 			$form.find('select[name=useYn]').removeAttr('disabled');
 	 			$form.find('select[name=deptCd]').removeAttr('disabled');
 	 			$form.find('select[name=empState]').removeAttr('disabled');
@@ -245,21 +240,22 @@
 		}
 		$popup.bPopup();
 	}
-	// 중복 휴일 체크
+	// 중복 아이디 체크
 	function fnIdCheck() {
-		let $form = $('[data-popup=mng_emp_add] form:first');
-		if ($form.find(':text[name=empNo]').val() === '') {
+		let $popup = $('[data-popup=mng_emp_add]');
+		let rowId = $popup.find(':text[name=empNo]').val();
+		if (rowId === '') {
 			toastr.warning('사번을 입력해 주세요.');
 			return;
 		}
 		EgovIndexApi.apiExecuteJson(
 			'GET',
 			'/backoffice/mng/empNoCheck.do', {
-				empNo: $form.find(':text[name=empNo]').val()
+				empNo: rowId
 			},
 			null,
 			function(json) {
-				$form.find(':hidden#idCheck').val('Y');
+				$popup.find(':hidden#idCheck').val('Y');
 				toastr.info(json.message);
 			},
 			function(json) {
@@ -267,46 +263,59 @@
 			}
 		);
 	}
-	// 사용자 등록
-	function fnEmpInsert() {
-		let $popup = $('[data-popup=mng_emp_add]');
-		let $form = $popup.find('form:first');
-		if ($form.find(':text[name=empNo]').val() === '') {
+	function fnEmpSaveValidation($popup) {
+		if ($popup.find(':text[name=empNo]').val() === '') {
 			toastr.warning('사번을 입력해 주세요.');
-			return;
+			return false;
 		}
-		if ($form.find(':hidden#idCheck').val() !== 'Y') {
+		if ($popup.find(':hidden#idCheck').val() !== 'Y') {
 			toastr.warning('중복체크가 안되었습니다.');
-			return;	
+			return false;
 		}
-		if ($form.find(':text[name=empNm]').val() === '') {
+		if ($popup.find(':text[name=empNm]').val() === '') {
 			toastr.warning('이름을 입력해 주세요.');
-			return;
+			return false;
 		}
-		let password = $form.find(':password[name=empPassword]').val();
+		let password = $popup.find(':password[name=empPassword]').val();
 		if (password === '') {
 			toastr.warning('비밀번호를 입력해 주세요.');
-			return;
+			return false;
 		} else {
 			if (!EgovIndexApi.vaildPassword(password)) {
 				toastr.warning('비밀번호가 유효하지 않습니다.');
-				return;
+				return false;
 			}
-			let password2 = $form.find(':password[name=empPassword2]').val();
+			let password2 = $popup.find(':password[name=empPassword2]').val();
 			if (password2 === '') {
 				toastr.warning('비밀번호 확인을 입력해 주세요.');
-				return;
+				return false;
 			}
 			if ($.trim(password) !== $.trim(password2)) {
 				toastr.warning('비밀번호가 일치하지 않습니다. ');
-				return;
+				return false;
 			}
 		}
+		let email = $popup.find('text[name=empEmail]').val();
+		if (email === '') {
+			toastr.warning('이메일을 입력해주세요.');
+			return false;
+		} else {
+			if (!EgovIndexApi.validEmail(email)) {
+				toastr.warning('이메일 형식에 맞지 않습니다.');
+				return false;
+			}
+		}
+		return true;
+	}
+	// 사용자 등록
+	function fnEmpInsert() {
+		let $popup = $('[data-popup=mng_emp_add]');
+		fnEmpSaveValidation($popup);
 		bPopupConfirm('사용자 등록', '등록 하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(
 				'POST',
-				'/backoffice/mng/empUpdate.do', 
-				$form.serializeObject(),
+				'/backoffice/mng/empUpdate.do',
+				$popup.find('form:first').serializeObject(),
 				null,
 				function(json) {
 					toastr.success(json.message);
@@ -322,45 +331,12 @@
 	// 사용자 수정
 	function fnEmpUpdate() {
 		let $popup = $('[data-popup=mng_emp_add]');
-		let $form = $popup.find('form:first');
-		if ($form.find(':text[name=empNm]').val() === '') {
-			toastr.warning('이름을 입력해 주세요.');
-			return;
-		}
-		let password = $form.find(':password[name=empPassword]').val();
-		if (password === '') {
-			toastr.warning('비밀번호를 입력해 주세요.');
-			return;
-		} else {
-			if (!EgovIndexApi.vaildPassword(password)) {
-				toastr.warning('비밀번호가 유효하지 않습니다.');
-				return;
-			}
-			let password2 = $form.find(':password[name=empPassword2]').val();
-			if (password2 === '') {
-				toastr.warning('비밀번호 확인을 입력해 주세요.');
-				return;
-			}
-			if ($.trim(password) !== $.trim(password2)) {
-				toastr.warning('비밀번호가 일치하지 않습니다. ');
-				return;
-			}
-		}
-		let email = $form.find('text[name=empEmail]').val();
-		if (email === '') {
-			toastr.warning('이메일을 입력해주세요.');
-			return;
-		} else {
-			if (!EgovIndexApi.validEmail(email)) {
-				toastr.warning('이메일 형식에 맞지 않습니다.');
-				return;
-			}
-		}
-		bPopupConfirm('사용자 수정', '<b>'+ $form.find(':text[name=empNo]').val() +'</b> 수정 하시겠습니까?', function() {
+		fnEmpSaveValidation($popup);
+		bPopupConfirm('사용자 수정', '<b>'+ $popup.find(':text[name=empNo]').val() +'</b> 수정 하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(
 				'POST',
-				'/backoffice/mng/empUpdate.do', 
-				$form.serializeObject(),
+				'/backoffice/mng/empUpdate.do',
+				$popup.find('form:first').serializeObject(),
 				null,
 				function(json) {
 					toastr.success(json.message);
@@ -376,7 +352,11 @@
 	// 사용자 삭제
 	function fnEmpDelete() {
 		let $popup = $('[data-popup=mng_emp_add]');
-		let rowId = $popup.find(':text[name=empNo]').val();
+		let rowId = EgovJqGridApi.getMainGridSingleSelectionId();
+		if (rowId === null) {
+			toastr.warning('목록을 선택해 주세요.');
+			return;
+		}
 		bPopupConfirm('사용자 삭제', '<b>'+ rowId +'</b> 를(을) 삭제 하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(
 				'POST',

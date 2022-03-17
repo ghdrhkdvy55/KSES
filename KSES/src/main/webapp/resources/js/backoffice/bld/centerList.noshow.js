@@ -16,7 +16,7 @@ $.Noshow.prototype.mainGridSettings = function() {
         cellEdit: true,
         cellsubmit: 'clientArray'
     });
-    $('#rightAreaBtn').show();
+    $('#rightAreaBtn').hide();
 };
 
 $.Noshow.prototype.updateSettings = function(ajaxUpdate, changedArr) {

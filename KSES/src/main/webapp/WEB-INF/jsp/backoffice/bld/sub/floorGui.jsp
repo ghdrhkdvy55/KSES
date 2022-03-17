@@ -52,7 +52,7 @@
     const FloorGuiGridId = 'guiGrid';
     const FloorGuiGridSelector = '#'+ FloorGuiGridId;
     $.FloorGui = function() {
-        EgovJqGridApi.popGrid(FloorGuiGridId, [
+        EgovJqGridApi.defaultGrid(FloorGuiGridId, [
             { label: '구역코드', name: 'part_cd', key: true, hidden: true },
             { label: '구역명', name: 'part_nm', align: 'center', sortable: false },
             { label: 'TOP', name: 'part_mini_top', align: 'center', sortable: false, editable: true, editoptions: this.gridEditOptions(4) },
@@ -74,7 +74,6 @@
                         }
                     }
                     return '<select data-rowid="'+row.part_cd+'" style="background-color:'+colorText+'">'+innerHtml+'</select>';
-
                 }
             },
         ], null, []).jqGrid('setGridParam', {
@@ -116,14 +115,19 @@
 
     $.FloorGui.prototype.initialize = function(floorCd) {
         let $panel = this.getGui();
-        let centerGridSelectedRowId = $('#centerGrid').jqGrid('getGridParam', 'selrow');
-        $('#centerNm', $panel).text($('#centerGrid').jqGrid('getRowData', centerGridSelectedRowId).center_nm);
+        let rowId = EgovJqGridApi.getDefaultGridSelectionId('centerGrid');
+        let rowData = EgovJqGridApi.getDefaultGridRowData('centerGrid', rowId);
+        $panel.find('#centerNm').text(rowData.center_nm);
         this.initMap($panel);
-        this.setComboList(centerGridSelectedRowId, floorCd);
-        this.getDetail('/backoffice/bld/floorInfoDetail.do', { floorCd: floorCd }, function(data) {
-            $('#floorNm', $panel).text(data.floor_nm);
-            FloorGui.setMap($panel, data.floor_map1);
-        });
+        this.setComboList(rowId, floorCd);
+        this.getDetail('/backoffice/bld/floorInfoDetail.do', {
+                floorCd: floorCd
+            },
+            function(data) {
+                $panel.find('#floorNm').text(data.floor_nm);
+                FloorGui.setMap($panel, data.floor_map1);
+            }
+        );
         this.initLayer($panel);
         this.getFloorPartList(floorCd, this.drawFloorPart);
         this.open();
@@ -132,17 +136,20 @@
     $.FloorGui.prototype.setComboList = function(centerCd, floorCd) {
         let $panel = this.getGui();
         let $select = $('#searchFloor', $panel);
-        $select.empty();
         EgovIndexApi.apiExecuteJson(
             'GET',
             '/backoffice/bld/floorComboInfo.do', {
                 centerCd: centerCd
             },
-            null,
+            function(xhr) {
+                $select.empty();
+            },
             function(json) {
                 let list = json.resultlist;
                 for (let item of list) {
-                    let $option = $('<option value="'+ item.floor_cd +'">'+ item.floor_nm +'</option>').data('item', item).appendTo($select);
+                    let $option = $(
+                        '<option value="'+ item.floor_cd +'">'+ item.floor_nm +'</option>'
+                    ).data('item', item).appendTo($select);
                     if (floorCd === item.floor_cd) {
                         $option.prop('selected', true);
                     }
@@ -242,9 +249,11 @@
                     EgovJqGridApi.selection(FloorGuiGridId);
                 },
                 resize: function(e, ui) {
-                    let rowId = $(FloorGuiGridSelector).jqGrid('getGridParam', 'selrow');
-                    $(FloorGuiGridSelector).jqGrid('setCell', rowId, 'part_mini_width', Math.floor(ui.size.width))
-                        .jqGrid('setCell', rowId, 'part_mini_height', Math.floor(ui.size.height));
+                    let rowId = EgovJqGridApi.getDefaultGridSelectionId(FloorGuiGridId);
+                    $(FloorGuiGridSelector).jqGrid('setRowData', rowId, {
+                        part_mini_width: Math.floor(ui.size.width),
+                        part_mini_height: Math.floor(ui.size.height)
+                    });
                     FloorGui.gridCellEdited(rowId);
                 }
             }).rotatable({
@@ -258,7 +267,7 @@
                     EgovJqGridApi.selection(FloorGuiGridId);
                 },
                 rotate: function(e, ui) {
-                    let rowId = $(FloorGuiGridSelector).jqGrid('getGridParam', 'selrow');
+                    let rowId = EgovJqGridApi.getDefaultGridSelectionId(FloorGuiGridId);
                     $(FloorGuiGridSelector).jqGrid('setCell', rowId, 'part_mini_rotate', Math.floor(ui.angle.degrees));
                     FloorGui.gridCellEdited(rowId);
                 }
@@ -272,9 +281,11 @@
                     EgovJqGridApi.selection(FloorGuiGridId);
                 },
                 drag: function(e, ui) {
-                    let rowId = $(FloorGuiGridSelector).jqGrid('getGridParam', 'selrow');
-                    $(FloorGuiGridSelector).jqGrid('setCell', rowId, 'part_mini_top', Math.floor(ui.position.top))
-                        .jqGrid('setCell', rowId, 'part_mini_left', Math.floor(ui.position.left));
+                    let rowId = EgovJqGridApi.getDefaultGridSelectionId(FloorGuiGridId);
+                    $(FloorGuiGridSelector).jqGrid('setRowData', rowId, {
+                        part_mini_top: Math.floor(ui.position.top),
+                        part_mini_left: Math.floor(ui.position.left)
+                    });
                     FloorGui.gridCellEdited(rowId);
                 }
             }).append(

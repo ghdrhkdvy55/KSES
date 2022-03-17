@@ -88,9 +88,6 @@
             </table>
         </form>
     </div>
-    <div style="float:left;">
-        <a href="javascript:CenterInfo.delete();" class="grayBtn" style="font-size:16px;padding: 6px 24px;">삭제</a>
-    </div>
     <popup-right-button clickFunc="CenterInfo.save();" />
 </div>
 <script type="text/javascript">
@@ -120,14 +117,15 @@
             $form.find(':radio[name=centerPilotYn]:first').prop('checked', true);
             $form.find(':radio[name=centerStandYn]:first').prop('checked', true);
         } else {
-            $popup.find('h2:first').text(centerNm +' 지점 수정');
-            EgovJqGridApi.selection('centerGrid', centerCd);
             EgovIndexApi.apiExecuteJson(
                 'GET',
                 '/backoffice/bld/centerInfoDetail.do', {
                     centerCd: centerCd
                 },
-                null,
+                function(xhr) {
+                    $popup.find('h2:first').text(centerNm +' 지점 수정');
+                    EgovJqGridApi.selection('centerGrid', centerCd);
+                },
                 function(json) {
                     let data = json.result;
                     $form.find(':hidden[name=mode]').val('Edt');
@@ -160,15 +158,14 @@
 
     $.CenterInfo.prototype.save = function() {
         let $popup = this.getPopup();
-        let $form = $popup.find('form:first');
-        if ($form.find(':text[name=centerNm]').val() === '') {
+        if ($popup.find(':text[name=centerNm]').val() === '') {
             toastr.warning('지점명을 입력해 주세요.');
             return;
         }
-        let formData = new FormData($form[0]);
-        if ($form.find('select[name=startFloor]').val() !== '' && $form.find('select[name=endFloor]').val()) {
-            let startFloor = $form.find('select[name=startFloor]').val().replace('CENTER_FLOOR_','');
-            let endFloor = $form.find('select[name=endFloor]').val().replace('CENTER_FLOOR_','');
+        let formData = new FormData($popup.find('form:first')[0]);
+        if ($popup.find('select[name=startFloor]').val() !== '' && $popup.find('select[name=endFloor]').val()) {
+            let startFloor = $popup.find('select[name=startFloor]').val().replace('CENTER_FLOOR_','');
+            let endFloor = $popup.find('select[name=endFloor]').val().replace('CENTER_FLOOR_','');
             if (parseInt(startFloor) > parseInt(endFloor)) {
                 toastr.warning('시작 층수가 종료 층수보다 큽니다.');
                 return;
@@ -179,7 +176,7 @@
             }
             formData.append('floorInfo', floorInfo.join(','));
         }
-        bPopupConfirm('지점 '+ ($form.find(':hidden[name=mode]').val() === 'Ins' ? '등록' : '수정'), '저장 하시겠습니까?', function() {
+        bPopupConfirm('지점 '+ ($popup.find(':hidden[name=mode]').val() === 'Ins' ? '등록' : '수정'), '저장 하시겠습니까?', function() {
             EgovIndexApi.apiExcuteMultipart(
                 '/backoffice/bld/centerInfoUpdate.do',
                 formData,
@@ -187,33 +184,6 @@
                 function(json) {
                     toastr.success(json.message);
                     $popup.bPopup().close();
-                    fnCenterSearch(1);
-                },
-                function(json) {
-                    toastr.error(json.message);
-                }
-            );
-        });
-    };
-
-    $.CenterInfo.prototype.delete = function() {
-        let $popup = this.getPopup();
-        let rowId = $popup.find(':hidden[name=centerCd]').val();
-        bPopupConfirm('지점 삭제', '<b>'+ rowId +'</b> 를(을) 삭제하시겠습니까?', function() {
-            CenterInfo._deleteConfirm($popup, rowId);
-        });
-    };
-
-    $.CenterInfo.prototype._deleteConfirm = function($popup, centerCd) {
-        bPopupConfirm('지점 삭제', '<b>'+ centerCd +'</b> 를(을) 삭제하시면 시스템에 영향이 있을 수 있습니다.<br>정말로 삭제하시겠습니까?', function() {
-            EgovIndexApi.apiExecuteJson(
-                'POST',
-                '/backoffice/bld/centerInfoDelete.do', {
-                    centerCd: centerCd
-                },
-                null,
-                function(json) {
-                    toastr.success(json.message);
                     fnCenterSearch(1);
                 },
                 function(json) {

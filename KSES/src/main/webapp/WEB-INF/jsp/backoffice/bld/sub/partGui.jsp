@@ -58,7 +58,7 @@
     const PartGuiGridId = 'guiPartGrid';
     const PartGuiGridSelector = '#'+ PartGuiGridId;
     $.PartGui = function() {
-        EgovJqGridApi.popGrid(PartGuiGridId, [
+        EgovJqGridApi.defaultGrid(PartGuiGridId, [
             { label: '좌석코드', name: 'seat_cd', key: true, hidden: true },
             { label: '좌석번호', name: 'seat_number', align: 'center', sortable: false },
             { label: '좌석명', name: 'seat_nm', align: 'center', sortable: false },
@@ -93,8 +93,9 @@
     
     $.PartGui.prototype.initialize = function(partCd, floorCd) {
     	let $panel = this.getGui();
-        let centerGridSelectedRowId = $('#centerGrid').jqGrid('getGridParam', 'selrow');
-        $('#centerNm', $panel).text($('#centerGrid').jqGrid('getRowData', centerGridSelectedRowId).center_nm);
+        let rowId = EgovJqGridApi.getDefaultGridSelectionId('centerGrid');
+        let rowData = EgovJqGridApi.getDefaultGridRowData('centerGrid', rowId);
+        $('#centerNm', $panel).text(rowData.center_nm);
         this.initMap($panel);
         this.setComboList(floorCd, partCd);
         this.getDetail('/backoffice/bld/partDetail.do', { partCd: partCd }, function(data) {
@@ -103,20 +104,21 @@
             PartGui.setMap($panel, data.part_map1);
         });
         this.initLayer($panel);
-        this.getPartSeatList(centerGridSelectedRowId, floorCd, partCd, this.drawPartSeat);
+        this.getPartSeatList(rowId, floorCd, partCd, this.drawPartSeat);
     	this.open();
     };
 
     $.PartGui.prototype.setComboList = function(floorCd, partCd) {
         let $panel = this.getGui();
         let $select = $('#searchPart', $panel);
-        $select.empty();
         EgovIndexApi.apiExecuteJson(
             'GET',
             '/backoffice/bld/partInfoComboList.do', {
                 floorCd: floorCd
             },
-            null,
+            function(xhr) {
+                $select.empty();
+            },
             function(json) {
                 let list = json.resultlist;
                 for (let item of list) {
@@ -192,16 +194,18 @@
                 containment: '#cbp-spmenu-part .mapArea',
                 start: function() {
                     EgovJqGridApi.selection(PartGuiGridId, $(this).data('item').seat_cd);
-                    let rowId = $(PartGuiGridSelector).jqGrid('getGridParam', 'selrow');
+                    let rowId = EgovJqGridApi.getDefaultGridSelectionId(PartGuiGridId);
                     $(PartGuiGridSelector).closest('.scroll_table').scrollTop($('#'+$.jgrid.jqID(rowId))[0].offsetTop);
                 },
                 stop: function() {
                     EgovJqGridApi.selection(PartGuiGridId);
                 },
                 drag: function(e, ui) {
-                    let rowId = $(PartGuiGridSelector).jqGrid('getGridParam', 'selrow');
-                    $(PartGuiGridSelector).jqGrid('setCell', rowId, 'seat_top', Math.floor(ui.position.top))
-                        .jqGrid('setCell', rowId, 'seat_left', Math.floor(ui.position.left));
+                    let rowId = EgovJqGridApi.getDefaultGridSelectionId(PartGuiGridId);
+                    $(PartGuiGridSelector).jqGrid('setRowData', rowId, {
+                        seat_top: Math.floor(ui.position.top),
+                        seat_left: Math.floor(ui.position.left)
+                    });
                     PartGui.gridCellEdited(rowId);
                 }
             }).append(
@@ -261,8 +265,9 @@
         }
         let wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(excelData), 'sheet1');
-        let wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
-        saveAs(new Blob([EgovIndexApi.s2ab(wbout)],{ type: 'application/octet-stream' }), '구역GUI_좌석목록.xlsx');
+        saveAs(new Blob([EgovIndexApi.s2ab(
+            XLSX.write(wb, { bookType: 'xlsx', type: 'binary' })
+        )],{ type: 'application/octet-stream' }), '구역GUI_좌석목록.xlsx');
     };
     
     const PartGui = new $.PartGui();

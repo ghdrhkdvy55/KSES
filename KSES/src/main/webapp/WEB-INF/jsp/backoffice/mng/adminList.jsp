@@ -181,7 +181,7 @@
 	        }
 		], true, false, fnSearch);
 		// 직원 검색 JqGrid 정의
-		EgovJqGridApi.popGrid('popGrid', [
+		EgovJqGridApi.defaultGrid('popGrid', [
 			{ label: '사번', name: 'emp_no', align: 'center', sortable: false, key: true },
 			{ label: '이름', name: 'emp_nm', align: 'center', sortable: false },
 			{ label: '부서', name: 'dept_nm', align: 'center', sortable: false },
@@ -233,7 +233,7 @@
 			$form.find('#spEmpEmail').text('');
 		}
 		else {
-			let rowData = $('#mainGrid').jqGrid('getRowData', rowId);
+			let rowData = EgovJqGridApi.getMainGridRowData(rowId);
 			$popup.find('h2:first').text('관리자 수정');
 			$popup.find('button.blueBtn').off('click').click(fnAdminUpdate);
 			$popup.find('a.grayBtn').hide();
@@ -253,24 +253,23 @@
 	// 관리자 등록
 	function fnAdminInsert() {
 		let $popup = $('[data-popup=mng_admin_add]');
-		let $form = $popup.find('form:first');
-		if ($form.find(':text[name=empNo]').val() === '') {
+		if ($popup.find(':text[name=empNo]').val() === '') {
 			toastr.warning('사번을 입력해 주세요.');
 			return;
 		}
-		if ($form.find(':hidden[name=adminId]').val() === '') {
+		if ($popup.find(':hidden[name=adminId]').val() === '') {
 			toastr.warning('중복 체크가 안되었습니다. [검색]으로 직원 검색하세요.');
 			return;
 		}
-		if ($form.find('select[name=authorCd]').val() === '') {
+		if ($popup.find('select[name=authorCd]').val() === '') {
 			toastr.warning('권한을 선택해 주세요.');
 			return;
 		}
 		bPopupConfirm('관리자 등록', '등록 하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(
 				'POST',
-				'/backoffice/mng/adminUpdate.do', 
-				$form.serializeObject(),
+				'/backoffice/mng/adminUpdate.do',
+				$popup.find('form:first').serializeObject(),
 				null,
 				function(json) {
 					toastr.success(json.message);
@@ -286,16 +285,15 @@
 	// 관리자 수정
 	function fnAdminUpdate() {
 		let $popup = $('[data-popup=mng_admin_add]');
-		let $form = $popup.find('form:first');
-		if ($form.find('select[name=authorCd]').val() === '') {
+		if ($popup.find('select[name=authorCd]').val() === '') {
 			toastr.warning('권한을 선택해 주세요.');
 			return;
 		}
-		bPopupConfirm('관리자 수정', '<b>'+ $form.find('#spEmpNm').text() +'</b>수정 하시겠습니까?', function() {
+		bPopupConfirm('관리자 수정', '<b>'+ $popup.find('#spEmpNm').text() +'</b>수정 하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(
 				'POST',
-				'/backoffice/mng/adminUpdate.do', 
-				$form.serializeObject(),
+				'/backoffice/mng/adminUpdate.do',
+				$popup.find('form:first').serializeObject(),
 				null,
 				function(json) {
 					toastr.success(json.message);
@@ -310,7 +308,7 @@
 	}
 	// 관리자 삭제
 	function fnAdminDelete() {
-		let rowIds = $('#mainGrid').jqGrid('getGridParam', 'selarrrow');
+		let rowIds = EgovJqGridApi.getMainGridMutipleSelectionIds();
 		if (rowIds.length === 0) {
 			toastr.warning('목록을 선택해 주세요.');
 			return false;
@@ -350,11 +348,11 @@
 			searchKeyword: $('#pSearchKeyword').val(),
 			mode: 'list'
 		};
-		EgovJqGridApi.popGridAjax('popGrid', '/backoffice/mng/empListAjax.do', params, fnEmpInfoSearch);
+		EgovJqGridApi.defaultGridAjax('popGrid', '/backoffice/mng/empListAjax.do', params, fnEmpInfoSearch);
 	}
 	// 관리자 등록 위한 직원 중복 체크
 	function fnAdminIdCheck() {
-		let rowId = $('#popGrid').jqGrid('getGridParam', 'selrow');
+		let rowId = EgovJqGridApi.getDefaultGridSelectionId('popGrid');
 		if (rowId === null) {
 			toastr.warning('목록을 선택해주세요.');
 			return;
@@ -367,7 +365,7 @@
 			null,
 			function(json) {
 				toastr.info(json.message);
-				let rowData = $('#popGrid').jqGrid('getRowData', rowId);
+				let rowData = EgovJqGridApi.getDefaultGridRowData('popGrid', rowId);
 				let $popup = $('[data-popup=mng_admin_add]');
 				$popup.find(':hidden[name=adminId]').val(rowId);
 				$popup.find(':text[name=empNo]').val(rowId);

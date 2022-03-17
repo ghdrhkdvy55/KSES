@@ -39,22 +39,22 @@
 
     $.FloorInfo.prototype.bPopup = function(floorCd) {
         let $popup = this.getPopup();
-        let $form = $popup.find('form:first');
-        EgovJqGridApi.selection('mainGrid', floorCd);
         EgovIndexApi.apiExecuteJson(
             'GET',
             '/backoffice/bld/floorInfoDetail.do', {
                 floorCd: floorCd
             },
-            null,
+            function(xhr) {
+                EgovJqGridApi.selection('mainGrid', floorCd);
+            },
             function(json) {
                 let data = json.result;
                 $popup.find('h2:first').text(data.floor_nm +' 정보 수정');
-                $form.find(':hidden[name=mode]').val('Edt');
-                $form.find(':hidden[name=floorCd]').val(data.floor_cd);
-                $form.find(':text[name=floorNm]').val(data.floor_nm);
-                $form.find(':radio[name=useYn][value='+ data.use_yn +']').prop('checked', true);
-                $form.find(':radio[name=floorPartDvsn][value='+ data.floor_part_dvsn +']').prop('checked', true);
+                $popup.find(':hidden[name=mode]').val('Edt');
+                $popup.find(':hidden[name=floorCd]').val(data.floor_cd);
+                $popup.find(':text[name=floorNm]').val(data.floor_nm);
+                $popup.find(':radio[name=useYn][value='+ data.use_yn +']').prop('checked', true);
+                $popup.find(':radio[name=floorPartDvsn][value='+ data.floor_part_dvsn +']').prop('checked', true);
             },
             function(json) {
                 toastr.warning(json.message);
@@ -65,11 +65,10 @@
 
     $.FloorInfo.prototype.save = function() {
         let $popup = this.getPopup();
-        let $form = $popup.find('form:first');
         bPopupConfirm('층 정보 수정', '저장 하시겠습니까?', function() {
             EgovIndexApi.apiExcuteMultipart(
                 '/backoffice/bld/floorInfoUpdate.do',
-                new FormData($form[0]),
+                new FormData($popup.find('form:first')[0]),
                 null,
                 function(json) {
                     toastr.success(json.message);

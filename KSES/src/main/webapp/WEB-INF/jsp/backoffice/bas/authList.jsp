@@ -44,6 +44,7 @@
         <div class="right_box">
         	<a href="javascript:fnMenuSetting();" class="blueBtn">메뉴 설정</a>
 	        <a href="javascript:fnAuthInfo();" class="blueBtn">권한분류 등록</a>
+	        <a href="javascript:fnAuthDelete();" class="grayBtn">삭제</a>
         </div>
         <div class="clear"></div>
         <div class="whiteBox">
@@ -89,9 +90,6 @@
                 </tbody>
             </table>
             </form>
-        </div>
-        <div style="float:left;">
-            <a href="javascript:fnAuthDelete();" class="grayBtn" style="font-size:16px;padding: 6px 24px;">삭제</a>
         </div>
         <popup-right-button />
     </div>
@@ -194,7 +192,7 @@
 			$form.find(':text[name=authorCode]').removeAttr('readonly');
 		}
 		else {
-			let rowData = $('#mainGrid').jqGrid('getRowData', rowId);
+            let rowData = EgovJqGridApi.getMainGridRowData(rowId);
 			$popup.find('h2:first').text('권한코드 수정');
 			$popup.find('span#sp_Unqi').hide();
 			$popup.find('button.blueBtn').off('click').click(fnAuthUpdate);
@@ -208,19 +206,20 @@
 	}
 	// 중복 권한 코드 체크
 	function fnIdCheck() {
-		let $form = $('[data-popup=bas_auth_add] form:first');
-		if ($form.find(':text[name=authorCode]').val() === '') {
+		let $popup = $('[data-popup=bas_auth_add]');
+        let rowId = $popup.find(':text[name=authorCode]').val();
+		if (rowId === '') {
 			toastr.warning('코드를 입력해 주세요.');
 			return;
 		}
 		EgovIndexApi.apiExecuteJson(
 			'GET',
 			'/backoffice/bas/authorIDCheck.do', {
-				authorCode: $form.find(':text[name=authorCode]').val()
+				authorCode: rowId
 			},
 			null,
 			function(json) {
-                $form.find(':hidden#idCheck').val('Y');
+                $popup.find(':hidden#idCheck').val('Y');
 				toastr.info(json.message);
 			},
 			function(json) {
@@ -231,24 +230,23 @@
 	// 권한 등록
 	function fnAuthInsert() {
 		let $popup = $('[data-popup=bas_auth_add]');
-		let $form = $popup.find('form:first');
-		if ($form.find(':text[name=authorCode]').val() === '') {
+		if ($popup.find(':text[name=authorCode]').val() === '') {
 			toastr.warning('코드를 입력해 주세요.');
 			return;
 		}
-		if ($form.find(':hidden#idCheck').val() !== 'Y') {
+		if ($popup.find(':hidden#idCheck').val() !== 'Y') {
 			toastr.warning('중복체크가 안되었습니다.');
 			return;	
 		}
-		if ($form.find(':text[name=authorNm]').val() === '') {
+		if ($popup.find(':text[name=authorNm]').val() === '') {
 			toastr.warning('권한명을 입력해 주세요.');
 			return;
 		}
 		bPopupConfirm('권한코드 등록', '등록 하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(
 				'POST',
-				'/backoffice/bas/authUpdate.do', 
-				$form.serializeObject(),
+				'/backoffice/bas/authUpdate.do',
+                $popup.find('form:first').serializeObject(),
 				null,
 				function(json) {
 					toastr.success(json.message);
@@ -264,16 +262,15 @@
 	// 권한 수정
 	function fnAuthUpdate() {
 		let $popup = $('[data-popup=bas_auth_add]');
-		let $form = $popup.find('form:first');
-		if ($form.find(':text[name=authorCode]').val() === '') {
-			toastr.warning('코드를 입력해 주세요.');
-			return;
-		}
-		bPopupConfirm('권한코드 수정', '<b>'+ $form.find(':text[name=authorCode]').val() +'</b> 수정 하시겠습니까?', function() {
+        if ($popup.find(':text[name=authorNm]').val() === '') {
+            toastr.warning('권한명을 입력해 주세요.');
+            return;
+        }
+		bPopupConfirm('권한코드 수정', '<b>'+ $popup.find(':text[name=authorCode]').val() +'</b> 수정 하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(
 				'POST',
-				'/backoffice/bas/authUpdate.do', 
-				$form.serializeObject(),
+				'/backoffice/bas/authUpdate.do',
+                $popup.find('form:first').serializeObject(),
 				null,
 				function(json) {
 					toastr.success(json.message);
@@ -289,18 +286,22 @@
 	// 권한 삭제 호출
 	function fnAuthDelete() {
         let $popup = $('[data-popup=bas_auth_add]');
-        let rowId = $popup.find(':text[name=authorCode]').val();
+        let rowId = EgovJqGridApi.getMainGridSingleSelectionId();
+        if (rowId === null) {
+            toastr.warning('권한을 선택해 주세요.');
+            return false;
+        }
 		bPopupConfirm('권한코드 삭제', '<b>'+ rowId +'</b> 를(을) 삭제 하시겠습니까?', function() {
 			fnAuthDeleteConfirm($popup, rowId);
 		});
 	}
 	// 권한 삭제 확인
-	function fnAuthDeleteConfirm($popup, authorCode) {
-		bPopupConfirm('권한코드 삭제', '<b>'+ authorCode +'</b> 를(을) 삭제하시면 시스템에 영향이 있을 수 있습니다.<br>정말로 삭제하시겠습니까?', function() {
+	function fnAuthDeleteConfirm($popup, rowId) {
+		bPopupConfirm('권한코드 삭제', '<b>'+ rowId +'</b> 를(을) 삭제하시면 시스템에 영향이 있을 수 있습니다.<br>정말로 삭제하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(
 				'POST',
 				'/backoffice/bas/authDelete.do', {
-					authorCode: authorCode
+					authorCode: rowId
 				},
 				null,
 				function(json) {
@@ -317,19 +318,20 @@
 	// 권한 메뉴 세팅 정보 얻기 -> 메뉴 트리에 정보 적용
 	function fnMenuSetting() {
 		let $popup = $('[data-popup=bas_menu_setting]');
-		let rowId = $('#mainGrid').jqGrid('getGridParam', 'selrow');
+        let rowId = EgovJqGridApi.getMainGridSingleSelectionId();
 		if (rowId === undefined || rowId === null) {
 			toastr.info('권한을 선택해 주세요.');
 			return;
 		}
-		$popup.find(':hidden[name=authorCode]').val(rowId);
-		$('#jstree').jstree('uncheck_all');
 		EgovIndexApi.apiExecuteJson(
 			'GET',
 			'/backoffice/bas/menuCreateMenuListAjax.do', {
 				authorCode: rowId
 			},
-			null,
+			function(xhr) {
+                $popup.find(':hidden[name=authorCode]').val(rowId);
+                $('#jstree').jstree('uncheck_all');
+            },
 			function(json) {
 				for (var m of json.resultlist) {
 					$('#jstree').jstree('select_node', m.menu_no);
@@ -344,7 +346,6 @@
 	// 권한 메뉴 세팅 정보 저장
 	function fnMenuSettingSave() {
 		let $popup = $('[data-popup=bas_menu_setting]');
-		let authorCode = $popup.find(':hidden[name=authorCode]').val();
         if ($('#jstree').jstree('get_selected', false).length === 0) {
             toastr.warning('체크된 값이 없습니다.');
             return;
@@ -358,11 +359,12 @@
                 arrCheckedMenuNo.push(menu.parent);
             }
         }
-		bPopupConfirm('메뉴설정 저장', '<b>'+ authorCode +'</b> 메뉴설정 저장 하시겠습니까?', function() {
+        let rowId = $popup.find(':hidden[name=authorCode]').val();
+		bPopupConfirm('메뉴설정 저장', '<b>'+ rowId +'</b> 메뉴설정 저장 하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(
 				'POST',
 				'/backoffice/bas/menuCreateUpdateAjax.do', {
-					authorCode: authorCode,
+					authorCode: rowId,
 					checkedMenuNo: arrCheckedMenuNo.join(',')
 				},
 				null,

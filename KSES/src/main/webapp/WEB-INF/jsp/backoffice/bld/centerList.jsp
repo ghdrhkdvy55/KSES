@@ -39,6 +39,7 @@
 				<div class="right_box">
 					<a href="javascript:fnPopupBillInfo();" class="blueBtn">현금영수증 설정</a>
 					<a href="javascript:fnPopupCenterInfo();" class="blueBtn">지점 등록</a>
+					<a href="javascript:fnCenterRemove();" class="grayBtn">삭제</a>
 				</div>
 			</div>
 			<div class="clear"></div>
@@ -86,7 +87,7 @@
 		$('#cbp-spmenu-floor').load('/backoffice/bld/floorGui.do');
 		$('#cbp-spmenu-part').load('/backoffice/bld/partGui.do');
 		// 지점 JqGrid 정의
-		EgovJqGridApi.popGrid('centerGrid', [
+		EgovJqGridApi.defaultGrid('centerGrid', [
 			{ label: '지점코드', name: 'center_cd', key: true, hidden:true },
 			{ label: '지점', name:'center_img', align: 'center', width: 80, fixed: true, sortable: false, formatter: (c, o, row) =>
 				'<img src="'+ (row.center_img === 'no_image.png' ? '/resources/img/no_image.png' : '/upload/'+ row.center_img) +'" style="width:120px;"/>'
@@ -101,10 +102,10 @@
             }
 		], 'centerPager', [10, 20]).jqGrid('setGridParam', {
 			onSelectRow: function(rowId, status, e) {
-				if ($('#mainGrid').contents().length > 0) {
+				if ($(MainGridSelector).contents().length > 0) {
 					fnSearch(1);
 				}
-				let rowData = $('#centerGrid').jqGrid('getRowData', rowId);
+				let rowData = EgovJqGridApi.getDefaultGridRowData('centerGrid', rowId);
 				$('#spCenterNm').text(rowData.center_nm);
 			},
 			gridComplete: function() {
@@ -115,7 +116,7 @@
 		});
 		// 하위 분류 탭 클릭 시
 		$('div.tabs .tab').click(function(e) {
-			let rowId = $('#centerGrid').jqGrid('getGridParam', 'selrow');
+			let rowId = EgovJqGridApi.getDefaultGridSelectionId('centerGrid');
 			if (rowId === null) {
 				toastr.info('지점을 선택해주세요.');
 				return;
@@ -143,7 +144,7 @@
 			}
 			// jqGrid EditCell 관련 버그 패치 추가
 			$(document).on('focusout', '[role=gridcell] select', function(e) {
-				$('#mainGrid').editCell(0, 0, false);
+				$(MainGridSelector).editCell(0, 0, false);
 			});
 		});
 		setTimeout(function() {
@@ -158,7 +159,34 @@
 			pageUnit: $('#centerPager .ui-pg-selbox option:selected').val(),
 			searchKeyword: $('#searchKeyword').val()
 		};
-		EgovJqGridApi.popGridAjax('centerGrid', '/backoffice/bld/centerListAjax.do', params, fnCenterSearch);
+		EgovJqGridApi.defaultGridAjax('centerGrid', '/backoffice/bld/centerListAjax.do', params, fnCenterSearch);
+	}
+	// 지점 삭제
+	function fnCenterRemove() {
+		let rowId = EgovJqGridApi.getDefaultGridSelectionId('centerGrid');
+		if (rowId === null) {
+			toastr.warning('지점 목록을 선택하세요.');
+			return;
+		}
+		let rowData = EgovJqGridApi.getDefaultGridRowData('centerGrid', rowId);
+		bPopupConfirm('지점 삭제', '<b>'+ rowData.center_nm +'</b> 를(을) 삭제하시겠습니까?', function() {
+			bPopupConfirm('지점 삭제', '<b>'+ rowData.center_nm +'</b> 를(을) 삭제하시면 시스템에 영향이 있을 수 있습니다.<br>정말로 삭제하시겠습니까?', function() {
+				EgovIndexApi.apiExecuteJson(
+						'POST',
+						'/backoffice/bld/centerInfoDelete.do', {
+							centerCd: rowId
+						},
+						null,
+						function(json) {
+							toastr.success(json.message);
+							fnCenterSearch(1);
+						},
+						function(json) {
+							toastr.error(json.message);
+						}
+				);
+			});
+		});
 	}
 	// 하위 목록 영역 초기화
 	function fnRightAreaClear() {
@@ -171,15 +199,15 @@
 	}
 	// 하위 목록 조회
 	function fnSearch(pageNo) {
-		let centerCd = $('#centerGrid').jqGrid('getGridParam', 'selrow');
+		let rowId = EgovJqGridApi.getDefaultGridSelectionId('centerGrid');
 		let params = {
 			pageIndex: pageNo,
 			pageUnit: $('#pager .ui-pg-selbox option:selected').val(),
-			centerCd: centerCd
+			centerCd: rowId
 		};
 		if ($('div.tabs .tab.active').attr('id') === 'floor') {
 			EgovJqGridApi.mainGridAjax(MainGridAjaxUrl, params, fnSearch, Floor.subFloorPartGrid);
-			PartInfo.partClassComboList(centerCd);
+			PartInfo.partClassComboList(rowId);
 		} else {
 			EgovJqGridApi.mainGridAjax(MainGridAjaxUrl, params, fnSearch);
 		}
@@ -187,7 +215,7 @@
 	// 오른쪽 탭 목록 수정 저장
 	function fnRightAreaSave() {
 		let tabMenu = $('div.tabs .tab.active').attr('id');
-		let changedArr = $('#mainGrid').jqGrid('getChangedCells', 'all');
+		let changedArr = $(MainGridSelector).jqGrid('getChangedCells', 'all');
 		if (tabMenu === 'billday') {
 			changedArr = Billday.changedArray();
 		}
@@ -236,12 +264,12 @@
 	}
 	// 현금영수증 팝업 호출
 	function fnPopupBillInfo() {
-		let rowId = $('#centerGrid').jqGrid('getGridParam', 'selrow');
+		let rowId = EgovJqGridApi.getDefaultGridSelectionId('centerGrid');
 		if (rowId === null) {
 			toastr.info('지점을 선택해주세요.');
 			return;
 		}
-		let rowData = $('#centerGrid').jqGrid('getRowData', rowId);
+		let rowData = EgovJqGridApi.getDefaultGridRowData('centerGrid', rowId);
 		BillInfo.bPopup(rowId, rowData.center_nm);
 	}
 </script>

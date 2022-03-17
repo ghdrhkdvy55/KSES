@@ -23,7 +23,7 @@ $.Floor.prototype.mainGridSettings = function() {
         }
     ], false, true, fnSearch, false).jqGrid('setGridParam', {
         isHasSubGrid: function(rowId) {
-            let rowData = $('#mainGrid').jqGrid('getRowData', rowId);
+            let rowData = EgovJqGridApi.getMainGridRowData(rowId);
             if (rowData.floor_part_dvsn === 'FLOOR_PART_2') {
                 return false;
             }
@@ -33,13 +33,10 @@ $.Floor.prototype.mainGridSettings = function() {
     $('#rightAreaUqBtn').html(
         '<a href="javascript:Floor.popupPartInfo();" class="orangeBtn">구역등록</a>'
     ).show();
-    $('#rightAreaBtn').show();
 };
 
-$.Floor.prototype.subFloorPartGrid = function(id, parentId) {
-    let subGridId = id + '_t';
-    $('#'+id).empty().append('<table id="'+ subGridId + '" class="scroll"></table>');
-    EgovJqGridApi.subGrid(subGridId, [
+$.Floor.prototype.subFloorPartGrid = function(parentId, rowId) {
+    EgovJqGridApi.subGrid(parentId, [
         { label: '구역코드', name:'part_cd', key: true, hidden: true },
         { label: '도면이미지', name: 'part_map1', align: 'center', sortable: false, formatter: (c, o, row) =>
             '<img src="'+ (row.part_map1 === 'no_image.png' || row.part_map1 === undefined ? '/resources/img/no_image.png'
@@ -56,7 +53,7 @@ $.Floor.prototype.subFloorPartGrid = function(id, parentId) {
             	'<a href="javascript:Floor.guiPart(\'' + row.part_cd + '\', \'' + row.floor_cd + '\');" class="gui_icon"></a>'
         }
     ], 'POST', '/backoffice/bld/partListAjax.do', {
-        floorCd: parentId
+        floorCd: rowId
     });
 };
 
@@ -76,7 +73,7 @@ $.Floor.prototype.popupFloorInfo = function(rowId) {
 
 $.Floor.prototype.popupPartInfo = function(rowId) {
     if (rowId === undefined || rowId === null) {
-        if ($('#mainGrid').jqGrid('getGridParam', 'selrow') === null) {
+        if (EgovJqGridApi.getMainGridSingleSelectionId() === null) {
             toastr.warning('층 목록을 선택하여 주세요.');
             return false;
         }

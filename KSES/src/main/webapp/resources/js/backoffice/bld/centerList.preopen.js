@@ -21,7 +21,7 @@ $.Preopen.prototype.mainGridSettings = function() {
     // $('#rightAreaUqBtn').html(
     //     '<a href="javascript:void(0);" class="orangeBtn">복사</a>'
     // ).show();
-    $('#rightAreaBtn').show();
+    $('#rightAreaBtn').hide();
 };
 
 $.Preopen.prototype.updateSettings = function(ajaxUpdate, changedArr) {
