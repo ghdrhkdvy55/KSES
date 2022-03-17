@@ -1,15 +1,17 @@
 const _MainGridId = 'mainGrid';
 const _MainPagerId = 'pager'
 const _JqGridDelay = 500;
-const _MainGridSelector = '#'+_MainGridId, _MainPagerSelector = '#'+_MainPagerId;
+const _MainPagerSelector = '#'+_MainPagerId;
+const MainGridSelector = '#'+_MainGridId;
 
 $.EgovJqGridApi = function() {
 	console.log('EgovJqGrid');
 	this._jqGridParams;
 };
-/** JqGrid 공통 Param 생성 
-	(외부 호출 함수 아님) 
-*/
+/************************************************************************************************
+ * Private 공통 함수
+ * - 외부에서 호출하지 말것
+ ************************************************************************************************/
 $.EgovJqGridApi.prototype._init = function(mtype, colModel, multiselect, subGrid, loadonce) {
 	this._jqGridParams = {
 		mtype: mtype,		
@@ -44,9 +46,6 @@ $.EgovJqGridApi.prototype._init = function(mtype, colModel, multiselect, subGrid
 		}
 	};
 };
-/** JqGrid Param 재 정의 
-	(외부 호출 함수 아님) 
-*/
 $.EgovJqGridApi.prototype._formatter = function(colModel) {
 	for (let col of colModel) {
 		if (col.formatter === 'date') {
@@ -57,9 +56,7 @@ $.EgovJqGridApi.prototype._formatter = function(colModel) {
 		}
 	}
 };
-/** JqGrid 페이징 정의
- */
-$.EgovJqGridApi.prototype.getPage = function(id, pgButton, page, lastpage) {
+$.EgovJqGridApi.prototype._getPage = function(id, pgButton, page, lastpage) {
 	let ret;
 	switch (pgButton) {
 		case 'next':
@@ -86,18 +83,39 @@ $.EgovJqGridApi.prototype.getPage = function(id, pgButton, page, lastpage) {
 	}
 	return ret;
 };
-/** JqGrid 메인 그리드 출력 
-	- 출력 후 자동 검색 함수 호출
+const EgovJqGridApi = new $.EgovJqGridApi();
+/************************************************************************************************
+ * public 공통 함수
+ ************************************************************************************************/
+/**
+ * jqGrid 그리드 선택
+ * - multiselect 그리드는 사용하지 말것
+ */
+$.EgovJqGridApi.prototype.selection = function(id, rowId) {
+	$('#'+id).jqGrid('resetSelection');
+	if (rowId !== null && rowId !== undefined) {
+		$('#'+id).jqGrid('setSelection', rowId);
+	}
+};
+/************************************************************************************************
+ * public 메인 그리드 함수
+ * - editable 가능
+ * - multiselect 가능
+ * - subgrid expend 가능
+ * - resize 여부 추가
+ ************************************************************************************************/
+/**
+ * JqGrid 메인 그리드 출력
  */
 $.EgovJqGridApi.prototype.mainGrid = function(colModel, multiselect, subGrid, searchFunc, resize) {
 	this._formatter(colModel);
 	this._init('POST', colModel, multiselect, subGrid, false);
 	this._jqGridParams['pager'] = $(_MainPagerSelector);
-	let retGrid = $(_MainGridSelector).jqGrid(this._jqGridParams);
+	let retGrid = $(MainGridSelector).jqGrid(this._jqGridParams);
 	if (resize !== false) {
 		$(window).bind('resize', function() {
 			// 그리드의 width를 div 에 맞춰서 적용 
-			$(_MainGridSelector).setGridWidth($(_MainGridSelector).closest('div.boardlist').width() , true);
+			$(MainGridSelector).setGridWidth($(MainGridSelector).closest('div.boardlist').width() , true);
 		}).trigger('resize');
 	}
 	if (searchFunc) {
@@ -106,10 +124,9 @@ $.EgovJqGridApi.prototype.mainGrid = function(colModel, multiselect, subGrid, se
 	$('th#'+_MainGridId+'_rn').children('div:first').append('NO');
 	return retGrid;
 };
-/** JqGrid 메인 그리드 검색 함수에서 필요한 데이터 호출 함수 
-	- 페이징 정의
-	- 서브 그리드 필요 여부
-*/
+/**
+ * JqGrid 메인 그리드 데이터 출력
+ */
 $.EgovJqGridApi.prototype.mainGridAjax = function(url, params, searchFunc, subFunc) {
 	let jqGridParams = {
 		url: url,
@@ -122,59 +139,109 @@ $.EgovJqGridApi.prototype.mainGridAjax = function(url, params, searchFunc, subFu
 			$('#sp_totcnt').html(data.paginationInfo.totalRecordCount);	
 		},
 		onPaging: function(pgButton) {
-			let mainGridParams = $(_MainGridSelector).jqGrid('getGridParam');
+			let mainGridParams = $(MainGridSelector).jqGrid('getGridParam');
 			let page = mainGridParams['page'];
 			let lastpage = mainGridParams['lastpage'];
-			searchFunc(EgovJqGridApi.getPage(_MainGridId, pgButton, page, lastpage));
+			searchFunc(EgovJqGridApi._getPage(_MainGridId, pgButton, page, lastpage));
 		},
 	};
 	if (subFunc) {
 		jqGridParams['subGridRowExpanded'] = subFunc;
 	}
-	$(_MainGridSelector).jqGrid('setGridParam', jqGridParams).trigger('reloadGrid');
+	$(MainGridSelector).jqGrid('setGridParam', jqGridParams).trigger('reloadGrid');
 };
-/** JqGrid 서브 그리드 정의 및 출력 */
-$.EgovJqGridApi.prototype.subGrid = function(id, colModel, method, url, params) {
+/** JqGrid 메인 그리드 상세 팝업 호출 시
+ *  - 사용 하지 않음
+ */
+// $.EgovJqGridApi.prototype.mainGridDetail = function(detailFunc) {
+// 	setTimeout(function() {
+// 		$(MainGridSelector).jqGrid('setGridParam', {
+// 			ondblClickRow: function(rowId, iRow, iCol, e) {
+// 				if (!$(MainGridSelector).jqGrid('getInd', rowId)) {
+// 					return false;
+// 				} else {
+// 					detailFunc(rowId, $(MainGridSelector).jqGrid('getRowData', rowId));
+// 				}
+// 			}
+// 		});
+// 	}, _JqGridDelay);
+// };
+/**
+ * jqGrid 메인 그리드 RowData 가져오기
+ */
+$.EgovJqGridApi.prototype.getMainGridRowData = function(rowId) {
+	return $(MainGridSelector).jqGrid('getRowData', rowId);
+};
+/**
+ * jqGrid 메인 그리드 선택된 하나의 RowId 가져오기
+ */
+$.EgovJqGridApi.prototype.getMainGridSingleSelectionId = function() {
+	return $(MainGridSelector).jqGrid('getGridParam', 'selrow');
+};
+/**
+ * jqGrid 메인 그리드 선택된 복수의 RowId 목록 가져오기
+ * - jqGrid multiselect 시에 사용할 것
+ */
+$.EgovJqGridApi.prototype.getMainGridMutipleSelectionIds = function() {
+	return $(MainGridSelector).jqGrid('getGridParam', 'selarrrow');
+};
+/************************************************************************************************
+ * 서브 그리드 함수
+ * - 메인그리드에서 expend 되어 출력되는 서브 그리드
+ * - 페이징 세팅 없음
+ * - selection 지원하지 않음
+ ************************************************************************************************/
+/**
+ * JqGrid 서브 그리드 정의 및 출력
+ */
+$.EgovJqGridApi.prototype.subGrid = function(parentId, colModel, method, url, params) {
+	let gridId = parentId + '_t';
+	$('#'+parentId).empty().append('<table id="'+ gridId + '" class="scroll"></table>');
 	this._formatter(colModel);
 	this._init(method, colModel, false, false, true);
 	this._jqGridParams['url'] = url;
 	this._jqGridParams['postData'] = method === 'POST' ? JSON.stringify(params) : params;
 	this._jqGridParams['jsonReader'] = { root: 'resultlist' };
-	$('#'+id).jqGrid(this._jqGridParams);
-	$('th#'+id+'_rn').children('div:first').append('NO');
+	$('#'+gridId).jqGrid(this._jqGridParams);
+	$('th#'+gridId+'_rn').children('div:first').append('NO');
 };
-/** JqGrid 메인 그리드 상세 팝업 호출 시  */
-$.EgovJqGridApi.prototype.mainGridDetail = function(detailFunc) {
+/** JqGrid 서브 그리드 상세 팝업 호출 시  
+ *  - 사용 하지 않음
+ */
+// $.EgovJqGridApi.prototype.subGridDetail = function(id, detailFunc) {
+// 	setTimeout(function() {
+// 		$('#'+id).jqGrid('setGridParam', {
+// 			onSelectRow: function(rowId, iRow, iCol, e) {
+// 				detailFunc(rowId, $('#'+id).jqGrid('getRowData', rowId));
+// 			}
+// 		});
+// 	}, _JqGridDelay);
+// };
+/**
+ * jqGrid 서브 그리드 변경 시 새로 고침
+ */
+$.EgovJqGridApi.prototype.subGridReload = function(parentId, subFunc) {
 	setTimeout(function() {
-		$(_MainGridSelector).jqGrid('setGridParam', { 
-			ondblClickRow: function(rowId, iRow, iCol, e) {
-				if (!$(_MainGridSelector).jqGrid('getInd', rowId)) {
-					return false;
-				} else {
-					detailFunc(rowId, $(_MainGridSelector).jqGrid('getRowData', rowId));
-				}
-			} 
-		});
+		subFunc(_MainGridId+'_'+parentId, parentId);
 	}, _JqGridDelay);
 };
-/** JqGrid 서브 그리드 상세 팝업 호출 시  */
-$.EgovJqGridApi.prototype.subGridDetail = function(id, detailFunc) {
-	setTimeout(function() {
-		$('#'+id).jqGrid('setGridParam', { 
-			onSelectRow: function(rowId, iRow, iCol, e) {
-				detailFunc(rowId, $('#'+id).jqGrid('getRowData', rowId));
-			}
-		});
-	}, _JqGridDelay);
+/**
+ * jqGrid 서브 그리드 RowData 가져오기
+ */
+$.EgovJqGridApi.prototype.getSubGridRowData = function(parentId, rowId) {
+	return $(MainGridSelector + '_' + parentId + '_t').jqGrid('getRowData', rowId);
 };
-
-$.EgovJqGridApi.prototype.subGridReload = function(rowId, subFunc) {
-	setTimeout(function() {
-		subFunc(_MainGridId+'_'+rowId, rowId);	
-	}, _JqGridDelay);
-};
-
-$.EgovJqGridApi.prototype.popGrid = function(id, colModel, pagerId, rowList) {
+/************************************************************************************************
+ * public 기본 그리드 함수 (확장형)
+ * - editable 가능
+ * - multiselect 없음
+ * - subgrid expend 기능 없음
+ * - resize 안됨
+ ************************************************************************************************/
+/**
+ * jqGrid 확장형 기본 그리드 출력
+ */
+$.EgovJqGridApi.prototype.defaultGrid = function(id, colModel, pagerId, rowList) {
 	this._formatter(colModel);
 	this._init('POST', colModel, false, false, false);
 	this._jqGridParams['url'] = null;
@@ -184,8 +251,10 @@ $.EgovJqGridApi.prototype.popGrid = function(id, colModel, pagerId, rowList) {
 	$('th#'+id+'_rn').children('div:first').append('NO');
 	return retGrid;
 };
-
-$.EgovJqGridApi.prototype.popGridAjax = function(id, url, params, searchFunc) {
+/**
+ * jqGrid 확장형 기본 그리드 데이터 출력
+ */
+$.EgovJqGridApi.prototype.defaultGridAjax = function(id, url, params, searchFunc) {
 	let jqGridParams = {
 		url: url,
 		postData: JSON.stringify(params),
@@ -199,17 +268,26 @@ $.EgovJqGridApi.prototype.popGridAjax = function(id, url, params, searchFunc) {
 			let gridParams = $('#'+id).jqGrid('getGridParam');
 			let page = gridParams['page'];
 			let lastpage = gridParams['lastpage'];
-			searchFunc(EgovJqGridApi.getPage(id, pgButton, page, lastpage));
+			searchFunc(EgovJqGridApi._getPage(id, pgButton, page, lastpage));
 		},
 	};
 	$('#'+id).jqGrid('setGridParam', jqGridParams).trigger('reloadGrid');
 };
-
-$.EgovJqGridApi.prototype.selection = function(id, rowId) {
-	$('#'+id).jqGrid('resetSelection');
-	if (rowId !== null && rowId !== undefined) {
-		$('#'+id).jqGrid('setSelection', rowId);
-	}
+/**
+ * jqGrid 확장형 기본 그리드 RowData 가져오기
+ */
+$.EgovJqGridApi.prototype.getDefaultGridRowData = function(id, rowId) {
+	return $('#'+id).jqGrid('getRowData', rowId);
 };
-
-const EgovJqGridApi = new $.EgovJqGridApi();
+/**
+ * jqGrid 확장형 기본 그리드 선택된 RowId 가져오기
+ */
+$.EgovJqGridApi.prototype.getDefaultGridSelectionId = function(id) {
+	return $('#'+id).jqGrid('getGridParam', 'selrow');
+};
+/**
+ * jqGrid 확장형 기본 그리드 선택된 RowData 가져오기
+ */
+$.EgovJqGridApi.prototype.getDefaultGridSelectionData = function(id) {
+	return $('#'+id).jqGrid('getRowData', this.getDefaultGridSelectionId(id));
+};
