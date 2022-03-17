@@ -127,7 +127,7 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 				jsonObject.put("Trade_Detail", "입장시스템 입장/좌석 이용료 출금");
 			}
 			
-			jsonObject.put("Trade_Pay", partSpeedPayCost + centerSpeedEntryPayCost);
+			jsonObject.put("Trade_Pay", String.valueOf(partSpeedPayCost + centerSpeedEntryPayCost));
 
 			node = SmartUtil.requestHttpJson(Url, jsonObject.toJSONString(), "SPEEDWITHDRAW", "SPEEDON", "KSES");
 			if (node.get("Error_Cd").asText().equals("SUCCESS")) {
@@ -221,7 +221,6 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 				ResvInfo resInfo = new ResvInfo();
 				resInfo.setResvSeq(resvSeq);
 				resInfo.setResvPayDvsn("RESV_PAY_DVSN_3");
-				resInfo.setResvState("RESV_STATE_4");
 				resInfo.setResvTicketDvsn("RESV_TICKET_DVSN_1");
 				resInfo.setTradNo(node.get("Trade_No").asText());
 				resvService.updateResvPriceInfo(resInfo);
