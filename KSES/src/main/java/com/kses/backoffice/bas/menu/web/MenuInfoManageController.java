@@ -141,7 +141,7 @@ public class MenuInfoManageController {
 				ret = menuService.insertMenuManage(menuInfo);
 				break;
 			case Globals.SAVE_MODE_UPDATE:
-				ret = menuService.insertMenuManage(menuInfo);
+				ret = menuService.updateMenuManage(menuInfo);
 				break;
 			default:
 				throw new EgovBizException("잘못된 호출입니다.");
