@@ -185,7 +185,7 @@
         let $panel = PartGui.getGui();
         for (let item of list) {
             let seat = $(
-                '<li class="seat" style="opacity:0.7;display:inline-block;width:30px;height:30px;"></li>'
+                '<li class="seat" style="opacity:0.7;display:inline-block;width:30px;height:30px;cursor:default;"></li>'
             ).data('item', item).css({
                 top: item.seat_top +'px',
                 left: item.seat_left +'px',

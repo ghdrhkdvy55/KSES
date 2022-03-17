@@ -230,7 +230,7 @@
         let $panel = FloorGui.getGui();
         for (let item of list) {
             let part = $(
-                '<li class="seat" style="opacity:0.7;display:inline-block;"></li>'
+                '<li class="seat" style="opacity:0.7;display:inline-block;cursor:default;"></li>'
             ).data('item', item).css({
                 top: item.part_mini_top +'px',
                 left: item.part_mini_left +'px',
