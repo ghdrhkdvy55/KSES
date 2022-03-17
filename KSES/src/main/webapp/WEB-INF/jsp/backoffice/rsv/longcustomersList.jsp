@@ -175,7 +175,7 @@ a.blueBtn, a.grayBtn {
 </div>
 <!-- popup// -->
 
-<script type="text/javascript" src="/resources/js/temporary.js"></script>
+<script type="text/javascript" src="/resources/jqgrid/jqgrid.custom.egovapi.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
 		EgovJqGridApi.mainGrid([
