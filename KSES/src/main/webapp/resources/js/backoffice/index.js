@@ -1,25 +1,10 @@
 $.EgovIndexApi = function() {
 	console.log('EgovIndexApi');
 };
-
-$.EgovIndexApi.prototype.camelToUnderscore = function(key) {
-	let result = key.replace( /([A-Z])/g, " $1" );
-	return result.split(' ').join('_').toLowerCase();
-};
-
-$.EgovIndexApi.prototype.getUrlParameter = function(name) {
-	let sParameterName, i;
-	let sPageURL = decodeURIComponent(window.location.search.substring(1)); 
-	let sURLVariables = sPageURL.split('&');
-	
-	for (var sURLVariable of sURLVariables) {
-		let sParameterName = sURLVariable.split('=');
-		if (sParameterName[0] === name) {
-			return  sParameterName[1] === undefined ? true : sParameterName[1];
-		}
-	}
-};
-
+/************************************************************************************************
+ * Private 공통 함수
+ * - 외부에서 호출하지 말것
+ ************************************************************************************************/
 $.EgovIndexApi.prototype._apiExecute = function(contentType, method, url, params, beforeFunc, doneFunc, failFunc) {
 	$.ajax({
 		contentType: contentType,
@@ -47,7 +32,6 @@ $.EgovIndexApi.prototype._apiExecute = function(contentType, method, url, params
 		}
 	});
 };
-
 $.EgovIndexApi.prototype._apiResponseException = function(xhr) {
 	switch (xhr.status) {
 		case 200:
@@ -67,13 +51,18 @@ $.EgovIndexApi.prototype._apiResponseException = function(xhr) {
 		default:
 			console.log('exception status code: '+ xhr.status);
 			// if (xhr.responseText === '') {
-				toastr.error('시스템에 오류가 발생하였습니다. 관리자에게 문의하세요.');
-			// } else {
-			// 	toastr.error(xhr.responseText);
-			// }
+			toastr.error('시스템에 오류가 발생하였습니다. 관리자에게 문의하세요.');
+		// } else {
+		// 	toastr.error(xhr.responseText);
+		// }
 	}
 };
-
+/************************************************************************************************
+ * public 공통 함수
+ ************************************************************************************************/
+/**
+ * Json 방식 Ajax 통신
+ */
 $.EgovIndexApi.prototype.apiExecuteJson = function(method, url, params, beforeFunc, doneFunc, failFunc) {
 	if (params === null) {
 		params = new Object();
@@ -83,11 +72,16 @@ $.EgovIndexApi.prototype.apiExecuteJson = function(method, url, params, beforeFu
 	}
 	this._apiExecute('application/json; charset=UTF-8', method, url, params, beforeFunc, doneFunc, failFunc);
 };
-
+/**
+ * Form 방식 Ajax 통신
+ * - POST 전용
+ */
 $.EgovIndexApi.prototype.apiExecuteForm = function(url, params, beforeFunc, doneFunc, failFunc) {
 	this._apiExecute('application/x-www-form-urlencoded; charset=UTF-8', 'POST', url, params, beforeFunc, doneFunc, failFunc);
 };
-
+/**
+ * Multipart 방식 Ajax 통신
+ */
 $.EgovIndexApi.prototype.apiExcuteMultipart = function(url, formData, beforeFunc, doneFunc, failFunc) {
 	$.ajax({
 		enctype: 'multipart/form-data',
@@ -117,15 +111,41 @@ $.EgovIndexApi.prototype.apiExcuteMultipart = function(url, formData, beforeFunc
 			EgovIndexApi._apiResponseException(xhr);
 		}
 	});
-}
-
+};
+/**
+ * CamelCase 문자열
+ */
+$.EgovIndexApi.prototype.camelToUnderscore = function(key) {
+	let result = key.replace(/([A-Z])/g, " $1" );
+	return result.split(' ').join('_').toLowerCase();
+};
+/**
+ * 파라미터 값 얻기
+ */
+$.EgovIndexApi.prototype.getUrlParameter = function(name) {
+	let sParameterName, i;
+	let sPageURL = decodeURIComponent(window.location.search.substring(1)); 
+	let sURLVariables = sPageURL.split('&');
+	
+	for (var sURLVariable of sURLVariables) {
+		let sParameterName = sURLVariable.split('=');
+		if (sParameterName[0] === name) {
+			return  sParameterName[1] === undefined ? true : sParameterName[1];
+		}
+	}
+};
+/**
+ * 엑셀 변환 시 필요
+ */
 $.EgovIndexApi.prototype.s2ab = function(s) {
 	var buf = new ArrayBuffer(s.length);
     var view = new Uint8Array(buf);
     for (var i=0; i<s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
     return buf;
 };
-
+/**
+ * 숫자만 입력 가능
+ */
 $.EgovIndexApi.prototype.numberOnly = function(el) {
 	let $el = (el) ? $(el) : $('input:text[numberonly]');
 	$el.on('focus', function () {
@@ -143,7 +163,9 @@ $.EgovIndexApi.prototype.numberOnly = function(el) {
 		$(this).val($(this).val().replace(/[^0-9]/g, ""));
 	});
 };
-
+/**
+ * 전화번호 형식으로 입력 가능
+ */
 $.EgovIndexApi.prototype.phoneOnly = function() {
 	$('input:text[phoneonly]').attr({
 		maxlength: '13'
@@ -162,7 +184,9 @@ $.EgovIndexApi.prototype.phoneOnly = function() {
 		$(this).val($(this).val().replace(/[^0-9][-]/g, ""));
 	});
 };
-
+/**
+ * 암호 형식 제한
+ */
 $.EgovIndexApi.prototype.vaildPassword = function(str) {
 	let regExp = /^.*(?=.{10,20})(?=.*[0-9])(?=.*[a-zA-Z]).*$/;
 	if (!regExp.test(str)) {
@@ -170,7 +194,9 @@ $.EgovIndexApi.prototype.vaildPassword = function(str) {
 	}
 	return true;
 };
-
+/**
+ * Email 형식으로 제한
+ */
 $.EgovIndexApi.prototype.validEmail = function(str) {
 	var regExp = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
 	if (!regExp.test(str)) {
