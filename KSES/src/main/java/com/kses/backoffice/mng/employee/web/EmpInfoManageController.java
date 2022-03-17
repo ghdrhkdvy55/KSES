@@ -532,10 +532,10 @@ public class EmpInfoManageController {
 	 */
 	@NoLogging
 	@RequestMapping(value="empNoCheck.do", method = RequestMethod.GET)
-	public ModelAndView empNoCheck(@RequestParam("empno") String empno) throws Exception {
+	public ModelAndView empNoCheck(@RequestParam("empNo") String empNo) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		
-		int ret = uniService.selectIdDoubleCheck("EMP_NO", "TSEH_EMP_INFO_M", "EMP_NO = ["+ empno + "[" );
+		int ret = uniService.selectIdDoubleCheck("EMP_NO", "TSEH_EMP_INFO_M", "EMP_NO = ["+ empNo + "[" );
 		if (ret == 0) {
     		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("common.codeOk.msg"));
