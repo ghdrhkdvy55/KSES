@@ -158,18 +158,10 @@ public class AdminInfoManageController {
 			default:
 				throw new EgovBizException("잘못된 호출입니다.");
 		}
-		
-		String messageKey = "";
-		if (ret > 0) {
-			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-			messageKey = StringUtils.equals(adminInfo.getMode(), Globals.SAVE_MODE_INSERT) 
-					? "sucess.common.insert" : "sucess.common.update";
-		}
-		else {
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			messageKey = StringUtils.equals(adminInfo.getMode(), Globals.SAVE_MODE_INSERT) 
-					? "fail.common.insert" : "fail.common.update";
-		}
+
+		String messageKey = StringUtils.equals(adminInfo.getMode(), Globals.SAVE_MODE_INSERT)
+				? "sucess.common.insert" : "sucess.common.update";
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(messageKey));
 		
 		return model;
