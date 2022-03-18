@@ -1,23 +1,5 @@
 package com.kses.backoffice.bld.season.web;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
-import egovframework.com.cmm.util.EgovUserDetailsHelper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -30,13 +12,23 @@ import com.kses.backoffice.bld.season.vo.SeasonInfo;
 import com.kses.backoffice.bld.season.vo.SeasonSeatInfo;
 import com.kses.backoffice.sym.log.annotation.NoLogging;
 import com.kses.backoffice.util.SmartUtil;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.Globals;
+import egovframework.com.cmm.util.EgovUserDetailsHelper;
+import egovframework.rte.fdl.cmmn.exception.EgovBizException;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -72,21 +64,10 @@ public class SeasonInfoManageController {
 	@NoLogging
 	@RequestMapping(value="seasonList.do", method = RequestMethod.GET)
 	public ModelAndView viewSeasonList() throws Exception {
-		ModelAndView model = new ModelAndView("/backoffice/bld/seasonList");
-		List<Map<String, Object>> centerInfoComboList = centerInfoManageService.selectCenterInfoComboList();
-		model.addObject("centerCombo", centerInfoComboList);
-		return model;
-	}
-
-	/**
-	 * 시즌 상세 팝업 화면
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value="seasonInfoPopup.do", method = RequestMethod.GET)
-	public ModelAndView popupSeasonInfo() throws Exception {
 		ModelMap model = new ModelMap();
-		return new ModelAndView("/backoffice/bld/sub/seasonInfo", model);
+		List<Map<String, Object>> centerInfoComboList = centerInfoManageService.selectCenterInfoComboList();
+		model.addAttribute("centerCombo", centerInfoComboList);
+		return new ModelAndView("/backoffice/bld/seasonList", model);
 	}
 
 	/**
@@ -127,70 +108,70 @@ public class SeasonInfoManageController {
 		return model;
 	}
 
-	@RequestMapping (value="seasonInfoDetail.do")
-	public ModelAndView selectSeasonInfoDetail(	@ModelAttribute("loginVO") LoginVO loginVO, 
-												@RequestParam("seasonCd") String seasonCd , 
-												HttpServletRequest request, 
-												BindingResult bindingResult) throws Exception {	
-		
-		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
-	    Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-		if(!isAuthenticated) {
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-			model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
-			return model;	
-	    }	
-		
-		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-		model.addObject(Globals.STATUS_REGINFO, seasonService.selectSeasonInfoDetail(seasonCd));	     	
-		return model;
-	}
+//	@RequestMapping (value="seasonInfoDetail.do")
+//	public ModelAndView selectSeasonInfoDetail(	@ModelAttribute("loginVO") LoginVO loginVO,
+//												   @RequestParam("seasonCd") String seasonCd ,
+//												   HttpServletRequest request,
+//												   BindingResult bindingResult) throws Exception {
+//
+//		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+//		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+//		if(!isAuthenticated) {
+//			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
+//			model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
+//			return model;
+//		}
+//
+//		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+//		model.addObject(Globals.STATUS_REGINFO, seasonService.selectSeasonInfoDetail(seasonCd));
+//		return model;
+//	}
 	
-	@RequestMapping (value="seasonCenterLst.do")
-	public ModelAndView selectSeasonCenterListInfo(@ModelAttribute("loginVO") LoginVO loginVO, 
-												   @RequestParam("seasonCd") String seasonCd , 
-												   HttpServletRequest request, 
-												   BindingResult bindingResult) throws Exception {	
-		
-		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
-		try {
-			
-			
-			Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-			if(!isAuthenticated) {
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
-				return model;	
-		    }	
-			List<Map<String, Object>> list = seasonService.selectSeasonCenterInfoList(seasonCd);
-			if (list.size() > 0) {
-				String centerCd = list.get(0).get("center_cd").toString();
-				//�� 
-				Map<String, Object> search = new HashMap<String,Object>();
-				search.put("centerCd", centerCd);
-				search.put("firstIndex", "0");
-				search.put("recordCountPerPage", "100");
-				List<Map<String, Object>> floorList = floorService.selectFloorInfoList(search);
-				
-				
-				model.addObject("floorlist", floorList);
-				if(floorList.get(0).get("floor_part_dvsn").toString().equals("FLOOR_PART_1"))
-					model.addObject("partlist", partService.selectFloorPartInfoManageCombo(floorList.get(0).get("floor_cd").toString()));
-				
-			}
-			
-			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-			model.addObject(Globals.STATUS_REGINFO, list);	
-		}catch(Exception e) {
-			log.debug("error:---------------------------------------");
-			StackTraceElement[] ste = e.getStackTrace();
-			log.error(e.toString() + ":" + ste[0].getLineNumber());
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
-		}
-	         	
-		return model;
-	}
+//	@RequestMapping (value="seasonCenterLst.do")
+//	public ModelAndView selectSeasonCenterListInfo(@ModelAttribute("loginVO") LoginVO loginVO,
+//												   @RequestParam("seasonCd") String seasonCd ,
+//												   HttpServletRequest request,
+//												   BindingResult bindingResult) throws Exception {
+//
+//		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+//		try {
+//
+//
+//			Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+//			if(!isAuthenticated) {
+//				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
+//				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
+//				return model;
+//		    }
+//			List<Map<String, Object>> list = seasonService.selectSeasonCenterInfoList(seasonCd);
+//			if (list.size() > 0) {
+//				String centerCd = list.get(0).get("center_cd").toString();
+//				//��
+//				Map<String, Object> search = new HashMap<String,Object>();
+//				search.put("centerCd", centerCd);
+//				search.put("firstIndex", "0");
+//				search.put("recordCountPerPage", "100");
+//				List<Map<String, Object>> floorList = floorService.selectFloorInfoList(search);
+//
+//
+//				model.addObject("floorlist", floorList);
+//				if(floorList.get(0).get("floor_part_dvsn").toString().equals("FLOOR_PART_1"))
+//					model.addObject("partlist", partService.selectFloorPartInfoManageCombo(floorList.get(0).get("floor_cd").toString()));
+//
+//			}
+//
+//			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+//			model.addObject(Globals.STATUS_REGINFO, list);
+//		}catch(Exception e) {
+//			log.debug("error:---------------------------------------");
+//			StackTraceElement[] ste = e.getStackTrace();
+//			log.error(e.toString() + ":" + ste[0].getLineNumber());
+//			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+//			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
+//		}
+//
+//		return model;
+//	}
 	
 	@RequestMapping (value="seasonSeatListAjax.do")
 	public ModelAndView seasonSeatListAjax(	@ModelAttribute("loginVO") LoginVO loginVO, 
@@ -257,45 +238,40 @@ public class SeasonInfoManageController {
 		return model;
 		
 	}
-	@RequestMapping (value="seasonInfoUpdate.do")
-	public ModelAndView updateSeasonInfo(@ModelAttribute("LoginVO") LoginVO loginVO, 
-			                             @RequestBody SeasonInfo vo, 
-										 BindingResult result) throws Exception {
-		
+
+	/**
+	 * 시즌 정보 저장
+	 * @param seasonInfo
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping (value = "seasonInfoUpdate.do", method = RequestMethod.POST)
+	public ModelAndView updateSeasonInfo(@RequestBody SeasonInfo seasonInfo) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-		
-		if(!isAuthenticated) {
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-			model.setViewName("/backoffice/login");
-		} 	
-		try {
-			
-			model.addObject(Globals.STATUS_REGINFO , vo);
-			String meesage = "";
-			
-	    	
-			meesage = vo.getMode().equals(Globals.SAVE_MODE_INSERT) ? "sucess.common.insert" : "sucess.common.update";
-			
-			loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
-			vo.setUserId(loginVO.getAdminId());
-			int ret = seasonService.updateSeasonInfo(vo);
-			log.debug("============================================================:");
-			log.debug("ret:" +ret);
-			if (ret > 0) {
-				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));		
-			}else if (ret == -1) {
-				meesage = "fail.common.overlap";
-				model.addObject(Globals.STATUS, Globals.STATUS_OVERLAPFAIL);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));	
-			}else {
-				throw new Exception();
+
+		String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
+		seasonInfo.setFrstRegterId(userId);
+		seasonInfo.setLastUpdusrId(userId);
+
+		if (seasonService.selectSeasonCenterInclude(seasonInfo) == 0) {
+			switch (seasonInfo.getMode()) {
+				case Globals.SAVE_MODE_INSERT:
+					seasonService.insertSeasonInfo(seasonInfo);
+					break;
+				case Globals.SAVE_MODE_UPDATE:
+					seasonService.updateSeasonInfo(seasonInfo);
+					break;
+				default:
+					throw new EgovBizException("잘못된 호출입니다.");
 			}
-		} catch (Exception e){
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.insert"));	
-		}	
+		} else {
+			throw new EgovBizException("이미 해당 기간에 시즌 정보가 있습니다.");
+		}
+
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(seasonInfo.getMode().equals(Globals.SAVE_MODE_INSERT)
+			? "sucess.common.insert" : "sucess.common.update"
+		));
 		return model;
 	}
 	

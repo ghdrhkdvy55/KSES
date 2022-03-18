@@ -1,8 +1,9 @@
 package com.kses.backoffice.bld.season.service;
 
+import com.kses.backoffice.bld.season.vo.SeasonInfo;
+
 import java.util.List;
 import java.util.Map;
-import com.kses.backoffice.bld.season.vo.SeasonInfo;
 
 public interface SeasonInfoManageService {
 	
@@ -12,11 +13,13 @@ public interface SeasonInfoManageService {
     
     List<Map<String, Object>> selectSeasonCenterInfoList(String seasonCd);
     
-    int selectSeasonCenterInclude(SeasonInfo vo);
+    int selectSeasonCenterInclude(SeasonInfo seasonInfo);
     
     String selectCenterSeasonCd(Map<String, Object> params);
-    
-    int updateSeasonInfo(SeasonInfo vo);
+
+    int insertSeasonInfo(SeasonInfo seasonInfo);
+
+    int updateSeasonInfo(SeasonInfo seasonInfo);
     
     int deleteSeasonInfo(String seasonCd);
 

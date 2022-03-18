@@ -46,7 +46,7 @@
 		</div>
 		<div class="right_box">
 			<a href="javascript:fnPopupSeasonInfo();" class="blueBtn">시즌 등록</a>
-			<a href="javascript:void(0);" class="grayBtn">삭제</a>
+			<a href="javascript:fnSeasonDelete();" class="grayBtn">삭제</a>
 		</div>
 		<div class="clear"></div>
 		<div class="whiteBox">
@@ -55,12 +55,57 @@
 		</div>
 	</div>
 </div>
-<div data-popup="bld_season_add" class="popup"></div>
+<div data-popup="bld_season_add" class="popup">
+	<div class="pop_con">
+		<a class="button b-close">X</a>
+		<h2 class="pop_tit">시즌 등록</h2>
+		<div class="pop_wrap">
+			<form>
+				<input type="hidden" name="mode" value="Ins">
+				<input type="hidden" name="seasonCd">
+				<input type="hidden" name="seasonCenterinfo">
+				<table class="detail_table">
+					<tbody>
+						<tr>
+							<th>시즌명</th>
+							<td><input type="text" name="seasonNm"></td>
+							<th>사용유무</th>
+							<td>
+								<input type="radio" name="useYn" value="Y">사용</input>
+								<input type="radio" name="useYn" value="N">사용 안함</input>
+							</td>
+						</tr>
+						<tr>
+							<th>시즌시작일</th>
+							<td><input type="text" name="seasonStartDay" class="cal_icon" readonly></td>
+							<th>시즌종료일</th>
+							<td><input type="text" name="seasonEndDay" class="cal_icon" readonly></td>
+						</tr>
+						<tr>
+							<th>해당지점</th>
+							<td colspan="3">
+								<c:forEach var="item" items="${centerCombo}">
+									<input type="checkbox" name="chkCenterInfo" value="${item.center_cd}"/>
+									<c:out value="${item.center_nm}"/>
+								</c:forEach>
+							</td>
+						</tr>
+						<tr>
+							<th>상세설명</th>
+							<td colspan="3">
+								<textarea name="seasonDc" style="width:400px;height:150px;"></textarea>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</form>
+		</div>
+		<popup-right-button clickFunc="javascript:fnSeasonUpdate();"/>
+	</div>
+</div>
 <script type="text/javascript" src="/resources/jqgrid/jqgrid.custom.egovapi.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
-		// 외부 팝업 load
-		$('[data-popup=bld_season_add]').load('/backoffice/bld/seasonInfoPopup.do');
 		// 메인 목록 정의
 		EgovJqGridApi.mainGrid([
 			{ label: '시즌코드', name: 'season_cd', hidden: true, key: true },
@@ -72,14 +117,14 @@
 			{ label: '적용지점코드', name: 'season_centerinfo', hidden: true },
 			{ label: '설명', name: 'season_dc', hidden: true },
 			{ label: '수정', align:'center', sortable: false, width: 50, fixed: true, formatter: (c, o, row) =>
-				'<a href="javascript:void(0);" class="edt_icon"></a>'
+				'<a href="javascript:fnPopupSeasonInfo(\''+ row.season_cd + '\');" class="edt_icon"></a>'
 			},
 			{ label: 'GUI', align:'center', sortable: false, width: 50, fixed: true, formatter: (c, o, row) =>
 				'<a href="javascript:void(0);" class="gui_icon"></a>'
 			}
 		], false, false, fnSearch);
 	});
-
+	// 시즌 관리 목록 조회
 	function fnSearch(pageNo) {
 		let params = {
 			pageIndex: pageNo,
@@ -89,8 +134,134 @@
 		};
 		EgovJqGridApi.mainGridAjax('/backoffice/bld/seasonListAjax.do', params, fnSearch);
 	}
-
-	function fnPopupSeasonInfo() {
-		$('[data-popup=bld_season_add]').bPopup();
+	// 시즌 관리 상세 팝업 호출
+	function fnPopupSeasonInfo(rowId) {
+		let $popup = $('[data-popup=bld_season_add]');
+		let $form = $popup.find('form:first');
+		$form.find(':hidden[name=seasonCenterinfo]').val('');
+		if (rowId === undefined || rowId === null) {
+			let today = new Date();
+			$popup.find('h2:first').text('시즌 등록');
+			$form.find(':hidden[name=mode]').val('Ins');
+			$form.find(':text,textarea').val('');
+			$form.find('.cal_icon').val($.datepicker.formatDate('yymmdd', today));
+			$form.find(':radio[name=useYn]:first').prop('checked', true);
+			$form.find(':checkbox[name=chkCenterInfo]').prop('checked', false);
+			fnSeasonCenterCheckbox([$('#loginCenterCd').val()]);
+		} else {
+			let rowData = EgovJqGridApi.getMainGridRowData(rowId);
+			EgovJqGridApi.selection('mainGrid', rowId);
+			$popup.find('h2:first').text('시즌 수정');
+			$form.find(':hidden[name=mode]').val('Edt');
+			$form.find(':hidden[name=seasonCd]').val(rowData.season_cd);
+			$form.find(':text[name=seasonNm]').val(rowData.season_nm);
+			$form.find(':text[name=seasonStartDay]').val(rowData.season_start_day);
+			$form.find(':text[name=seasonEndDay]').val(rowData.season_end_day);
+			$form.find(':radio[name=useYn][value='+ rowData.use_yn +']').prop('checked', true);
+			$form.find('textarea').val(rowData.season_dc);
+			$form.find(':checkbox[name=chkCenterInfo]').prop('checked', false);
+			fnSeasonCenterCheckbox(rowData.season_centerinfo.split(','));
+		}
+		switch ($('#loginAuthorCd').val()) {
+			case 'ROLE_ADMIN':
+			case 'ROLE_SYSTEM':
+				$('tr:eq(2),.blueBtn', $popup).show();
+				break;
+			default:
+				$('tr:eq(2),.blueBtn', $popup).hide();
+				if ($(':hidden[name=mode]').val() === 'Ins') {
+					$('.blueBtn').show();
+				} else if ($(':hidden[name=mode]').val() === 'Edt') {
+					$.each($(':checkbox[name=chkCenterInfo]', $popup), function() {
+						if ($(this).val() === $('#loginCenterCd').val()) {
+							$('.blueBtn').show();
+							return false;
+						}
+					});
+				}
+		}
+		$popup.bPopup();
+	}
+	// 시즌 관리 저장
+	function fnSeasonUpdate() {
+		let $popup = $('[data-popup=bld_season_add]');
+		if ($popup.find(':text[name=seasonNm]').val() === '') {
+			toastr.warning('시즌명을 입력해 주세요.');
+			return;
+		}
+		let seasonStartDay = $popup.find(':text[name=seasonStartDay]').val();
+		let seasonEndDay = $popup.find(':text[name=seasonEndDay]').val();
+		if (seasonStartDay === '') {
+			toastr.warning('시즌시작일을 선택해 주세요.');
+			return;
+		}
+		if (seasonEndDay === '') {
+			toastr.warning('시즌종료일을 선택해 주세요.');
+			return;
+		} else {
+			if (seasonStartDay > seasonEndDay) {
+				toastr.warning('시즌종료일이 시즌시작일보다 빠릅니다.');
+				return;
+			}
+		}
+		if ($popup.find(':checkbox[name=chkCenterInfo]:checked').length === 0) {
+			toastr.warning('시즌을 사용할 지점을 선택 하지 않았습니다.');
+			return;
+		} else {
+			$.each($(':checkbox[name=chkCenterInfo]:checked', $popup), function() {
+				let seasonCenterinfo = $(':hidden[name=seasonCenterinfo]').val();
+				if (seasonCenterinfo === '') {
+					$(':hidden[name=seasonCenterinfo]').val($(this).val());
+				} else {
+					$(':hidden[name=seasonCenterinfo]').val(seasonCenterinfo+','+$(this).val());
+				}
+			});
+		}
+		bPopupConfirm('시즌정보 저장', '저장 하시겠습니까?', function() {
+			EgovIndexApi.apiExecuteJson(
+				'POST',
+				'/backoffice/bld/seasonInfoUpdate.do',
+				$popup.find('form:first').serializeObject(),
+				null,
+				function(json) {
+					toastr.success(json.message);
+					$popup.bPopup().close();
+					fnSearch(1);
+				},
+				function(json) {
+					toastr.error(json.message);
+				}
+			);
+		});
+	}
+	// 시즌 관리 삭제
+	function fnSeasonDelete() {
+		let $popup = $('[data-popup=bld_season_add]');
+		let rowId = EgovJqGridApi.getMainGridSingleSelectionId();
+		if (rowId === null) {
+			toastr.warning('목록을 선택해 주세요.');
+			return false;
+		}
+		bPopupConfirm('시즌정보 삭제', '삭제 하시겠습니까?', function() {
+			EgovIndexApi.apiExecuteJson(
+				'POST',
+				'/backoffice/bld/seasonInfoDelete.do', {
+					seasonCd: rowId
+				},
+				null,
+				function(json) {
+					toastr.success(json.message);
+					fnSearch(1);
+				},
+				function(json) {
+					toastr.error(json.message);
+				}
+			);
+		});
+	}
+	// 시즌 해당 지점 체크
+	function fnSeasonCenterCheckbox(arr) {
+		let $popup = $('[data-popup=bld_season_add]');
+		arr.forEach(x => $(':checkbox[name=chkCenterInfo][value='+x+']', $popup).prop('checked', true));
 	}
 </script>
