@@ -298,7 +298,6 @@ public class Scheduler {
 	 * 
 	 * @throws Exception
 	 */
-	//@Scheduled(cron="0 0/3 * * * *")
 	@Scheduled(cron="0 59 23 ? * 7", zone="Asia/Seoul")
 	public void selectInterfaceLogFileCreate() throws Exception {		
 		LOGGER.info("----------------------------KSES INTERFACE LOG FILE CRATE BATCH START----------------------------");

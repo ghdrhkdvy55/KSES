@@ -1,10 +1,12 @@
 package com.kses.backoffice.sys.board.web;
 
-import java.io.File;
+import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -198,11 +200,6 @@ public class BoardInfoManageController {
 			
 			return model;
 		}
-		
-		
-		
-		
-		
 		
 		@RequestMapping (value="boardSetUpdate.do")
 		public ModelAndView boardSetUpdate(@RequestBody BoardSetInfo info 
@@ -582,4 +579,71 @@ public class BoardInfoManageController {
 			
 		    return new ModelAndView("FileDownloadView", "allData",allData);
 		}
+		
+    @RequestMapping(value="boardEditorFileUpload.do")
+    public void boardEditorFileUpload(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        try {
+            String sFileInfo = "";
+            String filename = request.getHeader("file-name");
+            String filename_ext = filename.substring(filename.lastIndexOf(".")+1);
+            filename_ext = filename_ext.toLowerCase();
+            String[] allow_file = {"jpg","png","bmp","gif"};
+
+			int cnt = 0;
+			for(int i=0; i<allow_file.length; i++) {
+				if(filename_ext.equals(allow_file[i])){
+					cnt++;
+				}
+			}
+
+			if(cnt == 0) {
+				PrintWriter print = response.getWriter();
+				print.print("NOTALLOW_"+filename);
+				print.flush();
+				print.close();
+			} else {
+				String dftFilePath = propertiesService.getString("Globals.filePath") + "/";
+				String filePath = dftFilePath + "editor" + File.separator;
+				File file = new File(filePath);
+				if(!file.exists()) {
+					file.mkdirs();
+				}
+				String realFileNm = "";
+				SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+				String today= formatter.format(new java.util.Date());
+				realFileNm = today+UUID.randomUUID().toString() + filename.substring(filename.lastIndexOf("."));
+				String rlFileNm = filePath + realFileNm;
+				
+				InputStream is = request.getInputStream();
+				OutputStream os=new FileOutputStream(rlFileNm);
+				int numRead;
+				byte b[] = new byte[Integer.parseInt(request.getHeader("file-size"))];
+				
+				while((numRead = is.read(b,0,b.length)) != -1){
+					os.write(b,0,numRead);
+				}
+				
+				if(is != null) {
+					is.close();
+				}
+			
+				os.flush();
+				os.close();
+	
+				sFileInfo += "&bNewLine=true";
+				sFileInfo += "&sFileName="+ filename;;
+				sFileInfo += "&sFileURL="+"/upload/editor/"+realFileNm;
+				
+				PrintWriter print = response.getWriter();
+				print.print(sFileInfo);
+				print.flush();
+				print.close();
+            }
+		} catch (Exception e){
+			StackTraceElement[] ste = e.getStackTrace();
+			int lineNumber = ste[0].getLineNumber();
+			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
+			LOGGER.info(e.toString());
+        }
+    }
 }
