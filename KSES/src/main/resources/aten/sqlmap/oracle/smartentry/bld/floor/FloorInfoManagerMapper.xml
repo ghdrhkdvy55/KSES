@@ -52,7 +52,7 @@
     
     <select id="selectFloorInfoComboList" resultType="lmap">
 		SELECT  
-			A.FLOOR_CD, A.FLOOR_NM 
+			A.FLOOR_CD, A.FLOOR_NM, A.FLOOR_PART_DVSN
 		FROM TSEB_FLOOR_INFO_M A, COMTCCMMNDETAILCODE B
 		WHERE A.USE_YN = 'Y'
 		AND B.CODE = A.FLOOR_INFO
