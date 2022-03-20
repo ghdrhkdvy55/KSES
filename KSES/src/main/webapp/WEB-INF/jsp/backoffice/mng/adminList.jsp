@@ -181,13 +181,13 @@
 	        }
 		], true, false, fnSearch);
 		// 직원 검색 JqGrid 정의
-		EgovJqGridApi.defaultGrid('popGrid', [
+		EgovJqGridApi.pagingGrid('popGrid', [
 			{ label: '사번', name: 'emp_no', align: 'center', sortable: false, key: true },
 			{ label: '이름', name: 'emp_nm', align: 'center', sortable: false },
 			{ label: '부서', name: 'dept_nm', align: 'center', sortable: false },
 			{ label: '전화번호', name: 'emp_clphn', hidden: true },
 			{ label: '이메일', name: 'emp_email', hidden: true }
-		], 'popPager');
+		], 'popPager', false);
 		// 관리자 상세 화면의 권한 Select Change Event 정의
 		$('[data-popup=mng_admin_add] select[name=authorCd]').change(function(e) {
 			let $center = $('[data-popup=mng_admin_add] select[name=centerCd]');
@@ -348,11 +348,11 @@
 			searchKeyword: $('#pSearchKeyword').val(),
 			mode: 'list'
 		};
-		EgovJqGridApi.defaultGridAjax('popGrid', '/backoffice/mng/empListAjax.do', params, fnEmpInfoSearch);
+		EgovJqGridApi.pagingGridAjax('popGrid', '/backoffice/mng/empListAjax.do', params, fnEmpInfoSearch);
 	}
 	// 관리자 등록 위한 직원 중복 체크
 	function fnAdminIdCheck() {
-		let rowId = EgovJqGridApi.getDefaultGridSelectionId('popGrid');
+		let rowId = EgovJqGridApi.getGridSelectionId('popGrid');
 		if (rowId === null) {
 			toastr.warning('목록을 선택해주세요.');
 			return;
@@ -365,7 +365,7 @@
 			null,
 			function(json) {
 				toastr.info(json.message);
-				let rowData = EgovJqGridApi.getDefaultGridRowData('popGrid', rowId);
+				let rowData = EgovJqGridApi.getGridRowData('popGrid', rowId);
 				let $popup = $('[data-popup=mng_admin_add]');
 				$popup.find(':hidden[name=adminId]').val(rowId);
 				$popup.find(':text[name=empNo]').val(rowId);

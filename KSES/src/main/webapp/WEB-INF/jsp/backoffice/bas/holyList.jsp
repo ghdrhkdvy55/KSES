@@ -358,7 +358,7 @@
 			pageUnit: '5',
 			holyDt: $('[data-popup=bas_holiday_add]').find(':text[name=holyDt]').val()
 		};
-		EgovJqGridApi.defaultGridAjax('popGrid', '/backoffice/bas/holyCenterListAjax.do', params, fnCenterHolyInfoSearch);
+		EgovJqGridApi.defaultGridAjaxPaging('popGrid', '/backoffice/bas/holyCenterListAjax.do', params, fnCenterHolyInfoSearch);
 	}
 	// 엑셀 다운로드
 	function fnExcelDownload() {

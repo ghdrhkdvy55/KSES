@@ -228,19 +228,20 @@
 			$form.find('span#sp_Unqi').show();
 		});
 		// 팝업 JqGrid 정의
-		EgovJqGridApi.defaultGrid('popGrid', [
+		EgovJqGridApi.pagingGrid('popGrid', [
 			{ label: '파일명', name: 'progrm_file_nm', align: 'center', sortable: false, key: true },
 			{ label: '한글명',  name: 'progrm_koreannm', align: 'left', sortable: false },
 			{ label: '저장경로', name: 'progrm_stre_path', align: 'left', sortable: false }
 		], 'popPager').jqGrid('setGridParam', {
 			ondblClickRow: function(rowId, iRow, iCol, e) {
-				let rowData = EgovJqGridApi.getDefaultGridRowData('popGrid', rowId);
+				let rowData = EgovJqGridApi.getGridRowData('popGrid', rowId);
 				fnProgramSelect(rowData);
 			}
 		});
 		// 프로그램 선택 팝업 [선택] 버튼 클릭 시 
 		$('[data-popup=bas_progrm_create] .blueBtn').click(function(e) {
-			let rowData = EgovJqGridApi.getDefaultGridSelectionData('popGrid');
+			let rowId = EgovJqGridApi.getGridSelectionId('popGrid');
+			let rowData = EgovJqGridApi.getGridRowData('popGrid', rowId);
 			fnProgramSelect(rowData);
 		});
 		fnJstreeRefresh();
@@ -390,13 +391,13 @@
 			pageUnit: '5',
 			searchKeyword: $('[data-popup=bas_progrm_create] #searchKeyword').val()
 		};
-		EgovJqGridApi.defaultGridAjax('popGrid', '/backoffice/bas/progrmListAjax.do', params, fnProgramSearch);
+		EgovJqGridApi.pagingGridAjax('popGrid', '/backoffice/bas/progrmListAjax.do', params, fnProgramSearch);
 	}
 	// 프로그램 선택 시
 	function fnProgramSelect(rowData) {
 		let $popup = $('[data-popup=bas_progrm_create]');
-		$popup.find(':hidden[name=progrmFileNm]').val(rowData.progrm_file_nm);
-		$popup.find(':text[name=progrmKoreannm]').val(rowData.progrm_koreannm);
+		$(':hidden[name=progrmFileNm]').val(rowData.progrm_file_nm);
+		$(':text[name=progrmKoreannm]').val(rowData.progrm_koreannm);
 		$popup.bPopup().close();
 	}
 	

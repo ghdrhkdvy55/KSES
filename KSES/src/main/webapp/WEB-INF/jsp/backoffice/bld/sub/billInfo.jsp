@@ -76,10 +76,10 @@
             {label: '삭제', align:'center', width: 50, fixed: true, formatter: (c, o, row) =>
                 '<a href="javascript:BillInfo.delete(\''+ row.bill_seq +'\');" class="del_icon"></a>'
             }
-        ], null, []).jqGrid('setGridParam', {
+        ], false).jqGrid('setGridParam', {
             onSelectRow: function (rowId, status, e) {
                 let $popup = BillInfo.getPopup();
-                let rowData = EgovJqGridApi.getDefaultGridRowData('billInfoGrid', rowId);
+                let rowData = EgovJqGridApi.getGridRowData('billInfoGrid', rowId);
                 $popup.find('#spModeNm').text('수정');
                 $popup.find(':hidden[name=mode]').val('Edt');
                 $popup.find(':hidden[name=billSeq]').val(rowData.bill_seq);
