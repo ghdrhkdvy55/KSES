@@ -97,6 +97,42 @@ $.EgovJqGridApi.prototype.selection = function(id, rowId) {
 		$('#'+id).jqGrid('setSelection', rowId);
 	}
 };
+/**
+ * jqGrid Default Editable Option
+ */
+$.EgovJqGridApi.prototype.getGridEditOption = function(num) {
+	return {
+		dataInit: function(el) {
+			EgovIndexApi.numberOnly(el);
+		},
+		size: num,
+		maxlength: num
+	}
+};
+/**
+ * jqGrid 그리드 RowData 가져오기
+ */
+$.EgovJqGridApi.prototype.getGridRowData = function(id, rowId) {
+	return $('#'+id).jqGrid('getRowData', rowId);
+};
+/**
+ * jqGrid 그리드 선택된 RowId 가져오기
+ */
+$.EgovJqGridApi.prototype.getGridSelectionId = function(id) {
+	return $('#'+id).jqGrid('getGridParam', 'selrow');
+};
+/**
+ * jqGrid 그리드 선택된 복수의 RowId 목록 가져오기
+ */
+$.EgovJqGridApi.prototype.getGridMutipleSelectionIds = function(id) {
+	return $('#'+id).jqGrid('getGridParam', 'selarrrow');
+};
+/**
+ * jqGrid 그리드 목록 초기화
+ */
+$.EgovJqGridApi.prototype.clearGrid = function(id) {
+	$('#'+id).jqGrid('clearGridData');
+};
 /************************************************************************************************
  * public 메인 그리드 함수
  * - editable 가능
@@ -232,18 +268,15 @@ $.EgovJqGridApi.prototype.getSubGridRowData = function(parentId, rowId) {
 	return $(MainGridSelector + '_' + parentId + '_t').jqGrid('getRowData', rowId);
 };
 /************************************************************************************************
- * public 기본 그리드 함수 (확장형)
+ * public 페이징 그리드 함수
+ * - paging 있음
  * - editable 가능
- * - multiselect 없음
  * - subgrid expend 기능 없음
  * - resize 안됨
  ************************************************************************************************/
-/**
- * jqGrid 확장형 기본 그리드 출력
- */
-$.EgovJqGridApi.prototype.defaultGrid = function(id, colModel, pagerId, rowList) {
+$.EgovJqGridApi.prototype.pagingGrid = function(id, colModel, pagerId, rowList, multiselect) {
 	this._formatter(colModel);
-	this._init('POST', colModel, false, false, false);
+	this._init('POST', colModel, multiselect, false, false);
 	this._jqGridParams['url'] = null;
 	this._jqGridParams['pager'] = $('#'+ pagerId);
 	this._jqGridParams['rowList'] = rowList === undefined ? [] : rowList;
@@ -251,17 +284,14 @@ $.EgovJqGridApi.prototype.defaultGrid = function(id, colModel, pagerId, rowList)
 	$('th#'+id+'_rn').children('div:first').append('NO');
 	return retGrid;
 };
-/**
- * jqGrid 확장형 기본 그리드 데이터 출력
- */
-$.EgovJqGridApi.prototype.defaultGridAjax = function(id, url, params, searchFunc) {
+$.EgovJqGridApi.prototype.pagingGridAjax = function(id, url, params, searchFunc) {
 	let jqGridParams = {
 		url: url,
 		postData: JSON.stringify(params),
 		loadComplete: function(data) {
 			if (data.status === 'FAIL') {
 				toastr.error(data.message);
-				return false;				
+				return false;
 			}
 		},
 		onPaging: function(pgButton) {
@@ -273,21 +303,35 @@ $.EgovJqGridApi.prototype.defaultGridAjax = function(id, url, params, searchFunc
 	};
 	$('#'+id).jqGrid('setGridParam', jqGridParams).trigger('reloadGrid');
 };
-/**
- * jqGrid 확장형 기본 그리드 RowData 가져오기
- */
-$.EgovJqGridApi.prototype.getDefaultGridRowData = function(id, rowId) {
-	return $('#'+id).jqGrid('getRowData', rowId);
+/************************************************************************************************
+ * public 기본 그리드 함수
+ * - paging 없음
+ * - editable 가능
+ * - subgrid expend 기능 없음
+ * - resize 안됨
+ ************************************************************************************************/
+$.EgovJqGridApi.prototype.defaultGrid = function(id, colModel, multiselect) {
+	this._formatter(colModel);
+	this._init('POST', colModel, multiselect, false, false);
+	this._jqGridParams['url'] = null;
+	let retGrid = $('#'+id).jqGrid(this._jqGridParams);
+	$('th#'+id+'_rn').children('div:first').append('NO');
+	return retGrid;
 };
-/**
- * jqGrid 확장형 기본 그리드 선택된 RowId 가져오기
- */
-$.EgovJqGridApi.prototype.getDefaultGridSelectionId = function(id) {
-	return $('#'+id).jqGrid('getGridParam', 'selrow');
-};
-/**
- * jqGrid 확장형 기본 그리드 선택된 RowData 가져오기
- */
-$.EgovJqGridApi.prototype.getDefaultGridSelectionData = function(id) {
-	return $('#'+id).jqGrid('getRowData', this.getDefaultGridSelectionId(id));
+$.EgovJqGridApi.prototype.defaultGridAjax = function(id, url, params, rowNum, callback) {
+	let jqGridParams = {
+		url: url,
+		postData: JSON.stringify(params),
+		rowNum: rowNum,
+		loadComplete: function(data) {
+			if (data.status === 'FAIL') {
+				toastr.error(data.message);
+				return false;
+			}
+			if (callback !== undefined && callback !== null) {
+				callback(data.resultlist);
+			}
+		}
+	};
+	$('#'+id).jqGrid('setGridParam', jqGridParams).trigger('reloadGrid');
 };
