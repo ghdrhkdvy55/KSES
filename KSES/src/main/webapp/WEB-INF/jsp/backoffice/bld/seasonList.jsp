@@ -103,9 +103,11 @@
 		<popup-right-button clickFunc="javascript:fnSeasonUpdate();"/>
 	</div>
 </div>
+<nav id="cbp-spmenu-season" class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right"></nav>
 <script type="text/javascript" src="/resources/jqgrid/jqgrid.custom.egovapi.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
+		$('#cbp-spmenu-season').load('/backoffice/bld/seasonSeatGui.do');
 		// 메인 목록 정의
 		EgovJqGridApi.mainGrid([
 			{ label: '시즌코드', name: 'season_cd', hidden: true, key: true },
@@ -120,7 +122,7 @@
 				'<a href="javascript:fnPopupSeasonInfo(\''+ row.season_cd + '\');" class="edt_icon"></a>'
 			},
 			{ label: 'GUI', align:'center', sortable: false, width: 50, fixed: true, formatter: (c, o, row) =>
-				'<a href="javascript:void(0);" class="gui_icon"></a>'
+				'<a href="javascript:fnSeasonSeatGuiOpen(\''+row.season_cd+'\');" class="gui_icon"></a>'
 			}
 		], false, false, fnSearch);
 	});
@@ -150,7 +152,6 @@
 			fnSeasonCenterCheckbox([$('#loginCenterCd').val()]);
 		} else {
 			let rowData = EgovJqGridApi.getMainGridRowData(rowId);
-			EgovJqGridApi.selection('mainGrid', rowId);
 			$popup.find('h2:first').text('시즌 수정');
 			$form.find(':hidden[name=mode]').val('Edt');
 			$form.find(':hidden[name=seasonCd]').val(rowData.season_cd);
@@ -161,6 +162,7 @@
 			$form.find('textarea').val(rowData.season_dc);
 			$form.find(':checkbox[name=chkCenterInfo]').prop('checked', false);
 			fnSeasonCenterCheckbox(rowData.season_centerinfo.split(','));
+            EgovJqGridApi.selection('mainGrid', rowId);
 		}
 		switch ($('#loginAuthorCd').val()) {
 			case 'ROLE_ADMIN':
@@ -263,5 +265,9 @@
 	function fnSeasonCenterCheckbox(arr) {
 		let $popup = $('[data-popup=bld_season_add]');
 		arr.forEach(x => $(':checkbox[name=chkCenterInfo][value='+x+']', $popup).prop('checked', true));
+	}
+	// 시즌 좌석 GUI 화면
+	function fnSeasonSeatGuiOpen(seasonCd) {
+		SeasonSeatGui.initialize(seasonCd);
 	}
 </script>

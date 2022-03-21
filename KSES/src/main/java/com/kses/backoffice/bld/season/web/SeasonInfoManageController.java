@@ -1,8 +1,5 @@
 package com.kses.backoffice.bld.season.web;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.kses.backoffice.bld.center.service.CenterInfoManageService;
 import com.kses.backoffice.bld.floor.service.FloorInfoManageService;
 import com.kses.backoffice.bld.floor.service.FloorPartInfoManageService;
@@ -22,11 +19,9 @@ import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -126,117 +121,81 @@ public class SeasonInfoManageController {
 //		model.addObject(Globals.STATUS_REGINFO, seasonService.selectSeasonInfoDetail(seasonCd));
 //		return model;
 //	}
-	
-//	@RequestMapping (value="seasonCenterLst.do")
-//	public ModelAndView selectSeasonCenterListInfo(@ModelAttribute("loginVO") LoginVO loginVO,
-//												   @RequestParam("seasonCd") String seasonCd ,
-//												   HttpServletRequest request,
-//												   BindingResult bindingResult) throws Exception {
-//
-//		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-//		try {
-//
-//
-//			Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-//			if(!isAuthenticated) {
-//				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-//				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
-//				return model;
-//		    }
-//			List<Map<String, Object>> list = seasonService.selectSeasonCenterInfoList(seasonCd);
-//			if (list.size() > 0) {
-//				String centerCd = list.get(0).get("center_cd").toString();
-//				//��
-//				Map<String, Object> search = new HashMap<String,Object>();
-//				search.put("centerCd", centerCd);
-//				search.put("firstIndex", "0");
-//				search.put("recordCountPerPage", "100");
-//				List<Map<String, Object>> floorList = floorService.selectFloorInfoList(search);
-//
-//
-//				model.addObject("floorlist", floorList);
-//				if(floorList.get(0).get("floor_part_dvsn").toString().equals("FLOOR_PART_1"))
-//					model.addObject("partlist", partService.selectFloorPartInfoManageCombo(floorList.get(0).get("floor_cd").toString()));
-//
-//			}
-//
-//			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-//			model.addObject(Globals.STATUS_REGINFO, list);
-//		}catch(Exception e) {
-//			log.debug("error:---------------------------------------");
-//			StackTraceElement[] ste = e.getStackTrace();
-//			log.error(e.toString() + ":" + ste[0].getLineNumber());
-//			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-//			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
-//		}
-//
-//		return model;
-//	}
-	
-	@RequestMapping (value="seasonSeatListAjax.do")
-	public ModelAndView seasonSeatListAjax(	@ModelAttribute("loginVO") LoginVO loginVO, 
-												@RequestBody Map<String, Object> searchVO,
-												HttpServletRequest request, 
-												BindingResult bindingResult) throws Exception {	
-		
-		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
-		try {
-			Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-			if(!isAuthenticated) {
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
-				return model;	
-		    }	
-			searchVO.put("firstIndex", 0);
-			searchVO.put("recordCountPerPage", 3000);
-			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-			List<Map<String, Object>> seasonList = seasonSeatService.selectSeasonSeatInfoList(searchVO);
-			int totCnt = seasonList.size() > 0 ?  Integer.valueOf( seasonList.get(0).get("total_record_count").toString()) : 0;
-			model.addObject(Globals.JSON_RETURN_RESULTLISR, seasonList);
-			model.addObject(Globals.PAGE_TOTALCNT, totCnt);
-		    
-		    if (searchVO.get("searchFloorCd") != null ) {
-		    	log.info(searchVO.get("searchPartCd").toString());
-		    	System.out.println((String)searchVO.get("searchPartCd") == "0");
-		    	System.out.println("0".equals((String)searchVO.get("searchPartCd")));
-		    	Map<String, Object> mapInfo = "0".equals((String)searchVO.get("searchPartCd")) ? floorService.selectFloorInfoDetail(searchVO.get("searchFloorCd").toString()) : partService.selectFloorPartInfoDetail(searchVO.get("searchPartCd").toString());
-		    	model.addObject("seatMapInfo", mapInfo);
-		    }
-		    
-		}catch(Exception e) {
-			log.debug("error:---------------------------------------");
-			StackTraceElement[] ste = e.getStackTrace();
-			log.error(e.toString() + ":" + ste[0].getLineNumber());
-			
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
-		}
+
+	/**
+	 * 시즌 지점 조회
+	 * @param seasonCd
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "seasonCenterList.do", method = RequestMethod.GET)
+	public ModelAndView selectSeasonCenterListInfo(@RequestParam("seasonCd") String seasonCd) throws Exception {
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+
+		List<Map<String, Object>> centerList = seasonService.selectSeasonCenterInfoList(seasonCd);
+		model.addObject(Globals.JSON_RETURN_RESULTLISR, centerList);
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+
+		return model;
+	}
+
+	/**
+	 * 시즌 좌석 GUI 화면
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping (value = "seasonSeatGui.do", method = RequestMethod.GET)
+	public ModelAndView guiSeasonSeat() throws Exception {
+		return new ModelAndView("/backoffice/bld/sub/seasonSeatGui");
+	}
+
+	/**
+	 * 시즌 좌석 조회
+	 * @param searchVO
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping (value = "seasonSeatListAjax.do", method = RequestMethod.POST)
+	public ModelAndView seasonSeatListAjax(@RequestBody Map<String, Object> searchVO) throws Exception {
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+
+		PaginationInfo paginationInfo = new PaginationInfo();
+		paginationInfo.setCurrentPageNo(1);
+		paginationInfo.setRecordCountPerPage(3000);
+		paginationInfo.setPageSize(propertiesService.getInt("pageSize"));
+
+		searchVO.put("firstIndex", paginationInfo.getFirstRecordIndex());
+		searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
+		searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
+
+		List<Map<String, Object>> seasonList = seasonSeatService.selectSeasonSeatInfoList(searchVO);
+		int totCnt = seasonList.size() > 0 ?  Integer.valueOf(seasonList.get(0).get("total_record_count").toString()) : 0;
+		paginationInfo.setTotalRecordCount(totCnt);
+
+		model.addObject(Globals.STATUS_REGINFO, searchVO);
+		model.addObject(Globals.JSON_RETURN_RESULTLISR, seasonList);
+		model.addObject(Globals.PAGE_TOTALCNT, paginationInfo.getTotalRecordCount());
+		model.addObject(Globals.JSON_PAGEINFO, paginationInfo);
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 	       	
 		return model;
-	}	
-	
-	
+	}
+
+	/**
+	 * 좌석 설정 업데이트
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value="seasonGuiUpdate.do", method=RequestMethod.POST)
-	public ModelAndView updateSeatGuiPosition (	@RequestBody Map<String, Object> params, 
-												HttpServletRequest request, 
-												BindingResult bindingResult) throws Exception {
-		
+	public ModelAndView updateSeatGuiPosition (@RequestBody List<SeasonSeatInfo> seasonSeatInfoList) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-		
-		try {
-			
-			Gson gson = new GsonBuilder().create();
-			List<SeasonSeatInfo> seatInfos = gson.fromJson(params.get("data").toString(), new TypeToken<List<SeasonSeatInfo>>(){}.getType());
-			int result = seasonSeatService.updateSeasonSeatPositionInfo(seatInfos);
-			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-            model.addObject("resutlCnt", result);
-		}catch(Exception e) {
-			log.info(e.toString());
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.update"));
-		}
+
+		seasonSeatService.updateSeasonSeatPositionInfo(seasonSeatInfoList);
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("sucess.common.update"));
+
 		return model;
-		
 	}
 
 	/**
@@ -274,30 +233,21 @@ public class SeasonInfoManageController {
 		));
 		return model;
 	}
-	
-	@RequestMapping (value="seasonInfoDelete.do")
-	public ModelAndView deleteSeasonInfoManage(	@ModelAttribute("loginVO") LoginVO loginVO,
-												@RequestBody Map<String, Object> info  ) throws Exception {
-		
-		
-		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
-	    Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-	    
-	    if(!isAuthenticated) {
-	    	model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-	    	model.setViewName("/backoffice/login");
-	    	return model;	
-	    }	
-	    
-	    try {
-	    	seasonService.deleteSeasonInfo(info.get("seasonCd").toString());
-			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-	    	model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.delete") );
-		} catch (Exception e) {
-			log.info(e.toString());
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.delete"));			
-		}		
+
+	/**
+	 * 시즌 정보 삭제
+	 * @param seasonInfo
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "seasonInfoDelete.do", method = RequestMethod.POST)
+	public ModelAndView deleteSeasonInfoManage(@RequestBody SeasonInfo seasonInfo) throws Exception {
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+
+		seasonService.deleteSeasonInfo(seasonInfo.getSeasonCd());
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.delete") );
+
 		return model;
 	}
 	
