@@ -10,25 +10,36 @@
 				TB.* 
 			FROM 	
 			(	
-				SELECT A.USER_ID, A.USER_NM,
-				A.USER_PHONE, A.USER_EMAIL,
-				CASE 
-					WHEN A.VACNTN_ROUND IS NULL THEN '입력정보 없음'
-					ELSE FN_DETAILCODENM(A.VACNTN_ROUND)
-				END AS VACNTN_ROUND_TEXT,
-				CASE 
-					WHEN A.VACNTN_DVSN IS NULL THEN '입력정보 없음'
-					ELSE FN_DETAILCODENM(A.VACNTN_DVSN)
-				END AS VACNTN_DVSN_TEXT,
-				CASE 
-					WHEN A.VACNTN_DT IS NULL THEN '입력정보 없음'
-					ELSE TO_CHAR(TO_DATE(A.VACNTN_DT,'YYYY-MM-DD'),'YYYY-MM-DD')
-				END AS VACNTN_DT,
-				CASE A.USER_SEX_MF 
-					WHEN 'M' THEN '남성' 
-					ELSE '여성' 
-				END AS USER_SEX_MF,
-				TO_CHAR(TO_DATE(A.USER_BIRTH_DY, 'yyyy-mm-dd'), 'yyyy-mm-dd') AS USER_BIRTH_DY
+				SELECT
+					A.USER_ID,
+					A.USER_NM,
+					A.USER_PHONE,
+					A.USER_EMAIL,
+					CASE WHEN A.VACNTN_ROUND IS NULL THEN '입력정보 없음'
+						 ELSE FN_DETAILCODENM(A.VACNTN_ROUND)
+					END AS VACNTN_ROUND_TEXT,
+					CASE WHEN A.VACNTN_DVSN IS NULL THEN '입력정보 없음'
+						 ELSE FN_DETAILCODENM(A.VACNTN_DVSN)
+					END AS VACNTN_DVSN_TEXT,
+					CASE WHEN A.VACNTN_DT IS NULL THEN '입력정보 없음'
+						 ELSE TO_CHAR(TO_DATE(A.VACNTN_DT,'YYYY-MM-DD'),'YYYY-MM-DD')
+					END AS VACNTN_DT,
+					CASE A.USER_SEX_MF 
+						WHEN 'M' THEN '남성' 
+						ELSE '여성' 
+					END AS USER_SEX_MF,
+					TO_CHAR(TO_DATE(A.USER_BIRTH_DY, 'yyyy-mm-dd'), 'yyyy-mm-dd') AS USER_BIRTH_DY,
+					CASE A.INDVDLINFO_AGRE_YN 
+                		WHEN 'Y' THEN '동의' 
+                		ELSE '동의 안함'
+            		END AS INDVDLINFO_AGRE_YN, 
+					CASE A.INDVDLINFO_AGRE_DT
+                		WHEN NULL THEN '동의 안함'
+						ELSE TO_CHAR(A.INDVDLINFO_AGRE_DT, 'yyyy-mm-dd')
+					END AS INDVDLINFO_AGRE_DT,
+					A.VACNTN_DVSN,
+					A.VACNTN_ROUND,
+					A.VACNTN_DT AS VACNTN_DT_POP 
 				FROM TSER_USER_INFO_I A
 				WHERE A.USER_DVSN = 'USER_DVSN_1'
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
