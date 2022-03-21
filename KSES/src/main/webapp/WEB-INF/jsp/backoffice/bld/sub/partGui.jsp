@@ -41,7 +41,7 @@
                 <a href="javascript:void(0);" class="defaultBtn" style="margin-right:10px;">좌석일괄등록</a>
             </div>
             <div class="scroll_table" style="width:650px;height:508px;padding-top:0px;">
-                <div style="width:638px;">
+                <div style="width:650px;">
                     <table id="guiPartGrid"></table>
                 </div>
             </div>
@@ -62,10 +62,10 @@
             { label: '좌석코드', name: 'seat_cd', key: true, hidden: true },
             { label: '좌석번호', name: 'seat_number', align: 'center', sortable: false },
             { label: '좌석명', name: 'seat_nm', align: 'center', sortable: false },
-            { label: 'TOP', name: 'seat_top', align: 'center', sortable: false, editable: true, editoptions: this.gridEditOptions(4) },
-            { label: 'LEFT', name: 'seat_left', align: 'center', sortable: false, editable: true, editoptions: this.gridEditOptions(4) },
+            { label: 'TOP', name: 'seat_top', align: 'center', sortable: false, editable: true, editoptions: EgovJqGridApi.getGridEditOption(4) },
+            { label: 'LEFT', name: 'seat_left', align: 'center', sortable: false, editable: true, editoptions: EgovJqGridApi.getGridEditOption(4) },
             { label: '정렬순서', name: 'seat_order', hidden: true },
-        ], null, []).jqGrid('setGridParam', {
+        ], false).jqGrid('setGridParam', {
             cellEdit: true,
             cellsubmit: 'clientArray',
             beforeSaveCell: function(rowId, name, val) {
@@ -93,8 +93,8 @@
     
     $.PartGui.prototype.initialize = function(partCd, floorCd) {
     	let $panel = this.getGui();
-        let rowId = EgovJqGridApi.getDefaultGridSelectionId('centerGrid');
-        let rowData = EgovJqGridApi.getDefaultGridRowData('centerGrid', rowId);
+        let rowId = EgovJqGridApi.getGridSelectionId('centerGrid');
+        let rowData = EgovJqGridApi.getGridRowData('centerGrid', rowId);
         $('#centerNm', $panel).text(rowData.center_nm);
         this.initMap($panel);
         this.setComboList(floorCd, partCd);
@@ -104,7 +104,14 @@
             PartGui.setMap($panel, data.part_map1);
         });
         this.initLayer($panel);
-        this.getPartSeatList(rowId, floorCd, partCd, this.drawPartSeat);
+        EgovJqGridApi.defaultGridAjax(PartGuiGridId, '/backoffice/bld/seatListAjax.do', {
+            searchCenter: rowId,
+            searchFloorCd: floorCd,
+            searchPartCd: partCd,
+            useYn: 'Y',
+            pageIndex: '1',
+            pageUnit: '500'
+        }, 500, this.drawPartSeat);
     	this.open();
     };
 
@@ -139,29 +146,6 @@
         );
     };
 
-    $.PartGui.prototype.getPartSeatList = function(centerCd, floorCd, partCd, callback) {
-        let jqGridParams = {
-            url: '/backoffice/bld/seatListAjax.do',
-            postData: JSON.stringify({
-                searchCenter: centerCd,
-                searchFloorCd: floorCd,
-                searchPartCd: partCd,
-                useYn: 'Y',
-                pageIndex: '1',
-                pageUnit: '500'
-            }),
-            rowNum: 500,
-            loadComplete: function(data) {
-                if (data.status === 'FAIL') {
-                    toastr.error(data.message);
-                    return false;
-                }
-                callback(data.resultlist);
-            }
-        };
-        $(PartGuiGridSelector).jqGrid('setGridParam', jqGridParams).trigger('reloadGrid');
-    };
-
     $.PartGui.prototype.setPartSeat = function(rowId, type, val) {
         let $panel = PartGui.getGui();
         $.each($('#partLayer', $panel).find('li'), function() {
@@ -194,14 +178,14 @@
                 containment: '#cbp-spmenu-part .mapArea',
                 start: function() {
                     EgovJqGridApi.selection(PartGuiGridId, $(this).data('item').seat_cd);
-                    let rowId = EgovJqGridApi.getDefaultGridSelectionId(PartGuiGridId);
+                    let rowId = EgovJqGridApi.getGridSelectionId(PartGuiGridId);
                     $(PartGuiGridSelector).closest('.scroll_table').scrollTop($('#'+$.jgrid.jqID(rowId))[0].offsetTop);
                 },
                 stop: function() {
                     EgovJqGridApi.selection(PartGuiGridId);
                 },
                 drag: function(e, ui) {
-                    let rowId = EgovJqGridApi.getDefaultGridSelectionId(PartGuiGridId);
+                    let rowId = EgovJqGridApi.getGridSelectionId(PartGuiGridId);
                     $(PartGuiGridSelector).jqGrid('setRowData', rowId, {
                         seat_top: Math.floor(ui.position.top),
                         seat_left: Math.floor(ui.position.left)

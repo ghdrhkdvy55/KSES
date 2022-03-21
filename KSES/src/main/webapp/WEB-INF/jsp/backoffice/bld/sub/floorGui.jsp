@@ -55,11 +55,11 @@
         EgovJqGridApi.defaultGrid(FloorGuiGridId, [
             { label: '구역코드', name: 'part_cd', key: true, hidden: true },
             { label: '구역명', name: 'part_nm', align: 'center', sortable: false },
-            { label: 'TOP', name: 'part_mini_top', align: 'center', sortable: false, editable: true, editoptions: this.gridEditOptions(4) },
-            { label: 'LEFT', name: 'part_mini_left', align: 'center', sortable: false, editable: true, editoptions: this.gridEditOptions(4) },
-            { label: '넓이', name: 'part_mini_width', align: 'center', sortable: false, editable: true, editoptions: this.gridEditOptions(4) },
-            { label: '높이', name: 'part_mini_height', align: 'center', sortable: false, editable: true, editoptions: this.gridEditOptions(4) },
-            { label: '회전', name: 'part_mini_rotate', align: 'center', sortable: false, editable: true, editoptions: this.gridEditOptions(3) },
+            { label: 'TOP', name: 'part_mini_top', align: 'center', sortable: false, editable: true, editoptions: EgovJqGridApi.getGridEditOption(4) },
+            { label: 'LEFT', name: 'part_mini_left', align: 'center', sortable: false, editable: true, editoptions: EgovJqGridApi.getGridEditOption(4) },
+            { label: '넓이', name: 'part_mini_width', align: 'center', sortable: false, editable: true, editoptions: EgovJqGridApi.getGridEditOption(4) },
+            { label: '높이', name: 'part_mini_height', align: 'center', sortable: false, editable: true, editoptions: EgovJqGridApi.getGridEditOption(4) },
+            { label: '회전', name: 'part_mini_rotate', align: 'center', sortable: false, editable: true, editoptions: EgovJqGridApi.getGridEditOption(3) },
             { label: 'CSS', align: 'center', sortable: false, formatter: (c, o, row) => {
                     let colorText = 'transparent';
                     let innerHtml = '<option value="" style="background-color:transparent;">선택</option>';
@@ -76,7 +76,7 @@
                     return '<select data-rowid="'+row.part_cd+'" style="background-color:'+colorText+'">'+innerHtml+'</select>';
                 }
             },
-        ], null, []).jqGrid('setGridParam', {
+        ], false).jqGrid('setGridParam', {
             cellEdit: true,
             cellsubmit: 'clientArray',
             beforeSaveCell: function(rowId, name, val) {
@@ -115,8 +115,8 @@
 
     $.FloorGui.prototype.initialize = function(floorCd) {
         let $panel = this.getGui();
-        let rowId = EgovJqGridApi.getDefaultGridSelectionId('centerGrid');
-        let rowData = EgovJqGridApi.getDefaultGridRowData('centerGrid', rowId);
+        let rowId = EgovJqGridApi.getGridSelectionId('centerGrid');
+        let rowData = EgovJqGridApi.getGridRowData('centerGrid', rowId);
         $panel.find('#centerNm').text(rowData.center_nm);
         this.initMap($panel);
         this.setComboList(rowId, floorCd);
@@ -129,7 +129,25 @@
             }
         );
         this.initLayer($panel);
-        this.getFloorPartList(floorCd, this.drawFloorPart);
+        EgovJqGridApi.defaultGridAjax(FloorGuiGridId, '/backoffice/bld/partListAjax.do', {
+            floorCd: floorCd,
+            useYn: 'Y',
+            pageIndex: '1',
+            pageUnit: '20'
+        }, 20, function(resultlist) {
+            $('select', this).on('change', function() {
+                let rowId = $(this).data('rowid');
+                let cssClass = $('option:selected', this);
+                if (cssClass.val() === '') {
+                    $(this).css('background-color', 'transparent');
+                } else {
+                    $(this).css('background-color', cssClass.text());
+                    FloorGui.setFloorPart(rowId, 'part_css', cssClass.val());
+                    FloorGui.gridCellEdited(rowId);
+                }
+            });
+            FloorGui.drawFloorPart(resultlist);
+        });
         this.open();
     };
 
@@ -163,37 +181,6 @@
                 toastr.error(json.message);
             }
         );
-    };
-
-    $.FloorGui.prototype.getFloorPartList = function(floorCd, callback) {
-        let jqGridParams = {
-            url: '/backoffice/bld/partListAjax.do',
-            postData: JSON.stringify({
-                floorCd: floorCd,
-                useYn: 'Y',
-                pageIndex: '1',
-                pageUnit: '20'
-            }),
-            loadComplete: function(data) {
-                if (data.status === 'FAIL') {
-                    toastr.error(data.message);
-                    return false;
-                }
-                $('select', this).on('change', function() {
-                    let rowId = $(this).data('rowid');
-                    let cssClass = $('option:selected', this);
-                    if (cssClass.val() === '') {
-                        $(this).css('background-color', 'transparent');
-                    } else {
-                        $(this).css('background-color', cssClass.text());
-                        FloorGui.setFloorPart(rowId, 'part_css', cssClass.val());
-                        FloorGui.gridCellEdited(rowId);
-                    }
-                });
-                callback(data.resultlist);
-            }
-        };
-        $(FloorGuiGridSelector).jqGrid('setGridParam', jqGridParams).trigger('reloadGrid');
     };
 
     $.FloorGui.prototype.setFloorPart = function(rowId, type, val) {
@@ -249,7 +236,7 @@
                     EgovJqGridApi.selection(FloorGuiGridId);
                 },
                 resize: function(e, ui) {
-                    let rowId = EgovJqGridApi.getDefaultGridSelectionId(FloorGuiGridId);
+                    let rowId = EgovJqGridApi.getGridSelectionId(FloorGuiGridId);
                     $(FloorGuiGridSelector).jqGrid('setRowData', rowId, {
                         part_mini_width: Math.floor(ui.size.width),
                         part_mini_height: Math.floor(ui.size.height)
@@ -267,7 +254,7 @@
                     EgovJqGridApi.selection(FloorGuiGridId);
                 },
                 rotate: function(e, ui) {
-                    let rowId = EgovJqGridApi.getDefaultGridSelectionId(FloorGuiGridId);
+                    let rowId = EgovJqGridApi.getGridSelectionId(FloorGuiGridId);
                     $(FloorGuiGridSelector).jqGrid('setCell', rowId, 'part_mini_rotate', Math.floor(ui.angle.degrees));
                     FloorGui.gridCellEdited(rowId);
                 }
@@ -281,7 +268,7 @@
                     EgovJqGridApi.selection(FloorGuiGridId);
                 },
                 drag: function(e, ui) {
-                    let rowId = EgovJqGridApi.getDefaultGridSelectionId(FloorGuiGridId);
+                    let rowId = EgovJqGridApi.getGridSelectionId(FloorGuiGridId);
                     $(FloorGuiGridSelector).jqGrid('setRowData', rowId, {
                         part_mini_top: Math.floor(ui.position.top),
                         part_mini_left: Math.floor(ui.position.left)
