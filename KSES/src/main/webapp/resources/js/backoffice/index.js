@@ -238,6 +238,12 @@ const EgovCalendar = {
 	yearRange: '2020:2100'
 };
 
+/**
+ * 팝업 버튼 공통 클래스
+ * - okText: 기본 저장 버튼 라벨 변경 시
+ * - clickFunc: 저장 버튼 클릭 시 호출 함수
+ * - noText: 기본 취소 버튼 라벨 변경 시
+ */
 class PopupRightButton extends HTMLElement {
 	constructor() {
 		super();
