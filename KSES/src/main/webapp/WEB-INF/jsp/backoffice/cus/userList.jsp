@@ -253,4 +253,3 @@
 	}
 	
 </script>
-<c:import url="/backoffice/inc/popup_common.do" />
