@@ -157,14 +157,14 @@
 		// 메인 목록 정의
 		EgovJqGridApi.mainGrid([
 			
-			{ label:'아이디'			, name:'user_id'			, index:'user_id'			, align:'center', key:true},
-			{ label:'이름'			, name:'user_nm'			, index:'user_nm'			, align:'center'},
-			{ label:'전화번호'			, name:'user_phone'			, index:'user_phone'		, align:'center'},
-			{ label:'백신 차수'		, name:'vacntn_round_text'	, index:'vacntn_round_text'	, align:'center'},
-			{ label:'백신 종류'		, name:'vacntn_dvsn_text'	, index:'vacntn_dvsn_text'	, align:'center'},
-			{ label:'접종 일자'		, name:'vacntn_dt'			, index:'vacntn_dt'			, align:'center'},
-			{ label:'성별'			, name:'user_sex_mf'		, index:'user_sex_mf'		, align:'center'},
-			{ label:'생년 월일'		, name:'user_birth_dy'		, index:'user_birth_dy'		, align:'center'},
+			{ label:'아이디'			, name:'user_id'        , align:'center', key:true},
+			{ label:'이름'			, name:'user_nm'            , align:'center'},
+			{ label:'전화번호'			, name:'user_phone'     , align:'center'},
+			{ label:'백신 차수'		, name:'vacntn_round_text'  , align:'center'},
+			{ label:'백신 종류'		, name:'vacntn_dvsn_text'	, align:'center'},
+			{ label:'접종 일자'		, name:'vacntn_dt'			, align:'center'},
+			{ label:'성별'			, name:'user_sex_mf'		, align:'center'},
+			{ label:'생년 월일'		, name:'user_birth_dy'		, align:'center'},
 			{ name:'email'				, hidden: true },
 			{ name:'indvdlinfo_agre_yn'	, hidden: true },
 			{ name:'indvdlinfo_agre_dt'	, hidden: true },
