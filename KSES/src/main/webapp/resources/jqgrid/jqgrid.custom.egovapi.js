@@ -50,6 +50,9 @@ $.EgovJqGridApi.prototype._formatter = function(colModel) {
 	for (let col of colModel) {
 		if (col.formatter === 'date') {
 			col['formatoptions'] = { newformat: 'Y-m-d' };
+		} else if (col.formatter === 'datetime') {
+			col['formatter'] = 'date';
+			col['formatoptions'] = { srcformat: 'Y-m-d H:i:s', newformat: 'Y-m-d H:i:s' }
 		}
 		if (col.sortable === undefined || col.sortable !== false || !col.hidden) {
 			col['index'] = col.name;
