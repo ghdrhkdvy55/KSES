@@ -144,7 +144,7 @@ a.blueBtn, a.redBtn {
 			{label: '입장 관리자', name:'enter_admin_id', align:'center'},		
 			{label: '통신시간 ', name:'rcv_dt', align:'center'},
 			{label: '통신결과', name:'rcv_cd', align:'center'}
-		], '/backoffice/rsv/enterRegistListAjax.do', {
+		], 'GET', '/backoffice/rsv/enterRegistListAjax.do', {
 			resvSeq: resvSeq
 		});
 	}

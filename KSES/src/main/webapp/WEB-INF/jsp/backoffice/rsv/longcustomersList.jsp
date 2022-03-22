@@ -203,8 +203,6 @@ a.blueBtn, a.grayBtn {
 			searchTo: $('#searchTo').val()
 		};
 		EgovJqGridApi.mainGridAjax('/backoffice/rsv/longCustomerListsAjax.do', params, fnSearch, fnSubGrid);
-		EgovJqGridApi.mainGridDetail(fnLongcustomersInfo);
-
 	}
 	
   	function fnSubGrid(id, longResvSeq) {
@@ -230,10 +228,9 @@ a.blueBtn, a.grayBtn {
 			{label: '입장료', name:'resv_entry_pay_cost', align:'center', hidden: true},
 			{label: '좌석료', name:'resv_seat_pay_cost', align:'center', hidden: true},
 			{label: '발권 구분', name:'resv_ticket_dvsn_text', align:'center', hidden: true},
-		], '/backoffice/rsv/longcustomerResvInfo.do', {
+		], 'GET', '/backoffice/rsv/longcustomerResvInfo.do', {
 			longResvSeq: longResvSeq
 		});
-		EgovJqGridApi.subGridDetail(subGridId, fnLongcustomerResvInfo);
 	}
 	
 	function fnLongcustomersInfo(id, rowData) {
