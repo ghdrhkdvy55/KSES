@@ -18,7 +18,10 @@ $.Preopen.prototype.mainGridSettings = function() {
         cellEdit: true,
         cellsubmit: 'clientArray'
     });
-    $('#rightAreaBtn').hide();
+    $('#rightAreaUqBtn').html(
+        '<a href="javascript:void(0);" class="orangeBtn">복사</a>'
+    ).show();
+    $('#rightAreaBtn').show();
 };
 
 $.Preopen.prototype.updateSettings = function(ajaxUpdate, changedArr) {
