@@ -18,9 +18,6 @@ $.Preopen.prototype.mainGridSettings = function() {
         cellEdit: true,
         cellsubmit: 'clientArray'
     });
-    // $('#rightAreaUqBtn').html(
-    //     '<a href="javascript:void(0);" class="orangeBtn">복사</a>'
-    // ).show();
     $('#rightAreaBtn').hide();
 };
 
@@ -34,6 +31,11 @@ $.Preopen.prototype.updateSettings = function(ajaxUpdate, changedArr) {
         closeMemberTm: x.close_member_tm.replace(/\:/g,''),
         closeGuestTm: x.close_guest_tm.replace(/\:/g,'')
     }));
+};
+
+$.Preopen.prototype.centerCopy = function(ajaxCopy) {
+    ajaxCopy.title = '사전예약시간 복사';
+    ajaxCopy.url = '/backoffice/bld/preOpenInfoCopy.do';
 };
 
 const Preopen = new $.Preopen();

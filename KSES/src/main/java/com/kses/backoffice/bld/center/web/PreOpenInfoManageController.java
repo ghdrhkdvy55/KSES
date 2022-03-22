@@ -91,23 +91,22 @@ public class PreOpenInfoManageController {
     	return model;
     }
     
-    @RequestMapping("preOpenInfoCopy.do")
-    public ModelAndView copyPreOpenInfo(	@ModelAttribute("loginVO") LoginVO loginVO,
-    										@RequestBody Map<String, Object> params,
-											HttpServletRequest request) {
+	/**
+	 * 사전예약시간 지점 복사
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 */
+    @RequestMapping(value = "preOpenInfoCopy.do", method = RequestMethod.POST)
+    public ModelAndView updateCopyPreOpenInfo(@RequestBody Map<String, Object> params) throws Exception {
     	ModelAndView model = new ModelAndView(Globals.JSONVIEW);
     	
-    	try {
-			preOpenInfoService.copyPreOpenInfo(params);
-			
-    		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-    		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.update"));
-		} catch (Exception e) {
-    		log.info("copyPreOpenInfo ERROR : " + e);
-    		model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-    		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
-		}
-    	
+    	String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
+    	params.put("userId", userId);
+    	preOpenInfoService.copyPreOpenInfo(params);
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.update"));
+
     	return model;
     }
 }
