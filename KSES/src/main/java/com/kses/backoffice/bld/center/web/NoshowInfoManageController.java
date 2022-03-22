@@ -7,6 +7,7 @@ import com.kses.backoffice.sym.log.annotation.NoLogging;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.Globals;
+import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import lombok.extern.slf4j.Slf4j;
@@ -88,22 +89,21 @@ public class NoshowInfoManageController {
     	return model;
     }
     
-    @RequestMapping("noshowInfoCopy.do")
-    public ModelAndView copyPreOpenInfo(	@ModelAttribute("loginVO") LoginVO loginVO,
-    										@RequestBody Map<String, Object> params,
-											HttpServletRequest request) {
+	/**
+	 * 자동 취소 지점 복사
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 */
+    @RequestMapping(value = "noshowInfoCopy.do", method = RequestMethod.POST)
+    public ModelAndView updateCopyPreOpenInfo(@RequestBody Map<String, Object> params) throws Exception {
     	ModelAndView model = new ModelAndView(Globals.JSONVIEW);
     	
-    	try {
-    		noshowInfoService.copyNoshowInfo(params);
-			
-    		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-    		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.update"));
-		} catch (Exception e) {
-			log.info("copyPreOpenInfo ERROR : " + e);
-    		model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-    		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
-		}
+    	String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
+    	params.put("userId", userId);
+    	noshowInfoService.copyNoshowInfo(params);
+    	model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+    	model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.update"));
     	
     	return model;
     }

@@ -29,4 +29,9 @@ $.Noshow.prototype.updateSettings = function(ajaxUpdate, changedArr) {
     }));
 };
 
+$.Noshow.prototype.centerCopy = function(ajaxCopy) {
+    ajaxCopy.title = '자동취소시간 복사';
+    ajaxCopy.url = '/backoffice/bld/noshowInfoCopy.do';
+};
+
 const Noshow = new $.Noshow();
