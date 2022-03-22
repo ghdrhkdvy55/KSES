@@ -61,39 +61,32 @@
 <script type="text/javascript" src="/resources/jqgrid/jqgrid.custom.egovapi.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
-		
 		// 메인 목록 정의
 		EgovJqGridApi.mainGrid([
-
-			{ label:'로그인 아이디'	, name:'log_id'		, index:'log_id'		, align:'left'	},
-			{ label:'아이디'		, name:'conect_id'	, index:'conect_id'		, align:'left'	},
-			{ label:'이름'		, name:'login_nm'	, index:'login_nm'		, align:'left'	},
-			{ label:'구분'		, name:'conect_mthd', index:'conect_mthd'	, align:'center', formatter:fnMthd},
-			{ label:'IP'		, name:'conect_ip'	, index:'conect_ip'		, align:'center'},
-			{ label:'발생일자'		, name: 'creat_dt'	, index:'creat_dt'		, align:'center', sortable: 'date' ,formatter: "date", formatoptions: { newformat: "Y-m-d H:i:s"} }
+			{ label:'로그인 아이디'	, name:'log_id'		, align:'left'	},
+			{ label:'아이디'		, name:'conect_id'	, align:'left'	},
+			{ label:'이름'		, name:'login_nm'	, align:'left'	},
+			{ label:'구분'		, name:'conect_mthd', align:'center', formatter: (c, o, row) =>
+				$.trim(row.conect_mthd) == 'I' ? '로그인' : '로그아웃'
+			},
+			{ label:'IP'		, name:'conect_ip'	, align:'center'},
+			{ label:'발생일자'		, name: 'creat_dt', align:'center', formatter: 'datetime' }
 		], false, false, fnSearch);
-		
-		$("#searchFrom").datepicker(EgovCalendar);
-		$("#searchTo").datepicker(EgovCalendar);
-
+		let today = new Date();
+		$('#searchFrom').val($.datepicker.formatDate('yymmdd', today))
+		$("#searchTo").val($.datepicker.formatDate('yymmdd', today))
 	 });
 
 	// 메인 목록 검색
 	function fnSearch(pageNo){
-
 		let params = {
-				pageIndex	  : pageNo,
-				pageUnit	  : $('.ui-pg-selbox option:selected').val(),
-				searchFrom	  : $("#searchFrom").val(),
-	    		searchTo 	  : $("#searchTo").val(),
-      			searchKeyword : $("#searchKeyword").val(),
+			pageIndex	  : pageNo,
+			pageUnit	  : $('.ui-pg-selbox option:selected').val(),
+			searchFrom	  : $("#searchFrom").val(),
+    		searchTo 	  : $("#searchTo").val(),
+			searchKeyword : $("#searchKeyword").val(),
 		};
-
 		EgovJqGridApi.mainGridAjax('/backoffice/sys/selectLoginLogListAjax.do', params, fnSearch);
 	}
 
-	// 메인 그리드 구분 컬럼 formatter
-	function fnMthd(c, o, row) {
-		return $.trim(row.conect_mthd) == "I" ? "로그인" : "로그아웃";
-	}
 </script>
