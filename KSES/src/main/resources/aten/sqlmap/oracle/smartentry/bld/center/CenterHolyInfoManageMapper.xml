@@ -57,16 +57,35 @@
 		</foreach>
 	</update>
 	
-	<update id="copyCenterHolyInfo">
-		UPDATE TSEB_CENTERHOLY_INFO_I A
-		SET (A.HOLY_DT, A.HOLY_NM, A.USE_YN, A.LAST_UPDUSR_ID, A.LAST_UPDT_DTM) = 
-	   	(
-	   		SELECT B.HOLY_DT, B.HOLY_NM, B.USE_YN, B.LAST_UPDUSR_ID, SYSDATE
-			FROM TSEB_NOSHOW_INFO_M B 
-			WHERE A.NOSHOW_DAY = B.NOSHOW_DAY 
-			AND B.CENTER_CD = #{params.copyCenterCd}
+	<update id="copyCenterHolyInfo">	
+		MERGE INTO TSEB_CENTERHOLY_INFO_I T
+		USING 
+		(
+			SELECT * FROM TSEB_CENTERHOLY_INFO_I 
+			WHERE CENTER_CD = #{params.copyCenterCd}
+		) A
+		ON 
+		(	
+			T.CENTER_CD = #{params.targetCenterCd}
+			AND 
+			T.HOLY_DT = A.HOLY_DT
 		)
-		WHERE A.CENTER_CD = #{params.targetCenterCd}
+		WHEN MATCHED THEN
+		UPDATE SET 
+			T.HOLY_NM = A.HOLY_NM,
+			T.LAST_UPDT_DTM = SYSDATE,
+		    T.LAST_UPDUSR_ID = #{params.userId}
+		WHEN NOT MATCHED THEN
+		INSERT 
+		(
+			T.CENTER_HOLY_SEQ, T.CENTER_CD, T.HOLY_DT, T.USE_YN, T.LAST_UPDT_DTM,
+			T.HOLY_NM, T.LAST_UPDUSR_ID, T.FRST_REGIST_DTM, T.FRST_REGTER_ID
+		)
+		VALUES
+		(
+			SEQ_ESB_CENTERHOLY_INFO.NEXTVAL, #{params.targetCenterCd}, A.HOLY_DT, A.USE_YN, SYSDATE,
+			A.HOLY_NM, A.FRST_REGTER_ID, SYSDATE, #{params.userId}
+		)
 	</update>
 	
 	<select id="centerUpdateSelect" resultType="lmap">

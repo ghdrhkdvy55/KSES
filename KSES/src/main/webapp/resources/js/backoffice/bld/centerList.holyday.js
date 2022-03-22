@@ -29,4 +29,8 @@ $.Holyday.prototype.updateSettings = function(ajaxUpdate, changedArr) {
     }));
 };
 
+$.Holyday.prototype.centerCopy = function(ajaxCopy) {
+    ajaxCopy.title = '지점휴일 복사';
+    ajaxCopy.url = '/backoffice/bld/centerHolyInfoCopy.do';  	
+};
 const Holyday = new $.Holyday();

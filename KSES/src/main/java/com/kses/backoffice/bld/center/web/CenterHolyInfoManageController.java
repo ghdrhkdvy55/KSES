@@ -202,4 +202,24 @@ public class CenterHolyInfoManageController {
     	
     	return model;
     }
+	
+	/**
+	 * 지점 휴일 정보 복사
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "centerHolyInfoCopy.do", method = RequestMethod.POST)
+	public ModelAndView updateCopyCenterHolyInfo(@RequestBody Map<String, Object> params) throws Exception {
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+		
+    	String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
+    	params.put("userId", userId);
+		centerHolyInfoService.copyCenterHolyInfo(params);
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.update"));
+
+		return model;
+	}
+	
 }
