@@ -25,6 +25,7 @@
     	<result property="center_speed_entry_pay_cost" column="CENTER_SPEED_ENTRY_PAY_COST" jdbcType="VARCHAR" javaType="java.lang.String"/>
     	<result property="center_rbm_cd" column="CENTER_RBM_CD" jdbcType="VARCHAR" javaType="java.lang.String"/>
     	<result property="center_auto_payment_yn" column="CENTER_AUTO_PAYMENT_YN" jdbcType="VARCHAR" javaType="java.lang.String"/>
+    	<result property="center_resv_able_day" column="CENTER_RESV_ABLE_DAY" jdbcType="VARCHAR" javaType="java.lang.String"/>
 	</resultMap>
 	
 	<select id="selectCenterInfoList" resultType="lmap">
@@ -65,7 +66,7 @@
 			CENTER_TEL, CENTER_FAX, CENTER_IMG, CENTER_MAP, CENTER_URL,
 			CENTER_INFO, USE_YN, START_FLOOR, END_FLOOR, FLOOR_INFO, 
 			CENTER_PILOT_YN, CENTER_SPEED_CD, CENTER_STAND_YN, CENTER_STAND_MAX, CENTER_ENTRY_PAY_COST,
-			CENTER_SPEED_ENTRY_PAY_COST, CENTER_RBM_CD,
+			CENTER_SPEED_ENTRY_PAY_COST, CENTER_RBM_CD, CENTER_RESV_ABLE_DAY,
 			CASE 
 				WHEN CENTER_PILOT_YN = 'Y' THEN 'Y'
  				ELSE 'N'
@@ -159,7 +160,7 @@
 			LAST_UPDT_DTM, CENTER_IMG, CENTER_URL, CENTER_MAP, USE_YN, 
 			CENTER_INFO, FLOOR_INFO, START_FLOOR, END_FLOOR, CENTER_STDM_DVSN, 
 			CENTER_PILOT_YN, CENTER_SPEED_CD, CENTER_STAND_YN, CENTER_STAND_MAX, CENTER_ENTRY_PAY_COST,
-			CENTER_SPEED_ENTRY_PAY_COST
+			CENTER_SPEED_ENTRY_PAY_COST, CENTER_RESV_ABLE_DAY
 		)
 		VALUES 
 		(
@@ -168,7 +169,7 @@
 			SYSDATE, #{centerImg, jdbcType=VARCHAR}, #{centerUrl ,jdbcType=VARCHAR}, #{centerMap, jdbcType=VARCHAR}, 'Y', 
 			#{centerInfo, jdbcType=VARCHAR}, #{floorInfo, jdbcType=VARCHAR}, #{startFloor, jdbcType=VARCHAR}, #{endFloor, jdbcType=VARCHAR}, '',
 		    #{centerPilotYn , jdbcType=VARCHAR}, #{centerSpeedCd , jdbcType=VARCHAR}, #{centerStandYn, jdbcType=VARCHAR}, #{centerStandMax, jdbcType=VARCHAR}, #{centerEntryPayCost, jdbcType=VARCHAR},
-		    #{centerSpeedEntryPayCost, jdbcType=VARCHAR}
+		    #{centerSpeedEntryPayCost, jdbcType=VARCHAR}, #{centerResvAbleDay, jdbcType=VARCHAR}
 		);
     	
 		<if test="floorInfo != null">
@@ -263,7 +264,8 @@
 			,CENTER_STAND_YN = #{centerStandYn, jdbcType=VARCHAR}
 			,CENTER_STAND_MAX = #{centerStandMax, jdbcType=VARCHAR}
 			,CENTER_ENTRY_PAY_COST = #{centerEntryPayCost, jdbcType=VARCHAR}
-			,CENTER_SPEED_ENTRY_PAY_COST = #{centerSpeedEntryPayCost, jdbcType=VARCHAR}                
+			,CENTER_SPEED_ENTRY_PAY_COST = #{centerSpeedEntryPayCost, jdbcType=VARCHAR}
+			,CENTER_RESV_ABLE_DAY = #{centerResvAbleDay, jdbcType=VARCHAR}                
 		WHERE CENTER_CD = #{centerCd};
 		
 		<if test="floorInfo != null">

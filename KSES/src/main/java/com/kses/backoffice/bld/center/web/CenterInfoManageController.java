@@ -86,6 +86,7 @@ public class CenterInfoManageController {
 		model.addObject("loginVO", loginVO);
 		model.addObject("centerInfoComboList", centerInfoComboList);
 		model.addObject("billDvsnInfoComboList", codeDetailService.selectCmmnDetailCombo("BILL_DVSN"));
+		model.addObject("centerResvAbleDay", codeDetailService.selectCmmnDetailCombo("CENTER_RESV_ABLE_DAY"));
 		model.addObject("floorInfo", codeDetailService.selectCmmnDetailCombo("CENTER_FLOOR"));
 		model.addObject(Globals.STATUS_REGINFO , searchVO);
 	    model.setViewName("/backoffice/bld/centerList");

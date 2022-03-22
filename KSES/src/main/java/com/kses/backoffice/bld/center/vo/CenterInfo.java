@@ -111,4 +111,7 @@ public class CenterInfo {
 	 
 	 // SPDM 지점코드
 	 private String centerRbmCd = "";
+	 
+	 // 지점 예약가능일
+	 private String centerResvAbleDay = "";
 }

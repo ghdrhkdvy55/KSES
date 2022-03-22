@@ -140,7 +140,6 @@
                   		</td>
 					</tr>
 					<tr>
-
                   		<th>자유석 여부</th>
 	                  	<td>
                     		<label for="centerStandYn_Y"><input id="centerStandYn_Y" type="radio" name="centerStandYn" value="Y" checked>Y</label>
@@ -160,6 +159,16 @@
 	                  	<td><input type="text" id="centerSpeedCd" name="centerSpeedCd"></td>
 						<th>RBM CODE</th>
 	                  	<td><input type="text" id="centerRbmCd" name="centerRbmCd" onkeypress="onlyNum();"></td>
+					</tr>
+					<tr>
+                  		<th>지점 사전예약일</th>
+                  		<td>
+	                     	<select id="centerResvAbleDay"style="width:120px">
+		                         <c:forEach items="${centerResvAbleDay}" var="centerResvAbleDay">
+									<option value="${centerResvAbleDay.codenm}"><c:out value='${centerResvAbleDay.codenm}'/>일</option>
+		                         </c:forEach>
+	                    	</select>
+						</td>
 					</tr>
 				</tbody>
 			</table>
@@ -683,6 +692,7 @@
 				$("#centerEntryPayCost").val("");
 				$("#centerSpeedEntryPayCost").val("");
 				$("#centerRbmCd").val("");
+				$("#centerResvAbleDay").val("");
 				$("input:radio[name='useYn']:radio[value='Y']").prop('checked', true);
 				
 				$("#sp_floorInfo").empty();
@@ -719,6 +729,7 @@
 							$("#centerEntryPayCost").val(obj.center_entry_pay_cost);
 							$("#centerSpeedEntryPayCost").val(obj.center_speed_entry_pay_cost);
 							$("#centerRbmCd").val(obj.center_rbm_cd);
+							$("#centerResvAbleDay").val(obj.center_resv_able_day);
 							$("#ir3").val(obj.center_info);
 							fnCreatCheckbox("sp_floorInfo", $("#startFloor").val().replace("CENTER_FLOOR_", ""),  $("#endFloor").val().replace("CENTER_FLOOR_", ""), obj.floor_info, "floorInfos", "층") ;
 						}
@@ -1581,6 +1592,7 @@
      	    formData.append('centerEntryPayCost' , $("#centerEntryPayCost").val());
      	   	formData.append('centerSpeedEntryPayCost' , $("#centerSpeedEntryPayCost").val());
      	    formData.append('centerRbmCd' , $("#centerRbmCd").val());
+     	    formData.append('centerResvAbleDay' , $("#centerResvAbleDay").val());
      	   
      	    uniAjaxMutipart
      	    (
