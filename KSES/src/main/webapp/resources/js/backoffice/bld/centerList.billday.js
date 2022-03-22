@@ -24,7 +24,7 @@ $.Billday.prototype.mainGridSettings = function() {
         cellEdit: true,
         cellsubmit: 'clientArray'
     });
-    $('#rightAreaBtn').hide();
+    $('#rightAreaBtn').show();
 };
 
 $.Billday.prototype.updateSettings = function(ajaxUpdate, changedArr) {

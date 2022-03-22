@@ -54,7 +54,7 @@
     $.PartInfo.prototype.bPopup = function(partCd) {
         let $popup = this.getPopup();
         let $form = $popup.find('form:first');
-        let centerCd = EgovJqGridApi.getDefaultGridSelectionId('centerGrid');
+        let centerCd = EgovJqGridApi.getGridSelectionId('centerGrid');
         let floorCd = EgovJqGridApi.getMainGridSingleSelectionId();
         $popup.find(':hidden[name=centerCd]').val(centerCd);
         $popup.find(':hidden[name=floorCd]').val(floorCd);
