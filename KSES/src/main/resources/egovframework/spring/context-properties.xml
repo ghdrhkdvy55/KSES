@@ -8,8 +8,13 @@
             <map>
             	<!-- # 외부 : CLOUD / 개발 : DEV / 운영 : PROD -->
             	<entry key="Globals.envType" value="CLOUD"/>
-				<entry key="Globals.filePath" value="C:\projectkses\KSES\KSES\src\main\webapp\upload"/>
-             	<!-- <entry key="Globals.filePath" value="/home/ec2-user/kses/webapps/KSES-1.0.0/upload"/> -->
+				<entry key="Globals.filePath" value="C:/Users/eogks/git/KSES/KSES/KSES/src/main/webapp/upload"/>
+				<!-- <entry key="Globals.filePath" value="/home/ec2-user/kses/webapps/KSES-1.0.0/upload"/> -->
+				
+				<entry key="InterfaceLog.filePath" value="C:/Users/eogks/git/KSES/KSES/KSES/src/main/webapp/upload/"/>
+				<entry key="InterfaceLog.prefix" value="interface_"/>
+				<entry key="InterfaceLog.suffix" value=".csv"/>
+             	
                 <entry key="Globals.addedOptions" value="false"/>
             	
             	<!-- Paging Default Value -->

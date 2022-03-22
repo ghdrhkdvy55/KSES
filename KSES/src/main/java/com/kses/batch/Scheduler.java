@@ -301,13 +301,13 @@ public class Scheduler {
 	@Scheduled(cron="0 59 23 ? * 7", zone="Asia/Seoul")
 	public void selectInterfaceLogFileCreate() throws Exception {		
 		LOGGER.info("----------------------------KSES INTERFACE LOG FILE CRATE BATCH START----------------------------");
-		String csvFilePath = "D:/";
-		String csvFilePrefix = "test_";
-		String csvFileSuffix = ".csv";
+		String csvFilePath = propertiesService.getString("InterfaceLog.filePath");
+		String csvFilePrefix = propertiesService.getString("InterfaceLog.prefix");
+		String csvFileSuffix = propertiesService.getString("InterfaceLog.suffix");
+		String NEWLINE = System.lineSeparator();
 		
 		File csvFile = null;
 		BufferedWriter bw = null;
-		String NEWLINE = System.lineSeparator();
 		
 		try {
 			InterfaceInfo interfaceInfo = new InterfaceInfo();
