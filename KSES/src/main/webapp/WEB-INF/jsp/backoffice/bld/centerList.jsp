@@ -61,10 +61,20 @@
 			</div>
 			<div class="clear"></div>
 			<div id="rightArea" style="margin-top:28px;"></div>
+			<div id="leftArea" style="float:left;margin-top:10px;display:none;">
+	            <select id="copyCenterList" onchange="fnSearch(1,  $('#copyCenterList option:selected').val());">
+					<option value="">지점 선택</option>
+					<c:forEach items="${centerInfoComboList}" var="centerInfoComboList">
+						<option value="${centerInfoComboList.center_cd}"><c:out value='${centerInfoComboList.center_nm}'/></option>
+					</c:forEach>
+	            </select>
+	            <a href="javascript:fnRightAreaCopy();" class="grayBtn">복사</a>
+			</div>
 			<div id="rightAreaUqBtn" style="float:left;margin-top:10px;display:none;"></div>
 			<div id="rightAreaBtn" class="right_box" style="display:none;">
 				<a href="javascript:fnRightAreaSave();" class="blueBtn">저장</a>
 			</div>
+			
 		</div>
 	</div>
 </div>
@@ -127,15 +137,22 @@
 			switch ($(this).attr('id')) {
 				case 'preopen':
 					Preopen.mainGridSettings();
+					$('#rightAreaBtn').show();
+					$('#leftArea').show();
 					break;
 				case 'noshow':
 					Noshow.mainGridSettings();
+					$('#rightAreaBtn').show();
+					$('#leftArea').show();
 					break;
 				case 'holyday':
 					Holyday.mainGridSettings();
+					$('#rightAreaBtn').show();
+					$('#leftArea').show();
 					break;
 				case 'billday':
 					Billday.mainGridSettings();
+					$('#rightAreaBtn').show();
 					break;
 				case 'floor':
 					Floor.mainGridSettings();
@@ -195,11 +212,22 @@
 			'<div id="pager"></div>'
 		);
 		$('#rightAreaUqBtn').html('').hide();
+		$('#leftArea').hide();
 		$('#rightAreaBtn').hide();
 	}
 	// 하위 목록 조회
-	function fnSearch(pageNo) {
-		let rowId = EgovJqGridApi.getGridSelectionId('centerGrid');
+	function fnSearch(pageNo, centerCd) {
+		let rowId = "";
+		
+		// 03-22 홍광표 if문 추가
+		if(centerCd == null){
+			rowId = EgovJqGridApi.getGridSelectionId('centerGrid');
+			$("#copyCenterList").val(rowId).attr("selected", true);
+		} else {
+			rowId = centerCd
+		}
+		
+		/* let rowId = EgovJqGridApi.getGridSelectionId('centerGrid'); */
 		let params = {
 			pageIndex: pageNo,
 			pageUnit: $('#pager .ui-pg-selbox option:selected').val(),
@@ -258,6 +286,46 @@
 			);
 		});
 	}
+	//지점별 탭 정보 복사 03-22 홍광표
+	function fnRightAreaCopy() {
+		let tabMenu = $('div.tabs .tab.active').attr('id');
+		let rowId = EgovJqGridApi.getGridSelectionId('centerGrid');
+		let copyCenterNm = $("#copyCenterList option:selected").text();
+		let params = 
+			{
+				copyCenterCd : $("#copyCenterList option:selected").val(),
+				targetCenterCd : rowId
+			};
+		let ajaxCopy = { title: '', url: ''};
+		switch (tabMenu) {
+			case 'preopen':
+				Preopen.centerCopy(ajaxCopy);
+				break;
+			case 'noshow':
+				Noshow.centerCopy(ajaxCopy);
+				break;
+			case 'holyday':
+				Holyday.centerCopy(ajaxCopy);
+				break;
+			default:
+		}
+		bPopupConfirm(ajaxCopy.title, copyCenterNm + '지점 정보를 복사를 하시겠습니까?', function() {
+			EgovIndexApi.apiExecuteJson(
+				'POST',
+				ajaxCopy.url,
+				params,
+				null,
+				function(json) {
+					toastr.success(json.message);
+					fnSearch(1);
+				},
+				function(json) {
+					toastr.error(json.message);
+				}
+			);
+		});
+	}
+	
 	// 지점 팝업 호출
 	function fnPopupCenterInfo(rowId, name) {
 		CenterInfo.bPopup(rowId, name);
