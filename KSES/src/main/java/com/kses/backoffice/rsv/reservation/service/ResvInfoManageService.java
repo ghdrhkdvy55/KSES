@@ -54,6 +54,15 @@ public interface ResvInfoManageService {
 	public String selectCenterResvDate(String centerCd) throws Exception;
 	
 	/**
+	 * SPDM 지점 예약 가능일 목록 조회
+	 * 
+	 * @param centerCd
+	 * @return
+	 * @throws Exception
+	 */
+	public List<Map<String, Object>> selectCenterResvDateList(String centerCd) throws Exception;
+	
+	/**
 	 * SPDM 회원 마지막 예약 정보 조회
 	 * 
 	 * @param userId

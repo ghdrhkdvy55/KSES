@@ -24,6 +24,8 @@ public interface ResvInfoManageMapper {
 	
 	public String selectCenterResvDate(@Param("centerCd") String centerCd);
 	
+	public List<Map<String, Object>> selectCenterResvDateList(@Param("centerCd") String centerCd);
+	
 	public Map<String, Object> selectInUserResvInfo(ResvInfo paramResvInfo);
 	
 	public String selectAutoPaymentResvInfo(@Param("userId") String userId);

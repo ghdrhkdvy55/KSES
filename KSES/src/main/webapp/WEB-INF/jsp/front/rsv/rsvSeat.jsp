@@ -90,17 +90,30 @@
         <div id="container">
             <div>
                 <div class="contents">      
-                    <h3>
+                    <h4>
 						선택한 지점 
                         <span class="change_br">
                             <a href="/front/rsvCenter.do"><img src="/resources/img/front/refresh.svg" alt="change">지점변경</a>
                         </span>
-                    </h3>
+                    </h4>
                     <div class="branch">
                         <p><c:out value='${resvInfo.center_nm}'/></p>
                     </div>
+                    
+                    <div class="date_sel">
+						<h4>예약일을 선택하세요.</h4>
+						<ul id="menu_ul" class="tabs">
+							<c:forEach items="${resvDateList}" var="resvDateList">
+							<li class="tab-link" data-date="${resvDateList.resv_date}" onclick="seatService.fn_resvDateChange(this);">
+								<ul>
+									<li><c:out value='${resvDateList.resv_date}'/></li>
+								</ul>
+							</li>
+							</c:forEach>
+						</ul>
+					</div>
                     <div class="null"></div>
-
+                    
                     <!--입장유형 선택-->
                     <h4>입장 유형을 선택하세요.</h4>
                     <div class="enter_type">
@@ -300,9 +313,9 @@
                                                         <input class="magic-checkbox qna_check" type="checkbox" name="layout" id="ENTRY_DVSN_2_qna_check" value="Y">
                                                         <label for="ENTRY_DVSN_2_qna_check">
                                                         	위 사항에 해당사항이 없으며, 허위기재로 문제발생시 본인에게 책임이 있음을 확인합니다.
-                                                        </label>     
+                                                        </label>
                                                     </li>
-                                                </ol>
+												</ol>
                                             </p>
                                         </li>
                                         
@@ -319,7 +332,7 @@
                                                         <input class="magic-checkbox qna_check" type="checkbox" name="layout" id="ENTRY_DVSN_2_auto_payment_check" value="Y">
                                                         <label for="ENTRY_DVSN_2_auto_payment_check">
                                                         	스피드온 사전결제에 동의합니다.
-                                                        </label>     
+                                                        </label>
                                                     </li>
                                                 </ol>
                                             </p>
@@ -335,7 +348,7 @@
 													<br>
 													<li class="check_impnt">
 														<input class="magic-checkbox qna_check" type="checkbox" name="layout" id="ENTRY_DVSN_2_person_agree" value="Y">
-													<label for="ENTRY_DVSN_2_person_agree">동의합니다.</label>     
+													<label for="ENTRY_DVSN_2_person_agree">동의합니다.</label>
 													</li>
 												</ol>
 											</p>
@@ -343,23 +356,23 @@
 										
 										<!--기타고지사항-->
 										<li class="person_check">
-											<p><span>&lt;기타 고지 사항 &gt;</span>	</p>
+											<p><span>&lt;기타 고지 사항 &gt;</span></p>
 											<ol>
 												<li class="notiCon">개인정보 보호법 제15조 제1항 제2호에 따라 정보주체의 동의 없이 개인정보를 수집·이용합니다.</li>
 												<li class="prsn_agree"><a data-popup-open="ect_agree">자세히 &gt;</a></li>
 											</ol>
-										</li>                                               
+										</li>
                                     </ul>
 
                                     <ul class="rsv_btn">
                                         <li><a href="javascript:seatService.fn_checkForm();">예약하기</a></li>
                                         <li><a data-popup-open="rsv_cancel">취소</a></li>
-                                    </ul>                         
+                                    </ul>
                                 </div>
                             </div>
                         </section>
                     </div>
-                </div>                
+                </div>
             </div>
         </div>
         <!--contents //-->
@@ -374,14 +387,14 @@
                 <div class="clear"></div>
             </div>
         </div>
-    </div>  
+    </div>
 
     <!-- // 예약완료 팝업 -->
     <div id="rsv_done" class="popup">
-      <div class="pop_con rsv_popup">
-          <div class="pop_wrap">
-              <h4><img src="/resources/img/front/done.svg" alt="예약확인">해당 정보로 예약하시겠습니까?</h4>
-               <ul class="rsv_list">
+		<div class="pop_con rsv_popup">
+          	<div class="pop_wrap">
+				<h4><img src="/resources/img/front/done.svg" alt="예약확인">해당 정보로 예약하시겠습니까?</h4>
+               	<ul class="rsv_list">
 					<li>
                         <ol>
                             <li>경주일</li>
@@ -411,15 +424,15 @@
                             <li>좌석</li>
                             <li><span id="rsv_seat" class="rsv_seat"></span></li>
                         </ol>
-                    </li>
-               </ul>
-          </div>
-          <div class="summit_btn">
-              <a href="javascript:seatService.fn_setResvInfo();" class="mintBtn">확인</a>
-              <a href="javascript:bPopupClose('rsv_done');">취소</a>
-          </div>
-          <div class="clear"></div>
-      </div>
+					</li>
+				</ul>
+          	</div>
+          	<div class="summit_btn">
+              	<a href="javascript:seatService.fn_setResvInfo();" class="mintBtn">확인</a>
+				<a href="javascript:bPopupClose('rsv_done');">취소</a>
+          	</div>
+			<div class="clear"></div>
+		</div>
     </div>
     <!-- 예약완료 팝업 // -->
 
@@ -552,8 +565,6 @@
 		<div class="clear"></div>
 	</div>
     <!-- 기타고지사항 팝업 // -->    
-    
-   						                
 
     <!--층 선택 시 show/hide-->
     <script>
@@ -575,26 +586,8 @@
     	var center ="";
     	
 		$(document).ready(function() {
-			//자유석 좌석 버튼 이벤트 정의
-			$(function(){
-				var sBtn = $(".section_menu ul > li, .enter_type ul > li");   //  ul > li 이를 sBtn으로 칭한다. (클릭이벤트는 li에 적용 된다.)
-				sBtn.find("ul").click(function(){   // sBtn에 속해 있는  ul 찾아 클릭 하면.
-					sBtn.removeClass("active");     // sBtn 속에 (active) 클래스를 삭제 한다.
-					$(this).parent().addClass("active"); // 클릭한 a에 (active)클래스를 넣는다.
-				})
-			});
-			
-			$('.section_menu ul.tabs li').click(function(){
-            	var tab_id = $(this).attr('data-tab');
-
-            	$('.section ul.tabs li').removeClass('current');
-            	$('.tab-content').removeClass('current');
-
-            	$(this).addClass('current');
-            	$("#"+tab_id).addClass('current');
-    		});
-			
 			$(".date").html(fn_resvDateFormat($("#resvDate").val()));
+			$("#menu_ul > li:eq(0)").addClass("active");
 			
 			if($("#isReSeat").val() != "Y") {
 				// TO-DO : 비시범지점일 경우 "좌석" 버튼숨김 임시적용
@@ -627,25 +620,31 @@
 				
 				$("#mask").trigger("click");
 			},
+			fn_resvDateChange : function(el) {
+				var resvDate = $(el).attr("data-date").replaceAll("-","");
+				if(resvDate === $("#resvDate").val()) return;
+				
+				$(".date").html(fn_resvDateFormat(resvDate));
+				$("#resvDate").val(resvDate.replaceAll("-",""));
+				seatService.fn_initializing("ALL");
+			},
 			fn_enterTypeChange : function(entryDvsn) {
 				if($("#entryDvsn").val() != entryDvsn) {
 					if(entryDvsn == "ENTRY_DVSN_1") {
 						$("#showHide").show();
 						$("#showHide_seat").hide();
-						
+
 						$(".rsv_list").children("li").eq(2).hide();
 						$(".rsv_list").children("li").eq(3).hide();
 					} else { 
 						$("#section_sel").hide();
-						$("#selectFloorCd").val("");
-
 						$("#showHide").hide();
 						$("#showHide_seat").show();
 						$(".rsv_list").children("li").eq(2).show();
 						$(".rsv_list").children("li").eq(3).show();
 					}
 					
-					seatService.fn_initializing("ALL");
+					seatService.fn_initializing("ENTRY");
 					$("#entryDvsn").val(entryDvsn);
 										
 					$("#" + entryDvsn + "_resvUserNm").val("");
@@ -1133,8 +1132,14 @@
 			},
 			fn_initializing : function(division) {
 				if(division == "ALL") {
+					$("#entryDvsn").val("");
+					$(".enter_type ul > li").removeClass("active");
+					$("#section_sel, #tab-a, #showHide_seat, #showHide").hide();
+					$("#floorCd, #partCd, #seatCd, #selectFloorCd").val("");
+					$(".sel_floor_nm, .sel_part_nm, .sel_seat_nm").html("");
+			    } else if(division == "ENTRY") {
 					$("#section_sel, #tab-a").hide();
-					$("#floorCd, #partCd, #seatCd").val("");
+					$("#floorCd, #partCd, #seatCd, #selectFloorCd").val("");
 					$(".sel_floor_nm, .sel_part_nm, .sel_seat_nm").html("");
 				} else if (division == "FLOOR") {
 					$("#section_sel").show();

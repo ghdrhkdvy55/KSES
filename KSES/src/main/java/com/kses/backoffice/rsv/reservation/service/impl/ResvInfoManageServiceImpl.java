@@ -89,6 +89,11 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	}
 
 	@Override
+	public List<Map<String, Object>> selectCenterResvDateList(String centerCd) throws Exception {
+		return resvMapper.selectCenterResvDateList(centerCd);
+	}
+	
+	@Override
 	public int updateUserResvInfo(ResvInfo vo) throws Exception {
 		return vo.getMode().equals("Ins") ? resvMapper.insertUserResvInfo(vo) : resvMapper.updateUserResvInfo(vo);
 	}

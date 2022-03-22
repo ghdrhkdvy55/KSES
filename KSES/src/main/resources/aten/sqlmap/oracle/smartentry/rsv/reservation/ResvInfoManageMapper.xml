@@ -391,6 +391,22 @@
     	SELECT FN_RESVDATE(#{centerCd}) FROM DUAL
     </select>
     
+    <!-- 지점 사전예약일 목록 조회 -->
+    <select id="selectCenterResvDateList" resultType="lmap">
+    <![CDATA[
+	    SELECT RESV_DATE FROM (
+			SELECT ROWNUM AS RNUM, TO_CHAR(TO_DATE(RESV_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') AS RESV_DATE FROM (
+				SELECT TO_CHAR(TO_DATE(FN_RESVDATE(#{centerCd}),'YYYY-MM-DD') + LEVEL -1, 'YYYYMMDD') AS RESV_DATE FROM DUAL 
+				CONNECT BY LEVEL <= 30
+				MINUS 
+				SELECT TO_CHAR(TO_DATE(HOLY_DT,'YYYY-MM-DD'), 'YYYY-MM-DD') FROM TSEB_CENTERHOLY_INFO_I WHERE CENTER_CD = #{centerCd} AND HOLY_DT >= FN_RESVDATE(#{centerCd})
+			) A
+			ORDER BY RESV_DATE ASC
+		)
+		WHERE RNUM <= (SELECT CENTER_RESV_ABLE_DAY FROM TSEB_CENTER_INFO_M WHERE CENTER_CD = #{centerCd})
+	]]>
+    </select>
+    
 	<select id="selectQrDuplicate" resultType="lmap">
     	SELECT NVL(COUNT(*),0) AS CNT
 		FROM TSER_QR_CHECK_H  
