@@ -192,19 +192,19 @@ $.EgovJqGridApi.prototype.mainGridAjax = function(url, params, searchFunc, subFu
 /** JqGrid 메인 그리드 상세 팝업 호출 시
  *  - 사용 하지 않음
  */
-// $.EgovJqGridApi.prototype.mainGridDetail = function(detailFunc) {
-// 	setTimeout(function() {
-// 		$(MainGridSelector).jqGrid('setGridParam', {
-// 			ondblClickRow: function(rowId, iRow, iCol, e) {
-// 				if (!$(MainGridSelector).jqGrid('getInd', rowId)) {
-// 					return false;
-// 				} else {
-// 					detailFunc(rowId, $(MainGridSelector).jqGrid('getRowData', rowId));
-// 				}
-// 			}
-// 		});
-// 	}, _JqGridDelay);
-// };
+$.EgovJqGridApi.prototype.mainGridDetail = function(detailFunc) {
+	setTimeout(function() {
+		$(MainGridSelector).jqGrid('setGridParam', {
+			ondblClickRow: function(rowId, iRow, iCol, e) {
+				if (!$(MainGridSelector).jqGrid('getInd', rowId)) {
+					return false;
+				} else {
+					detailFunc(rowId, $(MainGridSelector).jqGrid('getRowData', rowId));
+				}
+			}
+		});
+	}, _JqGridDelay);
+};
 /**
  * jqGrid 메인 그리드 RowData 가져오기
  */
