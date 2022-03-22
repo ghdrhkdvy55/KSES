@@ -63,9 +63,9 @@
 	$(document).ready(function() {
 		// 메인 목록 정의
 		EgovJqGridApi.mainGrid([
-			{ label:'로그인 아이디'	, name:'log_id'		, align:'left'	},
-			{ label:'아이디'		, name:'conect_id'	, align:'left'	},
-			{ label:'이름'		, name:'login_nm'	, align:'left'	},
+			{ label:'로그인 아이디'	, name:'log_id'		, align:'center'	},
+			{ label:'아이디'		, name:'conect_id'	, align:'center'	},
+			{ label:'이름'		, name:'login_nm'	, align:'center'	},
 			{ label:'구분'		, name:'conect_mthd', align:'center', formatter: (c, o, row) =>
 				$.trim(row.conect_mthd) == 'I' ? '로그인' : '로그아웃'
 			},
