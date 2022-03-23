@@ -29,9 +29,9 @@ public interface PreOpenInfoManageService {
 	/**
 	 * SPDM 지점 사전예약 입장시간 정보 복사
 	 * 
-	 * @param params
+	 * @param preOpenInfo
 	 * @return
 	 * @throws Exception
 	 */
-	public int copyPreOpenInfo(Map<String, Object> params) throws Exception;
+	public int copyPreOpenInfo(PreOpenInfo preOpenInfo) throws Exception;
 }

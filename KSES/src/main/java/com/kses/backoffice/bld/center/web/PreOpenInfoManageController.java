@@ -98,12 +98,12 @@ public class PreOpenInfoManageController {
 	 * @throws Exception
 	 */
     @RequestMapping(value = "preOpenInfoCopy.do", method = RequestMethod.POST)
-    public ModelAndView updateCopyPreOpenInfo(@RequestBody Map<String, Object> params) throws Exception {
+    public ModelAndView updateCopyPreOpenInfo(@RequestBody PreOpenInfo preOpenInfo) throws Exception {
     	ModelAndView model = new ModelAndView(Globals.JSONVIEW);
     	
     	String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
-    	params.put("userId", userId);
-    	preOpenInfoService.copyPreOpenInfo(params);
+    	preOpenInfo.setLastUpdusrId(userId);
+    	preOpenInfoService.copyPreOpenInfo(preOpenInfo);
 		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.update"));
 
