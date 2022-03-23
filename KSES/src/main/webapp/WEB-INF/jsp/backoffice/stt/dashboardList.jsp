@@ -91,50 +91,50 @@
 	});
 
 	function fnTodayResvNumber() {
-		fn_Ajax (
+		EgovIndexApi.apiExecuteJson(
+			'POST',
 			'/backoffice/stt/todayResvNumberAjax.do',
-			"POST",
 			null,
-			false,
-			function(result) {
-				if (result.status === 'SUCCESS') {
-					$('#pResvNumber').text(result.todayResvNumber);
+			null,
+			function(json) {
+				if (json.status === 'SUCCESS') {
+					$('#pResvNumber').text(json.todayResvNumber);
 				}
 			},
-			function(request){
-				console.log('error: '+ request.status);
+			function(json) {
+				toastr.error(json.status);
 			}
 		);
 	}
 
 	function fnNowEntryNumber() {
-		fn_Ajax (
+		EgovIndexApi.apiExecuteJson(
+			'POST',
 			'/backoffice/stt/nowEntryNumberAjax.do',
-			"POST",
 			null,
-			false,
-			function(result) {
-				if (result.status === 'SUCCESS') {
-					$('#pNowEntryNumber').text(result.nowEntryNumber);
+			null,
+			function(json) {
+				if (json.status === 'SUCCESS') {
+					$('#pNowEntryNumber').text(json.nowEntryNumber);
 				}
 			},
-			function(request){
-				console.log('error: '+ request.status);
+			function(json) {
+				toastr.error(json.status);
 			}
 		);
 	}
 
 	function fnDashboardList() {
-		fn_Ajax (
+		EgovIndexApi.apiExecuteJson(
+			'POST',
 			'/backoffice/stt/dashboardListAjax.do',
-			"POST",
 			null,
-			false,
-			function(result) {
-				if (result.status === 'SUCCESS') {
+			null,
+			function(json) {
+				if (json.status === 'SUCCESS') {
 					let $tbody = $('.main_table tbody');
 					$tbody.empty();
-					for (let item of result.dashboardList) {
+					for (let item of json.dashboardList) {
 						$(	'<tr>'+
 								'<td>'+ item.center_nm +'</td>'+
 								'<td>'+ item.class_4 +'</td>'+
@@ -150,8 +150,8 @@
 					$tbody.find('tr:last').addClass('tb_bottom');
 				}
 			},
-			function(request){
-				console.log('error: '+ request.status);
+			function(json) {
+				toastr.error(json.status);
 			}
 		);
 	}
