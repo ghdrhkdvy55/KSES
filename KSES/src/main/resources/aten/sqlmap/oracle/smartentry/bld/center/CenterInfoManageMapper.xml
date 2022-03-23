@@ -170,7 +170,7 @@
 			SYSDATE, #{centerImg, jdbcType=VARCHAR}, #{centerUrl ,jdbcType=VARCHAR}, #{centerMap, jdbcType=VARCHAR}, 'Y', 
 			#{centerInfo, jdbcType=VARCHAR}, #{floorInfo, jdbcType=VARCHAR}, #{startFloor, jdbcType=VARCHAR}, #{endFloor, jdbcType=VARCHAR}, '',
 		    #{centerPilotYn , jdbcType=VARCHAR}, #{centerSpeedCd , jdbcType=VARCHAR}, #{centerStandYn, jdbcType=VARCHAR}, #{centerStandMax, jdbcType=VARCHAR}, #{centerEntryPayCost, jdbcType=VARCHAR},
-		    #{centerSpeedEntryPayCost, jdbcType=VARCHAR}, #{centerResvAbleDay, jdbcType=VARCHAR}, #centerOrder, jdbcType=VARCHAR}, #{centerRbmCd, jdbcType=VARCHAR}
+		    #{centerSpeedEntryPayCost, jdbcType=VARCHAR}, #{centerResvAbleDay, jdbcType=VARCHAR}, #{centerOrder, jdbcType=VARCHAR}, #{centerRbmCd, jdbcType=VARCHAR}
 		);
     	
 		<if test="floorInfo != null">
