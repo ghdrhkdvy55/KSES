@@ -15,7 +15,7 @@ public class CenterInfo {
 	 // 지점 아이디 
 	 private String centerCd;
 	
-	 // 지점명 
+	 // 지점명
 	 private String centerNm;
 	
 	 // 우편번호 
@@ -102,6 +102,9 @@ public class CenterInfo {
 	 // 스피드온 지점코드
 	 private String centerSpeedCd = "";
 	 
+	 // SPDM 지점코드
+	 private String centerRbmCd = "";
+	 
 	 // 자유석 사용 유무
 	 private String centerStandYn = "";
 	 
@@ -117,8 +120,9 @@ public class CenterInfo {
 	 // 지점 스피드온 입장료
 	 private String centerSpeedEntryPayCost = "";
 	 
-	 // SPDM 지점코드
-	 private String centerRbmCd = "";
-
+	 // 지점 사전 예약가능일
+	 private String centerResvAbleDay = "";
+	 
+	 // 지점 표출 순서
 	 private String centerOrder;
 }

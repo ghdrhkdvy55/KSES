@@ -22,8 +22,10 @@
 		<result property="center_stand_yn" column="CENTER_STAND_YN" jdbcType="VARCHAR" javaType="java.lang.String"/>
     	<result property="center_stand_max" column="CENTER_STAND_MAX" jdbcType="VARCHAR" javaType="java.lang.String"/>
     	<result property="center_entry_pay_cost" column="CENTER_ENTRY_PAY_COST" jdbcType="VARCHAR" javaType="java.lang.String"/>
+    	<result property="center_speed_entry_pay_cost" column="CENTER_SPEED_ENTRY_PAY_COST" jdbcType="VARCHAR" javaType="java.lang.String"/>
     	<result property="center_rbm_cd" column="CENTER_RBM_CD" jdbcType="VARCHAR" javaType="java.lang.String"/>
     	<result property="center_auto_payment_yn" column="CENTER_AUTO_PAYMENT_YN" jdbcType="VARCHAR" javaType="java.lang.String"/>
+    	<result property="center_resv_able_day" column="CENTER_RESV_ABLE_DAY" jdbcType="VARCHAR" javaType="java.lang.String"/>
 		<result property="center_order" column="CENTER_ORDER" jdbcType="VARCHAR" javaType="java.lang.String"/>
 	</resultMap>
 	
@@ -65,15 +67,10 @@
 			CENTER_CD, CENTER_NM, CENTER_ZIPCD, CENTER_ADDR1, CENTER_ADDR2, 
 			CENTER_TEL, CENTER_FAX, CENTER_IMG, CENTER_MAP, CENTER_URL,
 			CENTER_INFO, USE_YN, START_FLOOR, END_FLOOR, FLOOR_INFO, 
-			CENTER_PILOT_YN, CENTER_SPEED_CD, CENTER_STAND_YN, CENTER_STAND_MAX, CENTER_ENTRY_PAY_COST,
-			CENTER_RBM_CD, CENTER_ORDER,
-			CASE
-				WHEN
-					CENTER_PILOT_YN = 'Y' AND
-					TO_CHAR(SYSDATE,'YYYYMMDDHH24MI') BETWEEN
-					CONCAT(TO_CHAR(TO_DATE(FN_RESVDATE(CENTER_CD),'YYYYMMDD') - (INTERVAL '1' DAY),'YYYYMMDD'),'2100')
-					AND
-					CONCAT(FN_RESVDATE(CENTER_CD),'1030') THEN 'Y'
+			CENTER_PILOT_YN, CENTER_SPEED_CD, CENTER_RBM_CD, CENTER_STAND_YN, CENTER_STAND_MAX, CENTER_ENTRY_PAY_COST,
+			CENTER_SPEED_ENTRY_PAY_COST, CENTER_RESV_ABLE_DAY, CENTER_ORDER, 
+			CASE 
+				WHEN CENTER_PILOT_YN = 'Y' THEN 'Y'
  				ELSE 'N'
  			END AS CENTER_AUTO_PAYMENT_YN
 		 FROM TSEB_CENTER_INFO_M
@@ -97,7 +94,7 @@
 				TA.CENTER_CD, 
 				CASE 
 					WHEN (TA.CENTER_CD = TB.CENTER_CD AND HOLY_DT = TA.RESV_DATE) THEN 'N'
-					WHEN 
+					WHEN
 					(
 						TO_CHAR(SYSDATE,'YYYYMMDDHH24MI') BETWEEN CONCAT(TO_CHAR(SYSDATE,'YYYYMMDD'), TA.CLOSE_MEMBER_TM) AND CONCAT(TO_CHAR(SYSDATE,'YYYYMMDD'), TA.OPEN_MEMBER_TM)
 					) THEN 'N'
@@ -164,8 +161,8 @@
 			CENTER_TEL, CENTER_FAX, FRST_REGTER_ID, FRST_REGIST_DTM, LAST_UPDUSR_ID, 
 			LAST_UPDT_DTM, CENTER_IMG, CENTER_URL, CENTER_MAP, USE_YN, 
 			CENTER_INFO, FLOOR_INFO, START_FLOOR, END_FLOOR, CENTER_STDM_DVSN, 
-			CENTER_PILOT_YN, CENTER_SPEED_CD, CENTER_STAND_YN, CENTER_STAND_MAX, CENTER_ENTRY_PAY_COST,
-			CENTER_RBM_CD, CENTER_ORDER
+			CENTER_PILOT_YN, CENTER_SPEED_CD, CENTER_RBM_CD, CENTER_STAND_YN, CENTER_STAND_MAX, 
+			CENTER_ENTRY_PAY_COST, CENTER_SPEED_ENTRY_PAY_COST, CENTER_RESV_ABLE_DAY, CENTER_ORDER
 		)
 		VALUES 
 		(
@@ -173,8 +170,8 @@
 			#{centerTel, jdbcType=VARCHAR}, #{centerFax, jdbcType=VARCHAR}, #{frstRegterId, jdbcType=VARCHAR}, SYSDATE, #{lastUpdusrId, jdbcType=VARCHAR},
 			SYSDATE, #{centerImg, jdbcType=VARCHAR}, #{centerUrl ,jdbcType=VARCHAR}, #{centerMap, jdbcType=VARCHAR}, 'Y', 
 			#{centerInfo, jdbcType=VARCHAR}, #{floorInfo, jdbcType=VARCHAR}, #{startFloor, jdbcType=VARCHAR}, #{endFloor, jdbcType=VARCHAR}, '',
-		    #{centerPilotYn , jdbcType=VARCHAR}, #{centerSpeedCd , jdbcType=VARCHAR}, #{centerStandYn, jdbcType=VARCHAR}, #{centerStandMax, jdbcType=VARCHAR}, #{centerEntryPayCost, jdbcType=VARCHAR},
-			#{centerRbmCd , jdbcType=VARCHAR}, #{centerOrder , jdbcType=VARCHAR}
+		    #{centerPilotYn, jdbcType=VARCHAR}, #{centerSpeedCd, jdbcType=VARCHAR} #{centerRbmCd, jdbcType=VARCHAR}, #{centerStandYn, jdbcType=VARCHAR}, #{centerStandMax, jdbcType=VARCHAR}, 
+		    #{centerEntryPayCost, jdbcType=VARCHAR}, #{centerSpeedEntryPayCost, jdbcType=VARCHAR}, #{centerResvAbleDay, jdbcType=VARCHAR}, #{centerOrder, jdbcType=VARCHAR}
 		);
     	
 		<if test="floorInfo != null">
@@ -266,10 +263,12 @@
 			,END_FLOOR = #{endFloor, jdbcType=VARCHAR}      
 			,CENTER_PILOT_YN = #{centerPilotYn, jdbcType=VARCHAR}  
 			,CENTER_SPEED_CD = #{centerSpeedCd, jdbcType=VARCHAR}
+			,CENTER_RBM_CD = #{centerRbmCd, jdbcType=VARCHAR}
 			,CENTER_STAND_YN = #{centerStandYn, jdbcType=VARCHAR}
 			,CENTER_STAND_MAX = #{centerStandMax, jdbcType=VARCHAR}
 			,CENTER_ENTRY_PAY_COST = #{centerEntryPayCost, jdbcType=VARCHAR}
-			,CENTER_RBM_CD = #{centerRbmCd, jdbcType=VARCHAR}
+			,CENTER_SPEED_ENTRY_PAY_COST = #{centerSpeedEntryPayCost, jdbcType=VARCHAR}
+			,CENTER_RESV_ABLE_DAY = #{centerResvAbleDay, jdbcType=VARCHAR}
 			,CENTER_ORDER = #{centerOrder, jdbcType=VARCHAR}
 		WHERE CENTER_CD = #{centerCd};
 		

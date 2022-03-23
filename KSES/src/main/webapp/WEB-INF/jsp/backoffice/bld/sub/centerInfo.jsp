@@ -52,37 +52,49 @@
                     <td><input type="text" name="centerOrder" numberonly></td>
                 </tr>
                 <tr>
-                    <th>URL</th>
-                    <td><input type="text" name="centerUrl" style="width:100%;"></td>
                     <th>사용 여부</th>
                     <td>
                         <input type="radio" name="useYn" value="Y">사용</input>
                         <input type="radio" name="useYn" value="N">사용 안함</input>
                     </td>
-                </tr>
-                <tr>
-                    <th>시범 지점 여부</th>
+					<th>시범 지점 여부</th>
                     <td>
                         <input type="radio" name="centerPilotYn" value="Y">사용</input>
                         <input type="radio" name="centerPilotYn" value="N">사용 안함</input>
                     </td>
-                    <th>입석 사용 여부</th>
+                </tr>
+                <tr>
+                    <th>자유석 사용 여부</th>
                     <td>
                         <input type="radio" name="centerStandYn" value="Y">사용</input>
                         <input type="radio" name="centerStandYn" value="N">사용 안함</input>
                     </td>
+					<th>최대 자유석수</th>
+                    <td><input type="text" name="centerStandMax" numberonly></td>
                 </tr>
                 <tr>
-                    <th>최대 자유석수</th>
-                    <td><input type="text" name="centerStandMax" numberonly></td>
                     <th>지점 입장료</th>
                     <td><input type="text" name="centerEntryPayCost" numberonly></td>
+					<th>지점 입장료(스피드온)</th>
+                    <td><input type="text" name="centerSpeedEntryPayCost" numberonly></td>
                 </tr>
                 <tr>
-                    <th>스피온 코드</th>
+                    <th>SPEEDON CODE</th>
                     <td><input type="text" name="centerSpeedCd" maxlength="15"></td>
-                    <th>QR 체크 코드</th>
+                    <th>RBM CODE</th>
                     <td><input type="text" name="centerRbmCd" maxlength="2"></td>
+                </tr>
+                <tr>
+                    <th>지점 사전예약일</th>
+                    <td>
+						<select name="centerResvAbleDay">
+							<c:forEach items="${centerResvAbleDay}" var="centerResvAbleDay">
+								<option value="${centerResvAbleDay.codenm}"><c:out value='${centerResvAbleDay.codenm}'/>일</option>
+							</c:forEach>
+                        </select>
+                    </td>
+                    <th></th>
+                    <td></td>
                 </tr>
                 </tbody>
             </table>
@@ -111,6 +123,8 @@
             $form.find(':text[name=centerOrder]').val(0);
             $form.find(':text[name=centerStandMax]').val(0);
             $form.find(':text[name=centerEntryPayCost]').val(0);
+            $form.find(':text[name=centerSpeedEntryPayCost]').val(0);
+            $form.find('select[name=centerResvAbleDay] option:first').prop('selected', true);
             $form.find('select[name=startFloor] option:first').prop('selected', true);
             $form.find('select[name=endFloor] option:first').prop('selected', true);
             $form.find(':radio[name=useYn]:first').prop('checked', true);
@@ -145,6 +159,8 @@
                     $form.find(':radio[name=centerStandYn][value='+ data.center_stand_yn +']').prop('checked', true);
                     $form.find(':text[name=centerStandMax]').val(data.center_stand_max);
                     $form.find(':text[name=centerEntryPayCost]').val(data.center_entry_pay_cost);
+                    $form.find(':text[name=centerSpeedEntryPayCost]').val(data.center_speed_entry_pay_cost);
+                    $form.find('select[name=centerResvAbleDay]').val(data.center_resv_able_day);
                     $form.find(':text[name=centerSpeedCd]').val(data.center_speed_cd);
                     $form.find(':text[name=centerRbmCd]').val(data.center_rbm_cd);
                 },

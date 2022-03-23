@@ -80,6 +80,7 @@ public class CenterInfoManageController {
 	@RequestMapping(value="centerInfoPopup.do", method = RequestMethod.GET)
 	public ModelAndView popupCenterInfo() throws Exception {
 		ModelMap model = new ModelMap();
+		model.addAttribute("centerResvAbleDay", codeDetailService.selectCmmnDetailCombo("CENTER_RESV_ABLE_DAY"));
 		model.addAttribute("floorInfo", codeDetailService.selectCmmnDetailCombo("CENTER_FLOOR"));
 		return new ModelAndView("/backoffice/bld/sub/centerInfo", model);
 	}
