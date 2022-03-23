@@ -20,7 +20,7 @@ public interface CenterHolyInfoManageMapper {
 	
 	int insertCenterHolyInfo(CenterHolyInfo vo) throws Exception;
 	
-	int copyCenterHolyInfo(@Param("params") Map<String, Object> params) throws Exception;
+	int copyCenterHolyInfo(CenterHolyInfo centerHolyInfo) throws Exception;
 	
 	Map<String, Object> centerUpdateSelect(@Param("centerHolySeq") String centerHolySeq) throws Exception;
 	

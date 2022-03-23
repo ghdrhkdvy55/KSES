@@ -210,12 +210,12 @@ public class CenterHolyInfoManageController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "centerHolyInfoCopy.do", method = RequestMethod.POST)
-	public ModelAndView updateCopyCenterHolyInfo(@RequestBody Map<String, Object> params) throws Exception {
+	public ModelAndView updateCopyCenterHolyInfo(@RequestBody CenterHolyInfo centerHolyInfo) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		
     	String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
-    	params.put("userId", userId);
-		centerHolyInfoService.copyCenterHolyInfo(params);
+    	centerHolyInfo.setLastUpdusrId(userId);
+		centerHolyInfoService.copyCenterHolyInfo(centerHolyInfo);
 		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.update"));
 

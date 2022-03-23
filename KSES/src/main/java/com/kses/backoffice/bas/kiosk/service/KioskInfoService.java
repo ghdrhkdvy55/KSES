@@ -17,8 +17,6 @@ public interface KioskInfoService {
 	 */
     List<Map<String, Object>> selectKioskInfoList(Map<String, Object> params) throws Exception;
 	
-    Map<String, Object> selectKioskInfoDetail(String ticketMchnSno) throws Exception;
-    
     /**
      * KSES 장비 정보 수정
      * @param kioskInfo

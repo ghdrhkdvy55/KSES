@@ -29,7 +29,7 @@ public class PreOpenInfoManageServiceImpl extends EgovAbstractServiceImpl implem
 	}
 
 	@Override
-	public int copyPreOpenInfo(Map<String, Object> params) throws Exception {
-		return preOpenMapper.copyPreOpenInfo(params);
+	public int copyPreOpenInfo(PreOpenInfo preOpenInfo) throws Exception {
+		return preOpenMapper.copyPreOpenInfo(preOpenInfo);
 	}
 }

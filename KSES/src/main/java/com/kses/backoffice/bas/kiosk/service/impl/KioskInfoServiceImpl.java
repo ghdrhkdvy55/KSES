@@ -22,11 +22,6 @@ public class KioskInfoServiceImpl extends EgovAbstractServiceImpl implements Kio
 		return kioskMapper.selectKioskInfoList(params);
 	}
 	
-	@Override 
-	public Map<String, Object> selectKioskInfoDetail(String ticketMchnSno) throws Exception {
-	    return kioskMapper.selectKioskInfoDetail(ticketMchnSno);
-	}
-	
 	@Override
 	public int insertKioskInfo(KioskInfo kioskInfo) throws Exception {
 		return kioskMapper.insertKioskInfo(kioskInfo);

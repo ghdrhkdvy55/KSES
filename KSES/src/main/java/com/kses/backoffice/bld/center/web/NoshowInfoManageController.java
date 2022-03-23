@@ -5,7 +5,6 @@ import com.kses.backoffice.bld.center.service.NoshowInfoManageService;
 import com.kses.backoffice.bld.center.vo.NoshowInfo;
 import com.kses.backoffice.sym.log.annotation.NoLogging;
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.Globals;
 import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import egovframework.rte.fdl.property.EgovPropertyService;
@@ -15,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -96,12 +94,12 @@ public class NoshowInfoManageController {
 	 * @throws Exception
 	 */
     @RequestMapping(value = "noshowInfoCopy.do", method = RequestMethod.POST)
-    public ModelAndView updateCopyPreOpenInfo(@RequestBody Map<String, Object> params) throws Exception {
+    public ModelAndView updateCopyNoshowInfo(@RequestBody NoshowInfo noshowInfo) throws Exception {
     	ModelAndView model = new ModelAndView(Globals.JSONVIEW);
     	
     	String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
-    	params.put("userId", userId);
-    	noshowInfoService.copyNoshowInfo(params);
+    	noshowInfo.setLastUpdusrId(userId);
+    	noshowInfoService.copyNoshowInfo(noshowInfo);
     	model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
     	model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.update"));
     	

@@ -25,5 +25,5 @@ public interface NoshowInfoManageMapper {
 	
 	public int updateNoshowInfo(@Param("noshowInfoList") List<NoshowInfo> noshowInfoList) throws Exception;
 	
-	public int copyNoshowInfo(@Param("params") Map<String, Object> params) throws Exception;
+	public int copyNoshowInfo(NoshowInfo noshowInfo) throws Exception;
 }

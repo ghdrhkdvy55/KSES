@@ -25,16 +25,16 @@
 <div class="clear"></div>
 <div class="dashboard">
 	<div class="boardlist">
-      	<div class="whiteBox searchBox">
-            <div class="top">
-                <p>검색어</p>
-                <select id="searchMachDvsn">
+		<div class="whiteBox searchBox">
+			<div class="top">
+				<p>검색어</p>
+				<select id="searchMachDvsn">
 					<option value="">선택</option>
 					<c:forEach items="${machInfo}" var="machInfo">
 						<option value="${machInfo.code}">${machInfo.codenm}</option>
 					</c:forEach>
-		        </select>
-                <select id="searchcenterNm">
+				</select>
+                <select id="searchCenterCd">
 					<option value="">지점 선택</option>
 					<c:forEach items="${centerInfo}" var="centerInfo">
 						<option value="${centerInfo.center_cd}">${centerInfo.center_nm}</option>
@@ -51,18 +51,18 @@
                 <a href="javascript:fnSearch(1);" class="grayBtn">검색</a>
             </div>
         </div>
-        <div class="left_box mng_countInfo">
-          <p>총 : <span id="sp_totcnt"></span>건</p>
+		<div class="left_box mng_countInfo">
+			<p>총 : <span id="sp_totcnt"></span>건</p>
         </div>
-        <div class="right_box">
-            <a href="javascript:fnKioskInfo();" class="blueBtn">장비 등록</a>
-            <a href="javascript:fnKioskDelete();" class="grayBtn">삭제</a>
-        </div>
-        <div class="clear"></div>
-        <div class="whiteBox">
-        	<table id="mainGrid"></table>
+		<div class="right_box">
+			<a href="javascript:fnKioskInfo();" class="blueBtn">장비 등록</a>
+			<a href="javascript:fnKioskDelete();" class="grayBtn">삭제</a>
+		</div>
+		<div class="clear"></div>
+		<div class="whiteBox">
+			<table id="mainGrid"></table>
 			<div id="pager"></div> 
-        </div>
+		</div>
 	</div>
 </div>
 <!-- contents// -->
@@ -169,7 +169,8 @@
 			{ label: '사용 여부', name:'use_yn_value', align:'center', hidden: true},
 			{ label: '비고', name:'mach_etc1', align:'left', hidden: true},
 			{ label: '수정일자', name:'last_updt_dtm', align:'center', formatter: 'date'},
-			{ label: '수정자', name: 'last_updusr_id', align:'center'}
+			{ label: '수정', align:'center', width: 50, fixed: true, formatter: (c, o, row) =>
+        	'<a href="javascript:fnKioskInfo(\''+ row.ticket_mchn_sno +'\');" class="edt_icon"></a>'}
 		], true, false, fnSearch);
  	});
 	// 메인 목록 검색
@@ -179,17 +180,17 @@
 			pageUnit: $('.ui-pg-selbox option:selected').val(),
 			searchKeyword: $('#searchKeyword').val(),
 			searchMachDvsn : $("#searchMachDvsn").val(),
-			searchcenterNm : $("#searchcenterNm").val(),
+			searchCenterCd : $("#searchCenterCd").val(),
 			searchCondition : $("#searchCondition").val()
 		};
 		EgovJqGridApi.mainGridAjax('/backoffice/bas/kioskListAjax.do', params, fnSearch);
-		EgovJqGridApi.mainGridDetail(fnKioskInfo);
+		/* EgovJqGridApi.mainGridDetail(fnKioskInfo); */
 	}
     // 장비 정보 팝업 정의
-	function fnKioskInfo(id, rowData) {
+	function fnKioskInfo(rowId) {
 		let $popup = $('[data-popup=bas_kiosk_add]');
 		let $form = $popup.find('form:first');
-		if (id === undefined || id === null) {
+		if (rowId === undefined || rowId === null) {
 			$popup.find('h2:first').text('장비 정보 등록');
 			$popup.find('span#sp_Unqi').show();
 			$popup.find('button.blueBtn').off('click').click(fnKioskInsert);
@@ -202,6 +203,7 @@
 			$form.find(':radio[name=useYn]:first').prop('checked', true);
 		}
 		else {
+			let rowData = EgovJqGridApi.getMainGridRowData(rowId);
 			$popup.find('h2:first').text('장비 정보 수정');
 			$popup.find('span#sp_Unqi').hide();
 			$popup.find('button.blueBtn').off('click').click(fnKioskUpdate);
@@ -264,7 +266,7 @@
 			return;
 		}
 		
-		bPopupConfirm('프로그램 등록', '등록 하시겠습니까?', function() {
+		bPopupConfirm('장비 등록', '등록 하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(
 				'POST',
 				'/backoffice/bas/kioskUpdate.do', 
@@ -318,7 +320,7 @@
 	
 	// 장비정보 삭제
 	function fnKioskDelete() {
-		let rowIds = $('#mainGrid').jqGrid('getGridParam', 'selarrrow');
+		let rowIds = EgovJqGridApi.getMainGridMutipleSelectionIds();
 		if (rowIds.length === 0) {
 			toastr.warning('목록을 선택해 주세요.');
 			return false;

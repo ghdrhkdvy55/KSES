@@ -66,7 +66,7 @@ public interface NoshowInfoManageService {
 	 * @return
 	 * @throws Exception
 	 */
-	public int copyNoshowInfo(Map<String, Object> params) throws Exception;
+	public int copyNoshowInfo(NoshowInfo noshowInfo) throws Exception;
 	
 	/**
 	 * 트랜잭션 테스트진행중 

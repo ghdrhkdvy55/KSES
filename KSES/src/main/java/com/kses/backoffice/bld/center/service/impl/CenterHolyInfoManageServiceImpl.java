@@ -49,8 +49,8 @@ public class CenterHolyInfoManageServiceImpl extends EgovAbstractServiceImpl imp
 	}
 
 	@Override
-	public int copyCenterHolyInfo(Map<String, Object> params) throws Exception {
-		return centerHolyMapper.copyCenterHolyInfo(params);
+	public int copyCenterHolyInfo(CenterHolyInfo centerHolyInfo) throws Exception {
+		return centerHolyMapper.copyCenterHolyInfo(centerHolyInfo);
 	}
 	
 	@Override

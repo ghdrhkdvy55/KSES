@@ -62,11 +62,11 @@
 		USING 
 		(
 			SELECT * FROM TSEB_CENTERHOLY_INFO_I 
-			WHERE CENTER_CD = #{params.copyCenterCd}
+			WHERE CENTER_CD = #{copyCenterCd}
 		) A
 		ON 
 		(	
-			T.CENTER_CD = #{params.targetCenterCd}
+			T.CENTER_CD = #{centerCd}
 			AND 
 			T.HOLY_DT = A.HOLY_DT
 		)
@@ -74,7 +74,7 @@
 		UPDATE SET 
 			T.HOLY_NM = A.HOLY_NM,
 			T.LAST_UPDT_DTM = SYSDATE,
-		    T.LAST_UPDUSR_ID = #{params.userId}
+		    T.LAST_UPDUSR_ID = #{lastUpdusrId}
 		WHEN NOT MATCHED THEN
 		INSERT 
 		(
@@ -83,8 +83,8 @@
 		)
 		VALUES
 		(
-			SEQ_ESB_CENTERHOLY_INFO.NEXTVAL, #{params.targetCenterCd}, A.HOLY_DT, A.USE_YN, SYSDATE,
-			A.HOLY_NM, A.FRST_REGTER_ID, SYSDATE, #{params.userId}
+			SEQ_ESB_CENTERHOLY_INFO.NEXTVAL, #{centerCd}, A.HOLY_DT, A.USE_YN, SYSDATE,
+			A.HOLY_NM, A.FRST_REGTER_ID, SYSDATE, #{lastUpdusrId}
 		)
 	</update>
 	

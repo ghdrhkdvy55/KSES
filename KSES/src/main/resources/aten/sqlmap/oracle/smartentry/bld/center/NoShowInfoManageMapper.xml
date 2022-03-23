@@ -110,11 +110,11 @@
 	   			B.NOSHOW_AM_TM,
 	   			 --> 
 	   			B.NOSHOW_PM_TM,
-	   			B.NOSHOW_ALL_TM, SYSDATE, #{params.userId}
+	   			B.NOSHOW_ALL_TM, SYSDATE, #{lastUpdusrId}
 			FROM TSEB_NOSHOW_INFO_M B 
 			WHERE A.NOSHOW_DAY = B.NOSHOW_DAY 
-			AND B.CENTER_CD = #{params.copyCenterCd}
+			AND B.CENTER_CD = #{copyCenterCd}
 		)
-		WHERE A.CENTER_CD = #{params.targetCenterCd}
+		WHERE A.CENTER_CD = #{centerCd}
 	</update>
 </mapper>
