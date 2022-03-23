@@ -114,4 +114,7 @@ public class CenterInfo {
 	 
 	 // 지점 예약가능일
 	 private String centerResvAbleDay = "";
+	 
+	 // 지점 정렬 순서
+	 private String centerOrder = "";
 }

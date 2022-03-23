@@ -174,7 +174,7 @@ public class CenterInfoManageController {
 		return model;
 	}
 	
-	//센터 정보 상세
+	// 센터 정보 상세
 	// post 에서 get으로 변경 
 	@RequestMapping (value="centerInfoDetail.do")
 	public ModelAndView selectCenterInfoDetail(	@ModelAttribute("loginVO") LoginVO loginVO, 
@@ -190,9 +190,15 @@ public class CenterInfoManageController {
 			return model;	
 	    }	
 		
-		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-		model.addObject(Globals.STATUS_REGINFO, centerInfoManageService.selectCenterInfoDetail(centerCd));	     	
-		return model;
+		try {
+	    	model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+	    	model.addObject(Globals.STATUS_REGINFO, centerInfoManageService.selectCenterInfoDetail(centerCd));	   
+	    } catch(Exception e) {
+			LOGGER.info(e.toString());
+			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
+	    }
+	    return model;
 	}
 	
 	@NoLogging

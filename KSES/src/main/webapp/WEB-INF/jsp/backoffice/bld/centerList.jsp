@@ -169,6 +169,8 @@
 		                         </c:forEach>
 	                    	</select>
 						</td>
+						<th>정렬 순서</th>
+	                  	<td><input type="text" id="centerOrder" name="centerOrder"></td>
 					</tr>
 				</tbody>
 			</table>
@@ -693,6 +695,7 @@
 				$("#centerSpeedEntryPayCost").val("");
 				$("#centerRbmCd").val("");
 				$("#centerResvAbleDay").val("");
+				$("#centerOrder").val("");
 				$("input:radio[name='useYn']:radio[value='Y']").prop('checked', true);
 				
 				$("#sp_floorInfo").empty();
@@ -711,6 +714,9 @@
 							location.href="/backoffice/login.do";
 					    } else if (result.status == "SUCCESS") {
 							var obj = result.regist;
+							console.log("CenterOrder : " + obj.center_order);
+							console.log("CenterSpeed : " + obj.center_speed_cd);
+							
 							$("#bld_branch_add .pop_tit").html("[" + obj.center_nm + "] 지점 정보 수정");
 							$("#btnUpdate").text('저장');
 							$("#centerCd").val(obj.center_cd).attr('readonly', true); 
@@ -730,6 +736,7 @@
 							$("#centerSpeedEntryPayCost").val(obj.center_speed_entry_pay_cost);
 							$("#centerRbmCd").val(obj.center_rbm_cd);
 							$("#centerResvAbleDay").val(obj.center_resv_able_day);
+							$("#centerOrder").val(obj.center_order);
 							$("#ir3").val(obj.center_info);
 							fnCreatCheckbox("sp_floorInfo", $("#startFloor").val().replace("CENTER_FLOOR_", ""),  $("#endFloor").val().replace("CENTER_FLOOR_", ""), obj.floor_info, "floorInfos", "층") ;
 						}
@@ -1593,6 +1600,7 @@
      	   	formData.append('centerSpeedEntryPayCost' , $("#centerSpeedEntryPayCost").val());
      	    formData.append('centerRbmCd' , $("#centerRbmCd").val());
      	    formData.append('centerResvAbleDay' , $("#centerResvAbleDay").val());
+     	    formData.append('centerOrder' , $("#centerOrder").val());
      	   
      	    uniAjaxMutipart
      	    (
