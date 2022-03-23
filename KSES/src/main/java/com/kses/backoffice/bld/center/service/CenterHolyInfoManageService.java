@@ -36,7 +36,7 @@ public interface CenterHolyInfoManageService {
 	 * @return
 	 * @throws Exception
 	 */
-	int copyCenterHolyInfo(Map<String, Object> params) throws Exception;
+	int copyCenterHolyInfo(CenterHolyInfo centerHolyInfo) throws Exception;
 	
 	
 	Map<String, Object>  centerUpdateSelect(String centerHolySeq) throws Exception;
