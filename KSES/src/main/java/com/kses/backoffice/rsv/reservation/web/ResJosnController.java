@@ -478,6 +478,11 @@ public class ResJosnController {
 		String resPersonCnt = "";
 		String returnCode = "";
 		String returnMessage = "";
+		String userNm = "";
+		String firstNm = "";
+		String middleNm = "";
+		String LastNm = "";
+		String cnvMiddleNm = "";
 
 		InterfaceInfo info = new InterfaceInfo();
 		info.setTrsmrcvSeCode(sendEnum.RPQ.getCode());
@@ -508,7 +513,7 @@ public class ResJosnController {
 				} else {
 					if (resInfo != null && SmartUtil.NVL(resInfo.get("resv_end_dt"), "").toString().equals(localTime) && recDate.substring(0, 8).equals(localTime)) {
 						LOGGER.info(localTime);
-						resName = SmartUtil.NVL(resInfo.get("user_nm"), "").toString();
+						userNm = SmartUtil.NVL(resInfo.get("user_nm"), "").toString();
 						resPrice = SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString();
 						resDay = SmartUtil.NVL(resInfo.get("resv_start_dt"), "").toString();
 						resTime = SmartUtil.NVL(resInfo.get("resv_start_tm"), "").toString();
@@ -541,7 +546,17 @@ public class ResJosnController {
 			returnMessage = "시스템 에러 입니다.";
 			info.setTrsmrcvSeCode(sendEnum.RPF.getCode());
 		}
-
+		
+		// 고객 이름 마스킹 처리
+		firstNm = userNm.substring(0,1);
+		middleNm = userNm.substring(1, userNm.length()-1);
+		LastNm = userNm.substring(userNm.length()-1, userNm.length());
+		cnvMiddleNm = "";
+		for(int i=0; i<middleNm.length(); i++) {
+			cnvMiddleNm +="*";
+		}
+		resName = firstNm + cnvMiddleNm + LastNm;
+		
 		model.addObject("RES_NAME", resName);
 		model.addObject("RES_PRICE", resPrice);
 		model.addObject("RES_DAY", resDay);
