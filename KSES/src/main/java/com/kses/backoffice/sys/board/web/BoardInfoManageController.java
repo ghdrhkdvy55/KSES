@@ -1,6 +1,10 @@
 package com.kses.backoffice.sys.board.web;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -11,6 +15,7 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +23,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,6 +39,7 @@ import com.kses.backoffice.sys.board.vo.BoardInfo;
 import com.kses.backoffice.sys.board.vo.BoardSetInfo;
 import com.kses.backoffice.util.SmartUtil;
 import com.kses.backoffice.util.service.UniSelectInfoManageService;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.EgovFileMngService;
@@ -40,6 +47,7 @@ import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.com.cmm.service.FileVO;
 import egovframework.com.cmm.service.Globals;
 import egovframework.com.cmm.util.EgovUserDetailsHelper;
+import egovframework.rte.fdl.cmmn.exception.EgovBizException;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 
@@ -47,227 +55,178 @@ import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 @RequestMapping("/backoffice/sys")
 public class BoardInfoManageController {
 
-	    private static final Logger LOGGER = LoggerFactory.getLogger(BoardInfoManageController.class);
-		
-		@Autowired
-	    protected EgovCcmCmmnDetailCodeManageService egovCodeDetailService;
-		
-		@Autowired
-	    protected BoardInfoManageService boardInfoService;
-		
-		@Autowired
-	    protected BoardSetInfoManageService boardSetService;
-		
-		@Autowired
-		private UniSelectInfoManageService uniService;
-		
-		@Autowired
-		protected EgovMessageSource egovMessageSource;
-		
-		@Autowired
-	    protected EgovPropertyService propertiesService;
-		
-		@Autowired
-		private EgovCcmCmmnDetailCodeManageService codeDetailService;
-		
-		@Autowired
-		private AuthInfoService authService;
+	private static final Logger LOGGER = LoggerFactory.getLogger(BoardInfoManageController.class);
 
-		@Autowired
-		private EgovFileMngUtil fileUtil;
+	@Autowired
+	protected EgovCcmCmmnDetailCodeManageService egovCodeDetailService;
+
+	@Autowired
+	protected BoardInfoManageService boardInfoService;
+
+	@Autowired
+	protected BoardSetInfoManageService boardSetService;
+
+	@Autowired
+private UniSelectInfoManageService uniService;
+
+	@Autowired
+	protected EgovMessageSource egovMessageSource;
+
+	@Autowired
+	protected EgovPropertyService propertiesService;
+
+	@Autowired
+	private EgovCcmCmmnDetailCodeManageService codeDetailService;
+
+	@Autowired
+	private AuthInfoService authService;
+
+	@Autowired
+	private EgovFileMngUtil fileUtil;
+
+	@Autowired
+	private EgovFileMngService egocFileService;
+
+	/**
+	 * 게시판 등록 관리 화면
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="boardSetList.do", method = RequestMethod.GET)
+	public ModelAndView  selectBoardSetInfoManageList() throws Exception {
+
+		ModelAndView model = new ModelAndView("/backoffice/sys/boardSetList");
+			
+		model.addObject("boardNotice", codeDetailService.selectCmmnDetailCombo("BOARD_NOTICE"));
+		model.addObject("boardGubun", codeDetailService.selectCmmnDetailCombo("BOARD_GUBUN"));
+		model.addObject("boardSize", codeDetailService.selectCmmnDetailCombo("BOARD_SIZE"));
+		model.addObject("authorInfo", authService.selectAuthInfoComboList());
+
+		return model;	
+
+	}
+
+	/**
+	 * 게시판 목록 조회
+	 * @param searchVO
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="boardSetListAjax.do", method = RequestMethod.POST)
+	public ModelAndView  selectBoardSetAjaxListByPagination(@RequestBody Map<String,Object>  searchVO) throws Exception {
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+
+		int pageUnit = searchVO.get("pageUnit") == null ?   propertiesService.getInt("pageUnit") 
+				: Integer.valueOf((String) searchVO.get("pageUnit"));
+
+		PaginationInfo paginationInfo = new PaginationInfo();
+		paginationInfo.setCurrentPageNo( Integer.parseInt( SmartUtil.NVL(searchVO.get("pageIndex"), "1") ) );
+		paginationInfo.setRecordCountPerPage(pageUnit);
+		paginationInfo.setPageSize(propertiesService.getInt("pageSize"));
+
+		searchVO.put("pageSize", propertiesService.getInt("pageSize"));
+		searchVO.put("firstIndex", paginationInfo.getFirstRecordIndex());
+		searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
+		searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
+  
+		List<Map<String, Object>> list =  boardSetService.selectBoardSettingInfoList(searchVO);
+		int totCnt = list.size() > 0 ?  Integer.valueOf( list.get(0).get("total_record_count").toString()) : 0;
+
+		model.addObject(Globals.JSON_RETURN_RESULTLISR, list);
+		model.addObject(Globals.PAGE_TOTALCNT, totCnt);
+		paginationInfo.setTotalRecordCount(totCnt);
+		model.addObject(Globals.JSON_PAGEINFO, paginationInfo);
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+				
+		return model;	
+	}
+
+//	@RequestMapping(value="boardSetListDetail.do")
+//	public ModelAndView selectBoardSetDetail (@ModelAttribute("LoginVO") LoginVO loginVO, 
+//											  @RequestParam("boardCd") String boardCd, 
+//											  HttpServletRequest request, 
+//											  BindingResult bindingResult) throws Exception {
+//	
+//		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+//		try {
+//			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+//			model.addObject(Globals.STATUS_REGINFO, boardSetService.selectBoardSettingInfoDetail(boardCd));		    	 
+//		} catch (Exception e) {
+//			LOGGER.info(e.toString());
+//			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+//			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));			
+//		}	
+//		return model;			
+//	}
+	/**
+	 * 게시판관리 정보 저장
+	 * @param authInfo
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping (value="boardSetUpdate.do", method = RequestMethod.POST)
+	public ModelAndView boardSetUpdate(@RequestBody BoardSetInfo info) throws Exception{
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		
-		@Autowired
-		private EgovFileMngService egocFileService;
+		String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
+		info.setUserId(userId);
+
+		switch (info.getMode()) {
+			case Globals.SAVE_MODE_INSERT:
+				boardSetService.insertBoardInfo(info);
+				break;
+			case Globals.SAVE_MODE_UPDATE:
+				boardSetService.updateBoardInfo(info);
+				break;
+			default:
+				throw new EgovBizException("잘못된 호출입니다.");
+		}
+
+		String messageKey = "";
+			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+			messageKey = StringUtils.equals(info.getMode(), Globals.SAVE_MODE_INSERT) 
+					? "sucess.common.insert" : "sucess.common.update";
+		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(messageKey));
+
+		return model;
+	}
+
+	/**
+	 * 게시판코드 중복 코드 체크
+	 * @param boardCd
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="boadCdCheck.do", method = RequestMethod.GET)
+	public ModelAndView selectadminIdCheckManger(@RequestParam("boardCd") String boardCd) throws Exception {
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+
+		int IDCheck = uniService.selectIdDoubleCheck("BOARD_CD", "TSES_BRDSET_INFO_M", " BOARD_CD = ["+ boardCd + "[" );
+
+		if (IDCheck == 0) {
+			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("common.codeOk.msg"));
+		}
+		else {
+			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("common.codeFail.msg"));
+		}
+
+		return model;
+	}
+
+	@RequestMapping(value="boardSetDelete.do", method = RequestMethod.GET)
+	public ModelAndView deleteBoardSetInfo(@RequestParam("delCd") String delCd) throws Exception {
+			
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+				
+		boardSetService.deleteBoardSetInfo(delCd);
 		
-		@RequestMapping(value="boardSetList.do")
-		public ModelAndView  selectBoardSetInfoManageList(@ModelAttribute("loginVO") LoginVO loginVO
-														  , HttpServletRequest request
-														  , BindingResult bindingResult) throws Exception {
-			
-			ModelAndView model = new ModelAndView("/backoffice/sys/boardSetList");
-			
-			try{
-				  Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-			      if(!isAuthenticated) {
-		    	    model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-		    	    model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
-		    	    model.setViewName("backoffice/login");
-		    		return model;
-			      }
-			      model.addObject("boardNotice", codeDetailService.selectCmmnDetailCombo("BOARD_NOTICE"));
-			      model.addObject("boardGubun", codeDetailService.selectCmmnDetailCombo("BOARD_GUBUN"));
-			      model.addObject("boardSize", codeDetailService.selectCmmnDetailCombo("BOARD_SIZE"));
-			      model.addObject("authorInfo", authService.selectAuthInfoComboList());
-			}catch (Exception e){
-				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-				model.addObject("message", egovMessageSource.getMessage("fail.common.list"));
-				LOGGER.info(e.toString());
-			}			   
-			return model;	
-		}
-		
-		@RequestMapping(value="boardSetListAjax.do")
-		public ModelAndView  selectBoardSetAjaxListByPagination(@ModelAttribute("loginVO") LoginVO loginVO
-																, @RequestBody Map<String,Object>  searchVO
-																, HttpServletRequest request
-																, BindingResult bindingResult) throws Exception {
-			
-			ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-			
-			try{
-				
-				/*
-				 * if (!request.getHeader("REFERER").contains("/web")) { Boolean isAuthenticated
-				 * = EgovUserDetailsHelper.isAuthenticated(); if(!isAuthenticated) {
-				 * model.addObject(Globals.STATUS_MESSAGE,
-				 * egovMessageSource.getMessage("fail.common.login"));
-				 * model.setViewName("/backoffice/login"); return model; } }
-				 */
-				 
-				Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-				if(!isAuthenticated) {
-					model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-					model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
-					return model;
-				}
-				
-			      
-			    int pageUnit = searchVO.get("pageUnit") == null ?   propertiesService.getInt("pageUnit") : Integer.valueOf((String) searchVO.get("pageUnit"));
-				  
-				searchVO.put("pageSize", propertiesService.getInt("pageSize"));
-				  
-			              
-			   	PaginationInfo paginationInfo = new PaginationInfo();
-				paginationInfo.setCurrentPageNo( Integer.parseInt( SmartUtil.NVL(searchVO.get("pageIndex"), "1") ) );
-				paginationInfo.setRecordCountPerPage(pageUnit);
-				paginationInfo.setPageSize(propertiesService.getInt("pageSize"));
-				searchVO.put("firstIndex", paginationInfo.getFirstRecordIndex());
-				searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
-				searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
-				  
-				LOGGER.debug("searchVO" + searchVO.get("adminYn"));
-				
-				List<Map<String, Object>> list =  boardSetService.selectBoardSettingInfoList(searchVO);
-				int totCnt = list.size() > 0 ?  Integer.valueOf( list.get(0).get("total_record_count").toString()) : 0;
-			    
-				model.addObject(Globals.JSON_RETURN_RESULTLISR, list);
-				model.addObject(Globals.PAGE_TOTALCNT, totCnt);
-				paginationInfo.setTotalRecordCount(totCnt);
-				model.addObject(Globals.JSON_PAGEINFO, paginationInfo);
-				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-				
-			}catch (Exception e){
-				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.list"));
-				LOGGER.info(e.toString());
-			}			   
-			return model;	
-		}
-		@RequestMapping(value="boardSetListDetail.do")
-		public ModelAndView selectBoardSetDetail (@ModelAttribute("LoginVO") LoginVO loginVO, 
-												  @RequestParam("boardCd") String boardCd, 
-												  HttpServletRequest request, 
-												  BindingResult bindingResult) throws Exception {
-			
-			ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-			try {
-				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-				model.addObject(Globals.STATUS_REGINFO, boardSetService.selectBoardSettingInfoDetail(boardCd));		    	 
-			} catch (Exception e) {
-				LOGGER.info(e.toString());
-				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));			
-			}	
-			return model;			
-		}	
-		@RequestMapping(value="boadCdCheck.do")
-		public ModelAndView selectadminIdCheckManger(@RequestParam("boardCd") String boardCd) throws Exception {
-			ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-			try {
-				
-				
-				int IDCheck = uniService.selectIdDoubleCheck("BOARD_CD", "TSES_BRDSET_INFO_M", " BOARD_CD = ["+ boardCd + "[" );
-				String result =  (IDCheck> 0) ? Globals.STATUS_FAIL : Globals.STATUS_OK;
-				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-				model.addObject(Globals.JSON_RETURN_RESULT, result);
-			}catch(Exception e) {
-				StackTraceElement[] ste = e.getStackTrace();
-				int lineNumber = ste[0].getLineNumber();
-				LOGGER.info("e:" + e.toString() + ":" + lineNumber);
-				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
-			}
-			
-			return model;
-		}
-		
-		@RequestMapping (value="boardSetUpdate.do")
-		public ModelAndView boardSetUpdate(@RequestBody BoardSetInfo info 
-							               , HttpServletRequest request
-									       , BindingResult result) throws Exception{
-			
-			ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-			String meesage = null;
-			
-			try {
-				 Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-				 if(!isAuthenticated) {
-					 model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-					 model.addObject(Globals.STATUS,  Globals.STATUS_LOGINFAIL);
-					 return model;	
-			     }
-				 LoginVO loginVO = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
-				 info.setUserId(loginVO.getAdminId());
-				 
-				 int ret = boardSetService.updateBoardSetInfo(info); 
-				 LOGGER.debug("ret:"  + ret);
-				 meesage = (info.getMode().equals("Ins")) ? "sucess.common.insert" : "sucess.common.update";
-				 if (ret > 0){
-					model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-					model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
-				 } else {
-					throw new Exception();
-				 }
-			} catch (Exception e) {
-				StackTraceElement[] ste = e.getStackTrace();
-				int lineNumber = ste[0].getLineNumber();
-				LOGGER.info("e:" + e.toString() + ":" + lineNumber);
-				meesage = (info.getMode().equals("Ins")) ? "fail.common.insert" : "fail.common.update";
-				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));			
-			}
-			return model;
-		}
-		
-		@RequestMapping(value="boardSetDelete.do")
-		public ModelAndView deleteBoardSetInfo(@RequestParam("delCd") String delCd,  
-											   HttpServletRequest request) throws Exception {
-				
-			ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-			try {
-				Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-				if(!isAuthenticated) {
-					 model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-					 model.addObject(Globals.STATUS,  Globals.STATUS_LOGINFAIL);
-					 return model;	
-			    }
-				
-				try {
-					
-					boolean delCheck = boardSetService.deleteBoardSetInfo(delCd);
-					
-					model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-					model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.delete") );
-				}catch(Exception e) {
-					throw new Exception();		
-				}
-			} catch (Exception e){
-				LOGGER.info(e.toString());
-				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.delete"));			
-			}	
-			return model;
-		}
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.delete") );
+
+		return model;
+	}
 		
 		@RequestMapping(value="boardList.do")
 		public ModelAndView  selectBoardInfoManageListByPagination(@ModelAttribute("loginVO") LoginVO loginVO

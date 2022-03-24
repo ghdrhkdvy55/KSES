@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.kses.backoffice.bas.authority.vo.AuthInfo;
 import com.kses.backoffice.sys.board.vo.BoardSetInfo;
 
 public interface BoardSetInfoManageService {
@@ -14,7 +15,9 @@ public interface BoardSetInfoManageService {
     
     Map<String, Object> selectBoardSettingInfoDetail(String boardCd) throws Exception;
     
-    int updateBoardSetInfo(BoardSetInfo vo) throws Exception;
+    void insertBoardInfo(BoardSetInfo vo) throws Exception;
     
-    boolean deleteBoardSetInfo(String delCd) throws Exception;
+    void updateBoardInfo(BoardSetInfo vo) throws Exception;
+    
+    void deleteBoardSetInfo(String delCd) throws Exception;
 }
