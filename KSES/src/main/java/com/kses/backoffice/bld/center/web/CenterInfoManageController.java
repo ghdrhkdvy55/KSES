@@ -355,30 +355,14 @@ public class CenterInfoManageController {
 	
 	//combo box 신규 추가 
 	@RequestMapping(value="centerCombo.do")
-	public ModelAndView selectCenterComboInfoList( @ModelAttribute("loginVO") LoginVO loginVO, 
-												   HttpServletRequest request, 
-												   BindingResult bindingResult) throws Exception {
+	public ModelAndView selectCenterComboInfoList() throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
-		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
 		
-		if(!isAuthenticated) {
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-			model.setViewName("/backoffice/login");
-			return model;	
-		}
-		try {
-			List<Map<String, Object>> centerInfoComboList = centerInfoManageService.selectCenterInfoComboList();
-			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-			model.addObject(Globals.JSON_RETURN_RESULTLISR, centerInfoComboList);
-			
-		}catch(Exception e) {
-			log.debug("---------------------------------------");
-			StackTraceElement[] ste = e.getStackTrace();
-			log.error(e.toString() + ":" + ste[0].getLineNumber());
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));	
-		}
+		List<Map<String, Object>> centerInfoComboList = centerInfoManageService.selectCenterInfoComboList();
+
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+		model.addObject(Globals.JSON_RETURN_RESULTLISR, centerInfoComboList);
 		
 		return model;	
 	}
