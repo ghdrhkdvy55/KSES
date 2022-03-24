@@ -1,6 +1,10 @@
 package com.kses.backoffice.sys.board.web;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -35,6 +39,7 @@ import com.kses.backoffice.sys.board.vo.BoardInfo;
 import com.kses.backoffice.sys.board.vo.BoardSetInfo;
 import com.kses.backoffice.util.SmartUtil;
 import com.kses.backoffice.util.service.UniSelectInfoManageService;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.EgovFileMngService;
@@ -166,30 +171,21 @@ private UniSelectInfoManageService uniService;
 		String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
 		info.setUserId(userId);
 
-		int ret = 0;
-		
 		switch (info.getMode()) {
 			case Globals.SAVE_MODE_INSERT:
-				ret = boardSetService.insertBoardInfo(info);
+				boardSetService.insertBoardInfo(info);
 				break;
 			case Globals.SAVE_MODE_UPDATE:
-				ret = boardSetService.updateBoardInfo(info);
+				boardSetService.updateBoardInfo(info);
 				break;
 			default:
 				throw new EgovBizException("잘못된 호출입니다.");
 		}
 
 		String messageKey = "";
-		if (ret > 0) {
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			messageKey = StringUtils.equals(info.getMode(), Globals.SAVE_MODE_INSERT) 
 					? "sucess.common.insert" : "sucess.common.update";
-		}
-		else {
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			messageKey = StringUtils.equals(info.getMode(), Globals.SAVE_MODE_INSERT) 
-					? "fail.common.insert" : "fail.common.update";
-		}
 		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(messageKey));
 
 		return model;

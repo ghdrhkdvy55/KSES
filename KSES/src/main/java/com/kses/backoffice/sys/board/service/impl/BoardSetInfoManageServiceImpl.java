@@ -40,32 +40,15 @@ public class BoardSetInfoManageServiceImpl extends EgovAbstractServiceImpl imple
 	}
 
 	@Override
-	public int insertBoardInfo(BoardSetInfo vo) throws Exception {
+	public void insertBoardInfo(BoardSetInfo vo) throws Exception {
 		int cnt = uniMapper.selectIdDoubleCheck("BOARD_CD", "TSES_BRDSET_INFO_M", "BOARD_CD = ["+ vo.getBoardCd() + "[" );
 		
-		if(cnt == 0) {
-			try {
-				boardSetMapper.insertBoardInfo(vo);
-				return 1;
-			}catch(Exception e) {
-				LOGGER.error("insertBoardInfo error:" + e.toString());
-				return -1;
-			}
-			
-		}else {
-			return -1;
-		}
+		if(cnt == 0) boardSetMapper.insertBoardInfo(vo);
 	}
 	
 	@Override
-	public int updateBoardInfo(BoardSetInfo vo) throws Exception {
-		try {
-			boardSetMapper.updateBoardInfo(vo);
-			return 1;
-		}catch (Exception e) {
-			LOGGER.error("updateBoardInfo error:" + e.toString());
-			return -1;
-		}
+	public void updateBoardInfo(BoardSetInfo vo) throws Exception {
+		boardSetMapper.updateBoardInfo(vo);
 	}
 
 	@Override

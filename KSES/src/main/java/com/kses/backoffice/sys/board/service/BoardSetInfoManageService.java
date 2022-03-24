@@ -15,9 +15,9 @@ public interface BoardSetInfoManageService {
     
     Map<String, Object> selectBoardSettingInfoDetail(String boardCd) throws Exception;
     
-    int insertBoardInfo(BoardSetInfo vo) throws Exception;
+    void insertBoardInfo(BoardSetInfo vo) throws Exception;
     
-    int updateBoardInfo(BoardSetInfo vo) throws Exception;
+    void updateBoardInfo(BoardSetInfo vo) throws Exception;
     
     void deleteBoardSetInfo(String delCd) throws Exception;
 }
