@@ -1,6 +1,5 @@
 package com.kses.backoffice.rsv.black.service.impl;
 
-import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 import java.util.List;
@@ -19,12 +18,17 @@ public class BlackUserInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 	BlackUserInfoManageMapper blackUserMapper;
 	
 	@Override
-	public List<Map<String, Object>> selectBlackUserInfoManageListByPagination(Map<String, Object> params) throws Exception {
-		return blackUserMapper.selectBlackUserInfoManageListByPagination(params);
+	public List<Map<String, Object>> selectBlackUserInfoList(Map<String, Object> params) throws Exception {
+		return blackUserMapper.selectBlackUserInfoList(params);
 	}
 	
 	@Override
-	public int updateBlackUserInfoManage(BlackUserInfo vo) throws Exception {
-		return vo.getMode().equals(Globals.SAVE_MODE_INSERT) ? blackUserMapper.insertBlackUserInfo(vo) : blackUserMapper.updateBlackUserInfo(vo);
+	public int insertBlackUserInfo(BlackUserInfo vo) throws Exception {
+		return blackUserMapper.insertBlackUserInfo(vo);
+	}
+	
+	@Override
+	public int updateBlackUserInfo(BlackUserInfo vo) throws Exception {
+		return blackUserMapper.updateBlackUserInfo(vo);
 	}
 }

@@ -11,7 +11,7 @@ import egovframework.rte.psl.dataaccess.mapper.Mapper;
 
 @Mapper
 public interface BlackUserInfoManageMapper {
-	public List<Map<String, Object>> selectBlackUserInfoManageListByPagination(@Param("params") Map<String, Object> params) throws Exception;
+	public List<Map<String, Object>> selectBlackUserInfoList(@Param("params") Map<String, Object> params) throws Exception;
 	
 	public int insertBlackUserInfo(BlackUserInfo vo);
 	

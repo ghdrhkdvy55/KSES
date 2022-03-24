@@ -13,8 +13,16 @@ public interface BlackUserInfoManageService {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<Map<String, Object>> selectBlackUserInfoManageListByPagination(Map<String, Object> params) throws Exception;
+	List<Map<String, Object>> selectBlackUserInfoList(Map<String, Object> params) throws Exception;
 	
+	/**
+	 * SPDM 출입통제정보 등록
+	 * 
+	 * @param vo
+	 * @return
+	 * @throws Exception
+	 */
+	int insertBlackUserInfo(BlackUserInfo vo) throws Exception;
 	
 	/**
 	 * SPDM 출입통제정보 갱신
@@ -23,5 +31,5 @@ public interface BlackUserInfoManageService {
 	 * @return
 	 * @throws Exception
 	 */
-	int updateBlackUserInfoManage(BlackUserInfo vo) throws Exception;
+	int updateBlackUserInfo(BlackUserInfo vo) throws Exception;
 }
