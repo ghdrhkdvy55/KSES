@@ -346,6 +346,7 @@
 			pageIndex: pageNo,
 			pageUnit: '5',
 			searchKeyword: $('#pSearchKeyword').val(),
+			searchCondition : $('#searchEmpGubun').val(),
 			mode: 'list'
 		};
 		EgovJqGridApi.pagingGridAjax('popGrid', '/backoffice/mng/empListAjax.do', params, fnEmpInfoSearch);
