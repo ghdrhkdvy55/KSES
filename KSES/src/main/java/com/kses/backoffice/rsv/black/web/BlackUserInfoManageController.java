@@ -20,6 +20,7 @@ import com.kses.backoffice.util.SmartUtil;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.Globals;
+import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import egovframework.rte.fdl.cmmn.exception.EgovBizException;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
@@ -99,6 +100,9 @@ public class BlackUserInfoManageController {
 	@RequestMapping (value="blackUserUpdate.do", method = RequestMethod.POST)
 	public ModelAndView updateAuthInfoManage(@RequestBody BlackUserInfo blackUserInfo) throws Exception{
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+		
+		String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
+		blackUserInfo.setLastUpdusrId(userId);
 
 		int ret = 0;
 		switch (blackUserInfo.getMode()) {
@@ -112,18 +116,27 @@ public class BlackUserInfoManageController {
 				throw new EgovBizException("잘못된 호출입니다.");
 		}
 		
-		String messageKey = "";
-		if (ret > 0) {
-			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-			messageKey = StringUtils.equals(blackUserInfo.getMode(), Globals.SAVE_MODE_INSERT) 
+		String messageKey = "";			
+		messageKey = StringUtils.equals(blackUserInfo.getMode(), Globals.SAVE_MODE_INSERT) 
 					? "sucess.common.insert" : "sucess.common.update";
-		}
-		else {
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			messageKey = StringUtils.equals(blackUserInfo.getMode(), Globals.SAVE_MODE_INSERT) 
-					? "fail.common.insert" : "fail.common.update";
-		}
 		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(messageKey));
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+		return model;
+	}
+	
+    /**
+     * 출입통제 고객정보 삭제
+     * @param blackUserInfo
+     * @return
+     * @throws Exception
+     */
+	@RequestMapping (value="blackUserDelete.do", method = RequestMethod.POST)
+	public ModelAndView deleteAuthInfoManage(@RequestBody BlackUserInfo blackUserInfo) throws Exception {
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
+		
+		blackUserService.deleteBlackUserInfo(blackUserInfo.getBlklstSeq());
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.delete"));
 		
 		return model;
 	}

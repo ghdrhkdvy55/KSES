@@ -31,4 +31,9 @@ public class BlackUserInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 	public int updateBlackUserInfo(BlackUserInfo vo) throws Exception {
 		return blackUserMapper.updateBlackUserInfo(vo);
 	}
+	
+	@Override
+	public int deleteBlackUserInfo(String blklstSeq) throws Exception {
+		return blackUserMapper.deleteBlackUserInfo(blklstSeq);
+	}
 }

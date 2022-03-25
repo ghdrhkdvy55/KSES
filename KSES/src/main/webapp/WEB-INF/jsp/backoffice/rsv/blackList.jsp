@@ -58,6 +58,7 @@
     	
     	<div class="right_box">
         	<a href="javascript:fnBlackInfo();" class="blueBtn">입장 제한 고객 등록</a>
+        	<a href="javascript:fnBlackDelete();" class="grayBtn">삭제</a>
 		</div>
 		<div class="clear"></div>
     	
@@ -110,7 +111,6 @@
                         	<select id="blklstDvsn" name="blklstDvsn">
                           		<option value="BLKLST_DVSN_1">블랙리스트</option>
                           		<option value="BLKLST_DVSN_2">자가출입통제</option>
-                          		<option value="BLKLST_DVSN_3">패널티 고객</option>
                         	</select>
                     	</td>
                   	</tr>
@@ -167,13 +167,18 @@
 			{label: '이름', 		  name:'user_nm',  		   align:'center', hidden:true},
 			{label: '통제유형', 	  name:'blklst_dvsn', 	   align:'center', hidden:true},
 			{label: '통제사유', 	  name:'blklst_reason',    align:'center', hidden:true},
+			{label: '해제여부', 	  name:'blklst_cancel_yn', align:'center', hidden:true},
 			{label: '아이디',		  name:'user_id',  		   align:'center'},
-			{label: '전화번호', 	  name:'user_phone',  	   align:'center', formatter:formSetting},
+			{label: '전화번호', 	  name:'user_phone',  	   align:'center', formatter: (c, o, row) =>
+				row.user_phone.replace(/(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/,"$1-$2-$3")
+       		},
 			{label: '유형', 		  name:'blklst_dvsn_txt',  align:'center'},
 			{label: '노쇼카운트', 	  name:'user_noshow_cnt',  align:'center', fixed: true},
 			{label: '최종 수정자', 	  name:'last_updusr_id',   align:'center', fixed: true},
 			{label: '최종 수정일', 	  name:'last_updt_dtm',    align:'center', fixed: true},
-			{label: '등록/해제', 	  name:'blklst_cancel_yn', align:'center', fixed: true, formatter: formSetting},
+			{label: '등록/해제', 	  align:'center', fixed: true, formatter: (c, o, row) =>
+            	'<a href="javascript:fnChangeBlackState(\'' + row.blklst_seq + '\');" class="blueBtn">' + (row.blklst_cancel_yn === 'Y' ? '등록' : '해제') + '</a>'
+       		}, 			
 			{label: '수정',        align: 'center', width: 50, fixed: true, sortable: false, formatter: (c, o, row) =>
             	'<a href="javascript:fnBlackInfo(\''+ row.blklst_seq + '\');" class="edt_icon"></a>'
        		} 
@@ -197,26 +202,6 @@
 		  	$tbody.eq(tabIdx).addClass('active');
 		});
 	});
-	
-	// 변경 및 제거 예정
-	function formSetting(c, o, row) {
-		let name = o.colModel.name;
-		let item = row;
-		let form = '';
-		
-		if(name === 'blklst_cancel_yn') {
-			let cancelYn = '';
-			let mode = '';
-			
-			if(item.blklst_cancel_yn === 'Y') cancelYn = '등록', mode = 'N';
-			else cancelYn = '해제', mode = 'Y';				
-			
-			return '<a href="javascript:fnChangeBlackState(\'' + mode + '\',\'' + item.blklst_seq + '\',\'' + item.blklst_dvsn + '\',\'' + item.user_id + '\');"' 
-					+ 'class="blueBtn">' + cancelYn + '</a>';
-		} else if(name === 'user_phone') {
-			return item.user_phone.replace(/(^02.{0}|^01.{1}|[0-9]{3})([0-9]+)([0-9]{4})/,"$1-$2-$3");
-		} 	
-	}
     
 	// 메인 목록 검색
 	function fnSearch(pageNo) {
@@ -229,9 +214,13 @@
 		};
 		EgovJqGridApi.mainGridAjax('/backoffice/rsv/blackListAjax.do', params, fnSearch);
 		
-		$('#searchBlklstDvsn').val() === 'BLKLST_DVSN_3' ? 
-			$(MainGridSelector).jqGrid('showCol', ['user_noshow_cnt', 'user_noshow_last_dt']) :
+		if($('#searchBlklstDvsn').val() === 'BLKLST_DVSN_3') {
+			$(MainGridSelector).jqGrid('showCol', ['user_noshow_cnt', 'user_noshow_last_dt']);
+			$('.boardlist > .right_box > .grayBtn').hide();
+		} else {
 			$(MainGridSelector).jqGrid('hideCol', ['user_noshow_cnt', 'user_noshow_last_dt']);
+			$('.boardlist > .right_box > .grayBtn').show();
+		}
 
 		$(MainGridSelector).setGridWidth($(MainGridSelector).closest('div.boardlist').width() , true);
 	}
@@ -310,6 +299,35 @@
 		});
 	}
 	
+	// 출입통제 정보 삭제
+	function fnBlackDelete() {
+		let $popup = $('[data-popup=rsv_blacklist_add]');
+		let rowId = EgovJqGridApi.getMainGridSingleSelectionId();
+		let rowData = EgovJqGridApi.getMainGridRowData(rowId);
+		
+		if (rowId === null) {
+			toastr.warning('목록을 선택해 주세요.');
+			return;
+		}
+		bPopupConfirm('출입통제 고객정보 삭제', rowData.blklst_dvsn_txt + ' <b>' + rowData.user_id +'</b> 를(을) 삭제 하시겠습니까?', function() {
+			EgovIndexApi.apiExecuteJson(
+				'POST',
+				'/backoffice/rsv/blackUserDelete.do', {
+					blklstSeq : rowId
+				},
+				null,
+				function(json) {
+					toastr.success(json.message);
+					$popup.bPopup().close();
+					fnSearch(1);
+				},
+				function(json) {
+					toastr.error(json.message);
+				}
+			);
+		});
+	}
+	
 	// 출입통제 유형 변경
 	function fnChangeBlackDvsn(el) {
 		$('#searchKeyword').val('');
@@ -319,20 +337,22 @@
 	}
 	
 	// 출입통제상태 변경
-	function fnChangeBlackState(blklstCancelYn, blklstSeq, blklstDvsn, userId) {
+	function fnChangeBlackState(rowId) {
+		let rowData = EgovJqGridApi.getMainGridRowData(rowId);
+		
 		let params = {
 			mode : 'Edt', 
-			blklstSeq : blklstSeq, 
-			blklstCancelYn : blklstCancelYn, 
-			blklstDvsn : blklstDvsn, 
-			userId : userId 
+			blklstSeq : rowData.blklst_seq, 
+			blklstCancelYn : rowData.blklst_cancel_yn, 
+			blklstDvsn : rowData.blklst_dvsn, 
+			userId : rowData.user_id 
 		};
 		
-		let resultTxt = blklstCancelYn === 'Y' ? '출입통제가 정상적으로 해제되었습니다.' : '출입통제가 정상적으로 등록 되었습니다.';
+		let resultTxt = rowData.blklst_cancel_yn === 'Y' ? '출입통제가 정상적으로 해제되었습니다.' : '출입통제가 정상적으로 등록 되었습니다.';
 		
 		EgovIndexApi.apiExecuteJson(
 			'POST',
-			'/backoffice/rsv/updateBlackUserInfo.do',
+			'/backoffice/rsv/blackUserUpdate.do',
 			params,
 			null,
 			function(json) {
@@ -383,4 +403,3 @@
 		$('[data-popup=rsv_user_search]').bPopup().close();
 	}
 </script>
-<c:import url="/backoffice/inc/popup_common.do" />

@@ -7,7 +7,7 @@ import com.kses.backoffice.rsv.black.vo.BlackUserInfo;
 
 public interface BlackUserInfoManageService {
 	/**
-	 * SPDM 출입통제인원 목록 조회
+	 * SPDM 출입통제정보 목록 조회
 	 * 
 	 * @param params
 	 * @return
@@ -32,4 +32,13 @@ public interface BlackUserInfoManageService {
 	 * @throws Exception
 	 */
 	int updateBlackUserInfo(BlackUserInfo vo) throws Exception;
+	
+	/**
+	 * SPDM 출입통제정보 삭제
+	 * 
+	 * @param vo
+	 * @return
+	 * @throws Exception
+	 */
+	int deleteBlackUserInfo(String blklstSeq) throws Exception;
 }
