@@ -1,5 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
+<!-- Xlsx -->
+<script type="text/javascript" src="/resources/js/xlsx.full.min.js"></script>
+<!-- FileSaver -->
+<script src="/resources/js/FileSaver.min.js"></script>
 <!-- //contents -->
 <div class="breadcrumb">
 	<ol class="breadcrumb-item">
@@ -60,7 +65,7 @@
 	<!-- 전일자 현황 -->
 	<div class="boardlist">
 		<div class="right_box">
-<%--			<a href="javascript:void(0);" class="right_box blueBtn">엑셀 다운로드</a>--%>
+			<a href="javascript:fnExcelDownload();" class="right_box blueBtn">엑셀 다운로드</a>
 		</div>
 		<div class="clear"></div>
 		<div class="whiteBox">
@@ -152,6 +157,47 @@
 			},
 			function(json) {
 				toastr.error(json.status);
+			}
+		);
+	}
+	
+	// 엑셀 다운로드
+	function fnExcelDownload() {
+		EgovIndexApi.apiExecuteJson(
+			'POST',
+			'/backoffice/stt/dashboardListAjax.do', 
+			null,
+			null,
+			function(json) {
+				let ret = json.dashboardList;
+				if (ret.length <= 0) {
+					return;
+				}
+				if (ret.length >= 1000) {
+					toastr.info('해당 조회 건수가 1000건이 넘습니다. 엑셀 다운로드 시 1000건에 대한 데이터만 저장됩니다.');
+				}
+				let excelData = new Array();
+				excelData.push(['지점명', '노블레스', '프리미엄', '스탠다드', '일반', '입석', '입장인원', '입장정원']);
+				for (let idx in ret) {
+					let arr = new Array();
+					arr.push(ret[idx].center_nm);
+					arr.push(ret[idx].class_4);
+					arr.push(ret[idx].class_3);
+					arr.push(ret[idx].class_2);
+					arr.push(ret[idx].class_1);
+					arr.push(ret[idx].stand);
+					arr.push(ret[idx].entry_number);
+					arr.push(ret[idx].maximum_number);
+					excelData.push(arr);
+				}
+				let wb = XLSX.utils.book_new();
+				XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(excelData), 'sheet1');
+				saveAs(new Blob([EgovIndexApi.s2ab(
+					XLSX.write(wb, { bookType: 'xlsx', type: 'binary' })
+				)],{ type: 'application/octet-stream' }), '통합이용현황.xlsx');
+			},
+			function(json) {
+				toastr.error(json.message);
 			}
 		);
 	}
