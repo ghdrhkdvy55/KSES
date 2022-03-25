@@ -12,8 +12,9 @@ import egovframework.rte.psl.dataaccess.mapper.Mapper;
 @Mapper
 public interface KioskInfoManageMapper {
 	public List<Map<String, Object>> selectKioskInfoList(@Param("params") Map<String, Object> params);
-	
-    public Map<String, Object> selectKioskInfoDetail(String ticketMchnSno);
+
+//  장비 상세 정보 사용하지 않음
+	public Map<String, Object> selectKioskInfoDetail(String ticketMchnSno);
 	   
     public int insertKioskInfo(KioskInfo kioskInfo);
 	

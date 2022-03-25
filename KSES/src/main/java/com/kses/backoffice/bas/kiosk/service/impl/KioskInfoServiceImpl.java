@@ -21,6 +21,12 @@ public class KioskInfoServiceImpl extends EgovAbstractServiceImpl implements Kio
 	public List<Map<String, Object>> selectKioskInfoList(Map<String, Object> params) throws Exception {
 		return kioskMapper.selectKioskInfoList(params);
 	}
+
+//  장비 상세 정보(사용안함)	
+	@Override 
+	public Map<String, Object> selectKioskInfoDetail(String ticketMchnSno) throws Exception {
+	    return kioskMapper.selectKioskInfoDetail(ticketMchnSno);
+	}
 	
 	@Override
 	public int insertKioskInfo(KioskInfo kioskInfo) throws Exception {
