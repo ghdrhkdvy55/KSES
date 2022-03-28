@@ -449,8 +449,13 @@ function fn_resvDateFormat(el) {
  * @returns
  */
 function fn_resvSeqFormat(el) {
-    /*return el.toString().replace(/\B(?=(\d{4})+(?!\d))/g, "-");*/
-	return el.toString().replace(/(^0+)/, "");
+	switch(el.length) {
+		case 20 : el = el.toString().substr(8).replace(/(^0+)/, ""); break;
+		case 12 : el = el.toString().replace(/(^0+)/, ""); break;
+		default : el = "알수없는 예약번호"; break;
+	}
+	
+	return el;
 }
 
 /**
