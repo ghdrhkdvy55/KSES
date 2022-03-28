@@ -6,6 +6,11 @@
 <script type="text/javascript" src="/resources/jqgrid/js/jquery.jqGrid.min.js"></script>
 <c:set var="fSearchDate" value="<%=new Date(new Date().getTime() - 60*60*24*1000*1)%>"/>
 
+<!-- Xlsx -->
+<script type="text/javascript" src="/resources/js/xlsx.full.min.js"></script>
+<!-- FileSaver -->
+<script src="/resources/js/FileSaver.min.js"></script>
+
 <!-- //contents -->
 <div class="breadcrumb">
 	<ol class="breadcrumb-item">
@@ -44,7 +49,9 @@
           	</div>
         </div>
         <div class="clear"></div>
-        
+        <div class="right_box">
+			<a href="javascript:fnExcelDownload();" class="right_box blueBtn">엑셀 다운로드</a>
+		</div>
         <div class="tabs blacklist">
           <div class="tab active">지점 별 인원통계</div>
 <!--      <div class="tab">지점 별 이용통계</div>
@@ -93,6 +100,7 @@
 <!-- contents//-->
 <!-- //popup -->
 <!-- popup// -->
+<script type="text/javascript" src="/resources/js/temporary.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
 		var clareCalendar = {
@@ -179,6 +187,62 @@
 						tbody.append("<tr><td colspan='17'>조회 일자에 데이터가 존재하지 않습니다.</td></tr>");
 					}
 				}
+			},
+			function(request){
+				console.log('error: '+ request.status);
+			}
+		);
+	}
+	
+	// 엑셀 다운로드
+	function fnExcelDownload() {
+		params = 			
+			{
+				"searchCenterCd" : $("#searchCenterCd").val(),
+				"searchResvDateFrom" : $("#searchResvDateFrom").val(),
+				"searchResvDateTo" : $("#searchResvDateTo").val()
+			},
+		fn_Ajax(
+			'/backoffice/stt/dashboardByCenterListAjax.do', 
+			'POST',
+			params,
+			false,
+			function(result) {
+				let ret = result.usageStatList;
+				if (ret.length <= 0) {
+					return;
+				}
+				if (ret.length >= 1000) {
+					common_popup("해당 조회 건수가 1000건이 넘습니다. 엑셀 다운로드 시 1000건에 대한 데이터만 저장됩니다.", "Y" , "");
+				}
+				let excelData = new Array();
+				excelData.push(['일자', '지점명', '예약정원', '회원 예약', '회원 입장완료', '회원 예약취소', '회원 예약 이행률', '비회원 예약', '비회원 입장완료', '비회원 예약취소', '비회원 예약 이행률', '통합 예약', '통합 입장완료', '통합 예약취소', '통합 이행률', '통합 위약률', '지점가동률']);
+				for (let idx in ret) {
+					let arr = new Array();
+					arr.push(ret[idx].resv_date);
+					arr.push(ret[idx].center_nm);
+					arr.push(ret[idx].seat_all_count);
+					arr.push(ret[idx].m_resv_all_count);
+					arr.push(ret[idx].m_resv_success_count);
+					arr.push(ret[idx].m_resv_cancel_count);
+					arr.push(ret[idx].m_resv_success_per);
+					arr.push(ret[idx].g_resv_all_count);
+					arr.push(ret[idx].g_resv_success_count);
+					arr.push(ret[idx].g_resv_cancel_count);
+					arr.push(ret[idx].g_resv_success_per);
+					arr.push(ret[idx].t_resv_all_count);
+					arr.push(ret[idx].t_resv_success_count);
+					arr.push(ret[idx].t_resv_cancel_count);
+					arr.push(ret[idx].t_resv_success_per);
+					arr.push(ret[idx].t_resv_cancel_per);
+					arr.push(ret[idx].t_center_use_per);
+					excelData.push(arr);
+				}
+				let wb = XLSX.utils.book_new();
+				XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(excelData), 'sheet1');
+				saveAs(new Blob([EgovIndexApi.s2ab(
+					XLSX.write(wb, { bookType: 'xlsx', type: 'binary' })
+				)],{ type: 'application/octet-stream' }), '지점별이용통계.xlsx');
 			},
 			function(request){
 				console.log('error: '+ request.status);
