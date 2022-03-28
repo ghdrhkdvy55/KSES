@@ -155,14 +155,14 @@ public class ResJosnController {
 				ModelMap result = interfaceService.SpeedOnPayMent(jsonObject.get("resvSeq").toString(), "", false);
 				
 				model.addObject(Globals.STATUS, result.get(Globals.STATUS));
-				model.addObject(Globals.STATUS_MESSAGE, result.get(Globals.STATUS));
+				model.addObject(Globals.STATUS_MESSAGE, result.get(Globals.STATUS_MESSAGE));
 				model.addObject(Globals.STATUS_REGINFO, result.get(Globals.STATUS_REGINFO));
 			
 			} else if (SmartUtil.NVL(sendInfo.get("gubun"), "").toString().equals("dep")) {
-				ModelMap result = interfaceService.SpeedOnPayMentCancel(jsonObject.get("resvSeq").toString(), "", false);
+				ModelMap result = interfaceService.SpeedOnPayMentCancel(jsonObject.get("resvSeq").toString(), "", false, false);
 				
 				model.addObject(Globals.STATUS, result.get(Globals.STATUS));
-				model.addObject(Globals.STATUS_MESSAGE, result.get(Globals.STATUS));
+				model.addObject(Globals.STATUS_MESSAGE, result.get(Globals.STATUS_MESSAGE));
 				model.addObject(Globals.STATUS_REGINFO, result.get(Globals.STATUS_REGINFO));
 			}
 		} catch (Exception e) {
@@ -491,10 +491,12 @@ public class ResJosnController {
 
 		try {
 			Map<String, Object> searchVO = new HashMap<String, Object>();
-			searchVO.put("resvSeq", SmartUtil.NVL(jsonInfo.get("RES_NO"), "").toString());
 			String localTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+			String resvSeq = localTime + SmartUtil.NVL(jsonInfo.get("RES_NO"), "").toString();
+			
 			searchVO.put("resvDate", localTime);
-			String checkResvSeq = uniService.selectIdDoubleCheck("RESV_SEQ", "TSER_RESV_INFO_I", "RESV_SEQ = ["+ SmartUtil.NVL(jsonInfo.get("RES_NO"), "").toString() + "[") > 0 ? "OK" : "FAIL";
+			searchVO.put("resvSeq", resvSeq);
+			String checkResvSeq = uniService.selectIdDoubleCheck("RESV_SEQ", "TSER_RESV_INFO_I", "RESV_SEQ = [" + resvSeq + "[") > 0 ? "OK" : "FAIL";
 			if (checkResvSeq.equals("OK")) {
 				Map<String, Object> resInfo = resService.selectUserResvInfo(searchVO);
 				Map<String, Object> machineVO = new HashMap<String, Object>();
