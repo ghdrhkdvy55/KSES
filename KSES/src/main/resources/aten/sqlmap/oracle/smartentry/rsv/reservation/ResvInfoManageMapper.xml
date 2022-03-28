@@ -383,7 +383,7 @@
 	
 	<!-- 다음 예약시퀀스 조회 -->
 	<select id="selectResvSeqNext" resultType="String">
-		SELECT FN_RESV_CD(#{resvDate) FROM DUAL
+		SELECT FN_RESV_CD(#{resvDate}) FROM DUAL
 	</select>
 	
 	<!-- 지점 예약일자 조회 -->
@@ -417,7 +417,7 @@
 	<!-- 회원 예약정보 등록 -->
     <insert id="insertUserResvInfo">
 		<selectKey resultType="String" keyProperty="resvSeq" order="BEFORE">
-			SELECT FN_RESV_CD(#{resvDate) FROM DUAL
+			SELECT FN_RESV_CD(#{resvDate}) FROM DUAL
 		</selectKey>
     
     	INSERT INTO TSER_RESV_INFO_I 
@@ -469,7 +469,7 @@
 			)
 			VALUES 
 			(
-				FN_RESV_CD(#{resvDate), #{longResvSeq}, #{seasonCd, jdbcType=VARCHAR}, #{centerCd, jdbcType=VARCHAR}, #{floorCd, jdbcType=VARCHAR}, #{partCd, jdbcType=VARCHAR}, #{seatCd, jdbcType=VARCHAR},
+				FN_RESV_CD(#{resvDate}), #{longResvSeq}, #{seasonCd, jdbcType=VARCHAR}, #{centerCd, jdbcType=VARCHAR}, #{floorCd, jdbcType=VARCHAR}, #{partCd, jdbcType=VARCHAR}, #{seatCd, jdbcType=VARCHAR},
 				TO_CHAR(TO_DATE(#{resvDate, jdbcType=VARCHAR},'YYYYMMDD') - (INTERVAL '1' DAY),'YYYYMMDD'), #{resvDate, jdbcType=VARCHAR}, '0000', '2359',
 				SYSDATE, 'USER_DVSN_1', #{userId, jdbcType=VARCHAR}, #{resvUserNm}, #{resvUserClphn}, 'Y', '',
 				'RESV_STATE_1', 'N', 'Y', FN_PARTCLASS(#{partCd, jdbcType=VARCHAR}),
