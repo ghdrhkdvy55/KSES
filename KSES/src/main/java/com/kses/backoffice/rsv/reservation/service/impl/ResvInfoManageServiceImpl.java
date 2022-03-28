@@ -79,8 +79,8 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	}
 	
 	@Override
-	public String selectResvSeqNext() throws Exception {
-		return resvMapper.selectResvSeqNext();
+	public String selectResvSeqNext(String resvDate) throws Exception {
+		return resvMapper.selectResvSeqNext(resvDate);
 	}
 	
 	@Override
@@ -195,7 +195,7 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 				}
 				
 				// 2.신규 예약정보 생성
-				String copyResvSeq = resvService.selectResvSeqNext();
+				String copyResvSeq = resvService.selectResvSeqNext(SmartUtil.NVL(resvInfo.get("resv_end_dt"),""));
 				params.put("copyResvSeq", copyResvSeq);
 				resultMap = resvService.updateResvInfoCopy(params);
 				
@@ -305,7 +305,7 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 				if(resvPayDvsn.equals("RESV_PAY_DVSN_2")) {
 					if(resvTicketDvsn.equals("RESV_TICKET_DVSN_1")) {
 						// 스피드온 결제(거래취소 인터페이스)
-						ModelMap result = interfaceService.SpeedOnPayMentCancel(resvSeq, cardPw, isPassword);
+						ModelMap result = interfaceService.SpeedOnPayMentCancel(resvSeq, cardPw, isPassword, true);
 						if(!SmartUtil.NVL(result.get(Globals.STATUS), "").equals("SUCCESS")) {
 							LOGGER.info("예약번호 : " + resvSeq + " 결제취소실패");
 							LOGGER.info("에러코드 : " + result.get(Globals.STATUS));

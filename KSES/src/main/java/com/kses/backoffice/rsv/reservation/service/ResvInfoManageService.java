@@ -38,11 +38,11 @@ public interface ResvInfoManageService {
 	/**
 	 * SPDM 예약번호 시퀀스 조회
 	 * 
-	 * @param vo
+	 * @param resvDate
 	 * @return
 	 * @throws Exception
 	 */
-	public String selectResvSeqNext() throws Exception;
+	public String selectResvSeqNext(String resvDate) throws Exception;
 	
 	/**
 	 * SPDM 지점 예약일자 조회
