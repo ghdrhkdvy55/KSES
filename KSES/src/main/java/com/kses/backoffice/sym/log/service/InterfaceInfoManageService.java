@@ -19,7 +19,7 @@ public interface InterfaceInfoManageService {
     
     ModelMap SpeedOnPayMent(String resvSeq, String cardPw, boolean isPassword) throws Exception;
     
-    ModelMap SpeedOnPayMentCancel(String resvSeq, String cardPw, boolean isPassword) throws Exception;
+    ModelMap SpeedOnPayMentCancel(String resvSeq, String cardPw, boolean isPassword, boolean isForced) throws Exception;
 	
     int InterfaceInsertLoginLog(InterfaceInfo vo) throws Exception;
 	
