@@ -46,8 +46,9 @@
 	            	<div class="check_wrap">
 	            		<ul>
 	            			<li>
-	            				<input type="checkbox" id="1" class="magic-checkbox">
-	            				<label class="text" for="1">사번 기억하기</label>
+	            				<input type="checkbox" id="snoSave" class="magic-checkbox">
+	            				<label for="snoSave"></label>
+	            				<label class="text" for="snoSave">사번 기억하기</label>
 	            			</li>
 	            		</ul>
 	            	</div>
@@ -62,6 +63,10 @@
 	<script type="text/javascript">
 		const loginError = '${param.login_error}';
 		$(document).ready(function() {
+	    	$(':text[name=adminId]').val(localStorage.getItem("adminId"));
+	    	if(localStorage.getItem("checkYn") == "Y"){
+	    		$(":checkbox[id='snoSave']").prop("checked", true);
+	    	}
 			switch (loginError) {
 				case '1':
 					toastr.warning('<spring:message code="page.common.alert03"/>');
@@ -100,6 +105,12 @@
 				$password.css('border-color', 'red');
 				setTimeout(() => $password.focus(), 0);
 				return false;
+			}
+			$("form[name=regist]").attr("action", "/backoffice/actionSecurityLogin.do").submit(); 
+			if($("input:checkbox[id='snoSave']").is(":checked")){
+				localStorage.setItem("checkYn", "Y");
+			} else {
+				localStorage.setItem("checkYn", "N");
 			}
 			document.regist.action = '<c:url value="/backoffice/actionSecurityLogin.do"/>';
 			document.regist.submit();

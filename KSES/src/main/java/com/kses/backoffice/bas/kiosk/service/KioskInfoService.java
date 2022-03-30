@@ -18,6 +18,14 @@ public interface KioskInfoService {
     List<Map<String, Object>> selectKioskInfoList(Map<String, Object> params) throws Exception;
 	
     /**
+     * 장비 상세 조회 (사용안함)
+     * @param ticketMchnSno
+     * @return
+     * @throws Exception
+     */
+    Map<String, Object> selectKioskInfoDetail(String ticketMchnSno) throws Exception;
+    
+    /**
      * KSES 장비 정보 수정
      * @param kioskInfo
      * @return

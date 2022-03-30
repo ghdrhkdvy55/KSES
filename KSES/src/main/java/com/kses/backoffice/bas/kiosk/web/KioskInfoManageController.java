@@ -166,14 +166,14 @@ public class KioskInfoManageController {
 
 		int ret = 0;
 		switch (vo.getMode()) {
-		case Globals.SAVE_MODE_INSERT:
-			ret = kioskService.insertKioskInfo(vo);
-			break;
-		case Globals.SAVE_MODE_UPDATE:
-			ret = kioskService.updateKioskInfo(vo);
-			break;
-		default:
-			throw new EgovBizException("잘못된 호출입니다.");
+			case Globals.SAVE_MODE_INSERT:
+				ret = kioskService.insertKioskInfo(vo);
+				break;
+			case Globals.SAVE_MODE_UPDATE:
+				ret = kioskService.updateKioskInfo(vo);
+				break;
+			default:
+				throw new EgovBizException("잘못된 호출입니다.");
 		}
 
 		String messageKey = StringUtils.equals(vo.getMode(), Globals.SAVE_MODE_INSERT)

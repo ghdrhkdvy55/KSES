@@ -27,6 +27,7 @@
 <body>
 <input type="hidden" id="loginAuthorCd" value="${authorcode}"/>
 <input type="hidden" id="loginCenterCd" value="${centercode}"/>
+<input type="hidden" id="adminId" value="${adminId}"/>
 <div class="wrapper">
 	<div class="header_wrap">
 		<header>
@@ -71,6 +72,7 @@
 	})();
 	
 	$(document).ready(function() {
+		localStorage.getItem("checkYn") != "Y" ? localStorage.removeItem("adminId") : localStorage.setItem("adminId", $("#adminId").val());
 		try {
 			var MenuJson = JSON.parse('${MenuJson}');
 		} catch (e) {

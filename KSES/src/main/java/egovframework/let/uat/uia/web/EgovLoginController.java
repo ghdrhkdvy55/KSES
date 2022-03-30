@@ -179,6 +179,7 @@ public class EgovLoginController {
 			model.addAttribute("usernmae", loginVO.getEmpNm());
 			model.addAttribute("authorcode", loginVO.getAuthorCd());
 			model.addAttribute("centercode", loginVO.getCenterCd());
+			model.addAttribute("adminId", loginVO.getAdminId());
 		}
 		return new ModelAndView("/backoffice/index", model);
 	}
