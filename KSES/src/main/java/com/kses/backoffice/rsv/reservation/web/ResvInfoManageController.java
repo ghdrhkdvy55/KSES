@@ -16,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
@@ -27,13 +28,14 @@ import com.kses.backoffice.rsv.reservation.service.AttendInfoManageService;
 import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
 import com.kses.backoffice.rsv.reservation.vo.AttendInfo;
 import com.kses.backoffice.rsv.reservation.vo.ResvInfo;
+import com.kses.backoffice.sym.log.annotation.NoLogging;
 import com.kses.backoffice.util.SmartUtil;
 
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.property.EgovPropertyService;
-import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
+import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 
 @RestController
@@ -60,46 +62,29 @@ public class ResvInfoManageController {
     @Autowired
     private AttendInfoManageService attendService;
     
-	@RequestMapping(value="rsvList.do")
-	public ModelAndView selectRsvInfoList(	@ModelAttribute("loginVO") LoginVO loginVO, 
-											@ModelAttribute("searchVO") CenterInfo searchVO, 
-											HttpServletRequest request, 
-											BindingResult bindingResult) throws Exception {
-		
+    
+	/**
+	 * 예약현황 화면
+	 * @return
+	 * @throws Exception
+	 */
+	@NoLogging
+	@RequestMapping(value="rsvList.do", method = RequestMethod.GET)
+	public ModelAndView viewRsvInfoList() throws Exception {
 		ModelAndView model = new ModelAndView("/backoffice/rsv/rsvList"); 
-		try {
-			Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
 			
-			if(!isAuthenticated) {
-				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-				model.setViewName("/backoffice/login");
-				return model;	
-			} else {
-		       HttpSession httpSession = request.getSession(true);
-		       loginVO = (LoginVO)httpSession.getAttribute("LoginVO");
-			}
-			
-			List<Map<String, Object>> centerInfoComboList = centerService.selectCenterInfoComboList();
-			
-			model.addObject("centerInfo", centerInfoComboList);
-			model.addObject("resvUserDvsn", codeDetailService.selectCmmnDetailCombo("USER_DVSN"));
-			model.addObject("resvState", codeDetailService.selectCmmnDetailCombo("RESV_STATE"));
-			model.addObject("resvPayDvsn", codeDetailService.selectCmmnDetailCombo("RESV_PAY_DVSN"));
-			model.addObject("resvTicketDvsn", codeDetailService.selectCmmnDetailCombo("RESV_TICKET_DVSN"));
-			model.addObject("loginVO" , loginVO);
-		    model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-		} catch(Exception e) {
-			LOGGER.error("selectRsvInfoList : " + e.toString());
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg")); 
-		}
+		model.addObject("centerInfo", centerService.selectCenterInfoComboList());
+		model.addObject("resvUserDvsn", codeDetailService.selectCmmnDetailCombo("USER_DVSN"));
+		model.addObject("resvState", codeDetailService.selectCmmnDetailCombo("RESV_STATE"));
+		model.addObject("resvPayDvsn", codeDetailService.selectCmmnDetailCombo("RESV_PAY_DVSN"));
+		model.addObject("resvTicketDvsn", codeDetailService.selectCmmnDetailCombo("RESV_TICKET_DVSN"));
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+
 		return model;	
 	}
     
-	@RequestMapping(value="rsvListAjax.do")
-	public ModelAndView selectCenterAjaxInfo(	@RequestBody Map<String,Object> searchVO, 
-												HttpServletRequest request) throws Exception {
+	@RequestMapping(value="rsvListAjax.do", method = RequestMethod.POST)
+	public ModelAndView selectCenterAjaxInfo(@RequestBody Map<String,Object> searchVO) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
 		try {
@@ -150,36 +135,17 @@ public class ResvInfoManageController {
 		return model;
 	}
 	
-	@RequestMapping (value="rsvSeatChange.do")
-	public ModelAndView rsvSeatChange(	HttpServletRequest request, 
-										@RequestBody Map<String,Object> params) throws Exception {
-		
+	@RequestMapping (value="rsvSeatChange.do", method = RequestMethod.POST)
+	public ModelAndView updateRsvSeatChange(@RequestBody Map<String,Object> params) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-		try {
-			Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-			if(!isAuthenticated) {
-				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-				return model;
-			}
-		
-			LoginVO loginVO = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
-			params.put("adminId", loginVO.getAdminId());
-			
-			model.addObject(resvService.resvSeatChange(params));	
-		} catch (Exception e){
-			StackTraceElement[] ste = e.getStackTrace();
-			LOGGER.info("rsvSeatChange ERROR :" + e.toString() + " : " + ste[0].getLineNumber());
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.insert"));	
-		}	
+		String adminId = EgovUserDetailsHelper.getAuthenticatedUserId();
+		params.put("adminId", adminId);
+		model.addObject(resvService.resvSeatChange(params));		
 		return model;
 	}
 	
-	@RequestMapping (value="rsvStateChange.do")
-	public ModelAndView rsvStateChange(	HttpServletRequest request, 
-										@RequestBody ResvInfo vo) throws Exception {
-		
+	@RequestMapping (value="rsvStateChange.do", method = RequestMethod.POST)
+	public ModelAndView rsvStateChange(@RequestBody ResvInfo vo) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
 			Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
@@ -263,7 +229,7 @@ public class ResvInfoManageController {
 	    }	
 		
 		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-		model.addObject(Globals.STATUS_REGINFO, resvService.selectResvInfoDetail(resvSeq));	     	
+		model.addObject(Globals.JSON_RETURN_RESULT, resvService.selectResvInfoDetail(resvSeq));	     	
 		return model;
 	}
 	
@@ -432,29 +398,12 @@ public class ResvInfoManageController {
 	}
 	
 	@RequestMapping (value="resvValidCheck.do")
-	public ModelAndView resvValidCheck(	@RequestBody Map<String, Object> params,
-										HttpServletRequest request) throws Exception {
+	public ModelAndView resvValidCheck(	@RequestBody Map<String, Object> params) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-		try {
-			HttpSession httpSession = request.getSession(true);
-			LoginVO loginVO = (LoginVO)httpSession.getAttribute("LoginVO");
-			
-			if(loginVO == null) {
-				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-				return model;
-			}
-			
-			resvService.resvValidCheck(params);
-			
-			model.addObject("validResult", params);
-			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-		} catch(Exception e) {
-			LOGGER.error("resvValidCheck : " + e.toString());
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg")); 
-		}
+		resvService.resvValidCheck(params);
+		model.addObject("validResult", params);
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		return model;
 	}
 }
