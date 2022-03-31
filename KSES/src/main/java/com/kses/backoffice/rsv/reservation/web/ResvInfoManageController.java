@@ -5,15 +5,10 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,7 +18,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.kses.backoffice.bas.code.service.EgovCcmCmmnDetailCodeManageService;
 import com.kses.backoffice.bld.center.service.CenterInfoManageService;
-import com.kses.backoffice.bld.center.vo.CenterInfo;
 import com.kses.backoffice.rsv.reservation.service.AttendInfoManageService;
 import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
 import com.kses.backoffice.rsv.reservation.vo.AttendInfo;
@@ -37,12 +31,12 @@ import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/backoffice/rsv")
 public class ResvInfoManageController {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ResvInfoManageController.class);
 
     @Autowired
     EgovMessageSource egovMessageSource;
@@ -62,9 +56,8 @@ public class ResvInfoManageController {
     @Autowired
     private AttendInfoManageService attendService;
     
-    
 	/**
-	 * 예약현황 화면
+	 * 예약정보 화면 호출
 	 * @return
 	 * @throws Exception
 	 */
@@ -83,94 +76,95 @@ public class ResvInfoManageController {
 		return model;	
 	}
     
+	/**
+	 * 예약정보 목록 조회
+	 * @param searchVO
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping(value="rsvListAjax.do", method = RequestMethod.POST)
-	public ModelAndView selectCenterAjaxInfo(@RequestBody Map<String,Object> searchVO) throws Exception {
+	public ModelAndView selectResvInfoListAjAX(@RequestBody Map<String,Object> searchVO) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
-		try {
-	          Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-				
-			  if(!isAuthenticated) {
-					model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
-					model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-					model.setViewName("/backoffice/login");
-					return model;
-			  } 
-			
-			  int pageUnit = searchVO.get("pageUnit") == null ? propertiesService.getInt("pageUnit") : Integer.valueOf((String) searchVO.get("pageUnit"));
-			  searchVO.put("pageSize", propertiesService.getInt("pageSize"));
+		LoginVO loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
+		
+		int pageUnit = searchVO.get("pageUnit") == null ?  propertiesService.getInt("pageUnit")
+				: Integer.valueOf((String) searchVO.get("pageUnit"));
 
-		   	  PaginationInfo paginationInfo = new PaginationInfo();
-			  paginationInfo.setCurrentPageNo(Integer.parseInt(SmartUtil.NVL(searchVO.get("pageIndex"), "1")));
-			  paginationInfo.setRecordCountPerPage(pageUnit);
-			  paginationInfo.setPageSize(propertiesService.getInt("pageSize"));
-			  
-			  searchVO.put("firstIndex", paginationInfo.getFirstRecordIndex());
-			  searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
-			  searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
-			  
-			  LoginVO loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
-			  
-			  searchVO.put("authorCd", loginVO.getAuthorCd());
-			  searchVO.put("centerCd", loginVO.getCenterCd());
-			  
-			  List<Map<String, Object>> list = resvService.selectResvInfoManageListByPagination(searchVO);
-		  
-		      int totCnt = list.size() > 0 ? Integer.valueOf( list.get(0).get("total_record_count").toString()) : 0;
+   	    PaginationInfo paginationInfo = new PaginationInfo();
+	    paginationInfo.setCurrentPageNo( Integer.parseInt(SmartUtil.NVL(searchVO.get("pageIndex"),"1")));
+	    paginationInfo.setRecordCountPerPage(pageUnit);
+	    paginationInfo.setPageSize(propertiesService.getInt("pageSize"));
+
+	    searchVO.put("firstIndex", paginationInfo.getFirstRecordIndex());
+	    searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
+	    searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
+		searchVO.put("authorCd", loginVO.getAuthorCd());
+		searchVO.put("centerCd", loginVO.getCenterCd());
+	    
+	    List<Map<String, Object>> list = resvService.selectResvInfoManageListByPagination(searchVO);
+        int totCnt =  list.size() > 0 ? Integer.valueOf(list.get(0).get("total_record_count").toString()) : 0;
+		paginationInfo.setTotalRecordCount(totCnt);
 		      
-		      LOGGER.debug("totCnt:" + totCnt);
-		      
-		      model.addObject(Globals.JSON_RETURN_RESULTLISR, list);
-		      model.addObject(Globals.STATUS_REGINFO, searchVO);		      
-		      model.addObject(Globals.PAGE_TOTALCNT, totCnt);
-		      paginationInfo.setTotalRecordCount(totCnt);
-		      model.addObject(Globals.JSON_PAGEINFO, paginationInfo);
-			  model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);	    
-		} catch(Exception e) {
-			StackTraceElement[] ste = e.getStackTrace();
-			LOGGER.error(e.toString() + ":" + ste[0].getLineNumber());
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));	
-		}
+		model.addObject(Globals.JSON_RETURN_RESULTLISR, list);
+		model.addObject(Globals.STATUS_REGINFO, searchVO);		      
+		model.addObject(Globals.PAGE_TOTALCNT, totCnt);
+		model.addObject(Globals.JSON_PAGEINFO, paginationInfo);
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);	    
+
 		return model;
 	}
 	
+	/**
+	 * 예약정보 단건 상세조회 
+	 * @param resvSeq
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping (value="rsvInfoDetail.do", method = RequestMethod.GET)
+	public ModelAndView selectRsvInfoDetail(@RequestParam("resvSeq") String resvSeq) throws Exception {	
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+		model.addObject(Globals.JSON_RETURN_RESULT, resvService.selectResvInfoDetail(resvSeq));	     	
+		return model;
+	}
+	
+	/**
+	 * 예약 좌석정보 변경
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping (value="rsvSeatChange.do", method = RequestMethod.POST)
 	public ModelAndView updateRsvSeatChange(@RequestBody Map<String,Object> params) throws Exception {
-		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		String adminId = EgovUserDetailsHelper.getAuthenticatedUserId();
 		params.put("adminId", adminId);
-		model.addObject(resvService.resvSeatChange(params));		
-		return model;
+		ModelMap modelMap = resvService.resvSeatChange(params);		
+		return new ModelAndView(Globals.JSONVIEW, modelMap);
 	}
 	
+	/**
+	 * 예약 상태정보 갱신
+	 * @param vo
+	 * @return
+	 * @throws Exception
+	 */
 	@RequestMapping (value="rsvStateChange.do", method = RequestMethod.POST)
 	public ModelAndView rsvStateChange(@RequestBody ResvInfo vo) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-		try {
-			Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-			if(!isAuthenticated) {
-				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-				return model;
-			}
+
+		String adminId = EgovUserDetailsHelper.getAuthenticatedUserId();
+		vo.setLastUpdusrId(adminId);
+		int ret = resvService.updateResvState(vo);
 		
-			LoginVO loginVO = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
-			vo.setLastUpdusrId(loginVO.getAdminId());
-			
-			int ret = resvService.updateResvState(vo);
-			if(ret > 0) {
-				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("sucess.common.update"));
-			} else {
-				throw new Exception();
-			}
-		} catch (Exception e){
-			StackTraceElement[] ste = e.getStackTrace();
-			LOGGER.info("rsvSeatChange ERROR :" + e.toString() + " : " + ste[0].getLineNumber());
+		if (ret > 0) {
+			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("sucess.common.update"));
+		} else {
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.insert"));	
-		}	
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.update"));
+		}
+
 		return model;
 	}
 	
@@ -209,59 +203,34 @@ public class ResvInfoManageController {
 			}
 		} catch (Exception e){
 			StackTraceElement[] ste = e.getStackTrace();
-			LOGGER.info("rsvLongSeatUpdate : " + e.toString() + " : " + ste[0].getLineNumber());
+			log.info("rsvLongSeatUpdate : " + e.toString() + " : " + ste[0].getLineNumber());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.insert"));	
 		}	
 		return model;
 	}
 	
-	@RequestMapping (value="rsvInfoDetail.do")
-	public ModelAndView selectRsvInfoDetail(	@RequestParam("resvSeq") String resvSeq, 
-												HttpServletRequest request) throws Exception {	
-		
-		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
-	    Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-		if(!isAuthenticated) {
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-			model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
-			return model;	
-	    }	
-		
-		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-		model.addObject(Globals.JSON_RETURN_RESULT, resvService.selectResvInfoDetail(resvSeq));	     	
-		return model;
+	/**
+	 * 예약정보 취소
+	 * @param resvSeq
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping (value="resvInfoCancel.do", method=RequestMethod.GET)
+	public ModelAndView updateResvInfoCancel(@RequestParam("resvSeq") String resvSeq) throws Exception {	
+		ModelMap modelMap = resvService.resvInfoAdminCancel(resvSeq, "", false);
+		return new ModelAndView(Globals.JSONVIEW,modelMap);
 	}
 	
-	@RequestMapping (value="resvInfoCancel.do")
-	public ModelAndView updateResvInfoCancel(	@RequestParam("resvSeq") String resvSeq, 
-												HttpServletRequest request) throws Exception {	
-		
-		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-
-		try {
-		    Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-			if(!isAuthenticated) {
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
-				return model;	
-		    }
-			
-			ModelMap modelMap = resvService.resvInfoAdminCancel(resvSeq, "", false);
-			model.addObject(modelMap);
-		} catch(Exception e) {
-			StackTraceElement[] ste = e.getStackTrace();
-			LOGGER.error(e.toString() + ":" + ste[0].getLineNumber());
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));	
-		}
-	     	
-		return model;
-	}
-	
-	@RequestMapping (value="resvInfoCancelAll.do")
-	public ModelAndView updateResvInfoCancelAll( 	@RequestBody Map<String,Object> params, 
-													HttpServletRequest request) throws Exception {	
+	/**
+	 * 예약 전체 취소
+	 * @param params
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping (value="resvInfoCancelAll.do", method=RequestMethod.POST)
+	public ModelAndView updateResvInfoCancelAll(@RequestBody Map<String,Object> params) throws Exception {	
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		List<Map<String, Object>> resvCancelList = new LinkedList<Map<String, Object>>();
@@ -320,7 +289,7 @@ public class ResvInfoManageController {
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("request.success.msg"));
 		} catch(Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
-			LOGGER.error(e.toString() + ":" + ste[0].getLineNumber());
+			log.error(e.toString() + ":" + ste[0].getLineNumber());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));	
 		}
@@ -328,81 +297,80 @@ public class ResvInfoManageController {
 		return model;
 	}
 	
-	@RequestMapping(value="attendListAjax.do")
-	public ModelAndView selectAttendListAjax(	@RequestBody Map<String,Object> searchVO, 
-												HttpServletRequest request) throws Exception {
-		
+	/**
+	 * 예약 출입정보 목록 조회 
+	 * @param searchVO
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="attendListAjax.do", method=RequestMethod.POST)
+	public ModelAndView selectAttendListAjax(@RequestBody Map<String,Object> searchVO) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
-		try {
-			  int pageUnit = searchVO.get("pageUnit") == null ? propertiesService.getInt("pageUnit") : Integer.valueOf((String) searchVO.get("pageUnit"));
-			  searchVO.put("pageSize", propertiesService.getInt("pageSize"));
-			  
-			  //Paging
-		   	  PaginationInfo paginationInfo = new PaginationInfo();
-			  paginationInfo.setCurrentPageNo(Integer.parseInt(SmartUtil.NVL(searchVO.get("pageIndex"), "1")));
-			  paginationInfo.setRecordCountPerPage(pageUnit);
-			  paginationInfo.setPageSize(propertiesService.getInt("pageSize"));
-			  
-			  searchVO.put("firstIndex", paginationInfo.getFirstRecordIndex());
-			  searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
-			  searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
-			  
-			  List<Map<String, Object>> list = attendService.selectAttendInfoListPage(searchVO);
-		      model.addObject(Globals.JSON_RETURN_RESULTLISR, list);
-		      model.addObject(Globals.STATUS_REGINFO, searchVO);
-		      
-		      int totCnt = list.size() > 0 ? Integer.valueOf( list.get(0).get("total_record_count").toString()) : 0;
-		      paginationInfo.setTotalRecordCount(totCnt);
-		      
-		      model.addObject("paginationInfo", paginationInfo);
-		      model.addObject("totalCnt", totCnt);
-		} catch(Exception e) {
-			StackTraceElement[] ste = e.getStackTrace();
-			LOGGER.error(e.toString() + ":" + ste[0].getLineNumber());
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));	
-		}
+		int pageUnit = searchVO.get("pageUnit") == null ?  propertiesService.getInt("pageUnit")
+				: Integer.valueOf((String) searchVO.get("pageUnit"));
+
+   	    PaginationInfo paginationInfo = new PaginationInfo();
+	    paginationInfo.setCurrentPageNo( Integer.parseInt(SmartUtil.NVL(searchVO.get("pageIndex"),"1")));
+	    paginationInfo.setRecordCountPerPage(pageUnit);
+	    paginationInfo.setPageSize(propertiesService.getInt("pageSize"));
+
+	    searchVO.put("firstIndex", paginationInfo.getFirstRecordIndex());
+	    searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
+	    searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
+
+	    List<Map<String, Object>> list = attendService.selectAttendInfoListPage(searchVO);
+        int totCnt =  list.size() > 0 ? Integer.valueOf(list.get(0).get("total_record_count").toString()) : 0;
+		paginationInfo.setTotalRecordCount(totCnt);
+
+		model.addObject(Globals.STATUS_REGINFO, searchVO);
+		model.addObject(Globals.JSON_RETURN_RESULTLISR, list);
+	    model.addObject(Globals.PAGE_TOTALCNT, totCnt);
+	    model.addObject(Globals.JSON_PAGEINFO, paginationInfo);
+	    model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+	    
 		return model;
 	}
 	
-	@RequestMapping (value="attendInfoUpdate.do")
-	public ModelAndView updateAttendInfo(	HttpServletRequest request,  
-											@RequestBody AttendInfo vo) throws Exception {
+	/**
+	 * 예약 출입정보 갱신
+	 * @param request
+	 * @param vo
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping (value="attendInfoUpdate.do", method=RequestMethod.POST)
+	public ModelAndView updateAttendInfo(@RequestBody AttendInfo vo) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-		
-		if(!isAuthenticated) {
-			model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-			return model;
-		}
-		
-		try {
-			LoginVO loginVO = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
-			vo.setEnterAdminId(loginVO.getAdminId());
+
+		String adminId = EgovUserDetailsHelper.getAuthenticatedUserId();
+		vo.setEnterAdminId(adminId);
+		vo = attendService.insertAttendInfo(vo);
 			
-			vo = attendService.insertAttendInfo(vo);
-			
-			if(vo.getRet() > 0) {
-				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.insert"));
-			} else {
-				throw new Exception();
-			}
-		} catch (Exception e){
+		if(vo.getRet() > 0) {
+			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.insert"));
+		} else {
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.insert"));	
-		}	
+		}
+
 		return model;
 	}
 	
-	@RequestMapping (value="resvValidCheck.do")
-	public ModelAndView resvValidCheck(	@RequestBody Map<String, Object> params) throws Exception {
+	/**
+	 * 예약정보 유효성 검사 (좌석변경/장기예약)
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping (value="resvValidCheck.do", method=RequestMethod.POST)
+	public ModelAndView resvValidCheck(@RequestBody Map<String, Object> params) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-		resvService.resvValidCheck(params);
-		model.addObject("validResult", params);
+		resvService.resvValidCheck(params); 
+		model.addObject(Globals.JSON_RETURN_RESULT, params);
 		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		return model;
 	}

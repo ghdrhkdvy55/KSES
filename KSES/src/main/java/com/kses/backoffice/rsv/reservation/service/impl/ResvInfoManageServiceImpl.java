@@ -6,13 +6,12 @@ import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
@@ -25,13 +24,12 @@ import com.kses.backoffice.rsv.reservation.vo.reservation;
 import com.kses.backoffice.sym.log.service.InterfaceInfoManageService;
 import com.kses.backoffice.util.SmartUtil;
 
+@Slf4j
 @Service
 public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implements ResvInfoManageService {
 	
 	@Autowired
 	ResvInfoManageMapper resvMapper;
-	
-    private static final Logger LOGGER = LoggerFactory.getLogger(ResvInfoManageServiceImpl.class);
 
     @Autowired
     EgovMessageSource egovMessageSource;
@@ -180,7 +178,7 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 			String cancelResvPayDvsn = SmartUtil.NVL(resvInfo.get("resv_pay_dvsn"),"");
 			String cancelResvCenterPilotYn = SmartUtil.NVL(resvInfo.get("center_pilot_yn"),"Y");
 			
-			int changeResvPayCost = Integer.parseInt(SmartUtil.NVL(params.get("resvEntryPayCost"),"")) + Integer.parseInt(SmartUtil.NVL(params.get("resvSeatPayCost"),""));
+			int changeResvPayCost = Integer.parseInt(SmartUtil.NVL(params.get("resvEntryPayCost"),"0")) + Integer.parseInt(SmartUtil.NVL(params.get("resvSeatPayCost"),"0"));
 			if(cancelResvCenterPilotYn.equals("Y") && cancelResvPayCost != changeResvPayCost && cancelResvPayDvsn.equals("RESV_PAY_DVSN_2")) {
 				// 1.이전 예약정보 취소
 				resultMap = resvService.resvInfoAdminCancel(resvSeq, cardPw, true);
@@ -201,7 +199,7 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 				}
 				
 				// 3.신규 예약정보 출금거래
-				LOGGER.info("resvSeatChange : " + SmartUtil.NVL(resvInfo.get("resv_seq"),"") + "번 결제 시작");
+				log.info("resvSeatChange : " + SmartUtil.NVL(resvInfo.get("resv_seq"),"") + "번 결제 시작");
 				resultMap = interfaceService.SpeedOnPayMent(copyResvSeq, cardPw, true);
 				if(!resultMap.get(Globals.STATUS).equals(Globals.STATUS_SUCCESS)) {
 					resultMap.addAttribute("resvSeq", copyResvSeq);
@@ -226,8 +224,6 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 				return resultMap;
 			}
 		} catch(Exception e) {
-			StackTraceElement[] ste = e.getStackTrace();
-			LOGGER.error(e.toString() + ":" + ste[0].getLineNumber());
 			resultMap.addAttribute(Globals.STATUS, Globals.STATUS_FAIL);
 			resultMap.addAttribute(Globals.STATUS_MESSAGE, message);	
 		}
@@ -249,8 +245,6 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 				throw new Exception();
 			}	
 		} catch(Exception e) {
-			StackTraceElement[] ste = e.getStackTrace();
-			LOGGER.error(e.toString() + ":" + ste[0].getLineNumber());
 			resultMap.addAttribute(Globals.STATUS, Globals.STATUS_FAIL);
 			resultMap.addAttribute(Globals.STATUS_MESSAGE, message);	
 		}
@@ -302,9 +296,9 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 						// 스피드온 결제(거래취소 인터페이스)
 						ModelMap result = interfaceService.SpeedOnPayMentCancel(resvSeq, cardPw, isPassword);
 						if(!SmartUtil.NVL(result.get(Globals.STATUS), "").equals("SUCCESS")) {
-							LOGGER.info("예약번호 : " + resvSeq + " 결제취소실패");
-							LOGGER.info("에러코드 : " + result.get(Globals.STATUS));
-							LOGGER.info("에러메세지 : " + result.get(Globals.STATUS_MESSAGE));
+							log.info("예약번호 : " + resvSeq + " 결제취소실패");
+							log.info("에러코드 : " + result.get(Globals.STATUS));
+							log.info("에러메세지 : " + result.get(Globals.STATUS_MESSAGE));
 							
 							step = "[거래취소]";
 							message = SmartUtil.NVL(result.get(Globals.STATUS_MESSAGE),"");
@@ -326,7 +320,6 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 				if(resvService.resvInfoCancel(params) > 0) {
 					resultMap.put(Globals.STATUS, Globals.STATUS_SUCCESS);
 					resultMap.put(Globals.STATUS_MESSAGE, "예약정보가 정상적으로 취소되었습니다.");
-					
 					sureService.insertResvSureData(Globals.SMS_TYPE_CANCEL, resvSeq);
 				} else {
 					step = "[예약취소]";
@@ -339,8 +332,6 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 				throw new Exception();
 			}
 		} catch(Exception e) {
-			StackTraceElement[] ste = e.getStackTrace();
-			LOGGER.error(e.toString() + ":" + ste[0].getLineNumber());
 			resultMap.put(Globals.STEP, step);
 			resultMap.put(Globals.STATUS, Globals.STATUS_FAIL);
 			resultMap.put(Globals.STATUS_MESSAGE, message);	

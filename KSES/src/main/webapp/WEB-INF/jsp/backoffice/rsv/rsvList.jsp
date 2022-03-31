@@ -27,8 +27,6 @@
 <script type="text/javascript" src="/resources/js/jszip.min.js"></script>
 <!-- //contents -->
 <input type="hidden" id="mode" name="mode">
-<input type="hidden" id="resvSeq" name="resvSeq">
-<input type="hidden" id="resvDate" name="resvDate">
 <input type="hidden" id="resvEntryPayCost" name="resvEntryPayCost">
 <input type="hidden" id="seasonCd" name="seasonCd">
 <jsp:useBean id="toDay" class="java.util.Date" />
@@ -119,7 +117,7 @@
 		</div>
 	
 		<div class="right_box">
-			<!-- <a href="javascript:common_modelOpen('all_cancel_pop');" class="blueBtn">전체 예약취소</a> -->
+			<!-- <a href="javascript:$('[data-popup=rsv_all_cancel]').bPopup();" class="blueBtn">전체 예약취소</a> -->
 			<a id="export" onClick="fnExcelDown();" class="blueBtn">엑셀 다운로드</a>
 		</div>
 		<div class="clear"></div>
@@ -196,7 +194,7 @@
           	</table>
           	</form>
 			<br>
-			<p class="pop_tit">입장 내역 <span class="pBtn"><a href="javascript:common_modelOpen('rsv_inout_add');" class="blueBtn">입장 수동 등록</a></span></p>
+			<p class="pop_tit">입장 내역 <span class="pBtn"><a href="javascript:$('[data-popup=rsv_inout_add]').bPopup();" class="blueBtn">입장 수동 등록</a></span></p>
 			<div style="width:650px;"> 
 	          	<table id="attendGrid"></table>
 				<div id="attendPager"></div>     
@@ -236,6 +234,8 @@
 		<a class="button b-close">X</a>
 		<input type="hidden" name="resvSeq">
 		<input type="hidden" name="resvDate">
+		<input type="hidden" name="seasonCd">
+		<input type="hidden" name="seatCd">
 		<input type="hidden" name="resvEntryPayCost">
 		<input type="hidden" name="resvSeatPayCost">
       	<h2 class="pop_tit">사용자 좌석 변경</h2>
@@ -468,7 +468,7 @@
 <!-- popup// -->
 <script type="text/javascript" src="/resources/jqgrid/jqgrid.custom.egovapi.js"></script>
 <script type="text/javascript">
-	let seatSearchInfo;
+	let searchStorage;
 
 	$(document).ready(function() { 
 		// 메인 JqGrid 정의
@@ -792,8 +792,12 @@
 		let $popup = $('[data-popup=rsv_seat_change]');
 		let rowId = EgovJqGridApi.getMainGridSingleSelectionId();
 		let rowData = EgovJqGridApi.getMainGridRowData(rowId);
+
 		$popup.find(':hidden[name=resvSeq]').val(rowData.resv_seq);
 		$popup.find(':hidden[name=resvDate]').val(rowData.resv_end_dt.replaceAll('-',''));
+		$popup.find(':hidden[name=seatCd]').val('');
+		$popup.find(':hidden[name=resvSeatPayCost]').val('');
+		$popup.find(':hidden[name=resvEntryPayCost]').val('');
 		$popup.find('select[name=centerCd]').val(rowData.center_cd).trigger("change").show();
 		$popup.find('select[name=floorCd]').val(rowData.floor_cd).trigger("change");
 		$popup.find('select[name=partCd]').val(rowData.part_cd);
@@ -806,7 +810,7 @@
 	function fnResvSeatSearch() {
 		let $popup = $('[data-popup=rsv_seat_change]');
 		
-        if ($popup.find('select[select=centerCd]').val() === '') {
+        if ($popup.find('select[name=centerCd]').val() === '') {
             toastr.warning('지점을 선택해 주세요.');
             return;
         }
@@ -823,7 +827,7 @@
 			$popup.find('select[name=centerCd]').find("option:selected").data("entrypaycost")
         );
         
-        seatSearchInfo = {
+        searchStorage = {
 			searchCondition : 'SEAT',
 			resvSeq : $popup.find(':hidden[name=resvSeq]').val(),
 			resvDate : $popup.find(':hidden[name=resvDate]').val(),
@@ -835,14 +839,16 @@
 		EgovIndexApi.apiExecuteJson(
 			'POST',
 			'/front/rsvSeatListAjax.do',
-			seatSearchInfo,
+			searchStorage,
 			null,
 			function(json) {
-				seatSearchInfo.seasonCd = json.seasonCd;
 				let img = json.seatMapInfo !== null ? '/upload/' + json.seatMapInfo.part_map1 : '';
+				
+				$popup.find(':hidden[name=seasonCd]').val(json.seasonCd);
 				$popup.find('.pop_mapArea').css({'background': '#fff url(' + img + ')'});
-    		    
-    		    let list = json.resultlist;
+				$popup.find('.pop_seat').empty();
+				
+				let list = json.resultlist;
     		    for (let i in list) {
     		    	let addClass = "";
 					switch(list[i].status){
@@ -868,7 +874,8 @@
 						let oldSel = $('.pop_seat li.usable');
 						oldSel.removeClass('usable').addClass('selected');
 						$(this).removeClass('selected').addClass('usable');
-						$popup.find(':hidden[name=resvSeatPayCost]').val($(this).data("seat_paycost"));
+						$popup.find(':hidden[name=resvSeatPayCost]').val($(this).data('seat_paycost'));
+						$popup.find(':hidden[name=seatCd]').val($(this).attr('id'));
 					}
 				});
 			},
@@ -883,7 +890,7 @@
 		let $sPopup = $('[data-popup=rsv_seat_change]');
 		let $pPopup = $('[data-popup=rsv_pay_number]');
 		
-		if($sPopup.find(".pop_seat li.usable").length <= 0) {
+		if($sPopup.find(":hidden[name=seatCd]").val() === '') {
 			toastr.warning('변경할 좌석을 선택해주세요.');
 			return;	
 		}
@@ -892,19 +899,16 @@
 			return;			
 		}
 		
-		let params = {
+		let params = Object.assign({
 			checkDvsn : 'CHANGE',
 			resvSeq : $sPopup.find(':hidden[name=resvSeq]').val(),
 			inResvDate : $sPopup.find(':hidden[name=resvDate]').val(),
-			seasonCd : seatSearchInfo.seasonCd,
-			centerCd : seatSearchInfo.centerCd,
-			floorCd : seatSearchInfo.floorCd,
-			partCd : seatSearchInfo.partCd,
-			seatCd : $sPopup.find(".pop_seat li.usable").attr("id"),
+			seasonCd : $sPopup.find(':hidden[name=seasonCd]').val(),
+			seatCd : $sPopup.find(':hidden[name=seatCd]').val(),
 			resvEntryPayCost : $sPopup.find(':hidden[name=resvEntryPayCost]').val(),
 			resvSeatPayCost : $sPopup.find(':hidden[name=resvSeatPayCost]').val(),
 			cardPw : $pPopup.find(':text[name=cardPw]').val()
-		};
+		},searchStorage);
 		
 		// 유효성 검사
 		fnResvVaildCheck(params, function() {
@@ -936,8 +940,8 @@
 			params,
 			null,
 			function(json) {
-				if(json.validResult.resultCode !== 'SUCCESS') {
-					toastr.error(json.validResult.resultMessage);
+				if(json.result.resultCode !== 'SUCCESS') {
+					toastr.error(json.result.resultMessage);
 				} else {
 					callback();
 				}
@@ -948,7 +952,6 @@
 		);
 	}
 	
-	// 좌석변경팝업 층 콤보박스 목록 검색(변경예정)
 	function fnFloorComboList() {
  		let params = {centerCd : $('#resvCenterCd').val()};
  		let returnVal = uniAjaxReturn('/backoffice/bld/floorComboInfo.do', 'GET', false, params, 'lst');
