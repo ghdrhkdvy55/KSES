@@ -88,7 +88,7 @@
                   	<tr>
                     	<th>회원 조회</th>
                     	<td>
-                      		<select id="userSearchCondition" name="userSearchCondition">
+                      		<select name="userSearchCondition">
                           		<option value="user_id">아이디</option>
                           		<option value="user_nm">이름</option>    
                           		<option value="user_phone">전화번호</option>             
@@ -97,18 +97,18 @@
                       		<a href="javascript:fnUserInfoPopup();" class="grayBtn">검색</a>
                     	</td>
                       	<th>아이디 </th>
-                      	<td><input type="text" id="userId" name="userId" readonly></td>
+                      	<td><input type="text" name="userId" readonly></td>
                   	</tr>
                   	<tr>
                       	<th>이름 </th>
-                      	<td><input type="text" id="userNm" name="userNm" readonly></td>
+                      	<td><input type="text" name="userNm" readonly></td>
                       	<th>전화번호 </th>
-                      	<td><input type="text" id="userClphn" name="userClphn" readonly></td>
+                      	<td><input type="text" name="userClphn" readonly></td>
                   	</tr>
                   	<tr>
                     	<th>제한 유형</th>
                     	<td>
-                        	<select id="blklstDvsn" name="blklstDvsn">
+                        	<select name="blklstDvsn">
                           		<option value="BLKLST_DVSN_1">블랙리스트</option>
                           		<option value="BLKLST_DVSN_2">자가출입통제</option>
                         	</select>
@@ -246,9 +246,9 @@
 			$form.find('textarea[name=blklstReason]').val(rowData.blklst_reason);
 			$form.find('select[name=userSearchCondition] option:first').prop('selected', true);
 			$form.find('select[name=blklstDvsn]').val(rowData.blklst_dvsn);
-			$form.find('#userId').val(rowData.user_id);
-			$form.find('#userNm').val(rowData.user_nm);
-			$form.find('#userClphn').val(rowData.user_phone);
+			$form.find(':text[name=userId]').val(rowData.user_id);
+			$form.find(':text[name=userNm]').val(rowData.user_nm);
+			$form.find('text[name=userClphn]').val(rowData.user_phone);
 		}
 		$popup.bPopup();
 	}
@@ -256,7 +256,7 @@
 	// 출입통제 정보 등록
 	function fnBlackInsert() {
 		let $popup = $('[data-popup=rsv_blacklist_add]');
-		if ($popup.find('#userId').val() === '') {
+		if ($popup.find(':text[name=userId]').val() === '') {
 			toastr.warning('출입통제 대상을 선택해 주세요.');
 			return;
 		}
@@ -281,7 +281,7 @@
 	// 출입통제 정보 수정
 	function fnBlackUpdate() {
 		let $popup = $('[data-popup=rsv_blacklist_add]');
-		bPopupConfirm('출입통제 수정', '<b>'+ $popup.find('#userId').text() +'</b>수정 하시겠습니까?', function() {
+		bPopupConfirm('출입통제 수정', '<b>'+ $popup.find(':text[name=userId]').text() +'</b> 수정 하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(
 				'POST',
 				'/backoffice/rsv/blackUserUpdate.do',
