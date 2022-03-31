@@ -421,7 +421,7 @@ div[data-popup="bld_seat_change"]{max-width: 1600px; top: 30px !important;}
 .pop_seat_change>.searchBox select, .pop_seat_change>.searchBox input{margin-left: 5px;}
 /* datepicker custom */
 .ui-datepicker.ui-widget.ui-widget-content{width: 320px !important;}
-.ui-state-default, .ui-widget-content .ui-state-default{border: none !important; line-height: 1.5rem !important;}
+/* .ui-state-default, .ui-widget-content .ui-state-default{border: none !important; line-height: 1.5rem !important;} */
 .pop_seat_change>.searchBox input{transform: translateY(3px);}
 .pop_seat_change>.searchBox .left_box.grayBtn{margin-top: 0; margin-left: 10px;}
 .pop_seat_label ul{overflow: hidden; padding: 15px; background-color: rgba(255,255,255,0.8); display: inline-block;}
