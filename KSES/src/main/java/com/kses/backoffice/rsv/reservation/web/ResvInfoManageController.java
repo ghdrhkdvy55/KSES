@@ -28,6 +28,7 @@ import com.kses.backoffice.util.SmartUtil;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.Globals;
+import egovframework.rte.fdl.cmmn.exception.EgovBizException;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
@@ -168,45 +169,41 @@ public class ResvInfoManageController {
 		return model;
 	}
 	
-	@RequestMapping (value="longResvInfoUpdate.do")
+	/**
+	 * 장기 예약 등록
+	 * @param vo
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping (value="longResvInfoUpdate.do", method = RequestMethod.POST)
 	@Transactional(rollbackFor = Exception.class)
-	public ModelAndView rsvLongSeatUpdate(	HttpServletRequest request, 
-											@RequestBody ResvInfo vo) throws Exception {
+	public ModelAndView insertRsvLongSeat(@RequestBody ResvInfo vo) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-		try {
-			if(!isAuthenticated) {
-				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-				return model;
-			}
+
+		LoginVO loginVO = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
+		vo.setAdminId(loginVO.getAdminId());
 		
-			LoginVO loginVO = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
-			vo.setAdminId(loginVO.getAdminId());
-			
-			List<String> resvDateList = resvService.selectResvDateList(vo);
-			vo.setResvDateList(resvDateList);
-			
-			int ret = resvService.updateUserLongResvInfo(vo);
-			
+		List<String> resvDateList = resvService.selectResvDateList(vo);
+		vo.setResvDateList(resvDateList);
+		
+		int ret = 0;
+		ret = resvService.insertUserLongResvInfo(vo);
+		
+		if(ret > 0) {
+			ret = resvService.insertLongResvInfo(vo);
 			if(ret > 0) {
-				ret = resvService.updateLongResvInfo(vo); 
-				if(ret > 0) {
-					model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-					model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("sucess.common.update"));
-				} else {
-					throw new Exception();
-				}
+				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("sucess.common.insert"));
 			} else {
-				throw new Exception();
+				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.insert"));
 			}
-		} catch (Exception e){
-			StackTraceElement[] ste = e.getStackTrace();
-			log.info("rsvLongSeatUpdate : " + e.toString() + " : " + ste[0].getLineNumber());
+		} else {
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.insert"));	
-		}	
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.insert"));
+		}
+
 		return model;
 	}
 	

@@ -135,6 +135,22 @@ public interface ResvInfoManageService {
 	public List<Map<String, Object>> selectGuestMyResvInfo(Map<String, Object> params) throws Exception;
 	
 	/**
+	 * SPDM 장기 예약 일자별 등록
+	 * @param vo
+	 * @return
+	 * @throws Exception
+	 */
+	public int insertUserLongResvInfo(ResvInfo vo) throws Exception;
+	
+	/**
+	 * SPDM 장기예약 등록
+	 * @param vo
+	 * @return
+	 * @throws Exception
+	 */
+	public int insertLongResvInfo(ResvInfo vo) throws Exception;
+	
+	/**
 	 * SPDM 회원 예약 정보 등록 및 수정
 	 * 
 	 * @param vo
@@ -142,24 +158,6 @@ public interface ResvInfoManageService {
 	 * @throws Exception
 	 */
 	public int updateUserResvInfo(ResvInfo vo) throws Exception;
-	
-	/**
-	 * SPDM 장기예약 정보 등록
-	 * 
-	 * @param vo
-	 * @return
-	 * @throws Exception
-	 */
-	public int updateLongResvInfo(ResvInfo vo) throws Exception;
-	
-	/**
-	 * SPDM 회원 장기예약 정보 등록 및 수정
-	 * 
-	 * @param vo
-	 * @return
-	 * @throws Exception
-	 */
-	public int updateUserLongResvInfo(ResvInfo vo) throws Exception;
 	
 	/**
 	 * SPDM 예약 좌석정보 변경
