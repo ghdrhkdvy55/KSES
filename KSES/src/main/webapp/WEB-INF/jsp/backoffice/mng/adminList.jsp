@@ -187,7 +187,7 @@
 			{ label: '부서', name: 'dept_nm', align: 'center', sortable: false },
 			{ label: '전화번호', name: 'emp_clphn', hidden: true },
 			{ label: '이메일', name: 'emp_email', hidden: true }
-		], 'popPager', false);
+		], 'popPager', false, false, 5);
 		// 관리자 상세 화면의 권한 Select Change Event 정의
 		$('[data-popup=mng_admin_add] select[name=authorCd]').change(function(e) {
 			let $center = $('[data-popup=mng_admin_add] select[name=centerCd]');

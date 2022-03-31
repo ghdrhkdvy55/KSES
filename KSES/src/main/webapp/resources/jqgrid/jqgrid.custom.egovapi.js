@@ -277,12 +277,13 @@ $.EgovJqGridApi.prototype.getSubGridRowData = function(parentId, rowId) {
  * - subgrid expend 기능 없음
  * - resize 안됨
  ************************************************************************************************/
-$.EgovJqGridApi.prototype.pagingGrid = function(id, colModel, pagerId, rowList, multiselect) {
+$.EgovJqGridApi.prototype.pagingGrid = function(id, colModel, pagerId, rowList, multiselect, rowNum) {
 	this._formatter(colModel);
 	this._init('POST', colModel, multiselect, false, false);
 	this._jqGridParams['url'] = null;
 	this._jqGridParams['pager'] = $('#'+ pagerId);
 	this._jqGridParams['rowList'] = rowList === undefined ? [] : rowList;
+	this._jqGridParams['rowNum'] = rowNum === undefined ? 10 : rowNum;
 	let retGrid = $('#'+id).jqGrid(this._jqGridParams);
 	$('th#'+id+'_rn').children('div:first').append('NO');
 	return retGrid;
