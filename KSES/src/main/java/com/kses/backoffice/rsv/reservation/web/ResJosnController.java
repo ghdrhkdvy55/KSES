@@ -522,6 +522,22 @@ public class ResJosnController {
 						seatName = SmartUtil.NVL(resInfo.get("seat_nm"), "").toString();
 						resPersonCnt = "1";
 						returnCode = "OK";
+						
+						if(userNm.length()>2) {
+							firstNm = userNm.substring(0,1);
+							middleNm = userNm.substring(1, userNm.length()-1);
+							LastNm = userNm.substring(userNm.length()-1, userNm.length());
+							cnvMiddleNm = "";
+							for(int i=0; i<middleNm.length(); i++) {
+								cnvMiddleNm +="*";
+							}
+							resName = firstNm + cnvMiddleNm + LastNm;
+						} else if(userNm.length()==2){
+							firstNm = userNm.substring(0,1);
+							resName = firstNm + "*";
+						} else {
+							resName = userNm;
+						}
 					}
 				}
 			} else {
@@ -548,16 +564,6 @@ public class ResJosnController {
 			returnMessage = "시스템 에러 입니다.";
 			info.setTrsmrcvSeCode(sendEnum.RPF.getCode());
 		}
-		
-		// 고객 이름 마스킹 처리
-		firstNm = userNm.substring(0,1);
-		middleNm = userNm.substring(1, userNm.length()-1);
-		LastNm = userNm.substring(userNm.length()-1, userNm.length());
-		cnvMiddleNm = "";
-		for(int i=0; i<middleNm.length(); i++) {
-			cnvMiddleNm +="*";
-		}
-		resName = firstNm + cnvMiddleNm + LastNm;
 		
 		model.addObject("RES_NAME", resName);
 		model.addObject("RES_PRICE", resPrice);
