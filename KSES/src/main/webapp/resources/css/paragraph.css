@@ -15,11 +15,11 @@ input[type=radio]:not(old) {
 input[type=radio]:not(old) + label {
     display: inline-block; 
     text-align: left; height:20px; 
-    background: url(/images/check_off_2.png) no-repeat 0 0; 
+    /* background: url(/images/check_off_2.png) no-repeat 0 0; */ 
     line-height: 130%; vertical-align: top;
 }
 input[type=radio]:not(old):checked + label {
-    background: url(/images/check_on_2.png) no-repeat 0 0;
+    /* background: url(/images/check_on_2.png) no-repeat 0 0; */
 }
 ::placeholder {width: 100%;}
 input[type=checkbox]{min-width: 14px;height: 14px;}
@@ -739,11 +739,10 @@ canvas {
 .setTxt input {
 width: 50%;
 position: relative;
-left: -80px;
 padding-left: 5px;
 }
 /*.setTxt tr:nth-child(4) input {left:-50px }*/
-.setTxt tr:nth-child(4) span {position: relative; left: -40px;}
+
 .center_box {text-align: center;}
 .salestab th{background: #e7e7e7 !important; border-right: 1px solid #d1d1d1;}
 /* 20210929
@@ -951,12 +950,19 @@ padding-left: 5px;
 .main_table tr.tb_bottom td{color: #000; font-weight: bold; background-color: #e1e1e1;}
 
 /*지점별통계0127*/
-.dashboard {margin-top: 1rem;}
-.dashboard tr:first-child th, .dashboard tr:nth-child(2) th{background: #4195e3; color: #fff;}
+.dashboard_table {margin-top: 1rem;}
+.dashboard_table tr:first-child th, .dashboard_table tr:nth-child(2) th{background: #4195e3; color: #fff;}
 .tabs>.tab.active {background: #105da5; color: #fff;}
-.dashboard tr th {color: #fff; padding: 10px 20px;}
-.dashboard tr.tb_bottom th{color: #000; font-weight: 600;}
+.dashboard_table tr th {color: #fff; padding: 10px 20px;}
+.dashboard_table tr.tb_bottom th{color: #000; font-weight: 600;}
 /*0118 jqGrid row img button*/
+
+/* 환경설정 테이블CSS 220331 JDH*/
+.system_info_table{width: 100%;text-align: center;}
+.system_info_table tr th{border-bottom: 2px solid #e4e4e4;font-weight: 400; background:#f6f6f6}
+.system_info_table tr td{border-bottom: 1px solid #e4e4e4;}
+.system_info_table tr:last-child td{border-bottom: 0;}
+.system_info_table tr th, .system_info_table tr td{padding: 8px;position: relative;border-left:1px solid #ebebeb}
 
 .del_icon {
 	display: block;
