@@ -140,7 +140,7 @@
 	        }
 		], true, false, fnSearch);
 		// 휴일 적용 센터 JqGrid 정의
-		EgovJqGridApi.defaultGrid('popGrid', [
+		EgovJqGridApi.pagingGrid('popGrid', [
 			{ label: '지점코드', name: 'center_cd', key: true, hidden: true },
 			{ label: '적용지점', name: 'center_nm', align: 'center', sortable: false },
 			{ label: '적용휴일명', name: 'holy_nm', align: 'center', sortable: false }
@@ -358,7 +358,7 @@
 			pageUnit: '5',
 			holyDt: $('[data-popup=bas_holiday_add]').find(':text[name=holyDt]').val()
 		};
-		EgovJqGridApi.defaultGridAjaxPaging('popGrid', '/backoffice/bas/holyCenterListAjax.do', params, fnCenterHolyInfoSearch);
+		EgovJqGridApi.pagingGridAjax('popGrid', '/backoffice/bas/holyCenterListAjax.do', params, fnCenterHolyInfoSearch);
 	}
 	// 엑셀 다운로드
 	function fnExcelDownload() {
