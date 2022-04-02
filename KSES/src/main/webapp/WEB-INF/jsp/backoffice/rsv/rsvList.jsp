@@ -109,13 +109,12 @@
 					<option value="resvName">이름</option>
 					<option value="resvPhone">전화번호</option>
 				</select>
-				<input type="text" id="searchKeyword" placeholder="검색어를 입력하세요.">		
+				<input type="text" id="searchKeyword" placeholder="검색어를 입력하세요.">
 				<div class="inlineBtn">
 					<a href="javascript:fnSearch(1);" class="grayBtn">검색</a>
 				</div>
 			</div>
 		</div>
-	
 		<div class="right_box">
 			<!-- <a href="javascript:$('[data-popup=rsv_all_cancel]').bPopup();" class="blueBtn">전체 예약취소</a> -->
 			<a id="export" onClick="fnExcelDown();" class="blueBtn">엑셀 다운로드</a>
@@ -194,7 +193,7 @@
           	</table>
           	</form>
 			<br>
-			<p class="pop_tit">입장 내역 <span class="pBtn"><a href="javascript:$('[data-popup=rsv_inout_add]').bPopup();" class="blueBtn">입장 수동 등록</a></span></p>
+			<p class="pop_tit">입장 내역 <span class="pBtn"><a href="javascript:$('[data-popup=rsv_inout_add]').bPopup();" id="enterRegistBtn" class="blueBtn">입장 수동 등록</a></span></p>
 			<div style="width:650px;"> 
 	          	<table id="attendGrid"></table>
 				<div id="attendPager"></div>     
@@ -475,12 +474,12 @@
 		EgovJqGridApi.mainGrid([
 			{ label: '예약번호', 	name: 'resv_seq',  				align:'center',	fixed: true, key:true },
 			{ label: '예약일자', 	name: 'resv_end_dt', 			align:'center', fixed: true, formatter: fnFormSetting },
-			{ label: '지점', 		name: 'center_nm', 				align:'center', fixed: true },
+			{ label: '지점', 	name: 'center_nm', 				align:'center', fixed: true },
 			{ label: '좌석등급', 	name: 'resv_seat_class_text',   align:'center', fixed: true },
 			{ label: '좌석정보', 	name: 'seat_nm', 				align:'center', fixed: true },
-			{ label: '이름', 		name: 'user_nm', 				align:'center', fixed: true },
+			{ label: '이름', 	name: 'user_nm', 				align:'center', fixed: true },
 			{ label: '전화번호', 	name: 'user_phone', 	 		align:'center', fixed: true },
-			{ label: '금액', 		name: 'resv_pay_cost', 		    align:'center', fixed: true, formatter: fnFormSetting },
+			{ label: '금액', 	name: 'resv_pay_cost', 		    align:'center', fixed: true, formatter: fnFormSetting },
 			{ label: '예약상태', 	name: 'resv_state_text',    	align:'center', fixed: true },
 			{ label: '결제상태', 	name: 'resv_pay_dvsn_text', 	align:'center', fixed: true },
 			{ label: '결제구분', 	name: 'resv_ticket_dvsn_text',  align:'center', fixed: true },
@@ -502,7 +501,7 @@
 			{label: '출입시간', 	name:'qr_check_tm',		align:'center', sortable: false},
 			{label: '통신시간', 	name:'rcv_dt',			align:'center', sortable: false},
 			{label: '통신결과', 	name:'rcv_cd', 			align:'center', sortable: false}
-		], 'attendPager', false);
+		], 'attendPager', false, false, 5);
 		
 		$("#searchResvDateFrom","#searchResvDateTo","#resvDateFrom","#resvDateTo","#cancelResvDate").datepicker(EgovCalendar);
 		
@@ -564,14 +563,16 @@
 			searchKeyword : $('#searchKeyword').val()
 		};
 		EgovJqGridApi.mainGridAjax('/backoffice/rsv/rsvListAjax.do', params, fnSearch);
+
         var patchWidth = $("[aria-labelledby='gbox_"+$(this).prop("id")+"']").css("width");
         var patchTarget = $(this).parent();
         $(patchTarget).css("width", patchWidth);
 	}
 	
 	// 메인 상세 팝업 정의
-	function fnResvInfo(rowId, rowData) {
+	function fnResvInfo(rowId) {
 		let $popup = $('[data-popup=rsv_rsv_detail]');
+		let rowData = EgovJqGridApi.getMainGridRowData(rowId);
 		
 		$popup.find('td#rsvCenterNm').html(rowData.center_nm);
 		$popup.find('td#rsvAreaInfo').html(rowData.seat_nm);
@@ -598,9 +599,12 @@
 		});
 		
 		// 예약취소/좌석변경 버튼
-		$popup.find('a#rsvSeatChangeBtn,a#resvCancelBtn').hide();
+		$popup.find('a#rsvSeatChangeBtn,a#resvCancelBtn,a#enterRegistBtn').hide();
 		if(rowData.resv_state === 'RESV_STATE_1' || rowData.resv_state === 'RESV_STATE_2') {
 			$popup.find('a#resvCancelBtn').show();
+			if(fn_resvDateFormat(today_get())  === rowData.resv_end_dt){
+				$popup.find('a#enterRegistBtn').show();
+			}
 			if(rowData.resv_ticket_dvsn === 'RESV_TICKET_DVSN_1') {
 				$popup.find('a#rsvSeatChangeBtn').show();
 			}
@@ -617,7 +621,8 @@
 		bPopupConfirm('예약상태변경', '예약상태를 변경 하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(
 				'POST',
-				'/backoffice/rsv/rsvStateChange.do"', {
+				'/backoffice/rsv/rsvStateChange.do', 
+				{
 					resvSeq : rowId,
 					resvState : $popup.find('select[name=resvState]').val(),
 					resvPayDvsn : $popup.find('select[name=resvPayDvsn]').val()
@@ -625,9 +630,9 @@
 				null,
 				function(json) {
 					toastr.success("예약상태가 정상적으로 변경되었습니다.");
-					fnResvInfo(rowId);
-					fnSearch(1);
 					$popup.bPopup().close();
+					fnSearch(1);
+					$('[data-popup=rsv_rsv_detail]').bPopup().close();
 				},
 				function(json) {
 					toastr.error(json.message);
@@ -638,6 +643,7 @@
 	
 	// 예약정보 취소
 	function fnResvInfoCancel() {
+		let $popup = $('[data-popup=rsv_rsv_detail]');
 		let rowId = EgovJqGridApi.getMainGridSingleSelectionId();
 		bPopupConfirm('예약취소', '<b>' + rowId + '번</b>' + ' 예약정보를 취소 하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(
@@ -648,8 +654,8 @@
 				null,
 				function(json) {
 					toastr.success(json.message);
-					fnResvInfo(rowId);
 					fnSearch(1);
+					$popup.bPopup().close()
 				},
 				function(json) {
 					toastr.error(json.message);
@@ -776,9 +782,9 @@
 				null,
 				function(json) {
 					toastr.success("입출입 정보가 정상적으로 등록되었습니다.");
-					fnResvInfo(rowId);
-					fnAttendSearch(1);
+					$popup.bPopup().close();
 					fnSearch(1);
+					$('[data-popup=rsv_rsv_detail]').bPopup().close();
 				},
 				function(json) {
 					toastr.error(json.message);
@@ -894,7 +900,7 @@
 			toastr.warning('변경할 좌석을 선택해주세요.');
 			return;	
 		}
-		if($pPopup.find(':text[name=cardPw]').val() === '') {
+		if($pPopup.find(':password[name=cardPw]').val() === '') {
 			toastr.warning('결제 비밀번호를 입력해주세요.');
 			return;			
 		}
@@ -907,7 +913,7 @@
 			seatCd : $sPopup.find(':hidden[name=seatCd]').val(),
 			resvEntryPayCost : $sPopup.find(':hidden[name=resvEntryPayCost]').val(),
 			resvSeatPayCost : $sPopup.find(':hidden[name=resvSeatPayCost]').val(),
-			cardPw : $pPopup.find(':text[name=cardPw]').val()
+			cardPw : $pPopup.find(':password[name=cardPw]').val()
 		},searchStorage);
 		
 		// 유효성 검사
@@ -919,7 +925,6 @@
 				null,
 				function(json) {
 					toastr.success(json.message);
-					fnResvInfo(json.resvSeq);
 					fnSearch(1);
 					$sPopup.bPopup().close();
 				},
@@ -928,8 +933,9 @@
 				}
 			);
 		});
-
+		$pPopup.find(':password[name=cardPw]').val('');
 		$pPopup.bPopup().close();
+		$('[data-popup=rsv_rsv_detail]').bPopup().close();
 	}
 
 	// 좌석변경 예약정보 유효성 검사
