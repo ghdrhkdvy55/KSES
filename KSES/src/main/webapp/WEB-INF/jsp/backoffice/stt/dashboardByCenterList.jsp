@@ -59,7 +59,7 @@
 		<div class="clear"></div>
         
         <div class="whiteBox">
-			<table class="main_table dashboard">
+			<table class="main_table dashboard_table">
            		<thead class="active">
 	            	<tr>
 	            		<th></th>
@@ -101,13 +101,13 @@
 <!-- popup// -->
 <script type="text/javascript">
 	$(document).ready(function() {
-		$("#searchResvDateFrom").datepicker(EgovCalendar);
-		$("#searchResvDateTo").datepicker(EgovCalendar);
+		$('#searchResvDateFrom').datepicker(EgovCalendar);
+		$('#searchResvDateTo').datepicker(EgovCalendar);
 		fnCenterUsageStatList();
 	});
 
 	function fnCenterUsageStatList() {
-		if (parseInt($("#searchResvDateFrom").val()) > parseInt($("#searchResvDateTo").val())) {
+		if (parseInt($('#searchResvDateFrom').val()) > parseInt($('#searchResvDateTo').val())) {
             toastr.warning('검색종료일자가 시작일자보다 빠를수 없습니다.');
             return;
         }
@@ -116,53 +116,53 @@
 			'POST',
 			'/backoffice/stt/dashboardByCenterListAjax.do',
 			{
-				"searchCenterCd" : $("#searchCenterCd").val(),
-				"searchResvDateFrom" : $("#searchResvDateFrom").val(),
-				"searchResvDateTo" : $("#searchResvDateTo").val()
+				searchCenterCd : $('#searchCenterCd').val(),
+				searchResvDateFrom : $('#searchResvDateFrom').val(),
+				searchResvDateTo : $('#searchResvDateTo').val()
 			},
 			null,
 			function(json) {
 				if (json.status === 'SUCCESS') {
-					let $tbody = $(".main_table tbody");
+					let $tbody = $('.main_table tbody');
 					$tbody.empty();
 					
 					if(json.usageStatList.length > 1) {
 						$.each(json.usageStatList, function (index, item) {
 							let isLastIndex = (index === (json.usageStatList.length - 1));
-							let tdRow = "";
-							let trClass = "";
+							let tdRow = '';
+							let trClass = '';
 							
 							if(!isLastIndex) {
-								tdRow = "<td>" + item.resv_date + "</td>" + 
-										"<td>" + item.center_nm + "</td>";	
+								tdRow = '<td>' + item.resv_date + '</td>' + 
+										'<td>' + item.center_nm + '</td>';	
 							} else {
-								tdRow = "<td colspan='2'>총계</td>";
-								trClass ="tb_bottom";
+								tdRow = '<td colspan="2">총계</td>';
+								trClass = 'tb_bottom';
 							}
 							
 							$tbody.append
 							(
-								"<tr class='" + trClass + "'>" + tdRow +
-									"<td>" + item.seat_all_count + "</td>" +
-									"<td>" + item.m_resv_all_count + "</td>" +
-									"<td>" + item.m_resv_success_count + "</td>" +
-									"<td>" + item.m_resv_cancel_count + "</td>" +
-									"<td>" + item.m_resv_success_per + "</td>" +
-									"<td>" + item.g_resv_all_count + "</td>" +
-									"<td>" + item.g_resv_success_count + "</td>" +
-									"<td>" + item.g_resv_cancel_count + "</td>" +
-									"<td>" + item.g_resv_success_per + "</td>" +
-									"<td>" + item.t_resv_all_count + "</td>" +
-									"<td>" + item.t_resv_success_count + "</td>" +
-									"<td>" + item.t_resv_cancel_count + "</td>" +
-									"<td>" + item.t_resv_success_per + "</td>" +
-									"<td>" + item.t_resv_cancel_per + "</td>" +
-									"<td>" + item.t_center_use_per + "</td>" +
-								"</tr>"
+								'<tr class="' + trClass + '">' + tdRow +
+									'<td>' + item.seat_all_count + '</td>' +
+									'<td>' + item.m_resv_all_count + '</td>' +
+									'<td>' + item.m_resv_success_count + '</td>' +
+									'<td>' + item.m_resv_cancel_count + '</td>' +
+									'<td>' + item.m_resv_success_per + '</td>' +
+									'<td>' + item.g_resv_all_count + '</td>' +
+									'<td>' + item.g_resv_success_count + '</td>' +
+									'<td>' + item.g_resv_cancel_count + '</td>' +
+									'<td>' + item.g_resv_success_per + '</td>' +
+									'<td>' + item.t_resv_all_count + '</td>' +
+									'<td>' + item.t_resv_success_count + '</td>' +
+									'<td>' + item.t_resv_cancel_count + '</td>' +
+									'<td>' + item.t_resv_success_per + '</td>' +
+									'<td>' + item.t_resv_cancel_per + '</td>' +
+									'<td>' + item.t_center_use_per + '</td>' +
+								'</tr>'
 							);
 						});
 					} else {
-						$tbody.append("<tr><td colspan='17'>조회 일자에 데이터가 존재하지 않습니다.</td></tr>");
+						$tbody.append('<tr><td colspan="17">조회 일자에 데이터가 존재하지 않습니다.</td></tr>');
 					}
 				}
 			},
@@ -175,9 +175,9 @@
 	// 엑셀 다운로드
 	function fnExcelDownload() {
 		let params = {
-			"searchCenterCd" : $("#searchCenterCd").val(),
-			"searchResvDateFrom" : $("#searchResvDateFrom").val(),
-			"searchResvDateTo" : $("#searchResvDateTo").val()
+			searchCenterCd : $('#searchCenterCd').val(),
+			searchResvDateFrom : $('#searchResvDateFrom').val(),
+			searchResvDateTo : $('#searchResvDateTo').val()
 		};
 		EgovIndexApi.apiExecuteJson(
 			'POST',
