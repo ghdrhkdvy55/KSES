@@ -179,8 +179,8 @@
 			{label: '등록/해제', 	  align:'center', fixed: true, formatter: (c, o, row) =>
             	'<a href="javascript:fnChangeBlackState(\'' + row.blklst_seq + '\');" class="blueBtn">' + (row.blklst_cancel_yn === 'Y' ? '등록' : '해제') + '</a>'
        		}, 			
-			{label: '수정',        align: 'center', width: 50, fixed: true, sortable: false, formatter: (c, o, row) =>
-            	'<a href="javascript:fnBlackInfo(\''+ row.blklst_seq + '\');" class="edt_icon"></a>'
+			{label: '수정',        name:'update_btn',		   align: 'center', width: 50, fixed: true, sortable: false, 
+       			formatter: (c, o, row) => '<a href="javascript:fnBlackInfo(\''+ row.blklst_seq + '\');" class="edt_icon"></a>'
        		} 
         ], false, false, fnSearch);
 		
@@ -214,14 +214,8 @@
 		};
 		EgovJqGridApi.mainGridAjax('/backoffice/rsv/blackListAjax.do', params, fnSearch);
 		
-		if($('#searchBlklstDvsn').val() === 'BLKLST_DVSN_3') {
-			$(MainGridSelector).jqGrid('showCol', ['user_noshow_cnt', 'user_noshow_last_dt']);
-			$('.boardlist > .right_box > .grayBtn').hide();
-		} else {
-			$(MainGridSelector).jqGrid('hideCol', ['user_noshow_cnt', 'user_noshow_last_dt']);
-			$('.boardlist > .right_box > .grayBtn').show();
-		}
-
+		let col = $('#searchBlklstDvsn').val() === 'BLKLST_DVSN_3' ? 'hideCol' : 'showCol';
+		$(MainGridSelector).jqGrid(col, ['user_noshow_cnt', 'user_noshow_last_dt', 'update_btn']);
 		$(MainGridSelector).setGridWidth($(MainGridSelector).closest('div.boardlist').width() , true);
 	}
 	
@@ -338,7 +332,16 @@
 	
 	// 출입통제상태 변경
 	function fnChangeBlackState(rowId) {
+		let resultTxt;
 		let rowData = EgovJqGridApi.getMainGridRowData(rowId);
+		
+		if(rowData.blklst_cancel_yn === 'Y') {
+			resultTxt = '출입통제가 정상적으로 등록되었습니다.';
+			rowData.blklst_cancel_yn = 'N';
+		} else {
+			resultTxt = '출입통제가 정상적으로 해제 되었습니다.';
+			rowData.blklst_cancel_yn = 'Y';
+		}
 		
 		let params = {
 			mode : 'Edt', 
@@ -347,8 +350,6 @@
 			blklstDvsn : rowData.blklst_dvsn, 
 			userId : rowData.user_id 
 		};
-		
-		let resultTxt = rowData.blklst_cancel_yn === 'Y' ? '출입통제가 정상적으로 해제되었습니다.' : '출입통제가 정상적으로 등록 되었습니다.';
 		
 		EgovIndexApi.apiExecuteJson(
 			'POST',
