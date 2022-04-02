@@ -102,6 +102,7 @@ public class BlackUserInfoManageController {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		
 		String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
+		blackUserInfo.setFrstRegisterId(userId);
 		blackUserInfo.setLastUpdusrId(userId);
 
 		int ret = 0;
