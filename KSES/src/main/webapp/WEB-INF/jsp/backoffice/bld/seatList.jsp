@@ -37,14 +37,14 @@
             </div>
 			<div class="top">
             	<p>지점</p>
-             	<select id="searchCenterCd" onChange="jqGridFunc.fn_centerChange('search')">
+             	<select id="searchCenterCd" onChange="fnCenterChange('search')">
                     <option value="">선택</option>
                      <c:forEach items="${centerList}" var="centerList">
 						<option value="${centerList.center_cd}"><c:out value='${centerList.center_nm}'/></option>
                      </c:forEach>
             	</select>
             	<p>층</p>
-            	<select id="searchFloorCd" onChange="jqGridFunc.fn_floorChange('search')">
+            	<select id="searchFloorCd" onChange="fnFloorChange('search')">
 					<option value="">선택</option>
             	</select>
             	<p>구역</p>
@@ -56,56 +56,55 @@
           	</div>
           	
           	<div class="inlineBtn">
-            	<a href="javascript:jqGridFunc.fn_search();" class="grayBtn">검색</a>
+            	<a href="javascript:fnSearch(1);" class="grayBtn">검색</a>
           	</div>
         </div>
 
 		<div class="right_box">
-			<a data-popup-open="bld_seat_add" onclick="jqGridFunc.fn_seatInfo('Ins','0')" class="blueBtn">좌석 등록</a>
-			<a onClick="jqGridFunc.fn_delCheck()" class="grayBtn">삭제</a>
+			<a data-popup-open="bld_seat_add" onclick="fnSeatInfo();" class="blueBtn">좌석 등록</a>
+			<a onClick="fnSeatDelete();" class="grayBtn">삭제</a>
 		</div>
 		<div class="clear"></div>
 		
 		<div class="whiteBox">
-			<table id="mainGrid">
-			
-			</table>
+			<table id="mainGrid"></table>
 			<div id="pager" class="scroll" style="text-align:center;"></div>     
-			<br/>
-			<div id="paginate"></div>
 		</div>
 	</div>
 </div>
 <!-- contents//-->
 <!-- //popup -->
 <!-- // 좌석 추가 팝업 -->
-<div id="bld_seat_add" data-popup="bld_seat_add" class="popup">
+<div data-popup="bld_seat_add" class="popup">
 	<div class="pop_con">
 		<a class="button b-close">X</a>
 		<h2 class="pop_tit">좌석 정보 등록(수정)</h2>
 		<div class="pop_wrap">
+			<form>
+			<input type="hidden" name="mode" value="Ins">
+			<input type="hidden" name="seatCd">
 			<table class="detail_table">
 				<tbody>
 					<tr>
 						<th>구역 선택</th>
 							<td colspan="3">
-	                     	<select id="centerCd" onChange="jqGridFunc.fn_centerChange('popup')">
-		                        <option value="">지점선택</option>
+	                     	<select name="centerCd" onChange="fnCenterChange('popup')">
+		                        <option value="">선택</option>
 								<c:forEach items="${centerList}" var="centerList">
 									<option value="${centerList.center_cd}"><c:out value='${centerList.center_nm}'/></option>
 								</c:forEach>
 	                    	</select>
-                        	<select id="floorCd" onChange="jqGridFunc.fn_floorChange('popup')">
-                          		<option value="">층선택</option>
+                        	<select name="floorCd" onChange="fnFloorChange('popup')">
+                          		<option value="">선택</option>
                         	</select>
-                        	<select id="partCd">
-                          		<option value="">구역선택</option>
+                        	<select name="partCd">
+                          		<option value="">선택</option>
                         	</select>
 						</td>
                   	</tr>
                   	<tr>
                     	<th>좌석명</th>
-                    	<td><input type="text" id="seatNm"></td>
+                    	<td><input type="text" name="seatNm"></td>
                     	<th>사용유무</th>
                     	<td>
                     		<label for="useYn_Y"><input id="useYn_Y" type="radio" name="useYn" value="Y" checked>Y</label>
@@ -114,16 +113,14 @@
                   	</tr>
               	</tbody>
 			</table>
+			</form>
       	</div>
-      	<div class="right_box">
-			<a id="btnUpdate" href="javascript:jqGridFunc.fn_CheckForm();" id="btnUpdate" class="blueBtn">등록</a>
-			<a href="javascript:bPopupClose('bld_seat_add');" class="grayBtn">취소</a>
-      	</div>
-      	<div class="clear"></div>
+		<popup-right-button />
   	</div>
 </div>
 <!-- 좌석 추가 팝업 // -->
 <!-- poopup// -->
+<script type="text/javascript" src="/resources/jqgrid/jqgrid.custom.egovapi.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
 		if($("#loginAuthorCd").val() != "ROLE_ADMIN" && $("#loginAuthorCd").val() != "ROLE_SYSTEM") {
@@ -132,338 +129,208 @@
 			$(".top > select").eq(0).hide();
 		}
 		
-		jqGridFunc.setGrid("mainGrid");
+		// 메인 JqGrid 정의
+        EgovJqGridApi.mainGrid([
+			{label: '좌석코드',  	name: 'seat_cd', 		hidden:true, key: true},
+			{label: '지점코드', 	name: 'center_cd', 		hidden:true},
+			{label: '층코드', 	name: 'floor_cd', 		hidden:true},
+			{label: '구역코드', 	name: 'part_cd', 		hidden:true},
+			{label: '지점', 		name: 'center_nm', 		align:'center'},
+			{label: '층수', 		name: 'floor_nm', 		align:'center'},
+			{label: '구역', 		name: 'part_nm', 		align:'center'},
+			{label: '좌석명', 	name: 'seat_nm', 		align:'center'},
+			{label: '좌석등급', 	name: 'seat_class_txt', align:'center'},
+			{label: '금액', 		name: 'part_pay_cost',  align:'center'},
+			{label: '정렬순서', 	name: 'seat_order',  	align:'center'},
+			{label: '사용유무', 	name: 'use_yn', 		align:'center'},
+			{label: '수정일자', 	name: 'last_updt_dtm', 	align:'center'},
+			{label: '수정자', 	name: 'last_updusr_id', align:'center'},
+			{label: '수정',      name: 'update_btn',		align:'center', width: 50, fixed: true, sortable: false, 
+       			formatter: (c, o, row) => '<a href="javascript:fnSeatInfo(\''+ row.seat_cd + '\');" class="edt_icon"></a>'
+       		} 
+        ], false, false, fnSearch);
 	});
-    
-	var jqGridFunc  = {
-		setGrid : function(gridOption){
-			var grid = $('#'+gridOption);
+	
+	// 메인 목록 검색
+	function fnSearch(pageNo) {
+		let params = {
+			pageIndex: pageNo,
+			pageUnit: $('.ui-pg-selbox option:selected').val(),
+			searchKeyword: $('#searchKeyword').val(),
+			searchCondition : $('#searchCondition').val(),
+			searchCenterCd : $('#searchCenterCd').val(),
+			searchFloorCd : $('#searchFloorCd').val(),
+			searchPartCd : $('#searchPartCd').val(),
+		};
+		EgovJqGridApi.mainGridAjax('/backoffice/bld/seatListAjax.do', params, fnSearch);
+	}
+	
+	function fnSeatInfo(rowId) {
+		let $popup = $('[data-popup=bld_seat_add]');
+		let $form = $popup.find('form:first');
+		if (rowId === undefined || rowId === null) {
+			$popup.find('h2:first').text('좌석정보 등록');
+			$popup.find('button.blueBtn').off('click').click(fnSeatInsert);
+			$form.find(':text').val('');
+			$form.find(':hidden[name=mode]').val('Ins');
+			$form.find(':hidden[name=seatCd]').val('');
+			if($('#loginAuthorCd').val() != "ROLE_ADMIN" && $('#loginAuthorCd').val() != 'ROLE_SYSTEM') {
+				$form.find('select[name=centerCd] option:first').prop('selected', true);
+			}
+			$form.find('select[name=floorCd] option:first').prop('selected', true);
+			$form.find('select[name=floorCd] option:not(:first)').remove();
+			$form.find('select[name=partCd] option:first').prop('selected', true);
+			$form.find('select[name=partCd] option:not(:first)').remove();
+			$form.find(':radio[name=useYn]:first').prop('checked', true);
+		} else {
+            let rowData = EgovJqGridApi.getMainGridRowData(rowId);
+			$popup.find('h2:first').text('좌석정보 수정');
+			$popup.find('button.blueBtn').off('click').click(fnSeatUpdate);
+			$form.find(':hidden[name=mode]').val('Edt');
+			$form.find(':hidden[name=seatCd]').val(rowData.seat_cd);
+			$form.find(':text[name=seatNm]').val(rowData.seat_nm);
+			$form.find('select[name=centerCd]').val(rowData.center_cd).trigger('change');
+			$form.find('select[name=floorCd]').val(rowData.floor_cd).trigger('change');
+			$form.find('select[name=partCd]').val(rowData.part_cd);
 			
-			//ajax 관련 내용 정리 하기 
-			var postData = {"pageIndex": "1"};
-			
-			grid.jqGrid({
-				url : '/backoffice/bld/seatListAjax.do',
-				mtype : 'POST',
-				datatype : 'json',
-				pager: $('#pager'),  
-				ajaxGridOptions: { contentType: "application/json; charset=UTF-8" },
-				ajaxRowOptions: { contentType: "application/json; charset=UTF-8", async: true },
-				ajaxSelectOptions: { contentType: "application/json; charset=UTF-8", dataType: "JSON" }, 
-				
-				postData : JSON.stringify(postData),
-				
-				jsonReader : {
-					root : 'resultlist',
-					"page":"paginationInfo.currentPageNo",
-					"total":"paginationInfo.totalPageCount",
-					"records":"paginationInfo.totalRecordCount",
-					repeatitems:false
-				},
-				//상단면
-				colModel :  
-				[
-					{label: '좌석코드', key: true, name:'seat_cd', index:'seat_cd', align:'center', hidden:true},
-					{label: '지점코드', name:'center_cd', index:'center_cd', align:'center', hidden:true},
-					{label: '층코드', name:'floor_cd', index:'floor_cd', align:'center', hidden:true},
-					{label: '구역코드', name:'part_cd', index:'part_cd', align:'center', hidden:true},
-					{label: '지점', name:'center_nm', index:'center_nm', align:'center'},
-					{label: '층수', name:'floor_nm', index:'floor_nm', align:'center'},
-					{label: '구역', name:'part_nm', index:'part_nm', align:'center'},
-					{label: '좌석명', name:'seat_nm', index:'seat_nm', align:'center'},
-					{label: '좌석등급', name:'seat_class_txt', index:'seat_class_txt', align:'center'},
-					{label: '금액', name: 'part_pay_cost',  index:'part_pay_cost', align:'center'},
-					{label: '정렬순서', name: 'seat_order',  index:'seat_order', align:'center'},
-					{label: '사용유무', name: 'use_yn', index:'use_yn', align:'center'},
-					{label: '수정일자', name:'last_updt_dtm', index:'last_updt_dtm', align:'center'},
-					{label: '수정자', name:'last_updusr_id', index:'last_updusr_id', align:'center'},
-				], 
-				rowNum : 10,  //레코드 수
-				rowList : [10,20,30,40,50,100],  // 페이징 수
-				pager : pager,
-				refresh : true,
-			    multiselect : true, // 좌측 체크박스 생성
-				rownumbers : false, // 리스트 순번
-				viewrecord : true,  // 하단 레코드 수 표기 유무
-				//loadonce : false, // true 데이터 한번만 받아옴 
-				loadui : "enable",
-				loadtext:'데이터를 가져오는 중...',
-				emptyrecords : "조회된 데이터가 없습니다", //빈값일때 표시 
-				height : "100%",
-				autowidth:true,
-				shrinkToFit : true,
-				refresh : true,
-				loadComplete : function (data) {
-					$("#sp_totcnt").text(data.paginationInfo.totalRecordCount);
-				},
-				loadError:function(xhr, status, error) {
-					alert(error); 
-				}, 
-				onPaging: function(pgButton) {
-					var gridPage = grid.getGridParam('page'); //get current  page
-					var lastPage = grid.getGridParam("lastpage"); //get last page 
-					var totalPage = grid.getGridParam("total");
-    		              
-					if (pgButton == "next"){
-						if (gridPage < lastPage ){
-							gridPage += 1;
-						} else {
-							gridPage = gridPage;
-						}
-					} else if (pgButton == "prev") {
-						if (gridPage > 1 ){
-							gridPage -= 1;
-						} else {
-							gridPage = gridPage;
-						}
-					} else if (pgButton == "first") {
-						gridPage = 1;
-                    } else if (pgButton == "last") {
-						gridPage = lastPage;
-					} else if (pgButton == "user") {
-						var nowPage = Number($("#pager .ui-pg-input").val());
-						
-						if (totalPage >= nowPage && nowPage > 0 ) {
-							gridPage = nowPage;
-						} else {
-							$("#pager .ui-pg-input").val(nowPage);
-							gridPage = nowPage;
-						}
-					} else if (pgButton == "records") {
-						gridPage = 1;
-					}
-					
-					grid.setGridParam({
-						page : gridPage,
-						rowNum : $('.ui-pg-selbox option:selected').val(),
-						postData : JSON.stringify({
-										"pageIndex": gridPage,
-										"searchCenterCd" : $("#searchCenterCd").val(),
-										"searchFloorCd" : $("#searchFloorCd").val(),
-										"searchPartCd" : $("#searchPartCd").val(),
-										"searchFloorCd" : $("#searchFloorCd").val(),
-										"searchCondition" : $("#searchCondition").val(),
-										"pageUnit":$('.ui-pg-selbox option:selected').val()
-									})
-					}).trigger("reloadGrid");
-				},
-				onSelectRow : function(rowId) {
-					// 체크 할떄
-					if(rowId != null) {  
-						
-					}
-				},
-				ondblClickRow : function(rowid, iRow, iCol, e){
-					grid.jqGrid('editRow', rowid, {keys: true});
-				},
-				onCellSelect : function (rowid, index, contents, action){
-					var cm = $(this).jqGrid('getGridParam', 'colModel');
-					
-					if (cm[index].name !='cb'){
-						jqGridFunc.fn_seatInfo("Edt", $(this).jqGrid('getCell', rowid, 'seat_cd'));
-					}
-				},
-					//체크박스 선택시에만 체크박스 체크 적용
-				beforeSelectRow: function (rowid, e) { 
-					var $myGrid = $(this), i = $.jgrid.getCellIndex($(e.target).closest('td')[0]), 
-					cm = $myGrid.jqGrid('getGridParam', 'colModel'); 
-					return (cm[i].name === 'cb'); 
-				}
-			});
-		},
-    	useYn : function(cellvalue, options, rowObject) {
-			return (rowObject.use_yn ==  "Y") ? "사용" : "사용안함";
-		},
-		rowBtn : function (cellvalue, options, rowObject) {
-			return '<input type="button" onclick="jqGridFunc.delRow('+rowObject.center_cd+')" value="DEL"/>';
-		},
-		SettingButton : function (cellvalue, options, rowObject) {
-			return '<a href="javascript:jqGridFunc.fn_Info(&#39;list&#39;,&#39;'+rowObject.seat_cd+'&#39;);" class="detailBtn">설정</a>';
-		},			
-		refreshGrid : function(){
-			$('#mainGrid').jqGrid().trigger("reloadGrid");
-		},
+            EgovJqGridApi.selection('mainGrid', rowId);
+		}
+		$popup.bPopup();
+	}
+	
+	function fnCenterChange(division) {
+		let params = new Object();
+		if(division === 'search') {
+			params.centerCd = $('#searchCenterCd').val();
+			$('#searchPartCd').find('option:first').prop('selected', true);
+			$('#searchPartCd').find('option:not(:first)').remove();
+			fnComboList($('#searchFloorCd'), '/backoffice/bld/floorComboInfo.do', params);	
+		} else {
+			let $popup = $('[data-popup=bld_seat_add]');
+			$popup.find('select[name=partCd] option:first').prop('selected', true);
+			$popup.find('select[name=partCd] option:not(:first)').remove();
+			params.centerCd = $popup.find('select[name=centerCd]').val();
+			fnComboList($popup.find('select[name=floorCd]'), '/backoffice/bld/floorComboInfo.do', params);
+		}		
+	}
+	
+	function fnFloorChange(division) {
+		let params = new Object();
+		if(division === 'search') {
+			params.floorCd = $('#searchFloorCd').val();
+			fnComboList($('#searchPartCd'), '/backoffice/bld/partInfoComboList.do', params);	
+		} else {
+			let $popup = $('[data-popup=bld_seat_add]');
+			params.floorCd = $popup.find('select[name=floorCd]').val();
+			fnComboList($popup.find('select[name=partCd]'), '/backoffice/bld/partInfoComboList.do', params);
+		}	
+	}
+	
+	function fnComboList(el, url, param) {
+		let resultlist = uniAjaxReturn(url, 'GET', false, param, 'lst');
 
-	    fn_delCheck  : function(){      
-			var menuArray = new Array();
- 			    getEquipArray("mainGrid", menuArray);
- 			    if (menuArray.length > 0){
- 				  $("#hid_DelCode").val(menuArray.join(","))
- 				  $("#id_ConfirmInfo").attr("href", "javascript:jqGridFunc.fn_del()");
- 				  menuArray = null;
-        		      fn_ConfirmPop("삭제 하시겠습니까?");
- 			    }else {
- 				  menuArray = null;
- 				  common_modelCloseM("체크된 값이 없습니다.", "savePage");
- 			    }
- 			    
-	    },
-	    fn_del : function (){
-	    	var params = {'seatCd':$("#hid_DelCode").val() };
-         	    fn_uniDelAction("/backoffice/bld/seatInfoDelete.do", "GET", params, false, "jqGridFunc.fn_search");
-         	},
- 		delRow : function (centerCd) {
-			if(trim(center_id) != "") {
-				var params = {'centerCd' : trim(seatCd)};
-				$("#searchKeyword").val("")
-				fn_uniDelAction("/backoffice/bld/centerInfoDelete.do", params, "jqGridFunc.fn_search");
-			}
-		},
-		clearGrid : function() {
-			$("#mainGrid").clearGridData();
-		},
-		fn_search: function(){
-			$("#mainGrid").setGridParam({
-				datatype : "json",
-				postData : JSON.stringify({
-					"pageIndex": $("#pager .ui-pg-input").val(),
-					"searchKeyword" : $("#searchKeyword").val(),
-					"searchCenterCd" : $("#searchCenterCd").val(),
-					"searchFloorCd" : $("#searchFloorCd").val(),
-					"searchPartCd" : $("#searchPartCd").val(),
-					"pageUnit":$('.ui-pg-selbox option:selected').val()
-				}),
-				loadComplete : function(data) {
-					$("#sp_totcnt").text(data.paginationInfo.totalRecordCount);
-				}
-			}).trigger("reloadGrid");
- 		}, 
-		fn_centerChange : function(division) {
-			var el = division == "search" ? $("#searchCenterCd") : $("#centerCd");
-			var targetEl = division == "search" ? $("#searchFloorCd") : $("#floorCd");
-			var url = "/backoffice/bld/floorComboInfo.do";
-			var param = {"centerCd" : el.val()};
-			$("#searchPartCd").val("").prop("selected",true);
-			jqGridFunc.fn_comboList(targetEl, url, param);
-		},
-		fn_floorChange : function(division) {
-			var el = division == "search" ? $("#searchFloorCd") : $("#floorCd");
-			var targetEl = division == "search" ? $("#searchPartCd") : $("#partCd");
-			var url = "/backoffice/bld/partInfoComboList.do";
-			var param = {"floorCd" : el.val()};				
-			jqGridFunc.fn_comboList(targetEl, url, param);
-		},
-		fn_comboList : function(el, url, param) {
-			var resultlist = uniAjaxReturn(url, "GET", false, param, "lst");
-
-			if (resultlist.length > 0){
-				var obj = resultlist;
-				el.empty();
-				el.append("<option value=''>선택</option>");
-					
-				for (var i in obj) {
-					var array = Object.values(obj[i])
-					el.append("<option value='"+ array[0]+"'>"+array[1]+"</option>");
-				}
-			} else {
-				//값이 없을때 처리 
-				el.empty();
-				el.append("<option value=''>선택</option>");
-			}
-		},
-		fn_seatInfo : function (mode, seatCd) {
-			$("#bld_seat_add").bPopup();
-			$("#mode").val(mode);
-		
-				if (mode == "Ins") {
-				$("#bld_seat_add .pop_tit").html("좌석 정보 등록");
-				$("#btnUpdate").text('등록');
+		if(resultlist.length > 0){
+			let obj = resultlist;
+			el.empty();
+			el.append('<option value="">선택</option>');
 				
-				$("#seatNm").val("");
-				$("#centerCd").val(""); 
-				$("#floorCd").val("");
-				$('#floorCd').children('option:not(:first)').remove();
-				$("#partCd").val("");
-				$('#partCd').children('option:not(:first)').remove();
-				$("input:radio[name='useYn']:radio[value='Y']").prop('checked', true);
-			} else {
-				$("#seatCd").val(seatCd);
-				var url = "/backoffice/bld/seatInfoDetail.do";
-				var params = {"seatCd" : seatCd};
-      			  
-				fn_Ajax
-				(
-					url, 
-					"POST",
-					params,
-					false,
-					function(result) {
-						if (result.status == "LOGIN FAIL") {
-							alert(result.meesage);
-							location.href="/backoffice/login.do";
-						} else if (result.status == "SUCCESS") {
-							var obj = result.regist;
-							
-							$("#bld_seat_add .pop_tit").html("[" + obj.seat_nm + "] 좌석 정보 수정");
-							$("#btnUpdate").text('저장');
-							
-							$("#seatNm").val(obj.seat_nm);
-							$("#centerCd").val(obj.center_cd);
-							jqGridFunc.fn_centerChange("popup");
-							$("#floorCd").val(obj.floor_cd);
-							jqGridFunc.fn_floorChange("popup");
-							$("#partCd").val(obj.part_cd);
-							$("input:radio[name='useYn']:radio[value='" + obj.use_yn + "']").prop('checked', true);
-						}
-					},
-					function(request){
-						alert("ERROR : " +request.status);	       						
-					}    		
-				);
+			for (var i in obj) {
+				var array = Object.values(obj[i])
+				el.append('<option value="' + array[0]+'">' + array[1] + '</option>');
 			}
-		},
-		fn_CheckForm : function () {
-			if (any_empt_line_id("seatNm", "좌석명을 입력해주세요.") == false) return;		  
-			if($("#floorCd option").length > 1){
-				if (any_empt_line_id("floorCd", "층을 선택해주세요.") == false) return;	
-			}
-			if($("#partCd option").length > 1){
-				if (any_empt_line_id("partCd", "구역을 선택해주세요.") == false) return;
-			}
-			
-			var commentTxt = ($("#mode").val() == "Ins") ? "신규 좌석 정보를 등록 하시겠습니까?" : "입력한 좌석 정보를 저장 하시겠습니까?";
-			/* var resultTxt = ($("#mode").val() == "Ins") ? "신규 좌석 정보가 정상적으로 등록 되었습니다." : "지점 좌석가 정상적으로 저장 되었습니다."; */
-     		$("#id_ConfirmInfo").attr("href", "javascript:jqGridFunc.fn_update()");
-       		fn_ConfirmPop(commentTxt);
-		},
-		fn_update : function () {
-			$("#confirmPage").bPopup().close();
-			var params = {
-			    'seatCd' : $("#seatCd").val(),
-			    'seatNm' : $("#seatNm").val(),
-			    'centerCd' : $("#centerCd").val(),
-			    'floorCd' : $("#floorCd").val(),
-			    'partCd' : $("#partCd").val(),
-			   	'useYn': $('input[name=useYn]:checked').val(),
-			    'mode' : $("#mode").val()
-			};
-			var url = "/backoffice/bld/seatInfoUpdate.do";
-			fn_Ajax
-			(
-				url,
-				"POST",
-				params,
-				false,
-				function(result) {
-					alert(result.message);
-				       if (result.status == "LOGIN FAIL"){
-				    	   common_popup(result.meesage, "Y","bld_seat_add");
-						   location.href="/backoffice/login.do";
-					   }else if (result.status == "SUCCESS"){
-						   //총 게시물 정리 하기'
-						   common_modelCloseM("등록이 완료 되었습니다.", "bld_seat_add");
-						   jqGridFunc.fn_search();
-					   }else if (result.status == "FAIL"){
-						   common_modelCloseM("저장 도중 문제가 발생 하였습니다.", "Y", "bld_seat_add");
-						   jqGridFunc.fn_search();
-					   }
-				    },
-				    function(request){
-				    	common_modelCloseM("Error:" + request.status,"bld_seat_add");
-				    }    		 		
+		} else {
+			el.empty();
+			el.append('<option value="">선택</option>');
+		}
+	}
+	
+	function fnSeatInsert() {
+		let $popup = $('[data-popup=bld_seat_add]');
+		if ($popup.find(':text[name=seatNm]').val() === '') {
+			toastr.warning('좌석명을 입력해주세요.');
+			return;
+		}
+		if ($popup.find('select[name=floorCd]').val() === '') {
+			toastr.warning('층을 선택해 주세요.');
+			return;	
+		}
+		if ($popup.find('select[name=partCd]').val() === '') {
+			toastr.warning('구역을 선택해 주세요.');
+			return;
+		}
+		bPopupConfirm('좌석정보 등록', '등록 하시겠습니까?', function() {
+			EgovIndexApi.apiExecuteJson(
+				'POST',
+				'/backoffice/bld/seatInfoUpdate.do',
+                $popup.find('form:first').serializeObject(),
+				null,
+				function(json) {
+					toastr.success(json.message);
+					$popup.bPopup().close();
+					fnSearch(1);
+				},
+				function(json) {
+					toastr.error(json.message);
+				}
 			);
- 
-		}   
+		});
+	}
+	
+	function fnSeatUpdate() {
+		let $popup = $('[data-popup=bld_seat_add]');
+		if ($popup.find(':text[name=seatNm]').val() === '') {
+			toastr.warning('좌석명을 입력해주세요.');
+			return;
+		}
+		if ($popup.find('select[name=floorCd]').val() === '') {
+			toastr.warning('층을 선택해 주세요.');
+			return;	
+		}
+		if ($popup.find('select[name=partCd]').val() === '') {
+			toastr.warning('구역을 선택해 주세요.');
+			return;
+		}
+		bPopupConfirm('좌석정보 수정', '수정 하시겠습니까?', function() {
+			EgovIndexApi.apiExecuteJson(
+				'POST',
+				'/backoffice/bld/seatInfoUpdate.do',
+                $popup.find('form:first').serializeObject(),
+				null,
+				function(json) {
+					toastr.success(json.message);
+					$popup.bPopup().close();
+					fnSearch(1);
+				},
+				function(json) {
+					toastr.error(json.message);
+				}
+			);
+		});
+	}
+	
+	// 권한 삭제 확인
+	function fnSeatDelete() {
+        let rowId = EgovJqGridApi.getMainGridSingleSelectionId();
+        if (rowId === null) {
+            toastr.warning('좌석정보를 선택해 주세요.');
+            return false;
+        }
+		bPopupConfirm('좌석정보 삭제', '해당 정보를 삭제할 경우 시스템에 영향이 있을 수 있습니다.<br>정말로 삭제하시겠습니까?', function() {
+			EgovIndexApi.apiExecuteJson(
+				'POST',
+				'/backoffice/bld/seatInfoDelete.do', {
+					seatCd : rowId
+				},
+				null,
+				function(json) {
+					toastr.success(json.message);
+                    $popup.bPopup().close();
+					fnSearch(1);
+				},
+				function(json) {
+					toastr.error(json.message);
+				}
+			);
+		});
 	}
 </script>
-<c:import url="/backoffice/inc/popup_common.do" />
