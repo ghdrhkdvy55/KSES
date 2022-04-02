@@ -72,7 +72,7 @@
 							AND A.RESV_END_DT BETWEEN #{params.searchFrom} AND #{params.searchTo}
 						</when>
 						<otherwise>
-							AND TO_CHAR(TO_DATE(A.RESV_REQ_DATE,'YYYY-MM-DD HH24:MI'),'YYYY-MM-DD HH24:MI') BETWEEN #{params.searchFrom} AND #{params.searchTo}
+							AND TO_CHAR(A.RESV_REQ_DATE,'YYYYMMDD') BETWEEN #{params.searchFrom} AND #{params.searchTo}
 						</otherwise>
 					</choose>
 				</if>
