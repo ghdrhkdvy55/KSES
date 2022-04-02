@@ -25,6 +25,7 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.sound.sampled.Port.Info;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -545,7 +546,7 @@ public class SmartUtil {
             httpPost.setHeader("Content-Type", "application/json");
 
             httpPost.setEntity(new StringEntity(_jsonInfo, "UTF-8")); //json 메시지 입력
-            LOGGER.debug(_jsonInfo.toString());
+            String requstTrnsmitTm = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
             HttpResponse response = client.execute(httpPost);
             
             ObjectMapper objectMapper = new ObjectMapper();
@@ -569,10 +570,12 @@ public class SmartUtil {
             }
             
             //전송 내용 & 수신 요청 
+            info.setRequstTrnsmitTm(requstTrnsmitTm);
             info.setRspnsRecptnTm(nowTime());
             info.setResultCode(node.get("Error_Cd").asText());
             info.setResultMessage(node.toString());
             info.setSendMessage(_jsonInfo);
+            info.setProvdInsttId(_provdId);
             info.setRqesterId("SYSTEM");
             interfaceService.InterfaceInsertLoginLog(info);
             
