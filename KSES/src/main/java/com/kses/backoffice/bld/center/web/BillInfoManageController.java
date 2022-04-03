@@ -168,7 +168,8 @@ public class BillInfoManageController {
 	@RequestMapping (value = "billInfoDelete.do", method = RequestMethod.POST)
 	public ModelAndView deleteBillInfoManage(@RequestBody BillInfo billInfo) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-
+		String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
+		billInfo.setLastUpdusrId(userId);
 		billService.deleteBillInfo(billInfo);
 
 		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
