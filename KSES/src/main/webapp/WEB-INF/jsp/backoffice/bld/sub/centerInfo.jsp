@@ -115,7 +115,7 @@
         let $popup = this.getPopup();
         let $form = $popup.find('form:first');
         if (centerCd === undefined || centerCd === null) {
-            $popup.find('h2.2:first').text('지점 등록');
+            $popup.find('h2:first').text('지점 등록');
             $form.find(':hidden[name=mode]').val('Ins');
             $form.find(':text').val('');
             $form.find(':text[name=centerTel]').val('02-3422-0000');
