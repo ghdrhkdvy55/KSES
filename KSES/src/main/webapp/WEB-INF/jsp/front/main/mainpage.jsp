@@ -406,8 +406,10 @@
 										// 유저정보하단 HTML생성
 										setHtml = "";
 										setHtml += "<li><span><a href='javascript:mainService.fn_userResvInfo(&#39;NOW&#39;, &#39;" + obj.resv_seq + "&#39;, &#39;rsv_info&#39;);' >" + obj.center_nm + " " + obj.seat_nm + "</a></span></li>";
-										setHtml += "<li class='rsv_cancel'><a href='javascript:mainService.fn_userResvInfo(&#39;CANCEL&#39;, &#39;" + obj.resv_seq + "&#39;, &#39;cancel_rsv_info&#39;);'>예약취소</a></li>";
-										setHtml += "<li style='font-weight:bold; font-size:2.3rem;'>예약번호 : " + obj.resv_seq.replace(/(^0+)/, ""); + "</li>";
+										setHtml += obj.resv_state === 'RESV_STATE_1' ?
+											"<li class='rsv_cancel'><a href='javascript:mainService.fn_userResvInfo(&#39;CANCEL&#39;, &#39;" + obj.resv_seq + "&#39;, &#39;cancel_rsv_info&#39;);'>예약취소</a></li>" :
+											"<li class='rsv_cancel'></li>";
+										setHtml += "<li style='font-weight:bold; font-size:2.3rem;'>예약번호 : " + fn_resvSeqFormat(obj.resv_seq) + "</li>";
 										setHtml += obj.resv_entry_dvsn == "ENTRY_DVSN_2" ? "<li><em class='n_class'>" + obj.resv_seat_class + "</em></li>" : "";
 
 										userInfoBottomArea.append(setHtml);
