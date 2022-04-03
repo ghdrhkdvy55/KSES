@@ -18,22 +18,12 @@ public class BlackUserInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 	BlackUserInfoManageMapper blackUserMapper;
 	
 	@Override
-	public List<Map<String, Object>> selectBlackUserInfoList(Map<String, Object> params) throws Exception {
-		return blackUserMapper.selectBlackUserInfoList(params);
+	public List<Map<String, Object>> selectBlackUserInfoManageListByPagination(Map<String, Object> params) throws Exception {
+		return blackUserMapper.selectBlackUserInfoManageListByPagination(params);
 	}
 	
 	@Override
-	public int insertBlackUserInfo(BlackUserInfo vo) throws Exception {
-		return blackUserMapper.insertBlackUserInfo(vo);
-	}
-	
-	@Override
-	public int updateBlackUserInfo(BlackUserInfo vo) throws Exception {
-		return blackUserMapper.updateBlackUserInfo(vo);
-	}
-	
-	@Override
-	public int deleteBlackUserInfo(String blklstSeq) throws Exception {
-		return blackUserMapper.deleteBlackUserInfo(blklstSeq);
+	public int updateBlackUserInfoManage(BlackUserInfo vo) throws Exception {
+		return vo.getMode().equals("Ins") ? blackUserMapper.insertBlackUserInfo(vo) : blackUserMapper.updateBlackUserInfo(vo);
 	}
 }

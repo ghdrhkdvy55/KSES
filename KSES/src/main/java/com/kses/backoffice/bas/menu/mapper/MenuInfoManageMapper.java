@@ -25,7 +25,7 @@ public interface MenuInfoManageMapper {
 	 * @return MenuManageVO
 	 * @exception Exception
 	 */
-	public Map<String, Object> selectMenuManage_D(String menuNo);
+	public List<Map<String, Object>> selectMenuManage_D(@Param("searchKeyword") String  searchKeyword);
 
 	/**
 	 * 메뉴목록 기본정보를 등록

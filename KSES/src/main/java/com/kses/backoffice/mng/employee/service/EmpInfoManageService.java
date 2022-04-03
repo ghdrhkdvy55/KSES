@@ -32,19 +32,12 @@ public interface EmpInfoManageService {
 	public Map<String, Object> selectEmpInfoDetail(String empId);
 	
 	/**
-	 * SPDM 직원(사용자) 정보 등록
-	 * @param empInfo
-	 * @return
-	 */
-	public int insertEmpInfo(EmpInfo empInfo);
-	
-	/**
 	 * SPDM 직원(사용자) 정보 수정
 	 * 
 	 * @param empId
 	 * @return
 	 */
-	public int updateEmpInfo(EmpInfo empInfo);
+	public int updateEmpInfo(EmpInfo params);
 	
 	/**
 	 * SPDM 직원(사용자) 정보 삭제

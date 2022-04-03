@@ -11,7 +11,8 @@
 				TO_CHAR(A.LAST_UPDT_PNTTM, 'yyyy-mm-dd') AS LAST_UPDT_PNTTM, A.LAST_UPDUSR_ID
 			FROM COMTCCMMNDETAILCODE A
 			     INNER JOIN COMTCCMMNCODE B ON A.CODE_ID = B.CODE_ID				     
-			WHERE B.CODE_ID = #{codeId}					
+			WHERE B.USE_AT = 'Y'
+		    AND B.CODE_ID = #{codeId}					
 		) R
 		WHERE 1=1
 		ORDER BY CAST(REPLACE(CODE, CONCAT(CODE_ID, '_'), '') AS INT) ASC
@@ -109,7 +110,7 @@
 		(
 		
 			#{codeId}, KSES_USER.FN_DETAIL_CODEID(#{codeId}) , #{codeNm}, 
-			#{codeDc,jdbcType=VARCHAR}, #{useAt, jdbcType=VARCHAR}, #{codeEtc1, jdbcType=VARCHAR}, #{codeEtc1, jdbcType=VARCHAR},
+			#{codeDc,jdbcType=VARCHAR}, 'Y', #{codeEtc1, jdbcType=VARCHAR}, #{codeEtc1, jdbcType=VARCHAR},
 			SYSDATE, #{lastUpdusrId,jdbcType=VARCHAR},
 			SYSDATE, #{lastUpdusrId,jdbcType=VARCHAR}
 		)

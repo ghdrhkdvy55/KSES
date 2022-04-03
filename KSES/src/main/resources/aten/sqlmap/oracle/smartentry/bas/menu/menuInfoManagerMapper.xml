@@ -2,21 +2,19 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kses.backoffice.bas.menu.mapper.MenuInfoManageMapper">
 	<select id="selectMenuManageList_D" resultType="lmap">
-		      SELECT TOTAL_RECORD_COUNT, RNUM , MENU_NO,  MENU_ORDR, LPAD(' ', 2*(LEVEL-1)) ||MENU_NM MENU_NM, UPPER_MENU_NO, UPPER_MENU_NM, MENU_DC,
-                     PROGRM_FILE_NM, PROGRM_KOREANNM, LEVEL
+		      SELECT TOTAL_RECORD_COUNT, RNUM , MENU_NO,  MENU_ORDR, LPAD(' ', 2*(LEVEL-1)) ||MENU_NM MENU_NM, UPPER_MENU_NO, MENU_DC,
+                     PROGRM_FILE_NM, LEVEL
               FROM ( SELECT SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT, 
 				                      ROW_NUMBER() OVER (ORDER BY ROWNUM DESC) AS RNUM, TB.* 
 				     FROM (
-							SELECT A.MENU_NO           
-								, A.MENU_ORDR         
-								, A.MENU_NM           
-								, A.UPPER_MENU_NO
-								, (SELECT MENU_NM FROM COMTNMENUINFO WHERE MENU_NO = A.UPPER_MENU_NO) AS UPPER_MENU_NM
-								, A.MENU_DC           
-								, A.PROGRM_FILE_NM
-								, B.PROGRM_KOREANNM
-							FROM COMTNMENUINFO A
-								INNER JOIN COMTNPROGRMLIST B ON A.PROGRM_FILE_NM = B.PROGRM_FILE_NM
+							SELECT 
+								  MENU_NO           
+								, MENU_ORDR         
+								, MENU_NM           
+								, UPPER_MENU_NO    
+								, MENU_DC           
+								, PROGRM_FILE_NM    
+							FROM COMTNMENUINFO 
 							WHERE 1=1 
 							     <if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">  
 							     <![CDATA[
@@ -30,18 +28,19 @@
                ORDER BY MENU_ORDR ASC
 	</select> 
 
+
+
 	<select id="selectMenuManage_D" resultType="lmap">
-		SELECT  A.MENU_NO           
-				, A.MENU_ORDR         
-				, A.MENU_NM           
-				, A.UPPER_MENU_NO
-				, (SELECT MENU_NM FROM COMTNMENUINFO WHERE MENU_NO = A.UPPER_MENU_NO) AS UPPER_MENU_NM
-				, A.MENU_DC             
-				, A.PROGRM_FILE_NM
-				, B.PROGRM_KOREANNM
-		FROM COMTNMENUINFO A
-			INNER JOIN COMTNPROGRMLIST B ON A.PROGRM_FILE_NM = B.PROGRM_FILE_NM
-		WHERE MENU_NO = #{value}
+		<![CDATA[
+			SELECT  MENU_NO           
+					, MENU_ORDR         
+					, MENU_NM           
+					, UPPER_MENU_NO     
+					, MENU_DC             
+					, PROGRM_FILE_NM    
+			FROM COMTNMENUINFO
+			WHERE MENU_NO = #{searchKeyword}
+		]]>
 	</select>
 	
 	<insert id="insertMenuManage_S">

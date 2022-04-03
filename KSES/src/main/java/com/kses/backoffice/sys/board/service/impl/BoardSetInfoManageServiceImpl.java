@@ -8,14 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.kses.backoffice.bas.authority.vo.AuthInfo;
 import com.kses.backoffice.sys.board.mapper.BoardSetInfoManageMapper;
 import com.kses.backoffice.sys.board.service.BoardSetInfoManageService;
 import com.kses.backoffice.sys.board.vo.BoardSetInfo;
 import com.kses.backoffice.util.SmartUtil;
-import com.kses.backoffice.util.mapper.UniSelectInfoManageMapper;
 
-import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service
@@ -25,9 +22,6 @@ public class BoardSetInfoManageServiceImpl extends EgovAbstractServiceImpl imple
 			
 	@Autowired
 	private BoardSetInfoManageMapper boardSetMapper;
-
-	@Autowired
-	private UniSelectInfoManageMapper uniMapper;
 
 	@Override
 	public List<Map<String, Object>> selectBoardSettingInfoList(Map<String, Object> params) throws Exception {
@@ -40,20 +34,31 @@ public class BoardSetInfoManageServiceImpl extends EgovAbstractServiceImpl imple
 	}
 
 	@Override
-	public void insertBoardInfo(BoardSetInfo vo) throws Exception {
-		int cnt = uniMapper.selectIdDoubleCheck("BOARD_CD", "TSES_BRDSET_INFO_M", "BOARD_CD = ["+ vo.getBoardCd() + "[" );
-		
-		if(cnt == 0) boardSetMapper.insertBoardInfo(vo);
-	}
-	
-	@Override
-	public void updateBoardInfo(BoardSetInfo vo) throws Exception {
-		boardSetMapper.updateBoardInfo(vo);
+	public int updateBoardSetInfo(BoardSetInfo vo) throws Exception {
+		int ret = 0;
+		try {
+			if (vo.getMode().equals("Ins")) {
+				boardSetMapper.insertBoardSettingInfo(vo);
+			}else {
+				boardSetMapper.updateBoardSettingInfo(vo);
+			}
+			
+			return 1;
+		}catch(Exception e) {
+			LOGGER.error("updateBoardSetInfo error:" + e.toString());
+			return 0;
+		}
 	}
 
 	@Override
-	public void deleteBoardSetInfo(String delCd) throws Exception {
-		boardSetMapper.deleteBoardSettingInfo(SmartUtil.dotToList(delCd));
+	public boolean deleteBoardSetInfo(String delCd) throws Exception {
+		try {
+			boardSetMapper.deleteBoardSettingInfo(SmartUtil.dotToList(delCd));
+			return true;
+		}catch(Exception e) {
+			LOGGER.error("deleteAuthInfo error:" + e.toString());
+			return false;
+		}
 	}
 	
 	

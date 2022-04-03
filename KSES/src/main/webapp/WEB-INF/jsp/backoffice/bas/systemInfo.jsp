@@ -1,23 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<script type="text/javascript" src="/resources/jqgrid/src/i18n/grid.locale-kr.js"></script>
-<script type="text/javascript" src="/resources/jqgrid/js/jquery.jqGrid.min.js"></script>
 <!-- timepicker -->
 <script src="/resources/js/jquery.timepicker.js"></script>
-<link rel="stylesheet" href="/resources/jqgrid/src/css/ui.jqgrid.css">
 <link rel="stylesheet" href="/resources/css/jquery.timepicker.css">
-<style type="text/css">
-.ui-jqgrid .ui-jqgrid-htable th div {
-	outline-style: none;
-	height: 30px;
-}
-.ui-jqgrid tr.jqgrow {
-	outline-style: none;
-	height: 30px;
-}
-</style>
-
 <!-- //contents -->
 <div class="breadcrumb">
 	<ol class="breadcrumb-item">
@@ -30,33 +16,96 @@
 <div class="dashboard">
 	<div class="boardlist">
    		<div class="whiteBox">
-        	<table class="system_info_table">
+        	<table class="main_table system_info_table">
 				<tbody class="setTxt">
 					<tr>
                         <th>사이트 명</th>
-                        <td style="text-align:left;"><input type="text" id="comTitle" name="comTitle" value="${result.comTitle}"></td>
-						<td colspan="2"></td>
+                        <td><input type="text" id="comTitle" name="comTitle" value="${regist.comTitle}"></td>
+						<td colspan="3"></td>
+                    </tr>
+                	<tr>
+                    	<th>전일 오픈 시간(회원)</th>
+                    	<td><input 
+                    			type="text" 
+                    			id="userEveDayOptm" 
+                    			name="userEveDayOptm"
+                    			value="${fn:substring(regist.userEveDayOptm, 0,2)}:${fn:substring(regist.userEveDayOptm, 2,4)}"
+                    			onkeypress="only_num();"
+								class="timepicker"
+								readonly
+                    		>
+                    	</td>
+                    	<th>전일 오픈 시간(비회원)</th>
+                    	<td><input 
+                    			type="text" 
+                    			id="nonUserEveDayOptm" 
+                    			name="nonUserEveDayOptm"
+                    			value="${fn:substring(regist.nonUserEveDayOptm, 0,2)}:${fn:substring(regist.nonUserEveDayOptm, 2,4)}"  
+                    			onkeypress="only_num();"
+								class="timepicker"
+								readonly
+                    		>
+                    	</td>
+                	</tr>
+                    <tr>
+                        <th>지점 자동취소 오전시간</th>
+                        <td><input 
+                        		type="text"
+                        		id="centerAutoCancleAmtm"
+                        		name="centerAutoCancleAmtm"
+                        		value="${fn:substring(regist.centerAutoCancleAmtm, 0,2)}:${fn:substring(regist.centerAutoCancleAmtm, 2,4)}" 
+                        		onkeypress="only_num();"
+								class="timepicker"
+								readonly
+                        	>
+                        </td>
+                        <th>지점 자동취소 오후시간</th>
+                        <td><input 
+                        		type="text" 
+                        		id="centerAutoCanclePmtm" 
+                        		name="centerAutoCanclePmtm"
+                        		value="${fn:substring(regist.centerAutoCanclePmtm, 0,2)}:${fn:substring(regist.centerAutoCanclePmtm, 2,4)}"  
+                        		onkeypress="only_num();"
+                        		class="timepicker"
+                        		readonly
+                        	>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>지점 자동취소 종일시간</th>
+                        <td><input 
+                        		type="text" 
+                        		id="centerAutoCancleAlltm" 
+                        		name="centerAutoCancleAlltm"
+                        		value="${fn:substring(regist.centerAutoCancleAlltm, 0,2)}:${fn:substring(regist.centerAutoCancleAlltm, 2,4)}"  
+                        		onkeypress="only_num();"
+								class="timepicker"
+								readonly
+                        	>
+                        </td>
+						<th>블랙리스트 해제일</th>
+                        <td><input type="number" id="blklstRlsdt" name="blklstRlsdt" value="${regist.blklstRlsdt}"></td>
                     </tr>
 					<tr>
 						<th>1차 자동취소 사용여부</th>
 	                  	<td style="text-align:left;">	                  	
 							<input 
 								style="width:0; left:0;"
-								id="autoCancelR1UseYn_Y"
-								name="autoCancelR1UseYn"  
+								id="autoCancelR1UseYn_Y" 
 								type="radio" 
+								name="autoCancelR1UseYn" 
 								value="Y" 
-								<c:if test="${result.autoCancelR1UseYn == 'Y' }"> checked </c:if>
+								<c:if test="${regist.autoCancelR1UseYn == 'Y' }"> checked </c:if>
 							>
                             <label for="autoCancelR1UseYn_Y">Y</label>
                     		
                     		<input 
 								style="width:0; left:0;"
-								id="autoCancelR1UseYn_N"
+								id="autoCancelR1UseYn_N" 
+								type="radio" 
 								name="autoCancelR1UseYn" 
-								type="radio"
 								value="N" 
-								<c:if test="${result.autoCancelR1UseYn == 'N' }"> checked </c:if>
+								<c:if test="${regist.autoCancelR1UseYn == 'N' }"> checked </c:if>
 							>
                             <label for="autoCancelR1UseYn_N">N</label>
 	                  	</td>
@@ -64,21 +113,21 @@
 	                  	<td style="text-align:left;">	                  	
 							<input 
 								style="width:0; left:0;"
-								id="autoCancelR2UseYn_Y"
-								name="autoCancelR2UseYn" 
+								id="autoCancelR2UseYn_Y" 
 								type="radio" 
+								name="autoCancelR2UseYn" 
 								value="Y" 
-								<c:if test="${result.autoCancelR2UseYn == 'Y' }"> checked </c:if>
+								<c:if test="${regist.autoCancelR2UseYn == 'Y' }"> checked </c:if>
 							>
                             <label for="autoCancelR2UseYn_Y">Y</label>
                     		
                     		<input 
 								style="width:0; left:0;"
-								id="autoCancelR2UseYn_N"
-								name="autoCancelR2UseYn"  
+								id="autoCancelR2UseYn_N" 
 								type="radio" 
+								name="autoCancelR2UseYn" 
 								value="N" 
-								<c:if test="${result.autoCancelR2UseYn == 'N' }"> checked </c:if>
+								<c:if test="${regist.autoCancelR2UseYn == 'N' }"> checked </c:if>
 							>
                             <label for="autoCancelR2UseYn_N">N</label>
                     		
@@ -89,139 +138,88 @@
 	                  	<td style="text-align:left;">	                  	
 							<input 
 								style="width:0; left:0;"
-								id="guestResvPossibleYn_Y"
-								name="guestResvPossibleYn" 
+								id="guestResvPossibleYn_Y" 
 								type="radio" 
+								name="guestResvPossibleYn" 
 								value="Y" 
-								<c:if test="${result.guestResvPossibleYn == 'Y' }"> checked </c:if>
+								<c:if test="${regist.guestResvPossibleYn == 'Y' }"> checked </c:if>
 							>
                             <label for="guestResvPossibleYn_Y">Y</label>
                     		
                     		<input 
 								style="width:0; left:0;"
-								id="guestResvPossibleYn_N"
+								id="guestResvPossibleYn_N" 
+								type="radio" 
 								name="guestResvPossibleYn" 
-								type="radio"  
 								value="N" 
-								<c:if test="${result.guestResvPossibleYn == 'N' }"> checked </c:if>
+								<c:if test="${regist.guestResvPossibleYn == 'N' }"> checked </c:if>
 							>
                             <label for="guestResvPossibleYn_N">N</label>
+                    		<td colspan="2"></td>
 	                  	</td>
-	                  	<th>스피드온 자동결제</th>
-	                  	<td style="text-align:left;"><button class="blueBtn" onclick="fnAutoPaymentInfo();">설정</button></td>
                     </tr>
             	</tbody>
         	</table>
     	</div>
     	<div class="center_box">
-        	<a href="javascript:fnSystemInfoUpdate();" class="blueBtn">저장</a> 
+        	<a href="javascript:fn_Checkform();" class="blueBtn">저장</a> 
     	</div>
 	</div>
 </div>
-
-<!-- 자동결제정보 팝업 -->
-<div data-popup="bas_autopay_info" class="popup">
-	<div class="pop_con">
-		<h2 class="pop_tit">자동 결제정보</h2>
-		<div class="pop_wrap">
-			<div style="width:700px;">
-				<table id="mainGrid"></table>
-				<div id="pager"></div>
-			</div>
-		</div>
-		<popup-right-button okText="저장" clickFunc="fnAutoPaymentUpdate();" />
-	</div>
-</div>
 <!-- contents//-->
-<script type="text/javascript" src="/resources/jqgrid/jqgrid.custom.egovapi.js"></script>
 <script type="text/javascript">
 	$(document).ready(function () {
-		let timeEdit = {size: 5, maxlength: 5};
-		let useEdit = {value: 'Y:사용; N:사용안함'};
-		
-		// 자동결제관리 JqGrid 정의
-		EgovJqGridApi.mainGrid([
-	        { label: '자동결제요일', 	name: 'auto_payment_day', 		key: true, hidden:true },
-	        { label: '요일', 			name: 'auto_payment_day_text', 	align: 'center', sortable: false },
-	        { label: '자동결제시작시간',	name: 'auto_payment_open_tm', 	align: 'center', sortable: false, editable: true, editoptions: timeEdit},
-	        { label: '자동결제종료시간',	name: 'auto_payment_close_tm', 	align: 'center', sortable: false, editable: true, editoptions: timeEdit},
-	        { label: '사용여부', 		name: 'use_yn', align: 'center', sortable: false, formatter: 'select', editable: true, edittype: 'select', editoptions: useEdit},
-		]).jqGrid('setGridParam', {
-	        cellEdit: true,
-	        cellsubmit: 'clientArray'
-	    });
+		$(".system_info_table th").css({
+			"background" : "#4195e3",
+			"color" : "#fff"
+		});
+		timepicker();
     });
 
-	// 휴일 적용 지점 목록
-	function fnAutoPaymentInfo(pageNo) {
-		let $popup = $('[data-popup=bas_autopay_info]');
-		let params = {
-			pageIndex: pageNo,
-			pageUnit: $('#pager .ui-pg-selbox option:selected').val()
-		};
-		EgovJqGridApi.mainGridAjax('/backoffice/bas/autoPaymentInfoListAjax.do', params, fnAutoPaymentInfo);
-		$popup.bPopup();
-	}
-	
-	// 휴일 적용 지점 목록
-	function fnAutoPaymentUpdate() {
-		let changedArr = $(MainGridSelector).jqGrid('getChangedCells', 'all');
-		if (changedArr.length === 0) {
-			toastr.warning('수정된 목록이 없습니다.');
-			return;
-		}
-		bPopupConfirm('스피드온 자동결제 정보', changedArr.length +'건에 대해 수정 하시겠습니까?', function() {
-			let params = new Array();
-		    changedArr.forEach(x => params.push({
-		        autoPaymentDay: x.auto_payment_day,
-		        autoPaymentOpenTm: x.auto_payment_open_tm.replace(/\:/g,''),
-		        autoPaymentCloseTm: x.auto_payment_close_tm.replace(/\:/g,''),
-		        useYn: x.use_yn
-		    }));
-			
-			EgovIndexApi.apiExecuteJson(
-				'POST',
-				'/backoffice/bas/autoPaymentInfoUpdate.do',
-				params,
-				null,
-				function(json) {
-					toastr.success(json.message);
-					fnAutoPaymentInfo(1);
-				},
-				function(json) {
-					toastr.error(json.message);
-				}
-			);
-		});
-	}
-	
-	function fnSystemInfoUpdate(){
-		if ($('#comTitle').val() === '') {
-			toastr.warning('사이트명을 입력해주세요.');
-			return;
-		}
+	function fn_Checkform(){
 		
-    	let params = {   
-			'comTitle' : $.trim($('#comTitle').val()),
+		if (any_empt_line_span_noPop("comTitle", "사이트명을 입력해주세요.","sp_message", "btn_Message") == false) return;
+		if (any_empt_line_span_noPop("userEveDayOptm", "회원 전일 오픈 시간을 입력해주세요.","sp_message", "btn_Message") == false) return;
+		if (any_empt_line_span_noPop("nonUserEveDayOptm", "비회원 전일 오픈 시간을 입력해주세요.","sp_message", "btn_Message") == false) return;
+		if (any_empt_line_span_noPop("centerAutoCancleAmtm", "지점 자동취소 오전시간을 입력해주세요.","sp_message", "btn_Message") == false) return;
+		if (any_empt_line_span_noPop("centerAutoCanclePmtm", "지점 자동취소 오후시간을 입력해주세요.","sp_message", "btn_Message") == false) return;
+		if (any_empt_line_span_noPop("centerAutoCancleAlltm", "지점 자동취소 종일시간을 입력해주세요.","sp_message", "btn_Message") == false) return;
+		if (any_empt_line_span_noPop("blklstRlsdt", "블랙리스트 해제일을 입력해주세요.","sp_message", "btn_Message") == false) return;
+		
+		var url = "/backoffice/bas/systemInfoUpdate.do";
+    	var params = 
+    	{   
+			'comTitle' : $.trim($("#comTitle").val()),
+			'userEveDayOptm' : $.trim($("#userEveDayOptm").val()).replace(":",""),
+			'nonUserEveDayOptm' : $.trim($("#nonUserEveDayOptm").val()).replace(":",""),
+			'centerAutoCancleAmtm' : $.trim($("#centerAutoCancleAmtm").val()).replace(":",""),
+			'centerAutoCanclePmtm' : $.trim($("#centerAutoCanclePmtm").val()).replace(":",""),
+			'centerAutoCancleAlltm' :  $.trim($("#centerAutoCancleAlltm").val()).replace(":",""),
 			'guestResvPossibleYn' : $('input[name=guestResvPossibleYn]:checked').val(),
 			'autoCancelR1UseYn' : $('input[name=autoCancelR1UseYn]:checked').val(),
-			'autoCancelR2UseYn' : $('input[name=autoCancelR2UseYn]:checked').val()
+			'autoCancelR2UseYn' : $('input[name=autoCancelR2UseYn]:checked').val(),
+			'blklstRlsdt' :  $.trim($("#blklstRlsdt").val())
 		}; 
     	
-		EgovIndexApi.apiExecuteJson(
-			'POST',
-			'/backoffice/bas/systemInfoUpdate.do',
+    	fn_Ajax
+    	(
+			url, 
+			"POST",
 			params,
-			null,
-			function(json) {
-				toastr.success(json.message);
-				setTimeout(function () {
-					location.reload();
-				}, 2000);
+			false,
+			function(result) {
+				if (result.status == "LOGIN FAIL") {
+					common_popup(result.message, "N","");
+					
+					location.href="/backoffice/login.do";
+				} else if (result.status == "SUCCESS") {
+					common_popup(result.message, "Y","");
+				}
 			},
-			function(json) {
-				toastr.error(json.message);
-			}
-		);
+			function(request) {
+				common_popup("ERROR : " +request.status, "N","");
+			}    		
+        );
 	}
 </script>
+<c:import url="/backoffice/inc/popup_common.do" />

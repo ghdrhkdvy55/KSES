@@ -26,7 +26,7 @@
     	<result property="center_rbm_cd" column="CENTER_RBM_CD" jdbcType="VARCHAR" javaType="java.lang.String"/>
     	<result property="center_auto_payment_yn" column="CENTER_AUTO_PAYMENT_YN" jdbcType="VARCHAR" javaType="java.lang.String"/>
     	<result property="center_resv_able_day" column="CENTER_RESV_ABLE_DAY" jdbcType="VARCHAR" javaType="java.lang.String"/>
-		<result property="center_order" column="CENTER_ORDER" jdbcType="VARCHAR" javaType="java.lang.String"/>
+    	<result property="center_order" column="CENTER_ORDER" jdbcType="VARCHAR" javaType="java.lang.String"/>
 	</resultMap>
 	
 	<select id="selectCenterInfoList" resultType="lmap">
@@ -36,14 +36,13 @@
 				SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT,
 				ROW_NUMBER() OVER (ORDER BY A.CENTER_ORDER ASC) AS RNUM, 
 				CENTER_CD, CENTER_NM, CENTER_TEL, CENTER_STAND_MAX, 
-				(<![CDATA[
-					CASE WHEN LENGTH(CENTER_IMG) > 0 THEN CENTER_IMG ELSE 'no_image.png' END
-				]]>) AS CENTER_IMG,
-				(<![CDATA[
-					SELECT CASE WHEN COUNT(*) > 0 THEN 'Y' ELSE 'N' END FROM TSER_BILL_INFO_I WHERE CENTER_CD = A.CENTER_CD
-				]]>) AS BILL_YN,
+				CASE WHEN LENGTH(CENTER_IMG) > 0 THEN 
+					CENTER_IMG
+				ELSE 
+					'no_image.png'
+				END CENTER_IMG, 
 				CENTER_ZIPCD, CENTER_ADDR1, CENTER_ADDR2, USE_YN, CENTER_HOLY_USE_YN, CENTER_ORDER,
-				TO_CHAR(A.LAST_UPDT_DTM, 'yyyy-mm-dd') AS LAST_UPDT_DTM, LAST_UPDUSR_ID
+				TO_CHAR(A.LAST_UPDT_DTM, 'yyyy-mm-dd') AS LAST_UPDT_DTM, LAST_UPDUSR_ID	        
 			FROM TSEB_CENTER_INFO_M A
 			WHERE 1=1        
 			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
@@ -61,20 +60,20 @@
 		WHERE RNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
 		ORDER BY TB.CENTER_ORDER ASC
 	</select>
-        
+
 	<select id="selectCenterInfoDetail" resultMap="CenterInfoDetail">
 		SELECT  
 			CENTER_CD, CENTER_NM, CENTER_ZIPCD, CENTER_ADDR1, CENTER_ADDR2, 
 			CENTER_TEL, CENTER_FAX, CENTER_IMG, CENTER_MAP, CENTER_URL,
-			CENTER_INFO, USE_YN, START_FLOOR, END_FLOOR, FLOOR_INFO, 
-			CENTER_PILOT_YN, CENTER_SPEED_CD, CENTER_RBM_CD, CENTER_STAND_YN, CENTER_STAND_MAX, CENTER_ENTRY_PAY_COST,
-			CENTER_SPEED_ENTRY_PAY_COST, CENTER_RESV_ABLE_DAY, CENTER_ORDER, 
+			CENTER_INFO, USE_YN, START_FLOOR, END_FLOOR, FLOOR_INFO,
+			CENTER_PILOT_YN, CENTER_SPEED_CD, CENTER_STAND_YN, CENTER_STAND_MAX, CENTER_ENTRY_PAY_COST,
+			CENTER_SPEED_ENTRY_PAY_COST, CENTER_RBM_CD, CENTER_RESV_ABLE_DAY, CENTER_ORDER,
 			CASE 
 				WHEN CENTER_PILOT_YN = 'Y' THEN 'Y'
  				ELSE 'N'
  			END AS CENTER_AUTO_PAYMENT_YN
 		 FROM TSEB_CENTER_INFO_M
-		 WHERE CENTER_CD = #{centerCd}
+		 WHERE CENTER_CD = #{centerCd}	  
     </select>
     
 	<select id="selectCenterInfoComboList" resultType="lmap">
@@ -94,7 +93,7 @@
 				TA.CENTER_CD, 
 				CASE 
 					WHEN (TA.CENTER_CD = TB.CENTER_CD AND HOLY_DT = TA.RESV_DATE) THEN 'N'
-					WHEN
+					WHEN 
 					(
 						TO_CHAR(SYSDATE,'YYYYMMDDHH24MI') BETWEEN CONCAT(TO_CHAR(SYSDATE,'YYYYMMDD'), TA.CLOSE_MEMBER_TM) AND CONCAT(TO_CHAR(SYSDATE,'YYYYMMDD'), TA.OPEN_MEMBER_TM)
 					) THEN 'N'
@@ -161,17 +160,17 @@
 			CENTER_TEL, CENTER_FAX, FRST_REGTER_ID, FRST_REGIST_DTM, LAST_UPDUSR_ID, 
 			LAST_UPDT_DTM, CENTER_IMG, CENTER_URL, CENTER_MAP, USE_YN, 
 			CENTER_INFO, FLOOR_INFO, START_FLOOR, END_FLOOR, CENTER_STDM_DVSN, 
-			CENTER_PILOT_YN, CENTER_SPEED_CD, CENTER_RBM_CD, CENTER_STAND_YN, CENTER_STAND_MAX, 
-			CENTER_ENTRY_PAY_COST, CENTER_SPEED_ENTRY_PAY_COST, CENTER_RESV_ABLE_DAY, CENTER_ORDER
+			CENTER_PILOT_YN, CENTER_SPEED_CD, CENTER_STAND_YN, CENTER_STAND_MAX, CENTER_ENTRY_PAY_COST,
+			CENTER_SPEED_ENTRY_PAY_COST, CENTER_RESV_ABLE_DAY, CENTER_ORDER, CENTER_RBM_CD
 		)
 		VALUES 
 		(
 			#{centerCd}, #{centerNm}, #{centerZipcd, jdbcType=VARCHAR}, #{centerAddr1, jdbcType=VARCHAR}, #{centerAddr2, jdbcType=VARCHAR}, 
-			#{centerTel, jdbcType=VARCHAR}, #{centerFax, jdbcType=VARCHAR}, #{frstRegterId, jdbcType=VARCHAR}, SYSDATE, #{lastUpdusrId, jdbcType=VARCHAR},
+			#{centerTel, jdbcType=VARCHAR}, #{centerFax, jdbcType=VARCHAR}, #{userId, jdbcType=VARCHAR}, SYSDATE, #{userId, jdbcType=VARCHAR}, 
 			SYSDATE, #{centerImg, jdbcType=VARCHAR}, #{centerUrl ,jdbcType=VARCHAR}, #{centerMap, jdbcType=VARCHAR}, 'Y', 
 			#{centerInfo, jdbcType=VARCHAR}, #{floorInfo, jdbcType=VARCHAR}, #{startFloor, jdbcType=VARCHAR}, #{endFloor, jdbcType=VARCHAR}, '',
-		    #{centerPilotYn, jdbcType=VARCHAR}, #{centerSpeedCd, jdbcType=VARCHAR}, #{centerRbmCd, jdbcType=VARCHAR}, #{centerStandYn, jdbcType=VARCHAR}, #{centerStandMax, jdbcType=VARCHAR}, 
-		    #{centerEntryPayCost, jdbcType=VARCHAR}, #{centerSpeedEntryPayCost, jdbcType=VARCHAR}, #{centerResvAbleDay, jdbcType=VARCHAR}, #{centerOrder, jdbcType=VARCHAR}
+		    #{centerPilotYn , jdbcType=VARCHAR}, #{centerSpeedCd , jdbcType=VARCHAR}, #{centerStandYn, jdbcType=VARCHAR}, #{centerStandMax, jdbcType=VARCHAR}, #{centerEntryPayCost, jdbcType=VARCHAR},
+		    #{centerSpeedEntryPayCost, jdbcType=VARCHAR}, #{centerResvAbleDay, jdbcType=VARCHAR}, #{centerOrder, jdbcType=VARCHAR}, #{centerRbmCd, jdbcType=VARCHAR}
 		);
     	
 		<if test="floorInfo != null">
@@ -219,13 +218,13 @@
 		
 		<!-- 지점 현금영수증 정보 생성 -->
 		<![CDATA[
-		INSERT INTO TESR_BILLDAY_INFO_I
+		INSERT INTO TESR_BILLDAY_INFO_I 
 		(
-			BILLDAY_CD, CENTER_CD, BILL_DAY, BILL_SEQ, FRST_REGIST_DTM,
+			BILLDAY_CD, CENTER_CD, BILL_DAY, BILL_SEQ, FRST_REGIST_DTM, 
 			FRST_REGTER_ID, LAST_UPDT_DTM, LAST_UPDUSR_ID
 		)
 		SELECT 
-			#{centerCd} || '_' || LPAD(LEVEL,2,0), #{centerCd}, LEVEL, '', SYSDATE,
+			#{centerCd} || '_' || LPAD(LEVEL,2,0), #{centerCd}, LEVEL, '', SYSDATE, 
 			#{userId, jdbcType=VARCHAR}, SYSDATE, #{userId, jdbcType=VARCHAR}
 		FROM DUAL CONNECT BY LEVEL <= 7;
 		]]>
@@ -268,8 +267,8 @@
 			,CENTER_STAND_MAX = #{centerStandMax, jdbcType=VARCHAR}
 			,CENTER_ENTRY_PAY_COST = #{centerEntryPayCost, jdbcType=VARCHAR}
 			,CENTER_SPEED_ENTRY_PAY_COST = #{centerSpeedEntryPayCost, jdbcType=VARCHAR}
-			,CENTER_RESV_ABLE_DAY = #{centerResvAbleDay, jdbcType=VARCHAR}
-			,CENTER_ORDER = #{centerOrder, jdbcType=VARCHAR}
+			,CENTER_RESV_ABLE_DAY = #{centerResvAbleDay, jdbcType=VARCHAR}    
+			,CENTER_ORDER = #{centerOrder, jdbcType=VARCHAR}            
 		WHERE CENTER_CD = #{centerCd};
 		
 		<if test="floorInfo != null">

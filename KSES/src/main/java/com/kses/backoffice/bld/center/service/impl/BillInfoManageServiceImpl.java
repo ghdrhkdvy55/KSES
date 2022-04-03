@@ -13,7 +13,6 @@ import com.kses.backoffice.bld.center.service.BillInfoManageService;
 import com.kses.backoffice.bld.center.vo.BillDayInfo;
 import com.kses.backoffice.bld.center.vo.BillInfo;
 import com.kses.backoffice.util.service.UniSelectInfoManageService;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class BillInfoManageServiceImpl extends EgovAbstractServiceImpl implements BillInfoManageService {
@@ -38,15 +37,17 @@ public class BillInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	public Map<String, Object> selectBillInfoDetail(String billSeq) throws Exception {
 		return billMapper.selectBillInfoDetail(billSeq);
 	}
-
+	
 	@Override
-	public int insertBillInfo(BillInfo billInfo) throws Exception {
-		return billMapper.insertBillInfo(billInfo);
-	}
-
-	@Override
-	public int updateBillInfo(BillInfo billInfo) throws Exception {
-		return billMapper.updateBillInfo(billInfo);
+	public int updateBillInfo(BillInfo vo) throws Exception {
+		String checkQuery = "BILL_DVSN = ["+ vo.getBillDvsn() + "[ AND CENTER_CD = ["+ vo.getCenterCd() + "[";
+		checkQuery += vo.getMode().equals("Edt") ? " AND BILL_SEQ != [" + vo.getBillSeq() + "[" : "";
+		
+		if(uniService.selectIdDoubleCheck("BILL_DVSN", "TSER_BILL_INFO_I", checkQuery) > 0) {
+			return -1;
+		}
+		
+		return vo.getMode().equals("Edt") ? billMapper.updateBillInfo(vo) : billMapper.insertBillInfo(vo);
 	}
 	
 	@Override
@@ -55,9 +56,7 @@ public class BillInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	}
 
 	@Override
-	@Transactional
-	public int deleteBillInfo(BillInfo billInfo) throws Exception {
-		billMapper.updateBillDayInfoByCenterCd(billInfo);
-		return billMapper.deleteBillInfo(billInfo.getBillSeq());
+	public int deleteBillInfo(String billSeq) throws Exception {
+		return billMapper.deleteBillInfo(billSeq);
 	}
 }

@@ -10,9 +10,6 @@ public class LoginLog {
 	private String logId;
 	private String connectId = "";
 	private String connectIp = "";
-	/**
-	 * 접속방식 
-	 */
 	private String connectMthd = "";
 	private String errorOccrrAt = "";
 	private String errorCode = "";

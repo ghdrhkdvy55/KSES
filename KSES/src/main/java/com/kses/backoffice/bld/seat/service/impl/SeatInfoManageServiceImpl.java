@@ -34,13 +34,8 @@ public class SeatInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	}
 	
 	@Override
-	public int insertSeatInfo(SeatInfo vo) throws Exception {
-		return seatMapper.insertSeatInfo(vo);
-	}
-	
-	@Override
 	public int updateSeatInfo(SeatInfo vo) throws Exception {
-		return seatMapper.updateSeatInfo(vo);
+		return vo.getMode().equals("Ins") ?  seatMapper.insertSeatInfo(vo) :  seatMapper.updateSeatInfo(vo);
 	}
 
 	@Override

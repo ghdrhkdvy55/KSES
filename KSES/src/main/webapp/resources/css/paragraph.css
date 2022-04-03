@@ -15,11 +15,11 @@ input[type=radio]:not(old) {
 input[type=radio]:not(old) + label {
     display: inline-block; 
     text-align: left; height:20px; 
-    /* background: url(/images/check_off_2.png) no-repeat 0 0; */ 
+    background: url(/images/check_off_2.png) no-repeat 0 0; 
     line-height: 130%; vertical-align: top;
 }
 input[type=radio]:not(old):checked + label {
-    /* background: url(/images/check_on_2.png) no-repeat 0 0; */
+    background: url(/images/check_on_2.png) no-repeat 0 0;
 }
 ::placeholder {width: 100%;}
 input[type=checkbox]{min-width: 14px;height: 14px;}
@@ -83,11 +83,11 @@ vertical-align: middle;
 /*btn*/
 .boardlist > a:first-child {margin-left: 5px !important;}
 .skyBtn {background:#28b2e7!important ;vertical-align:sub;display: inline-block;color: #fff;padding: 4px 20px;border-radius: 5px;}
-.blueBtn{ vertical-align:top; display: inline-block;background: #3670c5 !important;color: #fff;padding: 4px 20px;border-radius: 5px;}
+.blueBtn{ vertical-align:top; display: inline-block;background: #3670c5 !important; color: #fff; padding: 4px 20px; border-radius: 5px;}
 .blueBtn:hover{background: #1b5fc3;cursor:pointer;}
 .grayBtn{z-index: 9999;vertical-align:top; display: inline-block;background:#585858 !important; color: #fff;padding: 4px 20px;border-radius: 5px; margin-left: 3px;}
 .grayBtn:hover{background: #717171;cursor:pointer;}
-.redBtn{vertical-align:top;display: inline-block;background: #ce4848!important;color: #fff;padding: 4px 20px;border-radius: 5px;}
+.redBtn{ vertical-align:top; display: inline-block;background: #ce4848 !important; color: #fff; padding: 4px 20px; border-radius: 5px;}
 .redBtn:hover{background: #b92d2d;}
 .right_box a{margin-left: 3px;}
 
@@ -739,10 +739,11 @@ canvas {
 .setTxt input {
 width: 50%;
 position: relative;
+left: -80px;
 padding-left: 5px;
 }
 /*.setTxt tr:nth-child(4) input {left:-50px }*/
-
+.setTxt tr:nth-child(4) span {position: relative; left: -40px;}
 .center_box {text-align: center;}
 .salestab th{background: #e7e7e7 !important; border-right: 1px solid #d1d1d1;}
 /* 20210929
@@ -821,7 +822,9 @@ padding-left: 5px;
 .mms_title label {vertical-align: baseline!important;}
 .mms_title input {vertical-align: text-bottom!important;}
 .mms_select>div{margin-bottom: 18px;}
-.mms_select_input input[type="text"], .mms_select_group input[type="text"]{width: 90%; border: 1px solid #c0c0c0; padding: 6px; margin-bottom: 7px; outline: 0; background: url(/resources/img/ico_search.png) no-repeat right;}
+.mms_select_group input[type="text"]{width: 90%; border: 1px solid #c0c0c0; padding: 6px; margin-bottom: 7px; outline: 0; background: url(/resources/img/ico_search.png) no-repeat right;}
+.mms_select_input input[type="number"]{width: 55%; border: 1px solid #c0c0c0; padding: 6px; margin-bottom: 7px; outline: 0; background: url(/resources/img/ico_search.png) no-repeat right;}
+.mms_select_input input[type="text"]{width: 30%; border: 1px solid #c0c0c0; padding: 6px; margin-bottom: 7px; outline: 0;}
 .search a {
     padding: 8px 10px;
     background: #529fff;
@@ -950,42 +953,8 @@ padding-left: 5px;
 .main_table tr.tb_bottom td{color: #000; font-weight: bold; background-color: #e1e1e1;}
 
 /*지점별통계0127*/
-.dashboard_table {margin-top: 1rem;}
-.dashboard_table tr:first-child th, .dashboard_table tr:nth-child(2) th{background: #4195e3; color: #fff;}
+.dashboard {margin-top: 1rem;}
+.dashboard tr:first-child th, .dashboard tr:nth-child(2) th{background: #4195e3; color: #fff;}
 .tabs>.tab.active {background: #105da5; color: #fff;}
-.dashboard_table tr th {color: #fff; padding: 10px 20px;}
-.dashboard_table tr.tb_bottom th{color: #000; font-weight: 600;}
-/*0118 jqGrid row img button*/
-
-/* 환경설정 테이블CSS 220331 JDH*/
-.system_info_table{width: 100%;text-align: center;}
-.system_info_table tr th{border-bottom: 2px solid #e4e4e4;font-weight: 400; background:#f6f6f6}
-.system_info_table tr td{border-bottom: 1px solid #e4e4e4;}
-.system_info_table tr:last-child td{border-bottom: 0;}
-.system_info_table tr th, .system_info_table tr td{padding: 8px;position: relative;border-left:1px solid #ebebeb}
-
-.del_icon {
-	display: block;
-	width: 100%;
-	height: 30px;
-	background: no-repeat center url("/resources/img/del.png");
-}
-.edt_icon {
-	display: block;
-	width: 100%;
-	height: 30px;
-	background: no-repeat center url("/resources/img/edit.png");
-}
-.atc_icon {
-    display: block;
-    width: 100%;
-    height: 30px;
-    background: no-repeat center url("/resources/img/front/ic_title_file.svg");
-}
-.gui_icon {
-    display: block;
-    width: 100%;
-    height: 30px;
-    background: no-repeat center url("/resources/img/front/rsvSel.png");
-    background-size: 30px;
-}
+.dashboard tr th {color: #fff; padding: 10px 20px;}
+.dashboard tr.tb_bottom th{color: #000; font-weight: 600;}

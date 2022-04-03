@@ -11,9 +11,7 @@ public interface AdminInfoService {
 	
 	Map<String, Object> selectAdminUserManageDetail(String empNo);
 	
-	int insertAdminUserManage(AdminInfo adminInfo);
-	
-	int updateAdminUserManage(AdminInfo adminInfo);
+	int updateAdminUserManage(AdminInfo vo);
 	
 	int updateAdminUserLockManage(String adminId);
 	

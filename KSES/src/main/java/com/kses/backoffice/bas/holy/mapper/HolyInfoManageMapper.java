@@ -12,19 +12,17 @@ import egovframework.rte.psl.dataaccess.mapper.Mapper;
 @Mapper
 public interface HolyInfoManageMapper {
 
-    List<Map<String, Object>> selectHolyInfoList(@Param("params") Map<String, Object> params);
+    public List<Map<String, Object>> selectHolyInfoList(@Param("params") Map<String, Object> params);
 	
-    Map<String, Object> selectHolyInfoDetail(String holySeq);
+    public Map<String, Object> selectHolyInfoDetail(String holySeq);
     
-    int insertHolyInfo(HolyInfo vo);
+    public int insertHolyInfo(HolyInfo vo);
     
-    void insertExcelHoly(@Param("holyInfoList") List<HolyInfo> holyInfoList);
+    public void insertExcelHoly(@Param("holyInfoList") List<HolyInfo> holyInfoList);
 	
-    int updateHolyInfo(HolyInfo vo);
+    public int updateHolyInfo(HolyInfo vo);
     
-    int deleteHolyInfo(@Param("holyList") List<String> holyList);
+    public int deleteHolyInfo(@Param("holyList") List<String> holyList);
     
-    int holyInfoCenterApply(@Param("holyInfoList") List<HolyInfo> holyInfoList);
-    
-    List<Map<String, Object>> selectHolyCenterList(@Param("params") Map<String, Object> params);
+    public int holyInfoCenterApply(@Param("holyInfoList") List<HolyInfo> holyInfoList);
 }

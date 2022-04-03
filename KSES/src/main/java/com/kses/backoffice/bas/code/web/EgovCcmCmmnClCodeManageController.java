@@ -3,6 +3,15 @@ package com.kses.backoffice.bas.code.web;
 import java.util.List;
 import java.util.Map;
 
+import egovframework.com.cmm.LoginVO;
+import egovframework.com.cmm.EgovMessageSource;
+import com.kses.backoffice.bas.code.service.EgovCcmCmmnClCodeManageService;
+import com.kses.backoffice.bas.code.vo.CmmnClCode;
+import egovframework.rte.fdl.property.EgovPropertyService;
+import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
+import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -12,17 +21,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.kses.backoffice.bas.code.service.EgovCcmCmmnClCodeManageService;
-import com.kses.backoffice.bas.code.vo.CmmnClCode;
-
-import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.LoginVO;
-import egovframework.rte.fdl.property.EgovPropertyService;
-import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
-import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
-
 @Controller
 public class EgovCcmCmmnClCodeManageController {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(EgovCcmCmmnClCodeManageController.class);
 	
 	@Autowired
     private EgovCcmCmmnClCodeManageService cmmnClCodeManageService;

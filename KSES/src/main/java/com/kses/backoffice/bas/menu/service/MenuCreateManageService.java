@@ -57,12 +57,4 @@ public interface MenuCreateManageService {
 	 * @exception Exception
 	 */
 	void insertMenuCreatList(String checkedAuthorForInsert, String checkedMenuNoForInsert) throws Exception;
-	
-	/**
-	 * 권한 코드에 매핑된 메뉴 정보 삭제
-	 * @param authorCode
-	 * @return
-	 * @throws Exception
-	 */
-	int deleteMenuCreat_S(String authorCode) throws Exception;
 }

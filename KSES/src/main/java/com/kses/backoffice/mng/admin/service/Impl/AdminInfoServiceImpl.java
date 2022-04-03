@@ -31,13 +31,8 @@ public class AdminInfoServiceImpl extends EgovAbstractServiceImpl implements Adm
 	}
 
 	@Override
-	public int insertAdminUserManage(AdminInfo adminInfo) {
-		return adminMapper.insertAdminUserManage(adminInfo);
-	}
-	
-	@Override
-	public int updateAdminUserManage(AdminInfo adminInfo) {
-		return adminMapper.updateAdminUserManage(adminInfo);
+	public int updateAdminUserManage(AdminInfo vo) {
+		return vo.getMode().equals("Ins") ?  adminMapper.insertAdminUserManage(vo) :  adminMapper.updateAdminUserManage(vo);
 	}
 
 	@Override

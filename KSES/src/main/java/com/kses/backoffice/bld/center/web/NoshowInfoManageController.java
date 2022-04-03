@@ -1,26 +1,35 @@
 package com.kses.backoffice.bld.center.web;
 
-import com.kses.backoffice.bld.center.service.CenterInfoManageService;
-import com.kses.backoffice.bld.center.service.NoshowInfoManageService;
-import com.kses.backoffice.bld.center.vo.NoshowInfo;
-import com.kses.backoffice.sym.log.annotation.NoLogging;
-import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.Globals;
-import egovframework.com.cmm.util.EgovUserDetailsHelper;
-import egovframework.rte.fdl.property.EgovPropertyService;
-import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-
 import java.util.List;
 import java.util.Map;
 
-@Slf4j
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.kses.backoffice.bld.center.service.CenterInfoManageService;
+import com.kses.backoffice.bld.center.service.NoshowInfoManageService;
+import com.kses.backoffice.bld.center.vo.NoshowInfo;
+
+import egovframework.com.cmm.LoginVO;
+import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.service.Globals;
+import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
+
 @RestController
 @RequestMapping("/backoffice/bld")
 public class NoshowInfoManageController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(NoshowInfoManageController.class);
     
     @Autowired
     EgovMessageSource egovMessageSource;
@@ -30,78 +39,81 @@ public class NoshowInfoManageController {
     
     @Autowired
     CenterInfoManageService centerInfoService;
-
-	@Autowired
-	protected EgovPropertyService propertiesService;
-
-	/**
-	 * 자동 취소 목록 조회
-	 * @param searchVO
-	 * @return
-	 * @throws Exception
-	 */
-    @RequestMapping(value = "noshowInfoListAjax.do", method = RequestMethod.POST)
-    public ModelAndView selectNoshownfo(@RequestBody Map<String,Object> searchVO) throws Exception {
+    
+    @RequestMapping("noshowInfoListAjax.do")
+    public ModelAndView selectNoshownfo(	@ModelAttribute("loginVO") LoginVO loginVO,
+    										@RequestParam("centerCd") String centerCd,
+    										HttpServletRequest request) {
+    	
     	ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-
-		String centerCd = (String) searchVO.get("centerCd");
-
-		//Paging
-		PaginationInfo paginationInfo = new PaginationInfo();
-		paginationInfo.setCurrentPageNo(1);
-		paginationInfo.setRecordCountPerPage(10);
-		paginationInfo.setPageSize(propertiesService.getInt("pageSize"));
-
-		searchVO.put("firstIndex", paginationInfo.getFirstRecordIndex());
-		searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
-		searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
-		searchVO.put("pageSize", paginationInfo.getPageSize());
-
-		List<Map<String, Object>> noshowInfoList = noshowInfoService.selectNoshowInfoList(centerCd);
-		paginationInfo.setTotalRecordCount(7);
-
-		model.addObject(Globals .STATUS_REGINFO, searchVO);
-		model.addObject(Globals.JSON_RETURN_RESULTLISR, noshowInfoList);
-		model.addObject(Globals.PAGE_TOTALCNT, paginationInfo.getTotalRecordCount());
-		model.addObject(Globals.JSON_PAGEINFO, paginationInfo);
-		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-
-    	return model;
-    }
-
-	/**
-	 * 자동 취소 수정
-	 * @param noshowInfoList
-	 * @return
-	 * @throws Exception
-	 */
-	@NoLogging
-    @RequestMapping(value = "noshowInfoUpdate.do", method = RequestMethod.POST)
-    public ModelAndView updateNoshowInfo(@RequestBody List<NoshowInfo> noshowInfoList) throws Exception {
-    	ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-
-		noshowInfoService.updateNoshowInfo(noshowInfoList);
-		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.update"));
-
+		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+		
+		if(!isAuthenticated) {
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
+			model.setViewName("/backoffice/login");
+			return model;	
+		} else {
+			HttpSession httpSession = request.getSession(true);
+			loginVO = (LoginVO)httpSession.getAttribute("LoginVO");
+		}
+    	
+    	try {
+    		List<Map<String, Object>> noshowInfoList = noshowInfoService.selectNoshowInfoList(centerCd);
+    		String centerNm =   (noshowInfoList.size() > 0) ? 
+    							 noshowInfoList.get(0).get("center_nm").toString():
+    							 centerInfoService.selectCenterInfoDetail(centerCd).get("center_nm").toString();
+    		
+    		
+    		model.addObject(Globals.JSON_RETURN_RESULT, centerNm);
+    		model.addObject(Globals.STATUS_REGINFO, noshowInfoList);
+    		
+    		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+    		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.select"));
+    	} catch (Exception e) {
+    		LOGGER.info("selectNoshownfo ERROR : " + e.toString());
+    		model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+    		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
+		}
+    	
     	return model;
     }
     
-	/**
-	 * 자동 취소 지점 복사
-	 * @param params
-	 * @return
-	 * @throws Exception
-	 */
-    @RequestMapping(value = "noshowInfoCopy.do", method = RequestMethod.POST)
-    public ModelAndView updateCopyNoshowInfo(@RequestBody NoshowInfo noshowInfo) throws Exception {
+    @RequestMapping("noshowInfoUpdate.do")
+    public ModelAndView updateNoshownfo(	@ModelAttribute("loginVO") LoginVO loginVO,
+    										@RequestBody List<NoshowInfo> noshowInfoList,
+											HttpServletRequest request) {
     	ModelAndView model = new ModelAndView(Globals.JSONVIEW);
     	
-    	String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
-    	noshowInfo.setLastUpdusrId(userId);
-    	noshowInfoService.copyNoshowInfo(noshowInfo);
-    	model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-    	model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.update"));
+    	try {
+			noshowInfoService.updateNoshowInfo(noshowInfoList);
+			
+    		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+    		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.update"));
+		} catch (Exception e) {
+    		LOGGER.info("updateNoshownfo ERROR : " + e.toString());
+    		model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+    		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
+		}
+    	
+    	return model;
+    }
+    
+    @RequestMapping("noshowInfoCopy.do")
+    public ModelAndView copyPreOpenInfo(	@ModelAttribute("loginVO") LoginVO loginVO,
+    										@RequestBody Map<String, Object> params,
+											HttpServletRequest request) {
+    	ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+    	
+    	try {
+    		noshowInfoService.copyNoshowInfo(params);
+			
+    		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+    		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.update"));
+		} catch (Exception e) {
+    		LOGGER.info("copyPreOpenInfo ERROR : " + e.toString());
+    		model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+    		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
+		}
     	
     	return model;
     }

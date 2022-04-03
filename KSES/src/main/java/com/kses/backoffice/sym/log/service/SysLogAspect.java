@@ -1,269 +1,90 @@
 package com.kses.backoffice.sym.log.service;
 
-import java.util.Arrays;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.function.Predicate;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.mybatis.spring.MyBatisSystemException;
 import org.mybatis.spring.SqlSessionTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
-import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kses.backoffice.sym.log.vo.SysLog;
 
-import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.Globals;
 import egovframework.com.cmm.util.EgovUserDetailsHelper;
 import egovframework.let.utl.sim.service.EgovClntInfo;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Aspect
 @Component
+@ControllerAdvice
 public class SysLogAspect {
-	public static final String KEY_ECODE = "ecode";
 	
 	@Autowired
 	private EgovSysLogService sysLogService;
+ 
+	private static final Logger LOGGER = LoggerFactory.getLogger(SysLogAspect.class);
+	
+	public static final String KEY_ECODE = "ecode";
 	
 	@Autowired
 	protected EgovMessageSource egovMessageSource;
 	
-	private static ObjectMapper objectMapper;
-	static {
-		objectMapper = new ObjectMapper();
-		objectMapper.setSerializationInclusion(Include.NON_NULL);
-	}
-	private static <T> Predicate<T> not(Predicate<T> p) { return o -> !p.test(o); }
-	
-	/**
-	 * 데이터 업데이트 관련 Controller 호출 시
-	 * @param joinPoint
-	 * @return
-	 * @throws Throwable
-	 */
-	@Around("execution(public * egovframework.let..web.*Controller.update*(..)) || execution(public * com.kses..web.*Controller.update*(..))"
-			+ " &&  !@target(com.kses.backoffice.sym.log.annotation.NoLogging)"
-            + " &&  !@annotation(com.kses.backoffice.sym.log.annotation.NoLogging))")	
-	public Object logUpdate(ProceedingJoinPoint joinPoint) throws Throwable {
-		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-		Class<?> clazz = joinPoint.getTarget().getClass();
-		Object result = null; 
-		Object sqlId  = null;
+	public Object logSql(ProceedingJoinPoint joinPoint) throws Throwable {
+		LOGGER.debug("SqlSession----------------------------------------------------------------------------------------------------------");
+		Object[] methodArgs = joinPoint.getArgs(), sqlArgs = null;
+		Object retValue = joinPoint.proceed();
+		String statement = null;
+		String sqlid = methodArgs[0].toString();
 		
-		StopWatch stopWatch = new StopWatch();
-		try {
-			log.info(" [" + clazz.getSimpleName() + "] ---------------------------------------------------------------------------------//");
-			Arrays.stream(joinPoint.getArgs())
-				.filter(not(LoginVO.class::isInstance))
-				.filter(not(HttpSession.class::isInstance))
-				.filter(not(HttpServletRequest.class::isInstance))
-				.filter(not(SecurityContextHolderAwareRequestWrapper.class::isInstance))
-				.filter(not(BeanPropertyBindingResult.class::isInstance))
-				.forEach(arg -> {
-					try {
-						log.info(" (" + joinPoint.getSignature().getName() + ") Controller Parameters: " + objectMapper.writeValueAsString(arg));
-					} catch (JsonProcessingException e) {
-						log.info(" (" + joinPoint.getSignature().getName() + ") Controller Parameters: " + arg);
-					}
-			});
-			
-			stopWatch.start();
-			Object[] methodArgs = joinPoint.getArgs();
-			if (methodArgs.length > 0){
-				sqlId = methodArgs[0];
-			}
-			result = joinPoint.proceed();
-			return result;
-		} catch (Throwable e) {
-			throw e;
-		} finally {
-			stopWatch.stop();
-			if (result instanceof ModelAndView  && result != null) {
-				ModelAndView mav = ((ModelAndView) result);
-				if (!mav.getModel().isEmpty()) {
-					log.info(" ["+ clazz.getSimpleName() +"] ---------------------------------------------------------------------------------//\n(" + joinPoint.getSignature().getName() + ") Controller Return: " + mav.getModel());
-				}
-			}
-			
-			final String processSeCode = ParamToJson.JsonKeyToString(sqlId,"mode").equals(Globals.SAVE_MODE_INSERT) 
-					? Globals.SYSLOG_PROCESS_SE_CODE_INSERT : Globals.SYSLOG_PROCESS_SE_CODE_UPDATE;
-			final String ipAddr = EgovClntInfo.getClntIP(request);
-			final String processTime = Long.toString(stopWatch.getTotalTimeMillis());
-			final String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
-			// 시스템 로그 기록
-			SysLog sysLog = new SysLog();
-			sysLog.setErrorCode(HttpStatus.OK.value()+"");
-			sysLog.setSrvcNm(clazz.getSimpleName());
-			sysLog.setMethodNm(joinPoint.getSignature().getName());
-			sysLog.setProcessSeCode(processSeCode);
-			sysLog.setProcessTime(processTime);
-//			sysLog.setSqlParam(ParamToJson.paramToJson(sqlId));
-			sysLog.setRqesterIp(ipAddr);
-			sysLog.setRqesterId(userId);
-//			sysLogService.logInsertSysLog(sysLog);
-		}
-	}
-	
-	/**
-	 * 데이터 조회 관련 Controller 호출 시
-	 * @param joinPoint
-	 * @return
-	 * @throws Throwable
-	 */
-	@Around("execution(public * egovframework.let..web.*Controller.select*(..)) || execution(public * com.kses..web.*Controller.select*(..))"
-			+ " && !@target(com.kses.backoffice.sym.log.annotation.NoLogging)"
-            + " && !@annotation(com.kses.backoffice.sym.log.annotation.NoLogging))")	
-	public Object logSelect(ProceedingJoinPoint joinPoint) throws Throwable {
-		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-		Class<?> clazz = joinPoint.getTarget().getClass();
-		Object result = null;
-		Object sqlId  = null;
 		
-		StopWatch stopWatch = new StopWatch();
-		try {
-			log.info(" [" + clazz.getSimpleName() + "] ---------------------------------------------------------------------------------//");
-			Arrays.stream(joinPoint.getArgs())
-				.filter(not(LoginVO.class::isInstance))
-				.filter(not(HttpSession.class::isInstance))
-				.filter(not(HttpServletRequest.class::isInstance))
-				.filter(not(SecurityContextHolderAwareRequestWrapper.class::isInstance))
-				.filter(not(BeanPropertyBindingResult.class::isInstance))
-				.forEach(arg -> {
-					try {
-						log.info(" (" + joinPoint.getSignature().getName() + ") Controller Parameters: " + objectMapper.writeValueAsString(arg));
-					} catch (JsonProcessingException e) {
-						log.info(" (" + joinPoint.getSignature().getName() + ") Controller Parameters: " + arg);
-					}
-				});
+		LOGGER.debug("sqlid:" + sqlid);
+		LOGGER.debug("length:" + methodArgs.length);
+
+		for (int i =1, n = methodArgs.length; i < n; i++){
+			Object arg = methodArgs[i];
 			
-			stopWatch.start();
-			Object[] methodArgs = joinPoint.getArgs();
-			if (methodArgs.length > 0) {
-				sqlId = methodArgs[0];
-			}
-			result = joinPoint.proceed();
-			return result;
-		} catch (Throwable e) {
-		    throw e;
-		} finally {
-			stopWatch.stop();
-			if (result instanceof ModelAndView  && result != null) {
-				ModelAndView mav = ((ModelAndView) result);
-				if (!mav.getModel().isEmpty()) {
-					log.info(" ["+ clazz.getSimpleName() +"] ---------------------------------------------------------------------------------//\n(" + joinPoint.getSignature().getName() + ") Controller Return: " + mav.getModel());
+			LOGGER.debug("methodArgs:" + methodArgs[i].toString());
+			
+			if (arg instanceof HashMap){
+				@SuppressWarnings("unchecked")
+				Map<String, Object> map = (Map<String, Object>)arg;
+				
+				statement = ((SqlSessionTemplate)joinPoint.getTarget()).getConfiguration().getMappedStatement(sqlid).getBoundSql(map).getSql();
+				
+				sqlArgs = new Object[map.size()];
+				Iterator<String> itr = map.keySet().iterator();
+				
+				int j = 0;
+				while(itr.hasNext()){
+					sqlArgs[j++] = map.get(itr.next());
 				}
+				
 			}
-			
-			final String processSeCode = Globals.SYSLOG_PROCESS_SE_CODE_SELECT;
-			final String ipAddr = EgovClntInfo.getClntIP(request);
-			final String processTime = Long.toString(stopWatch.getTotalTimeMillis());
-			final String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
-			// 시스템 로그 기록
-			SysLog sysLog = new SysLog();
-			sysLog.setErrorCode(HttpStatus.OK.value()+"");
-			sysLog.setSrvcNm(clazz.getSimpleName());
-			sysLog.setMethodNm(joinPoint.getSignature().getName());
-			sysLog.setProcessSeCode(processSeCode);
-			sysLog.setProcessTime(processTime);
-//			sysLog.setSqlParam(ParamToJson.paramToJson(sqlId));
-			sysLog.setRqesterIp(ipAddr);
-			sysLog.setRqesterId(userId);
-//			sysLog.setMethodResult(ParamToJson.paramToJson(result));
-//			sysLogService.logInsertSysLog(sysLog);
+			break;
 		}
-	}
-	
-	/**
-	 * 데이터 삭제 관련 Controller 호출 후 반환 시 
-	 * @param joinPoint
-	 * @param result
-	 * @throws Throwable
-	 */
-	@Around("execution(public * egovframework.let..web.*Controller.delete*(..)) || execution(public * com.kses..web.*Controller.delete*(..))"
-			 + " && !@target(com.kses.backoffice.sym.log.annotation.NoLogging)"
-	         + " && !@annotation(com.kses.backoffice.sym.log.annotation.NoLogging))")
-	public Object logDelete(ProceedingJoinPoint joinPoint) throws Throwable {
-		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-		Class<?> clazz = joinPoint.getTarget().getClass();
-		Object result = null;
-		Object sqlId  = null;
-		
-		StopWatch stopWatch = new StopWatch();
-		try {
-			stopWatch.start();
-			Object[] methodArgs = joinPoint.getArgs(); //, sqlArgs = null;
-			if (methodArgs.length > 0){
-				sqlId = methodArgs[0];
-			}
-			result = joinPoint.proceed();
-			return result;
-		} catch (Throwable e) {
-			throw e;
-		} finally {
-			stopWatch.stop();
-			if (result instanceof ModelAndView  && result != null) {
-				ModelAndView mav = ((ModelAndView) result);
-				if (!mav.getModel().isEmpty()) {
-					log.info(" ["+ clazz.getSimpleName() +"] ---------------------------------------------------------------------------------//\n(" + joinPoint.getSignature().getName() + ") Controller Return: " + mav.getModel());
-				}
-			}
-			
-			final String processSeCode = Globals.SYSLOG_PROCESS_SE_CODE_DELETE;
-			final String ipAddr = EgovClntInfo.getClntIP(request);
-			final String processTime = Long.toString(stopWatch.getTotalTimeMillis());
-			final String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
-			// 시스템 로그 기록
-			SysLog sysLog = new SysLog();
-			sysLog.setErrorCode(HttpStatus.OK.value()+"");
-			sysLog.setSrvcNm(clazz.getSimpleName());
-			sysLog.setMethodNm(joinPoint.getSignature().getName());
-			sysLog.setProcessSeCode(processSeCode);
-			sysLog.setProcessTime(processTime);
-//			sysLog.setSqlParam(ParamToJson.paramToJson(sqlId));
-			sysLog.setRqesterIp(ipAddr);
-			sysLog.setRqesterId(userId);
-//			sysLogService.logInsertSysLog(sysLog);
-		}
-	}
-	
-	/**
-	 * Contoller 호출 후 오류 발생 시 
-	 * @param joinPoint
-	 * @param error
-	 * @throws Exception
-	 */
-	@AfterThrowing(pointcut = "execution( public * egovframework.let..web.*Controller.*(..)) or execution(* com.kses..web.*Controller.*(..))"
-		     + " and !@target(com.kses.backoffice.sym.log.annotation.NoLogging)"
-		     + " and !@annotation(com.kses.backoffice.sym.log.annotation.NoLogging))", throwing = "error")
-	public void logUpdateThrow(JoinPoint joinPoint, Exception error) throws Exception  {
-		Class<?> clazz = joinPoint.getTarget().getClass();
-		if (error.getClass().equals(MyBatisSystemException.class) || error.getClass().getName().contains("org.springframework.jdbc")) {
-			log.error(" ["+ clazz.getSimpleName() +"] ---------------------------------------------------------------------------------//\n(" + joinPoint.getSignature().getName() + ") Implement Throwable: " + error.getMessage());
-		} else {
-			log.error(" ["+ clazz.getSimpleName() +"] ---------------------------------------------------------------------------------//\n(" + joinPoint.getSignature().getName() + ") Implement Throwable: " + error);
-		}
+		String completedStatemane = (sqlArgs == null ? statement:fillParameters(statement, sqlArgs));
+		LOGGER.debug("completedStatemane:" + completedStatemane);
+		return retValue;
 	}
 	
 	/**
@@ -274,6 +95,7 @@ public class SysLogAspect {
 	 * @return Object
 	 * @throws Exception
 	 */
+	
 	//중복 행위 방지를 위해 작업 
 	/*@Before("execution( public * egovframework.let..web.Controller.*Update(..))  "
 			 + " or execution( public * egovframework.let..web.Controller.*Update(..)) "
@@ -334,33 +156,275 @@ public class SysLogAspect {
 		}
 		
 	}*/
+
+	@Around("execution(public * egovframework.let..impl.*Impl.update*(..)) "
+            + " || execution(public * com.kses..impl.*Impl.update*(..))   "
+			+ " &&  !@target(com.kses.backoffice.sym.log.annotation.NoLogging) "
+            + " &&  !@annotation(com.kses.backoffice.sym.log.annotation.NoLogging) )" )	
+	public Object logUpdate(ProceedingJoinPoint  joinPoint) throws Throwable {
+ 
+		SysLog sysLog = new SysLog();
+ 		Object sqlid  = null; 		
+ 		StopWatch stopWatch = new StopWatch();
+ 		 
+		
+		try {
+			stopWatch.start();
+			Object[] methodArgs = joinPoint.getArgs(); //, sqlArgs = null;
+			if (methodArgs.length > 0){
+				sqlid = methodArgs[0];
+			}
+			Object retValue = joinPoint.proceed();
+			return retValue; 
+		} catch (Throwable e) {
+			throw e;
+		} finally {
+			stopWatch.stop();
+			//paramToJson 나중에 수정하기 
+			
+			sysLog.setSqlParam(ParamToJson.paramToJson(sqlid));
+			String processSeCode = ParamToJson.JsonKeyToString(sqlid,"mode").equals("Ins") ? "I" : "U"; 
+			String className = joinPoint.getTarget().getClass().getName(); 
+			String methodName =
+			joinPoint.getSignature().getName(); 
+			String processTime = Long.toString(stopWatch.getTotalTimeMillis()); 
+			String uniqId = ""; 
+			String ip = ""; 
+			Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+			if(isAuthenticated.booleanValue()) { 
+				 LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser(); 
+				 uniqId = user.getAdminId();
+				 ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+			     HttpServletRequest request = attr.getRequest();
+				 ip = EgovClntInfo.getClntIP(request);
+			} 
+			sysLog.setErrorCode("200"); 
+			sysLog.setSrvcNm(className);
+			sysLog.setMethodNm(methodName); 
+			sysLog.setProcessSeCode(processSeCode);
+			sysLog.setProcessTime(processTime); 
+			sysLog.setRqesterId(uniqId);
+			sysLog.setRqesterIp(ip); 
+			sysLog.setMethodResult("");
+			
+			sysLog.setSearchIp(ip); 
+			sysLog.setSearchId(uniqId); 
+			sysLog.setFirstIndex(0);
+			sysLog.setRecordCountPerPage(20);
+			
+			sysLogService.logInsertSysLog(sysLog);
+			 
+		
+ 
+		}
+ 
+	}
+	@Around("execution(public * egovframework.let..impl.*Impl.select*(..)) "
+            + " || execution(public * com.kses..impl.*Impl.select*(..))   "
+			+ " &&  !@target(com.kses.backoffice.sym.log.annotation.NoLogging) "
+            + " &&  !@annotation(com.kses.backoffice.sym.log.annotation.NoLogging) )" )	
+	public Object logSelect(ProceedingJoinPoint  joinPoint) throws Throwable {
 	
-//  사용하지 않음	
-//	@ExceptionHandler(value = Exception.class)
-//	public Object handlerError(HttpServletRequest request, Exception e) {
-//		ModelAndView mav = null;
-//		if (request.getHeader("AJAX") != null && e.toString().equals("egovframework.com.cmm.exception.CustomerExcetion")) {
-//			mav = new ModelAndView(Globals.JSONVIEW);
-//			mav.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-//			mav.addObject(Globals.STATUS_MESSAGE, "자동 공격이 의심 됩니다.");
-//		    return mav;
-//		} else if (request.getHeader("AJAX") != null && !e.toString().equals("egovframework.com.cmm.exception.CustomerExcetion")) {
-//			LOGGER.error("============================================");
-//			LOGGER.error("error:" + e.toString());
-//			mav = new ModelAndView(Globals.JSONVIEW);
-//			mav.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-//			mav.addObject(Globals.STATUS_MESSAGE,  egovMessageSource.getMessage("fail.request.msg") );
-//		    return mav;
-//		} else if (request.getHeader("AJAX") == null && e.toString().equals("egovframework.com.cmm.exception.CustomerExcetion")) {
-//		    mav = new ModelAndView("/cmm/error/duplication");
-//			return mav;
-//		} else {
-//			LOGGER.error("============================================");
-//			LOGGER.error("error:" + e.toString());
-//			mav = new ModelAndView("/cmm/error/egovError");
-//			return mav;
-//		}
-//	}
+		SysLog sysLog = new SysLog();
+		Object sqlid  = null; 		
+		StopWatch stopWatch = new StopWatch();
+		
+		
+		try {
+			stopWatch.start();
+			Object[] methodArgs = joinPoint.getArgs(); //, sqlArgs = null;
+			if (methodArgs.length > 0){
+			sqlid = methodArgs[0];
+		}
+			Object retValue = joinPoint.proceed();
+			return retValue; 
+		} catch (Throwable e) {
+		    throw e;
+		} finally {
+			stopWatch.stop();
+			//paramToJson 나중에 수정하기 
+			
+			sysLog.setSqlParam(ParamToJson.paramToJson(sqlid));
+			String processSeCode = "S"; 
+			String className = joinPoint.getTarget().getClass().getName(); 
+			String methodName =
+			joinPoint.getSignature().getName(); 
+			String processTime = Long.toString(stopWatch.getTotalTimeMillis()); 
+			String uniqId = ""; 
+			String ip = ""; 
+			Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+			if(isAuthenticated.booleanValue()) { 
+				 LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser(); 
+				 uniqId = user.getAdminId();
+				 ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+				 HttpServletRequest request = attr.getRequest();
+				 ip = EgovClntInfo.getClntIP(request);
+			} 
+			sysLog.setErrorCode("200"); 
+			sysLog.setSrvcNm(className);
+			sysLog.setMethodNm(methodName); 
+			sysLog.setProcessSeCode(processSeCode);
+			sysLog.setProcessTime(processTime); 
+			sysLog.setRqesterId(uniqId);
+			sysLog.setRqesterIp(ip); 
+			sysLog.setMethodResult("");
+			
+			sysLog.setSearchIp(ip); 
+			sysLog.setSearchId(uniqId); 
+			sysLog.setFirstIndex(0);
+			sysLog.setRecordCountPerPage(20);
+			sysLogService.logInsertSysLog(sysLog);
+		
+		
+		
+		}
+	
+	}
+	/**
+	 * 시스템 로그정보를 생성한다.
+	 * sevice Class의 delete로 시작되는 Method
+	 *
+	 * @param ProceedingJoinPoint
+	 * @return Object
+	 * @throws Exception
+	 */
+	
+	
+	public void MapperSelect(ProceedingJoinPoint joinPoint) throws Throwable {
+		LOGGER.debug("mapper--------------------------------------------------------------------------------------------------------------");
+ 		StopWatch stopWatch = new StopWatch();
+ 		//Object sqlid  = null;
+		try {
+			stopWatch.start();
+			Object[] methodArgs = joinPoint.getArgs(); //, sqlArgs = null;
+			LOGGER.debug("length:" + methodArgs.length);
+			for (Object  methodArg : methodArgs){
+				LOGGER.debug("methodArg:" + methodArg.toString());
+			}
+			stopWatch.stop();
+			//return retValue;
+		} catch (Throwable e) {
+			throw e;
+		} finally {
+			
+		
+		}
+		
+	}
+	/**
+	 * 시스템 로그정보를 생성한다.
+	 * sevice Class의 select로 시작되는 Method
+	 *
+	 * @param ProceedingJoinPoint
+	 * @return Object
+	 * @throws Exception
+	 */
+	@AfterReturning(pointcut = "execution(public * egovframework.let..impl.*Impl.delete*(..)) "
+		                 + " || execution(public * com.kses..impl.*Impl.delete*(..))   "
+						 + " &&  !@target(com.kses.backoffice.sym.log.annotation.NoLogging) "
+			             + " &&  !@annotation(com.kses.backoffice.sym.log.annotation.NoLogging) )", returning = "result" )
+	public void logSelect(JoinPoint joinPoint, Object result) throws Throwable {
+		StopWatch stopWatch = new StopWatch();
+ 		SysLog sysLog = new SysLog();
+ 		Object sqlid  = null;
+		try {
+			stopWatch.start();
+			Object[] methodArgs = joinPoint.getArgs(); //, sqlArgs = null;
+			if (methodArgs.length > 0){
+				sqlid = methodArgs[0];
+			}
+			stopWatch.stop();
+		} catch (Throwable e) {
+			throw e;
+		} finally {
+			
+			sysLog.setSqlParam(ParamToJson.paramToJson(sqlid));
+			sysLog.setMethodResult(ParamToJson.paramToJson(result) );
+			
+			if (result instanceof ModelAndView  && result != null) {
+				ModelAndView mav = ((ModelAndView) result);
+				if (!mav.getModel().isEmpty()) {
+					LOGGER.info(" ( @AfterReturning 2 " + joinPoint.getSignature().getName() + ") Controller Return: " + mav.getModel());
+				}
+				if (mav.getModel().get(SysLogAspect.KEY_ECODE) == null) {
+					mav.addObject(SysLogAspect.KEY_ECODE, 0);
+				}
+			}
+			
+			String className = joinPoint.getTarget().getClass().getName();
+			String methodName = joinPoint.getSignature().getName();
+			
+			String processSeCode = "D";
+			String processTime = Long.toString(stopWatch.getTotalTimeMillis());
+			String uniqId = "";
+			String ip = "";
+ 
+			
+			Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+			if(isAuthenticated.booleanValue()) { 
+				 LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser(); 
+				 uniqId = user.getAdminId();
+				 ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+				 HttpServletRequest request = attr.getRequest();
+				 ip = EgovClntInfo.getClntIP(request);
+			} 
+			sysLog.setErrorCode("200"); 
+			sysLog.setSrvcNm(className);
+			sysLog.setMethodNm(methodName); 
+			sysLog.setProcessSeCode(processSeCode);
+			sysLog.setProcessTime(processTime); 
+			sysLog.setRqesterId(uniqId);
+			sysLog.setRqesterIp(ip); 
+			sysLog.setMethodResult("");
+			
+			sysLog.setSearchIp(ip); 
+			sysLog.setSearchId(uniqId); 
+			sysLog.setFirstIndex(0);
+			sysLog.setRecordCountPerPage(20);
+			sysLogService.logInsertSysLog(sysLog);
+ 
+		}
+ 
+	}
+	
+	
+	@AfterThrowing(pointcut = "execution( public * egovframework.let..impl.*Impl.update*(..))  "
+						     + " or execution(* com.kses.*Controller.*(..)) " 
+						     + " and  !@target(com.kses.backoffice.sym.log.annotation.NoLogging) "
+						     + " and  !@annotation(com.kses.backoffice.sym.log.annotation.NoLogging) )", throwing = "error")
+	public void logUpdateThrow(JoinPoint joinPoint, Exception error) throws Exception  {
+		if (error.getClass().equals(MyBatisSystemException.class) 
+			|| error.getClass().getName().contains("org.springframework.jdbc")) {
+		    LOGGER.error(" (" + joinPoint.getSignature().getName() + ") Implement Throwable: " + error.getMessage());
+		} else {
+		   LOGGER.error(" (" + joinPoint.getSignature().getName() + ") Implement Throwable: " + error);
+		}
+	}
+	@ExceptionHandler(value = Exception.class)
+	public Object handlerError(HttpServletRequest request, Exception e) {
+		ModelAndView mav = null;
+		if (request.getHeader("AJAX") != null && e.toString().equals("egovframework.com.cmm.exception.CustomerExcetion")) {
+			mav = new ModelAndView(Globals.JSONVIEW);
+			mav.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			mav.addObject(Globals.STATUS_MESSAGE, "자동 공격이 의심 됩니다.");
+		    return mav;
+		} else if (request.getHeader("AJAX") != null && !e.toString().equals("egovframework.com.cmm.exception.CustomerExcetion")) {
+			LOGGER.error("============================================");
+			LOGGER.error("error:" + e.toString());
+			mav = new ModelAndView(Globals.JSONVIEW);
+			mav.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			mav.addObject(Globals.STATUS_MESSAGE,  egovMessageSource.getMessage("fail.request.msg") );
+		    return mav;
+		} else if (request.getHeader("AJAX") == null && e.toString().equals("egovframework.com.cmm.exception.CustomerExcetion")) {
+		    mav = new ModelAndView("/cmm/error/duplication");
+			return mav;
+		} else {
+			LOGGER.error("============================================");
+			LOGGER.error("error:" + e.toString());
+			mav = new ModelAndView("/cmm/error/egovError");
+			return mav;
+		}
+	}
 	
 	private String fillParameters(String statement, Object[] sqlArgs){
 		StringBuilder completedSqlBuilder = new StringBuilder(Math.round(statement.length() * 1.2f));
@@ -382,61 +446,6 @@ public class SysLogAspect {
 		
 		return completedSqlBuilder.toString();
 	}
-	
-	@SuppressWarnings("unused")
-	private void mapperSelect(ProceedingJoinPoint joinPoint) throws Throwable {
-		log.debug("mapper--------------------------------------------------------------------------------------------------------------");
- 		StopWatch stopWatch = new StopWatch();
- 		//Object sqlid  = null;
-		try {
-			stopWatch.start();
-			Object[] methodArgs = joinPoint.getArgs(); //, sqlArgs = null;
-			log.debug("length:" + methodArgs.length);
-			for (Object  methodArg : methodArgs){
-				log.debug("methodArg:" + methodArg.toString());
-			}
-			stopWatch.stop();
-			//return retValue;
-		} catch (Throwable e) {
-			throw e;
-		}
-	}
-	
-	@SuppressWarnings("unused")
-	private Object logSql(ProceedingJoinPoint joinPoint) throws Throwable {
-		log.debug("SqlSession----------------------------------------------------------------------------------------------------------");
-		Object[] methodArgs = joinPoint.getArgs(), sqlArgs = null;
-		Object retValue = joinPoint.proceed();
-		String statement = null;
-		String sqlid = methodArgs[0].toString();
-		
-		log.debug("sqlid:" + sqlid);
-		log.debug("length:" + methodArgs.length);
 
-		for (int i =1, n = methodArgs.length; i < n; i++){
-			Object arg = methodArgs[i];
-			
-			log.debug("methodArgs:" + methodArgs[i].toString());
-			
-			if (arg instanceof HashMap){
-				@SuppressWarnings("unchecked")
-				Map<String, Object> map = (Map<String, Object>)arg;
-				
-				statement = ((SqlSessionTemplate)joinPoint.getTarget()).getConfiguration().getMappedStatement(sqlid).getBoundSql(map).getSql();
-				
-				sqlArgs = new Object[map.size()];
-				Iterator<String> itr = map.keySet().iterator();
-				
-				int j = 0;
-				while(itr.hasNext()){
-					sqlArgs[j++] = map.get(itr.next());
-				}
-			}
-			break;
-		}
-		String completedStatemane = (sqlArgs == null ? statement:fillParameters(statement, sqlArgs));
-		log.debug("completedStatemane:" + completedStatemane);
-		return retValue;
-	}
 	
 }

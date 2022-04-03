@@ -131,9 +131,20 @@
         <div class="clear"></div>
     </div>
 </div>
+<div data-popup="popupConfirm" class="popup m_pop">
+      <div class="pop_con">
+        <a id="a_closePop" class="button b-close">X</a>
+        <p class="pop_tit">메세지</p>
+        <p class="pop_wrap"><span></span></p>
+        <div class="right_box">
+		  <button class="blueBtn" style="cursor:pointer;">예</button>
+          <a href="javascript:$('[data-popup=popupConfirm]').bPopup().close();" class="grayBtn">아니요</a>
+      </div>
+      </div>
+</div>
 <!-- popup// -->
 
-<script type="text/javascript" src="/resources/jqgrid/jqgrid.custom.egovapi.js"></script>
+<script type="text/javascript" src="/resources/js/temporary.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
 		if($("#loginAuthorCd").val() != "ROLE_ADMIN" && $("#loginAuthorCd").val() != "ROLE_SYSTEM") {
@@ -142,26 +153,21 @@
 		}
 		
 		EgovJqGridApi.mainGrid([
-            { label: '구역 시퀀스',		name:'part_class_seq', 		align:'center', hidden:true, key: true},
-            { label: '지점 코드', 		name:'center_cd', 			align:'center', hidden:true},
-            { label: '구역', 			name:'part_icon', 			align:'center', 
-            	formatter: (c, o, row) => '<img src="' + (row.part_icon === undefined ? '/resources/img/no_image.png' : '/upload/' + row.part_icon) + '" style="width:120px">'
-            },
-			{ label: '지점명', 		name:'center_nm', 			align:'center'},
-			{ label: '구역 등급',  	name:'part_class_nm', 		align:'center'},
-			{ label: '구역 등급 코드',  	name:'part_class', 			align:'center', hidden:true},
-			{ label: '일반 금액', 		name:'part_pay_cost', 		align:'center', formatter:'currency', 
-			  formatoptions:{decimalSeparator:",", thousandsSeparator: ",", decimalPlaces: 0, defaulValue: 0, suffix : "원"}},
-			{ label: '스피드온 금액', 	name:'part_speed_pay_cost', align:'center', formatter:'currency', 
-		      formatoptions:{decimalSeparator:",", thousandsSeparator: ",", decimalPlaces: 0, defaulValue: 0, suffix : "원"}},
-			{ label: '사용유무', 		name:'use_yn', 				align:'center', hidden:true},
-			{ label: '사용유무', 		name:'use_yn_value', 		align:'center'},
-			{ label: '정렬순서', 		name:'part_class_order',	align:'center', hidden: true},
-			{ label: '수정자', 		name:'last_updusr_id', 	 	align:'center'},
-            { label: '수정일자', 		name:'last_updt_dtm', 		align:'center'},
-			{ label: '수정',      	name: 'update_btn',			align:'center', width: 50, fixed: true, sortable: false, 
-       			formatter: (c, o, row) => '<a href="javascript:fnPartClassInfo(\''+ row.part_class_seq + '\');" class="edt_icon"></a>'
-       		} 
+            { label: '구역 시퀀스', name:'part_class_seq', align:'center', key: true, hidden:true},
+            { label: '지점 코드', name:'center_cd', align:'center', hidden:true},
+            { label: '구역', name:'part_icon', align:'center', formatter: imageFomatter},
+			{ label: '지점명', name:'center_nm', align: 'center'},
+			{ label: '구역 등급',  name:'part_class_nm', align: 'center'},
+			{ label: '구역 등급',  name:'part_class', align: 'center', hidden:true},
+			{ label: '일반 금액', name:'part_pay_cost', align:'center', formatter:'currency', 
+				formatoptions:{decimalSeparator:",", thousandsSeparator: ",", decimalPlaces: 0, defaulValue: 0, suffix : "원"}},
+			{ label: '스피드온 금액', name:'part_speed_pay_cost', align:'center', formatter:'currency', 
+				formatoptions:{decimalSeparator:",", thousandsSeparator: ",", decimalPlaces: 0, defaulValue: 0, suffix : "원"}},
+			{ label: '사용유무', name:'use_yn', align:'center', hidden:true},
+			{ label: '사용유무', name:'use_yn_value', align:'center'},
+			{ label: '정렬순서', name:'part_class_order', align:'center', hidden: true},
+			{ label: '수정자', name:'last_updusr_id', align:'center'},
+            { label: '수정일자', name:'last_updt_dtm', align:'center'},
 		], false, false, fnSearch);
 	});
 	
@@ -172,16 +178,16 @@
 			searchCenterCd: $('#searchCenterCd').val()
 		};
 		EgovJqGridApi.mainGridAjax('/backoffice/bld/partClassListAjax.do', params, fnSearch, '');
+		EgovJqGridApi.mainGridDetail(fnPartClassInfo);
 	}
 	
   	
-	function fnPartClassInfo(rowId) {
+	function fnPartClassInfo(id, rowData) {
 		let $popup = $('[data-popup=bld_partClass_add]');
 		let $form = $popup.find('form:first');
-		if (rowId === undefined || rowId === null) {
+		if (id === undefined || id === null) {
 			$popup.find('h2:first').text('구역 정보 등록');
-			$form.find(':text').val('');
-			$form.find('select option:first').prop('selected', true);
+			$popup.find('select').prop('selectedIndex', 0);
 			if($("#loginAuthorCd").val() != "ROLE_ADMIN" && $("#loginAuthorCd").val() != "ROLE_SYSTEM") {
 				$form.find('select[name=centerCd]').val($("#loginCenterCd").val()).prop('disabled', true);
 				$popup.find('select[name=partClass]').prop('disabled', false);
@@ -191,9 +197,10 @@
 			$popup.find('button.blueBtn').off('click').click(fnPartClassInsert);
 			$form.find(':hidden[name=mode]').val('Ins');
 			$form.find(':hidden[name=partClassSeq]').val('');
+			$form.find(':text').val('');
 			$form.find(':radio[name=useYn]:first').prop('checked', true);
-		} else {
-			let rowData = EgovJqGridApi.getMainGridRowData(rowId);
+		}
+		else {
 			$popup.find('h2:first').text('구역 정보 수정');
 			$popup.find('button.blueBtn').off('click').click(fnPartClassUpdate);
 			$form.find(':hidden[name=mode]').val('Edt');
@@ -212,40 +219,68 @@
 	// 구역 정보 등록
 	function fnPartClassInsert() {
 		let $popup = $('[data-popup=bld_partClass_add]');
+		let $form = $popup.find('form:first');
 		if ($popup.find('select[name=centerCd]').val() === '') {
-			toastr.warning('지점명을 선택해 주세요.');
+			//toastr.warning('지점명을 선택해 주세요.');
+			alert('지점명을 선택해 주세요.');
 			return;
 		}
 		if ($popup.find('select[name=partClass]').val() === '') {
-			toastr.warning('구역 등급을 선택해 주세요.');
+			//toastr.warning('구역 등급을 선택해 주세요.');
+			alert('구역 등급을 선택해 주세요.');
 			return;	
 		}
 		if ($popup.find(':text[name=partPayCost]').val() === '') {
-			toastr.warning('구역 금액(일반)을 입력해 주세요.');
+			//toastr.warning('구역 금액을 입력해 주세요.');
+			alert('구역 금액(일반)을 입력해 주세요.');
 			return;
 		}
 		if ($popup.find(':text[name=partSpeedPayCost]').val() === '') {
-			toastr.warning('구역 금액(스피드온)을 입력해 주세요.');
+			//toastr.warning('구역 금액을 입력해 주세요.');
+			alert('구역 금액(스피드온)을 입력해 주세요.');
 			return;
 		}	
 		if ($popup.find(':text[name=partClassOrder]').val() === '') {
-			toastr.warning('정렬 순서를 입력해 주세요.');
+			//toastr.warning('정렬 순서를 입력해 주세요.');
+			alert('정렬 순서를 입력해 주세요.');
 			return;
 		}
 		
-		bPopupConfirm('구역등급정보 등록', '등록 하시겠습니까?', function() {
-            EgovIndexApi.apiExcuteMultipart(
-		        '/backoffice/bld/partClassUpdate.do',
-		        new FormData($popup.find('form:first')[0]),
-		        null,
-		        function(json) {
-		            toastr.success(json.message);
-		            $popup.bPopup().close();
-		            fnSearch(1);
-		        },
-		        function(json) {
-		            toastr.error(json.message);
-		        }
+		bPopupConfirm('구역 정보 등록', '등록 하시겠습니까?', function() {
+			//체크 박스 체그 값 알아오기 
+			var formData = new FormData();
+			//formData.append('partIcon', $('#centerImg')[0].files[0]);
+			formData.append('partIcon', $form.find(':file[name=partIcon]')[0].files[0]);
+	 	    formData.append('centerCd' , $form.find('select[name=centerCd]').val());
+	 	    formData.append('partClass' , $form.find('select[name=partClass]').val());
+	 	    formData.append('partPayCost' , $form.find(':text[name=partPayCost]').val());
+	 	   	formData.append('partSpeedPayCost' , $form.find(':text[name=partSpeedPayCost]').val());
+	 	    formData.append('partClassOrder' , $form.find(':text[name=partClassOrder]').val());
+	 	   	formData.append('useYn', $form.find('input[name=useYn]:checked').val());
+	 	   	formData.append('mode' , $form.find(':hidden[name=mode]').val());
+	 	   
+	 	    uniAjaxMutipart
+	 	    (
+				"/backoffice/bld/partClassUpdate.do", 
+				formData, 
+				function(result) {
+					//결과값 추후 확인 하기 	
+					if (result.status == "SUCCESS"){
+						common_modelCloseM(result.message, "bld_partClass_add");
+						fnSearch(1);
+					} else if (result.status == "OVERLAP FAIL"){
+						common_modelCloseM(result.message, "bld_partClass_add");
+						fnSearch(1);
+					} else if (result.status == "LOGIN FAIL") {
+						common_modelClose("bld_partClass_add");
+						    document.location.href="/backoffice/login.do";
+					} else {
+						common_modelCloseM("저장 도중 문제가 발생 하였습니다.", "Y", "bld_partClass_add");
+					}
+				},
+				function(request){
+					common_modelCloseM("Error:" +request.status, "N", "bld_partClass_add");	
+				}    		
 			);
 		});
 	}
@@ -255,41 +290,60 @@
 		let $popup = $('[data-popup=bld_partClass_add]');
 		let $form = $popup.find('form:first');
 		if ($popup.find(':text[name=partPayCost]').val() === '') {
-			toastr.warning('구역 금액을 입력해 주세요.');
+			//toastr.warning('구역 금액을 입력해 주세요.');
+			alert('구역 금액을 입력해 주세요.');
 			return;
 		}
 		if ($popup.find(':text[name=partClassOrder]').val() === '') {
-			toastr.warning('정렬 순서를 입력해 주세요.');
+			//toastr.warning('정렬 순서를 입력해 주세요.');
+			alert('정렬 순서를 입력해 주세요.');
 			return;
 		}
 		
-		bPopupConfirm('구역등급정보 수정', '<b>'+ $popup.find(':hidden[name=centerNm]').val() + '</b>을(를) 수정 하시겠습니까?', function() {
-			$("select[name=centerCd]").removeAttr('disabled');	
-            EgovIndexApi.apiExcuteMultipart(
-		        '/backoffice/bld/partClassUpdate.do',
-		        new FormData($popup.find('form:first')[0]),
-		        null,
-		        function(json) {
-		            toastr.success(json.message);
-		            //$popup.bPopup().close();
-		            fnSearch(1);
-		        },
-		        function(json) {
-		            toastr.error(json.message);
-		        }
+		bPopupConfirm('구역 정보 수정', '<b>'+ $popup.find(':hidden[name=centerNm]').val() + '</b>을(를) 수정 하시겠습니까?', function() {
+			$("select[name=centerCd]").removeAttr('disabled');
+			//체크 박스 체그 값 알아오기 
+			var formData = new FormData();
+			formData.append('partClassSeq', $form.find(':hidden[name=partClassSeq]').val());;
+			formData.append('partIcon', $form.find(':file[name=partIcon]')[0].files[0]);
+	 	    formData.append('centerCd' , $form.find('select[name=centerCd]').val());
+	 	    formData.append('partClass' , $form.find('select[name=partClass]').val());
+	 	    formData.append('partPayCost' , $form.find(':text[name=partPayCost]').val());
+	 	   	formData.append('partSpeedPayCost' , $form.find(':text[name=partSpeedPayCost]').val());
+	 	    formData.append('partClassOrder' , $form.find(':text[name=partClassOrder]').val());
+	 	   	formData.append('useYn', $form.find('input[name=useYn]:checked').val());
+	 	   	formData.append('mode' , $form.find(':hidden[name=mode]').val());
+	 	   
+	 	    uniAjaxMutipart
+	 	    (
+				"/backoffice/bld/partClassUpdate.do", 
+				formData, 
+				function(result) {
+					//결과값 추후 확인 하기 	
+					if (result.status == "SUCCESS"){
+						common_modelCloseM(result.message, "bld_partClass_add");
+						fnSearch(1);
+					} else if (result.status == "LOGIN FAIL") {
+						common_modelClose("bld_partClass_add");
+						    document.location.href="/backoffice/login.do";
+					} else {
+						common_modelCloseM("저장 도중 문제가 발생 하였습니다.", "Y", "bld_partClass_add");
+					}
+				},
+				function(request){
+					common_modelCloseM("Error:" +request.status, "N", "bld_partClass_add");	
+				}    		
 			);
 		});
-		$popup.bPopup().close();
 	}
 	
 	function fnPartClassDelete() {
-		let rowId = EgovJqGridApi.getMainGridSingleSelectionId();
-		let rowData = EgovJqGridApi.getMainGridRowData(rowId);
+		let rowId = $('#mainGrid').jqGrid('getGridParam', 'selrow');
 		if (rowId === null) {
 			toastr.warning('구역 정보를 선택해 주세요.');
 			return false;
 		}
-		
+		let rowData = $('#mainGrid').jqGrid('getRowData', rowId);
 		bPopupConfirm('구역 정보 삭제', '<b>'+ rowData.center_nm +' '+ rowData.part_class_nm +'</b> 를(을) 삭제 하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(
 				'POST',
@@ -298,13 +352,32 @@
 				},
 				null,
 				function(json) {
-					toastr.success(json.message);
+					common_modelCloseM(json.message, "bld_partClass_add");
 					fnSearch(1);
 				},
 				function(json) {
-					toastr.error(json.message);
+					common_modelClose("bld_partClass_add");
 				}
 			);
 		});
 	}
+
+	function imageFomatter (cellvalue, options, rowObject) {
+		//이미지 URL	
+		var partIcon = (rowObject.part_icon === undefined) ? "/resources/img/no_image.png": "/upload/"+ rowObject.part_icon;
+		return '<img src="' + partIcon + ' " style="width:120px">';
+	}
+
+	function bPopupConfirm(title, message, fnOk) {
+		let $popup = $('[data-popup=popupConfirm]');
+		$popup.find('.pop_tit').text(title);
+		$popup.find('.pop_wrap span').html(message);
+		$popup.find('.blueBtn').off('click').click(function() {
+			$('[data-popup=popupConfirm]').bPopup().close();
+			fnOk();
+		});
+		$popup.bPopup();
+	}
+	 
 </script>
+<c:import url="/backoffice/inc/popup_common.do" />

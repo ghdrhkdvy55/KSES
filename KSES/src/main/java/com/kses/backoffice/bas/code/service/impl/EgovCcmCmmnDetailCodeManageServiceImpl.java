@@ -25,8 +25,8 @@ public class EgovCcmCmmnDetailCodeManageServiceImpl extends EgovAbstractServiceI
 	}
 	
 	@Override
-	public CmmnDetailCode selectCmmnDetailCodeDetail(String code) throws Exception {
-    	return CmmnDetailCodeManageMapper.selectCmmnDetailCodeDetail(code);    	
+	public CmmnDetailCode selectCmmnDetailCodeDetail(CmmnDetailCode vo) throws Exception {
+    	return CmmnDetailCodeManageMapper.selectCmmnDetailCodeDetail(vo.getCode());    	
 	}
 
 	/**
@@ -42,14 +42,19 @@ public class EgovCcmCmmnDetailCodeManageServiceImpl extends EgovAbstractServiceI
 		return CmmnDetailCodeManageMapper.selectCmmnDetailCombo(code);
 	}
 	
+
+	/**
+	 * 공통상세코드를 수정한다.
+	 */
 	@Override
-	public int insertCmmnDetailCode(CmmnDetailCode cmmnDetailCode) throws Exception {
-		return CmmnDetailCodeManageMapper.insertCmmnDetailCode(cmmnDetailCode);
-	}
-	
-	@Override
-	public int updateCmmnDetailCode(CmmnDetailCode cmmnDetailCode) throws Exception {
-		return CmmnDetailCodeManageMapper.updateCmmnDetailCode(cmmnDetailCode);
+	public int updateCmmnDetailCode(CmmnDetailCode vo) throws Exception {
+		int ret = 0;
+		if (vo.getMode().equals("Ins")){
+			ret = CmmnDetailCodeManageMapper.insertCmmnDetailCode(vo);
+		}else {
+			ret = CmmnDetailCodeManageMapper.updateCmmnDetailCode(vo);
+		}
+		return ret;
 	}
 
 	

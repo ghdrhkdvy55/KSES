@@ -20,9 +20,11 @@ public interface ResvInfoManageMapper {
 	
 	public List<String> selectResvDateList(ResvInfo vo);
 	
-	public String selectResvSeqNext() throws Exception;
+	public String selectResvSeqNext(@Param("resvDate") String resvDate);
 	
 	public String selectCenterResvDate(@Param("centerCd") String centerCd);
+	
+	public List<Map<String, Object>> selectCenterResvDateList(@Param("centerCd") String centerCd);
 	
 	public Map<String, Object> selectInUserResvInfo(ResvInfo paramResvInfo);
 	

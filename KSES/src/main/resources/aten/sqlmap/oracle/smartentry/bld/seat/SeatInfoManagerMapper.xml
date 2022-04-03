@@ -30,11 +30,8 @@
 				AND TRIM(A.PART_CD) = #{params.searchPartCd}
 			</if>	
 			<if test="params.authorCd != 'ROLE_ADMIN' and params.authorCd != 'ROLE_SYSTEM'">
-			   	AND B.CENTER_CD = #{params.centerCd}
-			</if>
-			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.useYn)">
-				AND A.USE_YN = #{params.useYn}
-			</if>
+				   AND B.CENTER_CD = #{params.centerCd}
+			</if>	
 		) TB  
 		WHERE RNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}
 		ORDER BY TB.SEAT_CD ASC		 	    
@@ -236,7 +233,7 @@
 				SEAT_TOP = #{item.seatTop, jdbcType=VARCHAR}, 
 				SEAT_LEFT = #{item.seatLeft, jdbcType=VARCHAR}, 
 				LAST_UPDT_DTM = SYSDATE, 
-				LAST_UPDUSR_ID = #{item.lastUpdusrId, jdbcType=VARCHAR}
+				LAST_UPDUSR_ID = #{item.userId, jdbcType=VARCHAR}
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(item.seatOrder)">
 					, SEAT_ORDER = #{item.seatOrder}
 				</if>

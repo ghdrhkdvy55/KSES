@@ -6,7 +6,6 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.kses.backoffice.mng.employee.mapper.EmpInfoManageMapper;
 import com.kses.backoffice.mng.employee.service.EmpInfoManageService;
 import com.kses.backoffice.mng.employee.vo.EmpInfo;
@@ -30,19 +29,12 @@ public class EmpInfoManageServiceImpl extends EgovAbstractServiceImpl implements
 	public Map<String, Object> selectEmpInfoDetail(String empId) {
 		return empMapper.selectEmpInfoDetail(empId);
 	}
-	
-	@Override
-	public int insertEmpInfo(EmpInfo empInfo) {
-		String empPassword = !StringUtils.isBlank(empInfo.getEmpPassword()) ? SmartUtil.getEncryptSHA256(empInfo.getEmpPassword()) : "";
-		empInfo.setEmpPassword(empPassword);
-		return empMapper.insertEmpInfo(empInfo);
-	}
 
 	@Override
-	public int updateEmpInfo(EmpInfo empInfo) {
-		String empPassword = !StringUtils.isBlank(empInfo.getEmpPassword()) ? SmartUtil.getEncryptSHA256(empInfo.getEmpPassword()) : "";
-		empInfo.setEmpPassword(empPassword);
-		return empMapper.updateEmpInfo(empInfo);
+	public int updateEmpInfo(EmpInfo params) {
+		String empPassword = !StringUtils.isBlank(params.getEmpPassword()) ? SmartUtil.getEncryptSHA256(params.getEmpPassword()) : "";
+		params.setEmpPassword(empPassword);
+		return  params.getMode().equals("Ins") ? empMapper.insertEmpInfo(params) : empMapper.updateEmpInfo(params);
 	}
 
 	@Override

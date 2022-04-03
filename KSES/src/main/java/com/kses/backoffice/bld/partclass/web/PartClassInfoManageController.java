@@ -65,6 +65,8 @@ import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 	 * @return
 	 * @throws Exception
 	 */
+
+  
 	@RequestMapping(value = "partClassList.do", method = RequestMethod.GET)
 		public ModelAndView viewPartClassList() throws Exception {
 		
@@ -121,36 +123,38 @@ import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 	}
   
 	/**
-	 * 구역 등급 정보 등록 및 수정
+	 * 구역 정보 등록 및 삭제
+	 * @param request
 	 * @param mRequest
+	 * @param loginVO
 	 * @param partClassInfo
+	 * @param result
 	 * @return
 	 * @throws Exception
 	 */
 	@RequestMapping (value="partClassUpdate.do", method = RequestMethod.POST)
-	public ModelAndView updatePartClassInfo(MultipartRequest mRequest,
+	public ModelAndView updatePartClassInfo(HttpServletRequest request,
+											MultipartRequest mRequest,
+											@ModelAttribute("loginVO") LoginVO loginVO,
 											@ModelAttribute PartClassInfo partClassInfo,
-											BindingResult bindingResult) throws Exception{
+											BindingResult result) throws Exception{
+		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		
-		String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
-		partClassInfo.setLastUpdusrId(userId);
-		partClassInfo.setFrstRegterId(userId);
+		
 		partClassInfo.setPartIcon(uploadFile.uploadFileNm(mRequest.getFiles("partIcon"), propertiesService.getString("Globals.filePath")));
 		
-		int ret = 0; 
-
-		switch (partClassInfo.getMode()) {
-		case Globals.SAVE_MODE_INSERT:
-			ret = (uniService.selectIdDoubleCheck("PART_CLASS", "TSEB_CENTER_PART_CLASS_D",	"PART_CLASS = ["+ partClassInfo.getPartClass() + "[ AND CENTER_CD = ["+	partClassInfo.getCenterCd() + "[" ) > 0) ? -1 :	partClassService.insertPartClassInfo(partClassInfo);
-			break;
-		case Globals.SAVE_MODE_UPDATE:
-			ret = partClassService.updatePartClassInfo(partClassInfo);
-			break;
-		default:
-			throw new EgovBizException("잘못된 호출입니다.");
-		}
+		loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
+		partClassInfo.setUserId(loginVO.getAdminId());
 		
+		int ret = 0; 
+		switch (partClassInfo.getMode()) { 
+			case "Ins": ret = (uniService.selectIdDoubleCheck("PART_CLASS", "TSEB_CENTER_PART_CLASS_D",	"PART_CLASS = ["+ partClassInfo.getPartClass() + "[ AND CENTER_CD = ["+	partClassInfo.getCenterCd() + "[" ) > 0) ? -1 :	partClassService.insertPartClassInfo(partClassInfo);
+				break; 
+			case "Edt": ret = partClassService.updatePartClassInfo(partClassInfo);
+				break;
+				default: throw new EgovBizException("잘못된 호출입니다."); 
+		}
 		String messageKey = ""; 
 		if (ret > 0) {
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS); 

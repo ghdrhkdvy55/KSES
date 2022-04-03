@@ -23,11 +23,6 @@ import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 	}
 
 	@Override
-	public Map<String, Object> selectPartClass(String partClassSeq) throws Exception {
-		return partClassMapper.selectPartClass(partClassSeq);
-	}
-
-	@Override
 	public List<Map<String, Object>> selectPartClassComboList (String centerCd) throws Exception {
 		return partClassMapper.selectPartClassComboList(centerCd);
 	}

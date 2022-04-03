@@ -1,9 +1,7 @@
 package com.kses.backoffice.bld.floor.vo;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
@@ -26,9 +24,6 @@ public class FloorPartInfo {
 	
 	 // 층 이미지1
 	 private String partMap1;
-
-	@JsonIgnore
-	private MultipartFile partMap1File;
 	
 	 // 층 이미지2
 	 private String partMap2;

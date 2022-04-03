@@ -2,10 +2,8 @@ package com.kses.backoffice.bld.center.vo;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
 
 //지점 정보 
 @Getter
@@ -15,7 +13,7 @@ public class CenterInfo {
 	 // 지점 아이디 
 	 private String centerCd;
 	
-	 // 지점명
+	 // 지점명 
 	 private String centerNm;
 	
 	 // 우편번호 
@@ -38,15 +36,9 @@ public class CenterInfo {
 	
 	 // 전경 사진 
 	 private String centerImg;
-
-	 @JsonIgnore
-	 private MultipartFile centerImgFile;
 	
 	 // 지도 
 	 private String centerMap;
-
-	 @JsonIgnore
-	 private MultipartFile centerMapFile;
 	
 	 // 사용유무 
 	 private String useYn;
@@ -102,9 +94,6 @@ public class CenterInfo {
 	 // 스피드온 지점코드
 	 private String centerSpeedCd = "";
 	 
-	 // SPDM 지점코드
-	 private String centerRbmCd = "";
-	 
 	 // 자유석 사용 유무
 	 private String centerStandYn = "";
 	 
@@ -120,9 +109,12 @@ public class CenterInfo {
 	 // 지점 스피드온 입장료
 	 private String centerSpeedEntryPayCost = "";
 	 
-	 // 지점 사전 예약가능일
+	 // SPDM 지점코드
+	 private String centerRbmCd = "";
+	 
+	 // 지점 예약가능일
 	 private String centerResvAbleDay = "";
 	 
-	 // 지점 표출 순서
-	 private String centerOrder;
+	 // 지점 정렬 순서
+	 private String centerOrder = "";
 }

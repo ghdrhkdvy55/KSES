@@ -13,7 +13,6 @@ import com.kses.backoffice.rsv.msg.service.MessageGroupInfoManageService;
 import com.kses.backoffice.rsv.msg.vo.MessageGroupInfo;
 import com.kses.backoffice.util.SmartUtil;
 
-import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service
@@ -36,7 +35,7 @@ public class MessageGroupInfoManageServiceImpl extends EgovAbstractServiceImpl i
 
 	@Override
 	public int updateMessageGroupInfo(MessageGroupInfo vo) throws Exception {
-		return vo.getMode().equals(Globals.SAVE_MODE_INSERT) ? messageGroupMapper.insertMessageGroupInfo(vo) : messageGroupMapper.updateMessageGroupInfo(vo);
+		return vo.getMode().equals("Ins") ? messageGroupMapper.insertMessageGroupInfo(vo) : messageGroupMapper.updateMessageGroupInfo(vo);
 	}
 
 	@Override

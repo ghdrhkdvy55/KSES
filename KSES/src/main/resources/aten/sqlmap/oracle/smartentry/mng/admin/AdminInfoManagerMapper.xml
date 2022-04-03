@@ -9,7 +9,7 @@
 		 	FROM (
 				    SELECT  a.ADMIN_ID, a.EMP_NO, b.EMP_NM, b.EMP_CLPHN, b.EMP_TLPHN,
 	                        b.EMP_EMAIL,  FN_ORGNM(b.DEPT_CD, 'DEPT') DEPT_NM,
-	                        a.ADMIN_LOCKYN, a.USE_YN,	
+							a.ADMIN_LOCKYN, a.USE_YN,	
 							TO_CHAR(a.LAST_UPDT_DTM, 'YYYY-MM-DD') LAST_UPDT_DTM,
 				            a.AUTHOR_CD, c.AUTHOR_NM, a.CENTER_CD,
 				            CASE  WHEN ( AUTHOR_CD != 'ROLE_ADMIN' OR  AUTHOR_CD != 'ROLE_SYSTEM') THEN
@@ -89,7 +89,7 @@
                 <otherwise>
 				       INSERT INTO TSEH_ADMIN_INFO_M(ADMIN_ID, EMP_NO, AUTHOR_CD, ADMIN_LOCKYN, USE_YN, ADMIN_PASS_UPDT_DT,
 				                                     CENTER_CD, FRST_REGIST_DTM, FRST_REGTER_ID, LAST_UPDT_DTM, LAST_UPDUSR_ID)
-				       VALUES (	#{adminId} , #{empNo}, #{authorCd}, 'N', 'Y', SYSDATE,
+				       VALUES (	#{adminId}, #{empNo}, #{authorCd}, 'N', 'Y', SYSDATE,
 				                #{centerCd ,jdbcType=VARCHAR}, SYSDATE, #{frstRegterId ,jdbcType=VARCHAR}, SYSDATE, #{lastUpdusrId ,jdbcType=VARCHAR} );
 				       
 				       UPDATE TSEH_EMP_INFO_M SET ADMIN_DVSN = 'Y' WHERE EMP_NO = #{empNo};
@@ -117,8 +117,8 @@
    </update>
    <delete id="deleteAdminUserManage">
 	   DELETE FROM TSEH_ADMIN_INFO_M
-       WHERE ADMIN_ID = #{adminId}   ;
+       WHERE ADMIN_ID = #{adminId};
 	   UPDATE TSEH_EMP_INFO_M SET ADMIN_DVSN = 'N' 
-	   WHERE EMP_NO = (SELECT EMP_NO FROM TSEH_ADMIN_INFO_M WHERE ADMIN_ID = #{adminId}) 
+	   WHERE EMP_NO = (SELECT EMP_NO FROM TSEH_ADMIN_INFO_M WHERE ADMIN_ID = #{adminId})
    </delete>
 </mapper>

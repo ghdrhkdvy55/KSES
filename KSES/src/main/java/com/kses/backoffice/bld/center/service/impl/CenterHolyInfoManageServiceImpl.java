@@ -5,9 +5,12 @@ import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kses.backoffice.bas.holy.service.impl.HolyInfoServiceImpl;
 import com.kses.backoffice.bld.center.mapper.CenterHolyInfoManageMapper;
 import com.kses.backoffice.bld.center.service.CenterHolyInfoManageService;
 import com.kses.backoffice.bld.center.vo.CenterHolyInfo;
@@ -15,7 +18,9 @@ import com.kses.backoffice.util.mapper.UniSelectInfoManageMapper;
 
 @Service
 public class CenterHolyInfoManageServiceImpl extends EgovAbstractServiceImpl implements CenterHolyInfoManageService {
-
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(HolyInfoServiceImpl.class);
+		
 	@Autowired
 	CenterHolyInfoManageMapper centerHolyMapper;
 	
@@ -23,7 +28,7 @@ public class CenterHolyInfoManageServiceImpl extends EgovAbstractServiceImpl imp
 	private UniSelectInfoManageMapper uniMapper;
 	
 	@Override
-	public List<Map<String, Object>> selectCenterHolyInfoList(Map<String,Object> params) throws Exception {
+	public List<Map<String, Object>> selectCenterHolyInfoList(Map<String, Object> params) throws Exception {
 		return centerHolyMapper.selectCenterHolyInfoList(params);
 	}
 
@@ -44,13 +49,8 @@ public class CenterHolyInfoManageServiceImpl extends EgovAbstractServiceImpl imp
 	}
 
 	@Override
-	public int updateCenterHolyInfoList(List<CenterHolyInfo> centerHolyInfoList) throws Exception {
-		return centerHolyMapper.updateCenterHolyInfoList(centerHolyInfoList);
-	}
-
-	@Override
-	public int copyCenterHolyInfo(CenterHolyInfo centerHolyInfo) throws Exception {
-		return centerHolyMapper.copyCenterHolyInfo(centerHolyInfo);
+	public int copyCenterHolyInfo(Map<String, Object> params) throws Exception {
+		return centerHolyMapper.copyCenterHolyInfo(params);
 	}
 	
 	@Override
@@ -62,5 +62,16 @@ public class CenterHolyInfoManageServiceImpl extends EgovAbstractServiceImpl imp
 	public int deleteCenterHolyInfo(int centerHolySeq) throws Exception {
 		return centerHolyMapper.deleteCenterHolyInfo(centerHolySeq);
 	}
-
+	
+	@Override
+	public boolean insertExcelCenterHoly(List<CenterHolyInfo> centerHolyInfoList) throws Exception {
+		boolean result = false;
+		try {
+			centerHolyMapper.insertExcelCenterHoly(centerHolyInfoList);
+			result = true;
+		}catch( Exception e) {
+			LOGGER.error("insertExcelCenterHoly error:" + e.toString());
+		}
+		return result;
+	}
 }

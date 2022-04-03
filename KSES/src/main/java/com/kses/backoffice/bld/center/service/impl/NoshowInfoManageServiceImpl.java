@@ -66,8 +66,8 @@ public class NoshowInfoManageServiceImpl extends EgovAbstractServiceImpl impleme
 	}
 
 	@Override
-	public int copyNoshowInfo(NoshowInfo noshowInfo) throws Exception {
-		return noshowMapper.copyNoshowInfo(noshowInfo);
+	public int copyNoshowInfo(Map<String, Object> params) throws Exception {
+		return noshowMapper.copyNoshowInfo(params);
 	}
 	
 	@Override

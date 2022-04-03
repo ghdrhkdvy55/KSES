@@ -32,20 +32,16 @@ public class EgovCcmCmmnCodeManageServiceImpl extends EgovAbstractServiceImpl im
 	public List<?> selectCmmnCodeList() throws Exception {
 		return codeMapper.selectCmmnCodeList();
 	}
-	
-	@Override
-	public int insertCmmnCode(CmmnCode cmmnCode) throws Exception {
-		return codeMapper.insertCmmnCode(cmmnCode);
-	}
 
 	@Override
 	public int updateCmmnCode(CmmnCode cmmnCode) throws Exception {
-		return codeMapper.updateCmmnCode(cmmnCode);
+		return cmmnCode.getMode().equals("Ins") ?  codeMapper.insertCmmnCode(cmmnCode) : codeMapper.updateCmmnCode(cmmnCode);
 	}
 
 	
 	@Override
 	public List<Map<String, Object>> selectCmmnCodeListByPagination(Map<String, Object> vo) throws Exception {
+		System.out.println("vo:" + vo);
 		return codeMapper.selectCmmnCodeListByPagination(vo);
 	}
 }

@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 import com.kses.backoffice.bas.progrm.mapper.ProgrameChangeManageMapper;
 import com.kses.backoffice.bas.progrm.service.ProgrameChangeManageService;
 import com.kses.backoffice.bas.progrm.vo.ProgrameChangeInfo;
-
-import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service
@@ -30,7 +28,7 @@ public class ProgrameChangeManageServiceImpl extends EgovAbstractServiceImpl imp
 
 	@Override
 	public int updateProgrmChangeRequst(ProgrameChangeInfo vo) throws Exception {
-		return (vo.getMode().equals(Globals.SAVE_MODE_INSERT)) ? programChnageMapper.insertProgrmChangeRequst(vo) : programChnageMapper.updateProgrmChangeRequst(vo);
+		return (vo.getMode().equals("Ins")) ? programChnageMapper.insertProgrmChangeRequst(vo) : programChnageMapper.updateProgrmChangeRequst(vo);
 		
 	}
 

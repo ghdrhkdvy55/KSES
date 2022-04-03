@@ -5,29 +5,27 @@
 
 <!-- 시스템 로그 등록 -->
     <insert id="logInsertSysLog">
-		INSERT INTO COMTNSYSLOG ( REQUST_ID
-			, SRVC_NM
-			, METHOD_NM
-			, PROCESS_SE_CODE
-			, PROCESS_TIME
-			, RQESTER_ID
-			, RQESTER_IP
-			, OCCRRNC_DE
-			, OCCRRNC_DATE
-			, SQL_PARAM
-			, METHOD_RESULT
-		) VALUES ( #{requstId}
-			, #{srvcNm}
-			, #{methodNm}
-			, #{processSeCode}
-			, #{processTime}
-			, #{rqesterId}
-			, #{rqesterIp}
-			, SYSDATE
-			, SYSDATE
-			, #{sqlParam}
-			, #{methodResult}
-		)
+        <![CDATA[
+            INSERT INTO COMTNSYSLOG 
+                ( REQUST_ID
+                  , SRVC_NM
+                  , METHOD_NM
+                  , PROCESS_SE_CODE
+                  , PROCESS_TIME
+                  , RQESTER_ID
+                  , RQESTER_IP
+                  , OCCRRNC_DE 
+                  )
+            VALUES ( #{requstId}
+                  , #{srvcNm}
+                  , #{methodNm}
+                  , #{processSeCode}
+                  , #{processTime}
+                  , #{rqesterId}
+                  , #{rqesterIp}
+                  , SYSDATE
+                  )
+        ]]>
     </insert>
 
     <!-- 시스템 로그 상세 조회 -->
@@ -69,20 +67,12 @@
 		                  a.REQUST_ID
 		                , a.SRVC_NM
 		                , a.METHOD_NM
-		                , CASE a.PROCESS_SE_CODE WHEN 'S' THEN '조회'
-                       			WHEN 'I' THEN '입력'
-                        		WHEN 'U' THEN '업데이트'
-                        		WHEN 'D' THEN '삭제'
-                  		  END PROCESS_SE_CODE
+		                , a.PROCESS_SE_CODE
 		                , a.PROCESS_TIME
 		                , a.RQESTER_IP
 		                , a.RQESTER_ID
 		                , b.EMP_NM AS RQESTER_NM
-		                , a.SQL_PARAM
-		                , a.METHOD_RESULT
-		                , TO_CHAR(OCCRRNC_DATE, 'YYYY-MM-DD HH24:MI:SS') OCCRRNC_DATE
-		                , a.ERROR_SE
-                		, a.ERROR_CODE
+		                , TO_CHAR(OCCRRNC_DATE, 'YYYY-MM-DD HH24:MI:SS') OCCRRNC_DATE 
 		            FROM COMTNSYSLOG a, VW_EMPINFO b
 		            WHERE 
 		                 a.RQESTER_ID = b.ADMIN_ID

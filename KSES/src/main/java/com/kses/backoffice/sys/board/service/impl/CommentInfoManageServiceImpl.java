@@ -10,7 +10,6 @@ import com.kses.backoffice.sys.board.mapper.CommentInfoManageMapper;
 import com.kses.backoffice.sys.board.service.CommentInfoManageService;
 import com.kses.backoffice.sys.board.vo.BoardCommInfo;
 
-import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service
@@ -32,7 +31,7 @@ public class CommentInfoManageServiceImpl  extends EgovAbstractServiceImpl imple
 
 	@Override
 	public int updateCommentManage(BoardCommInfo vo) throws Exception {
-		return !vo.getMode().equals(Globals.SAVE_MODE_INSERT)? commtMapper.updateCommentManage(vo) : commtMapper.insertCommentManage(vo);
+		return !vo.getMode().equals("Ins")? commtMapper.updateCommentManage(vo) : commtMapper.insertCommentManage(vo);
 	}
 
 	@Override

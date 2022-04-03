@@ -17,7 +17,4 @@ public interface FloorInfoManageMapper {
 	public List<Map<String, Object>> selectFloorInfoComboList(@Param("centerCd") String centerCd);
 	
 	public int updateFloorInfo(FloorInfo vo);
-
-	int updateFloorInfoList(@Param("floorInfoList") List<FloorInfo> floorInfoList);
-
 }

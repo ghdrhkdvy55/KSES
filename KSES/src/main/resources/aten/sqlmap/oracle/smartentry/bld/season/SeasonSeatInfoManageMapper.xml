@@ -6,7 +6,7 @@
 		(
 			SELECT  
 				SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT,
-				ROW_NUMBER() OVER (ORDER BY A.SEAT_ORDER ASC) AS RNUM,
+				ROW_NUMBER() OVER (ORDER BY A.SEAT_ORDER DESC) AS RNUM, 
 				A.CENTER_CD, A.FLOOR_CD, A.PART_CD, E.SEASON_SEAT_CD,  A.SEAT_CD, E.SEASON_SEAT_LABEL, 
 				E.USE_YN, E.SEASON_SEAT_TOP, E.SEASON_SEAT_LEFT, 
 				FN_DETAILCODENM(E.SEASON_CLASS) AS SEAT_CLASS_TXT,  FN_DETAILCODENM(E.SEAT_DVSN) AS SEAT_DVSN_TXT,
@@ -36,7 +36,7 @@
 			</if>			
 		) TB  
 		WHERE RNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}
-		ORDER BY RNUM
+		ORDER BY TB.SEASON_SEAT_CD DESC  	 	    
     </select>
     
     <select id="selectSeasonSeatInfoDetail"  resultType="lmap">

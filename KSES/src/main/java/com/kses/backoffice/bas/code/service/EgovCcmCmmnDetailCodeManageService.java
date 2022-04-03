@@ -31,7 +31,7 @@ public interface EgovCcmCmmnDetailCodeManageService {
 	 */
 	List<CmmnDetailCode> selectCmmnDetailComboEtc(Map<String, Object> params) throws Exception;
 	
-	CmmnDetailCode selectCmmnDetailCodeDetail(String code) throws Exception;
+	CmmnDetailCode selectCmmnDetailCodeDetail(CmmnDetailCode vo) throws Exception;
 
 	/**
 	 * 공통상세코드 목록을 조회한다.
@@ -45,22 +45,13 @@ public interface EgovCcmCmmnDetailCodeManageService {
 	List<Map<String, Object>> selectComboSwcCon()throws Exception;
 	
 	List<?> selectCmmnDetailCodeList(String codeId) throws Exception;
-	
+
 	/**
-	 * 공통상세코드 등록
+	 * 공통상세코드를 수정한다.
 	 * @param cmmnDetailCode
-	 * @return
 	 * @throws Exception
 	 */
-	int insertCmmnDetailCode(CmmnDetailCode cmmnDetailCode) throws Exception;
-	
-	/**
-	 * 공통상세코드 수정
-	 * @param cmmnDetailCode
-	 * @return
-	 * @throws Exception
-	 */
-	int updateCmmnDetailCode(CmmnDetailCode cmmnDetailCode) throws Exception;
+    int updateCmmnDetailCode(CmmnDetailCode cmmnDetailCode) throws Exception;
     
 	Object selectCmmnDetailResTypeCombo(Map<String, Object> vo) throws Exception;
 }

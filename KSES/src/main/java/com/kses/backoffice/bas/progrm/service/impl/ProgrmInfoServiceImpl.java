@@ -34,13 +34,15 @@ public class ProgrmInfoServiceImpl extends EgovAbstractServiceImpl implements Pr
 	}
 	
 	@Override
-	public int insertProgrmInfo(ProgrmInfo progrmInfo) throws Exception {
-		return (uniMapper.selectIdDoubleCheck("PROGRM_FILE_NM", "COMTNPROGRMLIST", "PROGRM_FILE_NM = ["+ progrmInfo.getProgrmFileNm() + "[" ) > 0) ? -1 :  progrmMapper.insertProgrmInfo(progrmInfo);
-	}
-	
-	@Override
-	public int updateProgrmInfo(ProgrmInfo progrmInfo) throws Exception {
-		return progrmMapper.updateProgrmInfo(progrmInfo);
+	public int updateProgrmInfo(ProgrmInfo vo) throws Exception {
+		int ret = 0;
+		
+		if (vo.getMode().equals("Ins")){
+			ret = (uniMapper.selectIdDoubleCheck("PROGRM_FILE_NM", "COMTNPROGRMLIST", "PROGRM_FILE_NM = ["+ vo.getProgrmFileNm() + "[" ) > 0) ? -1 :  progrmMapper.insertProgrmInfo(vo);
+		} else {
+			ret = progrmMapper.updateProgrmInfo(vo);
+		}
+		return ret;
 	}
 
 	@Override

@@ -7,19 +7,18 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
-import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.kses.backoffice.bas.code.service.EgovCcmCmmnDetailCodeManageService;
 import com.kses.backoffice.mng.employee.service.DeptInfoManageService;
 import com.kses.backoffice.mng.employee.service.EmpInfoManageService;
 import com.kses.backoffice.mng.employee.service.GradInfoManageService;
@@ -28,24 +27,22 @@ import com.kses.backoffice.mng.employee.vo.DeptInfo;
 import com.kses.backoffice.mng.employee.vo.EmpInfo;
 import com.kses.backoffice.mng.employee.vo.GradInfo;
 import com.kses.backoffice.mng.employee.vo.PositionInfo;
-import com.kses.backoffice.sym.log.annotation.NoLogging;
 import com.kses.backoffice.util.SmartUtil;
 import com.kses.backoffice.util.service.UniSelectInfoManageService;
 import com.kses.backoffice.util.service.fileService;
-
-import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.Globals;
-import egovframework.rte.fdl.cmmn.exception.EgovBizException;
+import com.kses.backoffice.bas.code.service.EgovCcmCmmnDetailCodeManageService;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RestController
 @RequestMapping("/backoffice/mng")
 public class EmpInfoManageController {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(EmpInfoManageController.class);
 		
 	@Autowired
 	private EmpInfoManageService empService;
@@ -75,41 +72,66 @@ public class EmpInfoManageController {
 	private fileService uploadFile;
     
 	/**
-	 * 조직도관리 화면
+	 * 직원 정보 페이지 요청
+	 * 	
+	 * @param loginVO
+	 * @param info
+	 * @param request
+	 * @param bindingResult
 	 * @return
 	 * @throws Exception
 	 */
-    @NoLogging
-	@RequestMapping(value="orgList.do", method = RequestMethod.GET)
-	public ModelAndView viewOrgList() throws Exception {
-		ModelAndView model = new ModelAndView("/backoffice/mng/orgList");
+	
+	@RequestMapping(value="orgList.do")
+	public ModelAndView selectOrginfoList(@ModelAttribute("LoginVO") LoginVO loginVO , 
+										  HttpServletRequest request, 
+										  BindingResult bindingResult) throws Exception {
 		
-		String orgGubun = "Dept";
-		Map<String, Object> regInfo = new HashMap<String, Object>();
-		regInfo.put("orgGubun", orgGubun);
-		switch (orgGubun) {
-		     case "Dept" :
-		    	 regInfo.put("orgTitle", "부서관리");
-		    	 regInfo.put("orgCode", "부서코드");
-		    	 regInfo.put("orgCodeNm", "부서명");
-		    	 break;
-		     case "Grad" :
-		    	 regInfo.put("orgTitle", "직급관리");
-		    	 regInfo.put("orgCode", "직급코드");
-		    	 regInfo.put("orgCodeNm", "직급명");
-		    	 break;
-		     case "Post" : 
-		    	 regInfo.put("orgTitle", "직책관리");
-		    	 regInfo.put("orgCode", "직책코드");
-		    	 regInfo.put("orgCodeNm", "직책명");
-		    	 break;
-		     default :
-		    	 regInfo.put("orgTitle", "부서관리");
-			     regInfo.put("orgCode", "부서코드");
-		    	 regInfo.put("orgCodeNm", "부서명");
-		         break;
-	    }  
-		model.addObject(Globals.STATUS_REGINFO, regInfo);
+		ModelAndView model = new ModelAndView("/backoffice/mng/orgList");
+		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+		if(!isAuthenticated) {
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
+			model.setViewName("/backoffice/login");
+			return model;	
+		} else {
+			HttpSession httpSession = request.getSession(true);
+			loginVO = (LoginVO)httpSession.getAttribute("LoginVO");
+		}
+		try {
+			String orgGubun = "Dept";
+			Map<String, Object> regInfo = new HashMap<String, Object>();
+			regInfo.put("orgGubun", orgGubun);
+			switch (orgGubun) {
+			     case "Dept" :
+			    	 regInfo.put("orgTitle", "부서관리");
+			    	 regInfo.put("orgCode", "부서코드");
+			    	 regInfo.put("orgCodeNm", "부서명");
+			    	 break;
+			     case "Grad" :
+			    	 regInfo.put("orgTitle", "직급관리");
+			    	 regInfo.put("orgCode", "직급코드");
+			    	 regInfo.put("orgCodeNm", "직급명");
+			    	 break;
+			     case "Post" : 
+			    	 regInfo.put("orgTitle", "직책관리");
+			    	 regInfo.put("orgCode", "직책코드");
+			    	 regInfo.put("orgCodeNm", "직책명");
+			    	 break;
+			     default :
+			    	 regInfo.put("orgTitle", "부서관리");
+				     regInfo.put("orgCode", "부서코드");
+			    	 regInfo.put("orgCodeNm", "부서명");
+			         break;
+		    }  
+			model.addObject(Globals.STATUS_REGINFO, regInfo);
+		}catch(Exception e) {
+			StackTraceElement[] ste = e.getStackTrace();
+			int lineNumber = ste[0].getLineNumber();
+			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
+			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
+		}
+		
 		
 		return model;
 	}
@@ -168,7 +190,7 @@ public class EmpInfoManageController {
 		} catch(Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
-			log.info("e:" + e.toString() + ":" + lineNumber);
+			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 		}
@@ -192,7 +214,7 @@ public class EmpInfoManageController {
 		     }
 			 
 			int ret = 0; 
-			log.debug("orgGubun:" + searchVO.get("orgGubun"));
+			LOGGER.debug("orgGubun:" + searchVO.get("orgGubun"));
 			switch (SmartUtil.NVL(searchVO.get("orgGubun"), "Dept" )) {
 			    case "Dept":
 					DeptInfo info = new DeptInfo();
@@ -229,7 +251,7 @@ public class EmpInfoManageController {
 			
 			
 			
-			meesage = (searchVO.get("mode").toString().equals(Globals.SAVE_MODE_INSERT)) ? "sucess.common.insert" : "sucess.common.update";
+			meesage = (searchVO.get("mode").toString().equals("Ins")) ? "sucess.common.insert" : "sucess.common.update";
 			if (ret > 0){
 				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
@@ -239,8 +261,8 @@ public class EmpInfoManageController {
 		} catch (Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
-			log.info("e:" + e.toString() + ":" + lineNumber);
-			meesage = (searchVO.get("mode").toString().equals(Globals.SAVE_MODE_INSERT)) ? "fail.common.insert" : "fail.common.update";
+			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
+			meesage = (searchVO.get("mode").toString().equals("Ins")) ? "fail.common.insert" : "fail.common.update";
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));			
 		}
@@ -282,7 +304,7 @@ public class EmpInfoManageController {
 		} catch (Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
-			log.info("e:" + e.toString() + ":" + lineNumber);
+			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.delete"));			
 		}		
@@ -325,14 +347,14 @@ public class EmpInfoManageController {
 		} catch(Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
-			log.info("e:" + e.toString() + ":" + lineNumber);
+			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 		}
 		return model;
 	}
 	@RequestMapping(value="orgIdCheck.do")
-	public ModelAndView orgIdCheck(@RequestParam("code") String code, 
+	public ModelAndView selectOrgIDCheckManger(@RequestParam("code") String code, 
 			                                   @RequestParam("orgGubun") String orgGubun) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		try {
@@ -355,84 +377,129 @@ public class EmpInfoManageController {
 			    	 break;
 			}
 			int IDCheck = uniService.selectIdDoubleCheck(tbColumn, tbNm, ""+ tbColumn +" = ["+ code + "[" );
-			log.debug("IDCheck:" + IDCheck);
+			LOGGER.debug("IDCheck:" + IDCheck);
 			String result =  (IDCheck> 0) ? Globals.STATUS_FAIL : Globals.STATUS_OK;
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			model.addObject(Globals.JSON_RETURN_RESULT, result);
 		}catch(Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
-			log.info("e:" + e.toString() + ":" + lineNumber);
+			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 		}
 		
 		return model;
 	}
-	
-	/**
-	 * 직원관리 화면
-	 * @return
-	 * @throws Exception
-	 */
-	@NoLogging
-	@RequestMapping(value="empList.do", method = RequestMethod.GET)
-	public ModelAndView viwEmpList() throws Exception {
+	@RequestMapping(value="empList.do")
+	public ModelAndView selectEmpinfoList(	@ModelAttribute("LoginVO") LoginVO loginVO, 
+											@ModelAttribute("EmpInfo") EmpInfo info,
+											HttpServletRequest request, 
+											BindingResult bindingResult) throws Exception {
+		
 		ModelAndView model = new ModelAndView("/backoffice/mng/empList");
-		List<Map<String, Object>> orgList = deptService.selectOrgInfoComboList();
-		List<Map<String, Object>> deptList = orgList.stream()
-                .filter(x -> x.get("list_gubun").equals("DEPT"))
-                .sorted((o1, o2) -> o1.get("code_cd").toString().compareTo(o2.get("code_cd").toString()))
-                .collect(Collectors.toList());
-		List<Map<String, Object>> gradList = orgList.stream()
-                .filter(x -> x.get("list_gubun").equals("GRAD"))
-                .sorted((o1, o2) -> o1.get("code_cd").toString().compareTo(o2.get("code_cd").toString()))
-                .collect(Collectors.toList());
-		List<Map<String, Object>> postList = orgList.stream()
-                .filter(x -> x.get("list_gubun").equals("POST"))
-                .sorted((o1, o2) -> o1.get("code_cd").toString().compareTo(o2.get("code_cd").toString()))
-                .collect(Collectors.toList());
-		model.addObject("userState", cmmnDetailService.selectCmmnDetailCombo("USER_STATE"));
-		model.addObject("DEPT", deptList);
-		model.addObject("GRAD", gradList);
-		model.addObject("POST", postList);
+
+		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+		if(!isAuthenticated) {
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
+			model.setViewName("/backoffice/login");
+			return model;	
+		} else {
+			HttpSession httpSession = request.getSession(true);
+			loginVO = (LoginVO)httpSession.getAttribute("LoginVO");
+		}
+		try {
+			List<Map<String, Object>> orgList = deptService.selectOrgInfoComboList();
+			
+
+			List<Map<String, Object>> deptList = orgList.stream()
+	                .filter(x -> x.get("list_gubun").equals("DEPT"))
+	                .sorted((o1, o2) -> o1.get("code_cd").toString().compareTo(o2.get("code_cd").toString()))
+	                .collect(Collectors.toList());
+	        
+			
+			List<Map<String, Object>> gradList = orgList.stream()
+	                .filter(x -> x.get("list_gubun").equals("GRAD"))
+	                .sorted((o1, o2) -> o1.get("code_cd").toString().compareTo(o2.get("code_cd").toString()))
+	                .collect(Collectors.toList());
+			//gradList.forEach(item ->item.forEach((k,v) -> System.out.println(k+":" + v)));
+			
+			List<Map<String, Object>> postList = orgList.stream()
+	                .filter(x -> x.get("list_gubun").equals("POST"))
+	                .sorted((o1, o2) -> o1.get("code_cd").toString().compareTo(o2.get("code_cd").toString()))
+	                .collect(Collectors.toList());
+					                                    
+			
+			
+			model.addObject("userState", cmmnDetailService.selectCmmnDetailCombo("USER_STATE"));
+			model.addObject("DEPT", deptList);
+			model.addObject("GRAD", gradList);
+			model.addObject("POST", postList);
+		}catch(Exception e) {
+			StackTraceElement[] ste = e.getStackTrace();
+			int lineNumber = ste[0].getLineNumber();
+			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
+			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
+		}
 		
 		return model;
 	}
-	
 	/**
-	 * 직원 목록 조회
+	 * 직원 정보 목록 
+	 * 
+	 * @param loginVO
 	 * @param searchVO
+	 * @param request
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value="empListAjax.do", method = RequestMethod.POST)
-	public ModelAndView selectEmpinfoListAjax(@RequestBody Map<String,Object> searchVO) throws Exception {
+	@RequestMapping(value="empListAjax.do")
+	public ModelAndView selectEmpinfoListAjax(@RequestBody Map<String,Object> searchVO,
+											  HttpServletRequest request) throws Exception {
+	
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		
-		//페이징 처리 할 부분 정리 하기 
-		int pageUnit = searchVO.get("pageUnit") == null ? propertiesService.getInt("pageUnit")
-				: Integer.valueOf((String) searchVO.get("pageUnit"));
+		try {
+			Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+			if(!isAuthenticated) {
+				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
+				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
+				return model;
+			} 
+			LOGGER.debug("========================================================");
+			
+			//페이징 처리 할 부분 정리 하기 
+			int pageUnit = searchVO.get("pageUnit") == null ? propertiesService.getInt("pageUnit") : Integer.valueOf((String) searchVO.get("pageUnit"));
+			
+			PaginationInfo paginationInfo = new PaginationInfo();
+			paginationInfo.setCurrentPageNo( Integer.parseInt( SmartUtil.NVL(searchVO.get("pageIndex"), "1")));
+			paginationInfo.setRecordCountPerPage(pageUnit);
+			paginationInfo.setPageSize(propertiesService.getInt("pageSize"));
+			
+			searchVO.put("pageSize", propertiesService.getInt("pageSize"));
+			searchVO.put("firstIndex", paginationInfo.getFirstRecordIndex());
+			searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
+			searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
 		
-		PaginationInfo paginationInfo = new PaginationInfo();
-		paginationInfo.setCurrentPageNo( Integer.parseInt( SmartUtil.NVL(searchVO.get("pageIndex"), "1")));
-		paginationInfo.setRecordCountPerPage(pageUnit);
-		paginationInfo.setPageSize(propertiesService.getInt("pageSize"));
+			if (SmartUtil.NVL(searchVO.get("mode"), "").equals("")) 
+				searchVO.put("mode", "list");
+			
+			List<Map<String, Object>> list = empService.selectEmpInfoList(searchVO) ;
+			int totCnt = list.size() > 0 ? Integer.valueOf( list.get(0).get("total_record_count").toString()) : 0;
 		
-		searchVO.put("firstIndex", paginationInfo.getFirstRecordIndex());
-		searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
-		searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
-		
-		List<Map<String, Object>> list = empService.selectEmpInfoList(searchVO) ;
-		int totCnt = list.size() > 0 ? Integer.valueOf( list.get(0).get("total_record_count").toString()) : 0;
-		paginationInfo.setTotalRecordCount(totCnt);
-
-		model.addObject(Globals.STATUS_REGINFO, searchVO);
-		model.addObject(Globals.JSON_RETURN_RESULTLISR, list);
-		model.addObject(Globals.PAGE_TOTALCNT, totCnt);
-		model.addObject(Globals.JSON_PAGEINFO, paginationInfo);
-		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-		
+			model.addObject(Globals.JSON_RETURN_RESULTLISR, list);
+			model.addObject(Globals.PAGE_TOTALCNT, totCnt);
+			paginationInfo.setTotalRecordCount(totCnt);
+			model.addObject(Globals.JSON_PAGEINFO, paginationInfo);
+			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+		} catch(Exception e) {
+			StackTraceElement[] ste = e.getStackTrace();
+			int lineNumber = ste[0].getLineNumber();
+			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
+			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
+		}
 		return model;
 	}
 	
@@ -445,7 +512,7 @@ public class EmpInfoManageController {
 	 * @param bindingResult
 	 * @return
 	 * @throws Exception
-	 *//** 사용하지 않음
+	 */
 	@RequestMapping(value="empDetail.do")
 	public ModelAndView selectEmpinfoDetail(@ModelAttribute("LoginVO") LoginVO loginVO, 
 											@RequestParam("empNo") String empNo, 
@@ -457,95 +524,109 @@ public class EmpInfoManageController {
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			model.addObject(Globals.STATUS_REGINFO, empService.selectEmpInfoDetail(empNo));			    	 
 		} catch (Exception e) {
-			log.info(e.toString());
+			LOGGER.info(e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.delete"));			
 		}	
 		return model;			
-	}*/
-
-	/**
-	 * 직원 정보 수정
-	 * @param empInfo
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping (value="empUpdate.do", method = RequestMethod.POST)
-	public ModelAndView empUpdate(@RequestBody EmpInfo empInfo) throws Exception {
+	}	
+	@RequestMapping(value="empNoCheck.do")
+	public ModelAndView selectempNoCheckManger(@RequestParam("empNo") String empNo) throws Exception {
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-		
-		int ret = 0;
-		switch (empInfo.getMode()) {
-			case Globals.SAVE_MODE_INSERT:
-				ret = empService.insertEmpInfo(empInfo);
-				break;
-			case Globals.SAVE_MODE_UPDATE:
-				ret = empService.updateEmpInfo(empInfo);
-				break;
-			default:
-				throw new EgovBizException("잘못된 호출입니다.");
-		}
-		
-		String messageKey = "";
-		if (ret > 0) {
+		try {
+			
+			
+			int IDCheck = uniService.selectIdDoubleCheck("EMP_NO", "TSEH_EMP_INFO_M", "EMP_NO = ["+ empNo + "[" );
+			String result =  (IDCheck> 0) ? Globals.STATUS_FAIL : Globals.STATUS_OK;
 			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-			messageKey = StringUtils.equals(empInfo.getMode(), Globals.SAVE_MODE_INSERT) 
-					? "sucess.common.insert" : "sucess.common.update";
-		}
-		else {
+			model.addObject(Globals.JSON_RETURN_RESULT, result);
+		}catch(Exception e) {
+			StackTraceElement[] ste = e.getStackTrace();
+			int lineNumber = ste[0].getLineNumber();
+			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			messageKey = StringUtils.equals(empInfo.getMode(), Globals.SAVE_MODE_INSERT) 
-					? "fail.common.insert" : "fail.common.update";
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
 		}
-		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(messageKey));
 		
 		return model;
 	}
-
+	@RequestMapping (value="empUpdate.do")
+	public ModelAndView empUpdate(HttpServletRequest request
+						          , MultipartRequest mRequest
+								  , @ModelAttribute("EmpInfo") EmpInfo info
+								  , BindingResult result) throws Exception{
+		
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+		String meesage = null;
+		LOGGER.debug("======================================================1");
+		try {
+			
+			 LOGGER.debug("======================================================");
+			 Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+			 if(!isAuthenticated) {
+				 model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
+				 model.addObject(Globals.STATUS,  Globals.STATUS_LOGINFAIL);
+				 return model;	
+		     }
+			 info.setEmpPic(uploadFile.uploadFileNm(mRequest.getFiles("empPic"), propertiesService.getString("Globals.filePath")));
+			 LoginVO loginVO = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
+			 info.setUserId( loginVO.getAdminId() );
+			 int ret = empService.updateEmpInfo(info); 
+			 meesage = (info.getMode().equals("Ins")) ? "sucess.common.insert" : "sucess.common.update";
+			 if (ret > 0){
+				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
+			 } else {
+				throw new Exception();
+			 }
+		} catch (Exception e) {
+			StackTraceElement[] ste = e.getStackTrace();
+			int lineNumber = ste[0].getLineNumber();
+			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
+			meesage = (info.getMode().equals("Ins")) ? "fail.common.insert" : "fail.common.update";
+			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));			
+		}
+		return model;
+	}
 	/**
 	 * 직원 정보 삭제
-	 * @param empInfo
+	 * 
+	 * @param loginVO
+	 * @param empno
+	 * @param request
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value="empDelete.do", method = RequestMethod.POST)
-	public ModelAndView deleteEmployInfo(@RequestBody EmpInfo empInfo) throws Exception {
+	@RequestMapping(value="empDelete.do")
+	public ModelAndView deleteEmployInfo(@RequestParam("empNo") String empNo,
+										 HttpServletRequest request) throws Exception {
+			
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-		
-		int ret =  empService.deleteEmpInfo(SmartUtil.dotToList(empInfo.getEmpNo()));
-		if (ret > 0) {
-    		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.delete") );	
-    	} else {
-    		model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.delete"));
-    	}
-		
+		try {
+	    	int ret =  empService.deleteEmpInfo(SmartUtil.dotToList(empNo));
+	    	if (ret>0) {
+	    		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.delete") );	
+	    	}else {
+	    		throw new Exception();
+	    	}
+				    	 
+		} catch (Exception e) {
+			LOGGER.info(e.toString());
+			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.delete"));			
+		}		
 		return model;
 	}
-	
-	/**
-	 * 사번 중복 체크
-	 * @param empno
-	 * @return
-	 * @throws Exception
-	 */
-	@NoLogging
-	@RequestMapping(value="empNoCheck.do", method = RequestMethod.GET)
-	public ModelAndView empNoCheck(@RequestParam("empNo") String empNo) throws Exception {
-		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		
-		int ret = uniService.selectIdDoubleCheck("EMP_NO", "TSEH_EMP_INFO_M", "EMP_NO = ["+ empNo + "[" );
-		if (ret == 0) {
-    		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("common.codeOk.msg"));
-    	}
-    	else {
-    		model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("common.codeFail.msg"));
-    	}
-    	
-    	return model;
+	@RequestMapping(value="IdCheck.do")
+	public ModelAndView selectUserMangerIDCheck(@RequestParam("empno") String empno) throws Exception {
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+		int IDCheck = uniService.selectIdDoubleCheck("EMP_NO", "TSEH_EMP_INFO_M", "EMP_NO = ["+ empno + "[" );
+		String result =  (IDCheck> 0) ? Globals.STATUS_FAIL : Globals.STATUS_SUCCESS;
+		model.addObject(Globals.STATUS, result);
+		return model;
 	}
 	
 	

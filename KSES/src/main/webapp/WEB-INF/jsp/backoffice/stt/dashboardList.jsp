@@ -5,6 +5,7 @@
 <script type="text/javascript" src="/resources/js/xlsx.full.min.js"></script>
 <!-- FileSaver -->
 <script src="/resources/js/FileSaver.min.js"></script>
+
 <!-- //contents -->
 <div class="breadcrumb">
 	<ol class="breadcrumb-item">
@@ -88,6 +89,7 @@
 <!-- contents//-->
 <!-- //popup -->
 <!-- popup// -->
+<script type="text/javascript" src="/resources/js/temporary.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
 		fnTodayResvNumber();
@@ -96,50 +98,50 @@
 	});
 
 	function fnTodayResvNumber() {
-		EgovIndexApi.apiExecuteJson(
-			'POST',
+		fn_Ajax (
 			'/backoffice/stt/todayResvNumberAjax.do',
+			"POST",
 			null,
-			null,
-			function(json) {
-				if (json.status === 'SUCCESS') {
-					$('#pResvNumber').text(json.todayResvNumber);
+			false,
+			function(result) {
+				if (result.status === 'SUCCESS') {
+					$('#pResvNumber').text(result.todayResvNumber);
 				}
 			},
-			function(json) {
-				toastr.error(json.status);
+			function(request){
+				console.log('error: '+ request.status);
 			}
 		);
 	}
 
 	function fnNowEntryNumber() {
-		EgovIndexApi.apiExecuteJson(
-			'POST',
+		fn_Ajax (
 			'/backoffice/stt/nowEntryNumberAjax.do',
+			"POST",
 			null,
-			null,
-			function(json) {
-				if (json.status === 'SUCCESS') {
-					$('#pNowEntryNumber').text(json.nowEntryNumber);
+			false,
+			function(result) {
+				if (result.status === 'SUCCESS') {
+					$('#pNowEntryNumber').text(result.nowEntryNumber);
 				}
 			},
-			function(json) {
-				toastr.error(json.status);
+			function(request){
+				console.log('error: '+ request.status);
 			}
 		);
 	}
 
 	function fnDashboardList() {
-		EgovIndexApi.apiExecuteJson(
-			'POST',
+		fn_Ajax (
 			'/backoffice/stt/dashboardListAjax.do',
+			"POST",
 			null,
-			null,
-			function(json) {
-				if (json.status === 'SUCCESS') {
+			false,
+			function(result) {
+				if (result.status === 'SUCCESS') {
 					let $tbody = $('.main_table tbody');
 					$tbody.empty();
-					for (let item of json.dashboardList) {
+					for (let item of result.dashboardList) {
 						$(	'<tr>'+
 								'<td>'+ item.center_nm +'</td>'+
 								'<td>'+ item.class_4 +'</td>'+
@@ -155,26 +157,26 @@
 					$tbody.find('tr:last').addClass('tb_bottom');
 				}
 			},
-			function(json) {
-				toastr.error(json.status);
+			function(request){
+				console.log('error: '+ request.status);
 			}
 		);
 	}
 	
 	// 엑셀 다운로드
 	function fnExcelDownload() {
-		EgovIndexApi.apiExecuteJson(
-			'POST',
+		fn_Ajax(
 			'/backoffice/stt/dashboardListAjax.do', 
+			'POST',
 			null,
-			null,
-			function(json) {
-				let ret = json.dashboardList;
+			false,
+			function(result) {
+				let ret = result.dashboardList;
 				if (ret.length <= 0) {
 					return;
 				}
 				if (ret.length >= 1000) {
-					toastr.info('해당 조회 건수가 1000건이 넘습니다. 엑셀 다운로드 시 1000건에 대한 데이터만 저장됩니다.');
+					common_popup("해당 조회 건수가 1000건이 넘습니다. 엑셀 다운로드 시 1000건에 대한 데이터만 저장됩니다.", "Y" , "");
 				}
 				let excelData = new Array();
 				excelData.push(['지점명', '노블레스', '프리미엄', '스탠다드', '일반', '입석', '입장인원', '입장정원']);
@@ -196,8 +198,8 @@
 					XLSX.write(wb, { bookType: 'xlsx', type: 'binary' })
 				)],{ type: 'application/octet-stream' }), '통합이용현황.xlsx');
 			},
-			function(json) {
-				toastr.error(json.message);
+			function(request){
+				console.log('error: '+ request.status);
 			}
 		);
 	}

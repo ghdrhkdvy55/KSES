@@ -3,22 +3,28 @@ package com.kses.backoffice.bas.holy.service.impl;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kses.backoffice.bas.holy.mapper.HolyInfoManageMapper;
 import com.kses.backoffice.bas.holy.service.HolyInfoService;
 import com.kses.backoffice.bas.holy.vo.HolyInfo;
+import com.kses.backoffice.util.mapper.UniSelectInfoManageMapper;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @Service
 public class HolyInfoServiceImpl extends EgovAbstractServiceImpl implements HolyInfoService{
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(HolyInfoServiceImpl.class);
 			
 	@Autowired
 	private HolyInfoManageMapper holyMapper;
+	
+	@Autowired
+	private UniSelectInfoManageMapper uniMapper;
 
 	@Override
 	public List<Map<String, Object>> selectHolyInfoList(Map<String, Object> params) throws Exception {
@@ -31,18 +37,19 @@ public class HolyInfoServiceImpl extends EgovAbstractServiceImpl implements Holy
 	}
 	
 	@Override
-	public List<Map<String, Object>> selectHolyCenterList(Map<String, Object> searchVO) throws Exception {
-		return holyMapper.selectHolyCenterList(searchVO);
-	}
-	
-	@Override
-	public int insertHolyInfo(HolyInfo holyInfo) throws Exception {
-		return holyMapper.insertHolyInfo(holyInfo);
-	}
-	
-	@Override
-	public int updateHolyInfo(HolyInfo holyInfo) throws Exception {
-		return holyMapper.updateHolyInfo(holyInfo) ;
+	public int updateHolyInfo(HolyInfo vo) throws Exception {
+		int ret;
+		Map<String, Object> doubleCheckHolySeq = holyMapper.selectHolyInfoDetail(vo.getHolySeq());
+		if (vo.getMode().equals("Ins")) {
+			ret = (uniMapper.selectIdDoubleCheck("HOLY_DT", "TSEC_HOLY_INFO_M", "HOLY_DT = ["+ vo.getHolyDt() + "[" ) > 0) ? -1 : holyMapper.insertHolyInfo(vo);
+		} else {
+			if (doubleCheckHolySeq.get("holy_dt").equals(vo.getHolyDt()) && doubleCheckHolySeq.get("holy_seq").toString().equals(vo.getHolySeq().toString())) {
+				ret = holyMapper.updateHolyInfo(vo);
+			} else {
+				ret = (uniMapper.selectIdDoubleCheck("HOLY_DT", "TSEC_HOLY_INFO_M", "HOLY_DT = ["+ vo.getHolyDt() + "[" ) > 0) ? -1 : holyMapper.updateHolyInfo(vo);
+			}			
+		}
+		return ret;
 	}
 	
 	@Override
@@ -62,7 +69,7 @@ public class HolyInfoServiceImpl extends EgovAbstractServiceImpl implements Holy
 			holyMapper.insertExcelHoly(holyInfoList);
 			result = true;
 		}catch( Exception e) {
-			log.error("insertExcelHoly error:" + e.toString());
+			LOGGER.error("insertExcelHoly error:" + e.toString());
 		}
 		return result;
 	}

@@ -21,19 +21,6 @@
 		WHERE RNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}
 		ORDER BY TB.RNUM ASC
 	</select>
-
-	<select id="selectPartClass" resultType="lmap">
-		SELECT
-			PART_CLASS_SEQ,
-			CENTER_CD,
-			PART_CLASS,
-			FN_DETAILCODENM(PART_CLASS) AS PART_CLASS_NM,
-			PART_PAY_COST,
-			PART_ICON,
-			USE_YN
-		FROM TSEB_CENTER_PART_CLASS_D
-		WHERE PART_CLASS_SEQ = #{value}
-	</select>
 	
 	<select id="selectPartClassComboList" resultType="lmap">
 		SELECT
@@ -55,19 +42,20 @@
 		(
 			SEQ_SEB_CENTER_PART_CLASS.NEXTVAL, #{centerCd}, #{partClass, jdbcType=VARCHAR}, #{partPayCost}, #{partSpeedPayCost},
 			#{useYn}, #{partIcon, jdbcType=VARCHAR}, #{partClassOrder}, 
-			SYSDATE, #{frstRegterId}, SYSDATE, #{lastUpdusrId}
+			SYSDATE, #{userId}, SYSDATE, #{userId}
 		)
 	</insert>
 	
 	<update id ="updatePartClassInfo">
 		UPDATE TSEB_CENTER_PART_CLASS_D SET 
+			PART_CLASS = #{partClass, jdbcType=VARCHAR},
 			PART_PAY_COST = #{partPayCost},
 			PART_SPEED_PAY_COST = #{partSpeedPayCost},
 			<if test="partIcon != '' ">                                    
 				PART_ICON = #{partIcon, jdbcType=VARCHAR},
 			</if>			
 			USE_YN = #{useYn},
-			LAST_UPDUSR_ID = #{lastUpdusrId},
+			LAST_UPDUSR_ID = #{userId},
 			LAST_UPDT_DTM = SYSDATE,
 			PART_CLASS_ORDER = #{partClassOrder}
 		WHERE PART_CLASS_SEQ = #{partClassSeq, jdbcType=VARCHAR}					

@@ -35,9 +35,6 @@ public class CenterHolyInfo {
 	 // 최종 수정자 ID 
 	 private String lastUpdusrId;
 	 
-	 // 복사 지점 코드
-	 private String copyCenterCd;
-	 
 	 // 입력 구분 
 	 private String mode;
 }

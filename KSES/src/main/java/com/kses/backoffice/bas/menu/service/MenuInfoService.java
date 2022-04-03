@@ -14,7 +14,7 @@ public interface MenuInfoService {
 	 * @return MenuManageVO
 	 * @exception Exception
 	 */
-	Map<String, Object> selectMenuManage(String menuNo) throws Exception;
+	List<Map<String, Object>> selectMenuManage(String searchKeyword) throws Exception;
 
 	/**
 	 * 메뉴 목록을 조회
@@ -34,20 +34,12 @@ public interface MenuInfoService {
 
 
 	int selectUpperMenuNoByPk(String menuNo) throws Exception;
+
 	
 	/**
-	 * 메뉴 정보 등록
-	 * @param menuInfo
-	 * @return
-	 * @throws Exception
-	 */
-	int insertMenuManage(MenuInfo menuInfo) throws Exception;
-	
-	/**
-	 * 메뉴 정보 수정
-	 * @param vo
-	 * @return
-	 * @throws Exception
+	 * 메뉴 정보를 수정
+	 * @param vo MenuManageVO
+	 * @exception Exception
 	 */
 	int updateMenuManage(MenuInfo vo) throws Exception;
 

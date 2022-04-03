@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.kses.backoffice.bas.kiosk.mapper.KioskInfoManageMapper;
 import com.kses.backoffice.bas.kiosk.vo.KioskInfo;
 import com.kses.backoffice.bas.kiosk.service.KioskInfoService;
+import com.kses.backoffice.util.mapper.UniSelectInfoManageMapper;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
@@ -16,26 +17,38 @@ import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 public class KioskInfoServiceImpl extends EgovAbstractServiceImpl implements KioskInfoService{
 	@Autowired
 	private KioskInfoManageMapper kioskMapper;
+	
+	@Autowired
+	private UniSelectInfoManageMapper uniMapper;
 
 	@Override
 	public List<Map<String, Object>> selectKioskInfoList(Map<String, Object> params) throws Exception {
 		return kioskMapper.selectKioskInfoList(params);
 	}
 
-//  장비 상세 정보(사용안함)	
-	@Override 
+	@Override
 	public Map<String, Object> selectKioskInfoDetail(String ticketMchnSno) throws Exception {
-	    return kioskMapper.selectKioskInfoDetail(ticketMchnSno);
+		return kioskMapper.selectKioskInfoDetail(ticketMchnSno);
 	}
 	
 	@Override
-	public int insertKioskInfo(KioskInfo kioskInfo) throws Exception {
-		return kioskMapper.insertKioskInfo(kioskInfo);
-	}
-	
-	@Override
-	public int updateKioskInfo(KioskInfo kioskInfo) throws Exception {
-		return kioskMapper.updateKioskInfo(kioskInfo);
+	public int updateKioskInfo(KioskInfo vo) throws Exception {
+		int ret = 0;
+		
+		if (vo.getMode().equals("Ins")){
+			ret = (uniMapper.selectIdDoubleCheck("TICKET_MCHN_SNO", "TSEC_TICKET_MCHN_M", "TICKET_MCHN_SNO = ["+ vo.getTicketMchnSno() + "[" ) > 0) ? -1 : kioskMapper.insertKioskInfo(vo);
+		} else {
+			ret = kioskMapper.updateKioskInfo(vo);
+			/*
+			if (!vo.getTargetTicketMchnSno().equals(vo.getTicketMchnSno())) {
+				ret = (uniMapper.selectIdDoubleCheck("TICKET_MCHN_SNO", "TSEC_TICKET_MCHN_M", "TICKET_MCHN_SNO = ["+ vo.getTicketMchnSno() + "[" ) > 0) ? -1 : kioskMapper.updateKioskInfo(vo);
+			} else {
+				kioskMapper.updateKioskInfo(vo);
+			}
+			*/
+		}
+		
+		return ret;
 	}
 
 	@Override

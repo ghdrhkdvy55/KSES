@@ -15,8 +15,6 @@ public interface SeatInfoManageService {
 	
 	List<Map<String, Object>> selectReservationSeatList(Map<String, Object> params) throws Exception;
 	
-	int insertSeatInfo(SeatInfo vo) throws Exception;
-	
 	int updateSeatInfo(SeatInfo vo) throws Exception;
 	
 	int updateSeatPositionInfo(List<SeatInfo> list) throws Exception;

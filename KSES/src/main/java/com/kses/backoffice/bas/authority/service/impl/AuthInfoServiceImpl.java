@@ -33,13 +33,15 @@ public class AuthInfoServiceImpl extends EgovAbstractServiceImpl implements Auth
 	}
 	
 	@Override
-	public int insertAuthInfo(AuthInfo authInfo) throws Exception {
-		return (uniMapper.selectIdDoubleCheck("AUTHOR_CODE", "COMTNAUTHORINFO", "AUTHOR_CODE = ["+ authInfo.getAuthorCode() + "[" ) > 0) ? -1 :  authMapper.insertAuthInfo(authInfo);
-	}
-	
-	@Override
-	public int updateAuthInfo(AuthInfo authInfo) throws Exception {
-		return authMapper.updateAuthInfo(authInfo);
+	public int updateAuthInfo(AuthInfo vo) throws Exception {
+		int ret = 0;
+		
+		if (vo.getMode().equals("Ins")){
+			ret = (uniMapper.selectIdDoubleCheck("AUTHOR_CODE", "COMTNAUTHORINFO", "AUTHOR_CODE = ["+ vo.getAuthorCode() + "[" ) > 0) ? -1 :  authMapper.insertAuthInfo(vo);
+		} else {
+			ret = authMapper.updateAuthInfo(vo);
+		}
+		return ret;
 	}
 
 	@Override

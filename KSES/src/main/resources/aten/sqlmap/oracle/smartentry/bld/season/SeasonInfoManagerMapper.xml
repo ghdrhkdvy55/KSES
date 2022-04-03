@@ -117,7 +117,7 @@
 			VALUES 
 			(
 				#{seasonCd}, #{seasonStartDay}, #{seasonEndDay}, #{useYn,jdbcType=VARCHAR}, #{seasonNm,jdbcType=VARCHAR}, #{seasonDc,jdbcType=VARCHAR},
-				SYSDATE, #{frstRegterId}, SYSDATE, #{lastUpdusrId}, #{seasonCenterinfo,jdbcType=VARCHAR}
+				SYSDATE, #{userId}, SYSDATE, #{userId}, #{seasonCenterinfo,jdbcType=VARCHAR}
 			);
 			
 			INSERT INTO TSEB_SEASON_STINFO_D 
@@ -133,7 +133,7 @@
 				SEAT_CD, PAY_COST, PAY_AM_COST, PAY_PM_COST, SEAT_TOP, 
 				SEAT_LEFT, SEAT_WIDTH, SEAT_HEIGHT, PAY_DVSN, SEAT_CLASS, 
 				USE_YN, SEAT_NM, SEAT_ORDER, SEAT_NUMBER, SYSDATE, 
-				#{frstRegterId}, SYSDATE, #{lastUpdusrId}
+				#{userId}, SYSDATE, #{userId}
 			FROM TSEB_SEAT_INFO_D 
 			WHERE CENTER_CD IN (SELECT COLUMN_VALUE FROM TABLE (UF_SPLICT(#{seasonCenterinfo}, ','))
 			);
@@ -165,7 +165,7 @@
 				       CENTER_CD, FLOOR_CD, PART_CD, SEAT_CD, PAY_COST, PAY_AM_COST, PAY_PM_COST,
 				       SEAT_TOP,SEAT_LEFT, SEAT_WIDTH, SEAT_HEIGHT,
 				       PAY_DVSN, SEAT_CLASS, USE_YN, SEAT_NM, SEAT_ORDER,
-				       SYSDATE, #{frstRegterId}, SYSDATE, #{lastUpdusrId}
+				       SYSDATE, #{userId}, SYSDATE, #{userId}
 			    FROM TSEB_SEAT_INFO_D 
 			    WHERE CENTER_CD IN (
 			           SELECT COLUMN_VALUE FROM TABLE (UF_SPLICT(#{seasonCenterinfo}, ','))
@@ -180,8 +180,8 @@
 				                         SEASON_NM = #{seasonNm, jdbcType=VARCHAR}, 
 				                         SEASON_DC = #{seasonDc, jdbcType=VARCHAR}, 
 				                         LAST_UPDT_DTM = SYSDATE,     
-				                         LAST_UPDUSR_ID = #{lastUpdusrId, jdbcType=VARCHAR},
-				                         SEASON_CENTERINFO =  #{seasonCenterinfo, jdbcType=VARCHAR}
+				                         LAST_UPDUSR_ID = #{userId, jdbcType=VARCHAR},
+				                         SEASON_CENTERINFO =  #{seasonCenterinfo,jdbcType=VARCHAR}            
 		        WHERE SEASON_CD = #{seasonCd};
 		    END
 		 }

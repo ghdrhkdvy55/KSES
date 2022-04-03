@@ -4,7 +4,7 @@
 	<select id="selectBillInfoList" resultType="lmap">
 		SELECT 
 			A.BILL_SEQ, A.BILL_NUM, A.BILL_CORP_NAME, A.BILL_CEO_NAME, A.BILL_ADDR,
-			A.BILL_TEL, A.BILL_USER_ID, A.BILL_EMAIL, A.CENTER_CD, A.BILL_DVSN, B.CENTER_NM,
+			A.BILL_TEL, A.BILL_USER_ID, A.BILL_EMAIL, A.CENTER_CD, B.CENTER_NM,  
 			FN_DETAILCODENM(A.BILL_DVSN) AS BILL_DVSN_TEXT
 		FROM TSER_BILL_INFO_I A, TSEB_CENTER_INFO_M B
 		WHERE A.CENTER_CD = #{centerCd}
@@ -12,26 +12,26 @@
 	</select>
 	
 	<select id="selectBillDayInfoList" resultType="lmap">
-		SELECT A.BILLDAY_CD,
-		       A.CENTER_CD,
-			   A.BILL_DAY,
-			   A.BILL_SEQ,
-			   CASE A.BILL_DAY
-				   WHEN '2' THEN '월요일'
-				   WHEN '3' THEN '화요일'
-				   WHEN '4' THEN '수요일'
-				   WHEN '5' THEN '목요일'
-				   WHEN '6' THEN '금요일'
-				   WHEN '7' THEN '토요일'
-				   WHEN '1' THEN '일요일'
-				   END AS BILL_DAY_TEXT,
-			   B.BILL_DVSN,
-			   FN_DETAILCODENM(B.BILL_DVSN) AS BILL_DVSN_TEXT,
-			   B.BILL_CORP_NAME,
-			   B.BILL_NUM
-		FROM TESR_BILLDAY_INFO_I A
-			LEFT OUTER JOIN TSER_BILL_INFO_I B ON A.CENTER_CD = B.CENTER_CD AND A.BILL_SEQ = B.BILL_SEQ
+		SELECT 
+			A.BILLDAY_CD, A.BILL_DAY, A.BILL_SEQ,
+			CASE A.BILL_DAY
+				WHEN '2' THEN '월요일'
+				WHEN '3' THEN '화요일'
+				WHEN '4' THEN '수요일'
+				WHEN '5' THEN '목요일'
+				WHEN '6' THEN '금요일'
+				WHEN '7' THEN '토요일'
+				WHEN '1' THEN '일요일'
+			END BILL_DAY_TEXT,
+			B.BILL_DVSN,
+			FN_DETAILCODENM(B.BILL_DVSN) AS BILL_DVSN_TEXT, 
+ 			A.LAST_UPDUSR_ID,
+			TO_CHAR(A.LAST_UPDT_DTM, 'yyyy-mm-dd') AS LAST_UPDT_DTM, 
+			C.CENTER_NM
+		FROM TESR_BILLDAY_INFO_I A, TSER_BILL_INFO_I B, TSEB_CENTER_INFO_M C
 		WHERE A.CENTER_CD = #{centerCd}
+		AND A.CENTER_CD = C.CENTER_CD
+		AND A.BILL_SEQ = B.BILL_SEQ(+)
 		ORDER BY A.BILL_DAY ASC
 	</select>
 	
@@ -82,14 +82,8 @@
 			WHERE BILLDAY_CD = #{item.billdayCd}
 		</foreach>
 	</update>
-
-	<update id="updateBillDayInfoByCenterCd">
-		UPDATE TESR_BILLDAY_INFO_I SET
-			BILL_SEQ = #{billSeq}, LAST_UPDUSR_ID = #{lastUpdusrId}, LAST_UPDT_DTM = SYSDATE
-		WHERE CENTER_CD = #{centerCd}
-	</update>
 	
-	<delete id="deleteBillInfo">
+	<select id="deleteBillInfo">
 		DELETE FROM TSER_BILL_INFO_I WHERE BILL_SEQ = #{billSeq}
-	</delete>
+	</select>
 </mapper>

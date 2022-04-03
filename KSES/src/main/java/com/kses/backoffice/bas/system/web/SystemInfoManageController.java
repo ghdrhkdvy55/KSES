@@ -1,30 +1,31 @@
 package com.kses.backoffice.bas.system.web;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.kses.backoffice.bas.code.service.EgovCcmCmmnDetailCodeManageService;
 import com.kses.backoffice.bas.system.service.SystemInfoManageService;
 import com.kses.backoffice.bas.system.vo.SystemInfo;
-import com.kses.backoffice.sym.log.annotation.NoLogging;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RestController
 @RequestMapping("/backoffice/bas")
 public class SystemInfoManageController {
+	private static final Logger LOGGER = LoggerFactory.getLogger(SystemInfoManageController.class);
 	
 	@Autowired
 	protected EgovMessageSource egovMessageSource;
@@ -38,19 +39,18 @@ public class SystemInfoManageController {
 	@Autowired
 	SystemInfoManageService systemInfoService;
 	
-	/**
-	 * 환경설정 화면
-	 * @param searchVO
-	 * @return
-	 * @throws Exception
-	 */
-	@NoLogging
-	@RequestMapping(value="systemInfo.do", method = RequestMethod.GET)
-	public ModelAndView viewSystemInfo() throws Exception {
-		ModelAndView model = new ModelAndView("/backoffice/bas/systemInfo");
+	@RequestMapping(value="systemInfo.do")
+	public ModelAndView selectSystemInfo(	@ModelAttribute("loginVO") LoginVO loginVO, 
+											@ModelAttribute("searchVO") SystemInfo searchVO, 
+											HttpServletRequest request, 
+											BindingResult bindingResult) throws Exception {
+		
+		ModelAndView model = new ModelAndView();
 		SystemInfo result = systemInfoService.selectSystemInfo();   	
-        model.addObject(Globals.JSON_RETURN_RESULT, result);
+
+        model.addObject(Globals.STATUS_REGINFO, result);
         model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+        model.setViewName("/backoffice/bas/systemInfo");
         return model;	
 	}
 	
@@ -83,7 +83,7 @@ public class SystemInfoManageController {
 				throw new Exception();
 			}
 		} catch (Exception e) {
-			log.error("updateSystemInfo ERROR : " + e.toString());
+			LOGGER.error("updateSystemInfo ERROR : " + e.toString());
 			meesage = "fail.common.update";
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));			

@@ -7,7 +7,7 @@ import com.kses.backoffice.sym.log.vo.LoginLog;
 
 public interface LoginLogService {
 
-	public List<Map<String, Object>> selectLoginLogInfo(Map<String, Object> searchVO ) throws Exception;
+	public List selectLoginLogInfo(Map<String, Object> searchVO ) throws Exception;
 	
 	public Map<String, Object> selectLoginLogInfoDetail(String logId) throws Exception;
 	

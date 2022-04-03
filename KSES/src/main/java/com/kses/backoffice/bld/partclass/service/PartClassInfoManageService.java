@@ -19,14 +19,6 @@ public interface PartClassInfoManageService {
 	List<Map<String, Object>> selectPartClassList (@Param("params") Map<String, Object> searchVO) throws Exception;
 
 	/**
-	 * 구역 등급 상세 조회
-	 * @param partClassSeq
-	 * @return
-	 * @throws Exception
-	 */
-	Map<String, Object> selectPartClass(String partClassSeq) throws Exception;
-
-	/**
 	 * SPDM 구역 등급 관리 콤보 리스트 조회
 	 * 
 	 * @param centerCd

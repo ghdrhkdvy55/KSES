@@ -14,23 +14,20 @@
 				SELECT  
 					A.RESV_SEQ, A.SEAT_CD, A.SEASON_CD, A.RESV_START_DT, A.RESV_END_DT, A.RESV_DVSN,
 					A.RESV_START_TM, A.RESV_END_TM, TO_CHAR(A.RESV_REQ_DATE,'YYYY-MM-DD HH24:MI') AS RESV_REQ_DATE, A.USER_ID, A.RESV_USER_DVSN,
-					A.RESV_USER_ASK_YN, A.RESV_RCPT_YN, A.RESV_RCPT_NUMBER, A.RESV_RCPT_STATE, A.RESV_PAY_COST,
-					A.RESV_ENTRY_PAY_COST, A.RESV_SEAT_PAY_COST, A.RESV_PAY_DVSN, A.RESV_TICKET_DVSN, A.RESV_STATE,
+					A.RESV_USER_ASK_YN, A.RESV_RCPT_YN, A.RESV_RCPT_NUMBER, A.RESV_RCPT_STATE, A.RESV_PAY_COST, 
+					A.RESV_PAY_DVSN, A.RESV_TICKET_DVSN, A.RESV_STATE,
 					FN_DETAILCODENM(A.RESV_TICKET_DVSN) AS RESV_TICKET_DVSN_TEXT,
-					FN_DETAILCODENM(A.RESV_USER_DVSN) AS RESV_USER_DVSN_TEXT,
 					FN_DETAILCODENM(A.RESV_PAY_DVSN) AS RESV_PAY_DVSN_TEXT,
 					FN_DETAILCODENM(A.RESV_STATE) AS RESV_STATE_TEXT,
 					FN_DETAILCODENM(A.RESV_SEAT_CLASS) AS RESV_SEAT_CLASS_TEXT,
 					CASE  
     					WHEN A.RESV_ENTRY_DVSN = 'ENTRY_DVSN_1'  THEN '자유석' 
-    					ELSE F.FLOOR_NM || ' ' || E.PART_NM || '구역 ' || B.SEAT_NM
+    					ELSE (SELECT SEAT_NM FROM TSEB_SEAT_INFO_D WHERE SEAT_CD = A.SEAT_CD)
     				END AS SEAT_NM, 
-					C.CENTER_CD, C.CENTER_NM, C.CENTER_PILOT_YN, D.USER_NM, REGEXP_REPLACE(D.USER_PHONE, '(02|.{3})(.+)(.{4})', '\1-\2-\3') AS USER_PHONE,
-					E.PART_CD, F.FLOOR_CD
-				FROM TSER_RESV_INFO_I A, TSEB_SEAT_INFO_D B, TSEB_CENTER_INFO_M C, TSER_USER_INFO_I D, TSEB_PART_INFO_D E, TSEB_FLOOR_INFO_M F
+					C.CENTER_NM, C.CENTER_PILOT_YN, D.USER_NM, REGEXP_REPLACE(D.USER_PHONE, '(02|.{3})(.+)(.{4})', '\1-\2-\3') AS USER_PHONE
+				FROM TSER_RESV_INFO_I A, TSEB_SEAT_INFO_D B, TSEB_CENTER_INFO_M C, TSER_USER_INFO_I D, TSEB_PART_INFO_D E
 				WHERE A.SEAT_CD = B.SEAT_CD(+)
 				AND A.PART_CD = E.PART_CD(+)
-				AND A.FLOOR_CD = F.FLOOR_CD(+)
 				AND A.CENTER_CD = C.CENTER_CD
 				AND A.USER_ID = D.USER_ID
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchResvUserDvsn)">
@@ -72,7 +69,7 @@
 							AND A.RESV_END_DT BETWEEN #{params.searchFrom} AND #{params.searchTo}
 						</when>
 						<otherwise>
-							AND TO_CHAR(A.RESV_REQ_DATE,'YYYYMMDD') BETWEEN #{params.searchFrom} AND #{params.searchTo}
+							AND TO_CHAR(TO_DATE(A.RESV_REQ_DATE,'YYYY-MM-DD HH24:MI'),'YYYY-MM-DD HH24:MI') BETWEEN #{params.searchFrom} AND #{params.searchTo}
 						</otherwise>
 					</choose>
 				</if>
@@ -126,6 +123,7 @@
 			FN_DETAILCODENM(A.RESV_PAY_DVSN) AS RESV_PAY_DVSN_TEXT,
 			FN_DETAILCODENM(A.RESV_STATE) AS RESV_STATE_TEXT,
 			FN_DETAILCODENM(A.RESV_RCPT_DVSN) AS RESV_RCPT_DVSN_TEXT,
+			FN_DETAILCODENM(A.RESV_SEAT_CLASS) AS RESV_SEAT_CLASS,
 			CASE  
 				WHEN A.RESV_ENTRY_DVSN = 'ENTRY_DVSN_1'  THEN '자유석' 
 				ELSE D.FLOOR_NM || ' ' || E.PART_NM || '구역 ' || F.SEAT_NM
@@ -386,12 +384,28 @@
 	
 	<!-- 다음 예약시퀀스 조회 -->
 	<select id="selectResvSeqNext" resultType="String">
-		SELECT LPAD(SEQ_SER_RERV_INFO.NEXTVAL,12,0) FROM DUAL
+		SELECT FN_RESV_CD(#{resvDate}) FROM DUAL
 	</select>
 	
 	<!-- 지점 예약일자 조회 -->
 	<select id="selectCenterResvDate" resultType="String">
     	SELECT FN_RESVDATE(#{centerCd}) FROM DUAL
+    </select>
+    
+    <!-- 지점 사전예약일 목록 조회 -->
+    <select id="selectCenterResvDateList" resultType="lmap">
+    <![CDATA[
+	    SELECT RESV_DATE FROM (
+			SELECT ROWNUM AS RNUM, TO_CHAR(TO_DATE(RESV_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') AS RESV_DATE FROM (
+				SELECT TO_CHAR(TO_DATE(FN_RESVDATE(#{centerCd}),'YYYY-MM-DD') + LEVEL -1, 'YYYY-MM-DD') AS RESV_DATE FROM DUAL 
+				CONNECT BY LEVEL <= 30
+				MINUS 
+				SELECT TO_CHAR(TO_DATE(HOLY_DT,'YYYY-MM-DD'), 'YYYY-MM-DD') FROM TSEB_CENTERHOLY_INFO_I WHERE CENTER_CD = #{centerCd} AND HOLY_DT >= FN_RESVDATE(#{centerCd})
+			) A
+			ORDER BY RESV_DATE ASC
+		)
+		WHERE RNUM <= (SELECT NVL(CENTER_RESV_ABLE_DAY,1) FROM TSEB_CENTER_INFO_M WHERE CENTER_CD = #{centerCd})
+	]]>
     </select>
     
 	<select id="selectQrDuplicate" resultType="lmap">
@@ -404,7 +418,7 @@
 	<!-- 회원 예약정보 등록 -->
     <insert id="insertUserResvInfo">
 		<selectKey resultType="String" keyProperty="resvSeq" order="BEFORE">
-			SELECT LPAD(SEQ_SER_RERV_INFO.NEXTVAL,12,0) AS resvSeq FROM DUAL
+			SELECT FN_RESV_CD(#{resvDate}) FROM DUAL
 		</selectKey>
     
     	INSERT INTO TSER_RESV_INFO_I 
@@ -420,7 +434,7 @@
 		VALUES 
 		(
 			#{resvSeq}, #{seasonCd, jdbcType=VARCHAR}, #{centerCd, jdbcType=VARCHAR}, #{floorCd, jdbcType=VARCHAR}, #{partCd, jdbcType=VARCHAR}, 
-			#{seatCd, jdbcType=VARCHAR}, TO_CHAR(TO_DATE(#{resvDate, jdbcType=VARCHAR},'YYYYMMDD') - (INTERVAL '1' DAY),'YYYYMMDD'), #{resvDate, jdbcType=VARCHAR}, '0000', 
+			#{seatCd, jdbcType=VARCHAR}, TO_CHAR(TO_DATE(#{resvDate},'YYYYMMDD') - (INTERVAL '1' DAY),'YYYYMMDD'), #{resvDate}, '0000', 
 			'2359', SYSDATE, #{resvUserDvsn, jdbcType=VARCHAR}, 
 			<choose>
            		<when test='resvUserDvsn == "USER_DVSN_1"'>
@@ -456,7 +470,7 @@
 			)
 			VALUES 
 			(
-				LPAD(SEQ_SER_RERV_INFO.NEXTVAL,12,0), #{longResvSeq}, #{seasonCd, jdbcType=VARCHAR}, #{centerCd, jdbcType=VARCHAR}, #{floorCd, jdbcType=VARCHAR}, #{partCd, jdbcType=VARCHAR}, #{seatCd, jdbcType=VARCHAR},
+				FN_RESV_CD(#{resvDate}), #{longResvSeq}, #{seasonCd, jdbcType=VARCHAR}, #{centerCd, jdbcType=VARCHAR}, #{floorCd, jdbcType=VARCHAR}, #{partCd, jdbcType=VARCHAR}, #{seatCd, jdbcType=VARCHAR},
 				TO_CHAR(TO_DATE(#{resvDate, jdbcType=VARCHAR},'YYYYMMDD') - (INTERVAL '1' DAY),'YYYYMMDD'), #{resvDate, jdbcType=VARCHAR}, '0000', '2359',
 				SYSDATE, 'USER_DVSN_1', #{userId, jdbcType=VARCHAR}, #{resvUserNm}, #{resvUserClphn}, 'Y', '',
 				'RESV_STATE_1', 'N', 'Y', FN_PARTCLASS(#{partCd, jdbcType=VARCHAR}),

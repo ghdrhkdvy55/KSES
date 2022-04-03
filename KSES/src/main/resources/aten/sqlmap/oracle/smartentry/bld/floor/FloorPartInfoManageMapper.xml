@@ -7,7 +7,7 @@
 	    (
 			SELECT 
 				SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT,
-				ROW_NUMBER() OVER (ORDER BY C.PART_ORDER) AS RNUM,
+				ROW_NUMBER() OVER (ORDER BY C.PART_CD DESC) AS RNUM, 
 				C.PART_CD, C.PART_NM, B.FLOOR_CD, B.FLOOR_INFO, B.FLOOR_NM,
 				A.CENTER_CD, A.CENTER_NM,
 				CASE WHEN LENGTH(PART_MAP1) > 0 THEN 
@@ -43,11 +43,11 @@
 			</if>		
 		) TB  
 	    WHERE RNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage} 
-        ORDER BY RNUM
+        ORDER BY TB.PART_ORDER ASC, TB.PART_CD DESC
     </select>
     
     <select id="selectFloorPartInfoManageCombo" resultType="lmap">
-		SELECT PART_CD, PART_NM, FLOOR_CD
+		SELECT PART_CD, PART_NM 
 	    FROM TSEB_PART_INFO_D
 		WHERE USE_YN = 'Y'
 		<if test="floorCd != '' ">  
@@ -73,28 +73,42 @@
     <insert id="insertFloorPartInfo" >
 		INSERT INTO TSEB_PART_INFO_D
 		(
-			CENTER_CD, FLOOR_CD, PART_CD, PART_NM, PART_MAP1,
-		 	PART_CLASS, PART_CLASS_SEQ, PART_ORDER, USE_YN,
-			FRST_REGIST_DTM, FRST_REGTER_ID, LAST_UPDT_DTM, LAST_UPDUSR_ID
+			CENTER_CD, FLOOR_CD, PART_CD, PART_NM, PART_MAP1, 
+			PART_MAP2, PART_CLASS_SEQ, PART_CSS, PART_SEAT_RULE, 
+			PART_MINI_CSS, PART_MINI_TOP, PART_MINI_LEFT, PART_MINI_WIDTH, PART_MINI_HEIGHT, 
+			USE_YN, PART_ORDER, FRST_REGIST_DTM, FRST_REGTER_ID, LAST_UPDT_DTM, 
+			LAST_UPDUSR_ID, PART_MINI_ROTATE
 		)
-		VALUES
+		VALUES 
 		(
-		 	#{centerCd}, #{floorCd}, FN_PARTCODE(#{floorCd}), #{partNm}, #{partMap1, jdbcType=VARCHAR},
-		 	#{partClass}, #{partClassSeq}, #{partOrder, jdbcType=VARCHAR}, #{useYn},
-		 	SYSDATE, #{frstRegterId}, SYSDATE, #{lastUpdusrId}
-		)
+			#{centerCd}, #{floorCd}, FN_PARTCODE(#{floorCd}), #{partNm, jdbcType=VARCHAR}, #{partMap1, jdbcType=VARCHAR}, 
+			#{partMap2, jdbcType=VARCHAR}, #{partClassSeq, jdbcType=VARCHAR}, #{partCss, jdbcType=VARCHAR}, #{partSeatRule, jdbcType=VARCHAR}, 
+			#{partMiniCss, jdbcType=VARCHAR}, #{partMiniTop, jdbcType=VARCHAR}, #{partMiniLeft, jdbcType=VARCHAR}, #{partMiniWidth, jdbcType=VARCHAR}, #{partMiniHeight, jdbcType=VARCHAR}, 
+			#{useYn, jdbcType=VARCHAR}, #{partOrder, jdbcType=VARCHAR}, SYSDATE, #{frstRegterId, jdbcType=VARCHAR}, SYSDATE, 
+			#{lastUpdusrId, jdbcType=VARCHAR}, #{partMiniRotate, jdbcType=VARCHAR}
+		)        
     </insert>
     
     <update id="updateFloorPartInfo" > 
 		UPDATE TSEB_PART_INFO_D SET
-			PART_NM = #{partNm},
+			PART_CSS = #{partCss,jdbcType=VARCHAR}, 
+			PART_NM = #{partNm,jdbcType=VARCHAR},
+			PART_SEAT_RULE = #{partSeatRule,jdbcType=VARCHAR},
+			PART_CLASS_SEQ = #{partClassSeq,jdbcType=VARCHAR},
+			PART_MINI_CSS = #{partMiniCss,jdbcType=VARCHAR},
+			PART_MINI_LEFT = #{partMiniLeft,jdbcType=VARCHAR}, 
+			PART_MINI_TOP = #{partMiniTop,jdbcType=VARCHAR},
+			PART_MINI_WIDTH = #{partMiniWidth,jdbcType=VARCHAR},
+			PART_MINI_HEIGHT = #{partMiniHeight,jdbcType=VARCHAR},
+			PART_MINI_ROTATE = #{partMiniRotate, jdbcType=VARCHAR},
+			USE_YN = #{useYn,jdbcType=VARCHAR},
+			PART_ORDER = #{partOrder,jdbcType=VARCHAR},
 			<if test="partMap1 != ''">
 				PART_MAP1 = #{partMap1, jdbcType=VARCHAR},
 			</if>
-		    PART_CLASS = #{partClass},
-			PART_CLASS_SEQ = #{partClassSeq},
-		    PART_ORDER = #{partOrder, jdbcType=VARCHAR},
-		    USE_YN = #{useYn},
+			<if test="partMap2 != ''">
+				PART_MAP2 = #{partMap2, jdbcType=VARCHAR},
+			</if>
 			LAST_UPDT_DTM = SYSDATE,
 			LAST_UPDUSR_ID = #{lastUpdusrId, jdbcType=VARCHAR}
 	     WHERE PART_CD = #{partCd}           
@@ -110,7 +124,7 @@
 				PART_MINI_HEIGHT = #{item.partMiniHeight,jdbcType=VARCHAR}, 
 				PART_MINI_ROTATE = #{item.partMiniRotate,jdbcType=VARCHAR}, 
 				LAST_UPDT_DTM = SYSDATE, 
-				LAST_UPDUSR_ID = #{item.lastUpdusrId, jdbcType=VARCHAR}
+				LAST_UPDUSR_ID = #{item.userId, jdbcType=VARCHAR}
 			WHERE PART_CD = #{item.partCd} 
 		</foreach> 
     </update>

@@ -21,6 +21,7 @@ public class AdminInfo {
 	private String lastUpdtDtm = "";
 	private String lastUpdusrId = "";
 	private String mode = "";
+	private String userId = "";
 	private String centerCd = "";
 	private int cnt = 0;
 }

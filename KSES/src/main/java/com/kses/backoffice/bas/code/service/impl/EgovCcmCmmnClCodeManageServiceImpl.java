@@ -5,8 +5,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
-
-import egovframework.com.cmm.service.Globals;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import com.kses.backoffice.bas.code.mapper.EgovCmmnClCodeManageMapper;
 import com.kses.backoffice.bas.code.service.EgovCcmCmmnClCodeManageService;
@@ -49,7 +47,7 @@ public class EgovCcmCmmnClCodeManageServiceImpl extends EgovAbstractServiceImpl 
 	 */
 	@Override
 	public int updateCmmnClCode(CmmnClCode cmmnClCode) throws Exception {
-		return  cmmnClCode.getMode().equals(Globals.SAVE_MODE_INSERT)?  cmmnClCodeManageMapper.insertCmmnClCode(cmmnClCode) : cmmnClCodeManageMapper.updateCmmnClCode(cmmnClCode) ;		
+		return  cmmnClCode.getMode().equals("Ins")?  cmmnClCodeManageMapper.insertCmmnClCode(cmmnClCode) : cmmnClCodeManageMapper.updateCmmnClCode(cmmnClCode) ;		
 	}
 
 	

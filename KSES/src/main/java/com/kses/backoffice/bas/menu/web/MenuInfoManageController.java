@@ -11,41 +11,41 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
-
+import org.springmodules.validation.commons.DefaultBeanValidator;
 import com.kses.backoffice.bas.menu.service.MenuCreateManageService;
 import com.kses.backoffice.bas.menu.service.MenuInfoService;
+import com.kses.backoffice.bas.menu.vo.MenuCreatInfo;
 import com.kses.backoffice.bas.menu.vo.MenuInfo;
-import com.kses.backoffice.sym.log.annotation.NoLogging;
+import com.kses.backoffice.bas.progrm.service.ProgrmInfoService;
 import com.kses.backoffice.util.SmartUtil;
-import com.kses.backoffice.util.service.UniSelectInfoManageService;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.service.Globals;
-import egovframework.rte.fdl.cmmn.exception.EgovBizException;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RestController
 @RequestMapping("/backoffice/bas")
 public class MenuInfoManageController {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(MenuInfoManageController.class);
 	
+	@Autowired
+	private DefaultBeanValidator beanValidator;
 	/** EgovPropertyService */
 	@Resource(name = "propertiesService")
 	protected EgovPropertyService propertiesService;
@@ -55,37 +55,53 @@ public class MenuInfoManageController {
 	
 	@Autowired
 	private MenuCreateManageService menuCreateService;
-	
-	@Autowired
-	private UniSelectInfoManageService uniService;
 
+	@Autowired
+	private ProgrmInfoService progrmService;
+
+	/** EgovMessageSource */
 	@Resource(name = "egovMessageSource")
 	EgovMessageSource egovMessageSource;
 	
-	/**
-	 * 메뉴관리 화면
-	 * @param model
-	 * @return
-	 * @throws Exception
-	 */
-	@NoLogging
-	@RequestMapping(value = "menuList.do", method = RequestMethod.GET)
-	public ModelAndView viewMenuList(ModelMap model) throws Exception {
-		return new ModelAndView("/backoffice/bas/menuList");
+	@RequestMapping(value = "menuList.do")
+	public ModelAndView selectMenuManageList( ModelMap model) throws Exception {
+		// 0. Spring Security 사용자권한 처리
+		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+		ModelAndView mav = new  ModelAndView("/backoffice/bas/menuList");
+		if (isAuthenticated == null || !isAuthenticated) {
+			mav.addObject("message", egovMessageSource.getMessage("fail.common.login"));
+			mav.addObject(Globals.STATUS,  Globals.STATUS_LOGINFAIL);
+			mav.setViewName("/backoffice/login");
+			return mav;
+		}
+		// 내역 조회
+		return mav ;
 	}
-	
 	/**
-	 * 메뉴 목록 조회
-	 * @param searchVO
-	 * @return
-	 * @throws Exception
+	 * 메뉴목록 리스트조회한다.
+	 * @param searchVO ComDefaultVO
+	 * @return 출력페이지정보 "sym/mnu/mpm/EgovMenuManage"
+	 * @exception Exception
 	 */
-	@RequestMapping(value = "menuListAjax.do", method = RequestMethod.POST)
-	public ModelAndView selectMenuInfoListAjax(@RequestBody Map<String, Object> searchVO) throws Exception {
-		ModelAndView model = new ModelAndView (Globals.JSONVIEW);
+	@RequestMapping(value = "menuListAjax.do")
+	public ModelAndView selectMenuManageListAjax(@RequestBody Map<String, Object> searchVO, 
+											     HttpServletRequest request, 
+											     BindingResult bindingResult) throws Exception {
 		
-		int pageUnit = searchVO.get("pageUnit") == null ?  propertiesService.getInt("pageUnit")
-				: Integer.valueOf((String) searchVO.get("pageUnit"));
+		ModelAndView model = new ModelAndView (Globals.JSONVIEW);
+		// 0. Spring Security 사용자권한 처리
+		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+		if (isAuthenticated == null || !isAuthenticated) {
+			model.addObject("message", egovMessageSource.getMessage("fail.common.login"));
+			model.addObject(Globals.STATUS,  Globals.STATUS_LOGINFAIL);
+			return model;
+		}
+		
+		//int pageUnit = searchVO.get("pageUnit") == null ?  propertiesService.getInt("pageUnit") : Integer.valueOf((String) searchVO.get("pageUnit"));
+		int pageUnit = 1000;
+	    searchVO.put("pageSize", "1000");
+	  
+	    
 	  
    	    PaginationInfo paginationInfo = new PaginationInfo();
 	    paginationInfo.setCurrentPageNo( Integer.parseInt(SmartUtil.NVL(searchVO.get("pageIndex"),"1")));
@@ -95,125 +111,50 @@ public class MenuInfoManageController {
 	    searchVO.put("firstIndex", paginationInfo.getFirstRecordIndex());
 	    searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
 	    searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
-
+	    
+	    LOGGER.info("searchVO:" + searchVO);
+	    
 	    List<Map<String, Object>> menuList = menuService.selectMenuManageList(searchVO);
+	    
 	    int totCnt =  menuList.size() > 0 ? Integer.valueOf(menuList.get(0).get("total_record_count").toString()) : 0;
-		paginationInfo.setTotalRecordCount(totCnt);
-
-		model.addObject(Globals.STATUS_REGINFO, searchVO);
+		   
 		model.addObject(Globals.JSON_RETURN_RESULTLISR, menuList);
 	    model.addObject(Globals.PAGE_TOTALCNT, totCnt);
+	    paginationInfo.setTotalRecordCount(totCnt);
 	    model.addObject(Globals.JSON_PAGEINFO, paginationInfo);
-	    model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-	    
+	    model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);	
 		return model;
 	}
 	
 	/**
-	 * 메뉴 상세 조회
-	 * @param menuNo
-	 * @return
-	 * @throws Exception
+	 * 메뉴정보목록을 상세화면 호출 및 상세조회한다.
+	 * @param req_menuNo  String
+	 * @return 출력페이지정보 "sym/mnu/mpm/EgovMenuDetailSelectUpdt"
+	 * @exception Exception
 	 */
-	@RequestMapping(value = "menuDetailInfo.do", method = RequestMethod.GET)
-	public ModelAndView selectMenuDetailInfo(@RequestParam("menuNo") String menuNo) throws Exception {
+	@RequestMapping(value = "menuDetailInfo.do")
+	public ModelAndView selectMenuManage(@RequestParam("menuNo") String menuNo) throws Exception {
 		ModelAndView model = new ModelAndView (Globals.JSONVIEW);
+		// 0. Spring Security 사용자권한 처리
+		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+		if (isAuthenticated == null || !isAuthenticated) {
+			model.addObject("message", egovMessageSource.getMessage("fail.common.login"));
+			model.addObject(Globals.STATUS,  Globals.STATUS_LOGINFAIL);
+			return model;
+		}
 		
-		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-		model.addObject(Globals.JSON_RETURN_RESULT, menuService.selectMenuManage(menuNo));
-		
+		try {
+		    	model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+				model.addObject(Globals.STATUS_REGINFO, menuService.selectMenuManage(menuNo));
+		} catch(Exception e) {
+				LOGGER.info(e.toString());
+				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
+		}
 		return model;
 	}
+
 	
-	/**
-	 * 메뉴 저장
-	 * @param menuInfo
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "menuInfoUpdate.do", method = RequestMethod.POST)
-	public ModelAndView updateMenuInfoManage(@RequestBody MenuInfo menuInfo) throws Exception {
-		ModelAndView model = new ModelAndView (Globals.JSONVIEW);
-		
-		int ret = 0;
-		switch (menuInfo.getMode()) {
-			case Globals.SAVE_MODE_INSERT:
-				ret = menuService.insertMenuManage(menuInfo);
-				break;
-			case Globals.SAVE_MODE_UPDATE:
-				ret = menuService.updateMenuManage(menuInfo);
-				break;
-			default:
-				throw new EgovBizException("잘못된 호출입니다.");
-		}
-		
-		String messageKey = "";
-		if (ret > 0) {
-			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-			messageKey = StringUtils.equals(menuInfo.getMode(), Globals.SAVE_MODE_INSERT) 
-					? "sucess.common.insert" : "sucess.common.update";
-		}
-		else {
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			messageKey = StringUtils.equals(menuInfo.getMode(), Globals.SAVE_MODE_INSERT) 
-					? "fail.common.insert" : "fail.common.update";
-		}
-		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(messageKey));
-		
-		return model;
-	}
-
-	/**
-	 * 메뉴 삭제
-	 * @param menuInfo
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value = "menuManageDelete.do", method = RequestMethod.POST)
-	public ModelAndView deleteMenInfoManage(@RequestBody MenuInfo menuInfo) throws Exception {
-		ModelAndView model = new ModelAndView (Globals.JSONVIEW);
-		
-		// 화면에서 자식메뉴 체크 하므로 불필요
-//		if (menuService.selectUpperMenuNoByPk(menuNo) != 0) {
-//			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.delete.upperMenuExist"));
-//			model.addObject(Globals.STATUS,  Globals.STATUS_FAIL);
-//			return model;
-//		}
-		int ret = menuService.deleteMenuManage(menuInfo.getMenuNo());
-		if (ret > 0) {
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.delete"));
-			model.addObject(Globals.STATUS,  Globals.STATUS_SUCCESS);
-		}else {
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.delete"));
-			model.addObject(Globals.STATUS,  Globals.STATUS_FAIL);
-		}
-
-		return model;
-	}
-
-	/**
-	 * 메뉴 아이디 중복 체크
-	 * @param menuNo
-	 * @return
-	 * @throws Exception
-	 */
-	@NoLogging
-	@RequestMapping(value = "menuNoCheck.do", method = RequestMethod.GET)
-	public ModelAndView menuNoCheck(@RequestParam("menuNo") String menuNo) throws Exception {
-		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-		
-		int ret = uniService.selectIdDoubleCheck("MENU_NO", "COMTNMENUINFO", "MENU_NO = [" + menuNo + "[");
-		if (ret == 0) {
-			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("common.codeOk.msg"));
-		}
-		else {
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("common.codeFail.msg"));
-		}
-
-		return model;
-	}
 
 	/**
 	 * 메뉴목록 멀티 삭제한다.
@@ -253,7 +194,7 @@ public class MenuInfoManageController {
 				model.addObject(Globals.STATUS,  Globals.STATUS_SUCCESS);
 			 }
 		}catch(Exception e) {
-			log.info(e.toString());
+			LOGGER.info(e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.delete"));	
 		}
@@ -262,11 +203,11 @@ public class MenuInfoManageController {
 
 	/**
 	 * 메뉴정보를 등록화면으로 이동 및 등록 한다.
-	 * @param commandMap
-	 * @param menuIno
-	 * @param bindingResult
-	 * @return
-	 * @throws Exception
+	 * @param menuManageVO    MenuManageVO
+	 * @param commandMap      Map
+	 * @return 출력페이지정보 등록화면 호출시 "sym/mnu/mpm/EgovMenuRegist",
+	 *         출력페이지정보 등록처리시 "forward:/sym/mnu/mpm/EgovMenuManageSelect.do"
+	 * @exception Exception
 	 */
 	@RequestMapping(value = "menuRegistUpdate.do")
 	public ModelAndView insertMenuManage(@RequestParam Map<String, Object> commandMap, 
@@ -283,7 +224,7 @@ public class MenuInfoManageController {
 			return model;
 		}
 			
-		if (menuService.selectMenuNoByPk(menuIno) != 0 && menuIno.getMode().equals(Globals.SAVE_MODE_INSERT)) {
+		if (menuService.selectMenuNoByPk(menuIno) != 0 && menuIno.getMode().equals("Ins")) {
 			model.addObject(Globals.STATUS,  Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("common.isExist.msg"));
 			return model;
@@ -293,10 +234,10 @@ public class MenuInfoManageController {
 	    String states = "";
 	    
 	    if (ret > 0) {
-	    	message = menuIno.getMode().equals(Globals.SAVE_MODE_INSERT) ? egovMessageSource.getMessage("success.common.insert") : egovMessageSource.getMessage("success.common.update");
+	    	message = menuIno.getMode().equals("Ins") ? egovMessageSource.getMessage("success.common.insert") : egovMessageSource.getMessage("success.common.update");
 	    	states =  Globals.STATUS_SUCCESS;
 	    }else {
-	    	message = menuIno.getMode().equals(Globals.SAVE_MODE_INSERT) ? egovMessageSource.getMessage("fail.common.insert") : egovMessageSource.getMessage("fail.common.update");
+	    	message = menuIno.getMode().equals("Ins") ? egovMessageSource.getMessage("fail.common.insert") : egovMessageSource.getMessage("fail.common.update");
 	    	states =  Globals.STATUS_FAIL;
 	    }
 	    model.addObject(Globals.STATUS, states);
@@ -305,14 +246,54 @@ public class MenuInfoManageController {
 		return model;
 	}
 
+	
+	/**
+	 * 메뉴정보를 삭제 한다.
+	 * @param menuManageVO MenuManageVO
+	 * @return 출력페이지정보 "forward:/sym/mnu/mpm/EgovMenuManageSelect.do"
+	 * @exception Exception
+	 */
+	@RequestMapping(value = "menuManageDelete.do")
+	public ModelAndView deleteMenuManage(@RequestParam("menuNo") String menuNo, 
+			                       ModelMap mmp) throws Exception {
+		
+		ModelAndView model = new ModelAndView (Globals.JSONVIEW);
+		
+		// 0. Spring Security 사용자권한 처리
+		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+		if (isAuthenticated == null || !isAuthenticated) {
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
+			model.addObject(Globals.STATUS,  Globals.STATUS_LOGINFAIL);
+			return model;
+		}
+		
+		
+		
+		if (menuService.selectUpperMenuNoByPk(menuNo) != 0) {
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.delete.upperMenuExist"));
+			model.addObject(Globals.STATUS,  Globals.STATUS_FAIL);
+			
+			return model;
+		}
+		int ret = menuService.deleteMenuManage(menuNo);
+		if (ret > 0) {
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.delete"));
+			model.addObject(Globals.STATUS,  Globals.STATUS_SUCCESS);
+		}else {
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.delete"));
+			model.addObject(Globals.STATUS,  Globals.STATUS_FAIL);
+		}
+
+		return model;
+	}
+
 	/*### 일괄처리 프로세스 ###*/
 
 	/**
 	 * 메뉴생성 일괄삭제프로세스
-	 * @param menuInfo
-	 * @param mmp
-	 * @return
-	 * @throws Exception
+	 * @param menuManageVO MenuManageVO
+	 * @return 출력페이지정보 "sym/mnu/mpm/EgovMenuBndeRegist"
+	 * @exception Exception
 	 */
 	@RequestMapping(value = "menuBndeAllDelete.do")
 	public ModelAndView menuBndeAllDelete(@ModelAttribute("MenuInfo") MenuInfo menuInfo, 
@@ -340,12 +321,11 @@ public class MenuInfoManageController {
 
 	/**
 	 * 메뉴일괄등록화면 호출 및  메뉴일괄등록처리 프로세스
-	 * @param commandMap
-	 * @param request
-	 * @param menuInfo
-	 * @param mmp
-	 * @return
-	 * @throws Exception
+	 * @param commandMap    Map
+	 * @param menuManageVO  MenuManageVO
+	 * @param request       HttpServletRequest
+	 * @return 출력페이지정보 "sym/mnu/mpm/EgovMenuBndeRegist"
+	 * @exception Exception
 	 */
 	@RequestMapping(value = "menuBndeRegist.do")
 	public ModelAndView menuBndeRegist(@RequestParam Map<String, Object> commandMap, 
@@ -357,8 +337,8 @@ public class MenuInfoManageController {
 		
 		ModelAndView model = new ModelAndView (Globals.JSONVIEW);
 		
-//		String sLocationUrl = null;
-//		String resultMsg = "";
+		String sLocationUrl = null;
+		String resultMsg = "";
 		String sMessage = "";
 		String status = "";
 		
@@ -386,7 +366,7 @@ public class MenuInfoManageController {
 					if (file.getOriginalFilename().toLowerCase().endsWith(".xls") || file.getOriginalFilename().toLowerCase().endsWith(".xlsx")) {
 						if (menuService.menuBndeAllDelete()) {
 							sMessage = menuService.menuBndeRegist(menuInfo, fis);
-//							resultMsg = sMessage;
+							resultMsg = sMessage;
 						} else {
 							
 							sMessage = "EgovMenuBndeRegist Error!!";
@@ -411,7 +391,7 @@ public class MenuInfoManageController {
 						fis.close();
 					}
 				} catch (IOException ee) {
-					log.debug("{}", ee);
+					LOGGER.debug("{}", ee);
 				}
 			}
 
@@ -454,7 +434,7 @@ public class MenuInfoManageController {
 			  
 		    searchVO.put("pageSize", propertiesService.getInt("pageSize"));
 		  
-		    log.info("pageUnit:" + pageUnit);
+		    LOGGER.info("pageUnit:" + pageUnit);
 		  
 	   	    PaginationInfo paginationInfo = new PaginationInfo();
 		    paginationInfo.setCurrentPageNo( Integer.parseInt(SmartUtil.NVL(searchVO.get("pageIndex"),"1")));
@@ -475,47 +455,56 @@ public class MenuInfoManageController {
 		    model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);	    
 		  
 		}catch(Exception e) {
-			log.info(e.toString());
+			LOGGER.info(e.toString());
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));	
 		}
 		return model;
 	}
-
-	/**
-	 * 권한 코드에 따른 매핑 메뉴 정보 저장
-	 * @param params
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value="menuCreateUpdateAjax.do", method = RequestMethod.POST)
-	public ModelAndView updateMenuCreateAjax(@RequestBody Map<String, Object> params) throws Exception {
+	@RequestMapping(value="menuCreateUpdateAjax.do")
+	public ModelAndView updateMenuCreateAjax(	@RequestBody Map<String, Object> createInfo,
+									            @ModelAttribute("MenuCreatInfo") MenuCreatInfo info,
+									            BindingResult bindingResult)throws Exception {
+		
 		ModelAndView model = new ModelAndView (Globals.JSONVIEW);
-		
-		String authorCode = String.valueOf(params.get("authorCode"));
-		String checkedMenuNo = String.valueOf(params.get("checkedMenuNo"));
-		
-		menuCreateService.insertMenuCreatList(authorCode, checkedMenuNo);
-		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.update"));
-		
+		try {
+			Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+			if (isAuthenticated == null || !isAuthenticated) {
+				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
+				model.addObject(Globals.STATUS,  Globals.STATUS_LOGINFAIL);
+				return model;
+			}
+			LOGGER.debug("mode:" + createInfo.get("mode"));
+			menuCreateService.insertMenuCreatList(createInfo.get("authorCode").toString(), createInfo.get("checkedMenuNo").toString());
+			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.update"));	
+			
+		}catch(Exception e) {
+			LOGGER.info(e.toString());
+			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));	
+		}
 		return model;
 	}
-	
-	/**
-	 * 권한 코드에 매핑된 메뉴 목록 조회 
-	 * @param authorCode
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping(value="menuCreateMenuListAjax.do", method = RequestMethod.GET)
+	@RequestMapping(value="menuCreateMenuListAjax.do")
 	public ModelAndView selectMenuCreateMenuListAjax(@RequestParam("authorCode") String authorCode)throws Exception {
+		
 		ModelAndView model = new ModelAndView (Globals.JSONVIEW);
-		
-		List<Map<String, Object>> list = menuCreateService.selectMenuCreatList_Author(authorCode);
-		model.addObject(Globals.JSON_RETURN_RESULTLISR, list);
-		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-		
+		try {
+			Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+			if (isAuthenticated == null || !isAuthenticated) {
+				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
+				model.addObject(Globals.STATUS,  Globals.STATUS_LOGINFAIL);
+				return model;
+			}
+			List<Map<String, Object>> list = menuCreateService.selectMenuCreatList_Author(authorCode);
+			model.addObject(Globals.JSON_RETURN_RESULTLISR, list);
+			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+		}catch(Exception e) {
+			LOGGER.info(e.toString());
+			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));	
+		}
 		return model;
 	}
 	

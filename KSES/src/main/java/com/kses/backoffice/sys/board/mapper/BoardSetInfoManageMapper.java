@@ -14,9 +14,9 @@ public interface BoardSetInfoManageMapper {
     
     public Map<String, Object> selectBoardSettingInfoDetail(String boardCd);
     
-    public void insertBoardInfo(BoardSetInfo vo);
+    public void insertBoardSettingInfo(BoardSetInfo vo);
 	
-    public void updateBoardInfo(BoardSetInfo vo);
+    public void updateBoardSettingInfo(BoardSetInfo vo);
     
     public void deleteBoardSettingInfo(@Param("delCds") List<String> delCds);
 }

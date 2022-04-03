@@ -11,18 +11,17 @@ import egovframework.rte.psl.dataaccess.mapper.Mapper;
 
 @Mapper
 public interface CenterHolyInfoManageMapper {
-
-	List<Map<String, Object>> selectCenterHolyInfoList(@Param("params") Map<String, Object> params) throws Exception;
+	public List<Map<String, Object>> selectCenterHolyInfoList(@Param("params") Map<String, Object> params) throws Exception;
 	
-	int updateCenterHolyInfo(CenterHolyInfo vo) throws Exception;
-
-	int updateCenterHolyInfoList(@Param("centerHolyInfoList") List<CenterHolyInfo> centerHolyInfoList);
+	public int updateCenterHolyInfo(CenterHolyInfo vo) throws Exception;
 	
-	int insertCenterHolyInfo(CenterHolyInfo vo) throws Exception;
+	public int insertCenterHolyInfo(CenterHolyInfo vo) throws Exception;
 	
-	int copyCenterHolyInfo(CenterHolyInfo centerHolyInfo) throws Exception;
+	public int copyCenterHolyInfo(@Param("params") Map<String, Object> params) throws Exception;
 	
-	Map<String, Object> centerUpdateSelect(@Param("centerHolySeq") String centerHolySeq) throws Exception;
+	public Map<String, Object> centerUpdateSelect(@Param("centerHolySeq") String centerHolySeq) throws Exception;
 	
-	int deleteCenterHolyInfo(int centerHolySeq);
+	public int deleteCenterHolyInfo(int centerHolySeq);
+	
+	public void insertExcelCenterHoly(@Param("centerHolyInfoList") List<CenterHolyInfo> centerHolyInfoList) throws Exception;
 }

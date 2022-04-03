@@ -1,10 +1,14 @@
 package egovframework.com.cmm.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import egovframework.com.cmm.service.EgovUserDetailsService;
+
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
-import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
+
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 
 /**
  * 
@@ -22,33 +26,42 @@ import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
  *  
  *  </pre>
  */
-public class EgovUserDetailsSessionServiceImpl extends EgovAbstractServiceImpl implements EgovUserDetailsService {
 
-	/**
-	 * 인증된 사용자 객체를 VO 리턴
-	 */
-	@Override
+public class EgovUserDetailsSessionServiceImpl extends EgovAbstractServiceImpl implements
+		EgovUserDetailsService {
+
 	public Object getAuthenticatedUser() {
-		if (EgovUserDetailsHelper.isAuthenticated()) {
-			return EgovUserDetailsHelper.getAuthenticatedUser();
-		}
-		return null;
+
+	
+
+		return RequestContextHolder.getRequestAttributes().getAttribute("loginVO", RequestAttributes.SCOPE_SESSION);
+
 	}
 
-	/**
-	 * 권한 설정 리턴
-	 */
-	@Override
 	public List<String> getAuthorities() {
-		return EgovUserDetailsHelper.getAuthorities();
+
+		// 권한 설정을 리턴한다.
+		List<String> listAuth = new ArrayList<String>();
+
+		return listAuth;
 	}
 
-	/**
-	 * 인증된 유저 확인
-	 */
-	@Override
 	public Boolean isAuthenticated() {
-		return EgovUserDetailsHelper.isAuthenticated();
+		// 인증된 유저인지 확인한다.
+
+		if (RequestContextHolder.getRequestAttributes() == null) {
+			return false;
+		} else {
+
+			if (RequestContextHolder.getRequestAttributes().getAttribute(
+					"loginVO", RequestAttributes.SCOPE_SESSION) == null) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+
+
 	}
 
 }

@@ -1,9 +1,12 @@
 package egovframework.com.cmm.util;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import egovframework.com.cmm.LoginVO;
-import egovframework.com.cmm.service.EgovUserDetailsService;
+import egovframework.rte.fdl.string.EgovObjectUtil;
+import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 
 /**
  * EgovUserDetails Helper 클래스
@@ -25,48 +28,42 @@ import egovframework.com.cmm.service.EgovUserDetailsService;
  */
 public class EgovUserDetailsHelper {
 	
-	static EgovUserDetailsService egovUserDetailsService;
-	
-	public EgovUserDetailsService getEgovUserDetailsService() {
-		return egovUserDetailsService;
-	}
+		/**
+		 * 인증된 사용자객체를 VO형식으로 가져온다.
+		 * @return Object - 사용자 ValueObject
+		 */
+		public static Object getAuthenticatedUser() {
+			
+			return (LoginVO)RequestContextHolder.getRequestAttributes().getAttribute("LoginVO", RequestAttributes.SCOPE_SESSION)==null ? 
+					new LoginVO() : (LoginVO) RequestContextHolder.getRequestAttributes().getAttribute("LoginVO", RequestAttributes.SCOPE_SESSION);
 
-	public void setEgovUserDetailsService(EgovUserDetailsService egovUserDetailsService) {
-		EgovUserDetailsHelper.egovUserDetailsService = egovUserDetailsService;
-	}
-	
-	/**
-	 * 인증된 사용자객체를 VO형식으로 가져온다.
-	 */
-	public static Object getAuthenticatedUser() {
-		return egovUserDetailsService.getAuthenticatedUser();
-	}
-
-	/**
-	 * 인증된 사용자의 권한 정보를 가져온다.
-	 */
-	public static List<String> getAuthorities() {
-		return egovUserDetailsService.getAuthorities();
-	}
-
-	/**
-	 * 인증된 사용자 여부를 체크한다.
-	 */
-	public static Boolean isAuthenticated() {
-		return egovUserDetailsService.isAuthenticated();
-	}
-	
-	/**
-	 * 로그인 사용자 아이디를 가져온다.
-	 * @return
-	 */
-	public static String getAuthenticatedUserId() {
-		if (egovUserDetailsService.isAuthenticated()) {
-			LoginVO loginVO = (LoginVO) egovUserDetailsService.getAuthenticatedUser();
-			return loginVO.getAdminId();
 		}
-		else {
-			return null;
+		/**
+		 * 인증된 사용자의 권한 정보를 가져온다.
+		 * 예) [ROLE_ADMIN, ROLE_USER, ROLE_A, ROLE_B, ROLE_RESTRICTED, IS_AUTHENTICATED_FULLY, IS_AUTHENTICATED_REMEMBERED, IS_AUTHENTICATED_ANONYMOUSLY]
+		 * @return List - 사용자 권한정보 목록
+		 */
+		public static List<String> getAuthorities() {
+			List<String> listAuth = new ArrayList<String>();
+			
+			if (EgovObjectUtil.isNull((LoginVO) RequestContextHolder.getRequestAttributes().getAttribute("LoginVO", RequestAttributes.SCOPE_SESSION))) {
+				System.out.println("## getAuthorities authentication object is null!!");
+				return null;
+			}
+			
+			return listAuth;
 		}
-	}
+		
+		/**
+		 * 인증된 사용자 여부를 체크한다.
+		 * @return Boolean - 인증된 사용자 여부(TRUE / FALSE)	
+		 */
+		public static Boolean isAuthenticated() {
+			
+			if (EgovObjectUtil.isNull((LoginVO) RequestContextHolder.getRequestAttributes().getAttribute("LoginVO", RequestAttributes.SCOPE_SESSION))) {
+				System.out.println("## isAuthenticated authentication object is null!!");
+				return Boolean.FALSE;
+			}
+			return Boolean.TRUE;
+		}
 }

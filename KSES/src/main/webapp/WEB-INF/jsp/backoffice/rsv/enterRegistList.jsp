@@ -79,7 +79,7 @@ a.blueBtn, a.redBtn {
       </div>
 </div>
 <!-- popup// -->
-<script type="text/javascript" src="/resources/jqgrid/jqgrid.custom.egovapi.js"></script>
+<script type="text/javascript" src="/resources/js/temporary.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
 		if($("#loginAuthorCd").val() != "ROLE_ADMIN" && $("#loginAuthorCd").val() != "ROLE_SYSTEM") {
@@ -144,7 +144,7 @@ a.blueBtn, a.redBtn {
 			{label: '입장 관리자', name:'enter_admin_id', align:'center'},		
 			{label: '통신시간 ', name:'rcv_dt', align:'center'},
 			{label: '통신결과', name:'rcv_cd', align:'center'}
-		], 'GET', '/backoffice/rsv/enterRegistListAjax.do', {
+		], '/backoffice/rsv/enterRegistListAjax.do', {
 			resvSeq: resvSeq
 		});
 	}

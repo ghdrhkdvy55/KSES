@@ -1,28 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kses.backoffice.sys.board.mapper.BoardInfoManageMapper">
-	<resultMap id="getBoardListResult" type="HashMap"> 
-		<result property="board_seq" column="BOARD_SEQ" /> 
-        <result property="board_cd" column="BOARD_CD" />
-        <result property="board_refno" column="BOARD_REFNO" />
-        <result property="board_clevel" column="BOARD_CLEVEL" />
-        <result property="board_notice_start_day" column="BOARD_NOTICE_START_DAY" />
-        <result property="board_notice_end_day" column="BOARD_NOTICE_END_DAY" />
-        <result property="board_popup" column="BOARD_POPUP" />
-        <result property="board_title" column="BOARD_TITLE" /> 
-        <result property="board_group" column="BOARD_GROUP" /> 
-        <result property="board_top_seq" column="BOARD_TOP_SEQ" /> 
-        <result property="board_visit_cnt" column="BOARD_VISIT_CNT" /> 
-        <result property="use_yn" column="USE_YN" /> 
-        <result property="frst_regter_id" column="FRST_REGTER_ID" /> 
-        <result property="frst_regist_dtm" column="FRST_REGIST_DTM" /> 
-        <result property="last_updusr_id" column="LAST_UPDUSR_ID" /> 
-        <result property="last_updt_dtm" column="LAST_UPDT_DTM" />
-        <result property="board_center_id" column="BOARD_CENTER_ID" /> 
-        <result property="board_all_notice" column="BOARD_ALL_NOTICE" /> 
-        <result property="board_cn" column="BOARD_CN" jdbcType="CLOB" javaType="java.lang.String" /> 
-     </resultMap>
-     
 	<select id="selectBoardManageListByPagination" resultType="lmap">
 		SELECT * 
 		FROM		
@@ -36,7 +14,7 @@
 				SELECT 
 					LPAD(' ', 2*(LEVEL-1)) || BOARD_TITLE AS BOARD_TITLE, BOARD_SEQ, BOARD_CD, BOARD_REFNO, BOARD_CLEVEL, 
 					BOARD_NOTICE_START_DAY, BOARD_NOTICE_END_DAY, BOARD_POPUP, BOARD_TOP_SEQ, BOARD_VISIT_CNT, 
-					USE_YN, LAST_UPDUSR_ID, BOARD_GROUP, TO_CHAR(LAST_UPDT_DTM, 'yyyy-MM-dd') LAST_UPDT_DTM, BOARD_ALL_NOTICE, BOARD_CENTER_ID,
+					USE_YN, LAST_UPDUSR_ID, BOARD_GROUP, TO_CHAR(LAST_UPDT_DTM, 'yyyy-MM-dd') LAST_UPDT_DTM, BOARD_ALL_NOTICE,
 					CASE BOARD_ALL_NOTICE 
 						WHEN 'Y' THEN '전체공지'
 						ELSE (SELECT LISTAGG(CENTER_NM,',') WITHIN GROUP (ORDER BY CENTER_NM) FROM TSEB_CENTER_INFO_M WHERE CENTER_CD IN (SELECT COLUMN_VALUE  FROM TABLE(UF_SPLICT(A.BOARD_CENTER_ID, ','))))
@@ -105,6 +83,28 @@
 		) 
 		WHERE RNUM BETWEEN 1 AND 5
 	</select> 
+	
+	<resultMap id="getBoardListResult" type="HashMap"> 
+		<result property="board_seq" column="BOARD_SEQ" /> 
+        <result property="board_cd" column="BOARD_CD" />
+        <result property="board_refno" column="BOARD_REFNO" />
+        <result property="board_clevel" column="BOARD_CLEVEL" />
+        <result property="board_notice_start_day" column="BOARD_NOTICE_START_DAY" />
+        <result property="board_notice_end_day" column="BOARD_NOTICE_END_DAY" />
+        <result property="board_popup" column="BOARD_POPUP" />
+        <result property="board_title" column="BOARD_TITLE" /> 
+        <result property="board_group" column="BOARD_GROUP" /> 
+        <result property="board_top_seq" column="BOARD_TOP_SEQ" /> 
+        <result property="board_visit_cnt" column="BOARD_VISIT_CNT" /> 
+        <result property="use_yn" column="USE_YN" /> 
+        <result property="frst_regter_id" column="FRST_REGTER_ID" /> 
+        <result property="frst_regist_dtm" column="FRST_REGIST_DTM" /> 
+        <result property="last_updusr_id" column="LAST_UPDUSR_ID" /> 
+        <result property="last_updt_dtm" column="LAST_UPDT_DTM" />
+        <result property="board_center_id" column="BOARD_CENTER_ID" /> 
+        <result property="board_all_notice" column="BOARD_ALL_NOTICE" /> 
+        <result property="board_cn" column="BOARD_CN" jdbcType="CLOB" javaType="java.lang.String" /> 
+     </resultMap>
 
 	<select id="selectBoardManageDetail"  resultMap="getBoardListResult">
 	<![CDATA[
@@ -141,10 +141,10 @@
 				)
 				VALUES 
 				(
-					#{seq}, #{boardCd}, '0', '0', #{seq},  
-					#{boardNoticeStartDay,jdbcType=VARCHAR}, #{boardNoticeEndDay,jdbcType=VARCHAR}, 'N', #{boardTitle}, #{boardTopSeq,jdbcType=VARCHAR}, 
-					0, #{useYn,jdbcType=VARCHAR}, #{boardCn,jdbcType=VARCHAR}, #{frstRegterId,jdbcType=VARCHAR}, SYSDATE, 
-					#{lastUpdusrId,jdbcType=VARCHAR}, SYSDATE, #{boardCenterId ,jdbcType=VARCHAR}, #{boardAllNotice ,jdbcType=VARCHAR}                     
+					#{seq}, #{boardCd}, #{boardRefno}, #{boardClevel}, #{seq},  
+					#{boardNoticeStartDay,jdbcType=VARCHAR}, #{boardNoticeEndDay,jdbcType=VARCHAR}, #{boardPopup, jdbcType=VARCHAR}, #{boardTitle}, #{boardTopSeq,jdbcType=VARCHAR}, 
+					0, #{useYn,jdbcType=VARCHAR}, #{boardCn,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, SYSDATE, 
+					#{userId,jdbcType=VARCHAR}, SYSDATE, #{boardCenterId ,jdbcType=VARCHAR}, #{boardAllNotice ,jdbcType=VARCHAR}                     
 				)
 			</when>
 			<otherwise>
@@ -159,8 +159,8 @@
 				(
 					#{seq},  #{boardCd},  #{boardRefno}, #{boardClevel}, #{boardGroup},  
 					#{boardNoticeStartDay,jdbcType=VARCHAR}, #{boardNoticeEndDay,jdbcType=VARCHAR}, #{boardPopup, jdbcType=VARCHAR}, #{boardTitle}, #{boardTopSeq,jdbcType=VARCHAR}, 
-					0, #{useYn,jdbcType=VARCHAR}, #{boardCn,jdbcType=VARCHAR}, #{frstRegterId,jdbcType=VARCHAR}, SYSDATE, 
-					#{lastUpdusrId,jdbcType=VARCHAR}, SYSDATE, #{boardCenterId ,jdbcType=VARCHAR}, #{boardAllNotice ,jdbcType=VARCHAR}                    
+					0, #{useYn,jdbcType=VARCHAR}, #{boardCn,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, SYSDATE, 
+					#{userId,jdbcType=VARCHAR}, SYSDATE, #{boardCenterId ,jdbcType=VARCHAR}, #{boardAllNotice ,jdbcType=VARCHAR}                    
 				)
 	           
 			</otherwise>
@@ -174,19 +174,24 @@
      </update>
      
      <update id="updateBoardManage">
+     <![CDATA[
 		UPDATE TSES_BOARD_INFO_I SET 
 			BOARD_TITLE = #{boardTitle},
 			BOARD_CD = #{boardCd, jdbcType=VARCHAR},
+			BOARD_REFNO = #{boardRefno,jdbcType=VARCHAR},
+			BOARD_CLEVEL = #{boardClevel,jdbcType=VARCHAR},
 			BOARD_NOTICE_START_DAY = #{boardNoticeStartDay,jdbcType=VARCHAR},
 			BOARD_NOTICE_END_DAY = #{boardNoticeEndDay,jdbcType=VARCHAR},
+			BOARD_POPUP = #{boardPopup, jdbcType=VARCHAR},
 			USE_YN = #{useYn, jdbcType=VARCHAR},
 			BOARD_CN = #{boardCn, jdbcType=VARCHAR},
-			LAST_UPDUSR_ID =#{lastUpdusrId,jdbcType=VARCHAR},
+			LAST_UPDUSR_ID =#{userId,jdbcType=VARCHAR},
 			LAST_UPDT_DTM = SYSDATE,
 			BOARD_CENTER_ID = #{boardCenterId,jdbcType=VARCHAR},  
 			BOARD_ALL_NOTICE = #{boardAllNotice,jdbcType=VARCHAR},  
 			BOARD_TOP_SEQ = #{boardTopSeq}
       	WHERE BOARD_SEQ = #{boardSeq}   
+	]]>        
 	</update>
      
 	<delete id="deleteBoardManage">

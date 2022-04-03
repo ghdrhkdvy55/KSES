@@ -87,7 +87,7 @@ public class Scheduler {
 								LOGGER.info("예약번호 : " + resvSeq + " " + i + "차 자동취소 시작" );
 								
 								if(i == 2 && resvPayDvsn.equals("RESV_PAY_DVSN_2") && resvTicketDvsn.equals("RESV_TICKET_DVSN_1")) {
-									ModelMap result = interfaceService.SpeedOnPayMentCancel(resvSeq, "", false);
+									ModelMap result = interfaceService.SpeedOnPayMentCancel(resvSeq, "", false, false);
 	
 									if(!SmartUtil.NVL(result.get(Globals.STATUS), "").equals("SUCCESS")) {
 										LOGGER.info("예약번호 : " + resvSeq + " 결제취소실패");
@@ -301,13 +301,13 @@ public class Scheduler {
 	@Scheduled(cron="0 59 23 ? * 7", zone="Asia/Seoul")
 	public void selectInterfaceLogFileCreate() throws Exception {		
 		LOGGER.info("----------------------------KSES INTERFACE LOG FILE CRATE BATCH START----------------------------");
-		String csvFilePath = "D:/";
-		String csvFilePrefix = "test_";
-		String csvFileSuffix = ".csv";
+		String csvFilePath = propertiesService.getString("InterfaceLog.filePath");
+		String csvFilePrefix = propertiesService.getString("InterfaceLog.prefix");
+		String csvFileSuffix = propertiesService.getString("InterfaceLog.suffix");
+		String NEWLINE = System.lineSeparator();
 		
 		File csvFile = null;
 		BufferedWriter bw = null;
-		String NEWLINE = System.lineSeparator();
 		
 		try {
 			InterfaceInfo interfaceInfo = new InterfaceInfo();

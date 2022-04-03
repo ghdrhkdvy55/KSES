@@ -1,13 +1,14 @@
 package egovframework.let.uat.uia.web;
 
-import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -16,25 +17,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.context.support.WebApplicationContextUtils;
-import org.springframework.web.servlet.ModelAndView;
 
-import com.google.gson.Gson;
 import com.kses.backoffice.bas.menu.service.MenuInfoService;
-import com.kses.backoffice.sym.log.service.LoginLogService;
-import com.kses.backoffice.sym.log.vo.LoginLog;
 import com.kses.backoffice.util.SmartUtil;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.LoginVO;
-import egovframework.com.cmm.service.Globals;
-import egovframework.com.cmm.util.EgovRequestWrapperForSecurity;
-import egovframework.com.cmm.util.EgovUserDetailsHelper;
-import egovframework.com.cmm.web.EgovAuthenticationFailureHandler;
+import egovframework.let.uat.uap.service.EgovLoginPolicyService;
 import egovframework.let.uat.uia.service.EgovLoginService;
 import egovframework.let.utl.sim.service.EgovClntInfo;
 import egovframework.rte.fdl.cmmn.trace.LeaveaTrace;
-import lombok.extern.slf4j.Slf4j;
+import egovframework.rte.fdl.property.EgovPropertyService;
+import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
+
 
 /**
  * 일반 로그인, 인증서 로그인을 처리하는 컨트롤러 클래스
@@ -53,91 +49,176 @@ import lombok.extern.slf4j.Slf4j;
  *
  *  </pre>
  */
-@Slf4j
 @Controller
 public class EgovLoginController {
+
+	
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(EgovLoginController.class);
+	
+	
+	/** EgovLoginService */
+	@Autowired
+	private EgovLoginService loginService;
+
+	/** EgovMessageSource */
+	@Resource(name = "egovMessageSource")
+	EgovMessageSource egovMessageSource;
+
+	/** EgovLoginPolicyService */
 	
 	@Autowired
-	EgovLoginService loginService;
+	EgovLoginPolicyService egovLoginPolicyService;
 
-	@Autowired
-	LoginLogService loginLogService;
+	/** EgovPropertyService */
 	
 	@Autowired
-	MenuInfoService  menuService;
+	protected EgovPropertyService propertiesService;
+	
+	@Autowired
+	private MenuInfoService  menuService;
 
+	/** TRACE */
 	@Resource(name = "leaveaTrace")
 	LeaveaTrace leaveaTrace;
 
-	@Autowired
-	EgovAuthenticationFailureHandler egovAuthenticationFailureHandler;
-	
 	/**
-	 * 로그인 화면
-	 * @return
-	 * @throws Exception
+	 * 로그인 화면으로 들어간다
+	 * @param vo - 로그인후 이동할 URL이 담긴 LoginVO
+	 * @return 로그인 페이지
+	 * @exception Exception
 	 */
 	@RequestMapping(value = "/backoffice/login.do")
-	public String loginUsrView() throws Exception {
+	public String loginUsrView(@ModelAttribute("loginVO") LoginVO loginVO, 
+			                   HttpServletRequest request, 
+			                   HttpServletResponse response, 
+			                   ModelMap model) throws Exception {
 		return "/backoffice/login";
 	}
 
 	/**
-	 * 관리자 로그인 처리 - 스프링 시큐리티
-	 * @param loginVO
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws Exception
+	 * 일반(스프링 시큐리티) 로그인을 처리한다
+	 * @param vo - 아이디, 비밀번호가 담긴 LoginVO
+	 * @param request - 세션처리를 위한 HttpServletRequest
+	 * @return result - 로그인결과(세션정보)
+	 * @exception Exception
 	 */
-	@RequestMapping(value = "/backoffice/actionSecurityLogin.do", method = RequestMethod.POST)
-	public void actionSecurityLogin(@ModelAttribute("loginVO") LoginVO loginVO, HttpServletRequest request, HttpServletResponse response, HttpSession session) throws Exception {
-		String clientIp = EgovClntInfo.getClntIP(request);
-		ApplicationContext applicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(session.getServletContext());
-		Map<String, UsernamePasswordAuthenticationFilter> beans = applicationContext.getBeansOfType(UsernamePasswordAuthenticationFilter.class);
-		UsernamePasswordAuthenticationFilter springSecurity = null;
-		if (beans.size() > 0) {
-			springSecurity = (UsernamePasswordAuthenticationFilter) beans.values().toArray()[0];
-			springSecurity.setUsernameParameter("egov_security_username");
-			springSecurity.setPasswordParameter("egov_security_password");
-			springSecurity.setAuthenticationFailureHandler(egovAuthenticationFailureHandler);
-			springSecurity.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher(request.getServletContext().getContextPath() +"/egov_security_login", "POST"));
+	@RequestMapping(value = "/backoffice/actionSecurityLogin.do")
+	public String actionSecurityLogin(@ModelAttribute("loginVO") LoginVO loginVO, HttpServletResponse response, HttpServletRequest request, ModelMap model) throws Exception {
+
+		// 접속IP
+		String userIp = EgovClntInfo.getClntIP(request);
+		
+		// 1. 일반 로그인 처리
+		loginVO.setAdminPwd(SmartUtil.getEncryptSHA256(loginVO.getAdminPwd()));
+		LoginVO resultVO = loginService.actionLogin(loginVO);
+		LOGGER.debug("==========================================================");
+		LOGGER.debug("userIp:" + userIp);
+		resultVO.setIp(userIp);
+		LOGGER.debug("==========================================================");
+		boolean loginPolicyYn = true;
+		
+        /* 로그인 정책 할건지 확인 필요 
+         * 
+         * 
+		LoginPolicyVO loginPolicyVO = new LoginPolicyVO();
+		loginPolicyVO.setEmplyrId(resultVO.getAdminId());
+		loginPolicyVO = egovLoginPolicyService.selectLoginPolicy(loginPolicyVO);
+
+		if (loginPolicyVO == null) {
+			loginPolicyYn = true;
+		} else {
+			if (loginPolicyVO.getLmttAt().equals("Y")) {
+				if (!userIp.equals(loginPolicyVO.getIpInfo())) {
+					loginPolicyYn = false;
+				}
+			}
 		}
-		else {
-			throw new IllegalStateException("No AuthenticationProcessingFilter");
+		*/
+		
+		if (resultVO != null && resultVO.getAdminId() != null && !resultVO.getAdminId().equals("") && loginPolicyYn) {
+
+			
+			// 2. spring security 연동
+			request.getSession().setAttribute("LoginVO", resultVO);
+			
+			//메뉴 가지고 오기 
+			request.getSession().setAttribute("Menu", menuService.selectMainMenuLeft(resultVO.getAdminId()));
+
+			UsernamePasswordAuthenticationFilter springSecurity = null;
+
+			ApplicationContext act = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getSession().getServletContext());
+					
+			Map<String, UsernamePasswordAuthenticationFilter> beans = act.getBeansOfType(UsernamePasswordAuthenticationFilter.class);
+			
+			if (beans.size() > 0) {
+				
+				springSecurity = (UsernamePasswordAuthenticationFilter) beans.values().toArray()[0];
+				springSecurity.setUsernameParameter("egov_security_username");
+				springSecurity.setPasswordParameter("egov_security_password");
+				springSecurity.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher(request.getServletContext().getContextPath() +"/egov_security_login", "POST"));
+				
+			} else {
+				throw new IllegalStateException("No AuthenticationProcessingFilter");
+			}
+					
+			springSecurity.doFilter(new RequestWrapperForSecurity(request, resultVO.getAdminId() , resultVO.getAdminPwd()), response, null);
+						
+			return "forward:/backoffice/actionLoginCheck.do"; // 성공 시 페이지.. (redirect 불가)
+
+		} else {
+
+			model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
+			return "backoffice/login";
 		}
-		springSecurity.doFilter(new EgovRequestWrapperForSecurity(request, loginVO.getAdminId(), SmartUtil.getEncryptSHA256(loginVO.getAdminPwd()), clientIp), response, null);
+	}
+	@RequestMapping(value="/backoffice/actionLoginCheck.do")
+	public String actionLoginCheck( HttpServletRequest request, ModelMap model)  {
+        try{
+    		
+    		// 1. Spring Security 사용자권한 처리
+		    Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+	    	if(!isAuthenticated) {
+	    		LOGGER.debug("=== fail:" + isAuthenticated);
+	    		model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
+	    		return "/backoffice/login";
+	    	}
+	    	
+	    	return "forward:/backoffice/actionMain.do";
+    	} catch(Exception e){
+    		LOGGER.debug("login Error:" + e.toString());
+    		model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
+        	return "/backoffice/login";
+    	}
+		
 	}
 	
 	/**
-	 * 로그인 후 권한 체크 분기 처리
+	 * 로그인 후 메인화면으로 들어간다
 	 * @param
 	 * @return 로그인 페이지
 	 * @exception Exception
 	 */
 	@RequestMapping(value="/backoffice/actionMain.do")
-	public String actionMain(HttpServletRequest request, HttpSession session) throws Exception {
-		if (!EgovUserDetailsHelper.isAuthenticated()) {
-			return "redirect:/backoffice/login.do?login_error=1";
-		}
-		LoginVO loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
-		// 메뉴정보 세션에 저장
-		List<Map<String, Object>> menuList = menuService.selectMainMenuLeft(loginVO.getAdminId());
-		session.setAttribute("MenuJson", new Gson().toJson(menuList));
-		// 로그인 성공 기록
-		try {
-			String clientIp = EgovClntInfo.getClntIP(request);
-			LoginLog loginLog = new LoginLog();
-			loginLog.setConnectMthd(Globals.LOGIN_CONNECT_MTHD_I);
-			loginLog.setConnectId(loginVO.getAdminId());
-			loginLog.setConnectIp(clientIp);
-			loginLog.setErrorOccrrAt("Y");
-			loginLogService.logInsertLoginLog(loginLog);
-		} catch (Exception e) {
-			log.error(e.getMessage());
-		}
-		
-		return "forward:/backoffice/index.do";
+	public String actionMain( HttpServletRequest request, ModelMap model)  {
+    	try{
+    		
+    		// 1. Spring Security 사용자권한 처리
+		    Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+	    	if(!isAuthenticated) {
+	    		LOGGER.debug("=== fail:" + isAuthenticated);
+	    		model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
+	    		return "/backoffice/login";
+	    	}
+	    	
+	    	//2메뉴 정리 하기 
+	    	
+	    	return "/backoffice/index";
+    	} catch(Exception e){
+    		LOGGER.debug("login Error:" + e.toString());
+    		model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
+        	return "/backoffice/login";
+    	}
 	}
 
 	/**
@@ -147,41 +228,43 @@ public class EgovLoginController {
 	 */
 	@RequestMapping(value = "/backoffie/actionLogout.do")
 	public String actionLogout(HttpServletRequest request, ModelMap model) throws Exception {
-		String userIp = EgovClntInfo.getClntIP(request);
-		String adminId = EgovUserDetailsHelper.getAuthenticatedUserId();
-		
-		// 로그아웃 성공 기록
-		try {
-			LoginLog loginLog = new LoginLog();
-			loginLog.setConnectId(adminId);
-			loginLog.setConnectIp(userIp);
-			loginLog.setConnectMthd(Globals.LOGIN_CONNECT_MTHD_O);
-			loginLog.setErrorOccrrAt("N");
-			loginLogService.logInsertLoginLog(loginLog);
-		} catch (Exception e) {
-			log.error(e.getMessage());
-		}
+		request.getSession().setAttribute("LoginVO", null);
 		
 		return "redirect:/egov_security_logout";
 	}
-	
-	/**
-	 * 메인 화면 이동
-	 * @param model
-	 * @return
-	 */
-	@RequestMapping(value="/backoffice/index.do")
-	public ModelAndView index() {
-		ModelMap model = new ModelMap();
-		log.info("EgovUserDetailsHelper.isAuthenticated(): "+ EgovUserDetailsHelper.isAuthenticated());
-		if (EgovUserDetailsHelper.isAuthenticated()) {
-			LoginVO loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
-			model.addAttribute("usernmae", loginVO.getEmpNm());
-			model.addAttribute("authorcode", loginVO.getAuthorCd());
-			model.addAttribute("centercode", loginVO.getCenterCd());
-			model.addAttribute("adminId", loginVO.getAdminId());
-		}
-		return new ModelAndView("/backoffice/index", model);
+}
+
+class RequestWrapperForSecurity extends HttpServletRequestWrapper {
+	private String username = null;
+	private String password = null;
+
+	public RequestWrapperForSecurity(HttpServletRequest request, String username, String password) {
+		super(request);
+
+		this.username = username;
+		this.password = password;
 	}
 	
+	@Override
+	public String getServletPath() {		
+		return ((HttpServletRequest) super.getRequest()).getContextPath() + "/egov_security_login";
+	}
+
+	@Override
+	public String getRequestURI() {		
+		return ((HttpServletRequest) super.getRequest()).getContextPath() + "/egov_security_login";
+	}
+
+	@Override
+	public String getParameter(String name) {
+		if (name.equals("egov_security_username")) {
+			return username;
+		}
+
+		if (name.equals("egov_security_password")) {
+			return password;
+		}
+
+		return super.getParameter(name);
+	}
 }

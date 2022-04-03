@@ -31,7 +31,7 @@ public class KioskInfo {
  	private String frstRegisterId = "";
  	
  	// 최초 등록 일자
- 	private String frstRegterId = "";
+ 	private String frstRegistDtm = "";
 
  	// 최종 수정자
 	private String lastUpdusrId = "";

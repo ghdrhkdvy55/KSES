@@ -26,7 +26,6 @@ import com.kses.backoffice.bas.progrm.mapper.ProgrameChangeManageMapper;
 import com.kses.backoffice.bas.progrm.mapper.ProgrmInfoManageMapper;
 import com.kses.backoffice.bas.progrm.vo.ProgrmInfo;
 import com.kses.backoffice.util.SmartUtil;
-
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.fdl.excel.EgovExcelService;
 
@@ -46,11 +45,14 @@ public class MenuInfoServiceImpl extends EgovAbstractServiceImpl implements Menu
 	
 	@Resource(name = "excelZipService")
     private EgovExcelService excelZipService;
+	
+	@Autowired
+	private SmartUtil util;
 	 
 	@Override
-	public Map<String, Object> selectMenuManage(String menuNo) throws Exception {
+	public List<Map<String, Object>> selectMenuManage(String searchKeyword) throws Exception {
 		// 메뉴목록을 조회
-		return menuMapper.selectMenuManage_D(menuNo);
+		return menuMapper.selectMenuManage_D(searchKeyword);
 	}
 
 	@Override
@@ -67,15 +69,10 @@ public class MenuInfoServiceImpl extends EgovAbstractServiceImpl implements Menu
 	public int selectUpperMenuNoByPk(String menuNo) throws Exception {
 		return menuMapper.selectUpperMenuNoByPk(menuNo);
 	}
-	
-	@Override
-	public int insertMenuManage(MenuInfo menuInfo) throws Exception {
-		return menuMapper.insertMenuManage_S(menuInfo);
-	}
 
 	@Override
-	public int updateMenuManage(MenuInfo menuInfo) throws Exception {
-		return menuMapper.updateMenuManage_S(menuInfo);
+	public int updateMenuManage(MenuInfo vo) throws Exception {
+		return (vo.getMode().equals("Ins")) ? menuMapper.insertMenuManage_S(vo) : menuMapper.updateMenuManage_S(vo);
 	}
 
 	@Override

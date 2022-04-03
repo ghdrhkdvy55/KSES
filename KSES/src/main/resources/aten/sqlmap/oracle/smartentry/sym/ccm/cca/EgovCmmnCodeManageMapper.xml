@@ -5,10 +5,10 @@
 		SELECT R.* FROM
 		(
 			SELECT SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT,
-			       ROW_NUMBER() OVER (ORDER BY A.CODE_ID ASC) AS RNUM, 
+			       ROW_NUMBER() OVER (ORDER BY A.CODE_ID DESC) AS RNUM, 
 				   A.CODE_ID, A.CODE_ID_NM, A.CODE_ID_DC, A.USE_AT,
-				   TO_CHAR(A.LAST_UPDT_PNTTM, 'yyyy-mm-dd') AS LAST_UPDT_PNTTM, A.LAST_UPDUSR_ID,
-			       (SELECT COUNT(*) FROM COMTCCMMNDETAILCODE WHERE CODE_ID = A.CODE_ID) AS CHILD_CNT
+				   TO_CHAR(A.LAST_UPDT_PNTTM, 'yyyy-mm-dd') AS LAST_UPDT_PNTTM, A.LAST_UPDUSR_ID
+				   
 			FROM COMTCCMMNCODE A				     
 			WHERE A.CL_CODE = 'SPDM'
 			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
@@ -44,7 +44,7 @@
 		)
 		VALUES
 		(
-			#{codeId}, #{codeIdNm}, #{codeIdDc, jdbcType=VARCHAR}, #{useAt, jdbcType=CHAR}, 'SPDM', 
+			#{codeId}, #{codeIdNm}, #{codeIdDc, jdbcType=VARCHAR}, 'Y', 'SPDM', 
 			SYSDATE, #{frstRegisterId, jdbcType=VARCHAR}, SYSDATE, #{lastUpdusrId, jdbcType=VARCHAR}
 		)
 	</insert>	

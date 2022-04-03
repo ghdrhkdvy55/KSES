@@ -2,25 +2,25 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kses.backoffice.bld.center.mapper.CenterHolyInfoManageMapper">
 	<select id="selectCenterHolyInfoList" resultType="lmap">
-		SELECT TB.*
-		FROM (
-				 SELECT SUM(1) OVER (PARTITION BY NULL)            AS TOTAL_RECORD_COUNT,
-						ROW_NUMBER() OVER (ORDER BY A.HOLY_DT ASC) AS RNUM,
-						A.CENTER_HOLY_SEQ,
-						A.CENTER_CD,
-						A.HOLY_DT,
-						A.HOLY_NM,
-						A.USE_YN,
-						TO_CHAR(A.LAST_UPDT_DTM, 'yyyy-mm-dd')     AS LAST_UPDT_DTM,
-						A.LAST_UPDUSR_ID,
-						B.CENTER_NM
-				 FROM TSEB_CENTERHOLY_INFO_I A,
-					  TSEB_CENTER_INFO_M B
-				 WHERE A.CENTER_CD = B.CENTER_CD
-		    		AND A.CENTER_CD = #{params.centerCd}
-			 ) TB
+		SELECT * FROM 
+		( 
+			SELECT 	
+				SUM(1) OVER(PARTITION BY NULL) AS TOTAL_RECORD_COUNT, 
+				ROW_NUMBER() OVER (ORDER BY TB.HOLY_DT DESC) AS RNUM, 
+				TB.* 
+			FROM 	
+			(	
+				SELECT 
+					A.CENTER_HOLY_SEQ, A.CENTER_CD, A.HOLY_DT, A.HOLY_NM, A.USE_YN,
+					TO_CHAR(A.LAST_UPDT_DTM, 'yyyy-mm-dd') AS LAST_UPDT_DTM, A.LAST_UPDUSR_ID, B.CENTER_NM
+				FROM TSEB_CENTERHOLY_INFO_I A, TSEB_CENTER_INFO_M B
+				WHERE A.CENTER_CD = #{params.centerCd}
+				AND A.CENTER_CD = B.CENTER_CD
+			) TB 
+		) TA
 		WHERE RNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}
-		ORDER BY RNUM ASC
+		ORDER BY TA.RNUM ASC
+		
 	</select>
 	
 	<insert id="insertCenterHolyInfo">
@@ -35,6 +35,35 @@
 			#{frstRegterId, jdbcType=VARCHAR}, SYSDATE, #{lastUpdusrId, jdbcType=VARCHAR}, SYSDATE
 		)
 	</insert>
+     	
+	<insert id="insertExcelCenterHoly">
+   	    <foreach collection="centerHolyInfoList" item="item" separator=";" open="DECLARE BEGIN" close="; END;">   
+   	        MERGE INTO TSEB_CENTERHOLY_INFO_I A
+		    USING DUAL
+		    ON 
+			(	
+				A.CENTER_CD = #{item.centerCd}
+				AND
+				A.HOLY_DT = #{item.holyDt}
+			)
+			WHEN MATCHED THEN
+			UPDATE SET 
+				A.HOLY_NM = #{item.holyNm},
+				A.LAST_UPDT_DTM = SYSDATE,
+				A.LAST_UPDUSR_ID = #{item.lastUpdusrId, jdbcType=VARCHAR}
+			WHEN NOT MATCHED THEN
+			INSERT
+			(
+			  A.CENTER_HOLY_SEQ , A.HOLY_DT, A.HOLY_NM, A.USE_YN, A.CENTER_CD,
+			  A.LAST_UPDT_DTM, A.LAST_UPDUSR_ID, A.FRST_REGIST_DTM, A.FRST_REGTER_ID
+			)
+			VALUES 
+			( 
+			   SEQ_ESB_CENTERHOLY_INFO.NEXTVAL, #{item.holyDt}, #{item.holyNm,jdbcType=VARCHAR}, #{item.useYn,jdbcType=VARCHAR}, #{item.centerCd},
+			   SYSDATE, #{item.lastUpdusrId, jdbcType=VARCHAR}, SYSDATE, #{item.lastUpdusrId, jdbcType=VARCHAR} 
+			)
+   	    </foreach>
+   	</insert>
      
 	<update id="updateCenterHolyInfo">	
 		UPDATE TSEB_CENTERHOLY_INFO_I SET 
@@ -45,47 +74,34 @@
 			LAST_UPDT_DTM = SYSDATE				
 		WHERE CENTER_HOLY_SEQ = #{centerHolySeq}
 	</update>
-
-	<update id="updateCenterHolyInfoList">
-		<foreach collection="centerHolyInfoList" item="item" separator=";" open="DECLARE BEGIN" close="; END;">
-			UPDATE TSEB_CENTERHOLY_INFO_I SET
-				HOLY_NM = #{item.holyNm, jdbcType=VARCHAR},
-				USE_YN = #{item.useYn, jdbcType=VARCHAR},
-				LAST_UPDUSR_ID = #{item.lastUpdusrId, jdbcType=VARCHAR},
-				LAST_UPDT_DTM = SYSDATE
-			WHERE CENTER_HOLY_SEQ = #{item.centerHolySeq}
-		</foreach>
-	</update>
 	
 	<update id="copyCenterHolyInfo">	
 		MERGE INTO TSEB_CENTERHOLY_INFO_I T
-		USING 
-		(
-			SELECT * FROM TSEB_CENTERHOLY_INFO_I 
-			WHERE CENTER_CD = #{copyCenterCd}
-		) A
-		ON 
-		(	
-			T.CENTER_CD = #{centerCd}
-			AND 
-			T.HOLY_DT = A.HOLY_DT
-		)
-		WHEN MATCHED THEN
-		UPDATE SET 
-			T.HOLY_NM = A.HOLY_NM,
-			T.LAST_UPDT_DTM = SYSDATE,
-		    T.LAST_UPDUSR_ID = #{lastUpdusrId}
-		WHEN NOT MATCHED THEN
-		INSERT 
-		(
-			T.CENTER_HOLY_SEQ, T.CENTER_CD, T.HOLY_DT, T.USE_YN, T.LAST_UPDT_DTM,
-			T.HOLY_NM, T.LAST_UPDUSR_ID, T.FRST_REGIST_DTM, T.FRST_REGTER_ID
-		)
-		VALUES
-		(
-			SEQ_ESB_CENTERHOLY_INFO.NEXTVAL, #{centerCd}, A.HOLY_DT, A.USE_YN, SYSDATE,
-			A.HOLY_NM, A.FRST_REGTER_ID, SYSDATE, #{lastUpdusrId}
-		)
+			   USING 
+			(
+				SELECT * FROM TSEB_CENTERHOLY_INFO_I 
+				WHERE CENTER_CD = #{params.copyCenterCd}
+			) A
+			ON 
+			(	
+				T.CENTER_CD = #{params.targetCenterCd}
+				AND 
+				T.HOLY_DT = A.HOLY_DT
+			)
+			WHEN MATCHED THEN
+			UPDATE SET 
+				T.HOLY_NM = A.HOLY_NM,
+				T.LAST_UPDT_DTM = SYSDATE,
+	            T.LAST_UPDUSR_ID = A.LAST_UPDUSR_ID
+			WHEN NOT MATCHED THEN
+			INSERT 
+			(
+				T.CENTER_HOLY_SEQ, T.CENTER_CD, T.HOLY_DT, T.USE_YN, T.LAST_UPDT_DTM, T.HOLY_NM, T.LAST_UPDUSR_ID, T.FRST_REGIST_DTM, T.FRST_REGTER_ID
+			)
+			VALUES
+			(
+				SEQ_ESB_CENTERHOLY_INFO.NEXTVAL, #{params.targetCenterCd}, A.HOLY_DT, A.USE_YN, SYSDATE, A.HOLY_NM, A.FRST_REGTER_ID, SYSDATE, A.FRST_REGTER_ID
+		 	)
 	</update>
 	
 	<select id="centerUpdateSelect" resultType="lmap">

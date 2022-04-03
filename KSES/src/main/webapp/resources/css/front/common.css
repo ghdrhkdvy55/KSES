@@ -1796,24 +1796,25 @@ h2.guide_tit {
     width: 100%;
     overflow-x: scroll;   
     margin-top: 2rem;
-
+	margin-bottom: 2rem;
   } /*한줄로, 넘치면 스크롤*/
 #menu_ul >li {
-    width: 170px;
+    width: 110px;
     display: inline-block;
     background: #f0f0f0;
     text-align: center;
-    border-radius: 1.7rem;
     cursor: pointer;
-    font-size: .9em;
+    font-size: 0.7em;
+    border-radius: 8px;
     margin-right: 10px;
 }
 #menu_ul >li ul li:first-child {
     font-size: 1.1em;
+    border-radius: 8px;
     font-weight: 700;
 }
 #menu_ul >li ul{
-    padding: 3rem 0;
+    padding: 1rem;
 }
 .section_map {border: 1px solid #e0e0e0; overflow: hidden; height: auto; margin-top: 2rem;}
 .map {position:relative; width:-webkit-fill-available ;}

@@ -39,6 +39,8 @@ public class HolyInfo {
  	
  	// 입력 구분
  	private String mode = "";
+ 	
+    private String userId = "";
     
     private int cnt = 0;
 }

@@ -19,8 +19,6 @@ public interface fileService {
     String fileExt(File f, String _seq)throws Exception;
     //파일 업로드 확인 
   	String uploadFileNm(List<MultipartFile> mpf, String filePath)throws Exception;
-
-	  String uploadFileNm(MultipartFile multipartFile, String filePath) throws Exception;
 	//파일 이름 변경(중복 검사)
   	File rename(File f, String fileNm, String filedir)throws Exception;
   	//디렉토리 확인

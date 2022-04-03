@@ -126,6 +126,7 @@ public class FrontResvInfoManageController {
 			resvInfo.put("resvDate", resvService.selectCenterResvDate(centerCd));
 			resvInfo.forEach((key, value) -> params.merge(key, value, (v1, v2) -> v2));
 			
+			model.addObject("resvDateList", resvService.selectCenterResvDateList(centerCd));
 			model.addObject("partClass", partClass);
 			model.addObject("resvInfo", params);
 			model.addObject("floorList", floorList);
@@ -307,7 +308,7 @@ public class FrontResvInfoManageController {
 					user.setUserPhone(vo.getResvUserClphn());
 					user.setUserNm(vo.getResvUserNm());
 					user.setIndvdlinfoAgreYn(vo.getResvIndvdlinfoAgreYn());
-					user.setMode(Globals.SAVE_MODE_INSERT);
+					user.setMode("Ins");
 					
 					userService.updateUserInfo(user);
 				}

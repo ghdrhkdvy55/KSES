@@ -31,6 +31,7 @@ public class MenuCreateManageServiceImpl extends EgovAbstractServiceImpl impleme
 		return createMapper.selectMenuCreatList_Author(authorCode);
 	}
 	
+	
 	@Override
 	public int selectMenuCreatManagTotCnt(String searchKeyword) throws Exception {
 		return createMapper.selectMenuCreatCnt_S(searchKeyword);
@@ -53,6 +54,8 @@ public class MenuCreateManageServiceImpl extends EgovAbstractServiceImpl impleme
 
 	@Override
 	public void insertMenuCreatList(String authorCode, String checkedMenuNoForInsert) throws Exception {
+		
+		
 		int AuthorCnt = 0;
 		
         List<String> insertMenuNo =  SmartUtil.dotToList(checkedMenuNoForInsert).stream().distinct().collect(Collectors.toList());
@@ -70,12 +73,11 @@ public class MenuCreateManageServiceImpl extends EgovAbstractServiceImpl impleme
 			menuCreatVO.setMenuNo(menu);
 			createMapper.insertMenuCreat_S(menuCreatVO);
 		}
+		
+		
 	}
+
+
 	
-	@Override
-	public int deleteMenuCreat_S(String authorCode) throws Exception {
-		MenuCreatInfo menuCreatVO = new MenuCreatInfo();
-		menuCreatVO.setAuthorCode(authorCode);
-		return createMapper.deleteMenuCreat_S(menuCreatVO);
-	}
+	
 }

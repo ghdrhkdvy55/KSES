@@ -14,8 +14,6 @@ public interface FloorInfoManageService {
 	Map<String, Object> selectFloorInfoDetail(String floorCd)throws Exception;
 
 	int updateFloorInfo(FloorInfo vo)throws Exception;
-
-	int updateFloorInfoList(List<FloorInfo> floorInfoList) throws Exception;
 	
 	int insertFloorSeatUpdate(Map<String, Object> params)throws Exception;
 }

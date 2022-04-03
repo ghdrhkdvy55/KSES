@@ -1,16 +1,15 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <!-- JQuery Grid -->
 <link rel="stylesheet" href="/resources/jqgrid/src/css/ui.jqgrid.css">
 <script type="text/javascript" src="/resources/jqgrid/src/i18n/grid.locale-kr.js"></script>
 <script type="text/javascript" src="/resources/jqgrid/js/jquery.jqGrid.min.js"></script>
 <style type="text/css">
-.ui-jqgrid .ui-jqgrid-htable th div {
+.ui-jqgrid .ui-jqgrid-htable th div{
 	outline-style: none;
 	height: 30px;
 }
-
 .ui-jqgrid tr.jqgrow {
 	outline-style: none;
 	height: 30px;
@@ -20,372 +19,454 @@
 <input type="hidden" id="mode" name="mode" />
 <div class="breadcrumb">
 	<ol class="breadcrumb-item">
-		<li>인사 관리&nbsp;&gt;&nbsp;</li>
-		<li class="active">사용자 관리</li>
+    	<li>인사 관리&nbsp;&gt;&nbsp;</li>
+    	<li class="active">사용자 관리</li>
 	</ol>
 </div>
 <h2 class="title">사용자 관리</h2>
 <div class="clear"></div>
 <div class="dashboard">
-	<div class="boardlist">
-		<div class="whiteBox searchBox">
-			<div class="top">
-				<p>부서</p>
-				<select id="searchDepth">
-					<option value="">지점 선택</option>
-					<c:forEach var="item" items="${DEPT}">
-						<option value="${item.code_cd}"><c:out value="${item.code_nm}"/></option>
-					</c:forEach>
-				</select>
-				<p>검색어</p>
-				<select id="searchCondition">
-					<option value="EMP_NM">이름</option>
-					<option value="EMP_NO">사번</option>
-				</select> 
-				<input type="text" id="searchKeyword" placeholder="검색어를 입력하세요.">
-			</div>
-			<div class="inlineBtn">
-				<a href="javascript:fnSearch(1);" class="grayBtn">검색</a>
-			</div>
-		</div>
-		<div class="left_box mng_countInfo">
-			<p>총 : <span id="sp_totcnt"></span>건</p>
-		</div>
-		<div class="right_box">
-			<a href="javascript:fnEmpInfo();" class="blueBtn">사용자 등록</a>
-			<a href="javascript:fnEmpDelete();" class="grayBtn">삭제</a>
-		</div>
-		<div class="clear"></div>
-		<div class="whiteBox">
-			<table id="mainGrid"></table>
-			<div id="pager"></div>
-		</div>
-	</div>
+      <div class="boardlist">
+        <div class="whiteBox searchBox">
+              <div class="sName">
+                <h3>검색 옵션</h3>
+              </div>
+          <div class="top">
+            <p>부서</p>
+            <select id="searchDepth" name="searchDepth">
+               <option value="">부서 선택</option>
+               <c:forEach items="${DEPT}" var="dept">
+                  <option value="${dept.code_cd}"><c:out value='${dept.code_nm}'/></option>
+               </c:forEach>
+            </select>
+            <p>검색어</p>
+            <select id="searchCondition" name="searchCondition">
+              <option value="EMP_NM">이름</option>
+              <option value="EMP_NO">사번</option>
+            </select>
+            <input type="text" id="searchKeyword" name="searchKeyword" placeholder="검색어를 입력하세요.">
+          </div>
+          <div class="inlineBtn">
+            <a href="#" onClick="jqGridFunc.fn_search()" class="grayBtn">검색</a>
+          </div>
+        </div>
+        <div class="left_box mng_countInfo">
+          <p>총 : <span id="sp_totcnt"></span>건</p>
+         
+        </div>
+        <div class="right_box">
+            <a href="#" onClick="jqGridFunc.fn_empInfo('Ins', '')" class="blueBtn">사용자 등록</a> 
+            <a href="#" onClick="jqGridFunc.fn_empDel()" class="grayBtn">삭제</a>
+        </div>
+        <div class="clear"></div>
+        <div class="whiteBox">
+            <table id="mainGrid"></table>
+            <div id="pager" class="scroll" style="text-align:center;"></div>  
+        </div> 
+      </div>
 </div>
 <!-- contents//-->
 <!-- //popup -->
-<!-- // 직원 등록 팝업 -->
-<div data-popup="mng_emp_add" class="popup">
-	<div class="pop_con">
-		<a class="button b-close">X</a>
-		<h2 class="pop_tit">사용자 등록</h2>
-		<div class="pop_wrap">
-			<form>
-			<input type="hidden" name="mode" value="Ins">
-			<table class="detail_table">
-				<tbody>
-					<tr>
-						<th>사번</th>
-						<td>
-							<input type="text" name="empNo" onchange="fnIdChange();">
-							<span id="sp_Unqi">
-                            	<a href="javascript:fnIdCheck();" class="blueBtn">중복확인</a>
-                            	<input type="hidden" id="idCheck" value="N">
-                            </span>
-						</td>
-						<th>이름</th>
-						<td><input type="text" name="empNm"></td>
-					</tr>
-					<tr id="trPassword">
-						<th>비밀번호</th>
-						<td><input type="password" name="empPassword"></td>
-						<th>비밀번호 확인</th>
-						<td><input type="password" name="empPassword2"></td>
-					</tr>
-					<tr>
-						<th>부서</th>
-						<td>
-							<select name="deptCd">
-								<option value="">부서 선택</option>
-								<c:forEach var="item" items="${DEPT}">
-									<option value="${item.code_cd}"><c:out value="${item.code_nm}"/></option>
-								</c:forEach>
-							</select>
-						</td>
-						<th>이메일</th>
-						<td>
-							<input type="text" name="empEmail">
-						</td>
-					</tr>
-					<tr>
-						<th>직책</th>
-						<td>
-							<span id="spPsitNm"></span>
-						</td>
-						<th>직급</th>
-						<td>
-							<span id="spGradNm"></span>
-						</td>
-					</tr>
-					<tr>
-						<th>내선번호</th>
-						<td><input type="text" name="empTlphn" phoneonly></td>
-						<th>핸드폰</th>
-						<td><input type="text" name="empClphn" phoneonly></td>
-					</tr>
-					<tr>
-						<th>사용여부</th>
-						<td>
-							<input type="radio" name="useYn" value="Y">사용</input>
-							<input type="radio" name="useYn" value="N">사용 안함</input>
-						</td>
-						<th>사용자상태</th>
-						<td>
-							<select name="empState">
-								<option value="">상태</option>
-								<c:forEach var="item" items="${userState}">
-									<option value="${item.code}"><c:out value="${item.codenm}"/></option>
-								</c:forEach>
-							</select>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-			</form>
-		</div>
-		<popup-right-button />
-	</div>
+<!-- // 관리자ㅏ용자 등록 팝업 -->
+<div data-popup="mng_user_add" id="mng_user_add" class="popup">
+  <div class="pop_con">
+      <a class="button b-close">X</a>
+      <h2 class="pop_tit">사용자 등록</h2>
+      <div class="pop_wrap">
+          <table class="detail_table">
+              <tbody>
+                <tr>
+                  <th>사번</th>
+                  <td><input type="text" id="empNo" name="empNo">
+                      <span id="sp_Unqi">
+                      <a href="javascript:jqGridFunc.fn_idCheck()" class="blueBtn">중복확인</a>
+                      <input type="hidden" id="idCheck">
+                      </span>
+                  </td>
+                  <th>이름</th>
+                  <td><input type="text" id="empNm" name="empNm"></td>
+                </tr>
+				<tr>
+					<th>비밀번호</th>
+					<td><input type="password" id="empPassword"></td>
+					<th>비밀번호 확인</th>
+					<td><input type="password" id="empPassword2"></td>
+				</tr>
+                <tr>
+                   <th>사진</th>
+                   <td><input type="file" id="empPic" name="empPic"></td>
+                </tr>
+                <tr>
+                  <th>부서</th>
+                  <td>
+                     <select id="deptCd" name="deptCd">
+			               <option value="">부서 선택</option>
+			               <c:forEach items="${DEPT}" var="dept">
+			                  <option value="${dept.code_cd}"><c:out value='${dept.code_nm}'/></option>
+			               </c:forEach>
+			          </select> 
+                  </td>
+                  <th>직급</th>
+                  <td><select id="gradCd" name="gradCd">
+			               <option value="">직급 선택</option>
+			               <c:forEach items="${GRAD}" var="grad">
+			                  <option value="${grad.code_cd}"><c:out value='${grad.code_nm}'/></option>
+			               </c:forEach>
+			          </select> 
+			      </td>
+                </tr>
+                <tr>
+                  <th>직책</th>
+                  <td>
+                     <select id="psitCd" name="psitCd">
+			               <option value="">직책 선택</option>
+			               <c:forEach items="${POST}" var="post">
+			                  <option value="<c:out value='${post.code_cd}'/>"><c:out value='${post.code_nm}'/></option>
+			               </c:forEach>
+			          </select> 
+                  </td>
+                  <th>이메일</th>
+                  <td><input type="text" id="empEmail" name="empEmail" onClick="fn_join('empEmail',  'mng_user_add')"></td>
+                </tr>
+                <tr>
+                  <th>내선번호</th>
+                  <td><input type="text" id="empTlphn" name="empTlphn"></td>
+                  <th>핸드폰</th>
+                  <td><input type="text" id="empClphn" name="empClphn"></td>
+                </tr>
+                <tr>
+                  <th>사용여부</th>
+                  <td>
+                    <label for="useAt_Y"><input name="useYn" type="radio" id="useAt_Y" value="Y"/>사용</label>
+                    <label for="useAt_N"><input name="useYn" type="radio" id="useAt_N" value="N"/>사용 안함</label>
+                  </td>
+                  <th>사용자상태</th>
+                  <td><select id="empState" name="empState">
+			               <option value="">상태</option>
+			               <c:forEach items="${userState}" var="userState">
+			                  <option value="${userState.code}"><c:out value='${userState.codenm}'/></option>
+			               </c:forEach>
+			          </select> 
+			      </td>
+                </tr>
+              </tbody>
+          </table>
+      </div>
+      <div class="right_box">
+          <a href="#" onClick="jqGridFunc.fn_CheckForm()" id="btnUpdate" class="blueBtn">저장</a>
+          <a href="#" onClick="jqGridFunc.fn_close()" class="grayBtn">취소</a>
+      </div>
+      <div class="clear"></div>
+  </div>
 </div>
 <!-- popup// -->
-<script type="text/javascript" src="/resources/jqgrid/jqgrid.custom.egovapi.js"></script>
 <script type="text/javascript">
-	$(document).ready(function() {
-		// 메인 JqGrid 정의
-		EgovJqGridApi.mainGrid([
-			{ label: '사번', name:'emp_no', align:'center', key: true },
-			{ label: '이름', name:'emp_nm', align:'center' },
-			{ label: '부서코드', name:'dept_cd', hidden: true },
-			{ label: '부서', name:'dept_nm', align:'center' },
-			{ label: '내선번호', name:'emp_tlphn', align:'center', sortable: false },
-			{ label: '핸드폰', name:'emp_clphn', align:'center', sortable: false },
-			{ label: '이메일', name:'emp_email', align:'left', sortable: false },
-			{ label: '사용자상태', name:'emp_state', hidden: true },
-			{ label: '상태', name:'code_nm', align:'center' },
-			{ label: '사용유무', name:'use_yn', align:'center' },
-			{ label: '관리자여부', name:'admin_dvsn', align:'center' },
-			{ label: '최종수정자', name:'last_updusr_id', hidden: true },
-			{ label: '최종수정일', name:'last_updt_dtm', align:'center', formatter: 'date' },
-			{ label: '수정', align:'center', width: 50, fixed: true, formatter: (c, o, row) =>
-	        	'<a href="javascript:fnEmpInfo(\''+ row.emp_no +'\');" class="edt_icon"></a>'
-	        }
-		], false, false, fnSearch);
-	});
-	// 메인 목록 검색
-	function fnSearch(pageNo) {
-		let params = {
-			pageIndex: pageNo,
-			pageUnit: $('.ui-pg-selbox option:selected').val(),
-			searchKeyword: $('#searchKeyword').val(),
-			searchCondition: $('#searchCondition').val(),
-			searchDepth: $('#searchDepth').val(),
-			mode: 'list'
-		};
-		EgovJqGridApi.mainGridAjax('/backoffice/mng/empListAjax.do', params, fnSearch);
-	}
-	// 메인 상세 팝업 정의
-	function fnEmpInfo(rowId) {
-		let $popup = $('[data-popup=mng_emp_add]');
-		let $form = $popup.find('form:first');
-		if (rowId === undefined || rowId === null) {
-			$popup.find('h2:first').text('사용자 등록');
-			$popup.find('span#sp_Unqi').show();
-			$popup.find('tr#trPassword').show();
-			$popup.find('button.blueBtn').off('click').click(fnEmpInsert).show();
-			$form.find(':hidden[name=mode]').val('Ins');
-			$form.find(':text').val('');
-			$form.find(':password').val('');
-			$form.find('#spPsitNm').text('');
-			$form.find('#spGradNm').text('');
-			$form.find(':hidden#idCheck').val('N');
-			$form.find(':text[name=empNo]').removeAttr('readonly');
-			$form.find(':radio[name=useYn]:first').prop('checked', true).removeAttr('disabled');
-			$form.find('select[name=deptCd] option:first').prop('selected', true);
-			$form.find('select[name=empState] option:first').prop('selected', true);
-			$form.find('select[name=deptCd]').removeAttr('disabled');
-			$form.find('select[name=empState]').removeAttr('disabled');
-		}
-		else {
-			let rowData = EgovJqGridApi.getMainGridRowData(rowId);
-			// 직원일 경우 수정 불가
-			if (rowData.last_updusr_id === 'BATCH') {
-				$popup.find('h2:first').text('사용자 상세');
-				$popup.find('tr#trPassword').hide();
-				$popup.find('button.blueBtn').off('click').hide();
-				$form.find(':text').prop('readonly', true);
-				$form.find(':radio[name=useYn]').prop('disabled', true);
-				$form.find('select[name=deptCd]').prop('disabled', true);
-				$form.find('select[name=empState]').prop('disabled', true);
-			}
-			// 시스템 등록 사용자일 경우 수정 가능
-			else {
-				$popup.find('h2:first').text('사용자 수정');
-				$popup.find('tr#trPassword').show();
-	 			$popup.find('button.blueBtn').off('click').click(fnEmpUpdate).show();
-	 			$form.find('select[name=useYn]').removeAttr('disabled');
-	 			$form.find('select[name=deptCd]').removeAttr('disabled');
-	 			$form.find('select[name=empState]').removeAttr('disabled');
-			}
-			$popup.find('span#sp_Unqi').hide();
-			$form.find(':hidden[name=mode]').val('Edt');
-			$form.find(':text[name=empNo]').prop('readonly', true).val(rowData.emp_no);
-			$form.find(':text[name=empNm]').val(rowData.emp_nm);
-			$form.find(':password').val('');
-			$form.find('select[name=deptCd]').val(rowData.dept_cd);
-			$form.find('#spPsitNm').text(rowData.psit_nm);
-			$form.find('#spGradNm').text(rowData.grad_nm);
-			$form.find(':text[name=empEmail]').val(rowData.emp_email);
-			$form.find(':text[name=empTlphn]').val(rowData.emp_tlphn);
-			$form.find(':text[name=empClphn]').val(rowData.emp_clphn);
-			$form.find(':radio[name=useYn][value='+ rowData.use_yn +']').prop('checked', true);
-			$form.find('select[name=empState]').val(rowData.emp_state);
-			EgovJqGridApi.selection('mainGrid', rowId);
-		}
-		$popup.bPopup();
-	}
-	// 중복 아이디 체크
-	function fnIdCheck() {
-		let $popup = $('[data-popup=mng_emp_add]');
-		let rowId = $popup.find(':text[name=empNo]').val();
-		if (rowId === '') {
-			toastr.warning('사번을 입력해 주세요.');
-			return;
-		}
-		EgovIndexApi.apiExecuteJson(
-			'GET',
-			'/backoffice/mng/empNoCheck.do', {
-				empNo: rowId
-			},
-			null,
-			function(json) {
-				$popup.find(':hidden#idCheck').val('Y');
-				toastr.info(json.message);
-			},
-			function(json) {
-				toastr.warning(json.message);
-			}
-		);
-	}
-	// 입력 아이디 변경 이벤트
-	function fnIdChange() {
-		$('[data-popup=mng_emp_add]').find(':hidden#idCheck').val('N');
-	}
-	// 사용자 등록 유효성 검사
-	function fnEmpSaveValidation($popup) {
-		if ($popup.find(':text[name=empNo]').val() === '') {
-			toastr.warning('사번을 입력해 주세요.');
-			return false;
-		}
-		if ($popup.find(':hidden#idCheck').val() !== 'Y') {
-			toastr.warning('중복체크가 안되었습니다.');
-			return false;
-		}
-		if ($popup.find(':text[name=empNm]').val() === '') {
-			toastr.warning('이름을 입력해 주세요.');
-			return false;
-		}
-		let password = $popup.find(':password[name=empPassword]').val();
-		if (password === '') {
-			toastr.warning('비밀번호를 입력해 주세요.');
-			return false;
-		} else {
-			if (!EgovIndexApi.vaildPassword(password)) {
-				toastr.warning('비밀번호가 유효하지 않습니다.');
-				return false;
-			}
-			let password2 = $popup.find(':password[name=empPassword2]').val();
-			if (password2 === '') {
-				toastr.warning('비밀번호 확인을 입력해 주세요.');
-				return false;
-			}
-			if ($.trim(password) !== $.trim(password2)) {
-				toastr.warning('비밀번호가 일치하지 않습니다. ');
-				return false;
-			}
-		}
-		let email = $popup.find(':text[name=empEmail]').val();
-		if (email === '') {
-			toastr.warning('이메일을 입력해주세요.');
-			return false;
-		} else {
-			if (!EgovIndexApi.validEmail(email)) {
-				toastr.warning('이메일 형식에 맞지 않습니다.');
-				return false;
-			}
-		}
-		if ($popup.find('select[name=empState]').val() === '') {
-			toastr.warning('사용자상태를 입력해 주세요.');
-			return false;
-		}
-		
-		return true;
-	}
-	// 사용자 등록
-	function fnEmpInsert() {
-		let $popup = $('[data-popup=mng_emp_add]');
-		if(fnEmpSaveValidation($popup)) {
-			bPopupConfirm('사용자 등록', '등록 하시겠습니까?', function() {
-				EgovIndexApi.apiExecuteJson(
-					'POST',
-					'/backoffice/mng/empUpdate.do',
-					$popup.find('form:first').serializeObject(),
-					null,
-					function(json) {
-						toastr.success(json.message);
-						$popup.bPopup().close();
-						fnSearch(1);
-					},
-					function(json) {
-						toastr.error(json.message);
-					}
-				);
-			});
-		}
-	}
-	// 사용자 수정
-	function fnEmpUpdate() {
-		let $popup = $('[data-popup=mng_emp_add]');
-		fnEmpSaveValidation($popup);
-		bPopupConfirm('사용자 수정', '<b>'+ $popup.find(':text[name=empNo]').val() +'</b> 수정 하시겠습니까?', function() {
-			EgovIndexApi.apiExecuteJson(
-				'POST',
-				'/backoffice/mng/empUpdate.do',
-				$popup.find('form:first').serializeObject(),
-				null,
-				function(json) {
-					toastr.success(json.message);
-					$popup.bPopup().close();
-					fnSearch(1);
-				},
-				function(json) {
-					toastr.error(json.message);
-				}
-			);
-		});
-	}
-	// 사용자 삭제
-	function fnEmpDelete() {
-		let $popup = $('[data-popup=mng_emp_add]');
-		let rowId = EgovJqGridApi.getMainGridSingleSelectionId();
-		if (rowId === null) {
-			toastr.warning('목록을 선택해 주세요.');
-			return;
-		}
-		bPopupConfirm('사용자 삭제', '<b>'+ rowId +'</b> 를(을) 삭제 하시겠습니까?', function() {
-			EgovIndexApi.apiExecuteJson(
-				'POST',
-				'/backoffice/mng/empDelete.do', {
-					empNo: rowId
-				},
-				null,
-				function(json) {
-					toastr.success(json.message);
-					$popup.bPopup().close();
-					fnSearch(1);
-				},
-				function(json) {
-					toastr.error(json.message);
-				}
-			);
-		});
-	}
+	$(document).ready(function() { 
+		   jqGridFunc.setGrid("mainGrid");
+	 });
+	
+	
+    var jqGridFunc  = {
+    		
+    		setGrid : function(gridOption){
+    			var grid = $('#'+gridOption);
+    		    var postData = {"pageIndex": "1"};
+    		    grid.jqGrid({
+    		    	url : '/backoffice/mng/empListAjax.do' ,
+    		        mtype :  'POST',
+    		        datatype :'json',
+    		        pager: $('#pager'),  
+    		        ajaxGridOptions: { contentType: "application/json; charset=UTF-8" },
+    		        ajaxRowOptions: { contentType: "application/json; charset=UTF-8", async: true },
+    		        ajaxSelectOptions: { contentType: "application/json; charset=UTF-8", dataType: "JSON" }, 
+    		        postData :  JSON.stringify( postData ),
+    		        jsonReader : {
+	   		             root : 'resultlist',
+	   		             "page":"paginationInfo.currentPageNo",
+	   		             "total":"paginationInfo.totalPageCount",
+	   		             "records":"paginationInfo.totalRecordCount",
+	   		             repeatitems:false
+   		            },
+    		        colModel :  [
+	    		 	                { label: '사번',  key: true, name:'emp_no',    index:'emp_no',        align:'left',   width:'10%'},
+	    		 	                { label: '이름',  name:'emp_nm',         index:'emp_nm',        align:'left',   width:'10%'},
+	    		 	                { label: '부서',  name:'dept_nm',        index:'dept_nm',        align:'left',   width:'10%'},
+	    		 	                { label: '내선번호',  name:'emp_tlphn',     index:'emp_tlphn',        align:'left',   width:'10%'},
+	    		 	                { label: '핸드폰',  name:'emp_clphn',      index:'emp_clphn',        align:'left',   width:'10%'},
+	    		 	                { label: '이메일',  name:'emp_email',       index:'emp_email',        align:'left',   width:'10%'},
+	    		 	                { label: '상태',  name:'code_nm',        index:'code_nm',        align:'left',   width:'10%'},
+	    		 	                { label: '사용유무',  name:'use_yn',        index:'use_yn',        align:'left',   width:'10%'
+	    		 	                  , formatter:jqGridFunc.rowUseYn },
+	    		 	                { label: '관리자',  name:'admin_dvsn',        index:'admin_dvsn',        align:'left',   width:'10%'
+	    		 	                	, formatter:jqGridFunc.rowAdmin },
+	    		 	                { label: '최종수정일', name:'last_updt_dtm', index:'last_updt_dtm', align:'center', width:'12%', 
+	      			                  sortable: 'date' ,formatter: "date", formatoptions: { newformat: "Y-m-d"}}
+    			                ],  //상단면 
+    		        rowNum : 10,  //레코드 수
+    		        rowList : [10,20,30,40,50,100],  // 페이징 수
+    		        pager : pager,
+    		        refresh : true,
+    	            rownumbers : false, // 리스트 순번
+    		        viewrecord : true,    // 하단 레코드 수 표기 유무
+    		        //loadonce : false,     // true 데이터 한번만 받아옴 
+    		        loadui : "enable",
+    		        loadtext:'데이터를 가져오는 중...',
+    		        emptyrecords : "조회된 데이터가 없습니다", //빈값일때 표시 
+    		        height : "100%",
+    		        autowidth:true,
+    		        shrinkToFit : true,
+    		        refresh : true,
+    		        multiselect:true, 
+    		        loadComplete : function (data){
+    		        	 $("#sp_totcnt").text(data.paginationInfo.totalRecordCount);
+    		        },loadError:function(xhr, status, error) {
+    		            alert(error); 
+    		        }, onPaging: function(pgButton){
+    		        	  var gridPage = grid.getGridParam('page'); //get current  page
+    		        	  var lastPage = grid.getGridParam("lastpage"); //get last page 
+    		        	  var totalPage = grid.getGridParam("total");
+    		              if (pgButton == "next"){
+    		            	  if (gridPage < lastPage ){
+    		            		  gridPage += 1;
+    		            	  }else{
+    		            		  gridPage = gridPage;
+    		            	  }
+    		              }else if (pgButton == "prev"){
+    		            	  if (gridPage > 1 ){
+    		            		  gridPage -= 1;
+    		            	  }else{
+    		            		  gridPage = gridPage;
+    		            	  }
+    		              }else if (pgButton == "first"){
+    		            	  gridPage = 1;
+    		              }else if  ( pgButton == "last"){
+    		            	  gridPage = lastPage;
+    		              } else if (pgButton == "user"){
+    		            	  var nowPage = Number($("#pager .ui-pg-input").val());
+    		            	  
+    		            	  if (totalPage >= nowPage && nowPage > 0 ){
+    		            		  gridPage = nowPage;
+    		            	  }else {
+    		            		  $("#pager .ui-pg-input").val(nowPage);
+    		            		  gridPage = nowPage;
+    		            	  }
+    		              }else if (pgButton == "records"){
+    		            	  gridPage = 1;
+    		              }
+    		              grid.setGridParam({
+		    		          	  page : gridPage,
+		    		          	  rowNum : $('.ui-pg-selbox option:selected').val(),
+		    		          	  postData : JSON.stringify(  {
+							    		          			"pageIndex": gridPage,
+							    		          			"searchDepth" : $("#searchDepth").val(),
+							    		          			"searchCondition" : $("#searchCondition").val(),
+							    		          			"searchKeyword" : $("#searchKeyword").val(),
+							    		          			"pageUnit":$('.ui-pg-selbox option:selected').val()
+							    		          		})
+    		          	 }).trigger("reloadGrid");
+    		        }, beforeSelectRow: function (rowid, e) {
+    		            var $myGrid = $(this);
+    		            var i = $.jgrid.getCellIndex($(e.target).closest('td')[0]);
+    		            var cm = $myGrid.jqGrid('getGridParam', 'colModel');
+    		            return (cm[i].name == 'cb'); // 선택된 컬럼이 cb가 아닌 경우 false를 리턴하여 체크선택을 방지
+    		        }, onSelectRow: function(rowId){
+    	                if(rowId != null) {  }// 체크 할떄
+    	            }, ondblClickRow : function(rowid, iRow, iCol, e){
+    	            	grid.jqGrid('editRow', rowid, {keys: true});
+    	            }, onCellSelect : function (rowid, index, contents, action){
+    	            	var cm = $(this).jqGrid('getGridParam', 'colModel');
+    	                //console.log(cm);
+    	                if (cm[index].name !='cb' ){
+    	                	jqGridFunc.fn_empInfo("Edt", $(this).jqGrid('getCell', rowid, 'emp_no'));
+            		    }
+    	            }
+    		    });
+    		}, rowUseYn : function (cellvalue, options, rowObject){
+	        	return rowObject.use_yn == "Y" ? "사용" : "사용안함";
+            }, rowAdmin : function (cellvalue, options, rowObject){
+            	return rowObject.admin_dvsn == "Y" ? "관리자" : "사용자";  
+            },refreshGrid : function(){
+	           $('#mainGrid').jqGrid().trigger("reloadGrid");
+	        },fn_search: function(){
+	    	   $("#mainGrid").setGridParam({
+	    	    	 datatype	: "json",
+	    	    	 postData	: JSON.stringify(  {
+	    	    		"pageIndex": $("#pager .ui-pg-input").val(),
+	    	    		"searchDepth" : $("#searchDepth").val(),
+	          			"searchCondition" : $("#searchCondition").val(),
+	          			"searchKeyword" : $("#searchKeyword").val(),
+	         			"pageUnit":$('.ui-pg-selbox option:selected').val()
+	         		}),
+	    	    	loadComplete	: function(data) {$("#sp_totcnt").text(data.paginationInfo.totalRecordCount);}
+	    	     }).trigger("reloadGrid");
+ 
+	        }, clearGrid : function() {
+                $("#mainGrid").clearGridData();
+            }, fn_empInfo : function (mode, empNo){
+            	$("#mode").val(mode);
+            	if (mode == "Edt"){
+		        	$("#empNo").val(empNo).prop('readonly', true);
+		        	var params = {"empNo" : empNo};
+		        	var url = "/backoffice/mng/empDetail.do";
+		        	fn_Ajax
+		     	   	(
+						url, 
+						"GET",
+						params, 
+						false,
+			          	    function(result) {
+	     				       if (result.status == "LOGIN FAIL"){
+		 				    	   common_popup(result.meesage, "Y", "mng_user_add");
+		   						   location.href="/backoffice/login.do";
+	       					   }else if (result.status == "SUCCESS"){
+       						       var obj  = result.regist;
+       						       $("#empNo").val(obj.emp_no).prop('readonly', false);
+       						       $("#empNm").val(obj.emp_nm);
+       						       $("#empPassword").val('');
+       						       $("#empPassword2").val('');
+       						       $("#deptCd").val(obj.dept_cd);
+		       					   $("#gradCd").val(obj.grad_cd);
+		       					   $("#psitCd").val(obj.psit_cd);
+		       					   $("#empEmail").val(obj.emp_email);
+		       					   $("#empTlphn").val(obj.emp_tlphn);
+		       					   $("#empClphn").val(obj.emp_clphn);
+       						       $("#empState").val(obj.emp_state);
+       						       $("input:radio[name='useYn']:radio[value='"+obj.use_yn+"']").prop('checked', true);
+       						       $("#sp_Unqi").hide();
+       				        	   $("#mng_user_add > div >h2").text("사용자 정보 수정");
+       				        	   $("#btnUpdate").text("수정");
+	       					   }else{
+	       						   common_popup(result.meesage, "Y", "mng_user_add");
+	       					   }
+			     			},
+			     			function(request){
+			     				common_popup("Error:" +request.status, "Y", "mng_user_add");
+			     			}
+		               );
+		        }else{
+		        	$("#empNo").val('').prop('readonly', false);
+		        	$("#empNm").val('');
+					$("#empPassword").val('');
+					$("#empPassword2").val('');
+				    $("#deptCd").val('');
+					$("#gradCd").val('');
+					$("#psitCd").val('');
+					$("#empEmail").val('');
+					$("#empTlphn").val('');
+					$("#empClphn").val('');
+				    $("#empState").val('');
+				    $("#useAt_Y").prop("checked", true);
+		        	$("#sp_Unqi").show();
+		        	$("#btnUpdate").text("등록");
+		        	$("#mng_user_add > div >h2").text("사용자 정보 등록");
+		        	$("#idCheck").val('');
+		        }
+		        $("#mng_user_add").bPopup();
+           },fn_CheckForm  : function (){
+        	   if (any_empt_line_span("mng_user_add", "empNo", "사번을 입력해 주세요.","sp_message", "savePage") == false) return;
+        	   if ($("#mode").val() == "Ins" && $("#idCheck").val() != "Y"){
+				   if (any_empt_line_span("mng_user_add", "idCheck", "중복체크가 안되었습니다.","sp_message", "savePage") == false) return;
+				   if (any_empt_line_span("mng_user_add", "empPassword", "비밀번호를 입력해주세요.","sp_message", "savePage") == false) return;
+				   if ( chkPwd($('#empPassword').val()) == false  ){
+    				   common_popup("비밀 번호 정합성이 일치 하지 않습니다.", "N", "mng_admin_add");
+    				   return;
+    			   }
+    			   if (any_empt_line_span("mng_admin_add", "empPassword2", "비밀번호를 입력해주세요.","sp_message", "savePage") == false) return;	  
+    			   if ( $.trim($('#empPassword').val()) !=   $.trim($('#empPassword2').val())  ){
+    				   common_popup("비밀 번호가 일지 하지 않습니다.", "N", "mng_admin_add");
+    				   return;
+    			   }  
+			   }
+			   if (any_empt_line_span("mng_user_add", "empNm", "이름을 입력해 주세요.","sp_message", "savePage") == false) return;
+			   if (any_empt_line_span("mng_user_add", "empEmail", "이메일을 입력해 주세요.","sp_message", "savePage") == false) return;
+			   if (any_empt_line_span("mng_user_add", "empState", "사용자 상태를 선택해 주세요.","sp_message", "savePage") == false) return;
+		       var commentTxt = ($("#mode").val() == "Ins") ?  "등록 하시겠습니까?" : "수정 하시겠습니까?" ;
+		       $("#id_ConfirmInfo").attr("href", "javascript:jqGridFunc.fn_update()");
+       		   fn_ConfirmPop(commentTxt);
+		       
+		  }, fn_update : function(){
+			  $("#confirmPage").bPopup().close();
+			  var url = "/backoffice/mng/empUpdate.do";
+ 			  var formData = new FormData();
+ 			  formData.append('empPic', $('#empPic')[0].files[0]);
+ 			  formData.append('empNo', $('#empNo').val());
+ 			  formData.append('empPassword', $('#empPassword').val());
+ 			  formData.append('empNm' , $("#empNm").val());
+ 			  formData.append('deptCd' , $("#deptCd").val());
+ 			  formData.append('gradCd' , $("#gradCd").val());
+ 			  formData.append('psitCd' , $("#psitCd").val());
+ 			  formData.append('empEmail' , $("#empEmail").val());
+ 			  formData.append('empTlphn' , $("#empTlphn").val());
+ 			  formData.append('mode' , $("#mode").val());
+ 			  formData.append('empClphn' , $("#empClphn").val());
+ 			  formData.append('empState' , $("#empState").val());
+ 			  formData.append('useYn' , fn_emptyReplace($("input[name='useYn']:checked").val(),"Y"));
+ 			  uniAjaxMutipart(url, formData,
+ 						function(result) {
+ 						       //결과값 추후 확인 하기 	
+ 						       if (result.status == "SUCCESS"){
+								  common_modelCloseM(result.message, "mng_user_add");
+		   						      jqGridFunc.fn_search();
+ 		    	               }else if (result.status == "LOGIN FAIL"){
+ 		    	            	  common_popup(result.meesage, "Y","mng_user_add");
+ 								  document.location.href="/backoffice/login.do";
+ 				               }else {
+ 				            	  common_modelCloseM("저장 도중 문제가 발생 하였습니다.", "Y", "mng_user_add");
+		   						  jqGridFunc.fn_search();
+ 				               }
+ 						    },
+ 						    function(request){
+ 						    	common_modelCloseM("Error:" +request.status, "Y", "mng_user_add");	
+ 						    }    		
+ 			  );
+		  }, fn_empDel : function (){
+			  var empArray = new Array();
+			  getEquipArray("mainGrid", empArray);
+			  if (empArray.length > 0){
+				  $("#hid_DelCode").val(empArray.join(","));
+				  $("#id_ConfirmInfo").attr("href", "javascript:jqGridFunc.fn_del()");
+       		      empArray = null;
+       		   	  fn_ConfirmPop("삭제 하시겠습니까?");
+			  }else {
+				  empArray = null;
+				  common_modelCloseM("체크된 값이 없습니다.", "savePage");
+			  }
+			  
+		  }, fn_del: function (){
+			  var params = {'empNo':$("#hid_DelCode").val() };		  
+			  fn_uniDelAction("/backoffice/mng/empDelete.do", "GET",params, false, "jqGridFunc.fn_search");
+		  }, fn_idCheck : function (){
+	        	//공용으로 활용 할지 정리 필요 	        	
+	        	if (any_empt_line_span("mng_user_add", "empNo", "사번을 입력해 주세요.","sp_message", "savePage") == false) return;
+	        	var url = "/backoffice/mng/empNoCheck.do";
+    	        var param =  {"empNo" : $("#empNo").val()};
+	        	fn_Ajax(url, "GET", param, false,
+        			    function(result) {	
+     			           if (result != null) {	       	
+     			        	   if (result.status == "SUCCESS"){
+     			        		
+     			        		    var message = result.result == "OK" ? '등록되지 않은 사번 입니다.' : '등록된 사번 입니다.';
+     			        		    var alertIcon =  result.result == "OK" ? "Y" : "N";
+     			        		    common_popup(message, alertIcon, "mng_user_add");
+    			        		    	$("#idCheck").val(alertIcon);
+								}else {
+									common_popup('<spring:message code="common.codeFail.msg" />', "N", "mng_user_add");
+									$("#idCheck").val("N");
+								}
+							}else{
+								alert("장애");
+							}
+						},
+					    function(request){
+							common_modelCloseM("Error:" +request.status, "N", "mng_user_add");	
+							$("#idCheck").val("N");	       						
+					    }    		
+		        ); 
+	        	
+		 }, fn_close : function (){
+			 common_modelClose("mng_user_add");
+		 } 
+    }
+    
 </script>
+<c:import url="/backoffice/inc/popup_common.do" />

@@ -96,19 +96,9 @@ public class Globals {
 	public static final String PAGE_UNIT = "pageUnit";
 	public static final String PROCESS_STATE_NO = "NO_UPDATE";
 	
-	public static final String LOGIN_CONNECT_MTHD_I = "I"; // 로그인
-	public static final String LOGIN_CONNECT_MTHD_O = "O"; // 로그아웃
-
-	public static final String SAVE_MODE_INSERT = "Ins";
-	public static final String SYSLOG_PROCESS_SE_CODE_INSERT = "I";
-	public static final String SAVE_MODE_UPDATE = "Edt";
-	public static final String SYSLOG_PROCESS_SE_CODE_UPDATE = "U";
-	public static final String SYSLOG_PROCESS_SE_CODE_DELETE = "D";
-	public static final String SYSLOG_PROCESS_SE_CODE_SELECT = "S";
-
 	public static final String STEP = "step";
 	public static final String JSON_NO_KEY = "NO_KEY";
-
+	
 	public static final String SMS_TYPE_RESV = "RESERVATION";
 	public static final String SMS_TYPE_PAYMENT = "PAYMENT";
 	public static final String SMS_TYPE_CANCEL = "CANCEL";

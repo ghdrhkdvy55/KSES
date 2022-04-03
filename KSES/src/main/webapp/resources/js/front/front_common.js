@@ -1,19 +1,36 @@
-/* rsv_blacklist tab (table) */
-$('.blacklist.tabs>.tab').on('click', function(){
-  var tabIdx = $(this).index();
-  var $tabBtn = $('.blacklist.tabs>.tab');
-  var $tbody = $('.blacklist.main_table>tbody');
-  $tabBtn.removeClass('active');
-  $(this).addClass('active');
-  $tbody.removeClass('active');
-  $tbody.eq(tabIdx).addClass('active');
-})
+//자유석/좌석 버튼 이벤트 정의
+$(function(){
+	var sBtn = $(".section_menu ul > li, .enter_type ul > li");   //  ul > li 이를 sBtn으로 칭한다. (클릭이벤트는 li에 적용 된다.)
+	sBtn.find("ul").click(function(){   // sBtn에 속해 있는  ul 찾아 클릭 하면.
+		console.log(sBtn);
+		sBtn.removeClass("active");     // sBtn 속에 (active) 클래스를 삭제 한다.
+		$(this).parent().addClass("active"); // 클릭한 a에 (active)클래스를 넣는다.
+	})
+});
+
+$(function(){
+	var sBtn = $(".date_sel ul > li");   //  ul > li 이를 sBtn으로 칭한다. (클릭이벤트는 li에 적용 된다.)
+	sBtn.find("ul").click(function(){   // sBtn에 속해 있는  ul 찾아 클릭 하면.
+		sBtn.removeClass("active");     // sBtn 속에 (active) 클래스를 삭제 한다.
+		$(this).parent().addClass("active"); // 클릭한 a에 (active)클래스를 넣는다.
+	})
+});
+
+$('.section_menu ul.tabs li').click(function(){
+	var tab_id = $(this).attr('data-tab');
+
+	$('.section ul.tabs li').removeClass('current');
+	$('.tab-content').removeClass('current');
+
+	$(this).addClass('current');
+	$("#"+tab_id).addClass('current');
+});
 
 /* popup */
 $('[data-popup-open]').bind('click', function () {
-  var targeted_popup_class = jQuery(this).attr('data-popup-open');
-  $('[data-popup="' + targeted_popup_class + '"]').bPopup();
-  e.preventDefault();
+ 	var targeted_popup_class = jQuery(this).attr('data-popup-open');
+ 	$('[data-popup="' + targeted_popup_class + '"]').bPopup();
+ 	e.preventDefault();
 });
 
 //공통 팝업
@@ -432,8 +449,13 @@ function fn_resvDateFormat(el) {
  * @returns
  */
 function fn_resvSeqFormat(el) {
-    /*return el.toString().replace(/\B(?=(\d{4})+(?!\d))/g, "-");*/
-	return el.toString().replace(/(^0+)/, "");
+	switch(el.length) {
+		case 20 : el = el.toString().substr(8).replace(/(^0+)/, ""); break;
+		case 12 : el = el.toString().replace(/(^0+)/, ""); break;
+		default : el = "알수없는 예약번호"; break;
+	}
+	
+	return el;
 }
 
 /**

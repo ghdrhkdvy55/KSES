@@ -15,10 +15,16 @@
 }
 </style>
 <!-- Xlsx -->
+<script type="text/javascript" src="/resources/js/xlsx.js"></script>
 <script type="text/javascript" src="/resources/js/xlsx.full.min.js"></script>
 <!-- FileSaver -->
-<script src="/resources/js/FileSaver.min.js"></script>
+<script type="text/javascript" src="/resources/js/FileSaver.min.js"></script>
+<!-- jszip -->
+<script type="text/javascript" src="/resources/js/jszip.min.js"></script>
 <!-- //contents -->
+<input type="hidden" name="mode" id="mode" >
+<input type="hidden" name="holySeq" id="holySeq" >
+<input type="hidden" name="targetHolyDt" id="targetHolyDt">
 <div class="breadcrumb">
 	<ol class="breadcrumb-item">
 		<li>기초 관리&nbsp;&gt;&nbsp;</li>
@@ -30,415 +36,489 @@
 <div class="dashboard">
 	<div class="boardlist">
       	<div class="whiteBox searchBox">
-            <div class="top">
-            	<p>기간</p>
-	            <input type="text" id="searchFrom" class="cal_icon" numberonly> ~
-	            <input type="text" id="searchTo" class="cal_icon" numberonly>
-                <p>검색어</p>
-                <input type="text" id="searchKeyword" placeholder="검색어를 입력하새요.">
+            <div class="sName">
+              <h3>옵션 선택</h3>
             </div>
-            <div class="inlineBtn">
-                <a href="javascript:fnSearch(1);" class="grayBtn">검색</a>
+            <div class="top">
+                <p>검색어</p>
+                <select id="searchCondition" name="searchCondition">
+                    <option value="ALL">전체</option>
+					<option value="HOLY_DT">휴일 일자</option>
+					<option value="HOLY_NM">휴일명</option>
+                </select>
+                <input type="text" name="searchKeyword" id="searchKeyword" placeholder="검색어를 입력하새요.">
+            </div>
+            <div class="inlineBtn ">
+                <a href="javascript:jqGridFunc.fn_search();" class="grayBtn">검색</a>
             </div>
         </div>
         <div class="left_box mng_countInfo">
           <p>총 : <span id="sp_totcnt"></span>건</p>
         </div>
-        <div class="right_box">
-        	<a href="javascript:fnHolyInfoCenterApply();" class="blueBtn">전체지점 휴일 등록</a>
-        	<a href="javascript:$('[data-popup=bas_excel_upload]').bPopup();" class="blueBtn">엑셀 업로드</a>
-        	<a href="javascript:fnExcelDownload();" class="blueBtn">엑셀 다운로드</a>
-        	<a href="javascript:fnHolyInfo();" class="blueBtn">휴일 등록</a>
-        	<a href="javascript:fnHolyDelete();" class="grayBtn">삭제</a>
+        <div class="right_box">	            	
+            <a href="#" class="blueBtn" onclick="jqGridFunc.fn_holyInfoApply()">전체 지점 등록</a>
+            <a href="#" class="blueBtn" onclick="jqGridFunc.fn_Upload()">Excel Upload</a>
+            <a href="#" class="blueBtn" onclick="jqGridFunc.fn_holyInfo('Ins','')">휴일 등록</a>
+            <a id="export" onClick="jqGridFunc.fn_excelDown()" class="blueBtn">엑셀 다운로드</a> 
+            <a href="#" onClick="jqGridFunc.fn_delCheck()" class="grayBtn">삭제</a>
         </div>
         <div class="clear"></div>
-        <div class="whiteBox">
-        	<table id="mainGrid"></table>
-        	<div id="pager"></div>
-        </div>
+        <div class="whiteBox"></div>
 	</div>
+</div>
+<div class="Swrap tableArea">
+	<table id="mainGrid">
+	</table>
+	<div id="pager" class="scroll" style="text-align:center;"></div>     
+	<br />
+	<div id="paginate"></div>   
 </div>
 <!-- contents// -->
 <!-- //popup -->
 <!-- 휴일 정보 팝업 -->
-<div data-popup="bas_holiday_add" class="popup m_pop">
+<div id='bas_holiday_add' class="popup m_pop">
 	<div class="pop_con">
 		<a class="button b-close">X</a>
     	<h2 class="pop_tit">휴일 정보 등록</h2>
     	<div class="pop_wrap">
-    		<form>
-    		<input type="hidden" name="mode" value="Ins">
-    		<input type="hidden" name="holySeq">
     		<table class="detail_table">
            		<tbody>
                		<tr>
 						<th>휴일 일자</th>
 	                    <td>
-	                    	<input type="text" name="holyDt" class="cal_icon" style="margin-top:4px;">
-	                    	<span id="sp_Unqi">
-                            	<a href="javascript:fnIdCheck();" class="blueBtn">중복확인</a>
-                            	<input type="hidden" id="idCheck" value="N">
-                            </span>
+	                    	<input type="text" name="holyDt" id="holyDt" class="cal_icon">
 	                    </td>
 					</tr>
 					<tr>
 				        <th>휴일명</th>
 			            <td>
-		                    <input type="text" name="holyNm">
+		                    <input type="text" name="holyNm" id="holyNm">
 						</td>
 					</tr>
 					<tr>
 						<th>사용 유무</th>
 					    <td>
 				            <span>
-			                    <input type="radio" name="useYn" value="Y">사용</input>
+			                    <input type="radio" name="useYn" id="useY" value="Y" checked="checked">
+			                    <label for="y">사용</label>
 							</span>
 						    <span>
-					            <input type="radio" name="useYn" value="N">사용안함</input>
+					            <input type="radio" name="useYn" id="useN" value="N">
+				                <label for="n">사용 안함</label>
 			                </span>
 		                </td>
 	                </tr>
 				</tbody>
 			</table>
-			</form>
-			<div id="popCenterList" style="width:570px;display:none;">
-				<table id="popGrid"></table>
-				<div id="popPager"></div>
-			</div>
 		</div>
-	    <popup-right-button />
-	</div>
-</div>
-<div data-popup="bas_excel_upload" class="popup m_pop">
-	<div class="pop_con">
-		<a class="button b-close">X</a>
-        <p class="pop_tit">엑셀 업로드</p>
-        <p class="pop_wrap">
-        	<input type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
-        </p>
-        <div style="float:left;margin-top:5px;">
-        	<a href="/backoffice/bas/holyInfoUploadSampleDownload.do" class="orangeBtn">샘플</a>
-        </div>
-        <popup-right-button okText="업로드" />
+	    <div class="right_box">
+	    	<a href="javascript:jqGridFunc.fn_CheckForm();" id="btnUpdate" class="blueBtn">등록</a>
+        	<a href="#" onClick="common_modelClose('bas_holiday_add')" id="btnUpdate" class="grayBtn b-close">취소</a>
+		</div>
+		<div class="clear"></div>
 	</div>
 </div>
 <!-- popup// -->
-<script type="text/javascript" src="/resources/jqgrid/jqgrid.custom.egovapi.js"></script>
+<script type="text/javascript" src="/resources/js/temporary.js"></script>
 <script type="text/javascript">
-	$(document).ready(function() {
-		// 메인 JqGrid 정의
-		EgovJqGridApi.mainGrid([
-			{ label: '휴일코드', name:'holy_seq', align:'center', hidden: true, key: true },
-			{ label: '휴일일자', name:'holy_dt', align:'center', fixed: true },
-			{ label: '휴일명', name:'holy_nm', align:'center' },
-			{ label: '사용유무', name:'use_yn', align:'center', fixed: true },
-			{ label: '지점적용', name:'holy_center_spread', align:'center', fixed: true },
-			{ label: '수정자', name: 'last_updusr_id', align:'center', fixed: true },
-			{ label: '수정일자', name:'last_updt_dtm', align:'center', fixed: true },
-			{ label: '수정', align:'center', width: 50, fixed: true, formatter: (c, o, row) =>
-	        	'<a href="javascript:fnHolyInfo(\''+ row.holy_seq +'\');" class="edt_icon"></a>'
-	        }
-		], true, false, fnSearch);
-		// 휴일 적용 센터 JqGrid 정의
-		EgovJqGridApi.pagingGrid('popGrid', [
-			{ label: '지점코드', name: 'center_cd', key: true, hidden: true },
-			{ label: '적용지점', name: 'center_nm', align: 'center', sortable: false },
-			{ label: '적용휴일명', name: 'holy_nm', align: 'center', sortable: false }
-		], 'popPager');
-		// 달력 입력 검색 창 정의				
-		let startDate = new Date(new Date().getFullYear(), 0, 1);
-		let endDate = new Date(new Date().getFullYear(), 11, 31);
-		$('#searchFrom').val($.datepicker.formatDate('yymmdd', startDate))
-		$('#searchTo').val($.datepicker.formatDate('yymmdd', endDate));
-		// 엑셀업로드
-		$('[data-popup=bas_excel_upload] .blueBtn').click(function(e) {
-			bPopupConfirm('휴일일자 등록', '엑셀 업로드를 통한 휴일일자 등록을 진행하시겠습니까?', function() {
-				let $popup = $('[data-popup=bas_excel_upload]');
-				let $input = $popup.find(':file')[0];
-				let reader = new FileReader();
-				reader.onload = function() {
-					let wb = XLSX.read(reader.result, {type: 'binary'});
-					let sheet = wb.Sheets[wb.SheetNames[0]];
-					let json = XLSX.utils.sheet_to_json(sheet);
-					for (let row of json) {
-						Object.keys(row).forEach(k => {
-							switch (k) {
-								case '휴일일자':
-									row['holyDt'] = row[k];
-									break;
-								case '휴일명':
-									row['holyNm'] = row[k]
-									break;
-								case '사용여부':
-									row['useYn'] = row[k];
-									break;
-								default:
-							}
-							delete row[k];
-						});
-					}
-					EgovIndexApi.apiExecuteJson(
-						'POST',
-						'/backoffice/bas/holyInfoExcelUpload.do', {
-							data: JSON.stringify(json)	
-						},
-						null,
-						function(json) {
-							toastr.success(json.message);
-							$popup.bPopup().close();
-							fnSearch(1);
-						},
-						function(json) {
-							toastr.error(json.message);
+	$(document).ready(function() { 
+		jqGridFunc.setGrid("mainGrid");
+		
+		var clareCalendar = {
+		monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+		dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
+		weekHeader: 'Wk',
+		dateFormat: 'yymmdd', //형식(20120303)
+		autoSize: false, //오토리사이즈(body등 상위태그의 설정에 따른다)
+		changeMonth: true, //월변경가능
+		changeYear: true, //년변경가능
+		showMonthAfterYear: true, //년 뒤에 월 표시
+		buttonImageOnly: false, //이미지표시
+		yearRange: '1970:2030' //1990년부터 2020년까지
+        };	       
+	    $("#holyDt").datepicker(clareCalendar);
+		$("img.ui-datepicker-trigger").attr("style", "margin-left:3px; vertical-align:middle; cursor:pointer;"); //이미지버튼 style적용
+		$("#ui-datepicker-div").hide(); //자동으로 생성되는 div객체 숨김
+		
+ 	});
+   	
+	var jqGridFunc  = 
+	{
+   		setGrid : function(gridOption) {
+   			var grid = $('#'+gridOption);
+   		    //ajax 관련 내용 정리 하기 
+   			
+               var postData = {};
+   		    grid.jqGrid({
+   		    	url : '/backoffice/bas/holyListAjax.do' ,
+   		        mtype :  'POST',
+   		        datatype :'json',
+   		        pager: $('#pager'),  
+   		        ajaxGridOptions: { contentType: "application/json; charset=UTF-8" },
+   		        ajaxRowOptions: { contentType: "application/json; charset=UTF-8", async: true },
+   		        ajaxSelectOptions: { contentType: "application/json; charset=UTF-8", dataType: "JSON" }, 
+   		       
+   		        postData :  JSON.stringify(postData),
+   		        jsonReader : 
+   		        {
+					root : 'resultlist',
+					"page":"paginationInfo.currentPageNo",
+					"total":"paginationInfo.totalPageCount",
+					"records":"paginationInfo.totalRecordCount",
+					repeatitems:false
+  		            },
+  		         	//상단면
+   		        colModel :  
+				[
+					{ label: '휴일 코드',  name:'holy_seq', index:'holy_seq', align:'center', hidden:true, key:true},
+					{ label: '휴일 일자',  name:'holy_dt', index:'holy_dt', align:'center', width:'20%'},
+					{ label: '휴일명', name:'holy_nm', index:'holy_nm', align:'center', width:'15%'},
+					{ label: '사용 유무', name:'use_yn', index:'use_yn', align:'center', width:'18%'},
+					{ label: '수정일자', name:'last_updt_dtm', index:'last_updt_dtm', align:'center', width:'20%'},
+					{ label: '수정자', name: 'last_updusr_id',  index:'last_updusr_id', align:'center', width: '18%'}
+				],
+				//레코드 수
+   		        rowNum : 10,
+   		     	// 페이징 수
+   		        rowList : [10,20,30,40,50,100],  
+   		        pager : pager,
+   		        refresh : true,
+   		     	// 리스트 순번
+   	            rownumbers : false,
+   	         	// 하단 레코R드 수 표기 유무
+   		        viewrecord : true,
+   		     	// true 데이터 한번만 받아옴
+   		        loadonce : false,      
+   		        loadui : "enable",
+   		        loadtext:'데이터를 가져오는 중...',
+   		      	//빈값일때 표시
+   		        emptyrecords : "조회된 데이터가 없습니다", 
+   		        height : "100%",
+   		        autowidth:true,
+   		        shrinkToFit : true,
+   		        refresh : true,
+   		        multiselect: true,
+   				viewrecords: true,
+                   footerrow: false,
+   		        userDataOnFooter: true, // use the userData parameter of the JSON response to display data on footer
+   		        
+   		        loadComplete : function (data){
+   		        	$("#sp_totcnt").text(data.paginationInfo.totalRecordCount);
+   		        },
+   		        beforeSelectRow: function (rowid, e) {
+   		            var $myGrid = $(this);
+   		            var i = $.jgrid.getCellIndex($(e.target).closest('td')[0]);
+   		            var cm = $myGrid.jqGrid('getGridParam', 'colModel');
+   		            return (cm[i].name == 'cb'); // 선택된 컬럼이 cb가 아닌 경우 false를 리턴하여 체크선택을 방지
+   		        },
+   		        loadError:function(xhr, status, error) {
+   		            alert(error); 
+   		        }, 
+   		        onPaging: function(pgButton){
+					var gridPage = grid.getGridParam('page'); //get current  page
+					var lastPage = grid.getGridParam("lastpage"); //get last page 
+					var totalPage = grid.getGridParam("total");
+   		              
+					if (pgButton == "next"){
+						/* gridPage = gridPage < lastPage ? gridPage +=1 : gridPage; */
+						if (gridPage < lastPage ){
+							gridPage += 1;
+						} else {
+							gridPage = gridPage;
 						}
-					);
-				};
-				reader.readAsBinaryString($input.files[0]);
-			});
-		});
-	});
-	// 메인 목록 검색
-	function fnSearch(pageNo) {
-		if ($('#searchFrom').val() === '') {
-			toastr.warning('기간 시작일자를 입력하세요.');
-			return;
-		}
-		if ($('#searchTo').val() === '') {
-			toastr.warning('기간 종료일자를 입력하세요.');
-			return;
-		}
-		let params = {
-			pageIndex: pageNo,
-			pageUnit: $('.ui-pg-selbox option:selected').val(),
-			searchKeyword: $('#searchKeyword').val(),
-			searchFrom: $('#searchFrom').val(),
-			searchTo: $('#searchTo').val()
-		};
-		EgovJqGridApi.mainGridAjax('/backoffice/bas/holyListAjax.do', params, fnSearch);
-	}
-	// 메인 상세 팝업 정의
-	function fnHolyInfo(rowId) {
-		let $popup = $('[data-popup=bas_holiday_add]');
-		let $form = $popup.find('form:first');
-		if (rowId === undefined || rowId === null) {
-			$popup.find('h2:first').text('휴일정보 등록');
-			$popup.find('span#sp_Unqi').show();
-			$popup.find('#popCenterList').hide();
-			$popup.find('button.blueBtn').off('click').click(fnHolyInsert);
-			$form.find(':hidden[name=mode]').val('Ins');
-			$form.find(':hidden[name=holySeq]').val('');
-			$form.find(':text').val('');
-			$form.find(':hidden#idCheck').val('N');
-			$form.find(':text[name=holyDt]').removeAttr('disabled');
-			$form.find(':radio[name=useYn]:first').prop('checked', true);
-		}
-		else {
-			let rowData = EgovJqGridApi.getMainGridRowData(rowId);
-			$popup.find('h2:first').text('휴일정보 수정');
-			$popup.find('span#sp_Unqi').hide();
-			$popup.find('#popCenterList').show();
-			$popup.find('button.blueBtn').off('click').click(fnHolyUpdate);
-			$form.find(':hidden[name=mode]').val('Edt');
-			$form.find(':hidden[name=holySeq]').val(rowData.holy_seq);
-			$form.find(':text[name=holyDt]').prop('disabled', true).val(rowData.holy_dt);
-			$form.find(':text[name=holyNm]').val(rowData.holy_nm);
-			$form.find(':radio[name=useYn][value='+ rowData.use_yn +']').prop('checked', true);
-			fnCenterHolyInfoSearch(1);
-		}
-		$popup.bPopup();
-	}
-	// 중복 휴일 체크
-	function fnIdCheck() {
-		let $popup = $('[data-popup=bas_holiday_add]');
-		let rowId = $popup.find(':text[name=holyDt]').val();
-		if (rowId === '') {
-			toastr.warning('휴일일자를 입력해 주세요.');
-			return;
-		}
-		EgovIndexApi.apiExecuteJson(
-			'GET',
-			'/backoffice/bas/holyDtCheck.do', {
-				holyDt: rowId
-			},
-			null,
-			function(json) {
-				$popup.find(':hidden#idCheck').val('Y');
-				toastr.info(json.message);
-			},
-			function(json) {
-				toastr.warning(json.message);
+					} else if (pgButton == "prev") {
+						/* gridPage = gridPage > 1 ? gridPage -=1 : gridPage; */
+						if (gridPage > 1 ) {
+							gridPage -= 1;
+						} else {
+							gridPage = gridPage;
+						}
+					} else if (pgButton == "first"){
+						gridPage = 1;
+					} else if (pgButton == "last") {
+						gridPage = lastPage;
+					} else if (pgButton == "user"){
+						var nowPage = Number($("#pager .ui-pg-input").val());
+   		            	  
+						if (totalPage >= nowPage && nowPage > 0 ){
+							gridPage = nowPage;
+   		            	} else {
+   		            		$("#pager .ui-pg-input").val(nowPage);
+   		            		gridPage = nowPage;
+   		            	}
+					} else if (pgButton == "records") {
+   		            	  gridPage = 1;
+					}
+					
+					grid.setGridParam
+					({
+						page : gridPage,
+						rowNum : $('.ui-pg-selbox option:selected').val(),
+						postData : JSON.stringify
+						({
+							"pageIndex": gridPage,
+							"searchKeyword" : $("#searchKeyword").val(),
+							"pageUnit":$('.ui-pg-selbox option:selected').val()
+						})
+					}).trigger("reloadGrid");
+				},
+				onSelectRow: function(rowId){
+   	                if(rowId != null) {  }// 체크 할떄
+   	            },
+   	            ondblClickRow : function(rowid, iRow, iCol, e){
+   	            	grid.jqGrid('editRow', rowid, {keys: true});
+   	            },
+   	            //셀 선택시 이벤트 등록
+   	            onCellSelect : function (rowid, index, contents, action) {
+   	            	var cm = $(this).jqGrid('getGridParam', 'colModel');
+   	                if (cm[index].name != 'cb'){
+   	                	jqGridFunc.fn_holyInfo("Edt", $(this).jqGrid('getCell', rowid, 'holy_seq'));
+           		    }
+   	            }
+   		    });
+   		},
+   		refreshGrid : function() {
+			$('#mainGrid').jqGrid().trigger("reloadGrid");
+       	},
+       	clearGrid : function() {
+			$("#mainGrid").clearGridData();
+		}, 
+       	fn_del : function (){
+           	var params = {'holySeq':$("#hid_DelCode").val() };
+           	fn_uniDelAction("/backoffice/bas/holyDelete.do", "GET", params, false, "jqGridFunc.fn_search");
+          	},
+          	fn_delCheck  : function(){
+  	    	    //체크값 삭제 
+          		var menuArray = new Array();
+ 			    getEquipArray("mainGrid", menuArray);
+ 			    if (menuArray.length > 0){
+ 				  $("#hid_DelCode").val(menuArray.join(","))
+ 				  $("#id_ConfirmInfo").attr("href", "javascript:jqGridFunc.fn_del()");
+ 				  menuArray = null;
+        		      fn_ConfirmPop("삭제 하시겠습니까?");
+ 			    }else {
+ 				  menuArray = null;
+ 				  common_modelCloseM("체크된 값이 없습니다.", "savePage");
+ 			    }
+  	        },
+          	fn_holyInfoApply  : function(){
+ 	    	    var ids = $('#mainGrid').jqGrid('getGridParam', 'selarrrow'); //체크된 row id들을 배열로 반환
+ 	    
+   	    	if (ids.length < 1) {
+   	    		alert("선택한 값이 없습니다.");
+   	    		return false;
+   	    	}
+ 	    	    
+   	   
+   	    	var params = new Array();
+   	    	for(var i=0; i < ids.length; i++) {
+   	    		var param = new Object();
+   	    		var rowObject = $("#mainGrid").getRowData(ids[i]);
+   	    		param['holyDt'] = rowObject.holy_dt; 
+   	    		param['holyNm'] = rowObject.holy_nm; 
+   	    		params.push(param);
+   	    	}
+          		
+          		fn_Ajax
+          		(
+				"/backoffice/bas/holyInfoCenterApply.do",
+				"POST",
+				params,
+				false, 
+          	 		function(result) {
+          		    	if (result.status == "LOGIN FAIL"){
+          		    	   common_popup(result.message, "Y","bas_holiday_add");
+			    	   location.href="/backoffice/login.do";
+          				} else if (result.status == "SUCCESS"){
+   						   //총 게시물 정리 하기'
+   						   common_modelCloseM(result.message, "bas_holiday_add");
+   						   jqGridFunc.fn_search();
+   					 }else if (result.status == "FAIL"){
+   						   common_popup("저장 도중 문제가 발생 하였습니다.", "Y", "bas_holiday_add");
+   						   jqGridFunc.fn_search();
+   					 }
+				},
+          			function(request){
+          				common_modelCloseM("Error:" + request.status,"bas_holiday_add");
+          			}    		
+          	     );
+   	    	
+   	    	
+  	        },
+          	fn_holyInfo : function (mode, holySeq) {
+          		$("#mode").val(mode);
+	        $("#holySeq").val(holySeq);
+			if (mode == "Edt") {
+	           	var params = {"holySeq" : holySeq};
+	     	   	var url = "/backoffice/bas/holyInfoDetail.do";
+	     	   $("#bas_holiday_add > div >h2").text("휴일 정보 수정");
+	     	   $("#btnUpdate").text("수정");
+	     	    fn_Ajax
+	     	   	(
+					url, 
+					"GET",
+					params, 
+					false,
+					function(result) {
+						if (result.status == "LOGIN FAIL"){
+							common_modelCloseM(result.message, "bas_holiday_add");
+							location.href="/backoffice/login.do";
+						} else if (result.status == "SUCCESS") {
+							//총 게시물 정리 하기
+							var obj = result.regist;
+							$("#holySeq").val(obj.holy_seq);
+							$("#holyDt").val(obj.holy_dt);
+							$("#targetHolyDt").val(obj.holy_dt);								
+							$("#holyNm").val(obj.holy_nm);
+							$("input:radio[name='useYn']:radio[value='"+obj.use_yn+"']").prop('checked', true)
+						}else {
+						    common_modelCloseM(result.message, "bas_holiday_add");
+						}
+
+					},
+					function(request){
+						common_modelCloseM("ERROR : " +request.status, "bas_holiday_add");
+					}    		
+				);
+			} else {
+				$("#btnUpdate").text("등록");
+				$("#bas_holiday_add > div >h2").text("휴일 정보 등록");
+				$("#bas_holiday_add input[type='text']").val("");
+				$("#useY").prop("checked", true);
+	        }
+			$("#bas_holiday_add").bPopup();
+          	},
+		fn_CheckForm  : function () {
+			if (any_empt_line_span("bas_holiday_add", "holyDt", "휴일 일자를 입력해주세요.","sp_message", "savePage") == false) return;
+			if (any_empt_line_span("bas_holiday_add", "holyNm", "휴일명을 입력해주세요.","sp_message", "savePage") == false) return;
+			var commentTxt = ($("#mode").val() == "Ins") ?  "등록 하시겠습니까?" : "수정 하시겠습니까?" ;
+		    $("#id_ConfirmInfo").attr("href", "javascript:jqGridFunc.fn_update()");
+       		fn_ConfirmPop(commentTxt);
+		}, fn_update : function (){
+			//확인 
+			$("#confirmPage").bPopup().close();
+			var url = "/backoffice/bas/holyUpdate.do";
+			var params = 
+			{ 	
+				'holySeq' : $("#holySeq").val(),
+				'holyDt' : $("#holyDt").val(),
+				'targetHolyDt' : $("#targetHolyDt").val(),
+				'holyNm' : $("#holyNm").val(),
+				'useYN' : fn_emptyReplace($("input[name='useYn']:checked").val(),"Y"),
+				'useYn' : $("input:radio[name='useYn']:checked").val(),
+				'mode' : $("#mode").val()
+			}; 
+			fn_Ajax(url, "POST", params, true,
+	      			function(result) {
+	 				       if (result.status == "LOGIN FAIL"){
+	 				    	   common_popup(result.meesage, "Y","bas_holiday_add");
+	   						   location.href="/backoffice/login.do";
+	   					   }else if (result.status == "SUCCESS"){
+	   						   //총 게시물 정리 하기'
+	   						   common_modelCloseM(result.message, "bas_holiday_add");
+	   						   jqGridFunc.fn_search();
+	   					   }else if (result.status == "OVERLAP FAIL"){
+	   						   common_modelCloseM(result.message, "bas_holiday_add");
+	   					   }else if (result.status == "FAIL"){
+	   						   common_modelCloseM("저장 도중 문제가 발생 하였습니다.", "bas_holiday_add");
+	   					   }
+	 				    },
+	 				    function(request){
+	 				    	common_modelCloseM("Error:" + request.status,"bas_holiday_add");
+	 				    }    		
+	        );
+		},
+	  	fn_search: function(){
+			//검색 
+    	  	$("#mainGrid").setGridParam({
+    	    	datatype : "json",
+    	    	postData : JSON.stringify
+    	    	({
+          			"pageIndex": $("#pager .ui-pg-input").val(),
+          			"searchCondition" : $("#searchCondition").val(),
+          			"searchKeyword" : $("#searchKeyword").val(),
+         			"pageUnit":$('.ui-pg-selbox option:selected').val()
+         		}),
+    	    	loadComplete : function(data) {
+    	    		$("#sp_totcnt").text(data.paginationInfo.totalRecordCount);
+    	    	}
+    	  }).trigger("reloadGrid");
+		},
+		fn_Upload : function (){
+			$("#dv_excelUpload").bPopup();
+			$("#aUploadId").attr("href", "javascript:fn_excelUpload('0',jqGridFunc.fn_holyUpload)");
+			
+		}, 
+		fn_holyUpload : function (sheetNameList, sheetName, jsonResult){
+			var params = {"data": jsonResult};
+			var url = "/backoffice/bas/holyInfoExcelUpload.do";
+			fn_Ajax(url, "POST", params, true,
+	      			function(result) {
+				           if (result.status == "LOGIN FAIL"){
+	 				    	   common_popup(result.meesage, "Y","dv_excelUpload");
+	   						   location.href="/backoffice/login.do";
+	   					   }else if (result.status == "SUCCESS"){
+	   						   //총 게시물 정리 하기'
+	   						   common_modelClose("dv_excelUpload");
+	   						   jqGridFunc.fn_search();
+	   					   }else if (result.status == "FAIL"){
+	   						   common_popup("저장 도중 문제가 발생 하였습니다.", "Y", "dv_excelUpload");
+	   						   jqGridFunc.fn_search();
+	   					   }
+	 				    },
+	 				    function(request){
+	 				    	common_modelCloseM("Error:" + request.status,"dv_excelUpload");
+	 				    }    		
+	        ); 
+		},
+		fn_excelDown : function (){
+			if ($("#mainGrid").getGridParam("reccount") === 0) {
+				alert('다운받으실 데이터가 없습니다.');
+				return;
 			}
-		);
-	}
-	// 휴일 등록
-	function fnHolyInsert() {
-		let $popup = $('[data-popup=bas_holiday_add]');
-		if ($popup.find(':text[name=holyDt]').val() === '') {
-			toastr.warning('휴일일자를 입력해 주세요.');
-			return;
-		}
-		if ($popup.find(':hidden#idCheck').val() !== 'Y') {
-			toastr.warning('중복체크가 안되었습니다.');
-			return;	
-		}
-		if ($popup.find(':text[name=holyNm]').val() === '') {
-			toastr.warning('휴일명을 입력해 주세요.');
-			return;
-		}
-		bPopupConfirm('휴일일자 등록', '등록 하시겠습니까?', function() {
+			let params = {
+				pageIndex: '1',
+				pageUnit: '1000',
+				searchKeyword: $('#searchKeyword').val(),
+				searchFrom: $('#searchFrom').val(),
+				searchTo: $('#searchTo').val()
+			};
 			EgovIndexApi.apiExecuteJson(
 				'POST',
-				'/backoffice/bas/holyUpdate.do',
-				$popup.find('form:first').serializeObject(),
-				null,
-				function(json) {
-					toastr.success(json.message);
-					$popup.bPopup().close();
-					fnSearch(1);
-				},
-				function(json) {
-					toastr.error(json.message);
-				}
-			);
-		});
-	}
-	// 휴일 수정
-	function fnHolyUpdate() {
-		let $popup = $('[data-popup=bas_holiday_add]');
-		if ($popup.find(':text[name=holyNm]').val() === '') {
-			toastr.warning('휴일명을 입력해 주세요.');
-			return;
-		}
-		let rowId = $popup.find(':text[name=holyDt]').removeAttr('disabled').val();
-		bPopupConfirm('휴일일자 수정', '<b>'+ rowId +'</b> 수정 하시겠습니까?', function() {
-			EgovIndexApi.apiExecuteJson(
-				'POST',
-				'/backoffice/bas/holyUpdate.do',
-				$popup.find('form:first').serializeObject(),
-				null,
-				function(json) {
-					toastr.success(json.message);
-					$popup.bPopup().close();
-					fnSearch(1);
-				},
-				function(json) {
-					toastr.error(json.message);
-				}
-			);
-		});
-	}
-	// 휴일 삭제
-	function fnHolyDelete() {
-		let rowIds = EgovJqGridApi.getMainGridMutipleSelectionIds();
-		if (rowIds.length === 0) {
-			toastr.warning('목록을 선택해 주세요.');
-			return false;
-		}
-		bPopupConfirm('휴일일자 삭제', '삭제 하시겠습니까?', function() {
-			EgovIndexApi.apiExecuteJson(
-				'POST',
-				'/backoffice/bas/holyDelete.do', {
-					holySeq: rowIds.join(',')
-				},
-				null,
-				function(json) {
-					toastr.success(json.message);
-					fnSearch(1);
-				},
-				function(json) {
-					toastr.error(json.message);
-				}
-			);
-		});
-	}
-	// 휴일 적용 지점 목록
-	function fnCenterHolyInfoSearch(pageNo) {
-		let params = {
-			pageIndex: pageNo,
-			pageUnit: '5',
-			holyDt: $('[data-popup=bas_holiday_add]').find(':text[name=holyDt]').val()
-		};
-		EgovJqGridApi.pagingGridAjax('popGrid', '/backoffice/bas/holyCenterListAjax.do', params, fnCenterHolyInfoSearch);
-	}
-	// 엑셀 다운로드
-	function fnExcelDownload() {
-		if ($(MainGridSelector).getGridParam("reccount") === 0) {
-			toastr.warning('다운받으실 데이터가 없습니다.');
-			return;
-		}
-		let params = {
-			pageIndex: '1',
-			pageUnit: '1000',
-			searchKeyword: $('#searchKeyword').val(),
-			searchFrom: $('#searchFrom').val(),
-			searchTo: $('#searchTo').val()
-		};
-		EgovIndexApi.apiExecuteJson(
-			'POST',
-			'/backoffice/bas/holyListAjax.do', 
-			params,
-			null,
-			function(json) {
-				let ret = json.resultlist;
-				if (ret.length <= 0) {
-					return;
-				}
-				if (ret.length >= 1000) {
-					toastr.info('해당 조회 건수가 1000건이 넘습니다. 엑셀 다운로드 시 1000건에 대한 데이터만 저장됩니다.');
-				}
-				let excelData = new Array();
-				excelData.push(['NO', '휴일일자', '휴일명', '사용유무', '지점적용', '수정자', '수정일자']);
-				for (let idx in ret) {
-					let arr = new Array();
-					arr.push(Number(idx)+1);
-					arr.push(ret[idx].holy_dt);
-					arr.push(ret[idx].holy_nm);
-					arr.push(ret[idx].use_yn);
-					arr.push(ret[idx].holy_center_spread);
-					arr.push(ret[idx].last_updusr_id);
-					arr.push(ret[idx].last_updt_dtm);
-					excelData.push(arr);
-				}
-				let wb = XLSX.utils.book_new();
-				XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(excelData), 'sheet1');
-				saveAs(new Blob([EgovIndexApi.s2ab(
-					XLSX.write(wb, { bookType: 'xlsx', type: 'binary' })
-				)],{ type: 'application/octet-stream' }), '휴일관리.xlsx');
-			},
-			function(json) {
-				toastr.error(json.message);
-			}
-		);
-	}
-	// 전체지점 휴일 등록
-	function fnHolyInfoCenterApply() {
-		let rowIds = EgovJqGridApi.getMainGridMutipleSelectionIds();
-		if (rowIds.length === 0) {
-			toastr.warning('목록을 선택해 주세요.');
-			return false;
-		}
-		let params = new Array();
-		for (let rowId of rowIds) {
-			let rowData = EgovJqGridApi.getMainGridRowData(rowId);
-			params.push({
-				holyDt: rowData.holy_dt,
-				holyNm: rowData.holy_nm
-			});
-		}
-		bPopupConfirm('전체지점 휴일 등록', '선택한 휴일을 전체지점에 등록하시겠습니까?', function() {
-			EgovIndexApi.apiExecuteJson(
-				'POST',
-				'/backoffice/bas/holyInfoCenterApply.do', 
+				'/backoffice/bas/holyListAjax.do', 
 				params,
 				null,
 				function(json) {
-					toastr.success(json.message);
-					fnSearch(1);
+					let ret = json.resultlist;
+					if (ret.length <= 0) {
+						return;
+					}
+					if (ret.length >= 1000) {
+						alert('해당 조회 건수가 1000건이 넘습니다. 엑셀 다운로드 시 1000건에 대한 데이터만 저장됩니다.');
+					}
+					let excelData = new Array();
+					excelData.push(['NO', '휴일일자', '휴일명', '사용유무', '지점적용', '수정자', '수정일자']);
+					for (let idx in ret) {
+						let arr = new Array();
+						arr.push(Number(idx)+1);
+						arr.push(ret[idx].holy_dt);
+						arr.push(ret[idx].holy_nm);
+						arr.push(ret[idx].use_yn);
+						arr.push(ret[idx].holy_center_spread);
+						arr.push(ret[idx].last_updusr_id);
+						arr.push(ret[idx].last_updt_dtm);
+						excelData.push(arr);
+					}
+					let wb = XLSX.utils.book_new();
+					XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(excelData), 'sheet1');
+					var wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+					saveAs(new Blob([EgovIndexApi.s2ab(wbout)],{ type: 'application/octet-stream' }), '휴일관리.xlsx');
 				},
 				function(json) {
-					toastr.error(json.message);
+					alert(json.message);
 				}
 			);
-		});
-	}
+		}
+   	}
 </script>
+<c:import url="/backoffice/inc/popup_common.do" />

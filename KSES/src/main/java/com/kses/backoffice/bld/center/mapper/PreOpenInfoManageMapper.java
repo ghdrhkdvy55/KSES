@@ -15,5 +15,5 @@ public interface PreOpenInfoManageMapper {
 	
 	public int updatePreOpenInfo(@Param("preOpenInfoList") List<PreOpenInfo> preOpenInfoList) throws Exception;
 	
-	public int copyPreOpenInfo(PreOpenInfo preOpenInfo) throws Exception;
+	public int copyPreOpenInfo(@Param("params") Map<String, Object> params) throws Exception;
 }
