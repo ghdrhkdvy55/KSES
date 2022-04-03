@@ -77,13 +77,18 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 	}
 	
 	@Override
-	public String selectResvSeqNext() throws Exception {
-		return resvMapper.selectResvSeqNext();
+	public String selectResvSeqNext(String resvDate) throws Exception {
+		return resvMapper.selectResvSeqNext(resvDate);
 	}
 	
 	@Override
 	public String selectCenterResvDate(String centerCd) throws Exception {
 		return resvMapper.selectCenterResvDate(centerCd);
+	}
+
+	@Override
+	public List<Map<String, Object>> selectCenterResvDateList(String centerCd) throws Exception {
+		return resvMapper.selectCenterResvDateList(centerCd);
 	}
 
 	@Override
@@ -182,7 +187,7 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 				}
 				
 				// 2.신규 예약정보 생성
-				String copyResvSeq = resvService.selectResvSeqNext();
+				String copyResvSeq = resvService.selectResvSeqNext(SmartUtil.NVL(resvInfo.get("resv_end_dt"),""));
 				params.put("copyResvSeq", copyResvSeq);
 				resultMap = resvService.updateResvInfoCopy(params);
 				
