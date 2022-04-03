@@ -77,7 +77,7 @@
 					<tr>
 						<th>사번</th>
 						<td>
-							<input type="text" name="empNo">
+							<input type="text" name="empNo" onchange="fnIdChange();">
 							<span id="sp_Unqi">
                             	<a href="javascript:fnIdCheck();" class="blueBtn">중복확인</a>
                             	<input type="hidden" id="idCheck" value="N">
@@ -199,6 +199,8 @@
 			$form.find(':hidden#idCheck').val('N');
 			$form.find(':text[name=empNo]').removeAttr('readonly');
 			$form.find(':radio[name=useYn]:first').prop('checked', true).removeAttr('disabled');
+			$form.find('select[name=deptCd] option:first').prop('selected', true);
+			$form.find('select[name=empState] option:first').prop('selected', true);
 			$form.find('select[name=deptCd]').removeAttr('disabled');
 			$form.find('select[name=empState]').removeAttr('disabled');
 		}
@@ -263,6 +265,11 @@
 			}
 		);
 	}
+	// 입력 아이디 변경 이벤트
+	function fnIdChange() {
+		$('[data-popup=mng_emp_add]').find(':hidden#idCheck').val('N');
+	}
+	// 사용자 등록 유효성 검사
 	function fnEmpSaveValidation($popup) {
 		if ($popup.find(':text[name=empNo]').val() === '') {
 			toastr.warning('사번을 입력해 주세요.');
@@ -295,7 +302,7 @@
 				return false;
 			}
 		}
-		let email = $popup.find('text[name=empEmail]').val();
+		let email = $popup.find(':text[name=empEmail]').val();
 		if (email === '') {
 			toastr.warning('이메일을 입력해주세요.');
 			return false;
@@ -305,28 +312,34 @@
 				return false;
 			}
 		}
+		if ($popup.find('select[name=empState]').val() === '') {
+			toastr.warning('사용자상태를 입력해 주세요.');
+			return false;
+		}
+		
 		return true;
 	}
 	// 사용자 등록
 	function fnEmpInsert() {
 		let $popup = $('[data-popup=mng_emp_add]');
-		fnEmpSaveValidation($popup);
-		bPopupConfirm('사용자 등록', '등록 하시겠습니까?', function() {
-			EgovIndexApi.apiExecuteJson(
-				'POST',
-				'/backoffice/mng/empUpdate.do',
-				$popup.find('form:first').serializeObject(),
-				null,
-				function(json) {
-					toastr.success(json.message);
-					$popup.bPopup().close();
-					fnSearch(1);
-				},
-				function(json) {
-					toastr.error(json.message);
-				}
-			);
-		});
+		if(fnEmpSaveValidation($popup)) {
+			bPopupConfirm('사용자 등록', '등록 하시겠습니까?', function() {
+				EgovIndexApi.apiExecuteJson(
+					'POST',
+					'/backoffice/mng/empUpdate.do',
+					$popup.find('form:first').serializeObject(),
+					null,
+					function(json) {
+						toastr.success(json.message);
+						$popup.bPopup().close();
+						fnSearch(1);
+					},
+					function(json) {
+						toastr.error(json.message);
+					}
+				);
+			});
+		}
 	}
 	// 사용자 수정
 	function fnEmpUpdate() {
