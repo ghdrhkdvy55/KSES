@@ -83,11 +83,11 @@ vertical-align: middle;
 /*btn*/
 .boardlist > a:first-child {margin-left: 5px !important;}
 .skyBtn {background:#28b2e7!important ;vertical-align:sub;display: inline-block;color: #fff;padding: 4px 20px;border-radius: 5px;}
-.blueBtn{ vertical-align:top; display: inline-block;background: #3670c5 !important;color: #fff;padding: 4px 20px;border-radius: 5px;}
+.blueBtn{ vertical-align:top; display: inline-block;background: #3670c5 !important; color: #fff; padding: 4px 20px; border-radius: 5px;}
 .blueBtn:hover{background: #1b5fc3;cursor:pointer;}
 .grayBtn{z-index: 9999;vertical-align:top; display: inline-block;background:#585858 !important; color: #fff;padding: 4px 20px;border-radius: 5px; margin-left: 3px;}
 .grayBtn:hover{background: #717171;cursor:pointer;}
-.redBtn{vertical-align:top;display: inline-block;background: #ce4848!important;color: #fff;padding: 4px 20px;border-radius: 5px;}
+.redBtn{ vertical-align:top; display: inline-block;background: #ce4848 !important; color: #fff; padding: 4px 20px; border-radius: 5px;}
 .redBtn:hover{background: #b92d2d;}
 .right_box a{margin-left: 3px;}
 
