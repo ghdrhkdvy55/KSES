@@ -185,7 +185,7 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 			jsonObject.put("resvSeq", resvSeq);
 			Map<String, Object> resvInfo = resvService.selectUserResvInfo(jsonObject);
 			
-			if(!SmartUtil.NVL(resvInfo.get("resv_state"),"").equals("RESV_STATE_1") && isForced) {
+			if(!SmartUtil.NVL(resvInfo.get("resv_state"),"").equals("RESV_STATE_1")) {
 				switch (SmartUtil.NVL(resvInfo.get("resv_state"),"")) {
 					case "RESV_STATE_2" : message = "이미 이용중인 예약정보 입니다.";  break;
 					case "RESV_STATE_3" : message = "이미 이용완료 처리된 예약정보 입니다.";  break;
