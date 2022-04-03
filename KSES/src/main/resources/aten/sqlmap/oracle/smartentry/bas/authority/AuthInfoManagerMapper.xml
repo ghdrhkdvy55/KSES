@@ -17,9 +17,9 @@
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
 					AND 
 					( 
-						A.AUTHOR_CODE LIKE CONCAT('%',#{params.searchKeyword},'%') 
+						A.AUTHOR_CODE LIKE '%' || #{params.searchKeyword} || '%'
 						OR
-						A.AUTHOR_NM LIKE CONCAT('%',#{params.searchKeyword},'%')
+						A.AUTHOR_NM LIKE '%' || #{params.searchKeyword} || '%'
 					) 
 				</if>
 			) TB 

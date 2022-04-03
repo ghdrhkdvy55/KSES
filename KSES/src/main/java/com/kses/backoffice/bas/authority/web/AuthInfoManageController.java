@@ -79,7 +79,7 @@ public class AuthInfoManageController {
 	    searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
 	    searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
 
-	    List<Map<String, Object>> list = menuCreateService.selectMenuCreatManagList(searchVO);
+	    List<Map<String, Object>> list = authService.selectAuthInfoList(searchVO);
         int totCnt =  list.size() > 0 ? Integer.valueOf(list.get(0).get("total_record_count").toString()) : 0;
 		paginationInfo.setTotalRecordCount(totCnt);
 
