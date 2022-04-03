@@ -821,7 +821,9 @@ padding-left: 5px;
 .mms_title label {vertical-align: baseline!important;}
 .mms_title input {vertical-align: text-bottom!important;}
 .mms_select>div{margin-bottom: 18px;}
-.mms_select_input input[type="text"], .mms_select_group input[type="text"]{width: 90%; border: 1px solid #c0c0c0; padding: 6px; margin-bottom: 7px; outline: 0; background: url(/resources/img/ico_search.png) no-repeat right;}
+.mms_select_group input[type="text"]{width: 90%; border: 1px solid #c0c0c0; padding: 6px; margin-bottom: 7px; outline: 0; background: url(/resources/img/ico_search.png) no-repeat right;}
+.mms_select_input input[type="number"]{width: 55%; border: 1px solid #c0c0c0; padding: 6px; margin-bottom: 7px; outline: 0; background: url(/resources/img/ico_search.png) no-repeat right;}
+.mms_select_input input[type="text"]{width: 30%; border: 1px solid #c0c0c0; padding: 6px; margin-bottom: 7px; outline: 0;}
 .search a {
     padding: 8px 10px;
     background: #529fff;

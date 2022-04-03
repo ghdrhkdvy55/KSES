@@ -18,138 +18,137 @@
 <h2 class="title">메시지 전송 관리</h2>
 <div class="clear"></div>
 <div class="dashboard">
-  <div class="boardlist mms_mng_container">
-    <div class="mms_select whiteBox">
-      <div class="mms_select_check">
-        <div class="mms_title">
-          <label for="user_select01"><input type="checkbox" name="user_select" id="user_select01">수신자 선택</label>
-        </div>
-        <table class="detail_table">
-          <tbody>
-            <tr>
-              <th>
-                <label for="userArea"><input type="radio" name="user_SendGubn" id="userArea" value="E">지점 관리자</label>
-              </th>
-              <td>
-                <select id="send_G">
-                   	<c:choose>
-						<c:when test="${loginVO.authorCd ne 'ROLE_ADMIN' && loginVO.authorCd ne 'ROLE_SYSTEM' }">
-						    <option value="${loginVO.centerCd}"><c:out value='${centerInfo.center_nm}'/></option>
-						</c:when>
-						<c:otherwise>
-						    <option value="">관리자 전체 </option>
-						    <c:forEach items="${centerCombo}" var="centerCombo">
-						       <option value="${centerCombo.center_cd}"><c:out value='${centerCombo.center_nm}'/></option>
-							 </c:forEach>
-						</c:otherwise>
-					</c:choose>
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <th>
-                <label for="userDate"><input type="radio" name="user_SendGubn" id="userDate"  value="U">예약자 일자별 </label>
-              </th>
-              <td>
-                <select id="send_U">
-                  	<c:choose>
-						<c:when test="${(loginVO.authorCd ne 'ROLE_ADMIN' && loginVO.authorCd ne 'ROLE_SYSTEM') }">
-						    <option value="${loginVO.centerCd}"><c:out value='${centerInfo.center_nm}'/></option>
-						</c:when>
-						<c:otherwise>
-						    <option value="">사용자 전체 </option>
-						    <c:forEach items="${centerCombo}" var="centerCombo">
-						       <option value="${centerCombo.center_cd}"><c:out value='${centerCombo.center_nm}'/></option>
-							 </c:forEach>
-						</c:otherwise>
-					</c:choose>
-                </select>
-                <br />
-                <input type="text" id="search_from" readonly="readonly" class="cal_icon"> ~
-                <input type="text" id="search_to" readonly="readonly" class="cal_icon">
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="mms_select_input">
-        <div class="mms_title">
-          <label for="user_select02"><input type="checkbox" name="user_select" id="user_select02">수신자 입력</label>
-          <a href="#" onClick="msgFunction.fn_userSerach()" class="grayBtn">사용자 검색</a>
-        </div>
-        <div class="search">
-           <input type="text" name="sms_addUser" id="sms_addUser" placeholder="전화번호를 입력하세요." onChange="fn_autoHyphen(this);">
-          <a href="#" onClick="msgFunction.fn_indivUser()">추가</a>
-        </div>
-        <table id="tb_UserSendInfo" class="detail_table srch_option">
-          <tbody>
-            
-          </tbody>
-        </table>
-      </div>
-      <div class="mms_select_group">
-        <div class="mms_title">
-          <label for="user_select03"><input type="checkbox" name="user_select" id="user_select03">수신 그룹</label>
-          <a href="#" onClick="msgFunction.fn_GroupPop()" class="grayBtn">그룹 검색</a>
-          <a href="#" onClick="msgFunction.fn_MsgInfo('Ins', '')" class="grayBtn">그룹 등록</a>
-        </div>
-        <table class="detail_table srch_option" id="tb_GroupSendInfo">
-          <tbody>
-          </tbody>
-        </table>
-      </div>
-      <a href="#" onClick="msgFunction.fn_receiver()" class="blueBtn right_box">수신 목록에 추가</a>
-    </div>
-    <div class="mms_selectedUserList whiteBox">
-      <div class="mms_title"> ▶ 수신자 </div>
-      <table class="detail_table" id="tb_receiver">
-        <tbody>
-          <tr>
-            <th>받는 사람</th>
-            <td>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="mms_message whiteBox">
-      <div class="mms_title"> ▶ 메시지 </div>
-      <div class="mms_messageBox">
-          <textarea id="textMessage" onChange="javascript:updateInputCount('textMessage','sp_msgByte')" 
-                                     onKeyUp="javascript:updateInputCount('textMessage','sp_msgByte')"></textarea>
-          <span id="sp_msgByte"></span>
-          <a href="#" onClick="msgFunction.fn_megReset()" class="grayBtn">새로쓰기</a>
-          <a href="#" onClick="msgFunction.fn_megPop('1')" class="grayBtn">메시지 보관함</a>
-          <a href="#" onClick="msgFunction.fn_megSave()" class="grayBtn">메시지 저장</a>
-      </div>
-      <div class="mms_title"> ▶ 발신자 </div>
-      <table class="detail_table">
-        <tbody>
-          <tr>
-            <th>보내는 사람</th>
-            <td>
-              <input type="text" value="${empClphn }" id="sendTel">
-            </td>
-          </tr>
-          <tr>
-            <th>전송방법</th>
-            <td>
-              <a href="#" onClick="msgFunction.fn_msgSendSave('D')" class="blueBtn">즉시전송</a>
-              <a href="#" onClick="msgFunction.fn_msgSendSave('R')" class="blueBtn">예약전송</a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+	<div class="boardlist mms_mng_container">
+		<div class="mms_select whiteBox">
+			<div class="mms_select_check">
+				<div class="mms_title">
+					<label for="user_select01"><input type="checkbox" name="user_select" id="user_select01">수신자 선택</label>
+				</div>
+				<table class="detail_table">
+					<tbody>
+						<tr>
+							<th>
+								<label for="userArea"><input type="radio" name="user_SendGubn" id="userArea" value="E">지점 관리자</label>
+							</th>
+							<td>
+								<select id="send_G">
+									<c:choose>
+										<c:when test="${loginVO.authorCd ne 'ROLE_ADMIN' && loginVO.authorCd ne 'ROLE_SYSTEM' }">
+											<option value="${loginVO.centerCd}"><c:out value='${centerInfo.center_nm}'/></option>
+										</c:when>
+										<c:otherwise>
+											<option value="">관리자 전체 </option>
+											<c:forEach items="${centerCombo}" var="centerCombo">
+												<option value="${centerCombo.center_cd}"><c:out value='${centerCombo.center_nm}'/></option>
+											</c:forEach>
+										</c:otherwise>
+									</c:choose>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<th>
+								<label for="userDate"><input type="radio" name="user_SendGubn" id="userDate"  value="U">예약자 일자별 </label>
+							</th>
+							<td>
+								<select id="send_U">
+									<c:choose>
+										<c:when test="${(loginVO.authorCd ne 'ROLE_ADMIN' && loginVO.authorCd ne 'ROLE_SYSTEM') }">
+											<option value="${loginVO.centerCd}"><c:out value='${centerInfo.center_nm}'/></option>
+										</c:when>
+										<c:otherwise>
+											<option value="">사용자 전체 </option>
+											<c:forEach items="${centerCombo}" var="centerCombo">
+												<option value="${centerCombo.center_cd}"><c:out value='${centerCombo.center_nm}'/></option>
+											</c:forEach>
+										</c:otherwise>
+									</c:choose>
+								</select>
+								<br />
+								<input type="text" id="search_from" readonly="readonly" class="cal_icon"> ~
+								<input type="text" id="search_to" readonly="readonly" class="cal_icon">
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="mms_select_input">
+				<div class="mms_title">
+					<label for="user_select02"><input type="checkbox" name="user_select" id="user_select02">수신자 입력</label>
+					<a href="#" onClick="msgFunction.fn_userSerach()" class="grayBtn right_box" style="margin-right:20px;">사용자 검색</a>
+				</div>
+				<div class="search">
+					<input type="number" name="sms_addUser" id="sms_addUser" placeholder="전화번호를 입력하세요." onChange="fn_autoHyphen(this);">
+					<input type="text" name="sms_addUserNm" id="sms_addUserNm" placeholder="이름을 입력하세요.">
+					<a href="#" onClick="msgFunction.fn_indivUser()">추가</a>
+				</div>
+				<table id="tb_UserSendInfo" class="detail_table srch_option">
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+			<div class="mms_select_group">
+				<div class="mms_title">
+					<label for="user_select03"><input type="checkbox" name="user_select" id="user_select03">수신 그룹</label>
+					<a href="#" onClick="msgFunction.fn_GroupPop()" class="grayBtn right_box" style="margin-right:20px;">그룹 검색</a>
+				</div>
+				<table class="detail_table srch_option" id="tb_GroupSendInfo">
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+			<a href="#" onClick="msgFunction.fn_receiver()" class="blueBtn right_box">수신 목록에 추가</a>
+		</div>
+		<div class="mms_selectedUserList whiteBox">
+			<div class="mms_title"> ▶ 수신자 </div>
+			<table class="detail_table" id="tb_receiver">
+				<tbody>
+					<tr>
+						<th>받는 사람</th>
+						<td>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="mms_message whiteBox">
+			<div class="mms_title"> ▶ 메시지 </div>
+			<div class="mms_messageBox">
+				<textarea id="textMessage" onChange="javascript:updateInputCount('textMessage','sp_msgByte')" 
+										   onKeyUp="javascript:updateInputCount('textMessage','sp_msgByte')"></textarea>
+				<span id="sp_msgByte"></span>
+				<a href="#" onClick="msgFunction.fn_megReset()" class="grayBtn">새로쓰기</a>
+				<a href="#" onClick="msgFunction.fn_megPop('1')" class="grayBtn">메시지 보관함</a>
+				<a href="#" onClick="msgFunction.fn_megSave()" class="grayBtn">메시지 저장</a>
+			</div>
+			<div class="mms_title"> ▶ 발신자 </div>
+			<table class="detail_table">
+				<tbody>
+					<tr>
+						<th>보내는 사람</th>
+						<td>
+							<input type="text" value="${empClphn }" id="sendTel">
+						</td>
+					</tr>
+					<tr>
+						<th>전송방법</th>
+						<td>
+							<a href="#" onClick="msgFunction.fn_msgSendSave('D')" class="blueBtn">즉시전송</a>
+							<a href="#" onClick="msgFunction.fn_msgSendSave('R')" class="blueBtn">예약전송</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
 </div>
 <!-- contents//-->
 <!-- //popup -->
 <!--권한분류 추가 팝업-->
 <div id="dv_messageGroupSearch" class="popup">
-    <div class="pop_con">
-        <a class="button b-close">X</a>
-        <h2 class="pop_tit">그룹 현황</h2>
+	<div class="pop_con">
+		<a class="button b-close">X</a>
+		<h2 class="pop_tit">그룹 현황</h2>
         
 		<div class="pop_wrap">
 			<div class="whiteBox searchBox">
@@ -163,36 +162,41 @@
 				<div class="inlineBtn">
 					<a href="#" onClick="msgFunction.fn_GroupSearch()" class="grayBtn">검색</a>
 				</div>
-				<div class="clear"></div>
+				
+				<div class="clear">
+				</div>
 	        </div>
-            
-            <table class="detail_table" id='tb_groupList'>
-                <thead>
-                   <th style="width:200px;"><input type="checkbox" id="ck_groupAll" name="ck_groupAll" onClick="msgFunction.fn_CheckboxGroupAll()"></th>
-                   <th style="width:200px;">그룹명</th>
-                   <th style="width:200px;">등록인원</th>
-                   <th style="width:200px;">비고</th>
-                   <th style="width:200px;">최종 수정일</th>
-                   <th style="width:200px;">최종 수정자</th>
-                   <th style="width:200px;">삭제</th>
-                </thead>
-                <tbody>
+	        <div class="right_box">
+					<a href="#" onClick="msgFunction.fn_MsgInfo('Ins', '')" class="blueBtn" style="margin-bottom:10px;">그룹 등록</a>
+			</div>
+			
+			<table class="detail_table" id='tb_groupList'>
+				<thead>
+					<th style="text-align:center; width:200px;"><input type="checkbox" id="ck_groupAll" name="ck_groupAll" onClick="msgFunction.fn_CheckboxGroupAll()"></th>
+					<th style="text-align:center; width:200px;">그룹명</th>
+					<th style="text-align:center; width:200px;">등록인원</th>
+					<th style="text-align:center; width:200px;">비고</th>
+					<th style="text-align:center; width:200px;">그룹 수정</th>
+					<th style="text-align:center; width:200px;">사용자 등록</th>
+					<th style="text-align:center; width:200px;">삭제</th>
+				</thead>
+				<tbody>
                     
                 </tbody>
-            </table>
-        </div>
-        <div class="clear">
-        	<div class="right_box">
-	          	<a href="#" onClick="msgFunction.fn_GroupMsgListUpdate()" class="blueBtn">그룹추가</a>
-	          	<a href="#" class="grayBtn b-close"">닫기</a>
-	          </div>
-        </div>
-    </div>
+			</table>
+		</div>
+		<div class="clear">
+			<div class="right_box">
+				<a href="#" onClick="msgFunction.fn_GroupMsgListUpdate()" class="blueBtn">수신그룹추가</a>
+				<a href="#" class="grayBtn b-close"">닫기</a>
+			</div>
+		</div>
+	</div>
 </div>
 <div id="dv_messageUserSerach" class="popup m_pop">
-    <div class="pop_con">
-        <a class="button b-close">X</a>
-        <h2 class="pop_tit">사용자 조회</h2>
+	<div class="pop_con">
+		<a class="button b-close">X</a>
+		<h2 class="pop_tit">사용자 조회</h2>
         
 
         <div class="pop_wrap">
@@ -239,7 +243,7 @@
 </div>
 <div id="dv_messageGroup" class="popup m_pop">
 	<div class="pop_con">
-		<a class="button b-close">X</a>
+		<a class="button b-close" onclick="msgFunction.fn_MsgInfoClose()">X</a>
 		<h2 class="pop_tit">그룹 등록</h2>
 		<div class="pop_wrap">
 			<table class="detail_table">
@@ -268,8 +272,8 @@
 			</table>
 		</div>
 		<div class="right_box">
-			<a href="javascript:common_modelClose('dv_messageGroup')" class="grayBtn">취소</a>
 			<a href="#" onClick="msgFunction.fn_CheckForm()" class="blueBtn" id="btnUpdate">저장</a>
+			<a href="#" onclick="msgFunction.fn_MsgInfoClose()" class="grayBtn">취소</a>
 		</div>
 		<div class="clear"></div>
 	</div>
@@ -291,7 +295,7 @@
 			<a href="" class="grayBtn">닫기</a>
 		</div>
 		<div class="clear"></div>
-  	</div>
+	</div>
 </div>
 <!-- // 예약전송 팝업 -->
 <div data-popup="rsv_mms_sum" id="rsv_mms_sum" class="popup m_pop">
@@ -471,11 +475,12 @@
 		},
 		fn_MsgInfo : function(mode, groupCode){
 			$("#mode").val(mode);
-			common_modelClose('dv_messageGroupSearch');
+			common_modalOpenAndClose("dv_messageGroup", "dv_messageGroupSearch");
  			
 			if (mode == "Edt"){
 				$("#groupCode").val(groupCode).prop('readonly', true);
 				$("#btnUpdate").text("수정");
+				$("#dv_messageGroup > div > h2").text("그룹 수정");
 				var params = {"groupCode" : groupCode};
 			  	
 				var url = "/backoffice/rsv/msgGroupDetail.do";
@@ -498,6 +503,7 @@
 					}
 				);
 			}else{
+				$("#dv_messageGroup > div > h2").text("그룹 등록");
 				$("#groupCode").val('').prop('readonly', false);
 				$("#groupTitle").val('');
 				$("#groupDc").val('');
@@ -505,8 +511,9 @@
 				$("#btnUpdate").text("입력");
 			}
 			$("#dv_messageGroup").bPopup();  
-		},
-		fn_GroupPop : function (groupCode){
+		}, fn_MsgInfoClose : function (){
+        	common_modalOpenAndClose("dv_messageGroupSearch", "dv_messageGroup");	
+        }, fn_GroupPop : function (groupCode){
 			$("#groupCode").val(groupCode);
 			$("#dv_messageGroupSearch").bPopup();
 			$("#searchGroupTxt").val('');
@@ -523,18 +530,18 @@
 				for (var i in returnval){		
 					html = "<tr style='text-align:center;'>"
 						 + "   <td><input type='checkbox' id='send_GroupCell' name='send_GroupCell' value='"+ returnval[i].group_code +":"+returnval[i].group_title+"'></td>"
-						 + "   <td><a href=\"#\" onClick=\"msgFunction.fn_MsgInfo('Edt','"+ returnval[i].group_code+"')\">" + returnval[i].group_title + "</a></td>"
-						 + "   <td><a href=\"#\" onClick=\"msgFunction.fn_MsgUserPopInfo('"+ returnval[i].group_code+"')\">" + returnval[i].group_cnt + "</a></td>"
-						 + "   <td><a href=\"#\" onClick=\"msgFunction.fn_MsgInfo('Edt','"+ returnval[i].group_code+"')\">" + fn_emptyReplace(returnval[i].group_dc) + "</a></td>"
-						 + "   <td>" + returnval[i].last_updt_dtm + "</td>"
-						 + "   <td>" + returnval[i].last_updusr_id + "</td>"
-						 + "   <td><a href=\"#\" onClick=\"msgFunction.fn_MsgDel('"+ returnval[i].group_code+"')\">삭제</a></td>"
+						 + "   <td>" + returnval[i].group_title + "</td>"
+						 + "   <td>" + returnval[i].group_cnt + "</td>"
+						 + "   <td>" + fn_emptyReplace(returnval[i].group_dc) + "</td>"
+						 + "   <td><a href=\"#\" class=\"blueBtn\" onClick=\"msgFunction.fn_MsgInfo('Edt','"+ returnval[i].group_code+"')\">그룹 수정</td>"
+						 + "   <td><a href=\"#\" class=\"blueBtn\" onClick=\"msgFunction.fn_MsgUserPopInfo('"+ returnval[i].group_code+"')\">사용자 등록</td>"
+						 + "   <td><a href=\"#\" class=\"grayBtn\" onClick=\"msgFunction.fn_MsgDel('"+ returnval[i].group_code+"')\">삭제</a></td>"
 						 + " </tr>";		   					
 					$("#tb_groupList > tbody").append(html);
 					html = "";
 				}
 			}else {
-				html  = "<tr><td colspan='5' style='text-align:center'>검색한 내용이 없습니다.</td></tr>"
+				html  = "<tr><td colspan='7' style='text-align:center'>검색한 내용이 없습니다.</td></tr>"
 				$("#tb_groupList > tbody").append(html); 
 			}
 				$("#dv_messageGroupSearch").bPopup();  		
@@ -561,7 +568,7 @@
         			var obj = returnval[i];
         			sHtml = "<li>"+ obj.group_username +"<span>&lt;"
         			      + ""+ obj.group_user_cellphone+ "&gt;</span>"
-        			      + "<span class='delBtn' onClick='msgFunction.fn_GroupUserDel(\""+obj.group_userseq+"\")'>&times;</span></li>";
+        			      + "<span class='delBtn' onClick='msgFunction.fn_GroupUserDel(\""+obj.group_userseq+"\")'><img src=\"/resources/img/sub_del.png\" style=\"width:20px; height:20px\"></span></li>";
         			$("#tb_groupT > tbody> tr> td> ul").append(sHtml);
         		}
         	}else {
@@ -589,7 +596,7 @@
         }, fn_leftUserSearch : function (){
         	//좌측 사용자 검색
         	if (any_empt_line_span("dv_messageGroup_user", "searchUserGubun", "검색할 고객 구분을 선택해 주세요.","sp_message", "savePage") == false) return;
-        	if (any_empt_line_span("dv_messageGroup_user", "searchUserCondition", "검색할 조건을  선택해 주세요.","sp_message", "savePage") == false) return;
+        	/* if (any_empt_line_span("dv_messageGroup_user", "searchUserCondition", "검색할 조건을  선택해 주세요.","sp_message", "savePage") == false) return; */
         	if (any_empt_line_span("dv_messageGroup_user", "searchUserKeyworkd", "검색어를 입력해 주세요.","sp_message", "savePage") == false) return;
         	var params = {
         			      "groupCode" : $("#groupCode").val(),
@@ -609,13 +616,13 @@
 	        		if ($("#searchUserGubun").val() == "EMP"){
 	        			sHtml = "<li>"+ obj.emp_nm +"("+ obj.dept_nm +")<span>&lt;"
 		            	      + ""+ obj.emp_clphn+ "&gt;</span>"
-		            	      + "<span class='delBtn' onClick='msgFunction.fn_GroupUserUpdate(\""+obj.emp_nm+"\",\""+obj.dept_nm+"\",\""+obj.emp_clphn+"\")'>&raquo;</span></li>";
+		            	      + "<span class='delBtn' onClick='msgFunction.fn_GroupUserUpdate(\""+obj.emp_nm+"\",\""+obj.dept_nm+"\",\""+obj.emp_clphn+"\")'><img src=\"/resources/img/sub_add.png\" style=\"width:20px; height:20px\"></span></li>";
 		            	
 	            	}else {
 	        			//사용자 검색 
 	        			sHtml = "<li>"+ obj.user_nm +"("+ obj.user_id +")<span>&lt;"
-	        			      + ""+ obj.user_phone+ "&gt;</span><br />"
-	        			      + "<span class='delBtn' onClick='msgFunction.fn_GroupUserUpdate(\""+obj.user_id+"\",\""+obj.user_nm+"\",\""+obj.user_phone+"\")'>&raquo;</span></li>";
+	        			      + ""+ obj.user_phone+ "&gt;</span>"
+	        			      + "<span class='delBtn' onClick='msgFunction.fn_GroupUserUpdate(\""+obj.user_id+"\",\""+obj.user_nm+"\",\""+obj.user_phone+"\")'><img src=\"/resources/img/sub_add.png\" style=\"width:20px; height:20px\"></span></li>";
 	        		}
 	        		$("#tb_searchT > tbody> tr> td> ul").append(sHtml);
 	        		sHtml = "";
@@ -707,10 +714,9 @@
             			$("#tb_searchT_User > tbody").append(sHtml);
             		} 	
         		}
-        		
         	}else {
-        		$("tb_searchT_User > tbody").append("<tr><td colspan='3'>등록된 사용자가 없습니다.</td></tr>");
-        	}
+				$("#tb_searchT_User > tbody").append("<tr><td colspan='3' style='text-align:center'>검색한 내용이 없습니다.</td></tr>"); 
+			}
         	$("#dv_messageUserSerach").bPopup();
         }, fn_CheckboxAll : function (){
         	//사용자 전체 선택 하기 
@@ -723,8 +729,10 @@
             $("#dv_messageUserSerach").bPopup().close();
         }, fn_indivUser : function (){
         	if (any_empt_line_span_noPop("sms_addUser", "전화번호를 입력해 주세요.") == false) return;
-        	msgFunction.fn_smsUserTable( $("#sms_addUser").val() + "<" + $("#sms_addUser").val() + ">");
+        	if (any_empt_line_span_noPop("sms_addUserNm", "이름을 입력해 주세요.") == false) return;
+        	msgFunction.fn_smsUserTable( $("#sms_addUserNm").val() + "<" + $("#sms_addUser").val() + ">");
         	$("#sms_addUser").val('');
+        	$("#sms_addUserNm").val('');
         	
         }, fn_smsUserTable : function(telArray){
         	var number = 1;
@@ -745,7 +753,7 @@
            	}
             for (var i in new_tr){
             	var userTelNumber = new_tr[i].indexOf("<")> 0 ? new_tr[i].substring( parseInt( new_tr[i].indexOf("<")) + 1 , new_tr[i].indexOf(">")) : new_tr[i];
-            	$("#tb_UserSendInfo tbody:last").append("<tr id='"+userTelNumber+"'><td>"+ parseInt(parseInt(number) + parseInt(i)) +"</td><td>"+ new_tr[i]+"</td><td><a href='javascript:msgFunction.fn_trUserDel(&#39;"+ userTelNumber+"&#39;)'>&times;</a></td></tr>");
+            	$("#tb_UserSendInfo tbody:last").append("<tr id='"+userTelNumber+"'><td>"+ parseInt(parseInt(number) + parseInt(i)) +"</td><td>"+ new_tr[i]+"</td><td><a href='javascript:msgFunction.fn_trUserDel(&#39;"+ userTelNumber+"&#39;)'><img src=\"/resources/img/sub_del.png\" style=\"width:20px; height:20px\"></a></td></tr>");
             }
         },fn_trUserDel: function (telCode){
         	//user 삭제
@@ -754,23 +762,52 @@
         	//수신자 목록에 저장
         	//user_select02
         	//user_select01
+        	var userSelect = ckeckboxValue("수신 방법을 선택해 주세요.", "user_select", "");
         	$("#tb_receiver tbody> tr> td").empty();
-        	if ($('#user_select02').is(':checked') == true){
-            	
+        	if ($('#user_select01').is(':checked') == true){
+        		if ($('input:radio[name=user_SendGubn]').is(':checked') == false){
+        			common_popup("수신자를 선택해 주세요.", "N", "");
+        			return;
+        		}
+        		if($('#userArea').is(':checked') == true ) {
+        			$("#tb_receiver tbody> tr> td:first").append("<ul><li>지점 관리자</li></ul>");
+        			var id = $('#send_G').val();
+        			var text = $('#send_G option:checked').text();
+        			$("#tb_receiver tbody> tr> td> ul:first").append("<li id=\"CA_"+id+"\">"+text+"<span class=\"delBtn\" onClick=\"msgFunction.fn_receiverDel('CA_"+id+"')\"><img src=\"/resources/img/sub_del.png\" style=\"width:20px; height:20px\"></span></li>");
+        		} else {
+        			if (any_empt_line_span_noPop("search_from", "기간을 선택해 주세요.") == false) return;
+        			if (any_empt_line_span_noPop("search_to", "기간을 선택해 주세요.") == false) return;
+        			$("#tb_receiver tbody> tr> td:first").append("<ul><li>사용자</li></ul>");
+        			var id = $('#send_U').val();
+        			var text = $('#send_U option:checked').text();
+        			var searchFrom = $('#search_from').val();
+        			var searchTo = $('#search_to').val();
+        			$("#tb_receiver tbody> tr> td> ul:first").append("<li id=\"CU_"+id+"\">"+text+ " (" +searchFrom+ " ~ " +searchTo+ ") " + "<span class=\"delBtn\" onClick=\"msgFunction.fn_receiverDel('CU_"+id+"')\"><img src=\"/resources/img/sub_del.png\" style=\"width:20px; height:20px\"></span></li>");
+        		}
+        	}
+        	
+        	if ($('#user_select02').is(':checked') == true){  
+        		if($("#tb_UserSendInfo tbody> tr> td:first").val() === null || $("#tb_UserSendInfo tbody> tr> td:first").val() === undefined){ 
+        			common_popup("수신자를 추가해 주세요.", "N", "");
+        			return; 
+        		};
             	$("#tb_receiver tbody> tr> td").append("<ul><li>이름</li></ul>");
             	$("#tb_UserSendInfo tr").each(function(){
             		var text = $(this).children().eq(1).text();
             		var userTelNumber = text.substring(parseInt(text.indexOf("<")) + 1, text.indexOf(">"));
-            		$("#tb_receiver tbody> tr> td> ul:last").append("<li id=\"U_"+userTelNumber+"\">"+text+"<span class=\"delBtn\" onClick=\"msgFunction.fn_receiverDel('U_"+userTelNumber+"')\">&times;</span></li>");
+            		$("#tb_receiver tbody> tr> td> ul:last").append("<li id=\"U_"+userTelNumber+"\">"+text+"<span class=\"delBtn\" onClick=\"msgFunction.fn_receiverDel('U_"+userTelNumber+"')\"><img src=\"/resources/img/sub_del.png\" style=\"width:20px; height:20px\"></span></li>");
             	});
-            	
         	}
 			if ($('#user_select03').is(':checked') == true){
+        		if($("#tb_GroupSendInfo tbody> tr> td:first").val() === null || $("#tb_GroupSendInfo tbody> tr> td:first").val() === undefined){ 
+        			common_popup("수신그룹을 추가해 주세요.", "N", "");
+        			return; 
+        		};
 				$("#tb_receiver tbody> tr> td:last").append("<ul><li>그룹</li></ul>");
 				$("#tb_GroupSendInfo tr").each(function(){
 					var text = $(this).children().eq(1).text();
 					var id = $(this).attr("id");
-            		$("#tb_receiver tbody> tr> td> ul:last").append("<li id=\""+id+"\">"+text+"<span class=\"delBtn\" onClick=\"msgFunction.fn_receiverDel('"+id+"')\">&times;</span></li>");
+            		$("#tb_receiver tbody> tr> td> ul:last").append("<li id=\""+id+"\">"+text+"<span class=\"delBtn\" onClick=\"msgFunction.fn_receiverDel('"+id+"')\"><img src=\"/resources/img/sub_del.png\" style=\"width:20px; height:20px\"></span></li>");
             	});
 			}
         }, fn_GroupMsgListUpdate : function (){
@@ -796,11 +833,15 @@
             var groupInfo = new Array();
             for (var i in new_tr){
             	groupInfo = new_tr[i].split(":");
-            	$("#tb_GroupSendInfo tbody:last").append("<tr id='"+groupInfo[0]+"'><td>"+ parseInt(parseInt(number) + parseInt(i)) +"</td><td>"+ groupInfo[1]+"</td><td><a href='javascript:msgFunction.fn_trGroupDel(&#39;"+ groupInfo[0]+"&#39;)'>&times;</a></td></tr>");
+            	$("#tb_GroupSendInfo tbody:last").append("<tr id='"+groupInfo[0]+"'><td>"+ parseInt(parseInt(number) + parseInt(i)) +"</td><td>"+ groupInfo[1]+"</td><td><a href='javascript:msgFunction.fn_trGroupDel(&#39;"+ groupInfo[0]+"&#39;)'><img src=\"/resources/img/sub_del.png\" style=\"width:20px; height:20px\"></a></td></tr>");
             }
         }, fn_trGroupDel : function (code){
         	$("#tb_GroupSendInfo tr").filter("#"+code).remove();
         }, fn_receiverDel : function(code){
+        	console.log("test: " +  $("#tb_receiver li").filter("#"+code).siblings().length);
+        	if($("#tb_receiver li").filter("#"+code).siblings().length == 1) {
+        		$("#tb_receiver li").filter("#"+code).parent().remove();
+        	};
         	$("#tb_receiver li").filter("#"+code).remove();
         }, fn_megReset : function (){
         	$("#textMessage").val('');
@@ -914,7 +955,6 @@
         	if (any_empt_line_span_noPop("sendTel", "발신자 전화 번호를 입력해 주세요.") == false) return;
         	if (any_empt_line_span_noPop("textMessage", "메세지를 입력해 주세요.") == false) return;
         	var userSelect = ckeckboxValue("수신 방법을 선택해 주세요.", "user_select", "");
-        	console.log("userSelect : " + userSelect)
         	if (userSelect == false) return;
         	
         	if (gubun == "D"){
@@ -925,24 +965,9 @@
         		$("#result").val("R");
         	}
         }, fn_msgSave : function (){
-        	var msgArray = "";
-    		if ($('#user_select01').is(':checked') == true){
-        		//db 확인 후 가저오기 
-        		if ($('input:radio[name=user_SendGubn]').is(':checked') == false){
-        			console.log("TEST1");
-        			common_popup("수신자를 선택해 주세요.", "N", "");
-        			return;
-        		}        		
-        		if ($('input[name="user_SendGubn"]:checked').val() == "U"){
-        			if (any_empt_line_span_noPop("search_from", "기간을 선택해 주세요.") == false) return;
-        			if (any_empt_line_span_noPop("search_to", "기간을 선택해 주세요.") == false) return;
-        			msgArray = {"step": "U", "sendCnt":  $("#send_U").val(), "from" :  $("#search_from").val(), "to" :  $("#search_to").val()};	
-        		}else {
-        			msgArray = {"step": "E", "sendCnt":  $("#send_G").val()};
-        		}
-        	}
+			var msgArray = "";
     		var sendArray = new Array();
-    		if ($('#user_select02').is(':checked') == true || $('#user_select03').is(':checked') == true){
+    		if ( $('#user_select01').is(':checked') == true || $('#user_select02').is(':checked') == true || $('#user_select03').is(':checked') == true){
         	//구분값 가지고 오기 
             	var sendGubun = ""
             	
@@ -950,18 +975,28 @@
             		var messageInfo = new Object();
             		
             		if (typeof  $(this).attr("id") != "undefined"){
-            			if ( $(this).attr("id") != "" && $(this).attr("id").indexOf("U_") < 0){
+            			if ( $(this).attr("id") != "" && $(this).attr("id").indexOf("MSG_") == 0){
 	       		    		messageInfo.groupGubun = "G";
 	       		    		messageInfo.groupCode =  $(this).attr("id");
-	       		    	}else {
+	       		    	}else if( $(this).attr("id") != "" && $(this).attr("id").indexOf("U_") == 0){
 	       		    		messageInfo.groupGubun = "S";
 	       		    		messageInfo.groupCode = $(this).text().replace("×", "");
+	       		    	} else if( $(this).attr("id") != "" && $(this).attr("id").indexOf("CA_") == 0){
+	       		    		messageInfo.groupGubun = "CA";
+	       		    		messageInfo.groupCode = $(this).attr('id').replace("CA_", "");
+	       		    		console.log("messageInfo.groupCode : " + messageInfo.groupCode);
+	       		    	} else {
+	       		    		var text = $(this).text();
+	       		    		messageInfo.groupGubun = "CU";
+	       		    		messageInfo.groupCode = $(this).attr('id').replace("CU_", "");
+	       		    		messageInfo.searchFrom = text.substr(text.length-10,8);
+	       		    		messageInfo.searchTo = text.substr(text.length-21, 8);
 	       		    	}
             			sendArray.push(messageInfo);	
             		}
             	});
 				if (sendArray.length < 1){
-					$("#savePage #sp_Message").html("수신자 입력, 수신 그룹 선택 시 수신 목록에 추가는 필수 사항 입니다.");
+					$("#savePage #sp_Message").html("수신 목록을 추가해 주세요.");
 					$("#savePage #sp_Message").attr("style", "color:red");
 					$("#savePage").bPopup();
                		 
