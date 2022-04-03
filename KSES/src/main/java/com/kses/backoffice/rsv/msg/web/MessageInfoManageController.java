@@ -1,17 +1,14 @@
 package com.kses.backoffice.rsv.msg.web;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import egovframework.com.cmm.LoginVO;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.Globals;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kses.backoffice.bas.code.service.EgovCcmCmmnDetailCodeManageService;
 import com.kses.backoffice.mng.admin.service.AdminInfoService;
 import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
@@ -205,19 +202,6 @@ public class MessageInfoManageController {
 				//지점 담당자 메세지 보내기
 				Map<String, String> hMapData = new HashMap<String, String>();
 		        
-				HashMap<String, String> map = (HashMap<String, String>) Arrays.asList(step.split(","))
-						                .stream()
-						                .map(s -> s.split(":"))
-						                .collect(Collectors.toMap(e -> e[0], e -> e[1]));
-
-				/*
-				String[] pairs = step.split(",");
-				for (int i=0;i<pairs.length;i++) {
-				    String pair = pairs[i];
-				    String[] keyValue = pair.split(":");
-				    hMapData.put(keyValue[0], keyValue[1]);
-				}
-				*/
 				MessageInfo msgInfo = new MessageInfo();
 				if (hMapData.get("step").equals("U")) {
 					Map<String, Object>  searchVO_U = new HashMap<String, Object>();
@@ -347,68 +331,7 @@ public class MessageInfoManageController {
 	    	
 	    	//LOGGER.debug("step:" + SmartUtil.NVL(vo.get("msgArray"), "").toString());
 	    	
-	    	
-			if (!SmartUtil.NVL(vo.get("msgArray"), "").toString().equals("\"\"")) {
-				//지점 담당자 메세지 보내기
-				/*
-				HashMap<String, String> map = (HashMap<String, String>) Arrays.asList(SmartUtil.NVL(vo.get("msgArray"), "").toString().split(","))
-						                .stream()
-						                .map(s -> s.split(":"))
-						                .collect(Collectors.toMap(e -> e[0], e -> e[1]));
-				*/
-				Map<String, Object>  map = new ObjectMapper().readValue(SmartUtil.NVL(vo.get("msgArray"), "").toString(), Map.class) ;
-				
-				
-				if (map.size() > 0) {
-					if (map.get("step").equals("U")) {
-						Map<String, Object>  searchVO_U = new HashMap<String, Object>();
-						searchVO_U.put("firstIndex", 0);
-						searchVO_U.put("recordCountPerPage", 1000);
-						
-						searchVO_U.put("searchCenterCd", SmartUtil.NVL(map.get("sendCnt"), "").toString());
-						searchVO_U.put("searchFrom",  SmartUtil.NVL(map.get("from"), "").toString());
-						searchVO_U.put("searchTo",  SmartUtil.NVL(map.get("to"), "").toString());
-						searchVO_U.put("searchDayCondition",  "resvDate");
-						List<Map<String, Object>>  userInfo = resService.selectResvInfoManageListByPagination(searchVO_U);
-						
-						
-						userInfo.forEach(x->{
-							 MessageInfo msgInfo = new MessageInfo();
-					   		 msgInfo.setCallname(x.get("user_nm").toString());
-						   	 msgInfo.setCallphone(x.get("user_phone").toString());
-						   	 info.add(msgInfo);
-						   	 msgInfo = null;
-					   	 });
-						
-						searchVO_U =  null;
-					}else {
-						
-						Map<String, Object>  searchVO_A = new HashMap<String, Object>();
-						searchVO_A.put("firstIndex", 0);
-						searchVO_A.put("recordCountPerPage", 1000);
-						searchVO_A.put("searchCenter", SmartUtil.NVL(map.get("sendCnt"), "").toString());
-						LOGGER.debug("sendCnt:" + map.get("sendCnt"));
-						List<Map<String, Object>> adminInfos = adminService.selectAdminUserManageListByPagination(searchVO_A);
-						
-						adminInfos.forEach(x->{
-							 MessageInfo msgInfo = new MessageInfo();
-					   		 msgInfo.setCallname(x.get("emp_nm").toString());
-						   	 msgInfo.setCallphone(SmartUtil.NVL(x.get("emp_clphn"), "").toString());
-						   	 info.add(msgInfo);
-						   	 msgInfo = null;
-					   	});
-						
-						for (MessageInfo infos : info) {
-							LOGGER.debug("infos:" + infos.toString());
-						}
-						
-						
-						searchVO_A =  null;
-						adminInfos = null;
-					}
-						
-				}
-			}
+
 			if (!SmartUtil.NVL(vo.get("sendArray"), "").toString().equals("")) {
 				
 				JSONParser parser = new JSONParser();
@@ -438,7 +361,7 @@ public class MessageInfoManageController {
 				    	 }
 				    	 info.add(msgInfo);
 				    	 msgInfo = null;
-				    }else {
+				    }else if (jsonObject.get("groupGubun").equals("G")){
 				    //group 이면 
 				    	 searchVO.put("searchGroupCode", jsonObject.get("groupCode"));
 					   	 LOGGER.debug("groupCode:" + searchVO);
@@ -453,6 +376,41 @@ public class MessageInfoManageController {
 						   	 info.add(msgInfo);
 						   	 msgInfo = null;
 					   	 });
+				     } else if (jsonObject.get("groupGubun").equals("CU")) {
+				    	 Map<String, Object>  searchVO_U = new HashMap<String, Object>();
+				    	 searchVO_U.put("searchCenterCd", jsonObject.get("groupCode"));
+				    	 searchVO_U.put("searchFrom", jsonObject.get("searchFrom"));
+				    	 searchVO_U.put("searchTo", jsonObject.get("searchTo"));
+				    	 searchVO_U.put("searchDayCondition",  "resvDate");
+				    	 searchVO_U.put("searchStateCondition",  "cancel");
+				    	 searchVO_U.put("searchResvState",  "RESV_STATE_4");
+				    	 searchVO_U.put("firstIndex", 0);
+				    	 searchVO_U.put("recordCountPerPage", 1000);
+				    	 
+				    	 List<Map<String, Object>>  userInfo = resService.selectResvInfoManageListByPagination(searchVO_U);
+					   	 
+				    	 userInfo.forEach(x->{
+				    		 MessageInfo msgInfo = new MessageInfo();
+				    		 msgInfo.setCallname(x.get("user_nm").toString());
+						  	 msgInfo.setCallphone(x.get("user_phone").toString());
+						  	 info.add(msgInfo);
+						  	 msgInfo = null;
+						});
+				     } else {
+						Map<String, Object>  searchVO_A = new HashMap<String, Object>();
+						searchVO_A.put("searchCenter", jsonObject.get("groupCode"));
+						searchVO_A.put("firstIndex", 0);
+						searchVO_A.put("recordCountPerPage", 1000);
+				    	 
+						List<Map<String, Object>> adminInfos = adminService.selectAdminUserManageListByPagination(searchVO_A);
+						
+						adminInfos.forEach(x->{
+							 MessageInfo msgInfo = new MessageInfo();
+							 msgInfo.setCallname(x.get("emp_nm").toString());
+						   	 msgInfo.setCallphone(SmartUtil.NVL(x.get("emp_clphn"), "").toString());
+						   	 info.add(msgInfo);
+						   	 msgInfo = null;
+						});
 				     }
 			    }                
 			}
