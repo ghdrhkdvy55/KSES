@@ -67,7 +67,7 @@ public class BoardInfoManageController {
 	protected BoardSetInfoManageService boardSetService;
 
 	@Autowired
-private UniSelectInfoManageService uniService;
+	private UniSelectInfoManageService uniService;
 
 	@Autowired
 	protected EgovMessageSource egovMessageSource;
@@ -160,7 +160,7 @@ private UniSelectInfoManageService uniService;
 //	}
 	/**
 	 * 게시판관리 정보 저장
-	 * @param authInfo
+	 * @param info
 	 * @return
 	 * @throws Exception
 	 */
@@ -169,7 +169,7 @@ private UniSelectInfoManageService uniService;
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		
 		String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
-		info.setUserId(userId);
+		info.setFrstRegterId(userId);
 
 		switch (info.getMode()) {
 			case Globals.SAVE_MODE_INSERT:
@@ -228,381 +228,296 @@ private UniSelectInfoManageService uniService;
 		return model;
 	}
 		
-		@RequestMapping(value="boardList.do")
-		public ModelAndView  selectBoardInfoManageListByPagination(@ModelAttribute("loginVO") LoginVO loginVO
-																	, @RequestParam("boardCd") String boardCd
-																	, HttpServletRequest request
-																	, BindingResult bindingResult) throws Exception {
-			
-			ModelAndView model = new ModelAndView("/backoffice/sys/boardList");
-			
-			try{
-				
-				  Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-			      if(!isAuthenticated) {
-		    	    model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-		    	    model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
-		    	    model.setViewName("backoffice/login");
-		    		return model;
-			      }
-			      
-				  //공지사항의 경우, 공지기한이 지난 게시물은 board_notice_useyn을 N으로 변경
-				  //boardInfoService.updateBoardNoticeUseYn();
-			      loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
-			      
-			      //페이징 처리 
-				  model.addObject(Globals.STATUS_REGINFO, boardSetService.selectBoardSettingInfoDetail(boardCd));
-				  model.addObject("loginVO", loginVO);
-			}catch (Exception e){
-				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-				model.addObject("message", egovMessageSource.getMessage("fail.common.list"));
-				LOGGER.info(e.toString());
-			}			   
-			return model;	
-		}
+	@RequestMapping(value="boardList.do")
+	public ModelAndView  selectBoardInfoManageListByPagination(@ModelAttribute("loginVO") LoginVO loginVO
+																, @RequestParam("boardCd") String boardCd
+																, HttpServletRequest request
+																, BindingResult bindingResult) throws Exception {
 		
-		@RequestMapping(value="boardListAjax.do")
-		public ModelAndView  selectBoardAjaxInfoManageListByPagination(@ModelAttribute("loginVO") LoginVO loginVO
-																		, @RequestBody Map<String,Object>  searchVO
-																		, HttpServletRequest request
-																		, BindingResult bindingResult) throws Exception {
-			
-			ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-			
-			try{
-				
-				  LOGGER.info("getContextPath:" + request.getHeader("REFERER")); 
-				  
-				  
-				  if (!request.getHeader("REFERER").contains("/web")) {
-					  Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-				      if(!isAuthenticated) {
-							model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-							model.setViewName("/backoffice/login");
-							return model;
-				      } 
-				  }
-				  
-				  
-				  
-				  
-			      
-			     int pageUnit = searchVO.get("pageUnit") == null ?   propertiesService.getInt("pageUnit") : Integer.valueOf((String) searchVO.get("pageUnit"));
-				 
-				 searchVO.put("pageSize", propertiesService.getInt("pageSize"));
-				 LOGGER.info("pageUnit:" + pageUnit);
-				 
-			             
-			   	 PaginationInfo paginationInfo = new PaginationInfo();
-				 paginationInfo.setCurrentPageNo( Integer.parseInt( SmartUtil.NVL(searchVO.get("pageIndex"), "1") ) );
-				 paginationInfo.setRecordCountPerPage(pageUnit);
-				 paginationInfo.setPageSize(propertiesService.getInt("pageSize"));
-				 searchVO.put("firstIndex", paginationInfo.getFirstRecordIndex());
-				 searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
-				 searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
-				 
-				 //사용자 계정 정리 
-				 loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
-				 searchVO.put("authorCd", loginVO.getAuthorCd());
-				 searchVO.put("centerCd", loginVO.getCenterCd());
-				  
-				  
-				  
-				  
-				  LOGGER.debug("searchVO" + searchVO.get("adminYn"));
-				  
-				  List<Map<String, Object>> list =  boardInfoService.selectBoardManageListByPagination(searchVO) ;
-				  int totCnt = list.size() > 0 ?  Integer.valueOf( list.get(0).get("total_record_count").toString()) : 0;
-			      
-				  model.addObject(Globals.JSON_RETURN_RESULTLISR, list);
-				  model.addObject(Globals.PAGE_TOTALCNT, totCnt);
-				  paginationInfo.setTotalRecordCount(totCnt);
-				  model.addObject(Globals.JSON_PAGEINFO, paginationInfo);
-				  model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-				 
-			}catch (Exception e){
-				  model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-				  model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.list"));
-				  LOGGER.info(e.toString());
-			}			   
-			return model;	
-		}
+		ModelAndView model = new ModelAndView("/backoffice/sys/boardList");
 		
+		try{
+			
+			  Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+		      if(!isAuthenticated) {
+	    	    model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
+	    	    model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
+	    	    model.setViewName("backoffice/login");
+	    		return model;
+		      }
+		      
+			  //공지사항의 경우, 공지기한이 지난 게시물은 board_notice_useyn을 N으로 변경
+			  //boardInfoService.updateBoardNoticeUseYn();
+		      loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
+		      
+		      //페이징 처리 
+			  model.addObject(Globals.STATUS_REGINFO, boardSetService.selectBoardSettingInfoDetail(boardCd));
+			  model.addObject("loginVO", loginVO);
+		}catch (Exception e){
+			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			model.addObject("message", egovMessageSource.getMessage("fail.common.list"));
+			LOGGER.info(e.toString());
+		}			   
+		return model;	
+	}
+	/**
+	 * 게시판 목록 조회
+	 * @param searchVO
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="boardListAjax.do", method = RequestMethod.POST)
+	public ModelAndView  selectBoardAjaxInfoManageListByPagination(@RequestBody Map<String,Object>  searchVO) throws Exception {
 		
-		@NoLogging
-		@RequestMapping (value="boardVisited.do")
-		public ModelAndView selectBoardVisited(@ModelAttribute("loginVO") LoginVO loginVO
-										 	   , @RequestParam("boardSeq") String boardSeq
-								               , HttpServletRequest request
-								   			   , BindingResult bindingResult ) throws Exception{	
-			
-			ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-			
-			try{
-				
-				boardInfoService.updateBoardVisitedManage(boardSeq );
-			    model.addObject(Globals.STATUS_REGINFO, boardInfoService.selectBoardManageDetail(boardSeq));
-			    model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-			    
-			}catch(Exception e){
-				LOGGER.info("e:"+ e.toString());	
-				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			}
-			return model;
-		}
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+		      
+		int pageUnit = searchVO.get("pageUnit") == null ?   propertiesService.getInt("pageUnit") : Integer.valueOf((String) searchVO.get("pageUnit"));
 		
-		@RequestMapping (value="boardView.do")
-		public ModelAndView selectBoardViewInfoManageDetail(@ModelAttribute("loginVO") LoginVO loginVO
-													 	  , @RequestParam("boardSeq") String boardSeq
-											              , HttpServletRequest request
-											   			  , BindingResult bindingResult ) throws Exception{	
-			
-			ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-			
-			try{
-				Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-			    if(!isAuthenticated) {
-						model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-						model.setViewName("/backoffice/login");
-						return model;
-			    }
-			    model.addObject(Globals.STATUS_REGINFO, boardInfoService.selectBoardManageDetail(boardSeq));
-			    Map<String, Object> search = new HashMap<String, Object>();
-			    search.put("fileGubun", "BBS");
-			    search.put("fileSeq",boardSeq);
-			    model.addObject(Globals.JSON_RETURN_RESULTLISR, egocFileService.selectFileInfs(search));
-			    
-			    model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-			    
-			}catch(Exception e){
-				LOGGER.info("e:"+ e.toString());	
-			}
-			return model;
-		}
+		searchVO.put("pageSize", propertiesService.getInt("pageSize"));
 		
-		@RequestMapping (value="boardDelete.do")
-		public ModelAndView deleteBoardInfoManage(@ModelAttribute("loginVO") LoginVO loginVO
-				                                 , @RequestParam("boardSeq") String boardSeq)throws Exception{
-			
-			ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-
-			try{
-				Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-			    if(!isAuthenticated) {
-						model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-						model.setViewName("/backoffice/login");
-						return model;
-			    }
-			    
-				int ret = 	boardInfoService.deleteBoardManage(boardSeq);		      
-			    if (ret > 0 ) {		    	  
-			   	  model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-			    }else {
-			    	model.addObject(Globals.STATUS, Globals.STATUS_FAIL);	    	  
-			    }
-			}catch (Exception e){
-				LOGGER.info(e.toString());
-				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);	
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.delete"));
-				
-			}					
-			return model;
-		}	
-		@RequestMapping (value="boardFileDelete.do")
-		public ModelAndView deleteBoardFileInfoManage(@ModelAttribute("loginVO") LoginVO loginVO
-                                                  , @RequestParam("fileSeqs") String fileSeqs)throws Exception{
-
-			ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-			
-			try{
-				Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-				if(!isAuthenticated) {
-					model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-					model.setViewName("/backoffice/login");
-					return model;
-				}
-				List<String> streFiles = SmartUtil.dotToList(fileSeqs);
-				
-				for (String strFile : streFiles) {
-					uniService.deleteUniStatement("STRE_FILE_NM", "COMTNFILEDETAIL", "STRE_FILE_NM=["+strFile+"[");
-				}
-				
-				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.delete"));
-			}catch (Exception e){
-				LOGGER.info(e.toString());
-				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);	
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.delete"));
-			}					
-			return model;
-		}
+		PaginationInfo paginationInfo = new PaginationInfo();
+		paginationInfo.setCurrentPageNo( Integer.parseInt( SmartUtil.NVL(searchVO.get("pageIndex"), "1") ) );
+		paginationInfo.setRecordCountPerPage(pageUnit);
+		paginationInfo.setPageSize(propertiesService.getInt("pageSize"));
+		searchVO.put("firstIndex", paginationInfo.getFirstRecordIndex());
+		searchVO.put("lastRecordIndex", paginationInfo.getLastRecordIndex());
+		searchVO.put("recordCountPerPage", paginationInfo.getRecordCountPerPage());
 		
-		
-		@RequestMapping (value="boardUpdate.do")
-		public ModelAndView updateboardInfoManage(@ModelAttribute("LoginVO") LoginVO loginVO
-				                                  , HttpServletRequest request
-				                                  , MultipartRequest mRequest
-											      , @ModelAttribute("BoardInfo") BoardInfo vo
-											      , BindingResult result) throws Exception{
-			
-			
-			//파일 업로드 테스트 
-			
-			ModelAndView model = new ModelAndView(Globals.JSONVIEW);
-			try {
-				Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-			    if(!isAuthenticated) {
-						model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-						model.setViewName("/backoffice/login");
-						return model;
-			    }
-			    
-				
-			    loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
-			    List<FileVO> _result = null;
-			    Iterator itr = mRequest.getFileNames();
-			   if (itr.hasNext() ) {
-		    		List<MultipartFile> file_list = mRequest.getFiles( (String) itr.next());  
-				    LOGGER.debug("====================================== 4");
-				    if (file_list.size() > 0 ) {
-				    	_result = fileUtil.parseFileKSESInf(mRequest.getFileNames(), mRequest, "BBS_", 0,  propertiesService.getString("Globals.filePath"));
-				    }
-		    	}
-				
-			    vo.setBoardTopSeq("0");
-			 	String meesage = vo.getMode().equals("Ins") ?  "sucess.common.insert" :  "sucess.common.update";
-				vo.setUserId(loginVO.getAdminId());
-				int ret = boardInfoService.updateBoardManage(vo, _result) ;
-				if (ret >0){
-					model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-					model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
-				}else {
-					throw new Exception();
-				}
-			}catch(Exception e) {
-				StackTraceElement[] ste = e.getStackTrace();
-				int lineNumber = ste[0].getLineNumber();
-				LOGGER.info("e:" + e.toString() + ":" + lineNumber);
-				LOGGER.info(e.toString());
-				model.addObject(Globals.STATUS, Globals.STATUS_FAIL);	
-				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.msg"));
-			}
-			
-			return model;
-		}
-		
-		
-		@RequestMapping(value="boardPreview.do")
-		public String selectBoardPreview (@ModelAttribute("loginVO") LoginVO loginVO
-										  , @RequestParam("boardSeq") String boardSeq
-										  , HttpServletRequest request
-										  , BindingResult bindingResult	) throws Exception {
-			
-			return "/backoffice/boardManage/boardPreview";
-		}
-		
-		@RequestMapping(value="fileDownload.do")
-		public ModelAndView callDownload(HttpServletRequest request, HttpServletResponse response) throws Exception {
-			ModelAndView model = new ModelAndView();
-			
-			Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-		    if(!isAuthenticated) {
-		    	model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-				model.setViewName("/backoffice/login");
-				return model;
-		    }
-			
-			File downloadFile;
-			Map<String, Object> allData = new HashMap<String, Object>();
-			String filePath = propertiesService.getString("Globals.filePath");
-			String atchFileId = request.getParameter("atchFileId");
-			String uploadFileName = boardInfoService.selectBoardUploadFileName(atchFileId);
-			String originalFileName = boardInfoService.selectBoardoriginalFileName(atchFileId);
+		//사용자 계정 정리 
+		LoginVO loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
+		searchVO.put("authorCd", loginVO.getAuthorCd());
+		searchVO.put("centerCd", loginVO.getCenterCd());
+		 
+		 List<Map<String, Object>> list =  boardInfoService.selectBoardManageListByPagination(searchVO) ;
+		 int totCnt = list.size() > 0 ?  Integer.valueOf( list.get(0).get("total_record_count").toString()) : 0;
+		 paginationInfo.setTotalRecordCount(totCnt);
+		 
+		 model.addObject(Globals.JSON_RETURN_RESULTLISR, list);
+		 model.addObject(Globals.PAGE_TOTALCNT, totCnt);
+		 model.addObject(Globals.JSON_PAGEINFO, paginationInfo);
+		 model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			 
-			downloadFile = new File(filePath + "/" + uploadFileName);
-
-			try{
-			    if(!downloadFile.canRead()){
-			    	LOGGER.info("FILE DOWNLOAD IN CHECK ERROR!!!");
-			        throw new Exception("File can't read(파일을 찾을 수 없습니다)");
-			    } else {
-			    	downloadFile = new File(downloadFile.getParent(), uploadFileName);
-			    	
-			    	allData.put("downloadFile", downloadFile);
-			    	allData.put("originalName", originalFileName);
-			    }
-			} catch(Exception e) {
-				LOGGER.info(e.toString());
-				e.printStackTrace();
-			}
+	
+		return model;	
+	}
+	
+	
+	@NoLogging
+	@RequestMapping (value="boardVisited.do")
+	public ModelAndView selectBoardVisited(@RequestParam("boardSeq") String boardSeq) throws Exception{	
+		
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+	
+		boardInfoService.updateBoardVisitedManage(boardSeq );
+		model.addObject(Globals.STATUS_REGINFO, boardInfoService.selectBoardManageDetail(boardSeq));
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+		    
+		return model;
+	}
+	
+	/**
+	 * 게시물 상세
+	 * @param boardSeq
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping (value="boardView.do", method = RequestMethod.GET)
+	public ModelAndView selectBoardViewInfoManageDetail(@RequestParam("boardSeq") String boardSeq) throws Exception{	
+		
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 			
-		    return new ModelAndView("FileDownloadView", "allData",allData);
+		Map<String, Object> search = new HashMap<String, Object>();
+		search.put("fileGubun", "BBS");
+		search.put("fileSeq",boardSeq);
+		
+		model.addObject(Globals.JSON_RETURN_RESULT, boardInfoService.selectBoardManageDetail(boardSeq));
+		model.addObject(Globals.JSON_RETURN_RESULTLISR, egocFileService.selectFileInfs(search));
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+		    
+		return model;
+	}
+	/**
+	 * 게시물 삭제
+	 * @param boardInfo
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping (value="boardDelete.do", method = RequestMethod.POST)
+	public ModelAndView deleteBoardInfoManage( @RequestBody BoardInfo boardInfo)throws Exception{
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+		    
+		int ret = 	boardInfoService.deleteBoardManage(boardInfo.getBoardSeq());
+		if (ret > 0 ) {		    	  
+			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.delete") );	
+		}else {
+			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);	 
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.delete"));
+		}				
+		return model;
+	}	
+	/**
+	 * 게시물 파일 삭제
+	 * @param fileSeqs
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping (value="boardFileDelete.do", method = RequestMethod.GET)
+	public ModelAndView deleteBoardFileInfoManage(@RequestParam("fileSeqs") String fileSeqs)throws Exception{
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+		
+		List<String> streFiles = SmartUtil.dotToList(fileSeqs);
+		
+		for (String strFile : streFiles) {
+			uniService.deleteUniStatement("STRE_FILE_NM", "COMTNFILEDETAIL", "STRE_FILE_NM=["+strFile+"[");
 		}
+		
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.delete"));
+			
+		return model;
+	}
+	
+	/**
+	 * 게시물 수정
+	 * @param mRequest
+	 * @param vo
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping (value="boardUpdate.do")
+	public ModelAndView updateboardInfoManage(MultipartRequest mRequest, @ModelAttribute("BoardInfo") BoardInfo vo) throws Exception{			
+		//파일 업로드 테스트 
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+			
+		    List<FileVO> _result = null;
+		    Iterator itr = mRequest.getFileNames();
+		    if (itr.hasNext() ) {
+	    		List<MultipartFile> file_list = mRequest.getFiles( (String) itr.next());  
+			    if (file_list.size() > 0 ) {
+			    	_result = fileUtil.parseFileKSESInf(mRequest.getFileNames(), mRequest, "BBS_", 0,  propertiesService.getString("Globals.filePath"));
+			    }
+	    	}
+			
+		    vo.setBoardTopSeq("0");
+		 	String meesage = vo.getMode().equals("Ins") ?  "sucess.common.insert" :  "sucess.common.update";
+		 	String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
+		 	vo.setFrstRegterId(userId);
+			vo.setLastUpdusrId(userId);
+			
+			int ret = 0; 
+			
+			switch (vo.getMode()) {
+			case Globals.SAVE_MODE_INSERT:
+				ret = boardInfoService.insertBoardManage(vo, _result);
+				break;
+			case Globals.SAVE_MODE_UPDATE:
+				ret = boardInfoService.updateBoardManage(vo, _result);
+				break;
+			default:
+				throw new EgovBizException("잘못된 호출입니다.");
+			}
+			if (ret >0){
+				model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
+			}else {
+				throw new Exception();
+			}
+		
+		return model;
+	}
+		
+	/**
+	 * 파일 다운로드
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="fileDownload.do")
+	public ModelAndView callDownload(HttpServletRequest request) throws Exception {
+		ModelAndView model = new ModelAndView();
+				
+		File downloadFile;
+		Map<String, Object> allData = new HashMap<String, Object>();
+		String filePath = propertiesService.getString("Globals.filePath");
+		String atchFileId = request.getParameter("atchFileId");
+		String uploadFileName = boardInfoService.selectBoardUploadFileName(atchFileId);
+		String originalFileName = boardInfoService.selectBoardoriginalFileName(atchFileId);
+		 
+		downloadFile = new File(filePath + "/" + uploadFileName);
+	
+
+		if(!downloadFile.canRead()){
+			LOGGER.info("FILE DOWNLOAD IN CHECK ERROR!!!");
+		    throw new Exception("File can't read(파일을 찾을 수 없습니다)");
+		} else {
+			downloadFile = new File(downloadFile.getParent(), uploadFileName);
+			
+			allData.put("downloadFile", downloadFile);
+			allData.put("originalName", originalFileName);
+		}
+
+		
+	    return new ModelAndView("FileDownloadView", "allData",allData);
+	}
 		
     @RequestMapping(value="boardEditorFileUpload.do")
     public void boardEditorFileUpload(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        try {
-            String sFileInfo = "";
-            String filename = request.getHeader("file-name");
-            String filename_ext = filename.substring(filename.lastIndexOf(".")+1);
-            filename_ext = filename_ext.toLowerCase();
-            String[] allow_file = {"jpg","png","bmp","gif"};
-
-			int cnt = 0;
-			for(int i=0; i<allow_file.length; i++) {
-				if(filename_ext.equals(allow_file[i])){
-					cnt++;
-				}
+		String sFileInfo = "";
+		String filename = request.getHeader("file-name");
+		String filename_ext = filename.substring(filename.lastIndexOf(".")+1);
+		filename_ext = filename_ext.toLowerCase();
+		String[] allow_file = {"jpg","png","bmp","gif"};
+		
+		int cnt = 0;
+		for(int i=0; i<allow_file.length; i++) {
+			if(filename_ext.equals(allow_file[i])){
+				cnt++;
 			}
-
-			if(cnt == 0) {
-				PrintWriter print = response.getWriter();
-				print.print("NOTALLOW_"+filename);
-				print.flush();
-				print.close();
-			} else {
-				String dftFilePath = propertiesService.getString("Globals.filePath") + "/";
-				String filePath = dftFilePath + "editor" + File.separator;
-				File file = new File(filePath);
-				if(!file.exists()) {
-					file.mkdirs();
-				}
-				String realFileNm = "";
-				SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
-				String today= formatter.format(new java.util.Date());
-				realFileNm = today+UUID.randomUUID().toString() + filename.substring(filename.lastIndexOf("."));
-				String rlFileNm = filePath + realFileNm;
-				
-				InputStream is = request.getInputStream();
-				OutputStream os=new FileOutputStream(rlFileNm);
-				int numRead;
-				byte b[] = new byte[Integer.parseInt(request.getHeader("file-size"))];
-				
-				while((numRead = is.read(b,0,b.length)) != -1){
-					os.write(b,0,numRead);
-				}
-				
-				if(is != null) {
-					is.close();
-				}
+		}
+		
+		if(cnt == 0) {
+			PrintWriter print = response.getWriter();
+			print.print("NOTALLOW_"+filename);
+			print.flush();
+			print.close();
+		} else {
+			String dftFilePath = propertiesService.getString("Globals.filePath") + "/";
+			String filePath = dftFilePath + "editor" + File.separator;
+			File file = new File(filePath);
+			if(!file.exists()) {
+				file.mkdirs();
+			}
+			String realFileNm = "";
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+			String today= formatter.format(new java.util.Date());
+			realFileNm = today+UUID.randomUUID().toString() + filename.substring(filename.lastIndexOf("."));
+			String rlFileNm = filePath + realFileNm;
 			
-				os.flush();
-				os.close();
-	
-				sFileInfo += "&bNewLine=true";
-				sFileInfo += "&sFileName="+ filename;;
-				sFileInfo += "&sFileURL="+"/upload/editor/"+realFileNm;
-				
-				PrintWriter print = response.getWriter();
-				print.print(sFileInfo);
-				print.flush();
-				print.close();
-            }
-		} catch (Exception e){
-			StackTraceElement[] ste = e.getStackTrace();
-			int lineNumber = ste[0].getLineNumber();
-			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
-			LOGGER.info(e.toString());
-        }
+			InputStream is = request.getInputStream();
+			OutputStream os=new FileOutputStream(rlFileNm);
+			int numRead;
+			byte b[] = new byte[Integer.parseInt(request.getHeader("file-size"))];
+			
+			while((numRead = is.read(b,0,b.length)) != -1){
+				os.write(b,0,numRead);
+			}
+			
+			if(is != null) {
+				is.close();
+			}
+		
+			os.flush();
+			os.close();
+		
+			sFileInfo += "&bNewLine=true";
+			sFileInfo += "&sFileName="+ filename;;
+			sFileInfo += "&sFileURL="+"/upload/editor/"+realFileNm;
+			
+			PrintWriter print = response.getWriter();
+			print.print(sFileInfo);
+			print.flush();
+			print.close();
+		}
     }
 }
