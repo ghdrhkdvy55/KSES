@@ -386,12 +386,28 @@
 	
 	<!-- 다음 예약시퀀스 조회 -->
 	<select id="selectResvSeqNext" resultType="String">
-		SELECT LPAD(SEQ_SER_RERV_INFO.NEXTVAL,12,0) FROM DUAL
+		SELECT FN_RESV_CD(#{resvDate}) FROM DUAL
 	</select>
 	
 	<!-- 지점 예약일자 조회 -->
 	<select id="selectCenterResvDate" resultType="String">
     	SELECT FN_RESVDATE(#{centerCd}) FROM DUAL
+    </select>
+    
+    <!-- 지점 사전예약일 목록 조회 -->
+    <select id="selectCenterResvDateList" resultType="lmap">
+    <![CDATA[
+	    SELECT RESV_DATE FROM (
+			SELECT ROWNUM AS RNUM, TO_CHAR(TO_DATE(RESV_DATE,'YYYY-MM-DD'),'YYYY-MM-DD') AS RESV_DATE FROM (
+				SELECT TO_CHAR(TO_DATE(FN_RESVDATE(#{centerCd}),'YYYY-MM-DD') + LEVEL -1, 'YYYY-MM-DD') AS RESV_DATE FROM DUAL 
+				CONNECT BY LEVEL <= 30
+				MINUS 
+				SELECT TO_CHAR(TO_DATE(HOLY_DT,'YYYY-MM-DD'), 'YYYY-MM-DD') FROM TSEB_CENTERHOLY_INFO_I WHERE CENTER_CD = #{centerCd} AND HOLY_DT >= FN_RESVDATE(#{centerCd})
+			) A
+			ORDER BY RESV_DATE ASC
+		)
+		WHERE RNUM <= (SELECT NVL(CENTER_RESV_ABLE_DAY,1) FROM TSEB_CENTER_INFO_M WHERE CENTER_CD = #{centerCd})
+	]]>
     </select>
     
 	<select id="selectQrDuplicate" resultType="lmap">
@@ -404,7 +420,7 @@
 	<!-- 회원 예약정보 등록 -->
     <insert id="insertUserResvInfo">
 		<selectKey resultType="String" keyProperty="resvSeq" order="BEFORE">
-			SELECT LPAD(SEQ_SER_RERV_INFO.NEXTVAL,12,0) AS resvSeq FROM DUAL
+			SELECT FN_RESV_CD(#{resvDate}) FROM DUAL
 		</selectKey>
     
     	INSERT INTO TSER_RESV_INFO_I 
@@ -456,7 +472,7 @@
 			)
 			VALUES 
 			(
-				LPAD(SEQ_SER_RERV_INFO.NEXTVAL,12,0), #{longResvSeq}, #{seasonCd, jdbcType=VARCHAR}, #{centerCd, jdbcType=VARCHAR}, #{floorCd, jdbcType=VARCHAR}, #{partCd, jdbcType=VARCHAR}, #{seatCd, jdbcType=VARCHAR},
+				FN_RESV_CD(#{resvDate}), #{longResvSeq}, #{seasonCd, jdbcType=VARCHAR}, #{centerCd, jdbcType=VARCHAR}, #{floorCd, jdbcType=VARCHAR}, #{partCd, jdbcType=VARCHAR}, #{seatCd, jdbcType=VARCHAR},
 				TO_CHAR(TO_DATE(#{resvDate, jdbcType=VARCHAR},'YYYYMMDD') - (INTERVAL '1' DAY),'YYYYMMDD'), #{resvDate, jdbcType=VARCHAR}, '0000', '2359',
 				SYSDATE, 'USER_DVSN_1', #{userId, jdbcType=VARCHAR}, #{resvUserNm}, #{resvUserClphn}, 'Y', '',
 				'RESV_STATE_1', 'N', 'Y', FN_PARTCLASS(#{partCd, jdbcType=VARCHAR}),
