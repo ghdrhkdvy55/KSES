@@ -105,7 +105,7 @@
             </table>
         </div>
         <div class="right_box">
-            <a href="javascript:common_modelClose('bas_sys_add')" class="grayBtn">닫기</a>
+            <a href="javascript:$('[data-popup=bas_sys_add]').bPopup().close();" class="grayBtn">닫기</a>
         </div>
         <div class="clear"></div>
     </div>
