@@ -55,20 +55,19 @@
 		(
 			SEQ_SEB_CENTER_PART_CLASS.NEXTVAL, #{centerCd}, #{partClass, jdbcType=VARCHAR}, #{partPayCost}, #{partSpeedPayCost},
 			#{useYn}, #{partIcon, jdbcType=VARCHAR}, #{partClassOrder}, 
-			SYSDATE, #{userId}, SYSDATE, #{userId}
+			SYSDATE, #{frstRegterId}, SYSDATE, #{lastUpdusrId}
 		)
 	</insert>
 	
 	<update id ="updatePartClassInfo">
 		UPDATE TSEB_CENTER_PART_CLASS_D SET 
-			PART_CLASS = #{partClass, jdbcType=VARCHAR},
 			PART_PAY_COST = #{partPayCost},
 			PART_SPEED_PAY_COST = #{partSpeedPayCost},
 			<if test="partIcon != '' ">                                    
 				PART_ICON = #{partIcon, jdbcType=VARCHAR},
 			</if>			
 			USE_YN = #{useYn},
-			LAST_UPDUSR_ID = #{userId},
+			LAST_UPDUSR_ID = #{lastUpdusrId},
 			LAST_UPDT_DTM = SYSDATE,
 			PART_CLASS_ORDER = #{partClassOrder}
 		WHERE PART_CLASS_SEQ = #{partClassSeq, jdbcType=VARCHAR}					
