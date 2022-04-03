@@ -472,22 +472,22 @@
 	$(document).ready(function() { 
 		// 메인 JqGrid 정의
 		EgovJqGridApi.mainGrid([
-			{ label: '예약번호', 	name: 'resv_seq',  				align:'center',	fixed: true, key:true },
+			{ label: '예약번호', 	name: 'resv_seq',  				align:'center',	fixed: true, width : '180px', key:true },
 			{ label: '예약일자', 	name: 'resv_end_dt', 			align:'center', fixed: true, formatter: fnFormSetting },
-			{ label: '지점', 	name: 'center_nm', 				align:'center', fixed: true },
+			{ label: '지점', 		name: 'center_nm', 				align:'center', fixed: true },
 			{ label: '좌석등급', 	name: 'resv_seat_class_text',   align:'center', fixed: true },
 			{ label: '좌석정보', 	name: 'seat_nm', 				align:'center', fixed: true },
-			{ label: '이름', 	name: 'user_nm', 				align:'center', fixed: true },
+			{ label: '이름', 		name: 'user_nm', 				align:'center', fixed: true },
 			{ label: '전화번호', 	name: 'user_phone', 	 		align:'center', fixed: true },
-			{ label: '금액', 	name: 'resv_pay_cost', 		    align:'center', fixed: true, formatter: fnFormSetting },
+			{ label: '금액', 		name: 'resv_pay_cost', 		    align:'center', fixed: true, formatter: fnFormSetting },
 			{ label: '예약상태', 	name: 'resv_state_text',    	align:'center', fixed: true },
 			{ label: '결제상태', 	name: 'resv_pay_dvsn_text', 	align:'center', fixed: true },
 			{ label: '결제구분', 	name: 'resv_ticket_dvsn_text',  align:'center', fixed: true },
 			{ label: 'QR출력', 	name: 'resv_qr_print', 			align:'center', fixed: true, formatter: fnFormSetting },			
-			{ name : 'season_cd', hidden : true }, { name : 'center_cd', hidden : true },     { name : 'floor_cd', hidden : true }, 
-			{ name : 'part_cd', hidden : true },   { name : 'seat_cd', hidden : true },       { name : 'user_id', hidden : true }, 
-			{ name : 'resv_state', hidden : true },{ name : 'resv_pay_dvsn', hidden : true }, { name : 'resv_ticket_dvsn', hidden : true }, 
-			{ name : 'resv_seat_pay_cost', hidden : true }, { name : 'resv_entry_pay_cost', hidden : true }, 
+			{ name : 'season_cd',  hidden : true }, { name : 'center_cd',     hidden : true }, { name : 'floor_cd',         hidden : true }, 
+			{ name : 'part_cd',    hidden : true }, { name : 'seat_cd',       hidden : true }, { name : 'user_id',  		hidden : true }, 
+			{ name : 'resv_state', hidden : true }, { name : 'resv_pay_dvsn', hidden : true }, { name : 'resv_ticket_dvsn', hidden : true }, 
+			{ name : 'resv_seat_pay_cost',  hidden : true }, { name : 'resv_entry_pay_cost', hidden : true }, 
 			{ name : 'resv_user_dvsn_text', hidden : true }
 		], false, false, fnSearch);
 		

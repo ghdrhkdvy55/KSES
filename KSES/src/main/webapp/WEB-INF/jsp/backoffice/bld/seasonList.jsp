@@ -149,7 +149,9 @@
 			$form.find('.cal_icon').val($.datepicker.formatDate('yymmdd', today));
 			$form.find(':radio[name=useYn]:first').prop('checked', true);
 			$form.find(':checkbox[name=chkCenterInfo]').prop('checked', false);
-			fnSeasonCenterCheckbox([$('#loginCenterCd').val()]);
+			if($('#loginCenterCd').val() !== '') {
+				fnSeasonCenterCheckbox([$('#loginCenterCd').val()]);
+			}
 		} else {
 			let rowData = EgovJqGridApi.getMainGridRowData(rowId);
 			$popup.find('h2:first').text('시즌 수정');
