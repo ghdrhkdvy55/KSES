@@ -293,7 +293,7 @@ public class ResvInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 				if(resvPayDvsn.equals("RESV_PAY_DVSN_2")) {
 					if(resvTicketDvsn.equals("RESV_TICKET_DVSN_1")) {
 						// 스피드온 결제(거래취소 인터페이스)
-						ModelMap result = interfaceService.SpeedOnPayMentCancel(resvSeq, cardPw, isPassword);
+						ModelMap result = interfaceService.SpeedOnPayMentCancel(resvSeq, cardPw, isPassword, true);
 						if(!SmartUtil.NVL(result.get(Globals.STATUS), "").equals("SUCCESS")) {
 							log.info("예약번호 : " + resvSeq + " 결제취소실패");
 							log.info("에러코드 : " + result.get(Globals.STATUS));

@@ -155,14 +155,14 @@ public class ResJosnController {
 				ModelMap result = interfaceService.SpeedOnPayMent(jsonObject.get("resvSeq").toString(), "", false);
 				
 				model.addObject(Globals.STATUS, result.get(Globals.STATUS));
-				model.addObject(Globals.STATUS_MESSAGE, result.get(Globals.STATUS));
+				model.addObject(Globals.STATUS_MESSAGE, result.get(Globals.STATUS_MESSAGE));
 				model.addObject(Globals.STATUS_REGINFO, result.get(Globals.STATUS_REGINFO));
 			
 			} else if (SmartUtil.NVL(sendInfo.get("gubun"), "").toString().equals("dep")) {
-				ModelMap result = interfaceService.SpeedOnPayMentCancel(jsonObject.get("resvSeq").toString(), "", false);
+				ModelMap result = interfaceService.SpeedOnPayMentCancel(jsonObject.get("resvSeq").toString(), "", false, false);
 				
 				model.addObject(Globals.STATUS, result.get(Globals.STATUS));
-				model.addObject(Globals.STATUS_MESSAGE, result.get(Globals.STATUS));
+				model.addObject(Globals.STATUS_MESSAGE, result.get(Globals.STATUS_MESSAGE));
 				model.addObject(Globals.STATUS_REGINFO, result.get(Globals.STATUS_REGINFO));
 			}
 		} catch (Exception e) {

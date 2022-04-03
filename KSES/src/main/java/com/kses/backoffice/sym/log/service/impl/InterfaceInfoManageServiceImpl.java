@@ -82,9 +82,6 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 			Map<String, Object> resvInfo = resvService.selectUserResvInfo(jsonObject);
 			int partSpeedPayCost = Integer.parseInt(SmartUtil.NVL(resvInfo.get("part_speed_pay_cost"),"0")); 
 		    int centerSpeedEntryPayCost = Integer.parseInt(SmartUtil.NVL(resvInfo.get("center_speed_entry_pay_cost"),"0")); 
-			
-		    LOGGER.info("예약번호 : " + resvInfo.get("resv_seq") + "번 스피드온 결제 시작");
-		    LOGGER.info("입장로 : " + centerSpeedEntryPayCost + " 좌석료 : " + partSpeedPayCost);
 		    
 			if(!SmartUtil.NVL(resvInfo.get("resv_state"),"").equals("RESV_STATE_1")) {
 				switch (SmartUtil.NVL(resvInfo.get("resv_state"),"")) {
@@ -96,9 +93,22 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 				result.addAttribute(Globals.STATUS, Globals.STATUS_FAIL);
 				result.addAttribute(Globals.STATUS_MESSAGE, message);
 				return result;
-			} else if(SmartUtil.NVL(resvInfo.get("resv_pay_dvsn"),"").equals("RESV_PAY_DVSN_2")) {
+			}
+			
+			if(!SmartUtil.NVL(resvInfo.get("resv_pay_dvsn"),"").equals("RESV_PAY_DVSN_1")) {
+				switch (SmartUtil.NVL(resvInfo.get("resv_pay_dvsn"),"")) {
+					case "RESV_PAY_DVSN_2" : message = "이미 결제처리된 예약정보 입니다.";  break;
+					case "RESV_PAY_DVSN_3" : message = "이미 환불처리된 예약정보 입니다.";  break;
+					default: message = "알수없는 예약정보 입니다."; break;
+				}
 				result.addAttribute(Globals.STATUS, Globals.STATUS_FAIL);
-				result.addAttribute(Globals.STATUS_MESSAGE, "이미 결제처리된 예약정보 입니다.");
+				result.addAttribute(Globals.STATUS_MESSAGE, message);
+				return result;
+			}
+			
+			if(!SmartUtil.NVL(resvInfo.get("center_pilot_yn"),"").equals("Y")) {
+				result.addAttribute(Globals.STATUS, Globals.STATUS_FAIL);
+				result.addAttribute(Globals.STATUS_MESSAGE, "비시범 지점입니다.");
 				return result;
 			}
 			
@@ -163,7 +173,7 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 	}
 	
 	@Override
-	public ModelMap SpeedOnPayMentCancel(String resvSeq, String cardPw, boolean isPassword) throws Exception {
+	public ModelMap SpeedOnPayMentCancel(String resvSeq, String cardPw, boolean isPassword, boolean isForced) throws Exception {
 		String Url = propertiesService.getString("speedOnUrl") + "trade/fepDeposit";
 		JSONObject jsonObject = new JSONObject();
 		ModelMap result = new ModelMap();
@@ -175,10 +185,32 @@ public class InterfaceInfoManageServiceImpl extends EgovAbstractServiceImpl impl
 			jsonObject.put("resvSeq", resvSeq);
 			Map<String, Object> resvInfo = resvService.selectUserResvInfo(jsonObject);
 			
+			if(!SmartUtil.NVL(resvInfo.get("resv_state"),"").equals("RESV_STATE_1")) {
+				switch (SmartUtil.NVL(resvInfo.get("resv_state"),"")) {
+					case "RESV_STATE_2" : message = "이미 이용중인 예약정보 입니다.";  break;
+					case "RESV_STATE_3" : message = "이미 이용완료 처리된 예약정보 입니다.";  break;
+					case "RESV_STATE_4" : message = "이미 취소된 예약정보 입니다.";  break;
+					default: message = "알수없는 예약정보 입니다."; break;
+				}
+				result.addAttribute(Globals.STATUS, Globals.STATUS_FAIL);
+				result.addAttribute(Globals.STATUS_MESSAGE, message);
+				return result;
+			}
+			
 			if(!SmartUtil.NVL(resvInfo.get("resv_pay_dvsn"),"").equals("RESV_PAY_DVSN_2")) {
 				switch (SmartUtil.NVL(resvInfo.get("resv_pay_dvsn"),"")) {
 					case "RESV_PAY_DVSN_1" : message = "미결제 예약정보 입니다.";  break;
 					case "RESV_PAY_DVSN_3" : message = "이미 결제취소된 예약정보 입니다.";  break;
+					default: message = "알수없는 예약정보 입니다."; break;
+				}
+				result.addAttribute(Globals.STATUS, Globals.STATUS_FAIL);
+				result.addAttribute(Globals.STATUS_MESSAGE, message);
+				return result;
+			}
+			
+			if(!SmartUtil.NVL(resvInfo.get("resv_ticket_dvsn"),"").equals("RESV_TICKET_DVSN_1")) {
+				switch (SmartUtil.NVL(resvInfo.get("resv_pay_dvsn"),"")) {
+					case "RESV_TICKET_DVSN_2" : message = "무인발권기 결제 예약정보 입니다.";  break;
 					default: message = "알수없는 예약정보 입니다."; break;
 				}
 				result.addAttribute(Globals.STATUS, Globals.STATUS_FAIL);
