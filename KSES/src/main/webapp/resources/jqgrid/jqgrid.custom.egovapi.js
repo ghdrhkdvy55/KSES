@@ -16,7 +16,7 @@ $.EgovJqGridApi.prototype._init = function(mtype, colModel, multiselect, subGrid
 	this._jqGridParams = {
 		mtype: mtype,		
 		colModel: colModel,
-		datatype: 'json',
+		datatype: 'local',
 		ajaxGridOptions: { 
 			contentType: 'application/json; charset=UTF-8'
 		},
@@ -169,6 +169,7 @@ $.EgovJqGridApi.prototype.mainGrid = function(colModel, multiselect, subGrid, se
 $.EgovJqGridApi.prototype.mainGridAjax = function(url, params, searchFunc, subFunc) {
 	let jqGridParams = {
 		url: url,
+		datatype: 'json',
 		postData: JSON.stringify(params),
 		loadComplete: function(data) {
 			if (data.status === 'FAIL') {
@@ -291,6 +292,7 @@ $.EgovJqGridApi.prototype.pagingGrid = function(id, colModel, pagerId, rowList, 
 $.EgovJqGridApi.prototype.pagingGridAjax = function(id, url, params, searchFunc) {
 	let jqGridParams = {
 		url: url,
+		datatype: 'json',
 		postData: JSON.stringify(params),
 		loadComplete: function(data) {
 			if (data.status === 'FAIL') {
@@ -325,6 +327,7 @@ $.EgovJqGridApi.prototype.defaultGrid = function(id, colModel, multiselect) {
 $.EgovJqGridApi.prototype.defaultGridAjax = function(id, url, params, rowNum, callback) {
 	let jqGridParams = {
 		url: url,
+		datatype: 'json',
 		postData: JSON.stringify(params),
 		rowNum: rowNum,
 		loadComplete: function(data) {
