@@ -95,6 +95,7 @@
 </div>
 <!-- contents//-->
 <input type="hidden" id="boardCd" name="boardCd" value="${regist.board_cd }">
+<input type="hidden" id="mode">
 <!-- //popup -->
 <!--  -->
 <div data-popup="bas_board_add" class="popup">
@@ -103,7 +104,6 @@
 		<h2 class="pop_tit" name="h2_txt">게시물 등록</h2>
 		<div class="pop_wrap">
 			<form>
-			<input type="hidden" name="mode">
 			<input type="hidden" name="boardSeq">
 			<input type="hidden" name="boardClevel">
 			<input type="hidden" name="boardGroup">
@@ -133,7 +133,6 @@
 							</label> 
 						</td>
 					</tr>
-					<input type="hidden" name="boardCenterId" value="${loginVO.centerCd}">
 					<c:choose>
 						<c:when test="${loginVO.authorCd ne 'ROLE_ADMIN' && loginVO.authorCd ne 'ROLE_SYSTEM' }">
 							<input type="hidden" id="boardCenterId" name="boardCenterId" value="${loginVO.centerCd}">
@@ -234,7 +233,8 @@
 		let $popup = $('[data-popup=bas_board_add]');
 		let $form = $popup.find('form:first');
 		
-		$form.find(':hidden[name=mode]').val(mode);
+		$('#mode').val(mode);
+		console.log("TEST1 : " + $('#mode').val());
 		$form.find(':hidden[name=boardSeq]').val(boardSeq);
         
         $("#fileListTable > tbody").empty();
@@ -383,11 +383,13 @@
 			? "N" : $('#boardAllNotice').is(":checked") == true ? "Y" : "N";
 		
 		formData.append('boardCd' , $('#boardCd').val());
-		formData.append('boardCenterId' , boardCenterId);
+		/* formData.append('boardCenterId' , boardCenterId); */
 		formData.append('boardAllNotice' , boardAllCk);
 	    formData.append('useYn' , fn_emptyReplace($("#useYn").val(),"N"));
-			
-		bPopupConfirm('게시물 '+ ($form.find(':hidden[name=mode]').val() === 'Ins' ? '등록' : '수정'), '저장 하시겠습니까?', function() {
+	    formData.append('mode' , $('#mode').val());
+		
+	    
+		bPopupConfirm('게시물 '+ ($('#mode').val() === 'Ins' ? '등록' : '수정'), '저장 하시겠습니까?', function() {
 			EgovIndexApi.apiExcuteMultipart(
 				'/backoffice/sys/boardUpdate.do',
 				formData,
@@ -435,7 +437,7 @@
    			files = checkboxvalue.substring(1);
    		}
 		var params = {'fileSeqs' : files  };
-   		bPopupConfirm('게시물 '+ ($form.find(':hidden[name=mode]').val() === 'Ins' ? '등록' : '수정'), '저장 하시겠습니까?', function() {
+   		bPopupConfirm('파일 삭제', '삭제하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(
 				'GET',
 				'/backoffice/sys/boardFileDelete.do',

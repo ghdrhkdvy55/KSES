@@ -65,7 +65,8 @@
 				</if>
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.authorCd)">
 					<if test="params.authorCd != 'ROLE_ADMIN' and params.authorCd != 'ROLE_SYSTEM'">
-						AND #{params.centerCd} IN (SELECT COLUMN_VALUE FROM TABLE(UF_SPLICT(A.BOARD_CENTER_ID, ',')) )  
+						<!-- AND #{params.centerCd} IN (SELECT COLUMN_VALUE FROM TABLE(UF_SPLICT(A.BOARD_CENTER_ID, ',')) )   -->
+						AND #{params.centerCd} = A.BOARD_CENTER_ID  
 					</if>		
 				</if>
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchCenterCd)">
