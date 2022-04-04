@@ -240,6 +240,7 @@ $.EgovJqGridApi.prototype.subGrid = function(parentId, colModel, method, url, pa
 	this._formatter(colModel);
 	this._init(method, colModel, false, false, true);
 	this._jqGridParams['url'] = url;
+	this._jqGridParams['datatype'] = 'json';
 	this._jqGridParams['postData'] = method === 'POST' ? JSON.stringify(params) : params;
 	this._jqGridParams['jsonReader'] = { root: 'resultlist' };
 	$('#'+gridId).jqGrid(this._jqGridParams);
