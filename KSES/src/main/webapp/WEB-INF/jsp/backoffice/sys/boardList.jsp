@@ -202,7 +202,8 @@
 		EgovJqGridApi.mainGrid([
 			{ label: '게시판 시퀀스', 	name:'board_seq',				align:'center', key: true, hidden:true},
 			{ label: '제목', 		name:'board_title',				align:'left'},
-			{ label: '공지기간', 		name:'board_notice_startday', 	align:'center', formatter:boardNoticeDay},
+			{ label: '공지기간', 		name:'board_notice_startday', 	align:'center',
+				formatter: (c, o, row) => fn_emptyReplace(row.board_notice_start_day,"")+"~"+fn_emptyReplace(row.board_notice_end_day, "")},
 			{ label: '조회수', 		name:'board_visit_cnt',			align:'center'},
 			{ label: '최종 수정자', 	name:'last_updusr_id',			align:'center'},
 			{ label: '최종 수정 일자', 	name:'last_updt_dtm',			align:'center', formatter: "date", formatoptions: { newformat: "Y-m-d"}},
@@ -218,7 +219,7 @@
 		}
 		("${regist.board_file_upload_yn }" == "Y") ? $("#tr_fileUpload").show() : $("#tr_fileUpload").hide();
 	});
-	
+	// 검색
 	function fnSearch(pageNo) {
 		let params = {
 			pageIndex: pageNo,
@@ -228,7 +229,7 @@
 		};
 		EgovJqGridApi.mainGridAjax('/backoffice/sys/boardListAjax.do', params, fnSearch);
 	}
-	
+	// 게시물 상세 팝업
 	function fnBoardInfo(mode, boardSeq) {
 		let $popup = $('[data-popup=bas_board_add]');
 		let $form = $popup.find('form:first');
@@ -354,7 +355,7 @@
 			);
 		});
 	}
-	
+	//게시물 등록, 수정
 	function fnUpdate(){
 		let $popup = $('[data-popup=bas_board_add]');
 		let $form = $popup.find('form:first');
@@ -403,28 +404,22 @@
 		});
      }
 	
-	function boardNoticeDay(cellvalue, options, rowObject){
-		if ( rowObject.board_notice_startday != "")
-		return fn_emptyReplace(rowObject.board_notice_start_day,"")+"~"+fn_emptyReplace(rowObject.board_notice_end_day, "");
-	}
-	
 	function fnBoardCheck(){
 		let $popup = $('[data-popup=bas_board_add]');
 		let $form = $popup.find('form:first');
 		var checked = ($form.find('hidden[name=boardCenterId]').length != $form.find('hidden[name=boardCenterId]:checked').length ) ? false : true;
 		$('#boardAllNotice').prop("checked", checked);
 	}
-
+	// 파일 전체 선택
 	function fnFileCheck(){
-	//파일 전체 선택
 		var checked = $("input:checkbox[name=allCheck]").is(":checked");
 		fn_CheckboxAllChange("fileInfo", checked);
     }
-	
+	// 파일 다운로드
 	function fnFileDown(atchFileId) {
    	 location.href = "/backoffice/sys/fileDownload.do?atchFileId=" + atchFileId	
     }
-	
+	// 파일 삭제
 	function fnFileDel(){
 		let $popup = $('[data-popup=bas_board_add]');
 		let $form = $popup.find('form:first');
