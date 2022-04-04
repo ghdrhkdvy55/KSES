@@ -409,13 +409,25 @@
 			return;	
 		}
 		
-		if ($('#boardSize option:selected').val() === '') {
-			toastr.warning('게시판 페이지 수를 선택해 주세요.');
+
+		
+		if ($('#boardDvsn option:selected').val() === '') {
+			toastr.warning('게시판 구분값을 선택해 주세요.');
 			return;	
 		}
 		
 		if ($('#boardAuthor option:selected').val() === '') {
 			toastr.warning('권한설정을 선택해 주세요.');
+			return;	
+		}
+		
+		if ($('#boardSize option:selected').val() === '') {
+			toastr.warning('게시판 페이지 수를 선택해 주세요.');
+			return;	
+		}
+		
+		if ($('#boardNoticeDvsn option:selected').val() === '') {
+			toastr.warning('공지 여부를 선택해 주세요.');
 			return;	
 		}
 		
