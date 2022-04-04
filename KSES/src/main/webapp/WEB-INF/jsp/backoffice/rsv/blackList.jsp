@@ -83,6 +83,7 @@
       		<form>
       		<input type="hidden" name="mode" value="Ins">
       		<input type="hidden" name="blklstSeq">
+      		<input type="hidden" name="blklstCancelYn">
       		<table class="detail_table blacklist_add_table">
 				<tbody>
                   	<tr>
@@ -236,6 +237,7 @@
 			$popup.find('button.blueBtn').off('click').click(fnBlackUpdate);
 			$form.find(':hidden[name=mode]').val('Edt');
 			$form.find(':hidden[name=blklstSeq]').val(rowData.blklst_seq);
+			$form.find(':hidden[name=blklstCancelYn]').val(rowData.blklst_cancel_yn);
 			$form.find(':text').val('');
 			$form.find('textarea[name=blklstReason]').val(rowData.blklst_reason);
 			$form.find('select[name=userSearchCondition] option:first').prop('selected', true);
