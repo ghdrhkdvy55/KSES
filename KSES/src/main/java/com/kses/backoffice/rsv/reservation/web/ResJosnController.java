@@ -515,7 +515,7 @@ public class ResJosnController {
 				} else {
 					if (resInfo != null && SmartUtil.NVL(resInfo.get("resv_end_dt"), "").toString().equals(localTime) && recDate.substring(0, 8).equals(localTime)) {
 						LOGGER.info(localTime);
-						resName = SmartUtil.NVL(resInfo.get("user_nm"), "").toString();
+						userNm = SmartUtil.NVL(resInfo.get("user_nm"), "").toString();
 						resPrice = SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString();
 						resDay = SmartUtil.NVL(resInfo.get("resv_start_dt"), "").toString();
 						resTime = SmartUtil.NVL(resInfo.get("resv_start_tm"), "").toString();
