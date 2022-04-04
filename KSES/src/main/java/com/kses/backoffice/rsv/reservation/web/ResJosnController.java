@@ -478,6 +478,11 @@ public class ResJosnController {
 		String resPersonCnt = "";
 		String returnCode = "";
 		String returnMessage = "";
+		String userNm = "";
+		String firstNm = "";
+		String middleNm = "";
+		String LastNm = "";
+		String cnvMiddleNm = "";
 
 		InterfaceInfo info = new InterfaceInfo();
 		info.setTrsmrcvSeCode(sendEnum.RPQ.getCode());
@@ -486,10 +491,12 @@ public class ResJosnController {
 
 		try {
 			Map<String, Object> searchVO = new HashMap<String, Object>();
-			searchVO.put("resvSeq", SmartUtil.NVL(jsonInfo.get("RES_NO"), "").toString());
 			String localTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+			String resvSeq = localTime + SmartUtil.NVL(jsonInfo.get("RES_NO"), "").toString();
+			
 			searchVO.put("resvDate", localTime);
-			String checkResvSeq = uniService.selectIdDoubleCheck("RESV_SEQ", "TSER_RESV_INFO_I", "RESV_SEQ = ["+ SmartUtil.NVL(jsonInfo.get("RES_NO"), "").toString() + "[") > 0 ? "OK" : "FAIL";
+			searchVO.put("resvSeq", resvSeq);
+			String checkResvSeq = uniService.selectIdDoubleCheck("RESV_SEQ", "TSER_RESV_INFO_I", "RESV_SEQ = [" + resvSeq + "[") > 0 ? "OK" : "FAIL";
 			if (checkResvSeq.equals("OK")) {
 				Map<String, Object> resInfo = resService.selectUserResvInfo(searchVO);
 				Map<String, Object> machineVO = new HashMap<String, Object>();
@@ -515,6 +522,21 @@ public class ResJosnController {
 						seatName = SmartUtil.NVL(resInfo.get("seat_nm"), "").toString();
 						resPersonCnt = "1";
 						returnCode = "OK";
+						if(userNm.length()>2) {
+							firstNm = userNm.substring(0,1);
+							middleNm = userNm.substring(1, userNm.length()-1);
+							LastNm = userNm.substring(userNm.length()-1, userNm.length());
+							cnvMiddleNm = "";
+							for(int i=0; i<middleNm.length(); i++) {
+								cnvMiddleNm +="*";
+							}
+							resName = firstNm + cnvMiddleNm + LastNm;
+						} else if(userNm.length()==2){
+							firstNm = userNm.substring(0,1);
+							resName = firstNm + "*";
+						} else {
+							resName = userNm;
+						}
 					}
 				}
 			} else {
@@ -594,8 +616,10 @@ public class ResJosnController {
 
 		try {
 			Map<String, Object> searchVO = new HashMap<String, Object>();
-			searchVO.put("resvSeq", SmartUtil.NVL(jsonInfo.get("RES_NO"), "").toString());
-			searchVO.put("resvDate", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd")));
+			String localTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+			String resvSeq = localTime + SmartUtil.NVL(jsonInfo.get("RES_NO"), "").toString();
+			searchVO.put("resvSeq", resvSeq);
+			searchVO.put("resvDate", localTime);
 			
 			Map<String, Object> resInfo = resService.selectUserResvInfo(searchVO);
 			
@@ -609,7 +633,6 @@ public class ResJosnController {
 					", userNm : " + SmartUtil.NVL(resInfo.get("user_nm"), "").toString() +
 					", resvPayCost : " + SmartUtil.NVL(resInfo.get("resv_pay_cost"), "").toString());
 			
-			String localTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
 			String recDate = SmartUtil.NVL(jsonInfo.get("RES_SEND_DATE"), "19700101").toString();
 			String qrTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
 			
@@ -634,7 +657,7 @@ public class ResJosnController {
 				// TO-DO 층/구역명 추가 예정
 				
 				//QR발급회차 업데이트
-				resService.updateResvQrCount(SmartUtil.NVL(jsonInfo.get("RES_NO"), "").toString());
+				resService.updateResvQrCount(resvSeq);
 				
 				String qrCode = EgovFileScrty.encode(resInfo.get("resv_seq") + ":" + qrTime
 						+ ":IN:PAPER:" + SmartUtil.NVL(resInfo.get("user_id"), "").toString() + ":"
@@ -660,7 +683,7 @@ public class ResJosnController {
 				resInfoU.setTradNo(SmartUtil.NVL(jsonInfo.get("IF_NO"), "").toString());
 				resInfoU.setResvPayDvsn("RESV_PAY_DVSN_2");
 				resInfoU.setResvTicketDvsn("RESV_TICKET_DVSN_2");
-				resInfoU.setResvSeq(SmartUtil.NVL(jsonInfo.get("RES_NO"), "").toString());
+				resInfoU.setResvSeq(resvSeq);
 				
 				// SPDM요청사항 강낭지점한정 무인발권기 결제시 예약상태 '예약' -> '이용중' 으로 변경
 				if(resInfo.get("center_cd").equals("C21110401")) {
