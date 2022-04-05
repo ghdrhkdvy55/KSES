@@ -275,7 +275,7 @@
 			toastr.warning('사번을 입력해 주세요.');
 			return false;
 		}
-		if ($popup.find(':hidden#idCheck').val() !== 'Y') {
+		if ($popup.find(':hidden[name=mode]').val() == 'Ins' && $popup.find(':hidden#idCheck').val() !== 'Y') {
 			toastr.warning('중복체크가 안되었습니다.');
 			return false;
 		}
