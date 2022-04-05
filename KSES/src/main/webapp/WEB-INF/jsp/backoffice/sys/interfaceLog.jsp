@@ -121,8 +121,8 @@
 		
 		// 검색일자 세팅
 		let today = new Date();
-		$('#searchFrom').val($.datepicker.formatDate('yymmdd', today))
-		$("#searchTo").val($.datepicker.formatDate('yymmdd', today))
+		$('#searchFrom').val($.datepicker.formatDate('yymmdd', today));
+		$("#searchTo").val($.datepicker.formatDate('yymmdd', today));
 	});
 	
 	// 인터페이스 로그 목록 조회
@@ -148,9 +148,9 @@
 		$popup.find('span#sp_proInsttId').text(rowData.provd_instt_id);
 		$popup.find('span#sp_reqTrnTm').text(rowData.requst_trnsmit_tm);
 		$popup.find('span#sp_recpTnTm').text(rowData.rspns_recptn_tm);
-		$popup.find('span#sp_resultCode').text(rowData.result_code);
-		$popup.find('span#sp_sendtMessage').text(rowData.send_message);
-		$popup.find('span#sp_resultMessage').text(rowData.result_message);
+		$popup.find('span#sp_resultCode').text('결과코드 : ' + rowData.result_code);
+		$popup.find('span#sp_sendMessage').text('요청메시지 : ' + rowData.send_message);
+		$popup.find('span#sp_resultMessage').text('결과메시지 : ' + rowData.result_message);
 		
 		$popup.bPopup();
 	}
