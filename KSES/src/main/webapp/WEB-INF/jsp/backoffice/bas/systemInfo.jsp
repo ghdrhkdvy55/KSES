@@ -137,7 +137,7 @@
 <script type="text/javascript">
 	$(document).ready(function () {
 		let timeEdit = {size: 5, maxlength: 5};
-		let useEdit = {value: 'Y:사용; N:사용안함'};
+		let useEdit = {value: 'Y:사용;N:사용안함'};
 		
 		// 자동결제관리 JqGrid 정의
 		EgovJqGridApi.mainGrid([
@@ -165,7 +165,9 @@
 	
 	// 휴일 적용 지점 목록
 	function fnAutoPaymentUpdate() {
+		let $popup = $('[data-popup=bas_autopay_info]');
 		let changedArr = $(MainGridSelector).jqGrid('getChangedCells', 'all');
+		
 		if (changedArr.length === 0) {
 			toastr.warning('수정된 목록이 없습니다.');
 			return;
@@ -186,7 +188,7 @@
 				null,
 				function(json) {
 					toastr.success(json.message);
-					fnAutoPaymentInfo(1);
+					$popup.bPopup().close();
 				},
 				function(json) {
 					toastr.error(json.message);
