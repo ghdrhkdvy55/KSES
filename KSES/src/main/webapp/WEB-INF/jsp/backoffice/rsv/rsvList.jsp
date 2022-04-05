@@ -480,10 +480,11 @@
 			{ label: '이름', 		name: 'user_nm', 				align:'center', fixed: true },
 			{ label: '전화번호', 	name: 'user_phone', 	 		align:'center', fixed: true },
 			{ label: '금액', 		name: 'resv_pay_cost', 		    align:'center', fixed: true, formatter: fnFormSetting },
-			{ label: '예약상태', 	name: 'resv_state_text',    	align:'center', fixed: true },
-			{ label: '결제상태', 	name: 'resv_pay_dvsn_text', 	align:'center', fixed: true },
-			{ label: '결제구분', 	name: 'resv_ticket_dvsn_text',  align:'center', fixed: true },
-			{ label: 'QR출력', 	name: 'resv_qr_print', 			align:'center', fixed: true, formatter: fnFormSetting },			
+			{ label: '예약상태', 	name: 'resv_state_text',    	align:'center', fixed: true, hidden : true },
+			{ label: '결제상태', 	name: 'resv_pay_dvsn_text', 	align:'center', fixed: true, hidden : true },
+			{ label: '결제구분', 	name: 'resv_ticket_dvsn_text',  align:'center', fixed: true, hidden : true },
+			{ label: 'QR출력', 	name: 'resv_qr_print', 			align:'center', fixed: true, formatter: fnFormSetting },
+			{ label: '현금영수증', name: 'resv_rcpt_print', 		align:'center', fixed: true, formatter: fnFormSetting },	
 			{ name : 'season_cd',  hidden : true }, { name : 'center_cd',     hidden : true }, { name : 'floor_cd',         hidden : true }, 
 			{ name : 'part_cd',    hidden : true }, { name : 'seat_cd',       hidden : true }, { name : 'user_id',  		hidden : true }, 
 			{ name : 'resv_state', hidden : true }, { name : 'resv_pay_dvsn', hidden : true }, { name : 'resv_ticket_dvsn', hidden : true }, 
@@ -618,6 +619,17 @@
 	function fnResvStateChange() {
 		let $popup = $('[data-popup=rsv_state_change]');
 		let rowId = EgovJqGridApi.getMainGridSingleSelectionId();
+		
+		if($popup.find('select[name=resvState]').val() === '') {
+            toastr.warning('예약상태값을 선택해 주세요.');
+            return;
+		}
+		
+		if($popup.find('select[name=resvPayDvsn]').val() === '') {
+            toastr.warning('결제구분값을 선택해 주세요.');
+            return;
+		}
+		
 		bPopupConfirm('예약상태변경', '예약상태를 변경 하시겠습니까?', function() {
 			EgovIndexApi.apiExecuteJson(
 				'POST',
