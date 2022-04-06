@@ -1,5 +1,9 @@
 package com.kses.backoffice.bld.center.web;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import com.kses.backoffice.bas.holy.vo.HolyInfo;
 import com.kses.backoffice.bld.center.service.CenterHolyInfoManageService;
 import com.kses.backoffice.bld.center.service.CenterInfoManageService;
 import com.kses.backoffice.bld.center.vo.CenterHolyInfo;
@@ -220,6 +224,66 @@ public class CenterHolyInfoManageController {
 		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.update"));
 
 		return model;
+	}
+	
+	@RequestMapping (value="centerHolyInfoExcelUpload.do")
+	public ModelAndView selectHolyInfoExcelUpload(@ModelAttribute("loginVO") LoginVO loginVO, 
+			                                      @RequestBody Map<String, Object> params) throws Exception{	
+		
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
+	    Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+
+	    	
+		loginVO = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
+		String lastUpdusrId = loginVO.getAdminId();
+		
+		Gson gson = new GsonBuilder().create();
+		List<CenterHolyInfo> centerHolyInfos = gson.fromJson(params.get("data").toString(), new TypeToken<List<CenterHolyInfo>>(){}.getType());
+		//좌석/ 회의실 정리 하기 
+		centerHolyInfos.forEach(CenterHolyInfo -> CenterHolyInfo.setLastUpdusrId(lastUpdusrId));
+		centerHolyInfos.forEach(CenterHolyInfo -> CenterHolyInfo.setCenterCd(params.get("centerCd").toString()));
+		
+		boolean centerHolyInsert = centerHolyInfoService.insertExcelCenterHoly(centerHolyInfos);
+		if (centerHolyInsert == true) {
+			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("sucess.common.insert"));
+		}else {
+			throw new Exception();
+		}
+	    	
+	    return model;
+	}
+	/**
+	 * 휴일정보 엑셀 업로드
+	 * @param params
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping (value="centerHolyInfoExcelUpload.do", method = RequestMethod.POST)
+	public ModelAndView selectHolyInfoExcelUpload(@RequestBody Map<String, Object> params) throws Exception{	
+		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
+	    
+		String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
+		Gson gson = new GsonBuilder().create();
+		List<CenterHolyInfo> centerHolyInfos = gson.fromJson(params.get("data").toString(), new TypeToken<List<CenterHolyInfo>>(){}.getType());
+		centerHolyInfos.forEach(CenterHolyInfo -> {
+			CenterHolyInfo.setFrstRegterId(userId);
+			CenterHolyInfo.setLastUpdusrId(userId);
+			CenterHolyInfo.setCenterCd(params.get("centerCd").toString());
+		});
+		
+		boolean centerHolyInsert = centerHolyInfoService.insertExcelCenterHoly(centerHolyInfos);
+		log.info("centerHolyInsert: "+ centerHolyInsert);
+		if (centerHolyInsert) {
+			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("sucess.common.insert"));
+		}
+		else {
+			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.insert"));
+		}
+		
+	    return model;
 	}
 	
 }

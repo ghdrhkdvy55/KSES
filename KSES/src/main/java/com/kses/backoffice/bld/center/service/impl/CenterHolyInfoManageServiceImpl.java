@@ -1,6 +1,7 @@
 package com.kses.backoffice.bld.center.service.impl;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import com.kses.backoffice.bld.center.service.CenterHolyInfoManageService;
 import com.kses.backoffice.bld.center.vo.CenterHolyInfo;
 import com.kses.backoffice.util.mapper.UniSelectInfoManageMapper;
 
+@Slf4j
 @Service
 public class CenterHolyInfoManageServiceImpl extends EgovAbstractServiceImpl implements CenterHolyInfoManageService {
 
@@ -63,4 +65,15 @@ public class CenterHolyInfoManageServiceImpl extends EgovAbstractServiceImpl imp
 		return centerHolyMapper.deleteCenterHolyInfo(centerHolySeq);
 	}
 
+	@Override
+	public boolean insertExcelCenterHoly(List<CenterHolyInfo> centerHolyInfoList) throws Exception {
+		boolean result = false;
+		try {
+			centerHolyMapper.insertExcelCenterHoly(centerHolyInfoList);
+			result = true;
+		}catch( Exception e) {
+			log.error("insertExcelCenterHoly error:" + e.toString());
+		}
+		return result;
+	}
 }
