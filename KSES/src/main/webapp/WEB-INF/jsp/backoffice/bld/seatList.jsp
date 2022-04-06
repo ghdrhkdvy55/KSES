@@ -177,6 +177,8 @@
 			if($('#loginAuthorCd').val() != "ROLE_ADMIN" && $('#loginAuthorCd').val() != 'ROLE_SYSTEM') {
 				$form.find('select[name=centerCd] option:first').prop('selected', true);
 			}
+			
+			$form.find('select[name=centerCd] option:first').prop('selected', true);
 			$form.find('select[name=floorCd] option:first').prop('selected', true);
 			$form.find('select[name=floorCd] option:not(:first)').remove();
 			$form.find('select[name=partCd] option:first').prop('selected', true);
@@ -324,8 +326,8 @@
 				null,
 				function(json) {
 					toastr.success(json.message);
-                    $popup.bPopup().close();
 					fnSearch(1);
+                    $popup.bPopup().close();
 				},
 				function(json) {
 					toastr.error(json.message);
