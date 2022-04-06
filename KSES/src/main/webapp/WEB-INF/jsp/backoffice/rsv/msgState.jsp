@@ -989,8 +989,8 @@
 	       		    		var text = $(this).text();
 	       		    		messageInfo.groupGubun = "CU";
 	       		    		messageInfo.groupCode = $(this).attr('id').replace("CU_", "");
-	       		    		messageInfo.searchFrom = text.substr(text.length-10,8);
-	       		    		messageInfo.searchTo = text.substr(text.length-21, 8);
+	       		    		messageInfo.searchFrom = text.substr(text.length-21, 8);
+	       		    		messageInfo.searchTo = text.substr(text.length-10,8);
 	       		    	}
             			sendArray.push(messageInfo);	
             		}

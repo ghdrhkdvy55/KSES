@@ -22,6 +22,9 @@ public class SmsDataInfo {
 	//발신자이름
 	private String sendname = "";
 	
+	//수신전화번호(전체)
+	private String rphone;
+	
 	//수신전화번호(앞자리)
 	private String rphone1 = "";
 
@@ -75,4 +78,13 @@ public class SmsDataInfo {
 	
 	//인증코드
 	private String certifiCode = "";
+	
+	@Override 
+	public boolean equals(Object o) { 
+		if (o instanceof SmsDataInfo) { 
+			return this.rphone.equals(((SmsDataInfo) o).getRphone()); 
+		} else {
+			return super.equals(o);
+		}
+	}
 }
