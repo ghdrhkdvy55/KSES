@@ -283,25 +283,30 @@
 			toastr.warning('이름을 입력해 주세요.');
 			return false;
 		}
+		
+		
 		let password = $popup.find(':password[name=empPassword]').val();
-		if (password === '') {
-			toastr.warning('비밀번호를 입력해 주세요.');
-			return false;
-		} else {
-			if (!EgovIndexApi.vaildPassword(password)) {
-				toastr.warning('비밀번호가 유효하지 않습니다.');
+		if($popup.find(':hidden[name=mode]').val() === 'Ins' || password !== '') {
+			if (password === '') {
+				toastr.warning('비밀번호를 입력해 주세요.');
 				return false;
-			}
-			let password2 = $popup.find(':password[name=empPassword2]').val();
-			if (password2 === '') {
-				toastr.warning('비밀번호 확인을 입력해 주세요.');
-				return false;
-			}
-			if ($.trim(password) !== $.trim(password2)) {
-				toastr.warning('비밀번호가 일치하지 않습니다. ');
-				return false;
+			} else {
+				if (!EgovIndexApi.vaildPassword(password)) {
+					toastr.warning('비밀번호가 유효하지 않습니다.');
+					return false;
+				}
+				let password2 = $popup.find(':password[name=empPassword2]').val();
+				if (password2 === '') {
+					toastr.warning('비밀번호 확인을 입력해 주세요.');
+					return false;
+				}
+				if ($.trim(password) !== $.trim(password2)) {
+					toastr.warning('비밀번호가 일치하지 않습니다. ');
+					return false;
+				}
 			}
 		}
+		
 		let email = $popup.find(':text[name=empEmail]').val();
 		if (email === '') {
 			toastr.warning('이메일을 입력해주세요.');
@@ -344,23 +349,24 @@
 	// 사용자 수정
 	function fnEmpUpdate() {
 		let $popup = $('[data-popup=mng_emp_add]');
-		fnEmpSaveValidation($popup);
-		bPopupConfirm('사용자 수정', '<b>'+ $popup.find(':text[name=empNo]').val() +'</b> 수정 하시겠습니까?', function() {
-			EgovIndexApi.apiExecuteJson(
-				'POST',
-				'/backoffice/mng/empUpdate.do',
-				$popup.find('form:first').serializeObject(),
-				null,
-				function(json) {
-					toastr.success(json.message);
-					$popup.bPopup().close();
-					fnSearch(1);
-				},
-				function(json) {
-					toastr.error(json.message);
-				}
-			);
-		});
+		if(fnEmpSaveValidation($popup)) {
+			bPopupConfirm('사용자 수정', '<b>'+ $popup.find(':text[name=empNo]').val() +'</b> 수정 하시겠습니까?', function() {
+				EgovIndexApi.apiExecuteJson(
+					'POST',
+					'/backoffice/mng/empUpdate.do',
+					$popup.find('form:first').serializeObject(),
+					null,
+					function(json) {
+						toastr.success(json.message);
+						$popup.bPopup().close();
+						fnSearch(1);
+					},
+					function(json) {
+						toastr.error(json.message);
+					}
+				);
+			});
+		}
 	}
 	// 사용자 삭제
 	function fnEmpDelete() {
