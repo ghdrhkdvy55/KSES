@@ -17,7 +17,7 @@ $.Noshow.prototype.mainGridSettings = function() {
         cellsubmit: 'clientArray'
     });
     $('#rightAreaUqBtn').html(
-        '<a href="javascript:void(0);" class="orangeBtn">복사</a>'
+        '<a href="javascript:fnCenterNoshowPopup();" class="orangeBtn">복사</a>'
     ).show();
     $('#rightAreaBtn').show();
 };
@@ -32,9 +32,14 @@ $.Noshow.prototype.updateSettings = function(ajaxUpdate, changedArr) {
     }));
 };
 
-$.Noshow.prototype.centerCopy = function(ajaxCopy) {
-    ajaxCopy.title = '자동취소시간 복사';
-    ajaxCopy.url = '/backoffice/bld/noshowInfoCopy.do';
+$.Noshow.prototype.noshowGridSetting = function() {
+	// 직원 검색 JqGrid 정의
+	EgovJqGridApi.pagingGrid('popGridNoshowCopy', [
+        { label: '노쇼코드', name: 'noshow_cd', key: true, hidden:true },
+        { label: '요일', name: 'noshow_day_text', align: 'center', sortable: false },
+        { label: '1차자동취소시간', name: 'noshow_pm_tm', align: 'center', sortable: false},
+        { label: '2차자동취소시간', name: 'noshow_all_tm', align: 'center', sortable: false},
+    ], 'popPagerNoshowCopy', false, false, 10);
 };
 
 const Noshow = new $.Noshow();
