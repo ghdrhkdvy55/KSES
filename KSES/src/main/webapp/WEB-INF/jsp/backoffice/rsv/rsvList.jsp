@@ -538,7 +538,7 @@
 					form += '<a href="javascript:fnBillInfo(&#39;' + row.resv_seq + '&#39;);" class="blueBtn" style="padding: 5px 12px;">조회</a>';
 				} else {
 					form =  '<a href="javascript:fnBillStateChange(&#39;' + row.resv_seq + '&#39;);" class="blueBtn" style="padding: 5px 12px;">발행</a>';
-					form += '<a href="javascript:void(0);" class="blueBtn" style="padding: 5px 12px;">조회</a>';
+					form += '<a href="javascript:toastr.warning(\'발행된 현금영수증 정보가 존재하지 않습니다.\');" class="blueBtn" style="padding: 5px 12px;">조회</a>';
 				}
 			}
 		}
@@ -760,6 +760,7 @@
 				$('#totalAmount').html(data.totalAmount + '원');
 				$('#itemName').html(data.itemName);
 				$('#customerName').html(data.customerName);
+				$('[data-popup=rsv_bill_info]').bPopup();
 			},
 			function(json) {
 				toastr.error(json.message);
