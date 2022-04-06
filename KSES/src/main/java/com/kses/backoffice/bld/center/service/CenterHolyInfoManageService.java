@@ -3,8 +3,6 @@ package com.kses.backoffice.bld.center.service;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Param;
-
 import com.kses.backoffice.bld.center.vo.CenterHolyInfo;
 
 public interface CenterHolyInfoManageService {
@@ -42,4 +40,12 @@ public interface CenterHolyInfoManageService {
 	Map<String, Object>  centerUpdateSelect(String centerHolySeq) throws Exception;
 	
 	int deleteCenterHolyInfo(int centerHolySeq) throws Exception;
+	/**
+	 * SPDM 엑셀 업로드
+	 * 
+	 * @param centerHolyInfoList
+	 * @return
+	 * @throws Exception
+	 */
+	boolean insertExcelCenterHoly(List<CenterHolyInfo> centerHolyInfoList) throws Exception;
 }

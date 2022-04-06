@@ -37,13 +37,13 @@ public class SureMsgInfo {
 
                 msg += SmartUtil.getSmsName(resvInfo) + "님 " + resvDate.substring(4,6) + "월 " + resvDate.substring(6,8) + "일 ";
                 msg += centerNm + "지점 " + seatNm + "에 예약 완료되었습니다. ";
-                msg += "(예약번호 : " + resvSeq.replaceAll("^0+", "") + ")";
+                msg += "(예약번호 : " + resvSeq.replaceFirst(resvDate,"").replaceAll("^0+", "") + ")";
 			} else {
 				templateCode = "KSES_003";
 				
 				msg += SmartUtil.getSmsName(resvInfo) + "님 " + resvDate.substring(4,6) + "월 " + resvDate.substring(6,8) + "일 ";
                 msg += centerNm + "지점 " + seatNm + "에 예약 완료되었습니다. ";
-                msg += "(예약번호 : " + resvSeq.replaceAll("^0+", "") + ")";
+                msg += "(예약번호 : " + resvSeq.replaceFirst(resvDate,"").replaceAll("^0+", "") + ")";
                 
                 buttonType = "WL";
                 buttonNm = "QR링크";
@@ -56,7 +56,7 @@ public class SureMsgInfo {
 			templateCode = "KSES_005";
             msg += SmartUtil.getSmsName(resvInfo) + "님 " + resvDate.substring(4,6) + "월 " + resvDate.substring(6,8) + "일 ";
             msg += centerNm + "지점 " + resvPayCost + "원 스피드온 결제 완료되었습니다. ";
-            msg += "(예약번호 : " + resvSeq.replaceAll("^0+", "") + ")";
+            msg += "(예약번호 : " + resvSeq.replaceFirst(resvDate,"").replaceAll("^0+", "") + ")";
 		}
 		
 		sureData.setCallname(userNm);

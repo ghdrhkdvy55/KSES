@@ -10,6 +10,8 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.Globals;
 
 import com.kses.backoffice.bas.code.service.EgovCcmCmmnDetailCodeManageService;
+import com.kses.backoffice.cus.kko.service.SureManageSevice;
+import com.kses.backoffice.cus.kko.vo.SmsDataInfo;
 import com.kses.backoffice.mng.admin.service.AdminInfoService;
 import com.kses.backoffice.rsv.reservation.service.ResvInfoManageService;
 
@@ -68,6 +70,9 @@ public class MessageInfoManageController {
 	
 	@Autowired
 	private ResvInfoManageService  resService;
+	
+	@Autowired
+	private SureManageSevice sureService;
 	
 	@RequestMapping(value="msgList.do")
 	public ModelAndView  selectMsgInfoManageListByPagination(@ModelAttribute("loginVO") LoginVO loginVO
@@ -309,150 +314,143 @@ public class MessageInfoManageController {
         Map<Object,Boolean> seen = new ConcurrentHashMap<>();
         return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
     }
-	@RequestMapping (value="msgUpdate.do")
-	public ModelAndView updatemsgInfoManage( @ModelAttribute("loginVO") LoginVO loginVO
-											 , @RequestBody Map<String, Object> vo	                				 
-											 , BindingResult result) throws Exception{
-		
-		
+
+	@RequestMapping(value = "msgUpdate.do")
+	public ModelAndView updatemsgInfoManage(@ModelAttribute("loginVO") LoginVO loginVO,
+			@RequestBody Map<String, Object> vo, BindingResult result) throws Exception {
+
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
 		String meesage = null;
-		try{
+		try {
 			Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-			if(!isAuthenticated) {
-					model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-					model.addObject(Globals.STATUS,  Globals.STATUS_LOGINFAIL);
-					return model;	
-		    }
-			List<MessageInfo> info =  new ArrayList<MessageInfo>() ;
-			loginVO = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
-	    	String userNm = loginVO.getEmpNm();
-			
-	    	
-	    	//LOGGER.debug("step:" + SmartUtil.NVL(vo.get("msgArray"), "").toString());
-	    	
+			if (!isAuthenticated) {
+				model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
+				model.addObject(Globals.STATUS, Globals.STATUS_LOGINFAIL);
+				return model;
+			}
+			List<SmsDataInfo> info = new ArrayList<SmsDataInfo>();
+
+			loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
+			String userNm = loginVO.getEmpNm();
+
+			// LOGGER.debug("step:" + SmartUtil.NVL(vo.get("msgArray"), "").toString());
 
 			if (!SmartUtil.NVL(vo.get("sendArray"), "").toString().equals("")) {
-				
+
 				JSONParser parser = new JSONParser();
-				JSONArray arrays = (JSONArray)parser.parse(vo.get("sendArray").toString());
-				
-				Map<String, Object>  searchVO = new HashMap<String, Object>();
-				
+				JSONArray arrays = (JSONArray) parser.parse(vo.get("sendArray").toString());
+
+				Map<String, Object> searchVO = new HashMap<String, Object>();
+
 				searchVO.put("firstIndex", 0);
 				searchVO.put("recordCountPerPage", 1000);
-				
-				LOGGER.debug("==================="+ arrays.size());
-				
-			    for (int i = 0; i < arrays.size(); i ++) {
-			    	
-				    JSONObject jsonObject =  (JSONObject)arrays.get(i);
-				    LOGGER.debug("groupGubun:" + jsonObject.get("groupGubun"));
-				    if (jsonObject.get("groupGubun").equals("S")) {
-				   	 //사용자 이면
-				    	 MessageInfo msgInfo = new MessageInfo();
-				    	 if (jsonObject.get("groupCode").toString().contains("<")) {
-				    		
-				    		 String [] callInfo  = jsonObject.get("groupCode").toString().split("<");
-						   	 msgInfo.setCallname(callInfo[0]);
-						   	 msgInfo.setCallphone(callInfo[1].replace(">", ""));
-				    	 }else {
-				    		 msgInfo.setCallname(jsonObject.get("groupCode").toString());
-				    	 }
-				    	 info.add(msgInfo);
-				    	 msgInfo = null;
-				    }else if (jsonObject.get("groupGubun").equals("G")){
-				    //group 이면 
-				    	 searchVO.put("searchGroupCode", jsonObject.get("groupCode"));
-					   	 LOGGER.debug("groupCode:" + searchVO);
-					   	 
-					   	 
-					   	 List<Map<String, Object>> groupInfo = msgGroupUserService.selectMessageGroupUserInfoList(searchVO);
-					   	 
-					   	 groupInfo.forEach(x->{
-					   		 MessageInfo msgInfo = new MessageInfo();
-					   		 msgInfo.setCallname(x.get("group_username").toString());
-						   	 msgInfo.setCallphone(x.get("group_user_cellphone").toString());
-						   	 info.add(msgInfo);
-						   	 msgInfo = null;
-					   	 });
-				     } else if (jsonObject.get("groupGubun").equals("CU")) {
-				    	 Map<String, Object>  searchVO_U = new HashMap<String, Object>();
-				    	 searchVO_U.put("searchCenterCd", jsonObject.get("groupCode"));
-				    	 searchVO_U.put("searchFrom", jsonObject.get("searchFrom"));
-				    	 searchVO_U.put("searchTo", jsonObject.get("searchTo"));
-				    	 searchVO_U.put("searchDayCondition",  "resvDate");
-				    	 searchVO_U.put("searchStateCondition",  "cancel");
-				    	 searchVO_U.put("searchResvState",  "RESV_STATE_4");
-				    	 searchVO_U.put("firstIndex", 0);
-				    	 searchVO_U.put("recordCountPerPage", 1000);
-				    	 
-				    	 List<Map<String, Object>>  userInfo = resService.selectResvInfoManageListByPagination(searchVO_U);
-					   	 
-				    	 userInfo.forEach(x->{
-				    		 MessageInfo msgInfo = new MessageInfo();
-				    		 msgInfo.setCallname(x.get("user_nm").toString());
-						  	 msgInfo.setCallphone(x.get("user_phone").toString());
-						  	 info.add(msgInfo);
-						  	 msgInfo = null;
+
+				LOGGER.debug("===================" + arrays.size());
+
+				for (int i = 0; i < arrays.size(); i++) {
+					SmsDataInfo smsDataInfo = new SmsDataInfo();
+					JSONObject jsonObject = (JSONObject) arrays.get(i);
+
+					if (jsonObject.get("groupGubun").equals("S")) {
+						// 사용자 이면
+						if (jsonObject.get("groupCode").toString().contains("<")) {
+
+							String[] callInfo = jsonObject.get("groupCode").toString().split("<");
+							smsDataInfo.setRecvname(callInfo[0]);
+							smsDataInfo.setRphone(callInfo[1].replace(">", "").replace("-", ""));
+							info.add(smsDataInfo);
+						}
+					} else if (jsonObject.get("groupGubun").equals("G")) {
+						// group 이면
+						searchVO.put("searchGroupCode", jsonObject.get("groupCode"));
+
+						List<Map<String, Object>> groupInfo = msgGroupUserService.selectMessageGroupUserInfoList(searchVO);
+
+						groupInfo.forEach(x -> {
+							smsDataInfo.setRecvname(x.get("group_username").toString());
+							smsDataInfo.setRphone(x.get("group_user_cellphone").toString().replace("-", ""));
+							info.add(smsDataInfo);
 						});
-				     } else {
-						Map<String, Object>  searchVO_A = new HashMap<String, Object>();
+					} else if (jsonObject.get("groupGubun").equals("CU")) {
+						Map<String, Object> searchVO_U = new HashMap<String, Object>();
+						searchVO_U.put("searchCenterCd", jsonObject.get("groupCode"));
+						searchVO_U.put("searchFrom", jsonObject.get("searchFrom"));
+						searchVO_U.put("searchTo", jsonObject.get("searchTo"));
+						searchVO_U.put("searchDayCondition", "resvDate");
+						searchVO_U.put("searchStateCondition", "cancel");
+						searchVO_U.put("searchResvState", "RESV_STATE_4");
+						searchVO_U.put("firstIndex", 0);
+						searchVO_U.put("recordCountPerPage", 1000);
+
+						List<Map<String, Object>> userInfo = resService.selectResvInfoManageListByPagination(searchVO_U);
+
+						userInfo.forEach(x -> {
+							smsDataInfo.setRecvname(x.get("user_nm").toString());
+							smsDataInfo.setRphone(x.get("user_phone").toString().replace("-", ""));
+							info.add(smsDataInfo);
+						});
+					} else {
+						Map<String, Object> searchVO_A = new HashMap<String, Object>();
 						searchVO_A.put("searchCenter", jsonObject.get("groupCode"));
 						searchVO_A.put("firstIndex", 0);
 						searchVO_A.put("recordCountPerPage", 1000);
-				    	 
+
 						List<Map<String, Object>> adminInfos = adminService.selectAdminUserManageListByPagination(searchVO_A);
-						
-						adminInfos.forEach(x->{
-							 MessageInfo msgInfo = new MessageInfo();
-							 msgInfo.setCallname(x.get("emp_nm").toString());
-						   	 msgInfo.setCallphone(SmartUtil.NVL(x.get("emp_clphn"), "").toString());
-						   	 info.add(msgInfo);
-						   	 msgInfo = null;
+
+						adminInfos.forEach(x -> {
+							smsDataInfo.setRecvname(x.get("emp_nm").toString());
+							smsDataInfo.setRphone(x.get("emp_clphn").toString());
+							info.add(smsDataInfo);
 						});
-				     }
-			    }                
+					}
+				}
 			}
-			//insert 하기 
-			
-			
-			String reqtime = vo.get("result").toString().equals("O") ? "00000000000000" : vo.get("sendDate").toString()+vo.get("send_hour").toString()+vo.get("send_minute").toString()+"00";
-					
-			String kind =   vo.get("sendDate").toString().equals("mms Send") ? "M" : "S";
+			// MMS / SMS 구별하여 사용할경우
+			// String kind = vo.get("sendDate").toString().equals("mms Send") ? "M" : "S";
 			if (info.size() > 0) {
-				
-				
-				
-				
-				info.forEach(MessageInfo -> {
-					        MessageInfo.setReqname(userNm);
-					        MessageInfo.setReqphone(vo.get("sendTel").toString());
-					        MessageInfo.setResult(vo.get("result").toString());
-					        MessageInfo.setReqtime(reqtime);
-					        MessageInfo.setKind(kind);
-					        MessageInfo.setMsg(vo.get("Message").toString());
+				info.stream()
+					.distinct()
+					.forEach(smsInfo -> {
+					LoginVO loginInfo = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
+					try {
+						smsInfo.setSendid("kcycle");
+						smsInfo.setSendname("SYSTEM");
+	
+						String phNum[];
+						phNum = SmartUtil.getSplitPhNum(smsInfo.getRphone());
+						smsInfo.setRphone1(phNum[0]);
+						smsInfo.setRphone2(phNum[1]);
+						smsInfo.setRphone3(phNum[2]);
+						
+						phNum = SmartUtil.getSplitPhNum(vo.get("sendTel").toString());
+						smsInfo.setSphone1(phNum[0]);
+						smsInfo.setSphone2(phNum[1]);
+						smsInfo.setSphone3(phNum[2]);
+						smsInfo.setSysGbn("MOBILE_KCYCLE");
+						smsInfo.setUserid(loginInfo.getAdminId());
+						smsInfo.setMsg(vo.get("Message").toString());
+						sureService.insertSmsData(smsInfo);
+					} catch (Exception e) {
+						LOGGER.info("수신번호 " + smsInfo.getRphone() + "SMS발송 실패");
+						return;
+					}
 				});
-				
-				//중복 제거 확인 필요 
-				msgService.insertMsgManage(info);
+				// 중복 제거 확인 필요
+
 			}
-			
-   	        model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+
+
+			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("success.common.insert"));
-				
-			
-		}catch (Exception e){
+
+		} catch (Exception e) {
 			StackTraceElement[] ste = e.getStackTrace();
 			int lineNumber = ste[0].getLineNumber();
 			LOGGER.info("e:" + e.toString() + ":" + lineNumber);
 			meesage = "fail.common.insert";
 			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));			
+			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage(meesage));
 		}
 		return model;
 	}
-	
-	
-	
 }
