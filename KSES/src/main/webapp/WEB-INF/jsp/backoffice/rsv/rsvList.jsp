@@ -489,7 +489,7 @@
 			{ name : 'part_cd',    hidden : true }, { name : 'seat_cd',       hidden : true }, { name : 'user_id',  		hidden : true }, 
 			{ name : 'resv_state', hidden : true }, { name : 'resv_pay_dvsn', hidden : true }, { name : 'resv_ticket_dvsn', hidden : true }, 
 			{ name : 'resv_seat_pay_cost',  hidden : true }, { name : 'resv_entry_pay_cost', hidden : true }, 
-			{ name : 'resv_user_dvsn_text', hidden : true }
+			{ name : 'resv_user_dvsn_text', hidden : true }, { name : 'resv_rcpt_state', hidden : true }
 		], false, false, fnSearch);
 		
     	// 메인 그리드 더블 클릭 시 이벤트 발생.
@@ -559,7 +559,7 @@
 			searchResvState : $('#searchResvState').val(),
 			searchResvPayDvsn : $('#searchResvPayDvsn').val(),
 			searchResvTicketDvsn : $('#searchResvTicketDvsn').val(),
-			searchResvRcptYn : $('searchResvRcptYn').val(),
+			searchResvRcptYn : $('#searchResvRcptYn').val(),
 			searchCondition : $('#searchCondition').val(),
 			searchKeyword : $('#searchKeyword').val()
 		};
