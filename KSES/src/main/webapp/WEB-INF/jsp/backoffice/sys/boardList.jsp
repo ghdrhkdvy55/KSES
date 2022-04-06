@@ -135,7 +135,7 @@
 					</tr>
 					<c:choose>
 						<c:when test="${loginVO.authorCd ne 'ROLE_ADMIN' && loginVO.authorCd ne 'ROLE_SYSTEM' }">
-							<input type="hidden" id="boardCenterId" name="boardCenterId" value="${loginVO.centerCd}">
+							<input type="hidden" name="boardCenterId" value="${loginVO.centerCd}">
 							<input type="hidden" id="boardAllNotice" value="N">
 						</c:when>
 						<c:otherwise>
@@ -143,7 +143,7 @@
 								<th>지점 선택</th>
 								<td><span id="sp_boardCenter"></span>
 								<th>전 지점  선택</th>
-								<td><input type="checkbox" id="boardAllNotice" onClick="fn_CheckboxAllChangeInfo('boardAllNotice', 'boardCenterId');">
+								<td><input type="checkbox" id="boardAllNotice" name="boardAllNotice" onClick="fn_CheckboxAllChangeInfo('boardAllNotice', 'boardCenterId');">
 								</td>
 							</tr>
 						</c:otherwise>
@@ -210,12 +210,12 @@
 	        	'<a href="javascript:fnBoardInfo(\'Edt\',\''+ row.board_seq +'\');" class="edt_icon"></a>'
 			}	
 		], false, false, fnSearch);
-		if($('#loginAuthorCd').val() != 'ROLE_ADMIN' && $('#loginAuthorCd').val() != 'ROLE_SYSTEM') {
-			insertBoardCenterId = $('[data-popup=bas_board_add] :hidden[name=boardCenterId]').val();
-			insertBoardAllCk = "N"
-		} else {
-			insertBoardAllCk =  $('#boardAllNotice').is(":checked") == true ? "Y" : "N";
-		}
+		 if($("#authorCd").val() != "ROLE_ADMIN" && $("#authorCd").val() != "ROLE_SYSTEM") {
+			 insertBoardCenterId = $("#boardCenterId").val();
+			 insertBoardAllCk = "N"
+		 } else {
+			 insertBoardAllCk =  $("#boardAllNotice").is(":checked") == true ? "Y" : "N";
+		 }
 		("${regist.board_file_upload_yn }" == "Y") ? $("#tr_fileUpload").show() : $("#tr_fileUpload").hide();
 	});
 	// 검색
@@ -234,7 +234,6 @@
 		let $form = $popup.find('form:first');
 		
 		$('#mode').val(mode);
-		console.log("TEST1 : " + $('#mode').val());
 		$form.find(':hidden[name=boardSeq]').val(boardSeq);
         
         $("#fileListTable > tbody").empty();
@@ -260,7 +259,10 @@
 					$form.find(':text[name=boardNoticeStartDay]').val(data.board_notice_start_day);
 					$form.find(':text[name=boardNoticeEndDay]').val(data.board_notice_end_day);
 					$form.find(':hidden[name=boardGroup]').val(data.board_group); //부모값
-					if ($('#boardCd').val()  == 'Not'){
+					var allCheck = (data.board_all_notice == "Y") ? true : false;
+					$("input:checkbox[id='boardAllNotice']").prop("checked", allCheck);
+					
+					if ("${regist.board_cd }"  == 'Not'){
 						var url = "/backoffice/bld/centerCombo.do"
 						var returnVal = uniAjaxReturn(url, "GET", false, null, "lst");
 						fn_checkboxListJsonOnChange("sp_boardCenter", returnVal,data.board_center_id, "boardCenterId", "fnBoardCheck()");   
@@ -409,7 +411,7 @@
 	function fnBoardCheck(){
 		let $popup = $('[data-popup=bas_board_add]');
 		let $form = $popup.find('form:first');
-		var checked = ($form.find('hidden[name=boardCenterId]').length != $form.find('hidden[name=boardCenterId]:checked').length ) ? false : true;
+		var checked = ($('#boardCenterId').length != $('#boardCenterId').length ) ? false : true;
 		$('#boardAllNotice').prop("checked", checked);
 	}
 	// 파일 전체 선택

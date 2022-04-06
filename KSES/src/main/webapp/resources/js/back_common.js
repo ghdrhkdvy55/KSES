@@ -482,8 +482,8 @@ function fn_CheckboxAllChange(ck_nm, boolean){
 }
 //체크 박스 체크 에 따른 전체 선택 여부 
 function fn_CheckboxAllChangeInfo(ck_boxNm, ck_ChangeNm){
-   var all_ck =  ($("input[name="+ck_boxNm+"]").is(":checked") == true) ? true : false;
-   $("input[id="+ck_ChangeNm+"]").prop("checked", all_ck);
+   var all_ck =  ($("input[id="+ck_boxNm+"]").is(":checked") == true) ? true : false;
+   $("input[name="+ck_ChangeNm+"]").prop("checked", all_ck);
 }
 function fn_CheckboxChoice(ck_nm, choiceValue){
    $("input[name="+ck_nm+"]").prop("checked", false);
