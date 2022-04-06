@@ -215,7 +215,7 @@
 		};
 		EgovJqGridApi.mainGridAjax('/backoffice/rsv/blackListAjax.do', params, fnSearch);
 		
-		let col = $('#searchBlklstDvsn').val() === 'BLKLST_DVSN_3' ? 'hideCol' : 'showCol';
+		let col = $('#searchBlklstDvsn').val() !== 'BLKLST_DVSN_3' ? 'hideCol' : 'showCol';
 		$(MainGridSelector).jqGrid(col, ['user_noshow_cnt', 'user_noshow_last_dt', 'update_btn']);
 		$(MainGridSelector).setGridWidth($(MainGridSelector).closest('div.boardlist').width() , true);
 	}
