@@ -581,11 +581,7 @@
 	
     //좌석 정보 업데이트
 	function fnSeatUpdate() {
-    	console.log($("#floorCd").val());
-    	console.log($("#partCd").val());
-    	console.log($("#seatStr").val());
-    	console.log($("#seatEnd").val());
-		if ($("#seatStr").val() > $("#seatEnd").val()){
+		if ($("#seatStr").val() >= $("#seatEnd").val()){
 			toastr.warning("시작이 종료 보다 클수 없습니다. ");
 			return;
 		}
@@ -603,7 +599,9 @@
 				toastr.info(json.message);
 				fnSearch(1);
 				$('[data-popup=bld_seat_add]').bPopup().close();
-				$('#cbp-spmenu-part').bPopup().close();
+				PartGui.open();
+				$("#seatStr").val('1');
+				$("#seatEnd").val('1');
 			},
 			function(json) {
 			    toastr.error(json.message);

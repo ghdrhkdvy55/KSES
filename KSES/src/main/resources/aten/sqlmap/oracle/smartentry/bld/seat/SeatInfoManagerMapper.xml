@@ -148,6 +148,7 @@
 		
 		<choose>
 			<when test='params.partCd != "0"'>
+			
 				INSERT INTO TSEB_SEAT_INFO_D
 				(
 					SEAT_CD, CENTER_CD, FLOOR_CD, PART_CD, SEAT_NM, 
@@ -158,20 +159,25 @@
 				SELECT 
 					FN_SEATCODEINSERT(TA.PART_CD, 'PART', RNUM), TA.CENTER_CD, TA.FLOOR_CD, TA.PART_CD, TA.RN, 
 					'Y', 0, 0, #{params.frstRegterId}, SYSDATE, 
-					#{params.lastUpdusrId}, SYSDATE, TA.PART_CLASS, FN_SEATPAYCOST(TA.CENTER_CD, TA.PART_CLASS), TA.RNUM, 
-					TA.RNUM
+					#{params.lastUpdusrId}, SYSDATE, TA.PART_CLASS, FN_SEATPAYCOST(TA.CENTER_CD, TA.PART_CLASS), 
+					(					
+						SELECT NVL(MAX(SEAT_ORDER), 0) + TA.RNUM
+						FROM  TSEB_SEAT_INFO_D 
+						WHERE PART_CD = #{params.partCd}
+					) AS SEAT_ORDER, 
+					TA.SEAT_NUMBER
 				FROM 
 				(
-					<![CDATA[
+
 					SELECT  
-						A.CENTER_CD, A.FLOOR_CD, A.PART_CD, #{floorNm, jdbcType=VARCHAR}|| '_' || A.PART_NM || '_' || B.RN AS RN,  
-						ROW_NUMBER() OVER(ORDER BY B.RN ASC) AS RNUM, A.PART_CLASS
+						A.CENTER_CD, A.FLOOR_CD, A.PART_CD, 'C22031801_02'|| '_' || A.PART_NM || '_' || B.RN AS RN,  
+						ROW_NUMBER() OVER(ORDER BY B.RN ASC) AS RNUM, A.PART_CLASS, B.RN AS SEAT_NUMBER
 					FROM TSEB_PART_INFO_D A,
 					( 
 						SELECT NUM AS RN FROM TABLE(FN_ROWTABLE(${params.seatStr}, ${params.seatEnd}))
 					) B 
 					WHERE PART_CD = #{params.partCd}
-					]]>
+
 				) TA
 				ORDER BY TA.RN ASC;
 			</when>
