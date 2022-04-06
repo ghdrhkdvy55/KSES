@@ -380,8 +380,9 @@
                 $popup.find('form:first').serializeObject(),
 				null,
 				function(json) {
-                    EgovJqGridApi.subGridReload(parentId, fnSubGrid);
 					toastr.success(json.message);
+                    EgovJqGridApi.subGridReload(parentId, fnSubGrid);
+                    fnSearch(1);
 					$popup.bPopup().close();
 				},
 				function(json) {
