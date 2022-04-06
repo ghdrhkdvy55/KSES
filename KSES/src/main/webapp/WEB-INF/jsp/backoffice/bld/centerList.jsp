@@ -17,6 +17,8 @@
 <link rel="stylesheet" href="/resources/css/backoffice/cbp-spmenu.css">
 <script type="text/javascript" src="/resources/js/classie.js"></script>
 <!-- //contents -->
+<input type="hidden" id="floorCd">
+<input type="hidden" id="partCd">
 <div class="breadcrumb">
 	<ol class="breadcrumb-item">
 		<li>시설 관리&nbsp;&gt;&nbsp;</li>
@@ -66,6 +68,128 @@
 				<a href="javascript:fnRightAreaSave();" class="blueBtn">저장</a>
 			</div>
 		</div>
+	</div>
+</div>
+<!-- // 복사 지점 휴일 검색 팝업 -->
+<div data-popup="bld_holy_copy" class="popup">
+	<div class="pop_con">
+		<h2 class="pop_tit">휴일 복사</h2>
+		<div class="pop_wrap">
+			<fieldset class="whiteBox searchBox">
+				<div class="top" style="padding:0;border-bottom:none;">
+              		<p>지점</p>
+              		<select id="holySearchCenterCd">
+						<option value="">지점 선택</option>
+						<c:forEach items="${centerInfoComboList}" var="centerInfo">
+							<option value="${centerInfo.center_cd}"><c:out value='${centerInfo.center_nm}'/></option>
+						</c:forEach>
+              		</select>
+					<a href="javascript:fnHolySearch(1);" class="grayBtn">검색</a>
+				</div>
+			</fieldset>
+			<div style="width:570px;">
+				<table id="popGridHolyCopy"></table>
+				<div id="popPagerHolyCopy"></div>
+			</div>
+		</div>
+		<popup-right-button okText="복사" clickFunc="fnHolyCopy();" />
+	</div>
+</div>
+<!-- // 복사 지점 휴일 검색 팝업 -->
+<div data-popup="bld_preopen_copy" class="popup">
+	<div class="pop_con">
+		<h2 class="pop_tit">사전 예약 시간 복사</h2>
+		<div class="pop_wrap">
+			<fieldset class="whiteBox searchBox">
+				<div class="top" style="padding:0;border-bottom:none;">
+              		<p>지점</p>
+              		<select id="preopenSearchCenterCd">
+						<option value="">지점 선택</option>
+						<c:forEach items="${centerInfoComboList}" var="centerInfo">
+							<option value="${centerInfo.center_cd}"><c:out value='${centerInfo.center_nm}'/></option>
+						</c:forEach>
+              		</select>
+					<a href="javascript:fnPreopenSearch(1);" class="grayBtn">검색</a>
+				</div>
+			</fieldset>
+			<div style="width:570px;">
+				<table id="popGridPreopenCopy"></table>
+				<div id="popPagerPreopenCopy"></div>
+			</div>
+		</div>
+		<popup-right-button okText="복사" clickFunc="fnPreopenCopy();" />
+	</div>
+</div>
+<!-- // 복사 자동 취소 검색 팝업 -->
+<div data-popup="bld_noshow_copy" class="popup">
+	<div class="pop_con">
+		<h2 class="pop_tit">사전 예약 시간 복사</h2>
+		<div class="pop_wrap">
+			<fieldset class="whiteBox searchBox">
+				<div class="top" style="padding:0;border-bottom:none;">
+              		<p>지점</p>
+              		<select id="noshowSearchCenterCd">
+						<option value="">지점 선택</option>
+						<c:forEach items="${centerInfoComboList}" var="centerInfo">
+							<option value="${centerInfo.center_cd}"><c:out value='${centerInfo.center_nm}'/></option>
+						</c:forEach>
+              		</select>
+					<a href="javascript:fnNoshowSearch(1);" class="grayBtn">검색</a>
+				</div>
+			</fieldset>
+			<div style="width:570px;">
+				<table id="popGridNoshowCopy"></table>
+				<div id="popPagerNoshowCopy"></div>
+			</div>
+		</div>
+		<popup-right-button okText="복사" clickFunc="fnNoshowCopy();" />
+	</div>
+</div>
+<!-- // 좌석구역 생성 팝업 -->
+<div data-popup="bld_seat_add" class="popup">
+	<div class="pop_con">
+		<a class="button b-close">X</a>
+      	<h2 class="pop_tit">구역 좌석 일괄 생성</h2>
+      	<div class="pop_wrap">
+          	<table class="detail_table">
+              	<tbody>
+                  	<tr>
+                    	<th>설정 범위</th>
+                    	<td colspan="3">
+                        	<select id="seatStr" name="seatStr">
+		                  		<c:forEach var="cnt" begin="1" end="1000" step="1">
+		                     		<option value="${cnt}"><c:out value='${cnt}'/></option>
+		                  		</c:forEach> 
+			             	</select>~
+			             	<select id="seatEnd" name="seatEnd">
+			                  	<c:forEach var="cnt" begin="1" end="1000" step="1">
+			                     	<option value="${cnt}"><c:out value='${cnt}'/></option>
+			                  	</c:forEach> 
+			             	</select>
+                    	</td>
+                  	</tr>
+              	</tbody>
+          	</table>
+      	</div>
+      	<div class="right_box">
+			<a href="javascript:fnSeatUpdate();" class="blueBtn">저장</a>
+          	<a href="javascript:void(0);" class="grayBtn b-close">취소</a>
+      	</div>
+		<div class="clear"></div>
+	</div>
+</div>
+<!-- 엑셀 업로드 팝업 -->
+<div data-popup="bld_excel_upload" class="popup m_pop">
+	<div class="pop_con">
+		<a class="button b-close">X</a>
+        <p class="pop_tit">엑셀 업로드</p>
+        <p class="pop_wrap">
+        	<input type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+        </p>
+        <div style="float:left;margin-top:5px;">
+        	<a href="/backoffice/bas/holyInfoUploadSampleDownload.do" class="orangeBtn">샘플</a>
+        </div>
+        <popup-right-button okText="업로드" clickFunc="fnExcelUpload();" />
 	</div>
 </div>
 <div data-popup="bld_centerinfo_add" class="popup"></div>
@@ -150,6 +274,10 @@
 		setTimeout(function() {
 			fnCenterSearch(1);
 		}, _JqGridDelay);
+		
+		Holyday.holyGridSetting();
+		Preopen.preopenGridSetting();
+		Noshow.noshowGridSetting();
 	});
 	// 지점 목록 검색
 	function fnCenterSearch(pageNo) {
@@ -272,6 +400,217 @@
 		let rowData = EgovJqGridApi.getGridRowData('centerGrid', rowId);
 		BillInfo.bPopup(rowId, rowData.center_nm);
 	}
+	// 지점 휴일 목록 조회
+	function fnHolySearch(pageNo) {
+		let params = {			
+				pageIndex: pageNo,
+				pageUnit: '10',
+				centerCd: $('#holySearchCenterCd').val()
+			};
+		EgovJqGridApi.pagingGridAjax('popGridHolyCopy', '/backoffice/bld/centerHolyInfoListAjax.do', params, fnHolySearch);	
+	}
+	
+	// 지점 휴일 복사 팝업 호출
+	function fnCenterHolyPopup() {
+		let rowId = EgovJqGridApi.getGridSelectionId('centerGrid');
+		$('#holySearchCenterCd').val(rowId);
+		fnHolySearch(1);
+		setTimeout(function() {
+			$('[data-popup=bld_holy_copy]').bPopup();	
+		}, 100);
+	}
+	// 지점 휴일 복사
+	function fnHolyCopy() {
+		let rowId = EgovJqGridApi.getGridSelectionId('centerGrid');
+		let rowData = EgovJqGridApi.getGridRowData('centerGrid', rowId);
+		bPopupConfirm('지점 복사', rowData.center_nm +'지점 에 붙여 넣겠습니까?', function() {
+			EgovIndexApi.apiExecuteJson(
+				'POST',
+				'/backoffice/bld/centerHolyInfoCopy.do',
+				{
+					copyCenterCd : $('#holySearchCenterCd').val(),
+					centerCd : rowId
+				},
+				null,
+				function(json) {
+					toastr.success(json.message);
+					fnSearch(1);
+					$('[data-popup=bld_holy_copy]').bPopup().close();
+				},
+				function(json) {
+					toastr.error(json.message);
+				}
+			);
+		});
+	}
+	
+	// 사전 예약 시간 목록 조회
+	function fnPreopenSearch(pageNo) {
+		let params = {			
+				pageIndex: pageNo,
+				pageUnit: '10',
+				centerCd: $('#preopenSearchCenterCd').val()
+			};
+		EgovJqGridApi.pagingGridAjax('popGridPreopenCopy', '/backoffice/bld/preOpenInfoListAjax.do', params, fnPreopenSearch);	
+	}
+	
+	// 사전 예약 시간 팝업 호출
+	function fnCenterPreopenPopup() {
+		let rowId = EgovJqGridApi.getGridSelectionId('centerGrid');
+		$('#preopenSearchCenterCd').val(rowId);
+		fnPreopenSearch(1);
+		setTimeout(function() {
+			$('[data-popup=bld_preopen_copy]').bPopup();	
+		}, 100);
+	}
+	// 지점 사전 예약 시간 복사
+	function fnPreopenCopy() {
+		let rowId = EgovJqGridApi.getGridSelectionId('centerGrid');
+		let rowData = EgovJqGridApi.getGridRowData('centerGrid', rowId);
+		bPopupConfirm('지점 사전 예약 시간 복사', rowData.center_nm +'지점 에 붙여 넣겠습니까?', function() {
+			EgovIndexApi.apiExecuteJson(
+				'POST',
+				'/backoffice/bld/preOpenInfoCopy.do',
+				{
+					copyCenterCd : $('#preopenSearchCenterCd').val(),
+					centerCd : rowId
+				},
+				null,
+				function(json) {
+					toastr.success(json.message);
+					fnSearch(1);
+					$('[data-popup=bld_preopen_copy]').bPopup().close();
+				},
+				function(json) {
+					toastr.error(json.message);
+				}
+			);
+		});
+	}
+	// 자동 취소 시간 목록 조회
+	function fnNoshowSearch(pageNo) {
+		let params = {			
+				pageIndex: pageNo,
+				pageUnit: '10',
+				centerCd: $('#noshowSearchCenterCd').val()
+			};
+		EgovJqGridApi.pagingGridAjax('popGridNoshowCopy', '/backoffice/bld/noshowInfoListAjax.do', params, fnNoshowSearch);	
+	}
+	
+	// 자동 취소 시간 팝업 호출
+	function fnCenterNoshowPopup() {
+		let rowId = EgovJqGridApi.getGridSelectionId('centerGrid');
+		$('#noshowSearchCenterCd').val(rowId);
+		fnNoshowSearch(1);
+		setTimeout(function() {
+			$('[data-popup=bld_noshow_copy]').bPopup();	
+		}, 100);
+	}
+	// 지점 자동 취소 시간 복사
+	function fnNoshowCopy() {
+		let rowId = EgovJqGridApi.getGridSelectionId('centerGrid');
+		let rowData = EgovJqGridApi.getGridRowData('centerGrid', rowId);
+		bPopupConfirm('지점 자동 취소 시간 복사', rowData.center_nm +'지점 에 붙여 넣겠습니까?', function() {
+			EgovIndexApi.apiExecuteJson(
+				'POST',
+				'/backoffice/bld/noshowInfoCopy.do',
+				{
+					copyCenterCd : $('#noshowSearchCenterCd').val(),
+					centerCd : rowId
+				},
+				null,
+				function(json) {
+					toastr.success(json.message);
+					fnSearch(1);
+					$('[data-popup=bld_noshow_copy]').bPopup().close();
+				},
+				function(json) {
+					toastr.error(json.message);
+				}
+			);
+		});
+	}
+	function fnExcelUpload() {
+		// 엑셀업로드
+		bPopupConfirm('지점 휴일일자 등록', '엑셀 업로드를 통한 휴일일자 등록을 진행하시겠습니까?', function() {
+			let $popup = $('[data-popup=bld_excel_upload]');
+			let $input = $popup.find(':file')[0];
+			let rowId = EgovJqGridApi.getGridSelectionId('centerGrid');
+			let reader = new FileReader();
+			reader.onload = function() {
+				let wb = XLSX.read(reader.result, {type: 'binary'});
+				let sheet = wb.Sheets[wb.SheetNames[0]];
+				let json = XLSX.utils.sheet_to_json(sheet);
+				for (let row of json) {
+					Object.keys(row).forEach(k => {
+						switch (k) {
+							case '휴일일자':
+								row['holyDt'] = row[k];
+								break;
+							case '휴일명':
+								row['holyNm'] = row[k]
+								break;
+							case '사용여부':
+								row['useYn'] = row[k];
+								break;
+							default:
+						}
+						delete row[k];
+					});
+				}
+				EgovIndexApi.apiExecuteJson(
+					'POST',
+					'/backoffice/bld/centerHolyInfoExcelUpload.do', {
+						data: JSON.stringify(json),
+						centerCd: rowId
+					},
+					null,
+					function(json) {
+						toastr.success(json.message);
+						$popup.bPopup().close();
+						fnSearch(1);
+					},
+					function(json) {
+						toastr.error(json.message);
+					}
+				);
+			};
+			reader.readAsBinaryString($input.files[0]);
+		});
+	}
+	
+    //좌석 정보 업데이트
+	function fnSeatUpdate() {
+    	console.log($("#floorCd").val());
+    	console.log($("#partCd").val());
+    	console.log($("#seatStr").val());
+    	console.log($("#seatEnd").val());
+		if ($("#seatStr").val() > $("#seatEnd").val()){
+			toastr.warning("시작이 종료 보다 클수 없습니다. ");
+			return;
+		}
+ 	    EgovIndexApi.apiExecuteJson(
+			'POST',
+			'/backoffice/bld/floorSeatUpdate.do',
+			{
+				floorCd: $("#floorCd").val(),
+				partCd: $("#partCd").val(),
+				seatStr: $("#seatStr").val(),
+				seatEnd: $("#seatEnd").val()
+			},
+			null,
+			function(json) {
+				toastr.info(json.message);
+				fnSearch(1);
+				$('[data-popup=bld_seat_add]').bPopup().close();
+				$('#cbp-spmenu-part').bPopup().close();
+			},
+			function(json) {
+			    toastr.error(json.message);
+			}
+		); 
+	}
+    
 </script>
 <script type="text/javascript" src="/resources/js/backoffice/bld/centerList.preopen.js"></script>
 <script type="text/javascript" src="/resources/js/backoffice/bld/centerList.noshow.js"></script>

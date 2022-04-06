@@ -291,38 +291,21 @@ public class CenterInfoManageController {
 	
 	//좌석 일괄 등록
 	@NoLogging
-	@RequestMapping (value="floorSeatUpdate.do")
-	public ModelAndView updateFloorSeatUpdateInfoManage(	@ModelAttribute("LoginVO") LoginVO loginVO, 
-															@RequestBody Map<String,Object> params, 
-															HttpServletRequest request, 
-															BindingResult result) throws Exception {
+	@RequestMapping (value="floorSeatUpdate.do", method = RequestMethod.POST)
+	public ModelAndView updateFloorSeatUpdateInfoManage(@RequestBody Map<String,Object> params) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW);
+		String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
+		params.put("frstRegterId",userId);
+		params.put("lastUpdusrId",userId);
 		
-		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-		
-		if(!isAuthenticated) {
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-			model.setViewName("/backoffice/login");
-		} else {
-			HttpSession httpSession = request.getSession(true);
-			loginVO = (LoginVO)httpSession.getAttribute("LoginVO");
-			params.put("frstRegterId", loginVO.getAdminId());
-			params.put("lastUpdusrId", loginVO.getAdminId());
-	    }
-		
-		try {
-			floorService.insertFloorSeatUpdate(params);
-			
-			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("sucess.common.insert"));
-		} catch (Exception e) {
-			log.error("floorSeatUpdate ERROR : " + e.toString());
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.insert"));	
-		}	
-		log.debug("model:" + model.toString());
+		floorService.insertFloorSeatUpdate(params);
+	
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("sucess.common.insert"));
+
 		return model;
+
 	}
 	
 	@RequestMapping (value="seatCountInfo.do")

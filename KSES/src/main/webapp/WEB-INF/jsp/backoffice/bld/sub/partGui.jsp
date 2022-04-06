@@ -38,7 +38,8 @@
                 <a href="javascript:PartGui.save();" class="defaultBtn">저장</a>
                 <a href="javascript:PartGui.excelDownload();" class="defaultBtn" style="margin-right:10px;">엑셀다운로드</a>
                 <a href="javascript:void(0);" class="defaultBtn" style="margin-right:10px;">엑셀업로드</a>
-                <a href="javascript:void(0);" class="defaultBtn" style="margin-right:10px;">좌석일괄등록</a>
+                <a href="javascript:$('[data-popup=bld_seat_add]').bPopup()" class="defaultBtn" style="margin-right:10px;">좌석일괄등록</a>
+               
             </div>
             <div class="scroll_table" style="width:650px;height:508px;padding-top:0px;">
                 <div style="width:650px;">
@@ -92,6 +93,8 @@
     };
     
     $.PartGui.prototype.initialize = function(partCd, floorCd) {
+    	$('#floorCd').val(floorCd);
+    	$('#partCd').val(partCd);    	
     	let $panel = this.getGui();
         let rowId = EgovJqGridApi.getGridSelectionId('centerGrid');
         let rowData = EgovJqGridApi.getGridRowData('centerGrid', rowId);
@@ -252,7 +255,8 @@
         saveAs(new Blob([EgovIndexApi.s2ab(
             XLSX.write(wb, { bookType: 'xlsx', type: 'binary' })
         )],{ type: 'application/octet-stream' }), '구역GUI_좌석목록.xlsx');
-    };
+	};
     
+
     const PartGui = new $.PartGui();
 </script>
