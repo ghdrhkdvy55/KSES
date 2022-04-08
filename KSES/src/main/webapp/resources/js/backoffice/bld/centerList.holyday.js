@@ -17,7 +17,7 @@ $.Holyday.prototype.mainGridSettings = function() {
         cellsubmit: 'clientArray'
     });
     $('#rightAreaUqBtn').html(
-        '<a href="javascript:fnCenterHolyPopup();" class="orangeBtn">복사</a><a href="javascript:$(\'[data-popup=bld_excel_upload]\').bPopup();" class="orangeBtn">엑셀 업로드</a>'
+        '<a href="javascript:fnCenterHolyPopup();" class="orangeBtn">복사</a><a href="javascript:$(\'[data-popup=holy_excel_upload]\').bPopup();" class="orangeBtn">엑셀 업로드</a>'
     ).show();
     $('#rightAreaBtn').show();
 };

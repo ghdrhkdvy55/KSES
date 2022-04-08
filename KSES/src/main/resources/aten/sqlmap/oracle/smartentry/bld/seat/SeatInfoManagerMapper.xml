@@ -236,9 +236,16 @@
 	    WHERE SEAT_CD = #{seatCd}           
     </update>
     
-    <update id="updateSeatPositionInfo" parameterType="java.util.List">
-		<foreach collection="seatInfoList" item="item" separator=";" open="DECLARE BEGIN" close="; END;">
-			UPDATE TSEB_SEAT_INFO_D SET 
+    <update id="mergeExcelSeatPositionInfo" parameterType="java.util.List">
+		<foreach collection="seatInfoList" item="item" separator=";" open="DECLARE BEGIN" close="; END;">   
+   	        MERGE INTO TSEB_SEAT_INFO_D
+		    USING DUAL
+		    ON 
+			(	
+				SEAT_CD = #{item.seatCd}
+			)
+			WHEN MATCHED THEN
+			UPDATE SET 
 				SEAT_TOP = #{item.seatTop, jdbcType=VARCHAR}, 
 				SEAT_LEFT = #{item.seatLeft, jdbcType=VARCHAR}, 
 				LAST_UPDT_DTM = SYSDATE, 
@@ -252,8 +259,23 @@
 				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(item.seatNumber)">
 					, SEAT_NUMBER = #{item.seatNumber}
 				</if>
-			WHERE SEAT_CD = #{item.seatCd}
-		</foreach> 
+			WHEN NOT MATCHED THEN
+			INSERT
+			(
+			  SEAT_CD , CENTER_CD, FLOOR_CD, PART_CD,  SEAT_NM, 
+			  USE_YN, SEAT_TOP, SEAT_LEFT, SEAT_DVSN, SEAT_REQ_DAY,
+			  SEAT_CLASS, PAY_COST, PAY_AM_COST, PAY_PM_COST, FRST_REGIST_DTM,
+			  FRST_REGTER_ID, LAST_UPDT_DTM, LAST_UPDUSR_ID, SEAT_ORDER, SEAT_NUMBER
+			)
+			VALUES 
+			( 
+			   #{item.seatCd}, SUBSTR(#{item.seatCd}, 1, 9),  SUBSTR(#{item.seatCd}, 1, 12), SUBSTR(#{item.seatCd}, 1, 15), #{item.seatNm,jdbcType=VARCHAR},
+			   'Y', #{item.seatTop,jdbcType=VARCHAR}, #{item.seatLeft,jdbcType=VARCHAR}, 'SEAT_DVSN_1', 0,
+			   '', 0, 0, 0, SYSDATE,
+			   #{item.frstRegterId, jdbcType=VARCHAR}, SYSDATE, #{item.lastUpdusrId, jdbcType=VARCHAR},
+			   #{item.seatOrder, jdbcType=VARCHAR}, #{item.seatNumber, jdbcType=VARCHAR}
+			)
+   	    </foreach>
     </update> 
     
     <delete id="deleteSeatInfo">

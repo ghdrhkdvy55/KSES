@@ -19,7 +19,8 @@ public interface SeatInfoManageService {
 	
 	int updateSeatInfo(SeatInfo vo) throws Exception;
 	
-	int updateSeatPositionInfo(List<SeatInfo> list) throws Exception;
+//	int updateSeatPositionInfo(List<SeatInfo> list) throws Exception;
+	int mergeExcelSeatPositionInfo(List<SeatInfo> list) throws Exception;
 	
 	int deleteSeatInfo(List<String> seatList)throws Exception;
 }

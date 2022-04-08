@@ -197,7 +197,8 @@ public class SeatInfoManageController {
 
 		String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
 		seatInfoList.stream().forEach(x -> x.setLastUpdusrId(userId));
-		seatService.updateSeatPositionInfo(seatInfoList);
+//		seatService.updateSeatPositionInfo(seatInfoList);
+		seatService.mergeExcelSeatPositionInfo(seatInfoList);
 		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
 		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("sucess.common.update"));
 
@@ -206,37 +207,28 @@ public class SeatInfoManageController {
 	
 	//신규 excel upload
 	@RequestMapping(value="SeatExcelUpload.do", method=RequestMethod.POST)
-	public ModelAndView updateExcelUpload (@RequestBody Map<String, Object> params, 
-										  HttpServletRequest request, 
-										  BindingResult bindingResult) throws Exception {
+	public ModelAndView updateExcelUpload (@RequestBody Map<String, Object> params) throws Exception {
 		
 		ModelAndView model = new ModelAndView(Globals.JSONVIEW); 
-	    Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-	    if(!isAuthenticated) {
-	    	model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.login"));
-	    	model.setViewName("/backoffice/login");
-	    	return model;	
-	    }
-	    
-	    try {
-	    	
-	    	LoginVO loginVO = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
-	    	String userId = loginVO.getAdminId();
-	    	
-	    	Gson gson = new GsonBuilder().create();
-	    	List<SeatInfo> seatInfos = gson.fromJson(params.get("data").toString(), new TypeToken<List<SeatInfo>>(){}.getType());
-			//좌석/ 회의실 정리 하기 
-	    	seatInfos.forEach(SeatInfo -> SeatInfo.setUserId(userId));
-			
-	    	int result = seatService.updateSeatPositionInfo(seatInfos);
-			model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
-            model.addObject("resutlCnt", result);
-            
-	    } catch(Exception e) {
-	    	log.info(e.toString());
-			model.addObject(Globals.STATUS, Globals.STATUS_FAIL);
-			model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("fail.common.insert"));
-	    }
+
+		String userId = EgovUserDetailsHelper.getAuthenticatedUserId();
+		params.put("frstRegterId", userId);
+		params.put("lastUpdusrId", userId);
+		
+		Gson gson = new GsonBuilder().create();
+		List<SeatInfo> seatInfos = gson.fromJson(params.get("data").toString(), new TypeToken<List<SeatInfo>>(){}.getType());
+		//좌석/ 회의실 정리 하기 
+		seatInfos.forEach(SeatInfo -> {
+			SeatInfo.setFrstRegterId(userId);
+			SeatInfo.setLastUpdusrId(userId);
+		});
+		
+		//int result = seatService.updateSeatPositionInfo(seatInfos);
+		int result = seatService.mergeExcelSeatPositionInfo(seatInfos);
+		model.addObject("resutlCnt", result);
+		model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
+		model.addObject(Globals.STATUS_MESSAGE, egovMessageSource.getMessage("sucess.common.update"));
+
 	    return model;
 
 	}
