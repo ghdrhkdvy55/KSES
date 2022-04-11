@@ -43,9 +43,14 @@ public class SeatInfoManageServiceImpl extends EgovAbstractServiceImpl implement
 		return seatMapper.updateSeatInfo(vo);
 	}
 
+//	@Override
+//	public int updateSeatPositionInfo(List<SeatInfo> list) throws Exception {
+//		return seatMapper.updateSeatPositionInfo(list);
+//	}
+	
 	@Override
-	public int updateSeatPositionInfo(List<SeatInfo> list) throws Exception {
-		return seatMapper.updateSeatPositionInfo(list);
+	public int mergeExcelSeatPositionInfo(List<SeatInfo> list) throws Exception {
+		return seatMapper.mergeExcelSeatPositionInfo(list);
 	}
 
 	@Override

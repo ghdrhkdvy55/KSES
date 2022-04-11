@@ -37,7 +37,7 @@
                 <p>좌석 설정</p>
                 <a href="javascript:PartGui.save();" class="defaultBtn">저장</a>
                 <a href="javascript:PartGui.excelDownload();" class="defaultBtn" style="margin-right:10px;">엑셀다운로드</a>
-                <a href="javascript:void(0);" class="defaultBtn" style="margin-right:10px;">엑셀업로드</a>
+                <a href="javascript:$('[data-popup=seat_excel_upload]').bPopup();" class="defaultBtn" style="margin-right:10px;">엑셀업로드</a>
                 <a href="javascript:$('[data-popup=bld_seat_add]').bPopup()" class="defaultBtn" style="margin-right:10px;">좌석일괄등록</a>
                
             </div>
@@ -238,10 +238,9 @@
         }
         let list = $(PartGuiGridSelector).jqGrid('getRowData');
         let excelData = new Array();
-        excelData.push(['NO', '좌석코드', '좌석번호', '좌석명', 'TOP', 'LEFT', '정렬순서']);
+        excelData.push(['좌석코드', '좌석번호', '좌석명', 'TOP', 'LEFT', '정렬순서']);
         for (let idx in list) {
             let arr = new Array();
-            arr.push(Number(idx)+1);
             arr.push(list[idx].seat_cd);
             arr.push(list[idx].seat_number);
             arr.push(list[idx].seat_nm);
@@ -256,6 +255,62 @@
             XLSX.write(wb, { bookType: 'xlsx', type: 'binary' })
         )],{ type: 'application/octet-stream' }), '구역GUI_좌석목록.xlsx');
 	};
+	
+	/* $.PartGui.prototype.fnSeatExcelUpload = function() {
+		// 엑셀업로드
+		bPopupConfirm('좌석 엑셀 업로드', '엑셀 업로드를 좌석 설정을 진행하시겠습니까?', function() {
+			let $popup = $('[data-popup=seat_excel_upload]');
+			let $input = $popup.find(':file')[0];
+			let reader = new FileReader();
+			reader.onload = function() {
+				let wb = XLSX.read(reader.result, {type: 'binary'});
+				let sheet = wb.Sheets[wb.SheetNames[0]];
+				let json = XLSX.utils.sheet_to_json(sheet);
+				for (let row of json) {
+					Object.keys(row).forEach(k => {
+						switch (k) {
+							case '좌석코드':
+								row['seatCd'] = row[k];
+								break;
+							case '좌석번호':
+								row['seatNumber'] = row[k]
+								break;
+							case '좌석명':
+								row['seatNm'] = row[k];
+								break;
+							case 'TOP':
+								row['seatTop'] = row[k];
+								break;
+							case 'LEFT':
+								row['seatLeft'] = row[k];
+								break;
+							case '정렬순서':
+								row['seat_order'] = row[k];
+								break;
+							default:
+						}
+						delete row[k];
+					});
+				}
+				EgovIndexApi.apiExecuteJson(
+					'POST',
+					'/backoffice/bld/SeatExcelUpload.do', {
+						data: JSON.stringify(json),
+					},
+					null,
+					function(json) {
+						toastr.success(json.message);
+						$popup.bPopup().close();
+						fnSearch(1);
+					},
+					function(json) {
+						toastr.error(json.message);
+					}
+				);
+			};
+			reader.readAsBinaryString($input.files[0]);
+		});
+	}; */
     
 
     const PartGui = new $.PartGui();

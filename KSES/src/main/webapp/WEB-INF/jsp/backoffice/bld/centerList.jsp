@@ -179,7 +179,7 @@
 	</div>
 </div>
 <!-- 엑셀 업로드 팝업 -->
-<div data-popup="bld_excel_upload" class="popup m_pop">
+<div data-popup="holy_excel_upload" class="popup m_pop">
 	<div class="pop_con">
 		<a class="button b-close">X</a>
         <p class="pop_tit">엑셀 업로드</p>
@@ -189,7 +189,17 @@
         <div style="float:left;margin-top:5px;">
         	<a href="/backoffice/bas/holyInfoUploadSampleDownload.do" class="orangeBtn">샘플</a>
         </div>
-        <popup-right-button okText="업로드" clickFunc="fnExcelUpload();" />
+        <popup-right-button okText="업로드" clickFunc="fnHolyExcelUpload();" />
+	</div>
+</div>
+<div data-popup="seat_excel_upload" class="popup m_pop">
+	<div class="pop_con">
+		<a class="button b-close">X</a>
+        <p class="pop_tit">엑셀 업로드</p>
+        <p class="pop_wrap">
+        	<input type="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+        </p>
+        <popup-right-button okText="업로드" clickFunc="fnSeatExcelUpload();" />
 	</div>
 </div>
 <div data-popup="bld_centerinfo_add" class="popup"></div>
@@ -530,10 +540,10 @@
 			);
 		});
 	}
-	function fnExcelUpload() {
+	function fnHolyExcelUpload() {
 		// 엑셀업로드
 		bPopupConfirm('지점 휴일일자 등록', '엑셀 업로드를 통한 휴일일자 등록을 진행하시겠습니까?', function() {
-			let $popup = $('[data-popup=bld_excel_upload]');
+			let $popup = $('[data-popup=holy_excel_upload]');
 			let $input = $popup.find(':file')[0];
 			let rowId = EgovJqGridApi.getGridSelectionId('centerGrid');
 			let reader = new FileReader();
@@ -609,6 +619,62 @@
 		); 
 	}
     
+	function fnSeatExcelUpload() {
+		// 엑셀업로드
+		bPopupConfirm('좌석 엑셀 업로드', '엑셀 업로드를 좌석 설정을 진행하시겠습니까?', function() {
+			let $popup = $('[data-popup=seat_excel_upload]');
+			let $input = $popup.find(':file')[0];
+			let reader = new FileReader();
+			reader.onload = function() {
+				let wb = XLSX.read(reader.result, {type: 'binary'});
+				let sheet = wb.Sheets[wb.SheetNames[0]];
+				let json = XLSX.utils.sheet_to_json(sheet);
+				for (let row of json) {
+					Object.keys(row).forEach(k => {
+						switch (k) {
+							case '좌석코드':
+								row['seatCd'] = row[k];
+								break;
+							case '좌석번호':
+								row['seatNumber'] = row[k]
+								break;
+							case '좌석명':
+								row['seatNm'] = row[k];
+								break;
+							case 'TOP':
+								row['seatTop'] = row[k];
+								break;
+							case 'LEFT':
+								row['seatLeft'] = row[k];
+								break;
+							case '정렬순서':
+								row['seat_order'] = row[k];
+								break;
+							default:
+						}
+						delete row[k];
+					});
+				}
+				EgovIndexApi.apiExecuteJson(
+					'POST',
+					'/backoffice/bld/SeatExcelUpload.do', {
+						data: JSON.stringify(json),
+					},
+					null,
+					function(json) {
+						toastr.success(json.message);
+						$popup.bPopup().close();
+						fnSearch(1);
+						PartGui.open();
+					},
+					function(json) {
+						toastr.error(json.message);
+					}
+				);
+			};
+			reader.readAsBinaryString($input.files[0]);
+		});
+	};
 </script>
 <script type="text/javascript" src="/resources/js/backoffice/bld/centerList.preopen.js"></script>
 <script type="text/javascript" src="/resources/js/backoffice/bld/centerList.noshow.js"></script>

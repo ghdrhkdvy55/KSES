@@ -24,7 +24,8 @@ public interface SeatInfoManageMapper {
 		
 	public int updateSeatInfo(SeatInfo vo);
 	
-	public int updateSeatPositionInfo(@Param("seatInfoList") List<SeatInfo> seatInfoList);
+//	public int updateSeatPositionInfo(@Param("seatInfoList") List<SeatInfo> seatInfoList);
+	public int mergeExcelSeatPositionInfo(@Param("seatInfoList") List<SeatInfo> seatInfoList);
 	
 	public int deleteSeatInfo(@Param("seatInfoList") List<String> seatList);
 	
