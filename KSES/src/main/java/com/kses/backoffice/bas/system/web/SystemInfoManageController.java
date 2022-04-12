@@ -1,5 +1,8 @@
 package com.kses.backoffice.bas.system.web;
 
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -12,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.kses.backoffice.bas.code.service.EgovCcmCmmnDetailCodeManageService;
 import com.kses.backoffice.bas.system.service.SystemInfoManageService;
 import com.kses.backoffice.bas.system.vo.SystemInfo;
+import com.kses.backoffice.bld.center.service.CenterInfoManageService;
 import com.kses.backoffice.sym.log.annotation.NoLogging;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -35,6 +39,9 @@ public class SystemInfoManageController {
 	@Autowired
     protected EgovCcmCmmnDetailCodeManageService detailService;
 	
+    @Autowired
+    private CenterInfoManageService centerService;
+	
 	@Autowired
 	SystemInfoManageService systemInfoService;
 	
@@ -49,6 +56,7 @@ public class SystemInfoManageController {
 	public ModelAndView viewSystemInfo() throws Exception {
 		ModelAndView model = new ModelAndView("/backoffice/bas/systemInfo");
 		SystemInfo result = systemInfoService.selectSystemInfo();   	
+		model.addObject("centerInfo", centerService.selectCenterInfoComboList());
         model.addObject(Globals.JSON_RETURN_RESULT, result);
         model.addObject(Globals.STATUS, Globals.STATUS_SUCCESS);
         return model;	
