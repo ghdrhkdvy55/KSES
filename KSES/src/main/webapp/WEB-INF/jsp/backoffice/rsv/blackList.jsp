@@ -215,8 +215,13 @@
 		};
 		EgovJqGridApi.mainGridAjax('/backoffice/rsv/blackListAjax.do', params, fnSearch);
 		
-		let col = $('#searchBlklstDvsn').val() !== 'BLKLST_DVSN_3' ? 'hideCol' : 'showCol';
-		$(MainGridSelector).jqGrid(col, ['user_noshow_cnt', 'user_noshow_last_dt', 'update_btn']);
+		if ($('#searchBlklstDvsn').val() !== 'BLKLST_DVSN_3'){
+			$(MainGridSelector).jqGrid('hideCol', ['user_noshow_cnt', 'user_noshow_last_dt']);
+			$(MainGridSelector).jqGrid('showCol', 'update_btn');
+		} else {
+			$(MainGridSelector).jqGrid('showCol', ['user_noshow_cnt', 'user_noshow_last_dt']);
+			$(MainGridSelector).jqGrid('hideCol', 'update_btn');
+		}
 		$(MainGridSelector).setGridWidth($(MainGridSelector).closest('div.boardlist').width() , true);
 	}
 	
@@ -241,10 +246,10 @@
 			$form.find(':text').val('');
 			$form.find('textarea[name=blklstReason]').val(rowData.blklst_reason);
 			$form.find('select[name=userSearchCondition] option:first').prop('selected', true);
-			$form.find('select[name=blklstDvsn]').val(rowData.blklst_dvsn);
+			$form.find('select[name=blklstDvsn]').val(rowData.blklst_dvsn).prop('selected', true);
 			$form.find(':text[name=userId]').val(rowData.user_id);
 			$form.find(':text[name=userNm]').val(rowData.user_nm);
-			$form.find('text[name=userClphn]').val(rowData.user_phone);
+			$form.find(':text[name=userClphn]').val(rowData.user_phone);
 		}
 		$popup.bPopup();
 	}

@@ -48,7 +48,14 @@
 			) TB 
 		) TA
 		WHERE TA.RNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
-		ORDER BY TA.RNUM DESC
+		<choose>
+			<when test="@org.apache.commons.lang3.StringUtils@equals(params.searchBlklstDvsn,'BLKLST_DVSN_3')">
+				ORDER BY TA.USER_NOSHOW_CNT DESC
+			</when>
+			<otherwise>
+				ORDER BY TA.RNUM DESC
+			</otherwise>
+		</choose>
     </select>
 
     <update id="insertBlackUserInfo">
@@ -61,7 +68,7 @@
 		VALUES
 		(
 			SEQ_SER_BLKLIST_INFO.NEXTVAL, #{userId}, #{userDvsn, jdbcType=VARCHAR}, #{userClphn, jdbcType=VARCHAR}, #{blklstDvsn, jdbcType=VARCHAR}, 
-			#{blklstReason, jdbcType=CLOB}, 'N', #{adminId, jdbcType=VARCHAR}, SYSDATE, #{adminId, jdbcType=VARCHAR}, 
+			#{blklstReason, jdbcType=CLOB}, 'N', #{frstRegisterId, jdbcType=VARCHAR}, SYSDATE, #{lastUpdusrId, jdbcType=VARCHAR}, 
 			SYSDATE
 		)
     </update>	
