@@ -5,7 +5,7 @@
 		SELECT TB.*
 		FROM (
 				 SELECT SUM(1) OVER (PARTITION BY NULL)            AS TOTAL_RECORD_COUNT,
-						ROW_NUMBER() OVER (ORDER BY A.HOLY_DT ASC) AS RNUM,
+						ROW_NUMBER() OVER (ORDER BY A.HOLY_DT DESC) AS RNUM,
 						A.CENTER_HOLY_SEQ,
 						A.CENTER_CD,
 						A.HOLY_DT,
@@ -20,7 +20,7 @@
 		    		AND A.CENTER_CD = #{params.centerCd}
 			 ) TB
 		WHERE RNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}
-		ORDER BY RNUM ASC
+		ORDER BY TB.HOLY_DT DESC
 	</select>
 	
 	<insert id="insertCenterHolyInfo">
