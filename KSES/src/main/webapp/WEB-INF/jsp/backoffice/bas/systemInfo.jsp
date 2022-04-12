@@ -110,6 +110,11 @@
 	                  	<th>스피드온 자동결제</th>
 	                  	<td style="text-align:left;"><button class="blueBtn" onclick="fnAutoPaymentInfo();">설정</button></td>
                     </tr>
+                    <tr>
+                    	<th>예약 전체 취소</th>
+	                  	<td style="text-align:left;"><a href="javascript:$('[data-popup=bas_all_cancel]').bPopup();" class="blueBtn">전체 예약취소</a></td>
+	                  	<td colspan="2"></td>
+                    </tr>
             	</tbody>
         	</table>
     	</div>
@@ -130,6 +135,37 @@
 			</div>
 		</div>
 		<popup-right-button okText="저장" clickFunc="fnAutoPaymentUpdate();" />
+	</div>
+</div>
+<!-- 전체 취소 팝업 -->
+<div data-popup="bas_all_cancel" class="popup m_pop">
+	<div class="pop_con">
+		<a class="button b-close">X</a>
+    	<h2 class="pop_tit">전체 예약 취소</h2>
+    	<div class="pop_wrap">
+    		<table class="detail_table">
+           		<tbody>
+					<tr>
+						<th>지점</th>
+	                    <td>
+							<select name="centerCd">
+            					<option value="">선택</option>
+								<c:forEach items="${centerInfo}" var="centerInfo">
+									<option value="${centerInfo.center_cd}"><c:out value='${centerInfo.center_nm}'/></option>
+								</c:forEach>
+            				</select>
+	                    </td>
+					</tr>
+               		<tr>
+						<th>취소일</th>
+	                    <td>
+	                    	<input type="text" name="resvDate" class="cal_icon">
+	                    </td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<popup-right-button okText="예약취소" clickFunc="fnResvInfoCancelAll();" />
 	</div>
 </div>
 <!-- contents//-->
@@ -225,5 +261,50 @@
 				toastr.error(json.message);
 			}
 		);
+	}
+	
+	function fnResvInfoCancelAll() {
+		let $popup = $('[data-popup=bas_all_cancel]');
+		if($popup.find('select[name=centerCd]').val() === '') {
+            toastr.warning('지점을 선택해 주세요.');
+            return;
+		}
+		if($popup.find(':text[name=resvDate]').val() === '') {
+            toastr.warning('예약 취소일을 선택하세요.');
+            return;
+		}
+		
+		if(!yesterDayConfirm($popup.find(':text[name=resvDate]').val())) {
+            toastr.warning('예약 취소일을 이전일자로 지정하실수 없습니다.');
+            return;
+		}
+
+		bPopupConfirm('전체예약취소', $popup.find('select[name=centerCd] option:selected').text() + '점 예약정보를 모두 취소 하시겠습니까?', function() {
+			EgovIndexApi.apiExecuteJson(
+				'POST',
+				'/backoffice/rsv/resvInfoCancelAll.do', {
+					centerCd : $popup.find('select[name=centerCd]').val(),
+					resvDate : $popup.find(':text[name=resvDate]').val()
+				},
+				null,
+				function(json) {
+					if(json.allCount > 0){
+						json.message =
+							"전체 예약취소가 정상 처리 되었습니다." + "<br><br>" +
+							"취소 예약정보 : "  + json.allCount + "건" + "<br>" +
+							"취소 성공 : "  + json.successCount + "건" + "<br>" + 
+							"취소 실패 : "  + json.failCount + "건" + "<br>" +
+							"무인발권기 예외 : "  + json.ticketCount + "건";
+						toastr.success(json.message);
+						$popup.bPopup().close();
+					} else {
+						toastr.warning('지정한 날짜에 취소할 예약정보가 존재하지 않습니다.');
+					}
+				},
+				function(json) {
+					toastr.error(json.message);
+				}
+			);
+		});
 	}
 </script>
