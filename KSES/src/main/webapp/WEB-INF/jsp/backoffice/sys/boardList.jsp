@@ -95,6 +95,7 @@
 </div>
 <!-- contents//-->
 <input type="hidden" id="boardCd" name="boardCd" value="${regist.board_cd }">
+<input type="hidden" id="authorCd" name="authorCd" value="${loginVO.authorCd}">
 <input type="hidden" id="mode">
 <!-- //popup -->
 <!--  -->
@@ -390,7 +391,7 @@
 	    formData.append('useYn' , fn_emptyReplace($("#useYn").val(),"N"));
 	    formData.append('mode' , $('#mode').val());
 		
-	    
+	    console.log(formData);
 		bPopupConfirm('게시물 '+ ($('#mode').val() === 'Ins' ? '등록' : '수정'), '저장 하시겠습니까?', function() {
 			EgovIndexApi.apiExcuteMultipart(
 				'/backoffice/sys/boardUpdate.do',
