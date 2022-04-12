@@ -51,7 +51,10 @@ $.Floor.prototype.subFloorPartGrid = function(parentId, rowId) {
         { label: 'GUI', align:'center', sortable: false, width: 50, fixed: true, formatter: (c, o, row) =>
         	row.part_map1 === null || row.part_map1 === 'no_image.png' ? '' :
             	'<a href="javascript:Floor.guiPart(\'' + row.part_cd + '\', \'' + row.floor_cd + '\');" class="gui_icon"></a>'
-        }
+        },
+        { label: 'VIEW', align:'center', sortable: false, width: 50, fixed: true, formatter: (c, o, row) =>
+        	'<a href="javascript:Floor.preview(\'' + row.part_cd + '\', \'' + row.floor_cd + '\', \'' + row.center_cd + '\');" class="view_icon"></a>'
+        },
     ], 'POST', '/backoffice/bld/partListAjax.do', {
         floorCd: rowId
     });
@@ -87,6 +90,14 @@ $.Floor.prototype.guiFloor = function(rowId) {
 
 $.Floor.prototype.guiPart = function(rowId, parentId) {
 	PartGui.initialize(rowId, parentId);
+}
+
+$.Floor.prototype.preview = function(partCd, floorCd, centerCd) {
+	// 새탭
+	let getParameter = '?partCd=' + partCd + '&' + 'floorCd=' + floorCd + '&' + 'centerCd=' + centerCd;
+	window.open('/backoffice/bld/partPreview.do' + getParameter);
+	// 새창
+	//window.open('/backoffice/bld/partPreview.do' + getParameter, '좌석현황', 'width=1920px,height=1080px,scrollbars=yes');
 }
 
 const Floor = new $.Floor();
