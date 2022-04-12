@@ -545,7 +545,9 @@
     		RESV_STATE = 'RESV_STATE_4',
     		RESV_CANCEL_ID = #{params.resv_cancel_id},
     		RESV_CANCEL_CD = #{params.resv_cancel_cd},
-    		RESV_CANCEL_DT = SYSDATE
+    		RESV_CANCEL_DT = SYSDATE,
+    		LAST_UPDUSR_ID = #{params.resv_cancel_id},
+    		LAST_UPDT_DTM = SYSDATE
     	WHERE RESV_SEQ = #{params.resv_seq}
     </update>
     
@@ -557,7 +559,8 @@
 			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(resvPayDvsn)">
 				RESV_PAY_DVSN = #{resvPayDvsn},
 			</if>
-			LAST_UPDUSR_ID = #{lastUpdusrId}
+			LAST_UPDUSR_ID = #{lastUpdusrId},
+			LAST_UPDT_DTM = SYSDATE
         WHERE RESV_SEQ = #{resvSeq}
     </update>
     
@@ -573,11 +576,11 @@
 		UPDATE TSER_RESV_INFO_I SET 
 			RESV_STATE = 'RESV_STATE_3'
         WHERE RESV_END_DT = TO_CHAR(SYSDATE,'YYYYMMDD')
-        AND RESV_STATE != 'RESV_STATE_4'
+        AND RESV_STATE = 'RESV_STATE_2'
     </update>
     
 	<update id="updateResvQrCount">
-		UPDATE TSER_RESV_INFO_I SET 	
+		UPDATE TSER_RESV_INFO_I SET
 			RESV_QR_COUNT = RESV_QR_COUNT + 1
         WHERE RESV_SEQ = #{resvSeq}
     </update>     
