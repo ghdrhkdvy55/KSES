@@ -69,6 +69,18 @@ public class FloorPartInfoManageController {
 	public ModelAndView guiPart() throws Exception {
 		return new ModelAndView("/backoffice/bld/sub/partGui");
 	}
+	
+	/**
+	 * 구역 현황 화면
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping (value = "partPreview.do", method = RequestMethod.GET)
+	public ModelAndView preview(@RequestParam Map <String, Object> params) throws Exception {
+		ModelAndView model = new ModelAndView("/backoffice/bld/sub/partPreview");
+		model.addObject("areaInfo", params);
+		return model;
+	}
 
 	/**
 	 * 구역 목록 조회

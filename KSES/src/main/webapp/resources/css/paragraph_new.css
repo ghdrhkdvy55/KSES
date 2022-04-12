@@ -450,3 +450,91 @@ ul.pop_seat li.usable{background-color: #0094DB; left: 565px; top: 282px;}
 ul.pop_seat li.disable{background-color: #959595; left: 522px; top: 282px;}
 ul.pop_seat li.selected{background-color: #ffb047; padding: 0 !important; left: 608px; top: 282px;}
 
+/* --------------------------------------------------------------------------------------------- */
+html, body{width:100%;height:100%; margin: 0; padding: 0;}
+.wrapper{width:1920px; height:1080px; background: #fff; }
+
+/* .wrapper li.usable{background-color: #0094DB; left: 565px; top: 282px;}
+.wrapper li.disable{background-color: #959595; left: 522px; top: 282px;}
+.wrapper li.selected{background-color: #ffb047; padding: 0 !important; left: 608px; top: 282px;} */
+
+.wrapper .header {
+	position: relative;
+	padding: 20px 15px 0px 15px;
+	background-color: #fff;
+	font-weight: bold;
+	height: 10%;
+}
+.wrapper .header .area_info {
+	display: inline-block;
+	padding: 20px;
+}
+.wrapper .header .area_info span {
+	font-size: 40px;
+	padding: 20px;
+	color: #616161;
+}
+
+.wrapper .contents {
+	position: relative;
+	overflow: hidden;
+}
+.wrapper .contents .gui_seat {
+	position:relative;  
+	border-top: 1px solid #e0e0e0; 
+	width: 1920px;
+    height: 950px;
+}
+
+.wrapper .contents .part_map {
+	position: relative;
+    width: 1375px;
+    height: 750px;
+    left : -100px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    background-size: 100% !important;
+}
+
+.wrapper .contents .mapArea {
+    width: 100%;
+    min-height: 100%;
+    height: auto;
+}
+
+.wrapper .contents .seat li {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    box-sizing: border-box;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 1em;
+    text-align: center;
+    line-height: 35px;
+    list-style:none;
+}
+
+.wrapper .contents .seat li.select {
+    background: #0094DB !important;
+    color: white;
+}
+
+.wrapper .contents .seat li.none {
+    background: #848484;
+    color: white;
+}
+
+.wrapper .contents .seat li.seatUse {
+    background-color: #FFB047;
+    color: white;
+}
+
+.seat_stat {position : relative;  float : right;}
+.seat_stat ul{overflow: hidden;  background-color: rgba(255,255,255,0.8); display: inline-block; padding: 30px; margin:0}
+.seat_stat ul li{float: left; margin-right: 15px; font-size: 30px; color: #616161; list-style:none;}
+.seat_stat i{display: inline-block; width: 30px; height: 30px; border-radius: 100%;  vertical-align: middle; margin-right: 5px;}
+.seat_stat li.disable i{background-color: #959595;}
+.seat_stat li.usable i{background-color: #FFB047;}
+.seat_stat li.selected{padding: 0; margin-right: 0;}
+.seat_stat li.selected i{background-color: #0094DB; padding: 0 !important;}
