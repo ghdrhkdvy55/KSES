@@ -95,7 +95,6 @@
 </div>
 <!-- contents//-->
 <input type="hidden" id="boardCd" name="boardCd" value="${regist.board_cd }">
-<input type="hidden" id="authorCd" name="authorCd" value="${loginVO.authorCd}">
 <input type="hidden" id="mode">
 <!-- //popup -->
 <!--  -->
@@ -144,7 +143,7 @@
 								<th>지점 선택</th>
 								<td><span id="sp_boardCenter"></span>
 								<th>전 지점  선택</th>
-								<td><input type="checkbox" id="boardAllNotice" name="boardAllNotice" onClick="fn_CheckboxAllChangeInfo('boardAllNotice', 'boardCenterId');">
+								<td><input type="checkbox" id="boardAllNotice" onClick="fn_CheckboxAllChangeInfo('boardAllNotice', 'boardCenterId');">
 								</td>
 							</tr>
 						</c:otherwise>
@@ -210,8 +209,8 @@
 			{ label: '수정', align:'center', width: 50, fixed: true, formatter: (c, o, row) =>
 	        	'<a href="javascript:fnBoardInfo(\'Edt\',\''+ row.board_seq +'\');" class="edt_icon"></a>'
 			}	
-		], false, false, fnSearch);
-		 if($("#authorCd").val() != "ROLE_ADMIN" && $("#authorCd").val() != "ROLE_SYSTEM") {
+		], false, false, fnSearch); 
+		if($('#loginAuthorCd').val() != 'ROLE_ADMIN' && $('#loginAuthorCd').val() != 'ROLE_SYSTEM'){
 			 insertBoardCenterId = $("#boardCenterId").val();
 			 insertBoardAllCk = "N"
 		 } else {
@@ -382,8 +381,14 @@
 		//사용자 값에 따른 변경값
 		boardCenterId = ($('#loginAuthorCd').val() != 'ROLE_ADMIN' && $('#loginAuthorCd').val() != 'ROLE_SYSTEM') 
 			? insertBoardCenterId : ckeckboxValueNoPopup("boardCenterId");
-		boardAllCk = ($('#loginAuthorCd').val() != 'ROLE_ADMIN' && $('#loginAuthorCd').val() != 'ROLE_SYSTEM')  
-			? "N" : $('#boardAllNotice').is(":checked") == true ? "Y" : "N";
+/* 		boardAllCk = ($('#loginAuthorCd').val() != 'ROLE_ADMIN' && $('#loginAuthorCd').val() != 'ROLE_SYSTEM')  
+			? "N" : $('#boardAllNotice').is(":checked") == true ? "Y" : "N"; */
+		let boardAllCk = "";
+		if(($('#loginAuthorCd').val() != 'ROLE_ADMIN' && $('#loginAuthorCd').val() != 'ROLE_SYSTEM')){
+			boardAllCk = 'N';
+		} else {
+			boardAllCk = $('#boardAllNotice').is(":checked") == true ? "Y" : "N";
+		}
 		
 		formData.append('boardCd' , $('#boardCd').val());
 		/* formData.append('boardCenterId' , boardCenterId); */
@@ -412,7 +417,7 @@
 	function fnBoardCheck(){
 		let $popup = $('[data-popup=bas_board_add]');
 		let $form = $popup.find('form:first');
-		var checked = ($('#boardCenterId').length != $('#boardCenterId').length ) ? false : true;
+		var checked = ($('#boardCenterId').length != $('#boardCenterId').length ) ? true : false;
 		$('#boardAllNotice').prop("checked", checked);
 	}
 	// 파일 전체 선택
