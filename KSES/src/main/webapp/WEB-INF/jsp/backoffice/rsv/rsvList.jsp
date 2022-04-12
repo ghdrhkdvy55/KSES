@@ -586,7 +586,7 @@
 		$popup.find('td#rsvResvPayDvsn').html(rowData.resv_pay_dvsn_text);
 		$popup.find('td#rsvResvSeatPayCost').html(rowData.resv_seat_pay_cost + '원');
 		$popup.find('td#rsvResvEntryPayCost').html(rowData.resv_entry_pay_cost + '원');
-		$popup.find('td#rsvResvTicketDvsn').html(rowData.resv_state_text);
+		$popup.find('td#rsvResvTicketDvsn').html(rowData.resv_ticket_dvsn_text);
 		$popup.find('td#rsvResvPayDvsn').html(rowData.resv_pay_dvsn_text);
 		$popup.find('td#rsvResvState').html(rowData.resv_state_text);
 		$popup.find('popup-right-button button').eq(0).hide();
@@ -600,9 +600,12 @@
 		});
 		
 		// 예약취소/좌석변경 버튼
-		$popup.find('a#rsvSeatChangeBtn,a#resvCancelBtn,a#enterRegistBtn').hide();
+		$popup.find('a#rsvSeatChangeBtn,a#resvCancelBtn,a#enterRegistBtn,a#rsvStateChange').hide();
 		if(rowData.resv_state === 'RESV_STATE_1' || rowData.resv_state === 'RESV_STATE_2') {
-			$popup.find('a#resvCancelBtn').show();
+			if($('#loginAuthorCd').val() == "ROLE_ADMIN"){
+				$popup.find('a#resvCancelBtn').show();
+				$popup.find('a#rsvStateChange').show();
+			}
 			if(fn_resvDateFormat(today_get())  === rowData.resv_end_dt){
 				$popup.find('a#enterRegistBtn').show();
 			}
@@ -747,7 +750,7 @@
 			},
 			null,
 			function(json) {
-				let data = json.result;
+				let data = json.cashBillInfo;
 				$('#confirmNum').html(data.confirmNum);
 				$('#issueDT').html(data.issueDT);
 				$('#mgtKey').html(data.mgtKey);
@@ -760,7 +763,7 @@
 				$('#totalAmount').html(data.totalAmount + '원');
 				$('#itemName').html(data.itemName);
 				$('#customerName').html(data.customerName);
-				$('[data-popup=rsv_bill_info]').bPopup();
+				$popup.bPopup();
 			},
 			function(json) {
 				toastr.error(json.message);
