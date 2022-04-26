@@ -11,41 +11,50 @@
 				TB.* 
 			FROM 	
 			(	
-				SELECT  
-					A.BLKLST_SEQ, B.USER_ID, A.USER_DVSN, A.USER_CLPHN,
-					A.BLKLST_USER_YN, A.BLKLST_CANCEL_YN, FN_DETAILCODENM(A.BLKLST_DVSN) AS BLKLST_DVSN_TXT, B.USER_PHONE, 
-					B.USER_NM, B.USER_NOSHOW_CNT, B.USER_NOSHOW_LAST_DT, A.BLKLST_DVSN, 
-					DBMS_LOB.SUBSTR(A.BLKLST_REASON, DBMS_LOB.GETLENGTH(A.BLKLST_REASON)) AS BLKLST_REASON,
-					A.FRST_REGTER_ID, A.LAST_UPDUSR_ID,
+				SELECT
+					A.BLKLST_SEQ, B.USER_ID, A.USER_DVSN, B.USER_PHONE, B.USER_NM, 
+					A.BLKLST_CANCEL_YN, FN_DETAILCODENM(A.BLKLST_DVSN) AS BLKLST_DVSN_TXT, B.USER_NOSHOW_CNT, B.USER_NOSHOW_LAST_DT, 
+					A.BLKLST_DVSN, DBMS_LOB.SUBSTR(A.BLKLST_REASON, DBMS_LOB.GETLENGTH(A.BLKLST_REASON)) AS BLKLST_REASON,
+					A.FRST_REGTER_ID, A.LAST_UPDUSR_ID, 
 					TO_CHAR(A.LAST_UPDT_DTM, 'YYYY-MM-DD HH24:MI') AS LAST_UPDT_DTM,
 					TO_CHAR(A.FRST_REGIST_DTM, 'YYYY-MM-DD HH24:MI') AS FRST_REGIST_DTM
 				FROM TSER_BLKLST_INFO_I A, TSER_USER_INFO_I B
-				WHERE 1=1
+				WHERE 1 = 1
 				AND A.USER_ID = B.USER_ID
-				AND B.USER_DVSN = 'USER_DVSN_1'
-				AND A.BLKLST_DVSN = #{params.searchBlklstDvsn, jdbcType=VARCHAR}
-				<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
-					<choose>
-						<when test="@org.apache.commons.lang3.StringUtils@equals(params.searchCondition,'USER_ID')">
-							AND A.USER_ID LIKE '%' || #{params.searchKeyword} || '%'
-						</when>
-						<when test="@org.apache.commons.lang3.StringUtils@equals(params.searchCondition,'USER_NM')">
-							AND B.USER_NM LIKE '%' || #{params.searchKeyword} || '%'
-						</when>
-						<when test="@org.apache.commons.lang3.StringUtils@equals(params.searchCondition,'USER_PHONE')">
-							AND B.USER_PHONE LIKE '%' || #{params.searchKeyword} || '%'
-						</when>
-						<otherwise> 
-							AND 
-							(
-								A.USER_ID LIKE '%' || #{params.searchKeyword} || '%' 
-								OR B.USER_NM LIKE '%' || #{params.searchKeyword} || '%'
-								OR B.USER_PHONE LIKE '%' || #{params.searchKeyword} || '%' 
-							)
-						</otherwise>
-					</choose>
-				</if>	
+				AND A.USER_DVSN = 'USER_DVSN_1'
+				UNION
+				SELECT
+					C.BLKLST_SEQ, C.USER_ID, C.USER_DVSN, C.USER_CLPHN AS USER_PHONE, '비회원' AS USER_NM,
+					C.BLKLST_CANCEL_YN, FN_DETAILCODENM(C.BLKLST_DVSN) AS BLKLST_DVSN_TXT, 0, null, 
+					C.BLKLST_DVSN, DBMS_LOB.SUBSTR(C.BLKLST_REASON, DBMS_LOB.GETLENGTH(C.BLKLST_REASON)) AS BLKLST_REASON,
+					C.FRST_REGTER_ID, C.LAST_UPDUSR_ID, 
+					TO_CHAR(C.LAST_UPDT_DTM, 'YYYY-MM-DD HH24:MI') AS LAST_UPDT_DTM,
+					TO_CHAR(C.FRST_REGIST_DTM, 'YYYY-MM-DD HH24:MI') AS FRST_REGIST_DTM
+				FROM TSER_BLKLST_INFO_I C
+				WHERE C.USER_DVSN = 'USER_DVSN_2'
 			) TB 
+			WHERE TB.BLKLST_DVSN = #{params.searchBlklstDvsn, jdbcType=VARCHAR}
+			<if test="!@org.apache.commons.lang3.StringUtils@isEmpty(params.searchKeyword)">
+				<choose>
+					<when test="@org.apache.commons.lang3.StringUtils@equals(params.searchCondition,'USER_ID')">
+						AND TB.USER_ID LIKE '%' || #{params.searchKeyword} || '%'
+					</when>
+					<when test="@org.apache.commons.lang3.StringUtils@equals(params.searchCondition,'USER_NM')">
+						AND TB.USER_NM LIKE '%' || #{params.searchKeyword} || '%'
+					</when>
+					<when test="@org.apache.commons.lang3.StringUtils@equals(params.searchCondition,'USER_PHONE')">
+						AND TB.USER_PHONE LIKE '%' || #{params.searchKeyword} || '%'
+					</when>
+					<otherwise> 
+						AND 
+						(
+							TB.USER_ID LIKE '%' || #{params.searchKeyword} || '%' 
+							OR TB.USER_NM LIKE '%' || #{params.searchKeyword} || '%'
+							OR TB.USER_PHONE LIKE '%' || #{params.searchKeyword} || '%' 
+						)
+					</otherwise>
+				</choose>
+			</if>	
 		) TA
 		WHERE TA.RNUM BETWEEN #{params.firstIndex} + 1 AND #{params.firstIndex} + #{params.recordCountPerPage}  
 		<choose>
@@ -53,7 +62,7 @@
 				ORDER BY TA.USER_NOSHOW_CNT DESC
 			</when>
 			<otherwise>
-				ORDER BY TA.RNUM DESC
+				ORDER BY TA.RNUM ASC
 			</otherwise>
 		</choose>
     </select>

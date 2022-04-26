@@ -57,7 +57,8 @@
     	</div>
     	
     	<div class="right_box">
-        	<a href="javascript:fnBlackInfo();" class="blueBtn">입장 제한 고객 등록</a>
+        	<!-- <a href="javascript:fnBlackInfo();" class="blueBtn">입장 제한 고객 등록</a> -->
+        	<a data-popup-open="rsv_blacklist_sel" class="blueBtn">입장 제한 고객 등록</a>
         	<a href="javascript:fnBlackDelete();" class="grayBtn">삭제</a>
 		</div>
 		<div class="clear"></div>
@@ -82,6 +83,7 @@
       	<div class="pop_wrap">
       		<form>
       		<input type="hidden" name="mode" value="Ins">
+      		<input type="hidden" name="userDvsn">
       		<input type="hidden" name="blklstSeq">
       		<input type="hidden" name="blklstCancelYn">
       		<table class="detail_table blacklist_add_table">
@@ -108,7 +110,7 @@
                   	</tr>
                   	<tr>
                     	<th>제한 유형</th>
-                    	<td>
+                    	<td colspan="3">
                         	<select name="blklstDvsn">
                           		<option value="BLKLST_DVSN_1">블랙리스트</option>
                           		<option value="BLKLST_DVSN_2">자가출입통제</option>
@@ -129,6 +131,18 @@
       	</div>
 		<popup-right-button />
   	</div>
+</div>
+
+<!-- 입장제한 고객구분 선택 팝업 -->
+<div data-popup="rsv_blacklist_sel" class="popup s_pop">
+    <div class="pop_con" style="padding-bottom:20px;">
+        <a class="button b-close">X</a>
+        <h2 class="pop_tit" style="min-width:300px;">입장 제한 고객 구분</h2>
+        <div class="pop_wrap" style="text-align:center;">
+			<a href="javascript:fnBlackInfo(null,'USER_DVSN_1');" class="blueBtn" style="width:60px;">회원</a>
+			<a href="javascript:fnBlackInfo(null,'USER_DVSN_2');" class="blueBtn" style="width:60px;">비회원</a>
+        </div>
+    </div>
 </div>
 
 <!-- 고객 검색 팝업 -->
@@ -181,7 +195,7 @@
             	'<a href="javascript:fnChangeBlackState(\'' + row.blklst_seq + '\');" class="blueBtn">' + (row.blklst_cancel_yn === 'Y' ? '등록' : '해제') + '</a>'
        		}, 			
 			{label: '수정',        name:'update_btn',		   align: 'center', width: 50, fixed: true, sortable: false, 
-       			formatter: (c, o, row) => '<a href="javascript:fnBlackInfo(\''+ row.blklst_seq + '\');" class="edt_icon"></a>'
+       			formatter: (c, o, row) => '<a href="javascript:fnBlackInfo(\''+ row.blklst_seq + '\', \'' + row.user_dvsn + '\');" class="edt_icon"></a>'
        		} 
         ], false, false, fnSearch);
 		
@@ -201,6 +215,12 @@
 		  	$(this).addClass('active');
 		  	$tbody.removeClass('active');
 		  	$tbody.eq(tabIdx).addClass('active');
+		});
+        
+		//bpop 확인 하기 
+		$('[data-popup-open]').bind('click', function () {
+			var targeted_popup_class = jQuery(this).attr('data-popup-open');
+			$('[data-popup="' + targeted_popup_class + '"]').bPopup();
 		});
 	});
     
@@ -226,21 +246,26 @@
 	}
 	
 	// 메인 상세 팝업 정의
-	function fnBlackInfo(rowId) {
+	function fnBlackInfo(rowId,userDvsn) {
 		let $popup = $('[data-popup=rsv_blacklist_add]');
 		let $form = $popup.find('form:first');
+		let userDvsnTxt = userDvsn === 'USER_DVSN_1' ? '회원' : '비회원';
+		
 		if (rowId === undefined || rowId === null) {
-			$popup.find('h2:first').text('출입통제 등록');
+			$popup.find('h2:first').text(userDvsnTxt + ' 출입통제 등록');
 			$popup.find('button.blueBtn').off('click').click(fnBlackInsert);
+			$form.find(':hidden[name=mode]').val('Ins');
+			$form.find(':hidden[name=userDvsn]').val(userDvsn);
 			$form.find(':text').val('');
 			$form.find('textarea[name=blklstReason]').val('');
             $form.find('select[name=userSearchCondition] option:first').prop('selected', true);
             $form.find('select[name=blklstDvsn] option:first').prop('selected', true);
 		} else {
 			let rowData = EgovJqGridApi.getMainGridRowData(rowId);
-			$popup.find('h2:first').text('관리자 수정');
+			$popup.find('h2:first').text(userDvsnTxt + ' 출입통제 수정');
 			$popup.find('button.blueBtn').off('click').click(fnBlackUpdate);
 			$form.find(':hidden[name=mode]').val('Edt');
+			$form.find(':hidden[name=userDvsn]').val(userDvsn);
 			$form.find(':hidden[name=blklstSeq]').val(rowData.blklst_seq);
 			$form.find(':hidden[name=blklstCancelYn]').val(rowData.blklst_cancel_yn);
 			$form.find(':text').val('');
@@ -251,7 +276,21 @@
 			$form.find(':text[name=userNm]').val(rowData.user_nm);
 			$form.find(':text[name=userClphn]').val(rowData.user_phone);
 		}
+		
+		if(userDvsn === 'USER_DVSN_1') {
+			$('.blacklist_add_table > tbody > tr:eq(0)').show();
+			$('.blacklist_add_table > tbody > tr:eq(1)').find('th:eq(0),td:eq(0)').show();
+			$form.find(':text[name=userClphn]').prop('readonly',true);
+			$form.find(':text[name=userNm]')
+		} else {
+			$('.blacklist_add_table > tbody > tr:eq(0)').hide();
+			$('.blacklist_add_table > tbody > tr:eq(1)').find('th:eq(0),td:eq(0)').hide();
+			$form.find(':text[name=userId]').val('비회원');
+			$form.find(':text[name=userClphn]').prop('readonly',false);
+		}
+		
 		$popup.bPopup();
+		$('[data-popup=rsv_blacklist_sel]').bPopup().close();
 	}
 
 	// 출입통제 정보 등록
